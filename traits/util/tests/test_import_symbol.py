@@ -13,7 +13,7 @@ class TestImportSymbol(unittest.TestCase):
 
         import tarfile
 
-        symbol = import_symbol('tarfile.TarFile')
+        symbol = import_symbol("tarfile.TarFile")
         self.assertEqual(symbol, tarfile.TarFile)
 
         return
@@ -23,7 +23,7 @@ class TestImportSymbol(unittest.TestCase):
 
         import tarfile
 
-        symbol = import_symbol('tarfile:TarFile.open')
+        symbol = import_symbol("tarfile:TarFile.open")
         self.assertEqual(symbol, tarfile.TarFile.open)
 
         return
@@ -31,16 +31,14 @@ class TestImportSymbol(unittest.TestCase):
     def test_import_dotted_module(self):
         """ import dotted module """
 
-        symbol = import_symbol(
-            'traits.util.import_symbol:import_symbol'
-        )
+        symbol = import_symbol("traits.util.import_symbol:import_symbol")
 
         self.assertEqual(symbol, import_symbol)
 
         return
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
 
 #### EOF ######################################################################

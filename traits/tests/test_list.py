@@ -30,7 +30,7 @@ class Baz(HasTraits):
 
 
 class BazRef(HasTraits):
-    bars = List(Bar, copy='ref')
+    bars = List(Bar, copy="ref")
 
 
 class DeepBaz(HasTraits):
@@ -47,7 +47,6 @@ class CFoo(HasTraits):
 
 
 class ListTestCase(unittest.TestCase):
-
     def test_initialized(self):
         f = Foo()
         self.assertNotEqual(f.l, None)
@@ -55,41 +54,41 @@ class ListTestCase(unittest.TestCase):
         return
 
     def test_initializer(self):
-        f = Foo(l=['a', 'list'])
+        f = Foo(l=["a", "list"])
         self.assertNotEqual(f.l, None)
-        self.assertEqual(f.l, ['a', 'list'])
+        self.assertEqual(f.l, ["a", "list"])
         return
 
     def test_type_check(self):
         f = Foo()
-        f.l.append('string')
+        f.l.append("string")
 
         self.assertRaises(TraitError, f.l.append, 123.456)
         return
 
     def test_append(self):
         f = Foo()
-        f.l.append('bar')
-        self.assertEqual(f.l, ['bar'])
+        f.l.append("bar")
+        self.assertEqual(f.l, ["bar"])
         return
 
     def test_remove(self):
         f = Foo()
-        f.l.append('bar')
-        f.l.remove('bar')
+        f.l.append("bar")
+        f.l.remove("bar")
         self.assertEqual(f.l, [])
         return
 
     def test_slice(self):
-        f = Foo(l=['zero', 'one', 'two', 'three'])
-        self.assertEqual(f.l[0], 'zero')
+        f = Foo(l=["zero", "one", "two", "three"])
+        self.assertEqual(f.l[0], "zero")
         self.assertEqual(f.l[:0], [])
-        self.assertEqual(f.l[:1], ['zero'])
-        self.assertEqual(f.l[0:1], ['zero'])
-        self.assertEqual(f.l[1:], ['one', 'two', 'three'])
-        self.assertEqual(f.l[-1], 'three')
-        self.assertEqual(f.l[-2], 'two')
-        self.assertEqual(f.l[:-1], ['zero', 'one', 'two'])
+        self.assertEqual(f.l[:1], ["zero"])
+        self.assertEqual(f.l[0:1], ["zero"])
+        self.assertEqual(f.l[1:], ["one", "two", "three"])
+        self.assertEqual(f.l[-1], "three")
+        self.assertEqual(f.l[-2], "two")
+        self.assertEqual(f.l[:-1], ["zero", "one", "two"])
         return
 
     def test_slice_assignment(self):
@@ -97,11 +96,15 @@ class ListTestCase(unittest.TestCase):
         starts = stops = [None] + list(sm.range(-10, 11))
         steps = list(starts)
         steps.remove(0)
-        test_slices = [slice(start, stop, step)
-                       for start in starts for stop in stops for step in steps]
+        test_slices = [
+            slice(start, stop, step)
+            for start in starts
+            for stop in stops
+            for step in steps
+        ]
 
         for test_slice in test_slices:
-            f = Foo(l=['zero', 'one', 'two', 'three', 'four'])
+            f = Foo(l=["zero", "one", "two", "three", "four"])
             plain_l = list(f.l)
             length = len(plain_l[test_slice])
             replacements = list(sm.map(str, sm.range(length)))
@@ -110,25 +113,26 @@ class ListTestCase(unittest.TestCase):
             plain_l[test_slice] = replacements
             f.l[test_slice] = replacements
             self.assertEqual(
-                f.l, plain_l, "failed for slice {0!r}".format(test_slice))
+                f.l, plain_l, "failed for slice {0!r}".format(test_slice)
+            )
 
     def test_slice_assignments_of_different_length(self):
         # Test slice assignments where rhs has a different length
         # to the slice. These should work only for slices of step 1.
-        test_list = ['zero', 'one', 'two', 'three']
+        test_list = ["zero", "one", "two", "three"]
         f = Foo(l=test_list)
-        f.l[1:3] = '01234'
-        self.assertEqual(f.l, ['zero', '0', '1', '2', '3', '4', 'three'])
+        f.l[1:3] = "01234"
+        self.assertEqual(f.l, ["zero", "0", "1", "2", "3", "4", "three"])
         f.l[4:] = []
-        self.assertEqual(f.l, ['zero', '0', '1', '2'])
-        f.l[:] = 'abcde'
-        self.assertEqual(f.l, ['a', 'b', 'c', 'd', 'e'])
+        self.assertEqual(f.l, ["zero", "0", "1", "2"])
+        f.l[:] = "abcde"
+        self.assertEqual(f.l, ["a", "b", "c", "d", "e"])
         f.l[:] = []
         self.assertEqual(f.l, [])
 
         f = Foo(l=test_list)
         with self.assertRaises(ValueError):
-            f.l[::2] = ['a', 'b', 'c']
+            f.l[::2] = ["a", "b", "c"]
         self.assertEqual(f.l, test_list)
         with self.assertRaises(ValueError):
             f.l[::-1] = []
@@ -139,28 +143,28 @@ class ListTestCase(unittest.TestCase):
         class IHasConstrainedList(HasTraits):
             foo = List(Str, minlen=3)
 
-        f = IHasConstrainedList(foo=['zero', 'one', 'two', 'three'])
+        f = IHasConstrainedList(foo=["zero", "one", "two", "three"])
         # We're deleting two items; this should raise.
         with self.assertRaises(TraitError):
             del f.foo[::3]
 
     def test_retrieve_reference(self):
-        f = Foo(l=['initial', 'value'])
+        f = Foo(l=["initial", "value"])
 
         l = f.l
         self.assertIs(l, f.l)
 
         # no copy on change behavior, l is always a reference
-        l.append('change')
-        self.assertEqual(f.l, ['initial', 'value', 'change'])
+        l.append("change")
+        self.assertEqual(f.l, ["initial", "value", "change"])
 
-        f.l.append('more change')
-        self.assertEqual(l, ['initial', 'value', 'change', 'more change'])
+        f.l.append("more change")
+        self.assertEqual(l, ["initial", "value", "change", "more change"])
         return
 
     def test_assignment_makes_copy(self):
-        f = Foo(l=['initial', 'value'])
-        l = ['new']
+        f = Foo(l=["initial", "value"])
+        l = ["new"]
 
         f.l = l
         # same content
@@ -170,25 +174,25 @@ class ListTestCase(unittest.TestCase):
         self.assertIsNot(l, f.l)
 
         # which means behaviorally...
-        l.append('l change')
-        self.assertNotIn('l change', f.l)
+        l.append("l change")
+        self.assertNotIn("l change", f.l)
 
-        f.l.append('f.l change')
-        self.assertNotIn('f.l change', l)
+        f.l.append("f.l change")
+        self.assertNotIn("f.l change", l)
 
         return
 
     def test_should_not_allow_none(self):
-        f = Foo(l=['initial', 'value'])
+        f = Foo(l=["initial", "value"])
         try:
             f.l = None
-            self.fail('None assigned to List trait.')
+            self.fail("None assigned to List trait.")
         except TraitError:
             pass
 
     def test_clone(self):
         baz = Baz()
-        for name in ['a', 'b', 'c', 'd']:
+        for name in ["a", "b", "c", "d"]:
             baz.bars.append(Bar(name=name))
 
         # Clone will clone baz, the bars list, and the objects in the list
@@ -211,7 +215,7 @@ class ListTestCase(unittest.TestCase):
 
     def test_clone_ref(self):
         baz = BazRef()
-        for name in ['a', 'b', 'c', 'd']:
+        for name in ["a", "b", "c", "d"]:
             baz.bars.append(Bar(name=name))
 
         # Clone will clone baz, the bars list, but the objects in the list
@@ -229,7 +233,7 @@ class ListTestCase(unittest.TestCase):
 
     def test_clone_deep_baz(self):
         baz = Baz()
-        for name in ['a', 'b', 'c', 'd']:
+        for name in ["a", "b", "c", "d"]:
             baz.bars.append(Bar(name=name))
 
         deep_baz = DeepBaz(baz=baz)
@@ -259,7 +263,7 @@ class ListTestCase(unittest.TestCase):
 
     def test_clone_deep_baz_ref(self):
         baz = BazRef()
-        for name in ['a', 'b', 'c', 'd']:
+        for name in ["a", "b", "c", "d"]:
             baz.bars.append(Bar(name=name))
 
         deep_baz = DeepBazBazRef(baz=baz)
@@ -312,21 +316,21 @@ class ListTestCase(unittest.TestCase):
 
     def test_extend(self):
         f = Foo()
-        f.l = ['4', '5', '6']
-        f.l.extend(['1', '2', '3'])
-        self.assertEqual(f.l, ['4', '5', '6', '1', '2', '3'])
+        f.l = ["4", "5", "6"]
+        f.l.extend(["1", "2", "3"])
+        self.assertEqual(f.l, ["4", "5", "6", "1", "2", "3"])
 
     def test_iadd(self):
         f = Foo()
-        f.l = ['4', '5', '6']
-        f.l += ['1', '2', '3']
-        self.assertEqual(f.l, ['4', '5', '6', '1', '2', '3'])
+        f.l = ["4", "5", "6"]
+        f.l += ["1", "2", "3"]
+        self.assertEqual(f.l, ["4", "5", "6", "1", "2", "3"])
 
     def test_imul(self):
         f = Foo()
-        f.l = list('123')
+        f.l = list("123")
         f.l *= 4
-        self.assertEqual(f.l, list('123123123123'))
+        self.assertEqual(f.l, list("123123123123"))
 
     def test_sort_no_args(self):
         f = Foo()

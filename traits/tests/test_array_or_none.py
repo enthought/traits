@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2014, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """
 Tests for the ArrayOrNone TraitType.
 
@@ -52,6 +52,7 @@ class TestArrayOrNone(unittest.TestCase, UnittestTools):
     Tests for the ArrayOrNone TraitType.
 
     """
+
     def test_default(self):
         foo = Foo()
         self.assertIsNone(foo.maybe_array)
@@ -64,6 +65,7 @@ class TestArrayOrNone(unittest.TestCase, UnittestTools):
         # CArray and Array validate the default at class creation time;
         # we do the same for ArrayOrNone.
         with self.assertRaises(TraitError):
+
             class Bar(HasTraits):
                 bad_array = ArrayOrNone(shape=(None, None), value=[1, 2, 3])
 
@@ -116,41 +118,41 @@ class TestArrayOrNone(unittest.TestCase, UnittestTools):
         different_test_array = numpy.arange(10)
 
         # Assigning None to something that's already None shouldn't fire.
-        with self.assertTraitDoesNotChange(foo, 'maybe_array'):
+        with self.assertTraitDoesNotChange(foo, "maybe_array"):
             foo.maybe_array = None
 
         # Changing from None to an array: expect an event.
-        with self.assertTraitChanges(foo, 'maybe_array'):
+        with self.assertTraitChanges(foo, "maybe_array"):
             foo.maybe_array = test_array
 
         # No event from assigning the same array again.
-        with self.assertTraitDoesNotChange(foo, 'maybe_array'):
+        with self.assertTraitDoesNotChange(foo, "maybe_array"):
             foo.maybe_array = test_array
 
         # But assigning a new array fires an event.
-        with self.assertTraitChanges(foo, 'maybe_array'):
+        with self.assertTraitChanges(foo, "maybe_array"):
             foo.maybe_array = different_test_array
 
         # No event even if the array is modified in place.
         different_test_array += 2
-        with self.assertTraitDoesNotChange(foo, 'maybe_array'):
+        with self.assertTraitDoesNotChange(foo, "maybe_array"):
             foo.maybe_array = different_test_array
 
         # Set back to None; we should get an event.
-        with self.assertTraitChanges(foo, 'maybe_array'):
+        with self.assertTraitChanges(foo, "maybe_array"):
             foo.maybe_array = None
 
     def test_comparison_mode_override(self):
         foo = Foo()
         test_array = numpy.arange(-7, 2)
 
-        with self.assertTraitChanges(foo, 'maybe_array_no_compare'):
+        with self.assertTraitChanges(foo, "maybe_array_no_compare"):
             foo.maybe_array_no_compare = None
 
-        with self.assertTraitChanges(foo, 'maybe_array_no_compare'):
+        with self.assertTraitChanges(foo, "maybe_array_no_compare"):
             foo.maybe_array_no_compare = test_array
 
-        with self.assertTraitChanges(foo, 'maybe_array_no_compare'):
+        with self.assertTraitChanges(foo, "maybe_array_no_compare"):
             foo.maybe_array_no_compare = test_array
 
     def test_default_value_copied(self):

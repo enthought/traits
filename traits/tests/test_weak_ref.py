@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2013, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Test cases for weakref (WeakRef) traits. """
 
 import contextlib
@@ -47,7 +47,7 @@ class TestWeakRef(UnittestTools, unittest.TestCase):
     """ Test cases for weakref (WeakRef) traits. """
 
     def test_set_and_get(self):
-        eggs = Eggs(name='platypus')
+        eggs = Eggs(name="platypus")
         spam = Spam()
         self.assertIsNone(spam.eggs)
         spam.eggs = eggs
@@ -56,15 +56,15 @@ class TestWeakRef(UnittestTools, unittest.TestCase):
         self.assertIsNone(spam.eggs)
 
     def test_target_freed_notification(self):
-        eggs = Eggs(name='duck')
+        eggs = Eggs(name="duck")
         spam = Spam(eggs=eggs)
 
         # Removal of the last reference to 'eggs' should trigger notification.
-        with self.assertTraitChanges(spam, 'eggs'):
+        with self.assertTraitChanges(spam, "eggs"):
             del eggs
 
     def test_weakref_trait_doesnt_leak_cycles(self):
-        eggs = Eggs(name='ostrich')
+        eggs = Eggs(name="ostrich")
         with restore_gc_state():
             gc.disable()
             gc.collect()

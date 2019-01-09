@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
@@ -15,7 +15,7 @@
 #
 #  Rewritten as a C-based type extension: 06/21/2004
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 """
 Defines the 'core' traits for the Traits package. A trait is a type definition
@@ -42,9 +42,9 @@ Visualization:
     feature.
 """
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Imports:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
@@ -53,78 +53,102 @@ from types import FunctionType, MethodType
 
 import six
 
-NoneType = type(None)   # Python 3's types does not include NoneType
+NoneType = type(None)  # Python 3's types does not include NoneType
 
 from . import trait_handlers
 from .ctraits import cTrait
 from .trait_errors import TraitError
-from .trait_base import (SequenceTypes, Self, Undefined, Missing, TypeTypes,
-    add_article)
+from .trait_base import (
+    SequenceTypes,
+    Self,
+    Undefined,
+    Missing,
+    TypeTypes,
+    add_article,
+)
 
-from .trait_handlers import (TraitHandler, TraitInstance, TraitFunction,
-    TraitCoerceType, TraitCastType, TraitEnum, TraitCompound, TraitMap,
-    TraitString, ThisClass, TraitType, _arg_count, _read_only, _write_only,
-    _undefined_get, _undefined_set, UNSPECIFIED_DEFAULT_VALUE,
-    CALLABLE_AND_ARGS_DEFAULT_VALUE)
+from .trait_handlers import (
+    TraitHandler,
+    TraitInstance,
+    TraitFunction,
+    TraitCoerceType,
+    TraitCastType,
+    TraitEnum,
+    TraitCompound,
+    TraitMap,
+    TraitString,
+    ThisClass,
+    TraitType,
+    _arg_count,
+    _read_only,
+    _write_only,
+    _undefined_get,
+    _undefined_set,
+    UNSPECIFIED_DEFAULT_VALUE,
+    CALLABLE_AND_ARGS_DEFAULT_VALUE,
+)
 
 
 from ._py2to3 import LONG_TYPE
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Constants:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 # Mapping from 'ctrait' default value types to a string representation:
 KindMap = {
-   0: 'value',
-   1: 'value',
-   2: 'self',
-   3: 'list',
-   4: 'dict',
-   5: 'list',
-   6: 'dict',
-   7: 'factory',
-   8: 'method'
+    0: "value",
+    1: "value",
+    2: "self",
+    3: "list",
+    4: "dict",
+    5: "list",
+    6: "dict",
+    7: "factory",
+    8: "method",
 }
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Editor factory functions:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-PasswordEditor       = None
+PasswordEditor = None
 MultilineTextEditors = {}
-BytesEditors         = {}
-SourceCodeEditor     = None
-HTMLTextEditor       = None
-PythonShellEditor    = None
-DateEditor           = None
-TimeEditor           = None
+BytesEditors = {}
+SourceCodeEditor = None
+HTMLTextEditor = None
+PythonShellEditor = None
+DateEditor = None
+TimeEditor = None
 
-def password_editor ( auto_set=True, enter_set=False ):
+
+def password_editor(auto_set=True, enter_set=False):
     """ Factory function that returns an editor for passwords.
     """
     global PasswordEditor
 
     if PasswordEditor is None:
         from traitsui.api import TextEditor
-        PasswordEditor = TextEditor( password = True ,
-                                     auto_set   = auto_set,
-                                     enter_set  = enter_set )
+
+        PasswordEditor = TextEditor(
+            password=True, auto_set=auto_set, enter_set=enter_set
+        )
 
     return PasswordEditor
 
-def multi_line_text_editor ( auto_set=True, enter_set=False ):
+
+def multi_line_text_editor(auto_set=True, enter_set=False):
     """ Factory function that returns a text editor for multi-line strings.
     """
     if (auto_set, enter_set) not in MultilineTextEditors:
         from traitsui.api import TextEditor
+
         MultilineTextEditors[auto_set, enter_set] = TextEditor(
-            multi_line = True,
-            auto_set   = auto_set,
-            enter_set  = enter_set
-            )
+            multi_line=True, auto_set=auto_set, enter_set=enter_set
+        )
 
     return MultilineTextEditors[auto_set, enter_set]
+
 
 def bytes_editor(auto_set=True, enter_set=False, encoding=None):
     """ Factory function that returns a text editor for bytes.
@@ -132,6 +156,7 @@ def bytes_editor(auto_set=True, enter_set=False, encoding=None):
     if encoding is not None:
         if isinstance(encoding, str):
             import codecs
+
             encoding = codecs.lookup(encoding)
 
     if (auto_set, enter_set, encoding) not in BytesEditors:
@@ -139,8 +164,8 @@ def bytes_editor(auto_set=True, enter_set=False, encoding=None):
 
         if encoding is None:
             # py3-compatible bytes <-> hex unicode string
-            format = lambda b: b.encode('hex').decode('ascii')
-            evaluate = lambda s: s.encode('ascii').decode('hex')
+            format = lambda b: b.encode("hex").decode("ascii")
+            evaluate = lambda s: s.encode("ascii").decode("hex")
         else:
             format = encoding.decode
             evaluate = encoding.encode
@@ -150,12 +175,13 @@ def bytes_editor(auto_set=True, enter_set=False, encoding=None):
             format_func=format,
             evaluate=evaluate,
             auto_set=auto_set,
-            enter_set=enter_set
+            enter_set=enter_set,
         )
 
     return BytesEditors[(auto_set, enter_set, encoding)]
 
-def code_editor ( ):
+
+def code_editor():
     """ Factory function that returns an editor that treats a multi-line string
     as source code.
     """
@@ -163,11 +189,13 @@ def code_editor ( ):
 
     if SourceCodeEditor is None:
         from traitsui.api import CodeEditor
+
         SourceCodeEditor = CodeEditor()
 
     return SourceCodeEditor
 
-def html_editor ( ):
+
+def html_editor():
     """ Factory function for an "editor" that displays a multi-line string as
     interpreted HTML.
     """
@@ -175,42 +203,50 @@ def html_editor ( ):
 
     if HTMLTextEditor is None:
         from traitsui.api import HTMLEditor
+
         HTMLTextEditor = HTMLEditor()
 
     return HTMLTextEditor
 
-def shell_editor ( ):
+
+def shell_editor():
     """ Factory function that returns a Python shell for editing Python values.
     """
     global PythonShellEditor
 
     if PythonShellEditor is None:
         from traitsui.api import ShellEditor
+
         PythonShellEditor = ShellEditor()
 
     return PythonShellEditor
 
-def time_editor ( ):
+
+def time_editor():
     """ Factory function that returns a Time editor for editing Time values.
     """
     global TimeEditor
 
     if TimeEditor is None:
         from traitsui.api import TimeEditor
+
         TimeEditor = TimeEditor()
 
     return TimeEditor
 
-def date_editor ( ):
+
+def date_editor():
     """ Factory function that returns a Date editor for editing Date values.
     """
     global DateEditor
 
     if DateEditor is None:
         from traitsui.api import DateEditor
+
         DateEditor = DateEditor()
 
     return DateEditor
+
 
 def _expects_hastraits_instance(handler):
     """ Does a trait handler or type expect a HasTraits subclass instance?
@@ -246,20 +282,27 @@ def list_editor(trait, handler):
     item_handler = handler.item_trait.handler
     if _expects_hastraits_instance(item_handler):
         from traitsui.table_column import ObjectColumn
-        from traitsui.table_filter import (EvalFilterTemplate,
-            RuleFilterTemplate, MenuFilterTemplate, EvalTableFilter)
+        from traitsui.table_filter import (
+            EvalFilterTemplate,
+            RuleFilterTemplate,
+            MenuFilterTemplate,
+            EvalTableFilter,
+        )
         from traitsui.api import TableEditor
 
         return TableEditor(
-            filters=[RuleFilterTemplate, MenuFilterTemplate,
-                     EvalFilterTemplate],
-            edit_view='',
-            orientation='vertical',
+            filters=[
+                RuleFilterTemplate,
+                MenuFilterTemplate,
+                EvalFilterTemplate,
+            ],
+            edit_view="",
+            orientation="vertical",
             search=EvalTableFilter(),
             deletable=True,
             show_toolbar=True,
             reorderable=True,
-            row_factory=_instance_handler_factory(item_handler)
+            row_factory=_instance_handler_factory(item_handler),
         )
     else:
         from traitsui.api import ListEditor
@@ -268,90 +311,92 @@ def list_editor(trait, handler):
             trait_handler=handler,
             rows=trait.rows if trait.rows else 5,
             use_notebook=bool(trait.use_notebook),
-            page_name=trait.page_name if trait.page_name else ''
+            page_name=trait.page_name if trait.page_name else "",
         )
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  'CTrait' class (extends the underlying cTrait c-based type):
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class CTrait ( cTrait ):
+
+class CTrait(cTrait):
     """ Extends the underlying C-based cTrait type.
     """
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Allows a derivative trait to be defined from this one:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def __call__ ( self, *args, **metadata ):
+    def __call__(self, *args, **metadata):
         handler = self.handler
-        if isinstance( handler, TraitType ):
+        if isinstance(handler, TraitType):
             dict = (self.__dict__ or {}).copy()
-            dict.update( metadata )
+            dict.update(metadata)
 
-            return handler( *args, **dict )
+            return handler(*args, **dict)
 
-        metadata.setdefault( 'parent', self )
-        return Trait( *(args + ( self, )), **metadata )
+        metadata.setdefault("parent", self)
+        return Trait(*(args + (self,)), **metadata)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  (Python) property definitions:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def __get_default ( self ):
+    def __get_default(self):
         kind, value = self.default_value()
-        if kind in ( 2, 7, 8 ):
+        if kind in (2, 7, 8):
             return Undefined
 
-        if kind in ( 4, 6 ):
+        if kind in (4, 6):
             return value.copy()
 
-        if kind in ( 3, 5 ):
+        if kind in (3, 5):
             return value[:]
 
         return value
 
-    default = property( __get_default )
+    default = property(__get_default)
 
-    def __get_default_kind ( self ):
-        return KindMap[ self.default_value()[0] ]
+    def __get_default_kind(self):
+        return KindMap[self.default_value()[0]]
 
-    default_kind = property( __get_default_kind )
+    default_kind = property(__get_default_kind)
 
-    def __get_trait_type ( self ):
+    def __get_trait_type(self):
         handler = self.handler
         if handler is not None:
             return handler
         else:
             from .trait_types import Any
+
             return Any
 
-    trait_type = property( __get_trait_type )
+    trait_type = property(__get_trait_type)
 
-    def __get_inner_traits ( self ):
+    def __get_inner_traits(self):
         handler = self.handler
         if handler is not None:
             return handler.inner_traits()
 
         return ()
 
-    inner_traits = property( __get_inner_traits )
+    inner_traits = property(__get_inner_traits)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns whether or not this trait is of a specified trait type:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def is_trait_type ( self, trait_type ):
+    def is_trait_type(self, trait_type):
         """ Returns whether or not this trait is of a specified trait type.
         """
-        return isinstance( self.trait_type, trait_type )
+        return isinstance(self.trait_type, trait_type)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns the user interface editor associated with the trait:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def get_editor ( self ):
+    def get_editor(self):
         """ Returns the user interface editor associated with the trait.
         """
         from traitsui.api import EditorFactory
@@ -363,30 +408,31 @@ class CTrait ( cTrait ):
             # Else see if the trait handler has an editor:
             handler = self.handler
             if handler is not None:
-                editor = handler.get_editor( self )
+                editor = handler.get_editor(self)
 
             # If not, give up and use a default text editor:
             if editor is None:
                 from traitsui.api import TextEditor
+
                 editor = TextEditor
 
         # If the result is not an EditorFactory:
-        if not isinstance( editor, EditorFactory ):
+        if not isinstance(editor, EditorFactory):
             # Then it should be a factory for creating them:
-            args   = ()
+            args = ()
             traits = {}
-            if type( editor ) in SequenceTypes:
+            if type(editor) in SequenceTypes:
                 for item in editor[:]:
-                    if type( item ) in SequenceTypes:
-                        args = tuple( item )
-                    elif isinstance( item, dict ):
+                    if type(item) in SequenceTypes:
+                        args = tuple(item)
+                    elif isinstance(item, dict):
                         traits = item
-                        if traits.get( 'trait', 0 ) is None:
+                        if traits.get("trait", 0) is None:
                             traits = traits.copy()
-                            traits[ 'trait' ] = self
+                            traits["trait"] = self
                     else:
                         editor = item
-            editor = editor( *args, **traits )
+            editor = editor(*args, **traits)
 
         # Cache the result:
         self.editor = editor
@@ -394,11 +440,11 @@ class CTrait ( cTrait ):
         # Return the resulting EditorFactory object:
         return editor
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns the help text for a trait:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def get_help ( self, full = True ):
+    def get_help(self, full=True):
         """ Returns the help text for a trait.
 
         Parameters
@@ -420,290 +466,329 @@ class CTrait ( cTrait ):
 
         handler = self.handler
         if handler is not None:
-            info = 'must be %s.' % handler.info()
+            info = "must be %s." % handler.info()
         else:
-            info = 'may be any value.'
+            info = "may be any value."
 
         desc = self.desc
         if self.desc is None:
             return info.capitalize()
 
-        return 'Specifies %s and %s' % ( desc, info )
+        return "Specifies %s and %s" % (desc, info)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns a description of the trait:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def full_info ( self, object, name, value ):
+    def full_info(self, object, name, value):
         """ Returns a description of the trait.
         """
         handler = self.handler
         if handler is not None:
-            return handler.full_info( object, name, value )
+            return handler.full_info(object, name, value)
 
-        return 'any value'
+        return "any value"
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns a description of the trait:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def info ( self ):
+    def info(self):
         """ Returns a description of the trait.
         """
         handler = self.handler
         if handler is not None:
             return handler.info()
 
-        return 'any value'
+        return "any value"
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns the pickleable form of a CTrait object:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def __reduce_ex__ ( self, protocol ):
-        return ( __newobj__, ( self.__class__, 0 ), self.__getstate__() )
+    def __reduce_ex__(self, protocol):
+        return (__newobj__, (self.__class__, 0), self.__getstate__())
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Registers listeners on an assigned 'TraitValue' object's 'value'
     #  property:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _register ( self, object, name ):
+    def _register(self, object, name):
         """ Registers listeners on an assigned 'TraitValue' object's 'value'
             property.
         """
-        def handler ( ):
-            object.trait_property_changed( name, None )
 
-        tv       = self._trait_value
+        def handler():
+            object.trait_property_changed(name, None)
+
+        tv = self._trait_value
         handlers = tv._handlers
         if handlers is None:
             tv._handlers = handlers = {}
-        handlers[ ( id( object ), name ) ] = handler
+        handlers[(id(object), name)] = handler
 
-        tv.on_trait_change( handler, 'value' )
+        tv.on_trait_change(handler, "value")
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Unregisters listeners on an assigned 'TraitValue' object's 'value'
     #  property:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _unregister ( self, object, name ):
+    def _unregister(self, object, name):
         """ Unregisters listeners on an assigned 'TraitValue' object's 'value'
             property.
         """
-        tv       = self._trait_value
+        tv = self._trait_value
         handlers = tv._handlers
-        key      = ( id( object ), name )
-        handler  = handlers.get( key )
+        key = (id(object), name)
+        handler = handlers.get(key)
         if handler is not None:
-            del handlers[ key ]
-            tv.on_trait_change( handler, 'value', remove = True )
+            del handlers[key]
+            tv.on_trait_change(handler, "value", remove=True)
+
 
 # Make sure the Python-level version of the trait class is known to all
 # interested parties:
 from . import ctraits
-ctraits._ctrait( CTrait )
 
-#-------------------------------------------------------------------------------
+ctraits._ctrait(CTrait)
+
+# -------------------------------------------------------------------------------
 #  Constants:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-ConstantTypes    = ( NoneType, int, LONG_TYPE, float, complex, str, six.text_type )
+ConstantTypes = (NoneType, int, LONG_TYPE, float, complex, str, six.text_type)
 
-PythonTypes      = ( str, six.text_type, int, LONG_TYPE, float, complex, list, tuple,
-                     dict, FunctionType, MethodType, type, NoneType )
+PythonTypes = (
+    str,
+    six.text_type,
+    int,
+    LONG_TYPE,
+    float,
+    complex,
+    list,
+    tuple,
+    dict,
+    FunctionType,
+    MethodType,
+    type,
+    NoneType,
+)
 
 if sys.version_info[0] < 3:
-    from types import InstanceType,ClassType
-    PythonTypes = PythonTypes[:-2] + (InstanceType,ClassType) + PythonTypes[2:]
+    from types import InstanceType, ClassType
+
+    PythonTypes = (
+        PythonTypes[:-2] + (InstanceType, ClassType) + PythonTypes[2:]
+    )
 
 
-CallableTypes    = ( FunctionType, MethodType )
+CallableTypes = (FunctionType, MethodType)
 
-TraitTypes       = ( TraitHandler, CTrait )
+TraitTypes = (TraitHandler, CTrait)
 
 DefaultValues = {
-    str:  '',
-    six.text_type: '',
-    int:     0,
-    LONG_TYPE:    LONG_TYPE(0),
-    float:   0.0,
+    str: "",
+    six.text_type: "",
+    int: 0,
+    LONG_TYPE: LONG_TYPE(0),
+    float: 0.0,
     complex: 0j,
-    list:    [],
-    tuple:   (),
-    dict:    {},
-    bool: False
+    list: [],
+    tuple: (),
+    dict: {},
+    bool: False,
 }
 
-DefaultValueSpecial = [ Missing, Self ]
-DefaultValueTypes   = [ list, dict ]
+DefaultValueSpecial = [Missing, Self]
+DefaultValueTypes = [list, dict]
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Function used to unpickle new-style objects:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def __newobj__ ( cls, *args ):
+
+def __newobj__(cls, *args):
     """ Unpickles new-style objects.
     """
-    return cls.__new__( cls, *args )
+    return cls.__new__(cls, *args)
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Returns the type of default value specified:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def _default_value_type ( default_value ):
+
+def _default_value_type(default_value):
     try:
-        return DefaultValueSpecial.index( default_value ) + 1
+        return DefaultValueSpecial.index(default_value) + 1
     except:
         try:
-            return DefaultValueTypes.index( type( default_value ) ) + 3
+            return DefaultValueTypes.index(type(default_value)) + 3
         except:
             return 0
 
-#-------------------------------------------------------------------------------
-#  'TraitFactory' class:
-#-------------------------------------------------------------------------------
 
-class TraitFactory ( object ):
+# -------------------------------------------------------------------------------
+#  'TraitFactory' class:
+# -------------------------------------------------------------------------------
+
+
+class TraitFactory(object):
     ### Need a docstring here.
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Initializes the object:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def __init__ ( self, maker_function = None ):
+    def __init__(self, maker_function=None):
         if maker_function is not None:
             self.maker_function = maker_function
             self.__doc__ = maker_function.__doc__
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Creates a CTrait instance:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def __call__ ( self, *args, **metadata ):
-        return self.maker_function( *args, **metadata )
+    def __call__(self, *args, **metadata):
+        return self.maker_function(*args, **metadata)
 
-class TraitImportError ( TraitFactory ):
+
+class TraitImportError(TraitFactory):
     """ Defines a factory class for deferring import problems until encountering
         code that actually tries to use the unimportable trait.
     """
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Initializes the object:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def __init__ ( self, message ):
+    def __init__(self, message):
         self.message = message
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Creates a CTrait instance:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def __call__ ( self, *args, **metadata ):
-        raise TraitError( self.message )
+    def __call__(self, *args, **metadata):
+        raise TraitError(self.message)
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Returns a trait created from a TraitFactory instance:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 _trait_factory_instances = {}
 
-def trait_factory ( trait ):
+
+def trait_factory(trait):
     global _trait_factory_instances
 
-    tid = id( trait )
+    tid = id(trait)
     if tid not in _trait_factory_instances:
-        _trait_factory_instances[ tid ] = trait()
+        _trait_factory_instances[tid] = trait()
 
-    return _trait_factory_instances[ tid ]
+    return _trait_factory_instances[tid]
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Casts a CTrait or TraitFactory to a CTrait but returns None if it is neither:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def trait_cast ( something ):
+
+def trait_cast(something):
     """ Casts a CTrait, TraitFactory or TraitType to a CTrait but returns None
         if it is none of those.
     """
-    if isinstance( something, CTrait ):
+    if isinstance(something, CTrait):
         return something
 
-    if isinstance( something, TraitFactory ):
-        return trait_factory( something )
+    if isinstance(something, TraitFactory):
+        return trait_factory(something)
 
-    if isinstance( something, type ) and issubclass( something, TraitType ):
+    if isinstance(something, type) and issubclass(something, TraitType):
         return something().as_ctrait()
 
-    if isinstance( something, TraitType ):
+    if isinstance(something, TraitType):
         return something.as_ctrait()
 
     return None
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Attempts to cast a value to a trait. Returns either a trait or the original
 #  value:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def try_trait_cast ( something ):
+
+def try_trait_cast(something):
     """ Attempts to cast a value to a trait. Returns either a trait or the
         original value.
     """
-    return trait_cast( something ) or something
+    return trait_cast(something) or something
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Returns a trait derived from its input:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def trait_from ( something ):
+
+def trait_from(something):
     """ Returns a trait derived from its input.
     """
     from .trait_types import Any
 
-    if isinstance( something, CTrait ):
+    if isinstance(something, CTrait):
         return something
 
     if something is None:
         something = Any
 
-    if isinstance( something, TraitFactory ):
-        return trait_factory( something )
+    if isinstance(something, TraitFactory):
+        return trait_factory(something)
 
-    if isinstance( something, type ) and issubclass( something, TraitType ):
+    if isinstance(something, type) and issubclass(something, TraitType):
         return something().as_ctrait()
 
-    if isinstance( something, TraitType ):
+    if isinstance(something, TraitType):
         return something.as_ctrait()
 
-    return Trait( something )
+    return Trait(something)
+
 
 # Patch the reference to 'trait_from' in 'trait_handlers.py':
 trait_handlers.trait_from = trait_from
 
-#--- 'instance' traits ---------------------------------------------------------
+# --- 'instance' traits ---------------------------------------------------------
 
-class _InstanceArgs ( object ):
 
-    def __init__ ( self, factory, args, kw ):
-        self.args = ( factory, ) + args
-        self.kw   = kw
+class _InstanceArgs(object):
+    def __init__(self, factory, args, kw):
+        self.args = (factory,) + args
+        self.kw = kw
 
-#--- 'creates a run-time default value' ----------------------------------------
 
-class Default ( object ):
+# --- 'creates a run-time default value' ----------------------------------------
+
+
+class Default(object):
     """ Generates a value the first time it is accessed.
 
     A Default object can be used anywhere a default trait value would normally
     be specified, to generate a default value dynamically.
     """
-    def __init__ ( self, func = None, args = (), kw = None ):
-        self.default_value = ( func, args, kw )
 
-#-------------------------------------------------------------------------------
+    def __init__(self, func=None, args=(), kw=None):
+        self.default_value = (func, args, kw)
+
+
+# -------------------------------------------------------------------------------
 #  Factory function for creating C-based traits:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def Trait ( *value_type, **metadata ):
+
+def Trait(*value_type, **metadata):
     """ Creates a trait definition.
 
     Parameters
@@ -823,168 +908,181 @@ def Trait ( *value_type, **metadata ):
 
 
     """
-    return _TraitMaker( *value_type, **metadata ).as_ctrait()
+    return _TraitMaker(*value_type, **metadata).as_ctrait()
+
 
 #  Handle circular module dependencies:
 trait_handlers.Trait = Trait
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  '_TraitMaker' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class _TraitMaker ( object ):
+
+class _TraitMaker(object):
 
     # Ctrait type map for special trait types:
-    type_map = {
-       'event':    2,
-       'constant': 7
-    }
+    type_map = {"event": 2, "constant": 7}
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Initialize the object:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def __init__ ( self, *value_type, **metadata ):
-        metadata.setdefault( 'type', 'trait' )
-        self.define( *value_type, **metadata )
+    def __init__(self, *value_type, **metadata):
+        metadata.setdefault("type", "trait")
+        self.define(*value_type, **metadata)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Define the trait:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def define ( self, *value_type, **metadata ):
+    def define(self, *value_type, **metadata):
         default_value_type = UNSPECIFIED_DEFAULT_VALUE
-        default_value      = handler = clone = None
+        default_value = handler = clone = None
 
-        if len( value_type ) > 0:
+        if len(value_type) > 0:
             default_value = value_type[0]
-            value_type    = value_type[1:]
+            value_type = value_type[1:]
 
-            if ((len( value_type ) == 0) and
-                (type( default_value ) in SequenceTypes)):
+            if (len(value_type) == 0) and (
+                type(default_value) in SequenceTypes
+            ):
                 default_value, value_type = default_value[0], default_value
 
-            if len( value_type ) == 0:
-                default_value = try_trait_cast( default_value )
+            if len(value_type) == 0:
+                default_value = try_trait_cast(default_value)
 
                 if default_value in PythonTypes:
-                    handler       = TraitCoerceType( default_value )
-                    default_value = DefaultValues.get( default_value )
+                    handler = TraitCoerceType(default_value)
+                    default_value = DefaultValues.get(default_value)
 
-                elif isinstance( default_value, CTrait ):
+                elif isinstance(default_value, CTrait):
                     clone = default_value
                     default_value_type, default_value = clone.default_value()
-                    metadata[ 'type' ] = clone.type
+                    metadata["type"] = clone.type
 
-                elif isinstance( default_value, TraitHandler ):
-                    handler       = default_value
+                elif isinstance(default_value, TraitHandler):
+                    handler = default_value
                     default_value = None
 
                 elif default_value is ThisClass:
-                    handler       = ThisClass()
+                    handler = ThisClass()
                     default_value = None
 
                 else:
-                    typeValue = type( default_value )
+                    typeValue = type(default_value)
 
                     if isinstance(default_value, six.string_types):
-                        string_options = self.extract( metadata, 'min_len',
-                                                       'max_len', 'regex' )
-                        if len( string_options ) == 0:
-                            handler = TraitCastType( typeValue )
+                        string_options = self.extract(
+                            metadata, "min_len", "max_len", "regex"
+                        )
+                        if len(string_options) == 0:
+                            handler = TraitCastType(typeValue)
                         else:
-                            handler = TraitString( **string_options )
+                            handler = TraitString(**string_options)
 
                     elif typeValue in TypeTypes:
-                        handler = TraitCastType( typeValue )
+                        handler = TraitCastType(typeValue)
 
                     else:
-                        metadata.setdefault( 'instance_handler',
-                                             '_instance_changed_handler' )
-                        handler = TraitInstance( default_value )
+                        metadata.setdefault(
+                            "instance_handler", "_instance_changed_handler"
+                        )
+                        handler = TraitInstance(default_value)
                         if default_value is handler.aClass:
-                            default_value = DefaultValues.get( default_value )
+                            default_value = DefaultValues.get(default_value)
             else:
-                enum  = []
+                enum = []
                 other = []
-                map   = {}
-                self.do_list( value_type, enum, map, other )
+                map = {}
+                self.do_list(value_type, enum, map, other)
 
-                if (((len( enum )  == 1) and (enum[0] is None)) and
-                    ((len( other ) == 1) and
-                     isinstance( other[0], TraitInstance ))):
+                if ((len(enum) == 1) and (enum[0] is None)) and (
+                    (len(other) == 1) and isinstance(other[0], TraitInstance)
+                ):
                     enum = []
                     other[0].allow_none()
-                    metadata.setdefault( 'instance_handler',
-                                         '_instance_changed_handler' )
-                if len( enum ) > 0:
-                    if (((len( map ) + len( other )) == 0) and
-                        (default_value not in enum)):
-                        enum.insert( 0, default_value )
+                    metadata.setdefault(
+                        "instance_handler", "_instance_changed_handler"
+                    )
+                if len(enum) > 0:
+                    if ((len(map) + len(other)) == 0) and (
+                        default_value not in enum
+                    ):
+                        enum.insert(0, default_value)
 
-                    other.append( TraitEnum( enum ) )
+                    other.append(TraitEnum(enum))
 
-                if len( map ) > 0:
-                    other.append( TraitMap( map ) )
+                if len(map) > 0:
+                    other.append(TraitMap(map))
 
-                if len( other ) == 0:
+                if len(other) == 0:
                     handler = TraitHandler()
 
-                elif len( other ) == 1:
+                elif len(other) == 1:
                     handler = other[0]
-                    if isinstance( handler, CTrait ):
+                    if isinstance(handler, CTrait):
                         clone, handler = handler, None
-                        metadata[ 'type' ] = clone.type
+                        metadata["type"] = clone.type
 
-                    elif isinstance( handler, TraitInstance ):
-                        metadata.setdefault( 'instance_handler',
-                                             '_instance_changed_handler' )
+                    elif isinstance(handler, TraitInstance):
+                        metadata.setdefault(
+                            "instance_handler", "_instance_changed_handler"
+                        )
 
                         if default_value is None:
                             handler.allow_none()
 
-                        elif isinstance( default_value, _InstanceArgs ):
+                        elif isinstance(default_value, _InstanceArgs):
                             default_value_type = (
-                                CALLABLE_AND_ARGS_DEFAULT_VALUE)
-                            default_value = ( handler.create_default_value,
-                                default_value.args, default_value.kw )
+                                CALLABLE_AND_ARGS_DEFAULT_VALUE
+                            )
+                            default_value = (
+                                handler.create_default_value,
+                                default_value.args,
+                                default_value.kw,
+                            )
 
-                        elif (len( enum ) == 0) and (len( map ) == 0):
-                            aClass    = handler.aClass
-                            typeValue = type( default_value )
+                        elif (len(enum) == 0) and (len(map) == 0):
+                            aClass = handler.aClass
+                            typeValue = type(default_value)
 
                             if typeValue is dict:
                                 default_value_type = (
-                                    CALLABLE_AND_ARGS_DEFAULT_VALUE)
-                                default_value = ( aClass, (), default_value )
-                            elif not isinstance( default_value, aClass ):
+                                    CALLABLE_AND_ARGS_DEFAULT_VALUE
+                                )
+                                default_value = (aClass, (), default_value)
+                            elif not isinstance(default_value, aClass):
                                 if typeValue is not tuple:
-                                    default_value = ( default_value, )
+                                    default_value = (default_value,)
                                 default_value_type = (
-                                    CALLABLE_AND_ARGS_DEFAULT_VALUE)
-                                default_value = ( aClass, default_value, None )
+                                    CALLABLE_AND_ARGS_DEFAULT_VALUE
+                                )
+                                default_value = (aClass, default_value, None)
                 else:
-                    for i, item in enumerate( other ):
-                        if isinstance( item, CTrait ):
-                            if item.type != 'trait':
-                                raise TraitError("Cannot create a complex "
-                                    "trait containing %s trait." %
-                                    add_article( item.type ) )
+                    for i, item in enumerate(other):
+                        if isinstance(item, CTrait):
+                            if item.type != "trait":
+                                raise TraitError(
+                                    "Cannot create a complex "
+                                    "trait containing %s trait."
+                                    % add_article(item.type)
+                                )
                             handler = item.handler
                             if handler is None:
                                 break
                             other[i] = handler
                     else:
-                        handler = TraitCompound( other )
+                        handler = TraitCompound(other)
 
         # Save the results:
         self.handler = handler
-        self.clone   = clone
+        self.clone = clone
 
         if default_value_type < 0:
-            if isinstance( default_value, Default ):
+            if isinstance(default_value, Default):
                 default_value_type = CALLABLE_AND_ARGS_DEFAULT_VALUE
-                default_value      = default_value.default_value
+                default_value = default_value.default_value
             else:
                 if (handler is None) and (clone is not None):
                     handler = clone.handler
@@ -993,117 +1091,127 @@ class _TraitMaker ( object ):
                     default_value_type = handler.default_value_type
                     if default_value_type < 0:
                         try:
-                            default_value = handler.validate( None, '',
-                                                              default_value )
+                            default_value = handler.validate(
+                                None, "", default_value
+                            )
                         except:
                             pass
 
                 if default_value_type < 0:
-                    default_value_type = _default_value_type( default_value )
+                    default_value_type = _default_value_type(default_value)
 
         self.default_value_type = default_value_type
-        self.default_value      = default_value
-        self.metadata           = metadata.copy()
+        self.default_value = default_value
+        self.metadata = metadata.copy()
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Determine the correct TraitHandler for each item in a list:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def do_list ( self, list, enum, map, other ):
+    def do_list(self, list, enum, map, other):
         for item in list:
             if item in PythonTypes:
-                other.append( TraitCoerceType( item ) )
+                other.append(TraitCoerceType(item))
             else:
-                item     = try_trait_cast( item )
-                typeItem = type( item )
+                item = try_trait_cast(item)
+                typeItem = type(item)
 
                 if typeItem in ConstantTypes:
-                    enum.append( item )
+                    enum.append(item)
 
                 elif typeItem in SequenceTypes:
-                    self.do_list( item, enum, map, other )
+                    self.do_list(item, enum, map, other)
 
                 elif typeItem is dict:
-                    map.update( item )
+                    map.update(item)
 
                 elif typeItem in CallableTypes:
-                    other.append( TraitFunction( item ) )
+                    other.append(TraitFunction(item))
 
                 elif item is ThisClass:
-                    other.append( ThisClass() )
+                    other.append(ThisClass())
 
-                elif isinstance( item, TraitTypes ):
-                    other.append( item )
+                elif isinstance(item, TraitTypes):
+                    other.append(item)
 
                 else:
-                    other.append( TraitInstance( item ) )
+                    other.append(TraitInstance(item))
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns a properly initialized 'CTrait' instance:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def as_ctrait ( self ):
+    def as_ctrait(self):
         metadata = self.metadata
-        trait    = CTrait( self.type_map.get( metadata.get( 'type' ), 0 ) )
-        clone    = self.clone
+        trait = CTrait(self.type_map.get(metadata.get("type"), 0))
+        clone = self.clone
         if clone is not None:
-            trait.clone( clone )
+            trait.clone(clone)
             if clone.__dict__ is not None:
                 trait.__dict__ = clone.__dict__.copy()
 
-        trait.default_value( self.default_value_type, self.default_value )
+        trait.default_value(self.default_value_type, self.default_value)
 
         handler = self.handler
         if handler is not None:
             trait.handler = handler
-            validate      = getattr( handler, 'fast_validate', None )
+            validate = getattr(handler, "fast_validate", None)
             if validate is None:
                 validate = handler.validate
-            trait.set_validate( validate )
+            trait.set_validate(validate)
 
-            post_setattr = getattr( handler, 'post_setattr', None )
+            post_setattr = getattr(handler, "post_setattr", None)
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
-                trait.is_mapped( handler.is_mapped )
+                trait.is_mapped(handler.is_mapped)
 
         # Note: The use of 'rich_compare' metadata is deprecated; use
         # 'comparison_mode' metadata instead:
-        rich_compare = metadata.get( 'rich_compare' )
+        rich_compare = metadata.get("rich_compare")
         if rich_compare is not None:
-            trait.rich_comparison( rich_compare is True )
+            trait.rich_comparison(rich_compare is True)
 
-        comparison_mode = metadata.get( 'comparison_mode' )
+        comparison_mode = metadata.get("comparison_mode")
         if comparison_mode is not None:
-            trait.comparison_mode( comparison_mode )
+            trait.comparison_mode(comparison_mode)
 
-        trait.value_allowed( metadata.get( 'trait_value', False ) is True )
+        trait.value_allowed(metadata.get("trait_value", False) is True)
 
-        if len( metadata ) > 0:
+        if len(metadata) > 0:
             if trait.__dict__ is None:
                 trait.__dict__ = metadata
             else:
-                trait.__dict__.update( metadata )
+                trait.__dict__.update(metadata)
 
         return trait
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Extract a set of keywords from a dictionary:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def extract ( self, from_dict, *keys ):
+    def extract(self, from_dict, *keys):
         to_dict = {}
         for key in keys:
             if key in from_dict:
-                to_dict[ key ] = from_dict[ key ]
-                del from_dict[ key ]
+                to_dict[key] = from_dict[key]
+                del from_dict[key]
         return to_dict
 
-#-------------------------------------------------------------------------------
-#  Factory function for creating C-based trait properties:
-#-------------------------------------------------------------------------------
 
-def Property ( fget = None, fset = None, fvalidate = None, force = False,
-               handler = None, trait = None, **metadata ):
+# -------------------------------------------------------------------------------
+#  Factory function for creating C-based trait properties:
+# -------------------------------------------------------------------------------
+
+
+def Property(
+    fget=None,
+    fset=None,
+    fvalidate=None,
+    force=False,
+    handler=None,
+    trait=None,
+    **metadata
+):
     """ Returns a trait whose value is a Python property.
 
     Parameters
@@ -1163,37 +1271,37 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
     For details of the extended trait name syntax, refer to the on_trait_change()
     method of the HasTraits class.
     """
-    metadata[ 'type' ] = 'property'
+    metadata["type"] = "property"
 
     # If no parameters specified, must be a forward reference (if not forced):
     if (not force) and (fset is None):
-        sum = ((fget      is not None) +
-               (fvalidate is not None) +
-               (trait     is not None))
+        sum = (
+            (fget is not None) + (fvalidate is not None) + (trait is not None)
+        )
         if sum <= 1:
             if sum == 0:
-                return ForwardProperty( metadata )
+                return ForwardProperty(metadata)
 
             handler = None
             if fget is not None:
                 trait = fget
 
             if trait is not None:
-                trait = trait_cast( trait )
+                trait = trait_cast(trait)
                 if trait is not None:
                     fvalidate = handler = trait.handler
                     if fvalidate is not None:
                         fvalidate = handler.validate
 
             if (fvalidate is not None) or (trait is not None):
-                if 'editor' not in metadata:
+                if "editor" not in metadata:
                     if (trait is not None) and (trait.editor is not None):
-                        metadata[ 'editor' ] = trait.editor
+                        metadata["editor"] = trait.editor
 
-                return ForwardProperty( metadata, fvalidate, handler )
+                return ForwardProperty(metadata, fvalidate, handler)
 
     if fget is None:
-        metadata[ 'transient' ] = True
+        metadata["transient"] = True
         if fset is None:
             fget = _undefined_get
             fset = _undefined_set
@@ -1202,85 +1310,90 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
 
     elif fset is None:
         fset = _read_only
-        metadata[ 'transient' ] = True
+        metadata["transient"] = True
 
     if trait is not None:
-        trait   = trait_cast( trait )
+        trait = trait_cast(trait)
         handler = trait.handler
         if (fvalidate is None) and (handler is not None):
             fvalidate = handler.validate
 
-        if ('editor' not in metadata) and (trait.editor is not None):
-            metadata[ 'editor' ] = trait.editor
+        if ("editor" not in metadata) and (trait.editor is not None):
+            metadata["editor"] = trait.editor
 
-    metadata.setdefault( 'depends_on', getattr( fget, 'depends_on', None ) )
-    if ((metadata.get( 'depends_on' ) is not None) and
-         getattr( fget, 'cached_property', False )):
-        metadata.setdefault( 'cached', True )
+    metadata.setdefault("depends_on", getattr(fget, "depends_on", None))
+    if (metadata.get("depends_on") is not None) and getattr(
+        fget, "cached_property", False
+    ):
+        metadata.setdefault("cached", True)
 
-    n     = 0
-    trait = CTrait( 4 )
+    n = 0
+    trait = CTrait(4)
     trait.__dict__ = metadata.copy()
     if fvalidate is not None:
-        n = _arg_count( fvalidate )
+        n = _arg_count(fvalidate)
 
-    trait.property( fget,      _arg_count( fget ),
-                    fset,      _arg_count( fset ),
-                    fvalidate, n )
+    trait.property(
+        fget, _arg_count(fget), fset, _arg_count(fset), fvalidate, n
+    )
     trait.handler = handler
 
     return trait
 
-Property = TraitFactory( Property )
 
-class ForwardProperty ( object ):
+Property = TraitFactory(Property)
+
+
+class ForwardProperty(object):
     """ Used to implement Property traits where accessor functions are defined
     implicitly on the class.
     """
-    def __init__ ( self, metadata, validate = None, handler = None ):
+
+    def __init__(self, metadata, validate=None, handler=None):
         self.metadata = metadata.copy()
         self.validate = validate
-        self.handler  = handler
+        self.handler = handler
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Dictionary used to handle return type mapping special cases:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 SpecialNames = {
-###   'int':     trait_factory( Int ),
-###   'long':    trait_factory( Long ),
-###   'float':   trait_factory( Float ),
-###   'complex': trait_factory( Complex ),
-###   'str':     trait_factory( Str ),
-###   'unicode': trait_factory( Unicode ),
-###   'bool':    trait_factory( Bool ),
-###   'list':    trait_factory( List ),
-###   'tuple':   trait_factory( Tuple ),
-###   'dict':    trait_factory( Dict )
+    ###   'int':     trait_factory( Int ),
+    ###   'long':    trait_factory( Long ),
+    ###   'float':   trait_factory( Float ),
+    ###   'complex': trait_factory( Complex ),
+    ###   'str':     trait_factory( Str ),
+    ###   'unicode': trait_factory( Unicode ),
+    ###   'bool':    trait_factory( Bool ),
+    ###   'list':    trait_factory( List ),
+    ###   'tuple':   trait_factory( Tuple ),
+    ###   'dict':    trait_factory( Dict )
 }
 
 
-#-- Date Trait definition ----------------------------------------------------
-#Date = Instance(datetime.date, metadata = { 'editor': date_editor })
+# -- Date Trait definition ----------------------------------------------------
+# Date = Instance(datetime.date, metadata = { 'editor': date_editor })
 
 
-#-- Time Trait definition ----------------------------------------------------
-#Time = Instance(datetime.time, metadata = { 'editor': time_editor })
+# -- Time Trait definition ----------------------------------------------------
+# Time = Instance(datetime.time, metadata = { 'editor': time_editor })
 
 
-
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Create predefined, reusable trait instances:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 # Generic trait with 'object' behavior:
-generic_trait = CTrait( 8 )
+generic_trait = CTrait(8)
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  User interface related color and font traits:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def Color ( *args, **metadata ):
+
+def Color(*args, **metadata):
     """ Returns a trait whose value must be a GUI toolkit-specific color.
 
     Description
@@ -1298,11 +1411,13 @@ def Color ( *args, **metadata ):
     """
     from traitsui.toolkit_traits import ColorTrait
 
-    return ColorTrait( *args, **metadata )
+    return ColorTrait(*args, **metadata)
 
-Color = TraitFactory( Color )
 
-def RGBColor ( *args, **metadata ):
+Color = TraitFactory(Color)
+
+
+def RGBColor(*args, **metadata):
     """ Returns a trait whose value must be a GUI toolkit-specific RGB-based
         color.
 
@@ -1322,11 +1437,13 @@ def RGBColor ( *args, **metadata ):
     """
     from traitsui.toolkit_traits import RGBColorTrait
 
-    return RGBColorTrait( *args, **metadata )
+    return RGBColorTrait(*args, **metadata)
 
-RGBColor = TraitFactory( RGBColor )
 
-def Font ( *args, **metadata ):
+RGBColor = TraitFactory(RGBColor)
+
+
+def Font(*args, **metadata):
     """ Returns a trait whose value must be a GUI toolkit-specific font.
 
     Description
@@ -1344,6 +1461,7 @@ def Font ( *args, **metadata ):
     """
     from traitsui.toolkit_traits import FontTrait
 
-    return FontTrait( *args, **metadata )
+    return FontTrait(*args, **metadata)
 
-Font = TraitFactory( Font )
+
+Font = TraitFactory(Font)

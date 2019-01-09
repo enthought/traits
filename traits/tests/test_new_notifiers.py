@@ -31,18 +31,18 @@ class TestNewNotifiers(unittest.TestCase):
             notifications.append(event)
 
         obj = Foo()
-        obj.on_trait_change(on_foo_notifications, 'foo', dispatch='new')
+        obj.on_trait_change(on_foo_notifications, "foo", dispatch="new")
 
         obj.foo = 3
         # Wait for a while to make sure the notification has finished.
         time.sleep(0.1)
 
         self.assertEqual(len(notifications), 1)
-        self.assertEqual(notifications[0][1:], (obj, 'foo', 0, 3))
+        self.assertEqual(notifications[0][1:], (obj, "foo", 0, 3))
 
         this_thread_id = threading.current_thread().ident
         self.assertNotEqual(this_thread_id, notifications[0][0])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

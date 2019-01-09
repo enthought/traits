@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
@@ -13,14 +13,14 @@
 #  Author: David C. Morrill
 #  Date:   12/13/2004
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 """ Trait definitions related to the numpy library.
 """
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Imports:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
@@ -31,45 +31,55 @@ from .trait_errors import TraitError
 from .trait_handlers import TraitType, OBJECT_IDENTITY_COMPARE
 from .trait_types import Str, Any, Int as TInt, Float as TFloat
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Deferred imports from numpy:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 ndarray = None
 asarray = None
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  numpy dtype mapping:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def dtype2trait ( dtype ):
+
+def dtype2trait(dtype):
     """ Get the corresponding trait for a numpy dtype.
     """
 
     import numpy
 
-    if dtype.char in numpy.typecodes['Float']:
+    if dtype.char in numpy.typecodes["Float"]:
         return TFloat
 
-    elif dtype.char in numpy.typecodes['AllInteger']:
+    elif dtype.char in numpy.typecodes["AllInteger"]:
         return TInt
 
-    elif dtype.char[0] == 'S':
+    elif dtype.char[0] == "S":
         return Str
 
     else:
         return Any
 
-#-------------------------------------------------------------------------------
-#  'AbstractArray' trait base class:
-#-------------------------------------------------------------------------------
 
-class AbstractArray ( TraitType ):
+# -------------------------------------------------------------------------------
+#  'AbstractArray' trait base class:
+# -------------------------------------------------------------------------------
+
+
+class AbstractArray(TraitType):
     """ Abstract base class for defining numpy-based arrays.
     """
 
-    def __init__ ( self, dtype = None, shape = None, value = None,
-                         coerce = False, typecode = None, **metadata ):
+    def __init__(
+        self,
+        dtype=None,
+        shape=None,
+        value=None,
+        coerce=False,
+        typecode=None,
+        **metadata
+    ):
         """ Returns an AbstractArray trait.
         """
         global ndarray, asarray
@@ -77,44 +87,62 @@ class AbstractArray ( TraitType ):
         try:
             import numpy
         except ImportError:
-            raise TraitError( "Using Array or CArray trait types requires the "
-                              "numpy package to be installed." )
+            raise TraitError(
+                "Using Array or CArray trait types requires the "
+                "numpy package to be installed."
+            )
 
         from numpy import asarray, ndarray
 
         # Mark this as being an 'array' trait:
-        metadata[ 'array' ] = True
+        metadata["array"] = True
 
         # Normally use object identity to detect array values changing:
-        metadata.setdefault( 'comparison_mode', OBJECT_IDENTITY_COMPARE )
+        metadata.setdefault("comparison_mode", OBJECT_IDENTITY_COMPARE)
 
         if typecode is not None:
-            warnings.warn( 'typecode is a deprecated argument; use dtype '
-                           'instead', DeprecationWarning )
+            warnings.warn(
+                "typecode is a deprecated argument; use dtype " "instead",
+                DeprecationWarning,
+            )
 
             if (dtype is not None) and (dtype != typecode):
-                raise TraitError( 'Inconsistent usage of the dtype and '
-                                  'typecode arguments; use dtype alone.' )
+                raise TraitError(
+                    "Inconsistent usage of the dtype and "
+                    "typecode arguments; use dtype alone."
+                )
             else:
                 dtype = typecode
 
         if dtype is not None:
             try:
                 # Convert the argument into an actual numpy dtype object:
-                dtype = numpy.dtype( dtype )
+                dtype = numpy.dtype(dtype)
             except TypeError:
-                raise TraitError( 'could not convert %r to a numpy dtype' %
-                                  dtype )
+                raise TraitError(
+                    "could not convert %r to a numpy dtype" % dtype
+                )
 
         if shape is not None:
-            if isinstance( shape, SequenceTypes ):
+            if isinstance(shape, SequenceTypes):
                 for item in shape:
-                    if ((item is None) or (type( item ) is int) or
-                        (isinstance( item, SequenceTypes ) and
-                         (len( item ) == 2) and
-                         (type( item[0] ) is int) and (item[0] >= 0) and
-                         ((item[1] is None) or ((type( item[1] ) is int) and
-                           (item[0] <= item[1]))))):
+                    if (
+                        (item is None)
+                        or (type(item) is int)
+                        or (
+                            isinstance(item, SequenceTypes)
+                            and (len(item) == 2)
+                            and (type(item[0]) is int)
+                            and (item[0] >= 0)
+                            and (
+                                (item[1] is None)
+                                or (
+                                    (type(item[1]) is int)
+                                    and (item[0] <= item[1])
+                                )
+                            )
+                        )
+                    ):
                         continue
 
                     raise TraitError("shape should be a list or tuple")
@@ -122,36 +150,35 @@ class AbstractArray ( TraitType ):
                 raise TraitError("shape should be a list or tuple")
 
         if value is None:
-            value = self._default_for_dtype_and_shape( dtype, shape )
+            value = self._default_for_dtype_and_shape(dtype, shape)
 
-        self.dtype  = dtype
-        self.shape  = shape
+        self.dtype = dtype
+        self.shape = shape
         self.coerce = coerce
 
-        super( AbstractArray, self ).__init__( value, **metadata )
+        super(AbstractArray, self).__init__(value, **metadata)
 
-    def validate ( self, object, name, value ):
+    def validate(self, object, name, value):
         """ Validates that the value is a valid array.
         """
         try:
             # Make sure the value is an array:
-            type_value = type( value )
-            if not isinstance( value, ndarray ):
-                if not isinstance( value, SequenceTypes ):
-                    self.error( object, name, value )
+            type_value = type(value)
+            if not isinstance(value, ndarray):
+                if not isinstance(value, SequenceTypes):
+                    self.error(object, name, value)
                 if self.dtype is not None:
-                    value = asarray( value, self.dtype )
+                    value = asarray(value, self.dtype)
                 else:
-                    value = asarray( value )
+                    value = asarray(value)
 
             # Make sure the array is of the right type:
-            if ((self.dtype is not None) and
-                (value.dtype != self.dtype)):
+            if (self.dtype is not None) and (value.dtype != self.dtype):
                 if self.coerce:
-                    value = value.astype( self.dtype )
+                    value = value.astype(self.dtype)
                 else:
                     # XXX: this also coerces.
-                    value = asarray( value, self.dtype )
+                    value = asarray(value, self.dtype)
 
             # If no shape requirements, then return the value:
             trait_shape = self.shape
@@ -160,48 +187,49 @@ class AbstractArray ( TraitType ):
 
             # Else make sure that the value's shape is compatible:
             value_shape = value.shape
-            if len( trait_shape ) == len( value_shape ):
-                for i, dim in enumerate( value_shape ):
+            if len(trait_shape) == len(value_shape):
+                for i, dim in enumerate(value_shape):
                     item = trait_shape[i]
                     if item is not None:
-                        if type( item ) is int:
+                        if type(item) is int:
                             if dim != item:
                                 break
-                        elif ((dim < item[0]) or
-                              ((item[1] is not None) and (dim > item[1]))):
+                        elif (dim < item[0]) or (
+                            (item[1] is not None) and (dim > item[1])
+                        ):
                             break
                 else:
                     return value
         except:
             pass
 
-        self.error( object, name, value )
+        self.error(object, name, value)
 
-    def info ( self ):
+    def info(self):
         """ Returns descriptive information about the trait.
         """
-        dtype = shape = ''
+        dtype = shape = ""
 
         if self.shape is not None:
             shape = []
             for item in self.shape:
                 if item is None:
-                    item = '*'
-                elif type( item ) is not int:
+                    item = "*"
+                elif type(item) is not int:
                     if item[1] is None:
-                        item = '%d..' % item[0]
+                        item = "%d.." % item[0]
                     else:
-                        item = '%d..%d' % item
-                shape.append( item )
-            shape = ' with shape %s' % ( tuple( shape ), )
+                        item = "%d..%d" % item
+                shape.append(item)
+            shape = " with shape %s" % (tuple(shape),)
 
         if self.dtype is not None:
             # FIXME: restore nicer descriptions of dtypes.
-            dtype = ' of %s values' % self.dtype
+            dtype = " of %s values" % self.dtype
 
-        return 'an array%s%s' % ( dtype, shape )
+        return "an array%s%s" % (dtype, shape)
 
-    def create_editor ( self ):
+    def create_editor(self):
         """ Returns the default UI editor for the trait.
         """
         editor = None
@@ -211,39 +239,48 @@ class AbstractArray ( TraitType ):
             auto_set = True
         enter_set = self.enter_set or False
 
-        if self.shape is not None and len( self.shape ) == 2:
+        if self.shape is not None and len(self.shape) == 2:
             from traitsui.api import ArrayEditor
-            editor = ArrayEditor( auto_set=auto_set, enter_set=enter_set )
+
+            editor = ArrayEditor(auto_set=auto_set, enter_set=enter_set)
         else:
             from traitsui.api import TupleEditor
 
             if self.dtype is None:
                 types = Any
             else:
-                types = dtype2trait( self.dtype )
-            editor = TupleEditor( types     = types,
-                                  labels    = self.labels or [],
-                                  cols      = self.cols or 1,
-                                  auto_set  = auto_set,
-                                  enter_set = enter_set  )
+                types = dtype2trait(self.dtype)
+            editor = TupleEditor(
+                types=types,
+                labels=self.labels or [],
+                cols=self.cols or 1,
+                auto_set=auto_set,
+                enter_set=enter_set,
+            )
         return editor
 
-    #-- Private Methods --------------------------------------------------------
+    # -- Private Methods --------------------------------------------------------
 
-    def get_default_value ( self ):
+    def get_default_value(self):
         """ Returns the default value constructor for the type (called from the
             trait factory.
         """
-        return ( 7, ( self.copy_default_value,
-                 ( self.validate( None, None, self.default_value ), ), None ) )
+        return (
+            7,
+            (
+                self.copy_default_value,
+                (self.validate(None, None, self.default_value),),
+                None,
+            ),
+        )
 
-    def copy_default_value ( self, value ):
+    def copy_default_value(self, value):
         """ Returns a copy of the default value (called from the C code on
             first reference to a trait with no current value).
         """
         return value.copy()
 
-    def _default_for_dtype_and_shape ( self, dtype, shape ):
+    def _default_for_dtype_and_shape(self, dtype, shape):
         """ Invent a suitable default value for a given dtype and shape. """
         from numpy import zeros
 
@@ -253,31 +290,33 @@ class AbstractArray ( TraitType ):
         else:
             dt = dtype
         if shape is None:
-            value = zeros( ( 0, ), dt )
+            value = zeros((0,), dt)
         else:
             size = []
             for item in shape:
                 if item is None:
                     item = 1
-                elif type( item ) in SequenceTypes:
+                elif type(item) in SequenceTypes:
                     # Given a (minimum-allowed-length, maximum-allowed_length)
                     # pair for a particular axis, use the minimum.
                     item = item[0]
-                size.append( item )
-            value = zeros( size, dt )
+                size.append(item)
+            value = zeros(size, dt)
         return value
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  'Array' trait:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class Array ( AbstractArray ):
+
+class Array(AbstractArray):
     """ Defines a trait whose value must be a numpy array.
     """
 
-    def __init__ ( self, dtype = None, shape = None, value = None,
-                   typecode = None, **metadata ):
+    def __init__(
+        self, dtype=None, shape=None, value=None, typecode=None, **metadata
+    ):
         """ Returns an Array trait.
 
         Parameters
@@ -312,20 +351,24 @@ class Array ( AbstractArray ):
         right shape to the specified *dtype* (just like numpy's **array**
         does).
         """
-        super( Array, self ).__init__( dtype, shape, value, False,
-                                       typecode = typecode, **metadata )
+        super(Array, self).__init__(
+            dtype, shape, value, False, typecode=typecode, **metadata
+        )
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  'CArray' trait:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class CArray ( AbstractArray ):
+
+class CArray(AbstractArray):
     """ Defines a trait whose value must be a numpy array, with casting
         allowed.
     """
 
-    def __init__ ( self, dtype = None, shape = None, value = None,
-                   typecode = None, **metadata ):
+    def __init__(
+        self, dtype=None, shape=None, value=None, typecode=None, **metadata
+    ):
         """ Returns a CArray trait.
 
         Parameters
@@ -360,37 +403,46 @@ class CArray ( AbstractArray ):
         lists of the right shape to the specified *dtype* (just like
         numpy's **array** does).
         """
-        super( CArray, self ).__init__( dtype, shape, value, True,
-                                        typecode = typecode, **metadata )
+        super(CArray, self).__init__(
+            dtype, shape, value, True, typecode=typecode, **metadata
+        )
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  'ArrayOrNone' trait
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class ArrayOrNone ( CArray ):
+
+class ArrayOrNone(CArray):
     """ A trait whose value may be either a NumPy array or None, with
         casting allowed.  The default is None.
     """
-    def __init__ ( self, *args, **metadata ):
-        # Normally use object identity to detect array values changing:
-        metadata.setdefault( 'comparison_mode', OBJECT_IDENTITY_COMPARE )
-        super( ArrayOrNone, self ).__init__( *args, **metadata )
 
-    def validate (self, object, name, value ):
+    def __init__(self, *args, **metadata):
+        # Normally use object identity to detect array values changing:
+        metadata.setdefault("comparison_mode", OBJECT_IDENTITY_COMPARE)
+        super(ArrayOrNone, self).__init__(*args, **metadata)
+
+    def validate(self, object, name, value):
         if value is None:
             return value
-        return super( ArrayOrNone, self ).validate( object, name, value )
+        return super(ArrayOrNone, self).validate(object, name, value)
 
-    def get_default_value ( self ):
+    def get_default_value(self):
         dv = self.default_value
         if dv is None:
-            return ( 0, dv )
+            return (0, dv)
         else:
-            return ( 7, ( self.copy_default_value,
-                          ( self.validate( None, None, dv ), ), None ) )
+            return (
+                7,
+                (
+                    self.copy_default_value,
+                    (self.validate(None, None, dv),),
+                    None,
+                ),
+            )
 
-    def _default_for_dtype_and_shape ( self, dtype, shape ):
+    def _default_for_dtype_and_shape(self, dtype, shape):
         # For ArrayOrNone, if no default is explicitly specified, we
         # always default to `None`.
         return None

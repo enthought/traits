@@ -14,22 +14,22 @@ from traits.api import HasTraits, Instance, Str
 
 
 class Shared(HasTraits):
-    s = Str('new instance of Shared')
+    s = Str("new instance of Shared")
 
 
 class Foo(HasTraits):
-    s = Str('new instance of Foo')
+    s = Str("new instance of Foo")
     shared = Instance(Shared)
 
 
 class Bar(HasTraits):
-    s = Str('new instance of Bar')
+    s = Str("new instance of Bar")
     foo = Instance(Foo)
     shared = Instance(Shared)
 
 
 class Baz(HasTraits):
-    s = Str('new instance of Baz')
+    s = Str("new instance of Baz")
     bar = Instance(Bar)
     shared = Instance(Shared)
 
@@ -37,27 +37,28 @@ class Baz(HasTraits):
 class CopyTraitsBase(unittest.TestCase):
     """ Validate that copy_traits
     """
+
     __test__ = False
 
     def setUp(self):
         super(CopyTraitsBase, self).setUp()
-        self.shared = Shared(s='shared')
-        self.foo = Foo(shared=self.shared, s='foo')
-        self.bar = Bar(shared=self.shared, foo=self.foo, s='bar')
-        self.baz = Baz(shared=self.shared, bar=self.bar, s='baz')
+        self.shared = Shared(s="shared")
+        self.foo = Foo(shared=self.shared, s="foo")
+        self.bar = Bar(shared=self.shared, foo=self.foo, s="bar")
+        self.baz = Baz(shared=self.shared, bar=self.bar, s="baz")
 
-        self.shared2 = Shared(s='shared2')
-        self.foo2 = Foo(shared=self.shared2, s='foo2')
-        self.bar2 = Bar(shared=self.shared2, foo=self.foo2, s='bar2')
-        self.baz2 = Baz(shared=self.shared2, bar=self.bar2, s='baz2')
+        self.shared2 = Shared(s="shared2")
+        self.foo2 = Foo(shared=self.shared2, s="foo2")
+        self.bar2 = Bar(shared=self.shared2, foo=self.foo2, s="bar2")
+        self.baz2 = Baz(shared=self.shared2, bar=self.bar2, s="baz2")
 
         return
 
     def set_shared_copy(self, value):
         """ Change the copy style for the 'shared' traits. """
-        self.foo.base_trait('shared').copy = value
-        self.bar.base_trait('shared').copy = value
-        self.baz.base_trait('shared').copy = value
+        self.foo.base_trait("shared").copy = value
+        self.bar.base_trait("shared").copy = value
+        self.baz.base_trait("shared").copy = value
 
 
 class TestCopyTraitsSetup(CopyTraitsBase):
@@ -81,23 +82,22 @@ class TestCopyTraitsSetup(CopyTraitsBase):
 
 
 class CopyTraits(object):
-
     def test_baz2_s(self):
-        self.assertEqual(self.baz2.s, 'baz')
+        self.assertEqual(self.baz2.s, "baz")
         self.assertEqual(self.baz2.s, self.baz.s)
 
     def test_baz2_bar_s(self):
-        self.assertEqual(self.baz2.bar.s, 'bar')
+        self.assertEqual(self.baz2.bar.s, "bar")
         self.assertEqual(self.baz2.bar.s, self.baz.bar.s)
 
     def test_baz2_bar_foo_s(self):
-        self.assertEqual(self.baz2.bar.foo.s, 'foo')
+        self.assertEqual(self.baz2.bar.foo.s, "foo")
         self.assertEqual(self.baz2.bar.foo.s, self.baz.bar.foo.s)
 
     def test_baz2_shared_s(self):
-        self.assertEqual(self.baz2.shared.s, 'shared')
-        self.assertEqual(self.baz2.bar.shared.s, 'shared')
-        self.assertEqual(self.baz2.bar.foo.shared.s, 'shared')
+        self.assertEqual(self.baz2.shared.s, "shared")
+        self.assertEqual(self.baz2.bar.shared.s, "shared")
+        self.assertEqual(self.baz2.bar.foo.shared.s, "shared")
 
     def test_baz2_bar(self):
         # First hand Instance trait is different and
@@ -163,24 +163,24 @@ class CopyTraitsSharedCopyNone(object):
         self.assertIsNot(self.baz2.shared, self.baz2.bar.foo.shared)
 
 
-class TestCopyTraitsSharedCopyNone(CopyTraits,
-                                   CopyTraitsSharedCopyNone):
+class TestCopyTraitsSharedCopyNone(CopyTraits, CopyTraitsSharedCopyNone):
     __test__ = False
 
     def setUp(self):
-        #super(TestCopyTraitsSharedCopyNone,self).setUp()
+        # super(TestCopyTraitsSharedCopyNone,self).setUp()
 
         # deep is the default value for Instance trait copy
-        self.set_shared_copy('deep')
+        self.set_shared_copy("deep")
         return
 
 
-class TestCopyTraitsCopyNotSpecified(CopyTraitsBase,
-                                     TestCopyTraitsSharedCopyNone):
+class TestCopyTraitsCopyNotSpecified(
+    CopyTraitsBase, TestCopyTraitsSharedCopyNone
+):
     __test__ = True
 
     def setUp(self):
-#        super(TestCopyTraitsCopyNotSpecified,self).setUp()
+        #        super(TestCopyTraitsCopyNotSpecified,self).setUp()
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
         self.baz2.copy_traits(self.baz)
@@ -191,10 +191,10 @@ class TestCopyTraitsCopyShallow(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
     __test__ = True
 
     def setUp(self):
-#        super(TestCopyTraitsCopyShallow,self).setUp()
+        #        super(TestCopyTraitsCopyShallow,self).setUp()
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
-        self.baz2.copy_traits(self.baz, copy='shallow')
+        self.baz2.copy_traits(self.baz, copy="shallow")
         return
 
 
@@ -202,10 +202,10 @@ class TestCopyTraitsCopyDeep(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
     __test__ = True
 
     def setUp(self):
-#        super(TestCopyTraitsCopyDeep,self).setUp()
+        #        super(TestCopyTraitsCopyDeep,self).setUp()
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
-        self.baz2.copy_traits(self.baz, copy='deep')
+        self.baz2.copy_traits(self.baz, copy="deep")
         return
 
 
@@ -235,21 +235,21 @@ class CopyTraitsSharedCopyRef(object):
         self.assertIs(self.baz2.shared, self.baz2.bar.foo.shared)
 
 
-class TestCopyTraitsSharedCopyRef(CopyTraits,
-                                  CopyTraitsSharedCopyRef):
+class TestCopyTraitsSharedCopyRef(CopyTraits, CopyTraitsSharedCopyRef):
     __test__ = False
 
     def setUp(self):
-        #super(TestCopyTraitsSharedCopyRef,self).setUp()
-        self.set_shared_copy('ref')
+        # super(TestCopyTraitsSharedCopyRef,self).setUp()
+        self.set_shared_copy("ref")
         return
 
 
 # The next three tests demonstrate that a 'ref' trait is always copied as a
 # reference regardless of the copy argument to copy_traits.  That is, shallow
 # and deep are indistinguishable.
-class TestCopyTraitsCopyNotSpecifiedSharedRef(CopyTraitsBase,
-                                              TestCopyTraitsSharedCopyRef):
+class TestCopyTraitsCopyNotSpecifiedSharedRef(
+    CopyTraitsBase, TestCopyTraitsSharedCopyRef
+):
     __test__ = True
 
     def setUp(self):
@@ -259,24 +259,28 @@ class TestCopyTraitsCopyNotSpecifiedSharedRef(CopyTraitsBase,
         return
 
 
-class TestCopyTraitsCopyShallowSharedRef(CopyTraitsBase,
-                                         TestCopyTraitsSharedCopyRef):
+class TestCopyTraitsCopyShallowSharedRef(
+    CopyTraitsBase, TestCopyTraitsSharedCopyRef
+):
     __test__ = True
 
     def setUp(self):
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyRef.setUp(self)
-        self.baz2.copy_traits(self.baz, copy='shallow')
+        self.baz2.copy_traits(self.baz, copy="shallow")
         return
 
 
-class TestCopyTraitsCopyDeepSharedRef(CopyTraitsBase,
-                                      TestCopyTraitsSharedCopyRef):
+class TestCopyTraitsCopyDeepSharedRef(
+    CopyTraitsBase, TestCopyTraitsSharedCopyRef
+):
     __test__ = True
 
     def setUp(self):
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyRef.setUp(self)
-        self.baz2.copy_traits(self.baz, copy='deep')
+        self.baz2.copy_traits(self.baz, copy="deep")
         return
+
+
 ### EOF

@@ -18,9 +18,9 @@ class TestDynamicTraitDefinition(unittest.TestCase):
 
     def test_add_trait(self):
         foo = Foo(x=3)
-        foo.add_trait('y', Int)
+        foo.add_trait("y", Int)
 
-        self.assertTrue(hasattr(foo, 'y'))
+        self.assertTrue(hasattr(foo, "y"))
         self.assertEqual(type(foo.y), int)
 
         foo.y = 4
@@ -31,16 +31,16 @@ class TestDynamicTraitDefinition(unittest.TestCase):
 
         # We can't remove a "statically" added trait (i.e., a trait defined
         # in the Foo class).
-        result = foo.remove_trait('x')
+        result = foo.remove_trait("x")
         self.assertFalse(result)
 
         # We can remove dynamically added traits.
-        foo.add_trait('y', Int)
+        foo.add_trait("y", Int)
         foo.y = 70
 
-        result = foo.remove_trait('y')
+        result = foo.remove_trait("y")
         self.assertTrue(result)
 
-        self.assertFalse(hasattr(foo, 'y'))
+        self.assertFalse(hasattr(foo, "y"))
         foo.y = 10
         self.assertEqual(foo.y_changes, [70])

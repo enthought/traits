@@ -20,11 +20,11 @@ from traits.trait_types import ValidatedTuple
 class Simple(HasStrictTraits):
 
     scalar_range = ValidatedTuple(
-        Int(0), Int(1), fvalidate=lambda x: x[0] < x[1])
+        Int(0), Int(1), fvalidate=lambda x: x[0] < x[1]
+    )
 
 
 class ValidatedTupleTestCase(TupleTestMixin, unittest.TestCase):
-
     def setUp(self):
         self.trait = ValidatedTuple
 
@@ -42,7 +42,6 @@ class ValidatedTupleTestCase(TupleTestMixin, unittest.TestCase):
             simple.scalar_range = (5, 2)
 
     def test_error_during_custom_validation(self):
-
         def fvalidate(x):
             if x == (5, 2):
                 raise RuntimeError()

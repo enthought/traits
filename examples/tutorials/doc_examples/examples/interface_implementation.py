@@ -3,30 +3,31 @@
 
 # interface_implementation.py - Example of implementing an interface
 
-#--[Imports]-------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 from __future__ import print_function
 from traits.api import HasTraits, implements, Str, Instance
 from interface_definition import IName
 
 
-#--[Code]----------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 class Person(HasTraits):
     implements(IName)
 
-    first_name = Str('John')
-    last_name = Str('Doe')
+    first_name = Str("John")
+    last_name = Str("Doe")
 
     # Implementation of the 'IName' interface:
     def get_name(self):
         """ Returns the name of an object. """
-        return ('%s %s' % (self.first_name, self.last_name))
+        return "%s %s" % (self.first_name, self.last_name)
 
 
-#--[Example*]------------------------------------------------------------------
+# --[Example*]------------------------------------------------------------------
 class Apartment(HasTraits):
     renter = Instance(IName)
 
-william = Person(first_name='William', last_name='Adams')
+
+william = Person(first_name="William", last_name="Adams")
 apt1 = Apartment(renter=william)
-print('Renter is: ', apt1.renter.get_name())
+print("Renter is: ", apt1.renter.get_name())
 # Result: Renter is: William Adams

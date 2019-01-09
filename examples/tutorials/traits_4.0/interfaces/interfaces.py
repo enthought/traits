@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-#--(Interfaces)----------------------------------------------------------------
+# --(Interfaces)----------------------------------------------------------------
 """
 Interfaces
 ==========
@@ -93,46 +93,45 @@ interfaces, such as::
 In this case, the value of the trait must be an object which is an instance of
 the specified class or one of its subclasses.
 """
-#--<Imports>-------------------------------------------------------------------
+# --<Imports>-------------------------------------------------------------------
 from __future__ import print_function
 from traits.api import *
 
 
-#--[IName Interface]-----------------------------------------------------------
+# --[IName Interface]-----------------------------------------------------------
 # Define the 'IName' interface:
 class IName(Interface):
-
     def get_name(self):
         """ Returns the name of an object. """
 
 
-#--[Person Class]--------------------------------------------------------------
+# --[Person Class]--------------------------------------------------------------
 class Person(HasTraits):
 
     implements(IName)
 
-    first_name = Str('John')
-    last_name = Str('Doe')
+    first_name = Str("John")
+    last_name = Str("Doe")
 
     # Implementation of the 'IName' interface:
     def get_name(self):
         """ Returns the name of an object. """
-        return ('%s %s' % (self.first_name, self.last_name))
+        return "%s %s" % (self.first_name, self.last_name)
 
 
-#--[Apartment Class]-----------------------------------------------------------
+# --[Apartment Class]-----------------------------------------------------------
 # Define a class using an object that implements the 'IName' interface:
 class Apartment(HasTraits):
 
     renter = Instance(IName)
 
 
-#--[Example*]------------------------------------------------------------------
+# --[Example*]------------------------------------------------------------------
 # Create an object implementing the 'IName' interface:
-william = Person(first_name='William', last_name='Adams')
+william = Person(first_name="William", last_name="Adams")
 
 # Create an apartment, and assign 'renter' an object implementing 'IName':
 apt = Apartment(renter=william)
 
 # Verify that the object works correctly:
-print('Renter is:', apt.renter.get_name())
+print("Renter is:", apt.renter.get_name())

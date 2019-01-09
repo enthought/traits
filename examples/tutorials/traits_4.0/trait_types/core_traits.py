@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-#--(Rewritten Core Traits)-----------------------------------------------------
+# --(Rewritten Core Traits)-----------------------------------------------------
 """
 Rewritten Core Traits
 =====================

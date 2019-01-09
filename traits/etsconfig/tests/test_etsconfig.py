@@ -1,6 +1,7 @@
 """ Tests the 'ETSConfig' configuration object. """
 
 from __future__ import print_function
+
 # Standard library imports.
 import contextlib
 import os
@@ -8,6 +9,7 @@ import shutil
 import sys
 import tempfile
 import time
+
 if sys.version_info[:2] == (2, 6):
     import unittest2 as unittest
 else:
@@ -57,12 +59,13 @@ def temporary_home_directory():
     """
     # Use the same recipe as in ETSConfig._initialize_application_data
     # to determine the home directory.
-    home_var = 'APPDATA' if sys.platform == 'win32' else 'HOME'
+    home_var = "APPDATA" if sys.platform == "win32" else "HOME"
 
     with temporary_directory() as temp_home:
         with restore_mapping_entry(os.environ, home_var):
             os.environ[home_var] = temp_home
             yield
+
 
 @contextlib.contextmanager
 def mock_sys_argv(args):
@@ -134,8 +137,8 @@ class ETSConfigTestCase(unittest.TestCase):
 
         old = self.ETSConfig.application_data
 
-        self.ETSConfig.application_data = 'foo'
-        self.assertEqual('foo', self.ETSConfig.application_data)
+        self.ETSConfig.application_data = "foo"
+        self.assertEqual("foo", self.ETSConfig.application_data)
 
         self.ETSConfig.application_data = old
         self.assertEqual(old, self.ETSConfig.application_data)
@@ -160,13 +163,13 @@ class ETSConfigTestCase(unittest.TestCase):
 
         """
 
-        self.ETSConfig.company = 'Blah'
+        self.ETSConfig.company = "Blah"
         dirname = self.ETSConfig.application_data
 
-        path = os.path.join(dirname, 'dummy.txt')
+        path = os.path.join(dirname, "dummy.txt")
         data = str(time.time())
 
-        f = open(path, 'w')
+        f = open(path, "w")
         f.write(data)
         f.close()
 
@@ -188,7 +191,7 @@ class ETSConfigTestCase(unittest.TestCase):
 
         """
 
-        self.assertEqual(self.ETSConfig.company, 'Enthought')
+        self.assertEqual(self.ETSConfig.company, "Enthought")
 
         return
 
@@ -200,8 +203,8 @@ class ETSConfigTestCase(unittest.TestCase):
 
         old = self.ETSConfig.company
 
-        self.ETSConfig.company = 'foo'
-        self.assertEqual('foo', self.ETSConfig.company)
+        self.ETSConfig.company = "foo"
+        self.assertEqual("foo", self.ETSConfig.company)
 
         self.ETSConfig.company = old
         self.assertEqual(old, self.ETSConfig.company)
@@ -221,36 +224,36 @@ class ETSConfigTestCase(unittest.TestCase):
         (dirname, app_name) = os.path.split(app_home)
 
         self.assertEqual(dirname, self.ETSConfig.application_data)
-        self.assertEqual(app_name, 'tests')
+        self.assertEqual(app_name, "tests")
 
     def test_toolkit_environ(self):
-        test_args = ['something']
-        test_environ = {'ETS_TOOLKIT': 'test'}
+        test_args = ["something"]
+        test_environ = {"ETS_TOOLKIT": "test"}
         with mock_sys_argv(test_args):
             with mock_os_environ(test_environ):
                 toolkit = self.ETSConfig.toolkit
 
-        self.assertEqual(toolkit, 'test')
+        self.assertEqual(toolkit, "test")
 
     def test_toolkit_environ_missing(self):
-        test_args = ['something']
+        test_args = ["something"]
         test_environ = {}
         with mock_sys_argv(test_args):
             with mock_os_environ(test_environ):
                 toolkit = self.ETSConfig.toolkit
 
-        self.assertEqual(toolkit, '')
+        self.assertEqual(toolkit, "")
 
     def test_set_toolkit(self):
         test_args = []
-        test_environ = {'ETS_TOOLKIT': 'test_environ'}
+        test_environ = {"ETS_TOOLKIT": "test_environ"}
 
         with mock_sys_argv(test_args):
             with mock_os_environ(test_environ):
-                self.ETSConfig.toolkit = 'test_direct'
+                self.ETSConfig.toolkit = "test_direct"
                 toolkit = self.ETSConfig.toolkit
 
-        self.assertEqual(toolkit, 'test_direct')
+        self.assertEqual(toolkit, "test_direct")
 
     def test_provisional_toolkit(self):
         test_args = []
@@ -259,24 +262,24 @@ class ETSConfigTestCase(unittest.TestCase):
         with mock_sys_argv(test_args):
             with mock_os_environ(test_environ):
                 print(repr(self.ETSConfig.toolkit))
-                with self.ETSConfig.provisional_toolkit('test_direct'):
+                with self.ETSConfig.provisional_toolkit("test_direct"):
                     toolkit = self.ETSConfig.toolkit
-                    self.assertEqual(toolkit, 'test_direct')
+                    self.assertEqual(toolkit, "test_direct")
 
         # should stay set, since no exception raised
         toolkit = self.ETSConfig.toolkit
-        self.assertEqual(toolkit, 'test_direct')
+        self.assertEqual(toolkit, "test_direct")
 
     def test_provisional_toolkit_exception(self):
         test_args = []
-        test_environ = {'ETS_TOOLKIT': ''}
+        test_environ = {"ETS_TOOLKIT": ""}
 
         with mock_sys_argv(test_args):
             with mock_os_environ(test_environ):
                 try:
-                    with self.ETSConfig.provisional_toolkit('test_direct'):
+                    with self.ETSConfig.provisional_toolkit("test_direct"):
                         toolkit = self.ETSConfig.toolkit
-                        self.assertEqual(toolkit, 'test_direct')
+                        self.assertEqual(toolkit, "test_direct")
                         raise ETSToolkitError("Test exception")
                 except ETSToolkitError as exc:
                     if not exc.message == "Test exception":
@@ -284,21 +287,21 @@ class ETSConfigTestCase(unittest.TestCase):
 
                 # should be reset, since exception raised
                 toolkit = self.ETSConfig.toolkit
-                self.assertEqual(toolkit, '')
+                self.assertEqual(toolkit, "")
 
     def test_provisional_toolkit_already_set(self):
         test_args = []
-        test_environ = {'ETS_TOOLKIT': 'test_environ'}
+        test_environ = {"ETS_TOOLKIT": "test_environ"}
 
         with mock_sys_argv(test_args):
             with mock_os_environ(test_environ):
                 with self.assertRaises(ETSToolkitError):
-                    with self.ETSConfig.provisional_toolkit('test_direct'):
+                    with self.ETSConfig.provisional_toolkit("test_direct"):
                         pass
 
                 # should come from the environment
                 toolkit = self.ETSConfig.toolkit
-                self.assertEqual(toolkit, 'test_environ')
+                self.assertEqual(toolkit, "test_environ")
 
     def test_user_data(self):
         """
@@ -321,8 +324,8 @@ class ETSConfigTestCase(unittest.TestCase):
 
         old = self.ETSConfig.user_data
 
-        self.ETSConfig.user_data = 'foo'
-        self.assertEqual('foo', self.ETSConfig.user_data)
+        self.ETSConfig.user_data = "foo"
+        self.assertEqual("foo", self.ETSConfig.user_data)
 
         self.ETSConfig.user_data = old
         self.assertEqual(old, self.ETSConfig.user_data)
@@ -346,13 +349,13 @@ class ETSConfigTestCase(unittest.TestCase):
 
         """
 
-        self.ETSConfig.company = 'Blah'
+        self.ETSConfig.company = "Blah"
         dirname = self.ETSConfig.user_data
 
-        path = os.path.join(dirname, 'dummy.txt')
+        path = os.path.join(dirname, "dummy.txt")
         data = str(time.time())
 
-        f = open(path, 'w')
+        f = open(path, "w")
         f.write(data)
         f.close()
 
@@ -370,12 +373,12 @@ class ETSConfigTestCase(unittest.TestCase):
 
 
 # For running as an individual set of tests.
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     # Add the non-default test of application_home...non-default because it
     # must be run using this module as a script to be valid.
     suite = unittest.TestLoader().loadTestsFromTestCase(ETSConfigTestCase)
-    suite.addTest(ETSConfigTestCase('_test_default_application_home'))
+    suite.addTest(ETSConfigTestCase("_test_default_application_home"))
 
     unittest.TextTestRunner(verbosity=2).run(suite)
 

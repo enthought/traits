@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 """
 Tests for Dict items_changed events
@@ -25,6 +25,7 @@ from traits.api import HasTraits, Dict
 
 class MyClass(HasTraits):
     """ A dummy HasTraits class with a Dict """
+
     d = Dict({"a": "apple", "b": "banana", "c": "cherry", "d": "durian"})
 
     def __init__(self, callback):
@@ -40,6 +41,7 @@ class MyClass(HasTraits):
 
 class MyOtherClass(HasTraits):
     """ A dummy HasTraits class with a Dict """
+
     d = Dict({"a": "apple", "b": "banana", "c": "cherry", "d": "durian"})
 
 
@@ -47,6 +49,7 @@ class Callback:
     """
     A stateful callback that gets initialized with the values to check for
     """
+
     def __init__(self, obj, added={}, changed={}, removed={}):
         self.obj = obj
         self.added = added
@@ -67,7 +70,6 @@ class Callback:
 
 
 class DictEventTestCase(unittest.TestCase):
-
     def test_setitem(self):
         # overwriting an existing item
         cb = Callback(self, changed={"c": "cherry"})

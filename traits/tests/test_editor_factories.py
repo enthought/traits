@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2017, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """
 Tests for Editor factories.
 
@@ -18,6 +18,7 @@ Tests for Editor factories.
 
 try:
     import traitsui
+
     HAS_TRAITSUI = True
 except ImportError:
     HAS_TRAITSUI = False

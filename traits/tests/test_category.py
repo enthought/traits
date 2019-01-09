@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: David C. Morrill
 # Description: <Traits component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
@@ -30,6 +30,8 @@ class BaseExtra(Category, Base):
 
 class BasePlus(Category, Base):
     p = Str("BasePlus p")
+
+
 #   z = Str("BasePlus z")    overrides not allowed.
 
 
@@ -70,8 +72,10 @@ class CategoryTestCase(unittest.TestCase):
         """
         try:
             x = self.base.pp
-            self.fail(msg="base.pp should have thrown AttributeError "
-                          "as Category subclassing is not supported.")
+            self.fail(
+                msg="base.pp should have thrown AttributeError "
+                "as Category subclassing is not supported."
+            )
         except AttributeError:
             pass
 
@@ -86,22 +90,26 @@ class CategoryTestCase(unittest.TestCase):
         Seems like the declaration of the subclass (BasePlusPlus) should fail.
         """
         bpp = BasePlusPlus()
-        self.assertEqual(bpp.pp, "BasePlusPlus pp",
-                         msg="pp != 'BasePlusPlus pp'")
+        self.assertEqual(
+            bpp.pp, "BasePlusPlus pp", msg="pp != 'BasePlusPlus pp'"
+        )
 
         try:
             self.assertEqual(bpp.p, "BasePlus p", msg="p != 'BasePlus p'")
-            self.fail(msg="bpp.p should have thrown SystemError as "
-                          "instantiating a subclass of a category is not "
-                          "supported.")
+            self.fail(
+                msg="bpp.p should have thrown SystemError as "
+                "instantiating a subclass of a category is not "
+                "supported."
+            )
         except SystemError:
             pass
         return
 
+
 #
 # support running this test individually, from the command-line as a script
 #
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
 
 #### EOF ######################################################################

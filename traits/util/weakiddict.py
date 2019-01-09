@@ -18,6 +18,7 @@ def _remover(key_id, id_dict_ref):
         id_dict = id_dict_ref()
         if id_dict is not None:
             id_dict.data.pop(key_id, None)
+
     return callback
 
 
@@ -32,7 +33,7 @@ class WeakIDDict(collections.MutableMapping):
             self.update(dict)
 
     def __repr__(self):
-        return '<WeakIDDict at 0x{0:x}>'.format(id(self))
+        return "<WeakIDDict at 0x{0:x}>".format(id(self))
 
     def __delitem__(self, key):
         del self.data[id(key)]
@@ -43,7 +44,8 @@ class WeakIDDict(collections.MutableMapping):
     def __setitem__(self, key, value):
         self.data[id(key)] = (
             ref(key, _remover(id(key), ref(self))),
-            ref(value, _remover(id(key), ref(self))))
+            ref(value, _remover(id(key), ref(self))),
+        )
 
     def __len__(self):
         return len(self.data)
@@ -70,6 +72,4 @@ class WeakIDKeyDict(WeakIDDict):
         return self.data[id(key)][1]
 
     def __setitem__(self, key, value):
-        self.data[id(key)] = (
-            ref(key, _remover(id(key), ref(self))),
-            value)
+        self.data[id(key)] = (ref(key, _remover(id(key), ref(self))), value)

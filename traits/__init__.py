@@ -6,12 +6,10 @@ from traits._version import full_version as __version__
 import logging
 
 
-__requires__ = [
-    'six',
-]
+__requires__ = ["six"]
+
 
 class NullHandler(logging.Handler):
-
     def handle(self, record):
         pass
 
@@ -20,6 +18,7 @@ class NullHandler(logging.Handler):
 
     def createLock(self):
         self.lock = None
+
 
 logger = logging.getLogger(__name__)
 logger.addHandler(NullHandler())

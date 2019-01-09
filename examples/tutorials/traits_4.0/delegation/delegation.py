@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-#--(Delegation Fixes and Improvements)-----------------------------------------
+# --(Delegation Fixes and Improvements)-----------------------------------------
 """
 Delegation Fixes and Improvements
 =================================
@@ -91,51 +91,54 @@ notification handler.
 """
 
 from __future__ import print_function
+
 # FIXME - this need to be redone without traitsui
 
 from traits.api import *
 
 
-#--[Parent Class]--------------------------------------------------------------
+# --[Parent Class]--------------------------------------------------------------
 class Parent(HasTraits):
 
     first_name = Str
     last_name = Str
 
 
-#--[Child Class]---------------------------------------------------------------
+# --[Child Class]---------------------------------------------------------------
 class Child(HasTraits):
 
     mother = Instance(Parent)
     father = Instance(Parent)
 
     first_name = Str
-    last_name = Delegate('father')
+    last_name = Delegate("father")
 
-#--[Example*]------------------------------------------------------------------
 
-mom = Parent(first_name='Julia', last_name='Wilson')
-dad = Parent(first_name='William', last_name='Chase')
-son = Child(mother=mom, father=dad, first_name='John')
+# --[Example*]------------------------------------------------------------------
+
+mom = Parent(first_name="Julia", last_name="Wilson")
+dad = Parent(first_name="William", last_name="Chase")
+son = Child(mother=mom, father=dad, first_name="John")
 
 
 def name_changed(name):
-    print('Your last name has been changed to %s.' % name)
+    print("Your last name has been changed to %s." % name)
+
 
 # Set up a change notification handler on the son's last name:
-son.on_trait_change(name_changed, 'last_name')
+son.on_trait_change(name_changed, "last_name")
 
 # This should cause the son's last name to change as well:
 print("Changing dad's last name to Jones.")
-dad.last_name = 'Jones'
+dad.last_name = "Jones"
 
 # This change overrides the father's last name for the son:
 print("Changing son's last name to Thomas.")
-son.last_name = 'Thomas'
+son.last_name = "Thomas"
 
 # This should no longer have any effect on the son's last name:
 print("Changing dad's last name to Riley.")
-dad.last_name = 'Riley'
+dad.last_name = "Riley"
 
 # Son decides to revert his name back to his father's name:
 print("Reverting son's last name.")
@@ -143,4 +146,4 @@ del son.last_name
 
 # Now changing the father's name should affect the son again:
 print("Changing dad's last name to Simmons.")
-dad.last_name = 'Simmons'
+dad.last_name = "Simmons"

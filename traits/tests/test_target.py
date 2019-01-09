@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2010, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Test whether HasTraits objects with cycles can be garbage collected.
 """
 
@@ -26,6 +26,7 @@ class TestCase(unittest.TestCase):
 
     def test_simple(self):
         """ Tests a simple dynamic trait change handler. """
+
         class Test(HasTraits):
             i = Int
 
@@ -38,6 +39,7 @@ class TestCase(unittest.TestCase):
 
         def count_notifies():
             self.count += 1
+
         obj.on_trait_change(count_notifies, "i", target=target)
 
         # Change the trait
@@ -66,6 +68,7 @@ class TestCase(unittest.TestCase):
 
         def count_notifies():
             self.count += 1
+
         parent.on_trait_change(count_notifies, "child:i", target=target)
 
         # Change the trait
@@ -76,5 +79,6 @@ class TestCase(unittest.TestCase):
         # The count should be 1
         self.assertEqual(self.count, 1)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

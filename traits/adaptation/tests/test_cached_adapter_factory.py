@@ -12,7 +12,6 @@ from traits.testing.unittest_tools import unittest
 class TestCachedAdapterFactory(unittest.TestCase):
     """ Test the cached adapter factory. """
 
-
     examples = traits.adaptation.tests.interface_examples
 
     #### 'TestCase' protocol ##################################################
@@ -38,9 +37,7 @@ class TestCachedAdapterFactory(unittest.TestCase):
         factory = CachedAdapterFactory(factory=ex.EditorToIPrintable)
 
         self.adaptation_manager.register_factory(
-            factory       = factory,
-            from_protocol = ex.Editor,
-            to_protocol   = ex.IPrintable
+            factory=factory, from_protocol=ex.Editor, to_protocol=ex.IPrintable
         )
 
         editor = ex.Editor()
@@ -65,9 +62,7 @@ class TestCachedAdapterFactory(unittest.TestCase):
         factory = CachedAdapterFactory(factory=ex.EditorToIPrintable)
 
         self.adaptation_manager.register_factory(
-            factory       = factory,
-            from_protocol = ex.Editor,
-            to_protocol   = ex.IPrintable
+            factory=factory, from_protocol=ex.Editor, to_protocol=ex.IPrintable
         )
 
         editor = ex.Editor()
@@ -85,16 +80,16 @@ class TestCachedAdapterFactory(unittest.TestCase):
 
     def test_cached_adapters_with_lazy_loaded_factory(self):
 
-        LAZY_EXAMPLES = 'traits.adaptation.tests.lazy_examples'
+        LAZY_EXAMPLES = "traits.adaptation.tests.lazy_examples"
         if LAZY_EXAMPLES in sys.modules:
             del sys.modules[LAZY_EXAMPLES]
 
-        factory = CachedAdapterFactory(factory=LAZY_EXAMPLES + '.IBarToIFoo')
+        factory = CachedAdapterFactory(factory=LAZY_EXAMPLES + ".IBarToIFoo")
 
         self.adaptation_manager.register_factory(
-            factory       = factory,
-            from_protocol = LAZY_EXAMPLES + '.IBar',
-            to_protocol   = LAZY_EXAMPLES + '.IFoo',
+            factory=factory,
+            from_protocol=LAZY_EXAMPLES + ".IBar",
+            to_protocol=LAZY_EXAMPLES + ".IFoo",
         )
 
         self.assertNotIn(LAZY_EXAMPLES, sys.modules)
@@ -114,29 +109,28 @@ class TestCachedAdapterFactory(unittest.TestCase):
         factory = CachedAdapterFactory(factory=ex.EditorToIPrintable)
 
         self.adaptation_manager.register_factory(
-            factory       = factory,
-            from_protocol = ex.Editor,
-            to_protocol   = ex.IPrintable
+            factory=factory, from_protocol=ex.Editor, to_protocol=ex.IPrintable
         )
 
         editor = ex.Editor()
 
         adapter_1 = self.adaptation_manager.adapt(editor, ex.IPrintable)
         self.assertIs(type(adapter_1), ex.EditorToIPrintable)
-        adapter_1.marker = 'marker'
+        adapter_1.marker = "marker"
 
         del adapter_1
 
         adapter_2 = self.adaptation_manager.adapt(editor, ex.IPrintable)
         self.assertIsNotNone(adapter_2)
-        self.assertTrue(hasattr(adapter_2, 'marker'))
+        self.assertTrue(hasattr(adapter_2, "marker"))
 
         del adapter_2
         del editor
 
         self.assertTrue(factory.is_empty)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
 
 #### EOF ######################################################################

@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-#--(New Trait Definition Style)------------------------------------------------
+# --(New Trait Definition Style)------------------------------------------------
 """
 New Trait Definition Style
 ==========================
@@ -91,19 +91,19 @@ This provides the exact same functionality as the previous definition of
   creating a new trait type a little more understandable to a wider group of
   developers.
 """
-#--<Imports>-------------------------------------------------------------------
+# --<Imports>-------------------------------------------------------------------
 from __future__ import print_function
 from traits.api import *
 
 
-#--[OddInt Definition]---------------------------------------------------------
+# --[OddInt Definition]---------------------------------------------------------
 class OddInt(Int):
 
     # Define the default value:
     default_value = 1
 
     # Describe the trait type:
-    info_text = 'an odd integer'
+    info_text = "an odd integer"
 
     def validate(self, object, name, value):
         value = super(OddInt, self).validate(object, name, value)
@@ -113,13 +113,14 @@ class OddInt(Int):
         self.error(object, name, value)
 
 
-#--[Test Class]----------------------------------------------------------------
+# --[Test Class]----------------------------------------------------------------
 class Test(HasTraits):
 
     any_int = Int
     odd_int = OddInt
 
-#--[Example*]------------------------------------------------------------------
+
+# --[Example*]------------------------------------------------------------------
 
 # Create a test object:
 t = Test()

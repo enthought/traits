@@ -4,30 +4,30 @@
 # compound.py -- Example of multiple criteria in a trait definition
 
 
-#--[Imports]-------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 from __future__ import print_function
 from traits.api import HasTraits, Range, Trait, TraitError
 
 
-#--[Code]----------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 # Shows the definition of a compound trait.
+
 
 class Die(HasTraits):
 
     # Define a compound trait definition:
-    value = Trait(1, Range(1, 6),
-                  'one', 'two', 'three', 'four', 'five', 'six')
+    value = Trait(1, Range(1, 6), "one", "two", "three", "four", "five", "six")
 
 
-#--[Example*]------------------------------------------------------------------
+# --[Example*]------------------------------------------------------------------
 # Create a sample Die:
 die = Die()
 
 # Try out some sample valid values:
 die.value = 3
-die.value = 'three'
+die.value = "three"
 die.value = 5
-die.value = 'five'
+die.value = "five"
 
 # Now try out some invalid values:
 try:
@@ -36,6 +36,6 @@ except TraitError as excp:
     print(excp)
 
 try:
-    die.value = 'zero'
+    die.value = "zero"
 except TraitError as excp:
     print(excp)

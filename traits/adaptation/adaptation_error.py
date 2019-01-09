@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2013, Enthought, Inc.
 # All rights reserved.
 #
@@ -9,12 +9,14 @@
 # Thanks for using Enthought open source!
 #
 # Author: Enthought, Inc.
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Exception raised when a requested adaptation is not possible. """
+
 
 class AdaptationError(TypeError):
     """ Exception raised when a requested adaptation is not possible. """
 
     pass
+
 
 #### EOF ######################################################################

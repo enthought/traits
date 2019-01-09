@@ -12,6 +12,7 @@ The tests need a Cython version > 0.19 and a compiler.
 """
 try:
     import cython
+
     no_cython = False
 except ImportError:
     no_cython = True
@@ -36,7 +37,9 @@ def cython_version():
     if no_cython:
         return None
     from Cython.Compiler.Version import version
-    return tuple(int(v) for v in version.split('.'))
+
+    return tuple(int(v) for v in version.split("."))
+
 
 SKIP_TEST = has_no_compiler()
 
@@ -45,12 +48,11 @@ SKIP_TEST = has_no_compiler()
 # code. We provide a very basic implementation that always returns object
 # (we don't need any particular optimizations)
 def _always_object_type(arg, context):
-    return 'object'
+    return "object"
 
 
 class CythonizedTraitsTestCase(unittest.TestCase, UnittestTools):
-
-    @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
+    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_simple_default_methods(self):
 
         code = """
@@ -67,9 +69,9 @@ return Test()
 
         obj = cython.inline(code)
 
-        self.assertEqual(obj.name, 'Joe')
+        self.assertEqual(obj.name, "Joe")
 
-    @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
+    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_basic_events(self):
 
         code = """
@@ -83,10 +85,10 @@ return Test()
 
         obj = cython.inline(code)
 
-        with self.assertTraitChanges(obj, 'name', count=1):
-            obj.name = 'changing_name'
+        with self.assertTraitChanges(obj, "name", count=1):
+            obj.name = "changing_name"
 
-    @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
+    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_static_handlers(self):
 
         code = """
@@ -104,12 +106,12 @@ return Test()
 
         obj = cython.inline(code, get_type=_always_object_type, force=True)
 
-        with self.assertTraitChanges(obj, 'value', count=1):
-            obj.name = 'changing_name'
+        with self.assertTraitChanges(obj, "value", count=1):
+            obj.name = "changing_name"
 
         self.assertEqual(obj.value, 1)
 
-    @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
+    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_on_trait_change_decorator(self):
 
         code = """
@@ -126,15 +128,20 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(code, get_type=_always_object_type, force=True,
-                            locals={}, globals={})
+        obj = cython.inline(
+            code,
+            get_type=_always_object_type,
+            force=True,
+            locals={},
+            globals={},
+        )
 
-        with self.assertTraitChanges(obj, 'value', count=1):
-            obj.name = 'changing_name'
+        with self.assertTraitChanges(obj, "value", count=1):
+            obj.name = "changing_name"
 
         self.assertEqual(obj.value, 1)
 
-    @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
+    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_properties(self):
 
         code = """
@@ -151,16 +158,21 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(code, get_type=_always_object_type, force=True,
-                            locals={}, globals={})
+        obj = cython.inline(
+            code,
+            get_type=_always_object_type,
+            force=True,
+            locals={},
+            globals={},
+        )
 
         self.assertEqual(obj.name_len, len(obj.name))
 
         # Assert dependency works
-        obj.name = 'Bob'
+        obj.name = "Bob"
         self.assertEqual(obj.name_len, len(obj.name))
 
-    @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
+    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_properties_with_standard_getter(self):
 
         code = """
@@ -177,16 +189,21 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(code, get_type=_always_object_type, force=True,
-                            locals={}, globals={})
+        obj = cython.inline(
+            code,
+            get_type=_always_object_type,
+            force=True,
+            locals={},
+            globals={},
+        )
 
         self.assertEqual(obj.name_len, len(obj.name))
 
         # Assert dependency works
-        obj.name = 'Bob'
+        obj.name = "Bob"
         self.assertEqual(obj.name_len, len(obj.name))
 
-    @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
+    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_aliasing(self):
 
         code = """
@@ -208,16 +225,21 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(code, get_type=_always_object_type, force=True,
-                            locals={}, globals={})
+        obj = cython.inline(
+            code,
+            get_type=_always_object_type,
+            force=True,
+            locals={},
+            globals={},
+        )
 
         self.assertEqual(obj.funky_name, obj.name)
 
         # Assert dependency works
-        obj.name = 'Bob'
+        obj.name = "Bob"
         self.assertEqual(obj.funky_name, obj.name)
 
-    @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
+    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_aliasing_different_scope(self):
 
         code = """
@@ -242,10 +264,10 @@ return Test()
         self.assertEqual(obj.funky_name, obj.name)
 
         # Assert dependency works
-        obj.name = 'Bob'
+        obj.name = "Bob"
         self.assertEqual(obj.funky_name, obj.name)
 
-    @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
+    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_lambda_failure(self):
 
         # Lambda function are converted like builtins when cythonized which
@@ -269,8 +291,13 @@ return Test()
 """
 
         try:
-            cython.inline(code, get_type=_always_object_type, force=True,
-                          locals={}, globals={})
+            cython.inline(
+                code,
+                get_type=_always_object_type,
+                force=True,
+                locals={},
+                globals={},
+            )
         except:
             # We suppose we have an exception. Because of the usage of the
             # skipIf decorator on the test, we can't use an expectedFailure
@@ -278,6 +305,6 @@ return Test()
             pass
         else:
             self.fail(
-                'Unexpected results. Cython was not managing lambda as regular'
-                ' functions. Behaviour changed ...'
+                "Unexpected results. Cython was not managing lambda as regular"
+                " functions. Behaviour changed ..."
             )

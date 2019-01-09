@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
@@ -13,7 +13,7 @@
 #  Author: Martin Chilvers
 #  Date:   07/18/2007
 #
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 """ An extension to PyProtocols to simplify the declaration of adapters.
 """
@@ -27,7 +27,6 @@ from .util.deprecated import deprecated
 
 
 class Adapter(traits.adaptation.adapter.Adapter):
-
     @deprecated("use 'Adapter' in 'traits.api' instead")
     def __init__(self, adaptee, **traits):
         super(Adapter, self).__init__(adaptee, **traits)

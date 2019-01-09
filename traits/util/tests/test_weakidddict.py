@@ -61,20 +61,14 @@ class TestWeakIDDict(unittest.TestCase):
         self.assertEqual(len(wd), 5)
 
         # Check the remaining values.
-        self.assertCountEqual(
-            list(wd.values()),
-            list(range(0, 10, 2)))
-        self.assertEqual(
-            [wd[k] for k in keep],
-            list(range(0, 10, 2)))
+        self.assertCountEqual(list(wd.values()), list(range(0, 10, 2)))
+        self.assertEqual([wd[k] for k in keep], list(range(0, 10, 2)))
 
         # Check the remaining keys.
+        self.assertCountEqual([id(k) for k in wd.keys()], [id(k) for k in wd])
         self.assertCountEqual(
-            [id(k) for k in wd.keys()],
-            [id(k) for k in wd])
-        self.assertCountEqual(
-            [id(k) for k in wd.keys()],
-            [id(k) for k in keep])
+            [id(k) for k in wd.keys()], [id(k) for k in keep]
+        )
 
     def test_weak_keys_values(self):
         wd = WeakIDDict()
@@ -100,19 +94,17 @@ class TestWeakIDDict(unittest.TestCase):
 
         # Check the remaining values.
         self.assertCountEqual(
-            list(wd.values()),
-            list(map(WeakreffableInt, [0, 2, 4, 6, 8])))
+            list(wd.values()), list(map(WeakreffableInt, [0, 2, 4, 6, 8]))
+        )
         self.assertEqual(
-            [wd[k] for k in keep],
-            list(map(WeakreffableInt, [0, 2, 4, 6, 8])))
+            [wd[k] for k in keep], list(map(WeakreffableInt, [0, 2, 4, 6, 8]))
+        )
 
         # Check the remaining keys.
+        self.assertCountEqual([id(k) for k in wd.keys()], [id(k) for k in wd])
         self.assertCountEqual(
-            [id(k) for k in wd.keys()],
-            [id(k) for k in wd])
-        self.assertCountEqual(
-            [id(k) for k in wd.keys()],
-            [id(k) for k in keep])
+            [id(k) for k in wd.keys()], [id(k) for k in keep]
+        )
 
         # Delete the weak values progressively and ensure that the
         # corresponding entries disappear.

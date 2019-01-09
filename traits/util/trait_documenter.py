@@ -45,8 +45,8 @@ class TraitDocumenter(ClassLevelDocumenter):
 
     # ClassLevelDocumenter interface #####################################
 
-    objtype = 'traitattribute'
-    directivetype = 'attribute'
+    objtype = "traitattribute"
+    directivetype = "attribute"
     member_order = 60
 
     # must be higher than other attribute documenters
@@ -56,8 +56,11 @@ class TraitDocumenter(ClassLevelDocumenter):
     def can_document_member(cls, member, membername, isattr, parent):
         """ Check that the documented member is a trait instance.
         """
-        check = (isattr and issubclass(type(member), TraitType) or
-                 _is_class_trait(membername, parent.object))
+        check = (
+            isattr
+            and issubclass(type(member), TraitType)
+            or _is_class_trait(membername, parent.object)
+        )
         return check
 
     def document_members(self, all_members=False):
@@ -66,8 +69,7 @@ class TraitDocumenter(ClassLevelDocumenter):
 
     def add_content(self, more_content, no_docstring=False):
         """ Never try to get a docstring from the trait."""
-        ClassLevelDocumenter.add_content(self, more_content,
-                                         no_docstring=True)
+        ClassLevelDocumenter.add_content(self, more_content, no_docstring=True)
 
     def import_object(self):
         """ Get the Trait object.
@@ -93,10 +95,13 @@ class TraitDocumenter(ClassLevelDocumenter):
         except Exception as err:
             if self.env.app and not self.env.app.quiet:
                 self.env.app.info(traceback.format_exc().rstrip())
-            msg = ('autodoc can\'t import/find {0} {r1}, it reported error: '
-                   '"{2}", please check your spelling and sys.path')
-            self.directive.warn(msg.format(self.objtype, str(self.fullname),
-                                err))
+            msg = (
+                "autodoc can't import/find {0} {r1}, it reported error: "
+                '"{2}", please check your spelling and sys.path'
+            )
+            self.directive.warn(
+                msg.format(self.objtype, str(self.fullname), err)
+            )
             self.env.note_reread()
             return False
 
@@ -107,7 +112,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
         definition = self._get_trait_definition()
-        self.add_line(u'   :annotation: = {0}'.format(definition), '<autodoc>')
+        self.add_line(u"   :annotation: = {0}".format(definition), "<autodoc>")
 
     # Private Interface #####################################################
 
@@ -125,7 +130,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         name_found = False
         while not trait_found:
             item = next(tokens)
-            if name_found and item[:2] == (token.OP, '='):
+            if name_found and item[:2] == (token.OP, "="):
                 trait_found = True
                 continue
             if item[:2] == (token.NAME, self.object_name):
@@ -135,7 +140,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         definition_tokens = _get_definition_tokens(tokens)
         definition = tokenize.untokenize(definition_tokens).strip()
         if six.PY2:
-            definition = six.text_type(definition, 'utf-8')
+            definition = six.text_type(definition, "utf-8")
 
         return definition
 
@@ -163,11 +168,13 @@ def _get_definition_tokens(tokens):
         if type == token.NEWLINE:
             break
 
-        item = (type,
-                name,
-                (start[0] - first_line + 1, start[1]),
-                (stop[0] - first_line + 1, stop[1]),
-                line_text)
+        item = (
+            type,
+            name,
+            (start[0] - first_line + 1, start[1]),
+            (stop[0] - first_line + 1, stop[1]),
+            line_text,
+        )
 
         definition_tokens.append(item)
 
