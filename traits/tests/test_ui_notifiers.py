@@ -47,7 +47,7 @@ class CalledAsDecorator(HasTraits):
 
     callback = Callable
 
-    @on_trait_change('foo', dispatch='ui')
+    @on_trait_change("foo", dispatch="ui")
     def on_foo_change(self, obj, name, old, new):
         self.callback(obj, name, old, new)
 
@@ -76,7 +76,8 @@ class BaseTestUINotifiers(object):
     #### Tests ################################################################
 
     @unittest.skipIf(
-        not QT_FOUND, "Qt event loop not found, UI dispatch not possible.")
+        not QT_FOUND, "Qt event loop not found, UI dispatch not possible."
+    )
     def test_notification_from_main_thread(self):
 
         obj = self.obj_factory()
@@ -88,13 +89,14 @@ class BaseTestUINotifiers(object):
         self.assertEqual(len(notifications), 1)
 
         thread_id, event = notifications[0]
-        self.assertEqual(event, (obj, 'foo', 0, 3))
+        self.assertEqual(event, (obj, "foo", 0, 3))
 
         ui_thread = trait_notifiers.ui_thread
         self.assertEqual(thread_id, ui_thread)
 
     @unittest.skipIf(
-        not QT_FOUND, "Qt event loop not found, UI dispatch not possible.")
+        not QT_FOUND, "Qt event loop not found, UI dispatch not possible."
+    )
     def test_notification_from_separate_thread(self):
 
         obj = self.obj_factory()
@@ -114,7 +116,7 @@ class BaseTestUINotifiers(object):
         self.assertEqual(len(notifications), 1)
 
         thread_id, event = notifications[0]
-        self.assertEqual(event, (obj, 'foo', 0, 3))
+        self.assertEqual(event, (obj, "foo", 0, 3))
 
         ui_thread = trait_notifiers.ui_thread
         self.assertEqual(thread_id, ui_thread)
@@ -126,7 +128,7 @@ class TestMethodUINotifiers(BaseTestUINotifiers, unittest.TestCase):
 
     def obj_factory(self):
         obj = CalledAsMethod()
-        obj.on_trait_change(self.on_foo_notifications, 'foo', dispatch='ui')
+        obj.on_trait_change(self.on_foo_notifications, "foo", dispatch="ui")
         return obj
 
 
@@ -137,5 +139,5 @@ class TestDecoratorUINotifiers(BaseTestUINotifiers, unittest.TestCase):
         return CalledAsDecorator(callback=self.on_foo_notifications)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -25,7 +25,7 @@ class FileTestCase(unittest.TestCase):
         example_model = ExampleModel(file_name=__file__)
 
         def assign_invalid():
-            example_model.file_name = 'not_valid_path!#!#!#'
+            example_model.file_name = "not_valid_path!#!#!#"
 
         self.assertRaises(TraitError, assign_invalid)
 
@@ -47,5 +47,5 @@ class FileTestCase(unittest.TestCase):
 
     def test_fast(self):
         example_model = FastExampleModel(file_name=__file__)
-        example_model.path = '.'
-        example_model.path = u'.'
+        example_model.path = "."
+        example_model.path = u"."

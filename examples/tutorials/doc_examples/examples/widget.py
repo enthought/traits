@@ -16,8 +16,8 @@ class Widget(HasTraits):
     def __init__(self):
         self.part1 = Part()
         self.part2 = Part()
-        self.part1.on_trait_change(self.update_cost, 'cost')
-        self.part2.on_trait_change(self.update_cost, 'cost')
+        self.part1.on_trait_change(self.update_cost, "cost")
+        self.part2.on_trait_change(self.update_cost, "cost")
 
     def update_cost(self):
         self.cost = self.part1.cost + self.part2.cost

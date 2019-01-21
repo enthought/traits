@@ -6,11 +6,11 @@
 #                        using add_class_trait()
 
 
-#--[Imports]-------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Instance
 
 
-#--[Code]----------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 # Defining mutually-referring classes using add_class_trait()
 class Chicken(HasTraits):
     pass
@@ -19,7 +19,8 @@ class Chicken(HasTraits):
 class Egg(HasTraits):
     created_by = Instance(Chicken)
 
+
 # Now that 'Egg' is defined, we can add the 'hatched_from' trait to
 # solve the mutual-reference problem...
 
-Chicken.add_class_trait('hatched_from', Instance(Egg))
+Chicken.add_class_trait("hatched_from", Instance(Egg))

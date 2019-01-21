@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Utility functions for managing and finding resources (ie. images/files etc).
 
     get_path :           Returns the absolute path of a class or instance
@@ -54,7 +54,7 @@ def get_path(path):
         # Look the module up.
         module = sys.modules[module_name]
 
-        if module_name == '__main__':
+        if module_name == "__main__":
             dirs = [os.path.dirname(sys.argv[0]), os.getcwd()]
             for d in dirs:
                 if os.path.exists(d):
@@ -66,7 +66,8 @@ def get_path(path):
 
     return path
 
-def create_unique_name(prefix, names, separator='_'):
+
+def create_unique_name(prefix, names, separator="_"):
     """ Creates a name starting with 'prefix' that is not in 'names'. """
 
     i = 1
@@ -77,6 +78,7 @@ def create_unique_name(prefix, names, separator='_'):
         i += 1
 
     return name
+
 
 def find_resource(project, resource_path, alt_path=None, return_path=False):
     """ Returns a file object or file path pointing to the desired resource.
@@ -149,7 +151,7 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
             if return_path:
                 return full_path
             else:
-                return open(full_path, 'rb')
+                return open(full_path, "rb")
 
         # Get the image using sys.path[0], which is the directory that the
         # running script lives in. The path to the file is then constructed by
@@ -163,7 +165,7 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
 
         # Try to open the file, return None on exception
         try:
-            return open(os.path.join(sys.path[0], alt_path), 'rb')
+            return open(os.path.join(sys.path[0], alt_path), "rb")
         except:
             return
 
@@ -181,10 +183,12 @@ def store_resource(project, resource_path, filename):
     """
     fi = find_resource(project, resource_path)
     if fi is None:
-        raise RuntimeError('Resource not found for project "%s": %s' %
-                           (project, resource_path))
+        raise RuntimeError(
+            'Resource not found for project "%s": %s'
+            % (project, resource_path)
+        )
 
-    fo = open(filename, 'wb')
+    fo = open(filename, "wb")
     fo.write(fi.read())
     fo.close()
 

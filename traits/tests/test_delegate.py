@@ -23,9 +23,9 @@ foo_t_handler_self = None
 
 
 class Foo(HasTraits):
-    s = Str('foo')
-    t = Str('foo.t')
-    u = Str('foo.u')
+    s = Str("foo")
+    t = Str("foo.t")
+    u = Str("foo.u")
 
     def _s_changed(self, name, old, new):
         global foo_s_handler_self
@@ -40,14 +40,14 @@ class Foo(HasTraits):
 
 class Bar(HasTraits):
     foo = Instance(Foo, ())
-    s = Delegate('foo')
+    s = Delegate("foo")
 
 
 class BazModify(HasTraits):
     foo = Instance(Foo, ())
-    sd = Delegate('foo', prefix='s', modify=True)
-    t = Delegate('foo', modify=True)
-    u = Delegate('foo', listenable=False, modify=True)
+    sd = Delegate("foo", prefix="s", modify=True)
+    t = Delegate("foo", modify=True)
+    u = Delegate("foo", listenable=False, modify=True)
 
     def _s_changed(self, name, old, new):
         # should never be called
@@ -73,9 +73,9 @@ class BazModify(HasTraits):
 
 class BazNoModify(HasTraits):
     foo = Instance(Foo, ())
-    sd = Delegate('foo', prefix='s')
-    t = Delegate('foo')
-    u = Delegate('foo', listenable=False)
+    sd = Delegate("foo", prefix="s")
+    t = Delegate("foo")
+    u = Delegate("foo", listenable=False)
 
     def _s_changed(self, name, old, new):
         global baz_s_handler_self
@@ -127,7 +127,7 @@ class DelegateTestCase(unittest.TestCase):
         self.assertEqual(f.s, b.s)
 
         # Check that an override works.
-        b.s = 'bar'
+        b.s = "bar"
         self.assertNotEqual(f.s, b.s)
 
         # Check that we can reset back to delegation.  This is what we are
@@ -147,7 +147,7 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.s, b.sd)
 
-        b.sd = 'changed'
+        b.sd = "changed"
         self.assertEqual(f.s, b.sd)
 
         # Don't expect _s_changed to be called because from Baz's perspective
@@ -164,7 +164,7 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.s, b.sd)
 
-        b.sd = 'changed'
+        b.sd = "changed"
         self.assertEqual(f.s, b.sd)
 
         # Foo expects its '_s_changed' handler to be called with f as self
@@ -177,7 +177,7 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.s, b.sd)
 
-        b.sd = 'changed'
+        b.sd = "changed"
         self.assertNotEqual(f.s, b.sd)
 
         # Don't expect _s_changed to be called because from Baz's perspective
@@ -194,7 +194,7 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.s, b.sd)
 
-        b.sd = 'changed'
+        b.sd = "changed"
         self.assertNotEqual(f.s, b.sd)
 
         # Foo expects its '_s_changed' handler to be called with f as self
@@ -207,7 +207,7 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.t, b.t)
 
-        b.t = 'changed'
+        b.t = "changed"
         self.assertEqual(f.t, b.t)
 
         # Do expect '_t_changed' to be called with b as self
@@ -220,7 +220,7 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.t, b.t)
 
-        b.t = 'changed'
+        b.t = "changed"
         self.assertEqual(f.t, b.t)
 
         # Foo t did change so '_t_changed' handler should be called
@@ -233,7 +233,7 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.t, b.t)
 
-        b.t = 'changed'
+        b.t = "changed"
         self.assertNotEqual(f.t, b.t)
 
         # Do expect '_t_changed' to be called with b as self
@@ -246,7 +246,7 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.t, b.t)
 
-        b.t = 'changed'
+        b.t = "changed"
         self.assertNotEqual(f.t, b.t)
 
         # Foo t did not change so '_t_changed' handler should not be called
@@ -261,7 +261,7 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.t, b.t)
 
-        f.t = 'changed'
+        f.t = "changed"
         self.assertEqual(f.t, b.t)
 
         # Foo t did change so '_t_changed' handler should be called
@@ -274,7 +274,7 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.t, b.t)
 
-        f.t = 'changed'
+        f.t = "changed"
         self.assertEqual(f.t, b.t)
 
         # Do expect '_t_changed' to be called with b as self
@@ -287,7 +287,7 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.t, b.t)
 
-        f.t = 'changed'
+        f.t = "changed"
         self.assertEqual(f.t, b.t)
 
         # Foo t did change so '_t_changed' handler should be called
@@ -300,7 +300,7 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.t, b.t)
 
-        f.t = 'changed'
+        f.t = "changed"
         self.assertEqual(f.t, b.t)
 
         # Do expect '_t_changed' to be called with b as self
@@ -314,7 +314,7 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.u, b.u)
 
-        f.u = 'changed'
+        f.u = "changed"
         self.assertEqual(f.u, b.u)
 
         # Do not expect '_u_changed' to be called.
@@ -327,13 +327,14 @@ class DelegateTestCase(unittest.TestCase):
 
         self.assertEqual(f.u, b.u)
 
-        f.u = 'changed'
+        f.u = "changed"
         self.assertEqual(f.u, b.u)
 
         # Do not expect '_u_changed' to be called.
         self.assertEqual(baz_u_handler_self, None)
         return
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
 # EOF #

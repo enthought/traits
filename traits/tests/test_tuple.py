@@ -6,6 +6,5 @@ from traits.trait_types import Tuple
 
 
 class TupleTestCase(TupleTestMixin, unittest.TestCase):
-
     def setUp(self):
         self.trait = Tuple

@@ -10,8 +10,16 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from traits.api import (HasTraits, Any, Bool, Delegate, Event, Instance, Property,
-                   Str)
+from traits.api import (
+    HasTraits,
+    Any,
+    Bool,
+    Delegate,
+    Event,
+    Instance,
+    Property,
+    Str,
+)
 
 
 class Foo(HasTraits):
@@ -21,7 +29,7 @@ class Foo(HasTraits):
     s = Str
     i = Instance(HasTraits)
     e = Event
-    d = Delegate('i')
+    d = Delegate("i")
 
     p = Property
 
@@ -53,64 +61,61 @@ class TestCopyableTraitNames(unittest.TestCase):
         self.names = foo.copyable_trait_names()
 
     def test_events_not_copyable(self):
-        self.assertNotIn('e', self.names)
+        self.assertNotIn("e", self.names)
 
     def test_read_only_property_not_copyable(self):
-        self.assertNotIn('p_ro', self.names)
+        self.assertNotIn("p_ro", self.names)
 
     def test_write_only_property_not_copyable(self):
-        self.assertNotIn('p_wo', self.names)
+        self.assertNotIn("p_wo", self.names)
 
     def test_any_copyable(self):
-        self.assertIn('a', self.names)
+        self.assertIn("a", self.names)
 
     def test_bool_copyable(self):
-        self.assertIn('b', self.names)
+        self.assertIn("b", self.names)
 
     def test_str_copyable(self):
-        self.assertIn('s', self.names)
+        self.assertIn("s", self.names)
 
     def test_instance_copyable(self):
-        self.assertIn('i', self.names)
+        self.assertIn("i", self.names)
 
     def test_delegate_copyable(self):
-        self.assertIn('d', self.names)
+        self.assertIn("d", self.names)
 
     def test_property_copyable(self):
-        self.assertIn('p', self.names)
+        self.assertIn("p", self.names)
 
 
 class TestCopyableTraitNameQueries(unittest.TestCase):
-
     def setUp(self):
         self.foo = Foo()
 
     def test_type_query(self):
-        names = self.foo.copyable_trait_names(**{
-            'type': 'trait'
-        })
+        names = self.foo.copyable_trait_names(**{"type": "trait"})
 
-        self.assertEqual(['a', 'b', 'i', 's'], sorted(names))
+        self.assertEqual(["a", "b", "i", "s"], sorted(names))
 
-        names = self.foo.copyable_trait_names(**{
-            'type': lambda t: t in ('trait', 'property',)
-        })
+        names = self.foo.copyable_trait_names(
+            **{"type": lambda t: t in ("trait", "property")}
+        )
 
-        self.assertEqual(['a', 'b', 'i', 'p', 's'], sorted(names))
+        self.assertEqual(["a", "b", "i", "p", "s"], sorted(names))
 
     def test_property_query(self):
-        names = self.foo.copyable_trait_names(**{
-            'property': lambda p: p() and p()[1].__name__ == '_set_p',
-        })
+        names = self.foo.copyable_trait_names(
+            **{"property": lambda p: p() and p()[1].__name__ == "_set_p"}
+        )
 
-        self.assertEqual(['p'], names)
+        self.assertEqual(["p"], names)
 
     def test_unmodified_query(self):
-        names = self.foo.copyable_trait_names(**{
-            'is_trait_type': lambda f: f(Str)
-        })
+        names = self.foo.copyable_trait_names(
+            **{"is_trait_type": lambda f: f(Str)}
+        )
 
-        self.assertEqual(['s'], names)
+        self.assertEqual(["s"], names)
 
     def test_queries_not_combined(self):
         """ Verify that metadata is not merged with metadata to find the
@@ -119,14 +124,26 @@ class TestCopyableTraitNameQueries(unittest.TestCase):
 
         eval_true = lambda x: True
 
-        names = self.foo.copyable_trait_names(property=eval_true,
-                                              type=eval_true,
-                                              transient=eval_true)
+        names = self.foo.copyable_trait_names(
+            property=eval_true, type=eval_true, transient=eval_true
+        )
 
-        self.assertEqual(['a', 'b', 'd', 'e', 'i', 'p',
-                           'p_ro', 'p_wo', 's',
-                           'trait_added',
-                           'trait_modified'
-                           ], sorted(names))
+        self.assertEqual(
+            [
+                "a",
+                "b",
+                "d",
+                "e",
+                "i",
+                "p",
+                "p_ro",
+                "p_wo",
+                "s",
+                "trait_added",
+                "trait_modified",
+            ],
+            sorted(names),
+        )
+
 
 ### EOF

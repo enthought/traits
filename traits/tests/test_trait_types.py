@@ -24,7 +24,6 @@ from traits.api import Float, TraitType
 
 
 class TraitTypesTest(unittest.TestCase):
-
     def test_traits_shared_transient(self):
         # Regression test for a bug in traits where the same _metadata
         # dictionary was shared between different trait types.
@@ -47,17 +46,19 @@ class TraitTypesTest(unittest.TestCase):
 
         # Remove numpy from the list of imported modules.
         import sys
-        del sys.modules['numpy']
+
+        del sys.modules["numpy"]
         for k in list(sys.modules):
-            if k.startswith('numpy.'):
+            if k.startswith("numpy."):
                 del sys.modules[k]
 
         # Check that the validators contain the numpy types.
         from traits.trait_types import float_fast_validate
         import numpy
+
         self.assertIn(numpy.floating, float_fast_validate)
 
 
 # Run the unit tests (if invoked from the command line):
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

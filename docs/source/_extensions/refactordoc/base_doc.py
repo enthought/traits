@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #  file: base_doc.py
 #  License: LICENSE.TXT
 #
 #  Copyright (c) 2011, Enthought, Inc.
 #  All rights reserved.
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 import re
 
 from .definition_items import DefinitionItem
 from .line_functions import is_empty, get_indent, fix_backspace, NEW_LINE
 
 
-underline_regex = re.compile(r'\s*\S+\s*\Z')
+underline_regex = re.compile(r"\s*\S+\s*\Z")
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #  Classes
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
 
 class BaseDoc(object):
     """Base abstract docstring refactoring class.
@@ -107,8 +108,8 @@ class BaseDoc(object):
         """
         self.remove_lines(self.index, 2)  # Remove header
         self.remove_if_empty(self.index)  # Remove space after header
-        refactor_postfix = self.headers.get(header, 'header')
-        method_name = ''.join(('_refactor_', refactor_postfix))
+        refactor_postfix = self.headers.get(header, "header")
+        method_name = "".join(("_refactor_", refactor_postfix))
         method = getattr(self, method_name)
         lines = method(header)
         self.insert_and_move(lines, self.index)
@@ -127,7 +128,7 @@ class BaseDoc(object):
 
         """
         header = fix_backspace(header)
-        directive = '.. rubric:: {0}'.format(header)
+        directive = ".. rubric:: {0}".format(header)
         lines = []
         lines += [directive, NEW_LINE]
         return lines
@@ -188,8 +189,9 @@ class BaseDoc(object):
         item_type = DefinitionItem if (item_class is None) else item_class
         is_item = item_type.is_definition
         item_blocks = []
-        while (not self.eod) and \
-                (is_item(self.peek()) or is_item(self.peek(1))):
+        while (not self.eod) and (
+            is_item(self.peek()) or is_item(self.peek(1))
+        ):
             self.remove_if_empty(self.index)
             item_blocks.append(self.get_next_block())
         items = [item_type.parse(block) for block in item_blocks]
@@ -210,14 +212,14 @@ class BaseDoc(object):
 
         """
         item_header = self.pop()
-        sub_indent = get_indent(item_header) + ' '
+        sub_indent = get_indent(item_header) + " "
         block = [item_header]
-        while (not self.eod):
+        while not self.eod:
             peek_0 = self.peek()
             peek_1 = self.peek(1)
-            if (is_empty(peek_0) and (not peek_1.startswith(sub_indent))) \
-                    or ((not is_empty(peek_0)) \
-                    and (not peek_0.startswith(sub_indent))):
+            if (is_empty(peek_0) and (not peek_1.startswith(sub_indent))) or (
+                (not is_empty(peek_0)) and (not peek_0.startswith(sub_indent))
+            ):
                 break
             else:
                 line = self.pop()
@@ -242,10 +244,11 @@ class BaseDoc(object):
             return False
         # is the nextline an rst underline?
         striped_header = header.rstrip()
-        expected_underline1 = re.sub(r'[A-Za-z\\]|\b\s', '-', striped_header)
-        expected_underline2 = re.sub(r'[A-Za-z\\]|\b\s', '=', striped_header)
-        if ((underline.group().rstrip() == expected_underline1) or
-            (underline.group().rstrip() == expected_underline2)):
+        expected_underline1 = re.sub(r"[A-Za-z\\]|\b\s", "-", striped_header)
+        expected_underline2 = re.sub(r"[A-Za-z\\]|\b\s", "=", striped_header)
+        if (underline.group().rstrip() == expected_underline1) or (
+            underline.group().rstrip() == expected_underline2
+        ):
             return header.strip()
         else:
             return False
@@ -277,7 +280,7 @@ class BaseDoc(object):
 
         """
         docstring = self.docstring
-        for line in docstring[self.index:]:
+        for line in docstring[self.index :]:
             if not is_empty(line):
                 break
             self.index += 1
@@ -306,7 +309,7 @@ class BaseDoc(object):
 
         """
         docstring = self.docstring
-        del docstring[index:(index + count)]
+        del docstring[index : (index + count)]
 
     def remove_if_empty(self, index=None):
         """ Remove the line from the docstring if it is empty.
@@ -354,7 +357,7 @@ class BaseDoc(object):
         try:
             line = self.docstring[position]
         except IndexError:
-            line = ''
+            line = ""
         return line
 
     def pop(self, index=None):

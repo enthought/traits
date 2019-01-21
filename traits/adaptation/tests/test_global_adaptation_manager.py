@@ -1,10 +1,19 @@
 """ Test the setting/getting/resetting/using the global adaptation manager. """
 
-from traits.adaptation.api import adapt, AdaptationError, AdaptationManager, \
-    AdaptationOffer, get_global_adaptation_manager, provides_protocol, \
-    register_factory, register_provides, register_offer, \
-    reset_global_adaptation_manager, set_global_adaptation_manager, \
-    supports_protocol
+from traits.adaptation.api import (
+    adapt,
+    AdaptationError,
+    AdaptationManager,
+    AdaptationOffer,
+    get_global_adaptation_manager,
+    provides_protocol,
+    register_factory,
+    register_provides,
+    register_offer,
+    reset_global_adaptation_manager,
+    set_global_adaptation_manager,
+    supports_protocol,
+)
 import traits.adaptation.tests.abc_examples
 from traits.testing.unittest_tools import unittest
 
@@ -31,9 +40,9 @@ class TestGlobalAdaptationManager(unittest.TestCase):
 
         # UKStandard->EUStandard.
         adaptation_manager.register_factory(
-            factory       = ex.UKStandardToEUStandard,
-            from_protocol = ex.UKStandard,
-            to_protocol   = ex.EUStandard,
+            factory=ex.UKStandardToEUStandard,
+            from_protocol=ex.UKStandard,
+            to_protocol=ex.EUStandard,
         )
 
         # Create a UKPlug.
@@ -51,9 +60,9 @@ class TestGlobalAdaptationManager(unittest.TestCase):
 
         # UKStandard->EUStandard.
         adaptation_manager.register_factory(
-            factory       = ex.UKStandardToEUStandard,
-            from_protocol = ex.UKStandard,
-            to_protocol   = ex.EUStandard
+            factory=ex.UKStandardToEUStandard,
+            from_protocol=ex.UKStandard,
+            to_protocol=ex.EUStandard,
         )
 
         # Create a UKPlug.
@@ -71,9 +80,9 @@ class TestGlobalAdaptationManager(unittest.TestCase):
 
         # Global `register_factory`.
         register_factory(
-            factory       = ex.UKStandardToEUStandard,
-            from_protocol = ex.UKStandard,
-            to_protocol   = ex.EUStandard
+            factory=ex.UKStandardToEUStandard,
+            from_protocol=ex.UKStandard,
+            to_protocol=ex.EUStandard,
         )
 
         uk_plug = ex.UKPlug()
@@ -103,9 +112,9 @@ class TestGlobalAdaptationManager(unittest.TestCase):
         ex = self.examples
 
         offer = AdaptationOffer(
-            factory       = ex.UKStandardToEUStandard,
-            from_protocol = ex.UKStandard,
-            to_protocol   = ex.EUStandard
+            factory=ex.UKStandardToEUStandard,
+            from_protocol=ex.UKStandard,
+            to_protocol=ex.EUStandard,
         )
 
         # Global `register_offer`.
@@ -117,7 +126,7 @@ class TestGlobalAdaptationManager(unittest.TestCase):
         self.assertIsInstance(eu_plug, ex.UKStandardToEUStandard)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
 
 #### EOF ######################################################################

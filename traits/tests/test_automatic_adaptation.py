@@ -21,10 +21,10 @@ def bar_to_foo_adapter(bar):
 
 class FooContainer(HasTraits):
     not_adapting_foo = Instance(Foo)
-    adapting_foo = Instance(Foo, adapt='yes')
+    adapting_foo = Instance(Foo, adapt="yes")
 
     not_adapting_foo_list = List(Foo)
-    adapting_foo_list = List(Instance(Foo, adapt='yes'))
+    adapting_foo_list = List(Instance(Foo, adapt="yes"))
 
 
 class TestAutomaticAdaptation(unittest.TestCase):

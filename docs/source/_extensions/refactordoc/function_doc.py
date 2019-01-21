@@ -1,12 +1,12 @@
 # -*- coding: UTF-8 -*-
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #  file: function_doc.py
 #  License: LICENSE.TXT
 #  Author: Ioannis Tziakos
 #
 #  Copyright (c) 2011, Enthought, Inc.
 #  All rights reserved.
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 from .base_doc import BaseDoc
 from .line_functions import get_indent, add_indent
 from .definition_items import ArgumentItem, ListItem
@@ -34,10 +34,15 @@ class FunctionDoc(BaseDoc):
     def __init__(self, lines, headers=None):
 
         if headers is None:
-            headers = {'Returns': 'as_item_list', 'Arguments': 'arguments',
-                       'Parameters': 'arguments', 'Raises': 'as_item_list',
-                       'Yields': 'as_item_list', 'Notes':'notes',
-                       'Note': 'notes'}
+            headers = {
+                "Returns": "as_item_list",
+                "Arguments": "arguments",
+                "Parameters": "arguments",
+                "Raises": "as_item_list",
+                "Yields": "as_item_list",
+                "Notes": "notes",
+                "Note": "notes",
+            }
 
         super(FunctionDoc, self).__init__(lines, headers)
         return
@@ -52,9 +57,9 @@ class FunctionDoc(BaseDoc):
 
         """
         items = self.extract_items(item_class=ListItem)
-        lines = [':{0}:'.format(header.lower())]
+        lines = [":{0}:".format(header.lower())]
         if len(items) > 0:
-            prefix = None if len(items) == 1 else '-'
+            prefix = None if len(items) == 1 else "-"
             for item in items:
                 lines += add_indent(item.to_rst(prefix))
         else:
@@ -88,6 +93,6 @@ class FunctionDoc(BaseDoc):
 
         """
         paragraph = self.get_next_paragraph()
-        lines = ['.. note::']
+        lines = [".. note::"]
         lines += add_indent(paragraph)
         return lines

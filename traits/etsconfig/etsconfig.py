@@ -20,7 +20,7 @@ class ETSToolkitError(RuntimeError):
         The toolkit associated with the error.
     """
 
-    def __init__(self, message='', toolkit=None, *args):
+    def __init__(self, message="", toolkit=None, *args):
         if not message and toolkit:
             message = "could not import toolkit '{0}'".format(toolkit)
         self.toolkit = toolkit
@@ -59,13 +59,12 @@ class ETSConfig(object):
         # Shadow attributes for properties.
         self._application_data = None
         self._application_home = None
-        self._company          = None
-        self._toolkit          = None
-        self._kiva_backend     = None
-        self._user_data        = None
+        self._company = None
+        self._toolkit = None
+        self._kiva_backend = None
+        self._user_data = None
 
         return
-
 
     ###########################################################################
     # 'ETSConfig' interface.
@@ -94,17 +93,16 @@ class ETSConfig(object):
 
        """
         if self._application_data is None:
-            self._application_data = \
-                    self._initialize_application_data(create=create)
+            self._application_data = self._initialize_application_data(
+                create=create
+            )
 
         return self._application_data
-
 
     def _get_application_data(self):
         """ Property getter, see get_application_data's docstring.
         """
         return self.get_application_data(create=True)
-
 
     def _set_application_data(self, application_data):
         """
@@ -153,21 +151,18 @@ class ETSConfig(object):
        """
         if self._application_home is None:
             self._application_home = path.join(
-                                self.get_application_data(create=create),
-                                self._get_application_dirname())
+                self.get_application_data(create=create),
+                self._get_application_dirname(),
+            )
 
         return self._application_home
 
-
-
     application_data = property(_get_application_data, _set_application_data)
-
 
     def _get_application_home(self):
         """ Property getter, see get_application_home's docstring.
         """
         return self.get_application_home(create=True)
-
 
     def _set_application_home(self, application_home):
         """
@@ -179,9 +174,7 @@ class ETSConfig(object):
 
         return
 
-
     application_home = property(_get_application_home, _set_application_home)
-
 
     def _get_company(self):
         """
@@ -194,7 +187,6 @@ class ETSConfig(object):
 
         return self._company
 
-
     def _set_company(self, company):
         """
         Property setter for the company name.
@@ -205,9 +197,7 @@ class ETSConfig(object):
 
         return
 
-
     company = property(_get_company, _set_company)
-
 
     @contextmanager
     def provisional_toolkit(self, toolkit):
@@ -238,9 +228,8 @@ class ETSConfig(object):
             yield
         except:
             # reset the toolkit state
-            self._toolkit = ''
+            self._toolkit = ""
             raise
-
 
     def _get_toolkit(self):
         """
@@ -253,8 +242,7 @@ class ETSConfig(object):
         if self._toolkit is None:
             self._toolkit = self._initialize_toolkit()
 
-        return self._toolkit.split('.')[0]
-
+        return self._toolkit.split(".")[0]
 
     def _set_toolkit(self, toolkit):
         """
@@ -266,13 +254,14 @@ class ETSConfig(object):
         """
 
         if self._toolkit and self._toolkit != toolkit:
-            raise ValueError("cannot set toolkit to %s because it has "
-                             "already been set to %s" % (toolkit, self._toolkit))
+            raise ValueError(
+                "cannot set toolkit to %s because it has "
+                "already been set to %s" % (toolkit, self._toolkit)
+            )
 
         self._toolkit = toolkit
 
         return
-
 
     toolkit = property(_get_toolkit, _set_toolkit)
 
@@ -285,10 +274,10 @@ class ETSConfig(object):
         the 'ENABLE_TOOLKIT' environment variable; otherwise the empty string.
         """
         from warnings import warn
-        warn('Use of the enable_toolkit attribute is deprecated.')
+
+        warn("Use of the enable_toolkit attribute is deprecated.")
 
         return self.toolkit
-
 
     def _set_enable_toolkit(self, toolkit):
         """
@@ -300,10 +289,10 @@ class ETSConfig(object):
         module that gets the value is imported.
         """
         from warnings import warn
-        warn('Use of the enable_toolkit attribute is deprecated.')
+
+        warn("Use of the enable_toolkit attribute is deprecated.")
 
         return
-
 
     enable_toolkit = property(_get_enable_toolkit, _set_enable_toolkit)
 
@@ -316,15 +305,19 @@ class ETSConfig(object):
         value will be a reasonable default for the given enable backend.
         """
         if self._toolkit is None:
-            raise AttributeError("The kiva_backend attribute is dependent on toolkit, which has not been set.")
+            raise AttributeError(
+                "The kiva_backend attribute is dependent on toolkit, which has not been set."
+            )
 
         if self._kiva_backend is None:
             try:
-                self._kiva_backend = self._toolkit.split('.')[1]
+                self._kiva_backend = self._toolkit.split(".")[1]
             except IndexError:
                 # Pick a reasonable default based on the toolkit
                 if self.toolkit == "wx":
-                    self._kiva_backend = "quartz" if sys.platform == "darwin" else "image"
+                    self._kiva_backend = (
+                        "quartz" if sys.platform == "darwin" else "image"
+                    )
                 elif self.toolkit == "qt4":
                     self._kiva_backend = "image"
                 elif self.toolkit == "pyglet":
@@ -352,7 +345,6 @@ class ETSConfig(object):
 
         return self._user_data
 
-
     def _set_user_data(self, user_data):
         """
         Property setter.
@@ -363,9 +355,7 @@ class ETSConfig(object):
 
         return
 
-
     user_data = property(_get_user_data, _set_user_data)
-
 
     #### private methods #####################################################
 
@@ -393,14 +383,13 @@ class ETSConfig(object):
 
         dirname = ""
 
-        main_mod = sys.modules.get('__main__', None)
+        main_mod = sys.modules.get("__main__", None)
         if main_mod is not None:
-            if hasattr(main_mod, '__file__'):
+            if hasattr(main_mod, "__file__"):
                 main_mod_file = path.abspath(main_mod.__file__)
                 dirname = path.basename(path.dirname(main_mod_file))
 
         return dirname
-
 
     def _initialize_application_data(self, create=True):
         """
@@ -408,25 +397,28 @@ class ETSConfig(object):
 
         """
 
-        if sys.platform == 'win32':
-            environment_variable = 'APPDATA'
-            directory_name       = self.company
+        if sys.platform == "win32":
+            environment_variable = "APPDATA"
+            directory_name = self.company
 
         else:
-            environment_variable = 'HOME'
-            directory_name       = '.' + self.company.lower()
+            environment_variable = "HOME"
+            directory_name = "." + self.company.lower()
 
         # Lookup the environment variable.
         parent_directory = os.environ.get(environment_variable, None)
-        if parent_directory is None or parent_directory == '/root':
+        if parent_directory is None or parent_directory == "/root":
             import tempfile
             from warnings import warn
+
             parent_directory = tempfile.gettempdir()
-            user = os.environ.get('USER', None)
+            user = os.environ.get("USER", None)
             if user is not None:
                 directory_name += "_%s" % user
-            warn('Environment variable "%s" not set, setting home directory to %s' % \
-                (environment_variable, parent_directory))
+            warn(
+                'Environment variable "%s" not set, setting home directory to %s'
+                % (environment_variable, parent_directory)
+            )
 
         application_data = os.path.join(parent_directory, directory_name)
 
@@ -435,8 +427,9 @@ class ETSConfig(object):
             # a directory!
             if os.path.exists(application_data):
                 if not os.path.isdir(application_data):
-                    raise ValueError('File "%s" already exists'
-                                                    % application_data)
+                    raise ValueError(
+                        'File "%s" already exists' % application_data
+                    )
 
             # Otherwise, create the directory.
             else:
@@ -444,15 +437,13 @@ class ETSConfig(object):
 
         return application_data
 
-
     def _initialize_company(self):
         """
         Initializes the (default) company.
 
         """
 
-        return 'Enthought'
-
+        return "Enthought"
 
     def _initialize_toolkit(self):
         """
@@ -462,10 +453,9 @@ class ETSConfig(object):
         if self._toolkit is not None:
             toolkit = self._toolkit
         else:
-            toolkit = os.environ.get('ETS_TOOLKIT', '')
+            toolkit = os.environ.get("ETS_TOOLKIT", "")
 
         return toolkit
-
 
     def _initialize_user_data(self):
         """
@@ -474,11 +464,10 @@ class ETSConfig(object):
         """
 
         # We check what the os.path.expanduser returns
-        parent_directory = os.path.expanduser('~')
+        parent_directory = os.path.expanduser("~")
         directory_name = self.company
 
-
-        if sys.platform == 'win32':
+        if sys.platform == "win32":
             try:
                 from win32com.shell import shell, shellcon
 
@@ -495,7 +484,7 @@ class ETSConfig(object):
                 # If yes, then we should modify the usr_dir to be 'My Documents'.
                 # If no, then the user must have modified the os.environ
                 # variables and the directory chosen is a desirable one.
-                desired_dir = os.path.join(parent_directory, 'My Documents')
+                desired_dir = os.path.join(parent_directory, "My Documents")
 
                 if os.path.exists(desired_dir):
                     parent_directory = desired_dir
@@ -517,7 +506,6 @@ class ETSConfig(object):
             os.makedirs(usr_dir)
 
         return usr_dir
-
 
 
 # We very purposefully only have one object and do not export the class. We

@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
@@ -15,15 +15,15 @@
 #
 #  Rewritten as a C-based type extension: 06/21/2004
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 """ Defines the HasTraits class, along with several useful subclasses and
     associated metaclasses.
 """
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Imports:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 from __future__ import absolute_import, division, print_function
 
@@ -42,22 +42,46 @@ from .adaptation.adaptation_error import AdaptationError
 
 from .ctraits import CHasTraits, _HasTraits_monitors
 
-from .traits import (CTrait, ForwardProperty, Property, SpecialNames, Trait,
-    TraitFactory, __newobj__, generic_trait, trait_factory)
+from .traits import (
+    CTrait,
+    ForwardProperty,
+    Property,
+    SpecialNames,
+    Trait,
+    TraitFactory,
+    __newobj__,
+    generic_trait,
+    trait_factory,
+)
 
 from .trait_types import Any, Bool, Disallow, Enum, Event, Python, This
 
-from .trait_notifiers import (ExtendedTraitChangeNotifyWrapper,
-    FastUITraitChangeNotifyWrapper, NewTraitChangeNotifyWrapper,
-    StaticAnyTraitChangeNotifyWrapper, StaticTraitChangeNotifyWrapper,
-    TraitChangeNotifyWrapper)
+from .trait_notifiers import (
+    ExtendedTraitChangeNotifyWrapper,
+    FastUITraitChangeNotifyWrapper,
+    NewTraitChangeNotifyWrapper,
+    StaticAnyTraitChangeNotifyWrapper,
+    StaticTraitChangeNotifyWrapper,
+    TraitChangeNotifyWrapper,
+)
 
 from .trait_handlers import (
-    TraitType, MISSING_DEFAULT_VALUE, TRAIT_LIST_OBJECT_DEFAULT_VALUE,
-    CALLABLE_DEFAULT_VALUE)
+    TraitType,
+    MISSING_DEFAULT_VALUE,
+    TRAIT_LIST_OBJECT_DEFAULT_VALUE,
+    CALLABLE_DEFAULT_VALUE,
+)
 
-from .trait_base import (Missing, SequenceTypes, TraitsCache, Undefined,
-    add_article, is_none, not_event, not_false)
+from .trait_base import (
+    Missing,
+    SequenceTypes,
+    TraitsCache,
+    Undefined,
+    add_article,
+    is_none,
+    not_event,
+    not_false,
+)
 
 from .trait_errors import TraitError
 
@@ -65,7 +89,7 @@ from .protocols.advice import addClassAdvisor
 
 from .util.deprecated import deprecated
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Set CHECK_INTERFACES to one of the following values:
 #
 #  - 0: Does not check to see if classes implement their declared interfaces.
@@ -73,11 +97,11 @@ from .util.deprecated import deprecated
 #       logs a warning if they don't.
 #  - 2: Ensures that classes implement the interfaces they say they do, and
 #       raises an InterfaceError if they don't.
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 CHECK_INTERFACES = 0
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Deferred definitions:
 #
 #  The following classes have a 'chicken and the egg' definition problem. They
@@ -87,106 +111,120 @@ CHECK_INTERFACES = 0
 #
 #  Note: We need to look at whether the Category support could be used to
 #        allow us to implement this better.
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class ViewElement ( object ):
+
+class ViewElement(object):
     pass
 
-def ViewElements ( ):
+
+def ViewElements():
     return None
 
-#-------------------------------------------------------------------------------
-#  Constants:
-#-------------------------------------------------------------------------------
 
-WrapperTypes   = ( StaticAnyTraitChangeNotifyWrapper,
-                   StaticTraitChangeNotifyWrapper )
+# -------------------------------------------------------------------------------
+#  Constants:
+# -------------------------------------------------------------------------------
+
+WrapperTypes = (
+    StaticAnyTraitChangeNotifyWrapper,
+    StaticTraitChangeNotifyWrapper,
+)
 
 if sys.version_info[0] >= 3:
     # in python 3, unbound methods do not exist anymore, they're just functions
-    BoundMethodTypes    = ( MethodType, )
-    UnboundMethodTypes  = ( FunctionType, )
+    BoundMethodTypes = (MethodType,)
+    UnboundMethodTypes = (FunctionType,)
 else:
-    BoundMethodTypes    = ( MethodType, )
-    UnboundMethodTypes  = ( MethodType, )
+    BoundMethodTypes = (MethodType,)
+    UnboundMethodTypes = (MethodType,)
 
-FunctionTypes  = ( FunctionType, )
+FunctionTypes = (FunctionType,)
 
 # Class dictionary entries used to save trait, listener and view information and
 # definitions:
 
-BaseTraits      = '__base_traits__'
-ClassTraits     = '__class_traits__'
-PrefixTraits    = '__prefix_traits__'
-ListenerTraits  = '__listener_traits__'
-ViewTraits      = '__view_traits__'
-InstanceTraits  = '__instance_traits__'
+BaseTraits = "__base_traits__"
+ClassTraits = "__class_traits__"
+PrefixTraits = "__prefix_traits__"
+ListenerTraits = "__listener_traits__"
+ViewTraits = "__view_traits__"
+InstanceTraits = "__instance_traits__"
 
 # The default Traits View name
-DefaultTraitsView = 'traits_view'
+DefaultTraitsView = "traits_view"
 
 # Trait types which cannot have default values
-CantHaveDefaultValue = ( 'event', 'delegate', 'constant' )
+CantHaveDefaultValue = ("event", "delegate", "constant")
 
 # An empty list
 EmptyList = []
 
 # The trait types that should be copied last when doing a 'copy_traits':
-DeferredCopy = ( 'delegate', 'property' )
+DeferredCopy = ("delegate", "property")
 
 # Quick test for normal vs extended trait name
-extended_trait_pat = re.compile( r'.*[ :\+\-,\.\*\?\[\]]' )
+extended_trait_pat = re.compile(r".*[ :\+\-,\.\*\?\[\]]")
 
 # Generic 'Any' trait:
 any_trait = Any().as_ctrait()
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Creates a clone of a specified trait:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def _clone_trait ( clone, metadata = None ):
+
+def _clone_trait(clone, metadata=None):
     """ Creates a clone of a specified trait.
     """
-    trait = CTrait( 0 )
-    trait.clone( clone )
+    trait = CTrait(0)
+    trait.clone(clone)
 
     if clone.__dict__ is not None:
         trait.__dict__ = clone.__dict__.copy()
 
     if metadata is not None:
-        trait.__dict__.update( metadata )
+        trait.__dict__.update(metadata)
 
     return trait
 
-#-------------------------------------------------------------------------------
-#  Gets the definition of a specified method (if any):
-#-------------------------------------------------------------------------------
 
-def _get_method ( cls, method ):
-    result = getattr( cls, method, None )
+# -------------------------------------------------------------------------------
+#  Gets the definition of a specified method (if any):
+# -------------------------------------------------------------------------------
+
+
+def _get_method(cls, method):
+    result = getattr(cls, method, None)
     if (result is not None) and is_unbound_method_type(result):
         return result
     return None
 
 
-def _get_def ( class_name, class_dict, bases, method ):
+def _get_def(class_name, class_dict, bases, method):
     """ Gets the definition of a specified method (if any).
     """
-    if method[0:2] == '__':
-        method = '_%s%s' % ( class_name, method )
+    if method[0:2] == "__":
+        method = "_%s%s" % (class_name, method)
 
-    result = class_dict.get( method )
-    if ((result is not None) and
-        is_function_type(result) and
-        (getattr( result, 'on_trait_change', None ) is None)):
+    result = class_dict.get(method)
+    if (
+        (result is not None)
+        and is_function_type(result)
+        and (getattr(result, "on_trait_change", None) is None)
+    ):
         return result
 
     for base in bases:
-        result = getattr( base, method, None )
-        if ((result is not None) and
-            is_unbound_method_type(result) and \
-            (getattr( six.get_unbound_function,
-                        'on_trait_change', None ) is None)):
+        result = getattr(base, method, None)
+        if (
+            (result is not None)
+            and is_unbound_method_type(result)
+            and (
+                getattr(six.get_unbound_function, "on_trait_change", None)
+                is None
+            )
+        ):
             return result
 
     return None
@@ -195,51 +233,63 @@ def _get_def ( class_name, class_dict, bases, method ):
 def is_cython_func_or_method(method):
     """ Test if the given input is a Cython method or function. """
     # The only way to get the type from the method with str comparison ...
-    return 'cython_function_or_method' in str(type(method))
+    return "cython_function_or_method" in str(type(method))
+
 
 def is_bound_method_type(method):
     """ Test if the given input is a Python method or a Cython method. """
-    return isinstance(method, BoundMethodTypes ) or is_cython_func_or_method(method)
+    return isinstance(method, BoundMethodTypes) or is_cython_func_or_method(
+        method
+    )
+
 
 def is_unbound_method_type(method):
     """ Test if the given input is a Python method or a Cython method. """
-    return isinstance(method, UnboundMethodTypes ) or is_cython_func_or_method(method)
+    return isinstance(method, UnboundMethodTypes) or is_cython_func_or_method(
+        method
+    )
+
 
 def is_function_type(function):
     """ Test if the given input is a Python function or a Cython method. """
-    return isinstance(function, FunctionTypes ) or \
-           is_cython_func_or_method(function)
+    return isinstance(function, FunctionTypes) or is_cython_func_or_method(
+        function
+    )
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Returns whether or not a specified value is serializable:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def _is_serializable ( value ):
+
+def _is_serializable(value):
     """ Returns whether or not a specified value is serializable.
     """
-    if isinstance( value, ( list, tuple ) ):
+    if isinstance(value, (list, tuple)):
         for item in value:
-            if not _is_serializable( item ):
+            if not _is_serializable(item):
                 return False
 
         return True
 
-    if isinstance( value, dict ):
+    if isinstance(value, dict):
         for name, item in value.items():
-            if ((not _is_serializable( name )) or
-                (not _is_serializable( item ))):
+            if (not _is_serializable(name)) or (not _is_serializable(item)):
                 return False
 
         return True
 
-    return ((not isinstance( value, HasTraits )) or
-            value.has_traits_interface( ISerializable ))
+    return (not isinstance(value, HasTraits)) or value.has_traits_interface(
+        ISerializable
+    )
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Returns a dictionary of potential 'Instance' or 'List(Instance)' handlers:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def _get_instance_handlers ( class_dict, bases ):
+
+def _get_instance_handlers(class_dict, bases):
     """ Returns a dictionary of potential 'Instance' or 'List(Instance)'
         handlers.
     """
@@ -248,157 +298,179 @@ def _get_instance_handlers ( class_dict, bases ):
 
     # Merge all of the base class information into the result:
     for base in bases:
-        for name, base_arg_lists in base.__dict__.get( InstanceTraits ).items():
-            arg_lists = instance_traits.get( name )
+        for name, base_arg_lists in base.__dict__.get(InstanceTraits).items():
+            arg_lists = instance_traits.get(name)
             if arg_lists is None:
-                instance_traits[ name ] = base_arg_lists[:]
+                instance_traits[name] = base_arg_lists[:]
             else:
                 for arg_list in base_arg_lists:
                     if arg_list not in arg_lists:
-                        arg_lists.append( arg_list )
+                        arg_lists.append(arg_list)
 
     # Merge in the information from the class dictionary:
     for name, value in class_dict.items():
-        if (name[:1] == '_') and is_function_type(value):
-            n   = 13
-            col = name.find( '_changed_for_' )
+        if (name[:1] == "_") and is_function_type(value):
+            n = 13
+            col = name.find("_changed_for_")
             if col < 2:
-                 n   = 11
-                 col = name.find( '_fired_for_' )
+                n = 11
+                col = name.find("_fired_for_")
             if col >= 2:
-                key = name[ col + n: ]
-                if key != '':
-                    arg_list  = ( name, name[ 1: col ] )
-                    arg_lists = instance_traits.setdefault( key, [] )
+                key = name[col + n :]
+                if key != "":
+                    arg_list = (name, name[1:col])
+                    arg_lists = instance_traits.setdefault(key, [])
                     if arg_list not in arg_lists:
-                        arg_lists.append( arg_list )
+                        arg_lists.append(arg_list)
 
     # Return the dictionary of possible arg_lists:
     return instance_traits
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Returns the correct 'delegate' listener pattern for a specified name and
 #  delegate trait:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def get_delegate_pattern ( name, trait ):
+
+def get_delegate_pattern(name, trait):
     """ Returns the correct 'delegate' listener pattern for a specified name and
         delegate trait.
     """
     prefix = trait._prefix
-    if prefix == '':
+    if prefix == "":
         prefix = name
-    elif (len( prefix ) > 1) and (prefix[-1] == '*'):
+    elif (len(prefix) > 1) and (prefix[-1] == "*"):
         prefix = prefix[:-1] + name
 
-    return ' %s:%s' % ( trait._delegate, prefix )
+    return " %s:%s" % (trait._delegate, prefix)
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  '_SimpleTest' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+
 
 class _SimpleTest:
-    def __init__ ( self, value ): self.value = value
-    def __call__ ( self, test  ): return test == self.value
+    def __init__(self, value):
+        self.value = value
 
-#-------------------------------------------------------------------------------
+    def __call__(self, test):
+        return test == self.value
+
+
+# -------------------------------------------------------------------------------
 #  Returns either the original value or a valid CTrait if the value can be
 #  converted to a CTrait:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def _check_trait ( trait ):
+
+def _check_trait(trait):
     """ Returns either the original value or a valid CTrait if the value can be
         converted to a CTrait.
     """
-    if isinstance( trait, CTrait ):
+    if isinstance(trait, CTrait):
         return trait
 
-    if isinstance( trait, TraitFactory ):
-        return trait_factory( trait )
+    if isinstance(trait, TraitFactory):
+        return trait_factory(trait)
 
-    if isinstance( trait, type ) and issubclass( trait, TraitType ):
+    if isinstance(trait, type) and issubclass(trait, TraitType):
         trait = trait()
 
-    if isinstance( trait, TraitType ):
+    if isinstance(trait, TraitType):
         return trait.as_ctrait()
 
     return trait
 
-#-------------------------------------------------------------------------------
-#  Returns the trait corresponding to a specified value:
-#-------------------------------------------------------------------------------
 
-def _trait_for ( trait ):
+# -------------------------------------------------------------------------------
+#  Returns the trait corresponding to a specified value:
+# -------------------------------------------------------------------------------
+
+
+def _trait_for(trait):
     """ Returns the trait corresponding to a specified value.
     """
-    trait = _check_trait( trait )
-    if isinstance( trait, CTrait ):
+    trait = _check_trait(trait)
+    if isinstance(trait, CTrait):
         return trait
 
-    return Trait( trait )
+    return Trait(trait)
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Returns the 'mapped trait' definition for a mapped trait:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def _mapped_trait_for ( trait ):
+
+def _mapped_trait_for(trait):
     """ Returns the 'mapped trait' definition for a mapped trait.
     """
     default_value = trait.default_value()[1]
     try:
-        default_value = trait.handler.mapped_value( default_value )
+        default_value = trait.handler.mapped_value(default_value)
     except:
         pass
 
-    return Any( default_value, is_base  = False, transient = True,
-                               editable = False ).as_ctrait()
+    return Any(
+        default_value, is_base=False, transient=True, editable=False
+    ).as_ctrait()
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Adds a list of handlers to a specified notifiers list:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def _add_notifiers ( notifiers, handlers ):
+
+def _add_notifiers(notifiers, handlers):
     """ Adds a list of handlers to a specified notifiers list.
     """
     for handler in handlers:
-        if not isinstance( handler, WrapperTypes ):
-            handler = StaticTraitChangeNotifyWrapper( handler )
-        notifiers.append( handler )
+        if not isinstance(handler, WrapperTypes):
+            handler = StaticTraitChangeNotifyWrapper(handler)
+        notifiers.append(handler)
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Adds any specified event handlers defined for a trait by a class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def _add_event_handlers ( trait, cls, handlers ):
+
+def _add_event_handlers(trait, cls, handlers):
     """ Adds any specified event handlers defined for a trait by a class.
     """
     events = trait.event
     if events is not None:
         if isinstance(events, six.string_types):
-            events = [ events ]
+            events = [events]
 
         for event in events:
-            handlers.append( _get_method( cls, '_%s_changed' % event ) )
-            handlers.append( _get_method( cls, '_%s_fired'   % event ) )
+            handlers.append(_get_method(cls, "_%s_changed" % event))
+            handlers.append(_get_method(cls, "_%s_fired" % event))
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Returns the method associated with a particular class property getter/setter:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def _property_method ( class_dict, name ):
+
+def _property_method(class_dict, name):
     """ Returns the method associated with a particular class property
     getter/setter.
     """
-    return class_dict.get( name )
+    return class_dict.get(name)
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  'MetaHasTraits' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 # This really should be 'HasTraits', but it's not defined yet:
 _HasTraits = None
 
-class MetaHasTraits ( type ):
+
+class MetaHasTraits(type):
     """ Controls the creation of HasTraits classes.
 
     The heavy work is done by the `create_traits_meta_dict` function, which
@@ -408,48 +480,50 @@ class MetaHasTraits ( type ):
     of the type superclass, to be added to the class.
 
     """
+
     # All registered class creation listeners.
     #
     # { Str class_name : Callable listener }
     _listeners = {}
 
-    def __new__ ( cls, class_name, bases, class_dict ):
+    def __new__(cls, class_name, bases, class_dict):
         update_traits_class_dict(
-            class_name, bases, class_dict, is_category=False )
+            class_name, bases, class_dict, is_category=False
+        )
 
         # Finish building the class using the updated class dictionary:
-        klass = type.__new__( cls, class_name, bases, class_dict )
+        klass = type.__new__(cls, class_name, bases, class_dict)
 
         # Call all listeners that registered for this specific class:
-        name = '%s.%s' % ( klass.__module__, klass.__name__ )
-        for listener in MetaHasTraits._listeners.get( name, [] ):
-            listener( klass )
+        name = "%s.%s" % (klass.__module__, klass.__name__)
+        for listener in MetaHasTraits._listeners.get(name, []):
+            listener(klass)
 
         # Call all listeners that registered for ANY class:
-        for listener in MetaHasTraits._listeners.get( '', [] ):
-            listener( klass )
+        for listener in MetaHasTraits._listeners.get("", []):
+            listener(klass)
 
         return klass
 
-    def add_listener ( cls, listener, class_name = '' ):
+    def add_listener(cls, listener, class_name=""):
         """ Adds a class creation listener.
 
         If the class name is the empty string then the listener will be called
         when *any* class is created.
         """
-        MetaHasTraits._listeners.setdefault( class_name, [] ).append( listener )
+        MetaHasTraits._listeners.setdefault(class_name, []).append(listener)
 
-    add_listener = classmethod( add_listener )
+    add_listener = classmethod(add_listener)
 
-    def remove_listener ( cls, listener, class_name = '' ):
+    def remove_listener(cls, listener, class_name=""):
         """ Removes a class creation listener.
         """
-        MetaHasTraits._listeners[ class_name ].remove( listener )
+        MetaHasTraits._listeners[class_name].remove(listener)
 
-    remove_listener = classmethod( remove_listener )
+    remove_listener = classmethod(remove_listener)
 
 
-def update_traits_class_dict( class_name, bases, class_dict, is_category ):
+def update_traits_class_dict(class_name, bases, class_dict, is_category):
     """ Processes all of the traits related data in the class dictionary.
 
     This is called during the construction of a new HasTraits class. The first
@@ -471,343 +545,376 @@ def update_traits_class_dict( class_name, bases, class_dict, is_category ):
     """
     # Create the various class dictionaries, lists and objects needed to
     # hold trait and view information and definitions:
-    base_traits      = {}
-    class_traits     = {}
-    prefix_traits    = {}
-    listeners        = {}
-    prefix_list      = []
-    override_bases   = bases
-    view_elements    = ViewElements()
+    base_traits = {}
+    class_traits = {}
+    prefix_traits = {}
+    listeners = {}
+    prefix_list = []
+    override_bases = bases
+    view_elements = ViewElements()
 
     # Create a list of just those base classes that derive from HasTraits:
-    hastraits_bases = [ base for base in bases
-                        if base.__dict__.get( ClassTraits ) is not None ]
+    hastraits_bases = [
+        base for base in bases if base.__dict__.get(ClassTraits) is not None
+    ]
 
     # Create a list of all inherited trait dictionaries:
-    inherited_class_traits = [ base.__dict__.get( ClassTraits )
-                               for base in hastraits_bases ]
+    inherited_class_traits = [
+        base.__dict__.get(ClassTraits) for base in hastraits_bases
+    ]
 
     # Move all trait definitions from the class dictionary to the
     # appropriate trait class dictionaries:
     for name, value in list(class_dict.items()):
-        value = _check_trait( value )
-        rc    = isinstance( value, CTrait )
+        value = _check_trait(value)
+        rc = isinstance(value, CTrait)
 
-        if (not rc) and isinstance( value, ForwardProperty ):
-            rc     = True
+        if (not rc) and isinstance(value, ForwardProperty):
+            rc = True
             # Create Property trait from getter, setter, validator
-            getter = _property_method( class_dict, '_get_' + name )
-            setter = _property_method( class_dict, '_set_' + name )
+            getter = _property_method(class_dict, "_get_" + name)
+            setter = _property_method(class_dict, "_set_" + name)
             if (setter is None) and (getter is not None):
-                if getattr( getter, 'settable', False ):
+                if getattr(getter, "settable", False):
                     setter = HasTraits._set_traits_cache
-                elif getattr( getter, 'flushable', False ):
+                elif getattr(getter, "flushable", False):
                     setter = HasTraits._flush_traits_cache
-            validate = _property_method( class_dict, '_validate_' + name )
+            validate = _property_method(class_dict, "_validate_" + name)
             if validate is None:
                 validate = value.validate
 
-            value = Property( getter, setter, validate, True,
-                              value.handler, **value.metadata )
+            value = Property(
+                getter, setter, validate, True, value.handler, **value.metadata
+            )
         if rc:
-            del class_dict[ name ]
-            if name[-1:] != '_':
-                base_traits[ name ] = class_traits[ name ] = value
+            del class_dict[name]
+            if name[-1:] != "_":
+                base_traits[name] = class_traits[name] = value
                 value_type = value.type
-                if value_type == 'trait':
-                   handler = value.handler
-                   if handler is not None:
-                       if handler.has_items:
-                           items_trait = _clone_trait(
-                               handler.items_event(), value.__dict__ )
+                if value_type == "trait":
+                    handler = value.handler
+                    if handler is not None:
+                        if handler.has_items:
+                            items_trait = _clone_trait(
+                                handler.items_event(), value.__dict__
+                            )
 
-                           if items_trait.instance_handler == \
-                               '_list_changed_handler':
-                               items_trait.instance_handler = \
-                                   '_list_items_changed_handler'
+                            if (
+                                items_trait.instance_handler
+                                == "_list_changed_handler"
+                            ):
+                                items_trait.instance_handler = (
+                                    "_list_items_changed_handler"
+                                )
 
-                           class_traits[ name + '_items' ] = items_trait
+                            class_traits[name + "_items"] = items_trait
 
-                       if handler.is_mapped:
-                           class_traits[ name + '_' ] = _mapped_trait_for(
-                                value )
+                        if handler.is_mapped:
+                            class_traits[name + "_"] = _mapped_trait_for(value)
 
-                elif value_type == 'delegate':
+                elif value_type == "delegate":
                     # Only add a listener if the trait.listenable metadata
                     # is not False:
                     if value._listenable is not False:
-                        listeners[ name ] = ( 'delegate',
-                                       get_delegate_pattern( name, value ) )
-                elif value_type == 'event':
+                        listeners[name] = (
+                            "delegate",
+                            get_delegate_pattern(name, value),
+                        )
+                elif value_type == "event":
                     on_trait_change = value.on_trait_change
-                    if isinstance( on_trait_change, six.string_types ):
-                        listeners[ name ] = ( 'event', on_trait_change )
+                    if isinstance(on_trait_change, six.string_types):
+                        listeners[name] = ("event", on_trait_change)
             else:
                 name = name[:-1]
-                prefix_list.append( name )
-                prefix_traits[ name ] = value
+                prefix_list.append(name)
+                prefix_traits[name] = value
 
-        elif isinstance( value, FunctionType ) or is_cython_func_or_method(value):
-            pattern = getattr( value, 'on_trait_change', None )
+        elif isinstance(value, FunctionType) or is_cython_func_or_method(
+            value
+        ):
+            pattern = getattr(value, "on_trait_change", None)
             if pattern is not None:
-                listeners[ name ] = ( 'method', pattern )
+                listeners[name] = ("method", pattern)
 
-        elif isinstance( value, property ):
-            class_traits[ name ] = generic_trait
+        elif isinstance(value, property):
+            class_traits[name] = generic_trait
 
         # Handle any view elements found in the class:
-        elif isinstance( value, ViewElement ):
+        elif isinstance(value, ViewElement):
 
             # Add the view element to the class's 'ViewElements' if it is
             # not already defined (duplicate definitions are errors):
             if name in view_elements.content:
                 raise TraitError(
-                    "Duplicate definition for view element '%s'" % name )
+                    "Duplicate definition for view element '%s'" % name
+                )
 
-            view_elements.content[ name ] = value
+            view_elements.content[name] = value
 
             # Replace all substitutable view sub elements with 'Include'
             # objects, and add the substituted items to the
             # 'ViewElements':
-            value.replace_include( view_elements )
+            value.replace_include(view_elements)
 
             # Remove the view element from the class definition:
-            del class_dict[ name ]
+            del class_dict[name]
 
         else:
             for ct in inherited_class_traits:
                 if name in ct:
                     # The subclass is providing a default value for the
                     # trait defined in a superclass.
-                    ictrait = ct[ name ]
+                    ictrait = ct[name]
                     if ictrait.type in CantHaveDefaultValue:
-                        raise TraitError( "Cannot specify a default value "
+                        raise TraitError(
+                            "Cannot specify a default value "
                             "for the %s trait '%s'. You must override the "
-                            "the trait definition instead." %
-                            ( ictrait.type, name ) )
+                            "the trait definition instead."
+                            % (ictrait.type, name)
+                        )
 
                     default_value = value
-                    class_traits[ name ] = value = ictrait( default_value )
+                    class_traits[name] = value = ictrait(default_value)
                     # Make sure that the trait now has the default value
                     # has the correct initializer.
                     value.default_value(MISSING_DEFAULT_VALUE, value.default)
-                    del class_dict[ name ]
+                    del class_dict[name]
                     override_bases = []
-                    handler        = value.handler
+                    handler = value.handler
                     if (handler is not None) and handler.is_mapped:
-                        class_traits[ name + '_' ] = _mapped_trait_for(
-                                                                     value )
+                        class_traits[name + "_"] = _mapped_trait_for(value)
                     break
 
     # Process all HasTraits base classes:
     migrated_properties = {}
-    implements          = []
+    implements = []
     for base in hastraits_bases:
         base_dict = base.__dict__
 
         # Merge listener information:
-        for name, value in base_dict.get( ListenerTraits ).items():
+        for name, value in base_dict.get(ListenerTraits).items():
             if (name not in class_traits) and (name not in class_dict):
-                listeners[ name ] = value
+                listeners[name] = value
 
         # Merge base traits:
-        for name, value in base_dict.get( BaseTraits ).items():
+        for name, value in base_dict.get(BaseTraits).items():
             if name not in base_traits:
                 property_info = value.property()
                 if property_info is not None:
-                    key = id( value )
-                    migrated_properties[ key ] = value = \
-                        migrate_property( name, value, property_info,
-                                          class_dict )
-                base_traits[ name ] = value
+                    key = id(value)
+                    migrated_properties[key] = value = migrate_property(
+                        name, value, property_info, class_dict
+                    )
+                base_traits[name] = value
 
             elif is_category:
                 raise TraitError(
                     "Cannot override '%s' trait "
-                    "definition in a category" % name)
+                    "definition in a category" % name
+                )
 
         # Merge class traits:
-        for name, value in base_dict.get( ClassTraits ).items():
+        for name, value in base_dict.get(ClassTraits).items():
             if name not in class_traits:
                 property_info = value.property()
                 if property_info is not None:
-                    new_value = migrated_properties.get( id( value ) )
+                    new_value = migrated_properties.get(id(value))
                     if new_value is not None:
                         value = new_value
                     else:
-                        value = migrate_property( name, value,
-                                                  property_info, class_dict )
-                class_traits[ name ] = value
+                        value = migrate_property(
+                            name, value, property_info, class_dict
+                        )
+                class_traits[name] = value
 
             elif is_category:
                 raise TraitError(
                     "Cannot override '%s' trait "
-                    "definition in a category" % name)
+                    "definition in a category" % name
+                )
 
         # Merge prefix traits:
-        base_prefix_traits = base_dict.get( PrefixTraits )
-        for name in base_prefix_traits['*']:
+        base_prefix_traits = base_dict.get(PrefixTraits)
+        for name in base_prefix_traits["*"]:
             if name not in prefix_list:
-                prefix_list.append( name )
-                prefix_traits[ name ] = base_prefix_traits[ name ]
+                prefix_list.append(name)
+                prefix_traits[name] = base_prefix_traits[name]
             elif is_category:
                 raise TraitError(
                     "Cannot override '%s_' trait "
-                    "definition in a category" % name)
+                    "definition in a category" % name
+                )
 
         # If the base class has a 'ViewElements' object defined, add it to
         # the 'parents' list of this class's 'ViewElements':
-        parent_view_elements = base_dict.get( ViewTraits )
+        parent_view_elements = base_dict.get(ViewTraits)
         if parent_view_elements is not None:
-            view_elements.parents.append( parent_view_elements )
+            view_elements.parents.append(parent_view_elements)
 
     # Make sure there is a definition for 'undefined' traits:
-    if (prefix_traits.get( '' ) is None) and (not is_category):
-        prefix_list.append( '' )
-        prefix_traits[''] = Python().as_ctrait()
+    if (prefix_traits.get("") is None) and (not is_category):
+        prefix_list.append("")
+        prefix_traits[""] = Python().as_ctrait()
 
     # Save a link to the prefix_list:
-    prefix_traits['*'] = prefix_list
+    prefix_traits["*"] = prefix_list
 
     # Make sure the trait prefixes are sorted longest to shortest
     # so that we can easily bind dynamic traits to the longest matching
     # prefix:
-    prefix_list.sort( key = lambda x: -len(x) )
+    prefix_list.sort(key=lambda x: -len(x))
 
     # Get the list of all possible 'Instance'/'List(Instance)' handlers:
-    instance_traits = _get_instance_handlers( class_dict, hastraits_bases )
+    instance_traits = _get_instance_handlers(class_dict, hastraits_bases)
 
     # If there is an 'anytrait_changed' event handler, wrap it so that
     # it can be attached to all traits in the class:
-    anytrait = _get_def( class_name, class_dict, bases,
-                         '_anytrait_changed' )
+    anytrait = _get_def(class_name, class_dict, bases, "_anytrait_changed")
     if anytrait is not None:
-        anytrait = StaticAnyTraitChangeNotifyWrapper( anytrait )
+        anytrait = StaticAnyTraitChangeNotifyWrapper(anytrait)
 
         # Save it in the prefix traits dictionary so that any dynamically
         # created traits (e.g. 'prefix traits') can re-use it:
-        prefix_traits['@'] = anytrait
+        prefix_traits["@"] = anytrait
 
     # Make one final pass over the class traits dictionary, making sure
     # all static trait notification handlers are attached to a 'cloned'
     # copy of the original trait:
     cloned = set()
     for name in list(class_traits.keys()):
-        trait    = class_traits[ name ]
-        handlers = [ anytrait,
-                     _get_def( class_name, class_dict, bases,
-                               '_%s_changed' % name ),
-                     _get_def( class_name, class_dict, bases,
-                               '_%s_fired' % name ) ]
+        trait = class_traits[name]
+        handlers = [
+            anytrait,
+            _get_def(class_name, class_dict, bases, "_%s_changed" % name),
+            _get_def(class_name, class_dict, bases, "_%s_fired" % name),
+        ]
 
         # Check for an 'Instance' or 'List(Instance)' trait with defined
         # handlers:
         instance_handler = trait.instance_handler
-        if ((instance_handler is not None) and
-            (name in instance_traits) or
-            ((instance_handler == '_list_items_changed_handler') and
-             (name[-6:] == '_items') and
-             (name[:-6] in instance_traits))):
-            handlers.append( getattr( HasTraits, instance_handler ) )
+        if (
+            (instance_handler is not None)
+            and (name in instance_traits)
+            or (
+                (instance_handler == "_list_items_changed_handler")
+                and (name[-6:] == "_items")
+                and (name[:-6] in instance_traits)
+            )
+        ):
+            handlers.append(getattr(HasTraits, instance_handler))
 
         events = trait.event
         if events is not None:
 
             if isinstance(events, six.string_types):
-                events = [ events ]
+                events = [events]
 
             for event in events:
-                handlers.append( _get_def( class_name, class_dict, bases,
-                                           '_%s_changed' % event ) )
-                handlers.append( _get_def( class_name, class_dict, bases,
-                                           '_%s_fired' % event ) )
+                handlers.append(
+                    _get_def(
+                        class_name, class_dict, bases, "_%s_changed" % event
+                    )
+                )
+                handlers.append(
+                    _get_def(
+                        class_name, class_dict, bases, "_%s_fired" % event
+                    )
+                )
 
-        handlers = [ h for h in handlers if h is not None ]
-        default  = _get_def( class_name, class_dict, [],
-                             '_%s_default' % name )
-        if (len( handlers ) > 0) or (default is not None):
+        handlers = [h for h in handlers if h is not None]
+        default = _get_def(class_name, class_dict, [], "_%s_default" % name)
+        if (len(handlers) > 0) or (default is not None):
 
             if name not in cloned:
-                cloned.add( name )
-                class_traits[ name ] = trait = _clone_trait( trait )
+                cloned.add(name)
+                class_traits[name] = trait = _clone_trait(trait)
 
-            if len( handlers ) > 0:
-                _add_notifiers( trait._notifiers( 1 ), handlers )
+            if len(handlers) > 0:
+                _add_notifiers(trait._notifiers(1), handlers)
 
             if default is not None:
                 trait.default_value(CALLABLE_DEFAULT_VALUE, default)
 
         # Handle the case of properties whose value depends upon the value
         # of other traits:
-        if (trait.type == 'property') and (trait.depends_on is not None):
+        if (trait.type == "property") and (trait.depends_on is not None):
 
             cached = trait.cached
             if cached is True:
                 cached = TraitsCache + name
 
             depends_on = trait.depends_on
-            if isinstance( depends_on, SequenceTypes ):
-                depends_on = ','.join( depends_on )
+            if isinstance(depends_on, SequenceTypes):
+                depends_on = ",".join(depends_on)
             else:
                 # Note: We add the leading blank to force it to be treated
                 # as using the extended trait notation so that it will
                 # automatically add '_items' listeners to lists/dicts:
-                depends_on = ' ' + depends_on
+                depends_on = " " + depends_on
 
-            listeners[ name ] = ( 'property', cached, depends_on )
+            listeners[name] = ("property", cached, depends_on)
 
     # Add processed traits back into class_dict.
-    class_dict[ BaseTraits      ] = base_traits
-    class_dict[ ClassTraits     ] = class_traits
-    class_dict[ InstanceTraits  ] = instance_traits
-    class_dict[ PrefixTraits    ] = prefix_traits
-    class_dict[ ListenerTraits  ] = listeners
-    class_dict[ ViewTraits      ] = view_elements
+    class_dict[BaseTraits] = base_traits
+    class_dict[ClassTraits] = class_traits
+    class_dict[InstanceTraits] = instance_traits
+    class_dict[PrefixTraits] = prefix_traits
+    class_dict[ListenerTraits] = listeners
+    class_dict[ViewTraits] = view_elements
 
 
-def migrate_property ( name, property, property_info, class_dict ):
+def migrate_property(name, property, property_info, class_dict):
     """ Migrates an existing property to the class being defined
     (allowing for method overrides).
     """
-    get = _property_method( class_dict, '_get_' + name )
-    set = _property_method( class_dict, '_set_' + name )
-    val = _property_method( class_dict,
-                            '_validate_' + name )
-    if ((get is not None) or (set is not None) or (val is not None)):
+    get = _property_method(class_dict, "_get_" + name)
+    set = _property_method(class_dict, "_set_" + name)
+    val = _property_method(class_dict, "_validate_" + name)
+    if (get is not None) or (set is not None) or (val is not None):
         old_get, old_set, old_val = property_info
-        return Property( get or old_get, set or old_set, val or old_val,
-                         True, **property.__dict__ )
+        return Property(
+            get or old_get,
+            set or old_set,
+            val or old_val,
+            True,
+            **property.__dict__
+        )
 
     return property
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Manages the list of trait instance monitors:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def _trait_monitor_index ( cls, handler ):
+
+def _trait_monitor_index(cls, handler):
     global _HasTraits_monitors
 
-    type_handler = type( handler )
-    for i, _cls, _handler in enumerate( _HasTraits_monitors ):
-        if type_handler is type( _handler ):
-            if (((type_handler is MethodType)  or
-                'cython_function_or_method' in str(type_handler)) and \
-                (handler.__self__ is not None)):
-                if ((handler.__name__ == _handler.__name__) and
-                    (handler.__self__ is _handler.__self__)):
-                   return i
+    type_handler = type(handler)
+    for i, _cls, _handler in enumerate(_HasTraits_monitors):
+        if type_handler is type(_handler):
+            if (
+                (type_handler is MethodType)
+                or "cython_function_or_method" in str(type_handler)
+            ) and (handler.__self__ is not None):
+                if (handler.__name__ == _handler.__name__) and (
+                    handler.__self__ is _handler.__self__
+                ):
+                    return i
 
             elif handler == _handler:
                 return i
 
     return -1
 
-#-------------------------------------------------------------------------------
-#  'HasTraits' decorators:
-#-------------------------------------------------------------------------------
 
-def on_trait_change ( name, post_init = False, dispatch = 'same' ):
+# -------------------------------------------------------------------------------
+#  'HasTraits' decorators:
+# -------------------------------------------------------------------------------
+
+
+def on_trait_change(name, post_init=False, dispatch="same"):
     """ Marks the following method definition as being a handler for the
         extended trait change specified by *name(s)*.
 
@@ -822,17 +929,21 @@ def on_trait_change ( name, post_init = False, dispatch = 'same' ):
         processed. That is, trait values assigned as part of object construction
         will not cause the handler to be invoked.
     """
-    def decorator ( function ):
 
-        function.on_trait_change = {'pattern': name,
-                                    'post_init': post_init,
-                                    'dispatch': dispatch}
+    def decorator(function):
+
+        function.on_trait_change = {
+            "pattern": name,
+            "post_init": post_init,
+            "dispatch": dispatch,
+        }
 
         return function
 
     return decorator
 
-def cached_property ( function ):
+
+def cached_property(function):
     """ Marks the following method definition as being a "cached property".
         That is, it is a property getter which, for performance reasons, caches
         its most recently computed result in an attribute whose name is of the
@@ -863,12 +974,12 @@ def cached_property ( function ):
         so that _get_file_contents() is called only when **file_name** changes.
         For details, see the traits.traits.Property() function.
     """
-    name = TraitsCache + function.__name__[ 5: ]
+    name = TraitsCache + function.__name__[5:]
 
-    def decorator ( self ):
-        result = self.__dict__.get( name, Undefined )
+    def decorator(self):
+        result = self.__dict__.get(name, Undefined)
         if result is Undefined:
-            self.__dict__[ name ] = result = function( self )
+            self.__dict__[name] = result = function(self)
 
         return result
 
@@ -876,7 +987,8 @@ def cached_property ( function ):
 
     return decorator
 
-def property_depends_on ( dependency, settable = False, flushable = False ):
+
+def property_depends_on(dependency, settable=False, flushable=False):
     """ Marks the following method definition as being a "cached property"
         that depends on the specified extended trait names. That is, it is a
         property getter which, for performance reasons, caches its most recently
@@ -905,24 +1017,26 @@ def property_depends_on ( dependency, settable = False, flushable = False ):
         **_file_contents**, which is maintained by the @cached_property wrapper
         code, is returned.
     """
-    def decorator ( function ):
-        name = TraitsCache + function.__name__[ 5: ]
 
-        def wrapper ( self ):
-            result = self.__dict__.get( name, Undefined )
+    def decorator(function):
+        name = TraitsCache + function.__name__[5:]
+
+        def wrapper(self):
+            result = self.__dict__.get(name, Undefined)
             if result is Undefined:
-                self.__dict__[ name ] = result = function( self )
+                self.__dict__[name] = result = function(self)
 
             return result
 
         wrapper.cached_property = True
-        wrapper.depends_on      = dependency
-        wrapper.settable        = settable
-        wrapper.flushable       = flushable
+        wrapper.depends_on = dependency
+        wrapper.settable = settable
+        wrapper.flushable = flushable
 
         return wrapper
 
     return decorator
+
 
 def weak_arg(arg):
     """ Create a weak reference to arg and wrap the function so that the
@@ -931,6 +1045,7 @@ def weak_arg(arg):
     """
     # Create the weak reference
     weak_arg = weakref.ref(arg)
+
     def decorator(function):
         # We need multiple wrappers to traits can find the number of arguments.
         # The all just dereference the weak reference and the call the
@@ -939,28 +1054,34 @@ def weak_arg(arg):
             arg = weak_arg()
             if arg is not None:
                 return function(arg)
+
         def wrapper1(arg1):
             arg = weak_arg()
             if arg is not None:
                 return function(arg, arg1)
+
         def wrapper2(arg1, arg2):
             arg = weak_arg()
             if arg is not None:
                 return function(arg, arg1, arg2)
+
         def wrapper3(arg1, arg2, arg3):
             arg = weak_arg()
             if arg is not None:
                 return function(arg, arg1, arg2, arg3)
+
         def wrapper4(arg1, arg2, arg3, arg4):
             arg = weak_arg()
             if arg is not None:
                 return function(arg, arg1, arg2, arg3, arg4)
+
         def wrappern(*args):
             arg = weak_arg()
             if arg is not None:
                 function(arg, *args)
+
         # Return the correct wrapper depending on the arg count
-        args = function.__code__.co_argcount-1
+        args = function.__code__.co_argcount - 1
         if args == 0:
             return wrapper0
         elif args == 1:
@@ -976,12 +1097,14 @@ def weak_arg(arg):
 
     return decorator
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  'HasTraits' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+
 
 @six.add_metaclass(MetaHasTraits)
-class HasTraits ( CHasTraits ):
+class HasTraits(CHasTraits):
     """ Enables any Python class derived from it to have trait attributes.
 
     Most of the methods of HasTraits operated by default only on the trait
@@ -1007,52 +1130,53 @@ class HasTraits ( CHasTraits ):
     attribute *favorite_sport* are not listed.
     """
 
-    #-- Trait Prefix Rules -----------------------------------------------------
+    # -- Trait Prefix Rules -----------------------------------------------------
 
     #: Make traits 'property cache' values private with no type checking:
-    _traits_cache__ = Any( private = True, transient = True )
+    _traits_cache__ = Any(private=True, transient=True)
 
-    #-- Class Variables --------------------------------------------------------
+    # -- Class Variables --------------------------------------------------------
 
     #: Mapping from dispatch type to notification wrapper class type
     wrappers = {
-        'same':     TraitChangeNotifyWrapper,
-        'extended': ExtendedTraitChangeNotifyWrapper,
-        'new':      NewTraitChangeNotifyWrapper,
-        'fast_ui':  FastUITraitChangeNotifyWrapper,
-        'ui':       FastUITraitChangeNotifyWrapper
+        "same": TraitChangeNotifyWrapper,
+        "extended": ExtendedTraitChangeNotifyWrapper,
+        "new": NewTraitChangeNotifyWrapper,
+        "fast_ui": FastUITraitChangeNotifyWrapper,
+        "ui": FastUITraitChangeNotifyWrapper,
     }
 
-    #-- Trait Definitions ------------------------------------------------------
+    # -- Trait Definitions ------------------------------------------------------
 
     #: An event fired when a new trait is dynamically added to the object
-    trait_added = Event( six.string_types[0] )
+    trait_added = Event(six.string_types[0])
 
     #: An event that can be fired to indicate that the state of the object has
     #: been modified
     trait_modified = Event
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Handles a 'trait_added' event being fired:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _trait_added_changed ( self, name ):
+    def _trait_added_changed(self, name):
         """ Handles a 'trait_added' event being fired.
         """
         # fixme: This test should be made more comprehensive by also verifying
         # that if the trait name does end in '_items', its base trait is also
         # a list or dictionary (in order to eliminate a false positive on an
         # unfortunately named trait:
-        trait = self.trait( name )
-        if (trait.type == 'delegate') and (name[-6:] != '_items'):
-            self._init_trait_delegate_listener( name, 'delegate',
-                                           get_delegate_pattern( name, trait ) )
+        trait = self.trait(name)
+        if (trait.type == "delegate") and (name[-6:] != "_items"):
+            self._init_trait_delegate_listener(
+                name, "delegate", get_delegate_pattern(name, trait)
+            )
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Adds/Removes a trait instance creation monitor:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def trait_monitor ( cls, handler, remove = False ):
+    def trait_monitor(cls, handler, remove=False):
         """Adds or removes the specified *handler* from the list of active
         monitors.
 
@@ -1073,22 +1197,22 @@ class HasTraits ( CHasTraits ):
         """
         global _HasTraits_monitors
 
-        index = _trait_monitor_index( cls, handler )
+        index = _trait_monitor_index(cls, handler)
         if remove:
             if index >= 0:
-                del _HasTraits_monitors[ index ]
+                del _HasTraits_monitors[index]
             return
 
         if index < 0:
-            _HasTraits_monitors.append( ( cls, handler ) )
+            _HasTraits_monitors.append((cls, handler))
 
-    trait_monitor = classmethod( trait_monitor )
+    trait_monitor = classmethod(trait_monitor)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Add a new class trait (i.e. applies to all instances and subclasses):
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def add_class_trait ( cls, name, *trait ):
+    def add_class_trait(cls, name, *trait):
         """ Adds a named trait attribute to this class.
 
         Parameters
@@ -1103,203 +1227,216 @@ class HasTraits ( CHasTraits ):
         """
 
         # Make sure a trait argument was specified:
-        if len( trait ) == 0:
-            raise ValueError('No trait definition was specified.')
+        if len(trait) == 0:
+            raise ValueError("No trait definition was specified.")
 
         # Make sure only valid traits get added:
-        if len( trait ) > 1:
-            trait = Trait( *trait )
+        if len(trait) > 1:
+            trait = Trait(*trait)
         else:
-            trait = _trait_for( trait[0] )
+            trait = _trait_for(trait[0])
 
         # Add the trait to the class:
-        cls._add_class_trait( name, trait, False )
+        cls._add_class_trait(name, trait, False)
 
         # Also add the trait to all subclasses of this class:
-        for subclass in cls.trait_subclasses( True ):
-            subclass._add_class_trait( name, trait, True )
+        for subclass in cls.trait_subclasses(True):
+            subclass._add_class_trait(name, trait, True)
 
-    add_class_trait = classmethod( add_class_trait )
+    add_class_trait = classmethod(add_class_trait)
 
-    def _add_class_trait ( cls, name, trait, is_subclass ):
+    def _add_class_trait(cls, name, trait, is_subclass):
         # Get a reference to the class's dictionary and 'prefix' traits:
-        class_dict    = cls.__dict__
-        prefix_traits = class_dict[ PrefixTraits ]
+        class_dict = cls.__dict__
+        prefix_traits = class_dict[PrefixTraits]
 
         # See if the trait is a 'prefix' trait:
-        if name[-1:] == '_':
+        if name[-1:] == "_":
             name = name[:-1]
             if name in prefix_traits:
                 if is_subclass:
                     return
-                raise TraitError( "The '%s_' trait is already defined." % name )
-            prefix_traits[ name ] = trait
+                raise TraitError("The '%s_' trait is already defined." % name)
+            prefix_traits[name] = trait
 
             # Otherwise, add it to the list of known prefixes:
-            prefix_list = prefix_traits['*']
-            prefix_list.append( name )
+            prefix_list = prefix_traits["*"]
+            prefix_list.append(name)
 
             # Resort the list from longest to shortest:
-            prefix_list.sort( lambda x, y: len( y ) - len( x ) )
+            prefix_list.sort(lambda x, y: len(y) - len(x))
 
             return
 
         # Check to see if the trait is already defined:
-        class_traits = class_dict[ ClassTraits ]
-        if class_traits.get( name ) is not None:
+        class_traits = class_dict[ClassTraits]
+        if class_traits.get(name) is not None:
             if is_subclass:
                 return
-            raise TraitError( "The '%s' trait is already defined." % name )
+            raise TraitError("The '%s' trait is already defined." % name)
 
         # Check to see if the trait has additional sub-traits that need to be
         # defined also:
         handler = trait.handler
         if handler is not None:
             if handler.has_items:
-                cls.add_class_trait( name + '_items', handler.items_event() )
+                cls.add_class_trait(name + "_items", handler.items_event())
             if handler.is_mapped:
-                cls.add_class_trait( name + '_', _mapped_trait_for( trait ) )
+                cls.add_class_trait(name + "_", _mapped_trait_for(trait))
 
         # Make the new trait inheritable (if allowed):
         if trait.is_base is not False:
-            class_dict[ BaseTraits ][ name ] = trait
+            class_dict[BaseTraits][name] = trait
 
         # See if there are any static notifiers defined:
-        handlers = [ _get_method( cls, '_%s_changed' % name ),
-                     _get_method( cls, '_%s_fired'   % name ) ]
+        handlers = [
+            _get_method(cls, "_%s_changed" % name),
+            _get_method(cls, "_%s_fired" % name),
+        ]
 
         # Add any special trait defined event handlers:
-        _add_event_handlers( trait, cls, handlers )
+        _add_event_handlers(trait, cls, handlers)
 
         # Add the 'anytrait' handler (if any):
-        handlers.append( prefix_traits.get( '@' ) )
+        handlers.append(prefix_traits.get("@"))
 
         # Filter out any 'None' values:
-        handlers = [ h for h in handlers if h is not None ]
+        handlers = [h for h in handlers if h is not None]
 
         # If there are and handlers, add them to the trait's notifier's list:
-        if len( handlers ) > 0:
-            trait = _clone_trait( trait )
-            _add_notifiers( trait._notifiers( 1 ), handlers )
+        if len(handlers) > 0:
+            trait = _clone_trait(trait)
+            _add_notifiers(trait._notifiers(1), handlers)
 
         # Finally, add the new trait to the class trait dictionary:
-        class_traits[ name ] = trait
+        class_traits[name] = trait
 
-    _add_class_trait = classmethod( _add_class_trait )
+    _add_class_trait = classmethod(_add_class_trait)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Adds a 'category' to the class:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def add_trait_category ( cls, category ):
+    def add_trait_category(cls, category):
         """ Adds a trait category to a class.
         """
-        if issubclass( category, HasTraits ):
+        if issubclass(category, HasTraits):
             cls._add_trait_category(
-                getattr( category, BaseTraits ),
-                getattr( category, ClassTraits ),
-                getattr( category, InstanceTraits ),
-                getattr( category, PrefixTraits ),
-                getattr( category, ListenerTraits ),
-                getattr( category, ViewTraits, None ) )
+                getattr(category, BaseTraits),
+                getattr(category, ClassTraits),
+                getattr(category, InstanceTraits),
+                getattr(category, PrefixTraits),
+                getattr(category, ListenerTraits),
+                getattr(category, ViewTraits, None),
+            )
 
         # Copy all methods that are not already in the class from the category:
         for subcls in category.__mro__:
             for name, value in subcls.__dict__.items():
-                if not hasattr( cls, name ):
-                    setattr( cls, name, value )
+                if not hasattr(cls, name):
+                    setattr(cls, name, value)
 
-    add_trait_category = classmethod( add_trait_category )
+    add_trait_category = classmethod(add_trait_category)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Adds a 'category' to the class:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _add_trait_category ( cls, base_traits, class_traits, instance_traits,
-                              prefix_traits, listeners, view_elements ):
+    def _add_trait_category(
+        cls,
+        base_traits,
+        class_traits,
+        instance_traits,
+        prefix_traits,
+        listeners,
+        view_elements,
+    ):
         # Update the class and each of the existing subclasses:
-        for subclass in [ cls ] + cls.trait_subclasses( True ):
+        for subclass in [cls] + cls.trait_subclasses(True):
 
             # Merge the 'base_traits':
-            subclass_traits = getattr( subclass, BaseTraits )
+            subclass_traits = getattr(subclass, BaseTraits)
             for name, value in base_traits.items():
-                subclass_traits.setdefault( name, value )
+                subclass_traits.setdefault(name, value)
 
             # Merge the 'class_traits':
-            subclass_traits = getattr( subclass, ClassTraits )
+            subclass_traits = getattr(subclass, ClassTraits)
             for name, value in class_traits.items():
-                subclass_traits.setdefault( name, value )
+                subclass_traits.setdefault(name, value)
 
             # Merge the 'instance_traits':
-            subclass_traits = getattr( subclass, InstanceTraits )
+            subclass_traits = getattr(subclass, InstanceTraits)
             for name, arg_lists in instance_traits.items():
-                subclass_arg_lists = subclass_traits.get( name )
+                subclass_arg_lists = subclass_traits.get(name)
                 if subclass_arg_lists is None:
-                    subclass_traits[ name ] = arg_lists[:]
+                    subclass_traits[name] = arg_lists[:]
                 else:
                     for arg_list in arg_lists:
                         if arg_list not in subclass_arg_lists:
-                            subclass_arg_lists.append( arg_list )
+                            subclass_arg_lists.append(arg_list)
 
             # Merge the 'prefix_traits':
-            subclass_traits = getattr( subclass, PrefixTraits )
-            subclass_list   = subclass_traits['*']
-            changed         = False
+            subclass_traits = getattr(subclass, PrefixTraits)
+            subclass_list = subclass_traits["*"]
+            changed = False
             for name, value in prefix_traits.items():
                 if name not in subclass_traits:
-                    subclass_traits[ name ] = value
-                    subclass_list.append( name )
+                    subclass_traits[name] = value
+                    subclass_list.append(name)
                     changed = True
 
             # Resort the list from longest to shortest (if necessary):
             if changed:
-                subclass_list.sort( key = lambda x: -len( x ) )
+                subclass_list.sort(key=lambda x: -len(x))
 
             # Merge the 'listeners':
-            subclass_traits = getattr( subclass, ListenerTraits )
+            subclass_traits = getattr(subclass, ListenerTraits)
             for name, value in listeners.items():
-                subclass_traits.setdefault( name, value )
+                subclass_traits.setdefault(name, value)
 
         # Copy all our new view elements into the base class's ViewElements:
         if view_elements is not None:
             content = view_elements.content
-            if len( content ) > 0:
-                base_ve = getattr( cls, ViewTraits, None )
+            if len(content) > 0:
+                base_ve = getattr(cls, ViewTraits, None)
                 if base_ve is None:
                     base_ve = ViewElements()
-                    setattr( cls, ViewTraits, base_ve )
+                    setattr(cls, ViewTraits, base_ve)
                 base_ve_content = base_ve.content
                 for name, value in content.items():
-                    base_ve_content.setdefault( name, value )
+                    base_ve_content.setdefault(name, value)
 
-    _add_trait_category = classmethod( _add_trait_category )
+    _add_trait_category = classmethod(_add_trait_category)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Sets a trait notification dispatch handler:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def set_trait_dispatch_handler ( cls, name, klass, override = False ):
+    def set_trait_dispatch_handler(cls, name, klass, override=False):
         """ Sets a trait notification dispatch handler.
         """
         try:
-            if issubclass( klass, TraitChangeNotifyWrapper ):
+            if issubclass(klass, TraitChangeNotifyWrapper):
                 if (not override) and (name in cls.wrappers):
-                    raise TraitError("A dispatch handler called '%s' has "
-                                     "already been defined." % name)
-                cls.wrappers[ name ] = klass
+                    raise TraitError(
+                        "A dispatch handler called '%s' has "
+                        "already been defined." % name
+                    )
+                cls.wrappers[name] = klass
                 return
         except TypeError:
             pass
-        raise TraitError('%s is not a subclass of TraitChangeNotifyWrapper.' %
-                         klass)
+        raise TraitError(
+            "%s is not a subclass of TraitChangeNotifyWrapper." % klass
+        )
 
-    set_trait_dispatch_handler = classmethod( set_trait_dispatch_handler )
+    set_trait_dispatch_handler = classmethod(set_trait_dispatch_handler)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns the immediate (or all) subclasses of this class:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def trait_subclasses ( cls, all = False ):
+    def trait_subclasses(cls, all=False):
         """ Returns a list of the immediate (or all) subclasses of this class.
 
         Parameters
@@ -1311,24 +1448,24 @@ class HasTraits ( CHasTraits ):
         """
         if not all:
             return cls.__subclasses__()
-        return cls._trait_subclasses( [] )
+        return cls._trait_subclasses([])
 
-    trait_subclasses = classmethod( trait_subclasses )
+    trait_subclasses = classmethod(trait_subclasses)
 
-    def _trait_subclasses ( cls, subclasses ):
+    def _trait_subclasses(cls, subclasses):
         for subclass in cls.__subclasses__():
             if subclass not in subclasses:
-                subclasses.append( subclass )
-                subclass._trait_subclasses( subclasses )
+                subclasses.append(subclass)
+                subclass._trait_subclasses(subclasses)
         return subclasses
 
-    _trait_subclasses = classmethod( _trait_subclasses )
+    _trait_subclasses = classmethod(_trait_subclasses)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns whether the object implements a specified traits interface:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def has_traits_interface ( self, *interfaces ):
+    def has_traits_interface(self, *interfaces):
         """Returns whether the object implements a specified traits interface.
 
            Parameters
@@ -1344,11 +1481,11 @@ class HasTraits ( CHasTraits ):
         """
         return isinstance(self, interfaces)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Prepares an object to be pickled:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def __getstate__ ( self ):
+    def __getstate__(self):
         """ Returns a dictionary of traits to pickle.
 
         In general, avoid overriding __getstate__ in subclasses. Instead, mark
@@ -1366,71 +1503,82 @@ class HasTraits ( CHasTraits ):
                 return state
         """
         # Save all traits which do not have any 'transient' metadata:
-        result = self.trait_get( transient = is_none )
+        result = self.trait_get(transient=is_none)
 
         # Add all delegate traits that explicitly have 'transient = False'
         # metadata:
-        dic    = self.__dict__
-        result.update( dict( [ ( name, dic[ name ] )
-                             for name in self.trait_names( type = 'delegate',
-                                                           transient = False )
-                             if name in dic ] ) )
+        dic = self.__dict__
+        result.update(
+            dict(
+                [
+                    (name, dic[name])
+                    for name in self.trait_names(
+                        type="delegate", transient=False
+                    )
+                    if name in dic
+                ]
+            )
+        )
         # Add all instance traits
         inst_traits = self._instance_traits()
-        result['__instance_traits__'] = inst_traits
+        result["__instance_traits__"] = inst_traits
 
         # If this object implements ISerializable, make sure that all
         # contained HasTraits objects in its persisted state also implement
         # ISerializable:
-        if self.has_traits_interface( ISerializable ):
+        if self.has_traits_interface(ISerializable):
             for name, value in result.items():
-                if not _is_serializable( value ):
-                    raise TraitError( "The '%s' trait of a '%s' instance "
-                                      "contains the unserializable value: %s" %
-                                      ( name, self.__class__.__name__, value ) )
+                if not _is_serializable(value):
+                    raise TraitError(
+                        "The '%s' trait of a '%s' instance "
+                        "contains the unserializable value: %s"
+                        % (name, self.__class__.__name__, value)
+                    )
 
         # Store the traits version in the state dictionary (if possible):
-        result.setdefault( '__traits_version__', TraitsVersion )
+        result.setdefault("__traits_version__", TraitsVersion)
 
         # Return the final state dictionary:
         return result
 
-    def __reduce_ex__ ( self, protocol ):
-        return ( __newobj__, ( self.__class__, ), self.__getstate__() )
+    def __reduce_ex__(self, protocol):
+        return (__newobj__, (self.__class__,), self.__getstate__())
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Restores the previously pickled state of an object:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def __setstate__ ( self, state, trait_change_notify = True ):
+    def __setstate__(self, state, trait_change_notify=True):
         """ Restores the previously pickled state of an object.
         """
         pop = state.pop
-        if pop( '__traits_version__', None ) is None:
+        if pop("__traits_version__", None) is None:
             # If the state was saved by a version of Traits prior to 3.0, then
             # use Traits 2.0 compatible code to restore it:
-            values = [ ( name, pop( name ) )
-                       for name in pop( '__HasTraits_restore__', [] ) ]
-            self.__dict__.update( state )
-            self.trait_set( trait_change_notify=trait_change_notify,
-                            **dict( values ) )
+            values = [
+                (name, pop(name)) for name in pop("__HasTraits_restore__", [])
+            ]
+            self.__dict__.update(state)
+            self.trait_set(
+                trait_change_notify=trait_change_notify, **dict(values)
+            )
         else:
             # Otherwise, apply the Traits 3.0 restore logic:
             self._init_trait_listeners()
-            inst_traits = state.pop('__instance_traits__', {})
-            self.trait_set( trait_change_notify = trait_change_notify, **state )
+            inst_traits = state.pop("__instance_traits__", {})
+            self.trait_set(trait_change_notify=trait_change_notify, **state)
             for attr in inst_traits:
                 self.add_trait(attr, inst_traits[attr])
             self._post_init_trait_listeners()
             self.traits_init()
 
-        self.traits_inited( True )
+        self.traits_inited(True)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Shortcut for retrieving the value of a list of traits:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def trait_get ( self, *names, **metadata ):
+    def trait_get(self, *names, **metadata):
         """ Shortcut for getting object trait attributes.
 
         Parameters
@@ -1456,31 +1604,31 @@ class HasTraits ( CHasTraits ):
         """
 
         result = {}
-        n      = len( names )
-        if (n == 1) and (type( names[0] ) in SequenceTypes):
+        n = len(names)
+        if (n == 1) and (type(names[0]) in SequenceTypes):
             names = names[0]
         elif n == 0:
-            names = self.trait_names( **metadata )
+            names = self.trait_names(**metadata)
 
         for name in names:
-            value = getattr( self, name, Missing )
+            value = getattr(self, name, Missing)
             if value is not Missing:
-                result[ name ] = value
+                result[name] = value
 
         return result
 
     # Defines the deprecated alias for 'trait_get'
     @deprecated('use "HasTraits.trait_get" instead')
-    def get( self, *names, **metadata ):
-        return self.trait_get( *names, **metadata )
+    def get(self, *names, **metadata):
+        return self.trait_get(*names, **metadata)
 
     get.__doc__ = trait_get.__doc__
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Shortcut for setting object traits:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def trait_set ( self, trait_change_notify = True, **traits ):
+    def trait_set(self, trait_change_notify=True, **traits):
         """ Shortcut for setting object trait attributes.
 
         Parameters
@@ -1515,27 +1663,28 @@ class HasTraits ( CHasTraits ):
 
         """
         if not trait_change_notify:
-            self._trait_change_notify( False )
+            self._trait_change_notify(False)
             try:
                 for name, value in traits.items():
-                    setattr( self, name, value )
+                    setattr(self, name, value)
             finally:
-                self._trait_change_notify( True )
+                self._trait_change_notify(True)
         else:
             for name, value in traits.items():
-                setattr( self, name, value )
+                setattr(self, name, value)
 
         return self
 
     # Defines the deprecated alias for 'trait_set'
     @deprecated('use "HasTraits.trait_set" instead')
-    def set ( self, trait_change_notify = True, **traits ):
+    def set(self, trait_change_notify=True, **traits):
         return self.trait_set(
-            trait_change_notify=trait_change_notify, **traits)
+            trait_change_notify=trait_change_notify, **traits
+        )
 
     set.__doc__ = trait_set.__doc__
 
-    def trait_setq ( self, **traits ):
+    def trait_setq(self, **traits):
         """ Shortcut for setting object trait attributes.
 
         Parameters
@@ -1566,13 +1715,13 @@ class HasTraits ( CHasTraits ):
             person.age = 27
 
         """
-        return self.trait_set( trait_change_notify = False, **traits )
+        return self.trait_set(trait_change_notify=False, **traits)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Resets some or all of an object's traits to their default values:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def reset_traits ( self, traits = None, **metadata ):
+    def reset_traits(self, traits=None, **metadata):
         """ Resets some or all of an object's trait attributes to their default
         values.
 
@@ -1600,42 +1749,42 @@ class HasTraits ( CHasTraits ):
         unresetable = []
 
         if traits is None:
-            traits = self.trait_names( **metadata )
+            traits = self.trait_names(**metadata)
 
         for name in traits:
             try:
-                delattr( self, name )
-            except ( AttributeError, TraitError ):
-                unresetable.append( name )
+                delattr(self, name)
+            except (AttributeError, TraitError):
+                unresetable.append(name)
 
         return unresetable
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns the list of trait names to copy/clone by default:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def copyable_trait_names ( self, **metadata ):
+    def copyable_trait_names(self, **metadata):
         """ Returns the list of trait names to copy or clone by default.
         """
 
-        metadata.setdefault('transient', lambda t: t is not True)
-        return self.trait_names( **metadata )
+        metadata.setdefault("transient", lambda t: t is not True)
+        return self.trait_names(**metadata)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns the list of all trait names, including implicitly defined
     #  traits:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def all_trait_names ( self ):
+    def all_trait_names(self):
         """ Returns the list of all trait names, including implicitly defined
             traits.
         """
         return list(self.__class_traits__.keys())
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     #  Returns the list of trait names when calling the dir() builtin on the
     #  object. This enables tab-completion in IPython.
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def __dir__(self):
         """ Returns the list of trait names when calling the dir() builtin on
@@ -1646,12 +1795,13 @@ class HasTraits ( CHasTraits ):
         class_attrs = list(vars(self.__class__).keys())
         return trait_names + method_names + class_attrs
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Copies another object's traits into this one:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def copy_traits ( self, other, traits = None, memo = None, copy = None,
-                            **metadata ):
+    def copy_traits(
+        self, other, traits=None, memo=None, copy=None, **metadata
+    ):
         """ Copies another object's trait attributes into this one.
 
         Parameters
@@ -1678,75 +1828,74 @@ class HasTraits ( CHasTraits ):
         """
 
         if traits is None:
-            traits = self.copyable_trait_names( **metadata )
-        elif (traits == 'all') or (len( traits ) == 0):
+            traits = self.copyable_trait_names(**metadata)
+        elif (traits == "all") or (len(traits) == 0):
             traits = self.all_trait_names()
             if memo is not None:
-                memo[ 'traits_to_copy' ] = 'all'
+                memo["traits_to_copy"] = "all"
 
         unassignable = []
-        deferred     = []
-        deep_copy    = (copy == 'deep')
-        shallow_copy = (copy == 'shallow')
+        deferred = []
+        deep_copy = copy == "deep"
+        shallow_copy = copy == "shallow"
 
         for name in traits:
             try:
-                trait = self.trait( name )
+                trait = self.trait(name)
                 if trait.type in DeferredCopy:
-                    deferred.append( name )
+                    deferred.append(name)
                     continue
 
-                base_trait = other.base_trait( name )
-                if base_trait.type == 'event':
+                base_trait = other.base_trait(name)
+                if base_trait.type == "event":
                     continue
 
-                value     = getattr( other, name )
+                value = getattr(other, name)
                 copy_type = base_trait.copy
-                if copy_type == 'shallow':
-                    value = copy_module.copy( value )
-                elif copy_type == 'ref':
+                if copy_type == "shallow":
+                    value = copy_module.copy(value)
+                elif copy_type == "ref":
                     pass
-                elif (copy_type == 'deep') or deep_copy:
+                elif (copy_type == "deep") or deep_copy:
                     if memo is None:
-                        value = copy_module.deepcopy( value )
+                        value = copy_module.deepcopy(value)
                     else:
-                        value = copy_module.deepcopy( value, memo )
+                        value = copy_module.deepcopy(value, memo)
                 elif shallow_copy:
-                    value = copy_module.copy( value )
+                    value = copy_module.copy(value)
 
-                setattr( self, name, value )
+                setattr(self, name, value)
             except:
-                unassignable.append( name )
+                unassignable.append(name)
 
         for name in deferred:
             try:
-                value     = getattr( other, name )
-                copy_type = other.base_trait( name ).copy
-                if copy_type == 'shallow':
-                    value = copy_module.copy( value )
-                elif copy_type == 'ref':
+                value = getattr(other, name)
+                copy_type = other.base_trait(name).copy
+                if copy_type == "shallow":
+                    value = copy_module.copy(value)
+                elif copy_type == "ref":
                     pass
-                elif (copy_type == 'deep') or deep_copy:
+                elif (copy_type == "deep") or deep_copy:
                     if memo is None:
-                        value = copy_module.deepcopy( value )
+                        value = copy_module.deepcopy(value)
                     else:
-                        value = copy_module.deepcopy( value, memo )
+                        value = copy_module.deepcopy(value, memo)
                 elif shallow_copy:
-                    value = copy_module.copy( value )
+                    value = copy_module.copy(value)
 
-                setattr( self, name, value )
+                setattr(self, name, value)
             except:
-                unassignable.append( name )
+                unassignable.append(name)
 
         return unassignable
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Clones a new object from this one, optionally copying only a specified
     #  set of traits:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def clone_traits ( self, traits = None, memo = None, copy = None,
-                             **metadata ):
+    def clone_traits(self, traits=None, memo=None, copy=None, **metadata):
         """ Clones a new object from this one, optionally copying only a
         specified set of traits.
 
@@ -1779,50 +1928,59 @@ class HasTraits ( CHasTraits ):
             memo = {}
 
         if traits is None:
-            traits = self.copyable_trait_names( **metadata )
-        elif (traits == 'all') or (len( traits ) == 0):
+            traits = self.copyable_trait_names(**metadata)
+        elif (traits == "all") or (len(traits) == 0):
             traits = self.all_trait_names()
-            memo[ 'traits_to_copy' ] = 'all'
+            memo["traits_to_copy"] = "all"
 
-        memo[ 'traits_copy_mode' ] = copy
-        new = self.__new__( self.__class__ )
-        memo[ id( self ) ] = new
+        memo["traits_copy_mode"] = copy
+        new = self.__new__(self.__class__)
+        memo[id(self)] = new
         new._init_trait_listeners()
         inst_traits = self._instance_traits()
         for attr in inst_traits:
             new.add_trait(attr, inst_traits[attr])
-        new.copy_traits( self, traits, memo, copy, **metadata )
+        new.copy_traits(self, traits, memo, copy, **metadata)
         new._post_init_trait_listeners()
         new.traits_init()
-        new.traits_inited( True )
+        new.traits_inited(True)
 
         return new
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Creates a deep copy of the object:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def __deepcopy__ ( self, memo ):
+    def __deepcopy__(self, memo):
         """ Creates a deep copy of the object.
         """
-        id_self = id( self )
+        id_self = id(self)
         if id_self in memo:
-            return memo[ id_self ]
+            return memo[id_self]
 
-        result = self.clone_traits( memo   = memo,
-                                    traits = memo.get( 'traits_to_copy' ),
-                                    copy   = memo.get( 'traits_copy_mode' ) )
+        result = self.clone_traits(
+            memo=memo,
+            traits=memo.get("traits_to_copy"),
+            copy=memo.get("traits_copy_mode"),
+        )
 
         return result
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Edits the object's traits:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def edit_traits ( self, view       = None, parent  = None,
-                            kind       = None, context = None,
-                            handler    = None, id      = '',
-                            scrollable = None, **args ):
+    def edit_traits(
+        self,
+        view=None,
+        parent=None,
+        kind=None,
+        context=None,
+        handler=None,
+        id="",
+        scrollable=None,
+        **args
+    ):
         """ Displays a user interface window for editing trait attribute values.
 
         Parameters
@@ -1864,26 +2022,34 @@ class HasTraits ( CHasTraits ):
         if context is None:
             context = self
 
-        view = self.trait_view( view )
+        view = self.trait_view(view)
 
-        return view.ui( context, parent, kind, self.trait_view_elements(),
-                        handler, id, scrollable, args )
+        return view.ui(
+            context,
+            parent,
+            kind,
+            self.trait_view_elements(),
+            handler,
+            id,
+            scrollable,
+            args,
+        )
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns the default context to use for editing/configuring traits:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def trait_context ( self ):
+    def trait_context(self):
         """ Returns the default context to use for editing or configuring
             traits.
         """
-        return { 'object': self }
+        return {"object": self}
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Gets or sets a ViewElement associated with an object's class:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def trait_view ( self, name = None, view_element = None ):
+    def trait_view(self, name=None, view_element=None):
         """ Gets or sets a ViewElement associated with an object's class.
 
         Parameters
@@ -1921,27 +2087,44 @@ class HasTraits ( CHasTraits ):
            non-event trait attributes on the current object.
 
         """
-        return self.__class__._trait_view( name, view_element,
-                            self.default_traits_view, self.trait_view_elements,
-                            self.visible_traits, self )
+        return self.__class__._trait_view(
+            name,
+            view_element,
+            self.default_traits_view,
+            self.trait_view_elements,
+            self.visible_traits,
+            self,
+        )
 
-    def class_trait_view ( cls, name = None, view_element = None ):
-        return cls._trait_view( name, view_element,
-                  cls.class_default_traits_view, cls.class_trait_view_elements,
-                  cls.class_visible_traits, None )
+    def class_trait_view(cls, name=None, view_element=None):
+        return cls._trait_view(
+            name,
+            view_element,
+            cls.class_default_traits_view,
+            cls.class_trait_view_elements,
+            cls.class_visible_traits,
+            None,
+        )
 
-    class_trait_view = classmethod( class_trait_view )
+    class_trait_view = classmethod(class_trait_view)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Gets or sets a ViewElement associated with an object's class:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _trait_view ( cls, name, view_element, default_name, view_elements,
-                           trait_selector_f, handler ):
+    def _trait_view(
+        cls,
+        name,
+        view_element,
+        default_name,
+        view_elements,
+        trait_selector_f,
+        handler,
+    ):
         """ Gets or sets a ViewElement associated with an object's class.
         """
         # If a view element was passed instead of a name or None, return it:
-        if isinstance( name, ViewElement ):
+        if isinstance(name, ViewElement):
             return name
 
         # Get the ViewElements object associated with the class:
@@ -1956,17 +2139,17 @@ class HasTraits ( CHasTraits ):
             if view_element is None:
                 # If only a name was specified, return the ViewElement it
                 # matches, if any:
-                result = view_elements.find( name )
+                result = view_elements.find(name)
                 if (result is None) and (handler is not None):
-                    method = getattr( handler, name, None )
-                    if callable( method ):
+                    method = getattr(handler, name, None)
+                    if callable(method):
                         result = method()
 
                 return result
 
             # Otherwise, save the specified ViewElement under the name
             # specified:
-            view_elements.content[ name ] = view_element
+            view_elements.content[name] = view_element
 
             return None
 
@@ -1974,7 +2157,7 @@ class HasTraits ( CHasTraits ):
         name = default_name()
 
         # If the default is a View, return it:
-        if isinstance( name, ViewElement ):
+        if isinstance(name, ViewElement):
             return name
 
         # Otherwise, get all View objects associated with the object's class:
@@ -1982,53 +2165,53 @@ class HasTraits ( CHasTraits ):
 
         # If the specified default name is in the list, return its View:
         if name in names:
-            return view_elements.find( name )
+            return view_elements.find(name)
 
         if handler is not None:
-            method = getattr( handler, name, None )
-            if callable( method ):
+            method = getattr(handler, name, None)
+            if callable(method):
                 result = method()
-                if isinstance( result, ViewElement ):
+                if isinstance(result, ViewElement):
                     return result
 
         # If there is only one View, return it:
-        if len( names ) == 1:
-            return view_elements.find( names[0] )
+        if len(names) == 1:
+            return view_elements.find(names[0])
 
         # Otherwise, create and return a View based on the set of editable
         # traits defined for the object:
         from traitsui.api import View
 
-        return View( trait_selector_f(), buttons = [ 'OK', 'Cancel' ] )
+        return View(trait_selector_f(), buttons=["OK", "Cancel"])
 
-    _trait_view = classmethod( _trait_view )
+    _trait_view = classmethod(_trait_view)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Return the default traits view/name:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def default_traits_view ( self ):
+    def default_traits_view(self):
         """ Returns the name of the default traits view for the object's class.
         """
         return self.__class__.class_default_traits_view()
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Return the default traits view/name:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def class_default_traits_view ( cls ):
+    def class_default_traits_view(cls):
         """ Returns the name of the default traits view for the class.
         """
         return DefaultTraitsView
 
-    class_default_traits_view = classmethod( class_default_traits_view )
+    class_default_traits_view = classmethod(class_default_traits_view)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Gets the list of names of ViewElements associated with the object's
     #  class that are of a specified ViewElement type:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def trait_views ( self, klass = None ):
+    def trait_views(self, klass=None):
         """ Returns a list of the names of all view elements associated with the
         current object's class.
 
@@ -2049,13 +2232,13 @@ class HasTraits ( CHasTraits ):
         If *klass* is specified, the list of names is filtered such that only
         objects that are instances of the specified class are returned.
         """
-        return self.__class__.__dict__[ ViewTraits ].filter_by( klass )
+        return self.__class__.__dict__[ViewTraits].filter_by(klass)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns the ViewElements object associated with the object's class:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def trait_view_elements ( self ):
+    def trait_view_elements(self):
         """ Returns the ViewElements object associated with the object's
         class.
 
@@ -2064,24 +2247,32 @@ class HasTraits ( CHasTraits ):
         """
         return self.__class__.class_trait_view_elements()
 
-    def class_trait_view_elements ( cls ):
+    def class_trait_view_elements(cls):
         """ Returns the ViewElements object associated with the class.
 
         The returned object can be used to access all the view elements
         associated with the class.
         """
-        return cls.__dict__[ ViewTraits ]
+        return cls.__dict__[ViewTraits]
 
-    class_trait_view_elements = classmethod( class_trait_view_elements )
+    class_trait_view_elements = classmethod(class_trait_view_elements)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Configure the object's traits:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def configure_traits ( self, filename = None, view       = None,
-                                 kind     = None, edit       = True,
-                                 context  = None, handler    = None,
-                                 id       = '',   scrollable = None, **args ):
+    def configure_traits(
+        self,
+        filename=None,
+        view=None,
+        kind=None,
+        edit=True,
+        context=None,
+        handler=None,
+        id="",
+        scrollable=None,
+        **args
+    ):
         ### JMS: Is it correct to assume that non-modal options for 'kind'
         ###      behave modally when called from this method?
         """Creates and displays a dialog box for editing values of trait
@@ -2154,63 +2345,71 @@ class HasTraits ( CHasTraits ):
         modified by the user.
         """
         if filename is not None:
-            with open(filename, 'rb') as fd:
-                self.copy_traits( sm.cPickle.Unpickler( fd ).load() )
+            with open(filename, "rb") as fd:
+                self.copy_traits(sm.cPickle.Unpickler(fd).load())
 
         if edit:
             from traitsui.api import toolkit
+
             if context is None:
                 context = self
-            rc = toolkit().view_application( context, self.trait_view( view ),
-                                             kind, handler, id, scrollable, args )
+            rc = toolkit().view_application(
+                context,
+                self.trait_view(view),
+                kind,
+                handler,
+                id,
+                scrollable,
+                args,
+            )
             if rc and (filename is not None):
-                with open(filename, 'wb') as fd:
-                    sm.cPickle.Pickler( fd, True ).dump( self )
+                with open(filename, "wb") as fd:
+                    sm.cPickle.Pickler(fd, True).dump(self)
             return rc
 
         return True
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Return the list of editable traits:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def editable_traits ( self ):
+    def editable_traits(self):
         """Returns an alphabetically sorted list of the names of non-event
         trait attributes associated with the current object.
         """
-        names = self.trait_names( type = not_event, editable = not_false )
+        names = self.trait_names(type=not_event, editable=not_false)
         names.sort()
         return names
 
-    def class_editable_traits ( cls ):
+    def class_editable_traits(cls):
         """Returns an alphabetically sorted list of the names of non-event
         trait attributes associated with the current class.
         """
-        names = cls.class_trait_names( type = not_event, editable = not_false )
+        names = cls.class_trait_names(type=not_event, editable=not_false)
         names.sort()
         return names
 
-    class_editable_traits = classmethod( class_editable_traits )
+    class_editable_traits = classmethod(class_editable_traits)
 
-    def visible_traits ( self ):
+    def visible_traits(self):
         """Returns an alphabetically sorted list of the names of non-event
         trait attributes associated with the current object, that should be GUI visible
         """
-        return self.trait_names( type = not_event, visible = not_false )
+        return self.trait_names(type=not_event, visible=not_false)
 
-    def class_visible_traits ( cls ):
+    def class_visible_traits(cls):
         """Returns an alphabetically sorted list of the names of non-event
         trait attributes associated with the current class, that should be GUI visible
         """
-        return cls.class_trait_names( type = not_event, visible = not_false )
+        return cls.class_trait_names(type=not_event, visible=not_false)
 
-    class_visible_traits = classmethod( class_visible_traits )
+    class_visible_traits = classmethod(class_visible_traits)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Pretty print the traits of an object:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def print_traits ( self, show_help = False, **metadata ):
+    def print_traits(self, show_help=False, **metadata):
         """Prints the values of all explicitly-defined, non-event trait
         attributes on the current object, in an easily readable format.
 
@@ -2220,47 +2419,57 @@ class HasTraits ( CHasTraits ):
             Indicates whether to display additional descriptive information.
         """
 
-        if len( metadata ) > 0:
-            names = self.trait_names( **metadata )
+        if len(metadata) > 0:
+            names = self.trait_names(**metadata)
         else:
-            names = self.trait_names( type = not_event )
+            names = self.trait_names(type=not_event)
 
-        if len( names ) == 0:
-            print('')
+        if len(names) == 0:
+            print("")
             return
 
         result = []
-        pad    = max( [ len( x ) for x in names ] ) + 1
+        pad = max([len(x) for x in names]) + 1
         maxval = 78 - pad
         names.sort()
 
         for name in names:
             try:
-                value = repr( getattr( self, name ) ).replace( '\n', '\\n' )
-                if len( value ) > maxval:
-                    value = '%s...%s' % ( value[: (maxval - 2) // 2 ],
-                                          value[ -((maxval - 3) // 2): ] )
+                value = repr(getattr(self, name)).replace("\n", "\\n")
+                if len(value) > maxval:
+                    value = "%s...%s" % (
+                        value[: (maxval - 2) // 2],
+                        value[-((maxval - 3) // 2) :],
+                    )
             except:
-                value = '<undefined>'
-            lname = (name + ':').ljust( pad )
+                value = "<undefined>"
+            lname = (name + ":").ljust(pad)
             if show_help:
-                result.append( '%s %s\n   The value must be %s.' % (
-                       lname, value, self.base_trait( name ).setter.info() ) )
+                result.append(
+                    "%s %s\n   The value must be %s."
+                    % (lname, value, self.base_trait(name).setter.info())
+                )
             else:
-                result.append( '%s %s' % ( lname, value ) )
+                result.append("%s %s" % (lname, value))
 
-        print('\n'.join( result ))
+        print("\n".join(result))
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Add/Remove a handler for a specified trait being changed:
     #
     #  If no name is specified, the handler will be invoked for any trait
     #  change.
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _on_trait_change ( self, handler, name = None, remove = False,
-                                 dispatch = 'same', priority = False,
-                                 target = None):
+    def _on_trait_change(
+        self,
+        handler,
+        name=None,
+        remove=False,
+        dispatch="same",
+        priority=False,
+        target=None,
+    ):
         """Causes the object to invoke a handler whenever a trait attribute
         is modified, or removes the association.
 
@@ -2284,60 +2493,68 @@ class HasTraits ( CHasTraits ):
         object is changed.
         """
 
-        if type( name ) is list:
+        if type(name) is list:
             for name_i in name:
-                self._on_trait_change( handler, name_i, remove, dispatch,
-                                       priority, target )
+                self._on_trait_change(
+                    handler, name_i, remove, dispatch, priority, target
+                )
 
             return
 
-        name = name or 'anytrait'
+        name = name or "anytrait"
 
         if remove:
-            if name == 'anytrait':
-                notifiers = self._notifiers( 0 )
+            if name == "anytrait":
+                notifiers = self._notifiers(0)
             else:
-                trait = self._trait( name, 1 )
+                trait = self._trait(name, 1)
                 if trait is None:
                     return
-                notifiers = trait._notifiers( 0 )
+                notifiers = trait._notifiers(0)
 
             if notifiers is not None:
-                for i, notifier in enumerate( notifiers ):
-                    if notifier.equals( handler ):
+                for i, notifier in enumerate(notifiers):
+                    if notifier.equals(handler):
                         del notifiers[i]
                         notifier.dispose()
                         break
 
             return
 
-        if name == 'anytrait':
-            notifiers = self._notifiers( 1 )
+        if name == "anytrait":
+            notifiers = self._notifiers(1)
         else:
-            notifiers = self._trait( name, 2 )._notifiers( 1 )
+            notifiers = self._trait(name, 2)._notifiers(1)
 
         for notifier in notifiers:
-            if notifier.equals( handler ):
+            if notifier.equals(handler):
                 break
         else:
-            wrapper = self.wrappers[ dispatch ]( handler, notifiers, target )
+            wrapper = self.wrappers[dispatch](handler, notifiers, target)
 
             if priority:
-                notifiers.insert( 0, wrapper )
+                notifiers.insert(0, wrapper)
             else:
-                notifiers.append( wrapper )
+                notifiers.append(wrapper)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Add/Remove handlers for an extended set of one or more traits being
     #  changed:
     #
     #  If no name is specified, the handler will be invoked for any trait
     #  change.
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def on_trait_change ( self, handler, name = None, remove = False,
-                                dispatch = 'same', priority = False,
-                                deferred = False, target = None ):
+    def on_trait_change(
+        self,
+        handler,
+        name=None,
+        remove=False,
+        dispatch="same",
+        priority=False,
+        deferred=False,
+        target=None,
+    ):
         """Causes the object to invoke a handler whenever a trait attribute
         matching a specified pattern is modified, or removes the association.
 
@@ -2547,17 +2764,24 @@ class HasTraits ( CHasTraits ):
         """
         # Check to see if we can do a quick exit to the basic trait change
         # handler:
-        if ((isinstance( name, six.string_types ) and
-            (extended_trait_pat.match( name ) is None)) or (name is None)):
-            self._on_trait_change( handler, name, remove, dispatch, priority, target )
+        if (
+            isinstance(name, six.string_types)
+            and (extended_trait_pat.match(name) is None)
+        ) or (name is None):
+            self._on_trait_change(
+                handler, name, remove, dispatch, priority, target
+            )
 
             return
 
-        from .traits_listener \
-            import TraitsListener, ListenerParser, ListenerHandler, \
-                   ListenerNotifyWrapper
+        from .traits_listener import (
+            TraitsListener,
+            ListenerParser,
+            ListenerHandler,
+            ListenerNotifyWrapper,
+        )
 
-        if isinstance( name, list ):
+        if isinstance(name, list):
             for name_i in name:
                 self.on_trait_change(
                     handler,
@@ -2572,50 +2796,55 @@ class HasTraits ( CHasTraits ):
             return
 
         # Make sure we have a name string:
-        name = (name or 'anytrait').strip()
+        name = (name or "anytrait").strip()
 
         if remove:
-            dict = self.__dict__.get( TraitsListener )
+            dict = self.__dict__.get(TraitsListener)
             if dict is not None:
-                listeners = dict.get( name )
+                listeners = dict.get(name)
                 if listeners is not None:
-                    for i, wrapper in enumerate( listeners ):
-                        if wrapper.equals( handler ):
+                    for i, wrapper in enumerate(listeners):
+                        if wrapper.equals(handler):
                             del listeners[i]
-                            if len( listeners ) == 0:
-                                del dict[ name ]
-                                if len( dict ) == 0:
-                                    del self.__dict__[ TraitsListener ]
-                            wrapper.listener.unregister( self )
+                            if len(listeners) == 0:
+                                del dict[name]
+                                if len(dict) == 0:
+                                    del self.__dict__[TraitsListener]
+                            wrapper.listener.unregister(self)
                             wrapper.dispose()
                             break
         else:
-            dict      = self.__dict__.setdefault( TraitsListener, {} )
-            listeners = dict.setdefault( name, [] )
+            dict = self.__dict__.setdefault(TraitsListener, {})
+            listeners = dict.setdefault(name, [])
             for wrapper in listeners:
-                if wrapper.equals( handler ):
+                if wrapper.equals(handler):
                     break
             else:
-                listener = ListenerParser( name ).listener
-                lnw = ListenerNotifyWrapper( handler, self, name, listener, target )
-                listeners.append( lnw )
-                listener.trait_set( handler         = ListenerHandler( handler ),
-                                    wrapped_handler_ref = weakref.ref(lnw),
-                                    type            = lnw.type,
-                                    dispatch        = dispatch,
-                                    priority        = priority,
-                                    deferred        = deferred )
-                listener.register( self )
+                listener = ListenerParser(name).listener
+                lnw = ListenerNotifyWrapper(
+                    handler, self, name, listener, target
+                )
+                listeners.append(lnw)
+                listener.trait_set(
+                    handler=ListenerHandler(handler),
+                    wrapped_handler_ref=weakref.ref(lnw),
+                    type=lnw.type,
+                    dispatch=dispatch,
+                    priority=priority,
+                    deferred=deferred,
+                )
+                listener.register(self)
 
     # A synonym for 'on_trait_change'
     on_trait_event = on_trait_change
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Synchronize the value of two traits:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def sync_trait ( self, trait_name, object, alias = None, mutual = True,
-                           remove = False ):
+    def sync_trait(
+        self, trait_name, object, alias=None, mutual=True, remove=False
+    ):
         """Synchronizes the value of a trait attribute on this object with a
         trait attribute on another object.
 
@@ -2647,118 +2876,121 @@ class HasTraits ( CHasTraits ):
         if alias is None:
             alias = trait_name
 
-        is_list = (self._is_list_trait( trait_name ) and
-                   object._is_list_trait( alias ))
+        is_list = self._is_list_trait(trait_name) and object._is_list_trait(
+            alias
+        )
 
         if remove:
             info = self._get_sync_trait_info()
-            dic  = info.get( trait_name )
+            dic = info.get(trait_name)
             if dic is not None:
-                key = ( id( object ), alias )
+                key = (id(object), alias)
                 if key in dic:
-                    del dic[ key ]
+                    del dic[key]
 
-                    if len( dic ) == 0:
-                        del info[ trait_name ]
-                        self._on_trait_change( self._sync_trait_modified,
-                            trait_name, remove = True )
+                    if len(dic) == 0:
+                        del info[trait_name]
+                        self._on_trait_change(
+                            self._sync_trait_modified, trait_name, remove=True
+                        )
 
                         if is_list:
                             self._on_trait_change(
                                 self._sync_trait_items_modified,
-                                trait_name + '_items', remove = True )
+                                trait_name + "_items",
+                                remove=True,
+                            )
 
             if mutual:
-                object.sync_trait( alias, self, trait_name, False, True )
+                object.sync_trait(alias, self, trait_name, False, True)
 
             return
 
         # Callback to use when the synced object goes out of scope. In order
         # to avoid reference cycles, this must not be a member function. See
         # Github issue #69 for more detail.
-        def _sync_trait_listener_deleted (ref, info):
+        def _sync_trait_listener_deleted(ref, info):
             for key, dic in list(info.items()):
-                if key != '':
+                if key != "":
                     for name, value in list(dic.items()):
                         if ref is value[0]:
-                            del dic[ name ]
-                    if len( dic ) == 0:
-                        del info[ key ]
+                            del dic[name]
+                    if len(dic) == 0:
+                        del info[key]
 
         info = self._get_sync_trait_info()
-        dic   = info.setdefault( trait_name, {} )
-        key   = ( id( object ), alias )
+        dic = info.setdefault(trait_name, {})
+        key = (id(object), alias)
 
         callback = lambda ref: _sync_trait_listener_deleted(ref, info)
-        value = ( weakref.ref( object, callback ), alias )
+        value = (weakref.ref(object, callback), alias)
 
         if key not in dic:
-            if len( dic ) == 0:
-                self._on_trait_change( self._sync_trait_modified, trait_name )
+            if len(dic) == 0:
+                self._on_trait_change(self._sync_trait_modified, trait_name)
                 if is_list:
-                    self._on_trait_change( self._sync_trait_items_modified,
-                                           trait_name + '_items' )
-            dic[ key ] = value
-            setattr( object, alias, getattr( self, trait_name ) )
+                    self._on_trait_change(
+                        self._sync_trait_items_modified, trait_name + "_items"
+                    )
+            dic[key] = value
+            setattr(object, alias, getattr(self, trait_name))
 
         if mutual:
-            object.sync_trait( alias, self, trait_name, False )
+            object.sync_trait(alias, self, trait_name, False)
 
-    def _get_sync_trait_info ( self ):
-        info = getattr( self, '__sync_trait__', None )
+    def _get_sync_trait_info(self):
+        info = getattr(self, "__sync_trait__", None)
         if info is None:
-            self.__dict__[ '__sync_trait__' ] = info = {}
-            info[ '' ] = {}
+            self.__dict__["__sync_trait__"] = info = {}
+            info[""] = {}
 
         return info
 
-    def _sync_trait_modified ( self, object, name, old, new ):
-        info   = self.__sync_trait__
+    def _sync_trait_modified(self, object, name, old, new):
+        info = self.__sync_trait__
         if name not in info:
             return
-        locked = info[ '' ]
-        locked[ name ] = None
-        for object, object_name in info[ name ].values():
+        locked = info[""]
+        locked[name] = None
+        for object, object_name in info[name].values():
             object = object()
-            if object_name not in object._get_sync_trait_info()[ '' ]:
+            if object_name not in object._get_sync_trait_info()[""]:
                 try:
-                    setattr( object, object_name, new )
+                    setattr(object, object_name, new)
                 except:
                     pass
 
-        del locked[ name ]
+        del locked[name]
 
-    def _sync_trait_items_modified ( self, object, name, old, event ):
-        n0     = event.index
-        n1     = n0 + len( event.removed )
-        name   = name[:-6]
-        info   = self.__sync_trait__
-        locked = info[ '' ]
-        locked[ name ] = None
-        for object, object_name in info[ name ].values():
+    def _sync_trait_items_modified(self, object, name, old, event):
+        n0 = event.index
+        n1 = n0 + len(event.removed)
+        name = name[:-6]
+        info = self.__sync_trait__
+        locked = info[""]
+        locked[name] = None
+        for object, object_name in info[name].values():
             object = object()
-            if object_name not in object._get_sync_trait_info()[ '' ]:
+            if object_name not in object._get_sync_trait_info()[""]:
                 try:
-                    getattr( object, object_name )[ n0: n1 ] = event.added
+                    getattr(object, object_name)[n0:n1] = event.added
                 except:
                     pass
 
-        del locked[ name ]
+        del locked[name]
 
-    def _is_list_trait ( self, trait_name ):
-        handler = self.base_trait( trait_name ).handler
+    def _is_list_trait(self, trait_name):
+        handler = self.base_trait(trait_name).handler
 
-        return (
-            (handler is not None)
-            and
-            (handler.default_value_type == TRAIT_LIST_OBJECT_DEFAULT_VALUE)
+        return (handler is not None) and (
+            handler.default_value_type == TRAIT_LIST_OBJECT_DEFAULT_VALUE
         )
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Add a new trait:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def add_trait ( self, name, *trait ):
+    def add_trait(self, name, *trait):
         """Adds a trait attribute to this object.
 
         Parameters
@@ -2773,67 +3005,69 @@ class HasTraits ( CHasTraits ):
         """
 
         # Make sure a trait argument was specified:
-        if len( trait ) == 0:
-            raise ValueError('No trait definition was specified.')
+        if len(trait) == 0:
+            raise ValueError("No trait definition was specified.")
 
         # Make sure only valid traits get added:
-        if len( trait ) > 1:
-            trait = Trait( *trait )
+        if len(trait) > 1:
+            trait = Trait(*trait)
         else:
-            trait = _trait_for( trait[0] )
+            trait = _trait_for(trait[0])
 
         # Check to see if the trait has additional sub-traits that need to be
         # defined also:
         handler = trait.handler
         if handler is not None:
             if handler.has_items:
-                self.add_trait( name + '_items', handler.items_event() )
+                self.add_trait(name + "_items", handler.items_event())
             if handler.is_mapped:
-                self.add_trait( name + '_', _mapped_trait_for( trait ) )
+                self.add_trait(name + "_", _mapped_trait_for(trait))
 
         # See if there already is a class or instance trait with the same name:
-        old_trait = self._trait( name, 0 )
+        old_trait = self._trait(name, 0)
 
         # Get the object's instance trait dictionary and add a clone of the new
         # trait to it:
         itrait_dict = self._instance_traits()
-        itrait_dict[ name ] = trait = _clone_trait( trait )
+        itrait_dict[name] = trait = _clone_trait(trait)
 
         # If there already was a trait with the same name:
         if old_trait is not None:
             # Copy the old traits notifiers into the new trait:
-            old_notifiers = old_trait._notifiers( 0 )
+            old_notifiers = old_trait._notifiers(0)
             if old_notifiers is not None:
-                trait._notifiers( 1 ).extend( old_notifiers )
+                trait._notifiers(1).extend(old_notifiers)
         else:
             # Otherwise, see if there are any static notifiers that should be
             # applied to the trait:
-            cls      = self.__class__
-            handlers = [ _get_method( cls, '_%s_changed' % name ),
-                         _get_method( cls, '_%s_fired'   % name ) ]
+            cls = self.__class__
+            handlers = [
+                _get_method(cls, "_%s_changed" % name),
+                _get_method(cls, "_%s_fired" % name),
+            ]
 
             # Add any special trait defined event handlers:
-            _add_event_handlers( trait, cls, handlers )
+            _add_event_handlers(trait, cls, handlers)
 
             # Add the 'anytrait' handler (if any):
-            handlers.append( self.__prefix_traits__.get( '@' ) )
+            handlers.append(self.__prefix_traits__.get("@"))
 
             # Filter out any 'None' values:
-            handlers = [ h for h in handlers if h is not None ]
+            handlers = [h for h in handlers if h is not None]
 
             # If there are any static notifiers, attach them to the trait:
-            if len( handlers ) > 0:
-                _add_notifiers( trait._notifiers( 1 ), handlers )
+            if len(handlers) > 0:
+                _add_notifiers(trait._notifiers(1), handlers)
 
         # If this was a new trait, fire the 'trait_added' event:
         if old_trait is None:
             self.trait_added = name
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Remove an existing trait:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def remove_trait ( self, name ):
+    def remove_trait(self, name):
         """Removes a trait attribute from this object.
 
         Parameters
@@ -2847,7 +3081,7 @@ class HasTraits ( CHasTraits ):
             True if the trait was successfully removed.
         """
         # Get the trait definition:
-        trait = self._trait( name, 0 )
+        trait = self._trait(name, 0)
         if trait is not None:
 
             # Check to see if the trait has additional sub-traits that need to
@@ -2855,28 +3089,28 @@ class HasTraits ( CHasTraits ):
             handler = trait.handler
             if handler is not None:
                 if handler.has_items:
-                    self.remove_trait( name + '_items' )
+                    self.remove_trait(name + "_items")
                 if handler.is_mapped:
-                    self.remove_trait( name + '_' )
+                    self.remove_trait(name + "_")
 
             # Remove the trait value from the object dictionary as well:
             if name in self.__dict__:
-                del self.__dict__[ name ]
+                del self.__dict__[name]
 
             # Get the object's instance trait dictionary and remove the trait
             # from it:
             itrait_dict = self._instance_traits()
             if name in itrait_dict:
-                del itrait_dict[ name ]
+                del itrait_dict[name]
                 return True
 
         return False
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns the trait definition of a specified trait:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def trait ( self, name, force = False, copy = False ):
+    def trait(self, name, force=False, copy=False):
         """Returns the trait definition for the *name* trait attribute.
 
         Parameters
@@ -2905,17 +3139,17 @@ class HasTraits ( CHasTraits ):
         mode = 0
         if force:
             mode = -1
-        result = self._trait( name, mode )
+        result = self._trait(name, mode)
         if (not copy) or (result is None):
             return result
 
-        return  _clone_trait( result )
+        return _clone_trait(result)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns the base trait definition of a specified trait:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def base_trait ( self, name ):
+    def base_trait(self, name):
         """Returns the base trait definition for a trait attribute.
 
         Parameters
@@ -2931,25 +3165,25 @@ class HasTraits ( CHasTraits ):
         delegation chain until a non-delegated trait attribute is reached, and
         returns the definition of that attribute's trait as the result.
         """
-        return self._trait( name, -2 )
+        return self._trait(name, -2)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Validates whether or not a specified value is legal for a specified
     # trait and returns the validated value if valid:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def validate_trait ( self, name, value ):
+    def validate_trait(self, name, value):
         """ Validates whether a value is legal for a trait.
 
         Returns the validated value if it is valid.
         """
-        return self.base_trait( name ).validate( self, name, value )
+        return self.base_trait(name).validate(self, name, value)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Return a dictionary of all traits which match a set of metadata:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def traits ( self, **metadata ):
+    def traits(self, **metadata):
         """Returns a dictionary containing the definitions of all of the trait
         attributes of this object that match the set of *metadata* criteria.
 
@@ -2990,32 +3224,32 @@ class HasTraits ( CHasTraits ):
 
         for name in self.__dict__.keys():
             if name not in traits:
-                trait = self.trait( name )
+                trait = self.trait(name)
                 if trait is not None:
-                    traits[ name ] = trait
+                    traits[name] = trait
 
-        if len( metadata ) == 0:
+        if len(metadata) == 0:
             return traits
 
         for meta_name, meta_eval in list(metadata.items()):
-            if type( meta_eval ) is not FunctionType:
-                metadata[ meta_name ] = _SimpleTest( meta_eval )
+            if type(meta_eval) is not FunctionType:
+                metadata[meta_name] = _SimpleTest(meta_eval)
 
         result = {}
         for name, trait in traits.items():
             for meta_name, meta_eval in metadata.items():
-                if not meta_eval( getattr( trait, meta_name ) ):
+                if not meta_eval(getattr(trait, meta_name)):
                     break
             else:
-                result[ name ] = trait
+                result[name] = trait
 
         return result
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Return a dictionary of all traits which match a set of metadata:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def class_traits ( cls, **metadata ):
+    def class_traits(cls, **metadata):
         """Returns a dictionary containing the definitions of all of the trait
         attributes of the class that match the set of *metadata* criteria.
 
@@ -3047,31 +3281,31 @@ class HasTraits ( CHasTraits ):
         metadata keyword is specified, a trait attribute must match the metadata
         values of all keywords to be included in the result.
         """
-        if len( metadata ) == 0:
+        if len(metadata) == 0:
             return cls.__base_traits__.copy()
 
         result = {}
 
         for meta_name, meta_eval in list(metadata.items()):
-            if type( meta_eval ) is not FunctionType:
-                metadata[ meta_name ] = _SimpleTest( meta_eval )
+            if type(meta_eval) is not FunctionType:
+                metadata[meta_name] = _SimpleTest(meta_eval)
 
         for name, trait in cls.__base_traits__.items():
             for meta_name, meta_eval in metadata.items():
-                if not meta_eval( getattr( trait, meta_name ) ):
+                if not meta_eval(getattr(trait, meta_name)):
                     break
             else:
-                result[ name ] = trait
+                result[name] = trait
 
         return result
 
-    class_traits = classmethod( class_traits )
+    class_traits = classmethod(class_traits)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Return a list of all trait names which match a set of metadata:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def trait_names ( self, **metadata ):
+    def trait_names(self, **metadata):
         """Returns a list of the names of all trait attributes whose definitions
         match the set of *metadata* criteria specified.
 
@@ -3085,9 +3319,9 @@ class HasTraits ( CHasTraits ):
         This method is similar to the traits() method, but returns only the
         names of the matching trait attributes, not the trait definitions.
         """
-        return list(self.traits( **metadata ).keys())
+        return list(self.traits(**metadata).keys())
 
-    def class_trait_names ( cls, **metadata ):
+    def class_trait_names(cls, **metadata):
         """Returns a list of the names of all trait attributes whose definitions
         match the set of *metadata* criteria specified.
 
@@ -3101,42 +3335,43 @@ class HasTraits ( CHasTraits ):
         This method is similar to the traits() method, but returns only the
         names of the matching trait attributes, not the trait definitions.
         """
-        return list(cls.class_traits( **metadata ).keys())
+        return list(cls.class_traits(**metadata).keys())
 
-    class_trait_names = classmethod( class_trait_names )
+    class_trait_names = classmethod(class_trait_names)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Explicitly sets the value of a cached property:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _set_traits_cache ( self, name, value ):
+    def _set_traits_cache(self, name, value):
         """ Explicitly sets the value of a cached property.
         """
-        cached    = TraitsCache + name
-        old_value = self.__dict__.get( cached, Undefined )
-        self.__dict__[ cached ] = value
+        cached = TraitsCache + name
+        old_value = self.__dict__.get(cached, Undefined)
+        self.__dict__[cached] = value
         if old_value != value:
-            self.trait_property_changed( name, old_value, value )
+            self.trait_property_changed(name, old_value, value)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Explicitly flushes the value of a cached property:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _flush_traits_cache ( self, name, value ):
+    def _flush_traits_cache(self, name, value):
         """ Explicitly flushes the value of a cached property.
         """
         self.trait_property_changed(
-            name, self.__dict__.pop( TraitsCache + name, Undefined ) )
+            name, self.__dict__.pop(TraitsCache + name, Undefined)
+        )
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns the trait definition for a specified name when there is no
     #  explicit definition in the class:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def __prefix_trait__ ( self, name, is_set ):
+    def __prefix_trait__(self, name, is_set):
         # Check to see if the name is of the form '__xxx__':
-        if (name[:2] == '__') and (name[-2:] == '__'):
-            if name == '__class__':
+        if (name[:2] == "__") and (name[-2:] == "__"):
+            if name == "__class__":
                 return generic_trait
 
             # If this is for purposes of performing a 'setattr', always map the
@@ -3146,261 +3381,289 @@ class HasTraits ( CHasTraits ):
 
             # Otherwise, it is a 'getattr' request, so indicate that no such
             # attribute exists:
-            raise AttributeError("'%s' object has no attribute '%s'" % (
-                                 self.__class__.__name__, name ))
+            raise AttributeError(
+                "'%s' object has no attribute '%s'"
+                % (self.__class__.__name__, name)
+            )
 
         # Handle the special case of 'delegated' traits:
-        if name[-1:] == '_':
-           trait = self._trait( name[:-1], 0 )
-           if (trait is not None) and (trait.type == 'delegate'):
-               return _clone_trait( trait )
+        if name[-1:] == "_":
+            trait = self._trait(name[:-1], 0)
+            if (trait is not None) and (trait.type == "delegate"):
+                return _clone_trait(trait)
 
         prefix_traits = self.__prefix_traits__
-        for prefix in prefix_traits['*']:
-            if prefix == name[ :len( prefix ) ]:
+        for prefix in prefix_traits["*"]:
+            if prefix == name[: len(prefix)]:
                 # If we found a match, use its trait as a template for a new
                 # trait:
-                trait = prefix_traits[ prefix ]
+                trait = prefix_traits[prefix]
 
                 # Get any change notifiers that apply to the trait:
-                cls      = self.__class__
-                handlers = [ _get_method( cls, '_%s_changed' % name ),
-                             _get_method( cls, '_%s_fired'   % name ) ]
+                cls = self.__class__
+                handlers = [
+                    _get_method(cls, "_%s_changed" % name),
+                    _get_method(cls, "_%s_fired" % name),
+                ]
 
                 # Add any special trait defined event handlers:
-                _add_event_handlers( trait, cls, handlers )
+                _add_event_handlers(trait, cls, handlers)
 
                 # Add the 'anytrait' handler (if any):
-                handlers.append( prefix_traits.get( '@' ) )
+                handlers.append(prefix_traits.get("@"))
 
                 # Filter out any 'None' values:
-                handlers = [ h for h in handlers if h is not None ]
+                handlers = [h for h in handlers if h is not None]
 
                 # If there are any handlers, add them to the trait's notifier's
                 # list:
-                if len( handlers ) > 0:
-                    trait = _clone_trait( trait )
-                    _add_notifiers( trait._notifiers( 1 ), handlers )
+                if len(handlers) > 0:
+                    trait = _clone_trait(trait)
+                    _add_notifiers(trait._notifiers(1), handlers)
 
                 return trait
 
         # There should ALWAYS be a prefix match in the trait classes, since ''
         # is at the end of the list, so we should never get here:
-        raise SystemError("Trait class look-up failed for attribute '%s' "
-                          "for an object of type '%s'" % (
-                          name, self.__class__.__name__))
+        raise SystemError(
+            "Trait class look-up failed for attribute '%s' "
+            "for an object of type '%s'" % (name, self.__class__.__name__)
+        )
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Adds/Removes (Java-style) event listeners to an object:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def add_trait_listener ( self, object, prefix = '' ):
-        self._trait_listener( object, prefix, False )
+    def add_trait_listener(self, object, prefix=""):
+        self._trait_listener(object, prefix, False)
 
-    def remove_trait_listener ( self, object, prefix = '' ):
-        self._trait_listener( object, prefix, True )
+    def remove_trait_listener(self, object, prefix=""):
+        self._trait_listener(object, prefix, True)
 
-    def _trait_listener ( self, object, prefix, remove ):
-        if prefix[-1:] != '_':
-            prefix += '_'
-        n      = len( prefix )
+    def _trait_listener(self, object, prefix, remove):
+        if prefix[-1:] != "_":
+            prefix += "_"
+        n = len(prefix)
         traits = self.__base_traits__
-        for name in self._each_trait_method( object ):
+        for name in self._each_trait_method(object):
             if name[:n] == prefix:
-                if name[-8:] == '_changed':
+                if name[-8:] == "_changed":
                     short_name = name[n:-8]
                     if short_name in traits:
-                        self._on_trait_change( getattr( object, name ),
-                                               short_name, remove = remove )
-                    elif short_name == 'anytrait':
-                        self._on_trait_change( getattr( object, name ),
-                                               remove = remove )
-                elif name[:-6] == '_fired':
+                        self._on_trait_change(
+                            getattr(object, name), short_name, remove=remove
+                        )
+                    elif short_name == "anytrait":
+                        self._on_trait_change(
+                            getattr(object, name), remove=remove
+                        )
+                elif name[:-6] == "_fired":
                     short_name = name[n:-6]
                     if short_name in traits:
-                        self._on_trait_change( getattr( object, name ),
-                                               short_name, remove = remove )
-                    elif short_name == 'anytrait':
-                        self._on_trait_change( getattr( object, name ),
-                                               remove = remove )
+                        self._on_trait_change(
+                            getattr(object, name), short_name, remove=remove
+                        )
+                    elif short_name == "anytrait":
+                        self._on_trait_change(
+                            getattr(object, name), remove=remove
+                        )
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Generates each (name, method) pair for a specified object:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _each_trait_method ( self, object ):
+    def _each_trait_method(self, object):
         """ Generates each (name, method) pair for a specified object.
         """
         dic = {}
         for klass in object.__class__.__mro__:
             for name, method in klass.__dict__.items():
-                if (type( method ) is FunctionType) and (name not in dic):
-                    dic[ name ] = True
+                if (type(method) is FunctionType) and (name not in dic):
+                    dic[name] = True
                     yield name
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Handles adding/removing listeners for a generic 'Instance' trait:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _instance_changed_handler ( self, name, old, new ):
+    def _instance_changed_handler(self, name, old, new):
         """ Handles adding/removing listeners for a generic 'Instance' trait.
         """
-        arg_lists = self._get_instance_handlers( name )
+        arg_lists = self._get_instance_handlers(name)
 
         if old is not None:
             for args in arg_lists:
-                old.on_trait_change( remove = True, *args )
+                old.on_trait_change(remove=True, *args)
 
         if new is not None:
             for args in arg_lists:
-                new.on_trait_change( *args )
+                new.on_trait_change(*args)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Handles adding/removing listeners for a generic 'List( Instance )' trait:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _list_changed_handler ( self, name, old, new ):
+    def _list_changed_handler(self, name, old, new):
         """ Handles adding/removing listeners for a generic 'List( Instance )'
             trait.
         """
-        arg_lists = self._get_instance_handlers( name )
+        arg_lists = self._get_instance_handlers(name)
 
         for item in old:
             for args in arg_lists:
-                item.on_trait_change( remove = True, *args )
+                item.on_trait_change(remove=True, *args)
 
         for item in new:
             for args in arg_lists:
-                item.on_trait_change( *args )
+                item.on_trait_change(*args)
 
-    def _list_items_changed_handler ( self, name, not_used, event ):
+    def _list_items_changed_handler(self, name, not_used, event):
         """ Handles adding/removing listeners for a generic 'List( Instance )'
             trait.
         """
-        arg_lists = self._get_instance_handlers( name[:-6] )
+        arg_lists = self._get_instance_handlers(name[:-6])
 
         for item in event.removed:
             for args in arg_lists:
-                item.on_trait_change( remove = True, *args )
+                item.on_trait_change(remove=True, *args)
 
         for item in event.added:
             for args in arg_lists:
-                item.on_trait_change( *args )
+                item.on_trait_change(*args)
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Returns a list of ( name, method ) pairs for a specified 'Instance' or
     #  'List( Instance )' trait name:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _get_instance_handlers ( self, name ):
+    def _get_instance_handlers(self, name):
         """ Returns a list of ( name, method ) pairs for a specified 'Instance'
             or 'List( Instance )' trait name:
         """
-        return [ ( getattr( self, method_name ), item_name )
-                 for method_name, item_name in
-                     self.__class__.__instance_traits__[ name ] ]
+        return [
+            (getattr(self, method_name), item_name)
+            for method_name, item_name in self.__class__.__instance_traits__[
+                name
+            ]
+        ]
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Initializes the object's statically parsed, but dynamically registered,
     #  traits listeners (called at object creation and unpickling times):
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _post_init_trait_listeners ( self ):
+    def _post_init_trait_listeners(self):
         """ Initializes the object's statically parsed, but dynamically
             registered, traits listeners (called at object creation and
             unpickling times).
         """
         for name, data in self.__class__.__listener_traits__.items():
-            if data[0] == 'method':
+            if data[0] == "method":
                 config = data[1]
-                if config['post_init']:
-                    self.on_trait_change( getattr( self, name ),
-                                          config['pattern'],
-                                          deferred = True,
-                                          dispatch=config['dispatch'] )
+                if config["post_init"]:
+                    self.on_trait_change(
+                        getattr(self, name),
+                        config["pattern"],
+                        deferred=True,
+                        dispatch=config["dispatch"],
+                    )
 
-    def _init_trait_listeners ( self ):
+    def _init_trait_listeners(self):
         """ Initializes the object's statically parsed, but dynamically
             registered, traits listeners (called at object creation and
             unpickling times).
         """
         for name, data in self.__class__.__listener_traits__.items():
-            getattr( self, '_init_trait_%s_listener' % data[0] )( name, *data )
+            getattr(self, "_init_trait_%s_listener" % data[0])(name, *data)
 
-    def _init_trait_method_listener ( self, name, kind, config ):
+    def _init_trait_method_listener(self, name, kind, config):
         """ Sets up the listener for a method with the @on_trait_change
             decorator.
         """
-        if not config['post_init']:
-            self.on_trait_change( getattr( self, name ),
-                                  config['pattern'],
-                                  deferred = True,
-                                  dispatch=config['dispatch'] )
+        if not config["post_init"]:
+            self.on_trait_change(
+                getattr(self, name),
+                config["pattern"],
+                deferred=True,
+                dispatch=config["dispatch"],
+            )
 
-    def _init_trait_event_listener ( self, name, kind, pattern ):
+    def _init_trait_event_listener(self, name, kind, pattern):
         """ Sets up the listener for an event with on_trait_change metadata.
         """
+
         @weak_arg(self)
-        def notify ( self ):
-            setattr( self, name, True )
+        def notify(self):
+            setattr(self, name, True)
 
-        self.on_trait_change( notify, pattern, target=self )
+        self.on_trait_change(notify, pattern, target=self)
 
-    def _init_trait_property_listener ( self, name, kind, cached, pattern ):
+    def _init_trait_property_listener(self, name, kind, cached, pattern):
         """ Sets up the listener for a property with 'depends_on' metadata.
         """
         if cached is None:
+
             @weak_arg(self)
-            def notify ( self ):
-                self.trait_property_changed( name, None )
+            def notify(self):
+                self.trait_property_changed(name, None)
+
         else:
-            cached_old = cached + ':old'
+            cached_old = cached + ":old"
+
             @weak_arg(self)
-            def pre_notify ( self ):
+            def pre_notify(self):
                 dict = self.__dict__
-                old  = dict.get( cached_old, Undefined )
+                old = dict.get(cached_old, Undefined)
                 if old is Undefined:
-                    dict[ cached_old ] = dict.pop( cached, None )
-            self.on_trait_change( pre_notify, pattern, priority = True, target=self )
+                    dict[cached_old] = dict.pop(cached, None)
+
+            self.on_trait_change(
+                pre_notify, pattern, priority=True, target=self
+            )
 
             @weak_arg(self)
-            def notify ( self ):
-                old = self.__dict__.pop( cached_old, Undefined )
+            def notify(self):
+                old = self.__dict__.pop(cached_old, Undefined)
                 if old is not Undefined:
-                    self.trait_property_changed( name, old )
+                    self.trait_property_changed(name, old)
 
-        self.on_trait_change( notify, pattern, target=self )
+        self.on_trait_change(notify, pattern, target=self)
 
-    def _init_trait_delegate_listener ( self, name, kind, pattern ):
+    def _init_trait_delegate_listener(self, name, kind, pattern):
         """ Sets up the listener for a delegate trait.
         """
-        name_pattern    = self._trait_delegate_name( name, pattern )
-        target_name_len = len( name_pattern.split( ':' )[-1] )
+        name_pattern = self._trait_delegate_name(name, pattern)
+        target_name_len = len(name_pattern.split(":")[-1])
 
         @weak_arg(self)
-        def notify ( self, object, notify_name, old, new ):
-            self.trait_property_changed( name + notify_name[ target_name_len: ],
-                                         old, new )
+        def notify(self, object, notify_name, old, new):
+            self.trait_property_changed(
+                name + notify_name[target_name_len:], old, new
+            )
 
-        self.on_trait_change( notify, name_pattern, target=self )
-        self.__dict__.setdefault( ListenerTraits, {} )[ name ] = notify
+        self.on_trait_change(notify, name_pattern, target=self)
+        self.__dict__.setdefault(ListenerTraits, {})[name] = notify
 
-    def _remove_trait_delegate_listener ( self, name, remove ):
+    def _remove_trait_delegate_listener(self, name, remove):
         """ Removes a delegate listener when the local delegate value is set.
         """
-        dict = self.__dict__.setdefault( ListenerTraits, {} )
+        dict = self.__dict__.setdefault(ListenerTraits, {})
 
         if remove:
             # Although the name should be in the dict, it may not be if a value
             # was assigned to a delegate in a constructor or setstate:
             if name in dict:
                 # Remove the delegate listener:
-                self.on_trait_change( dict[ name ], self._trait_delegate_name(
-                         name, self.__class__.__listener_traits__[ name ][1] ),
-                         remove = True )
-                del dict[ name ]
-                if len( dict ) == 0:
-                    del self.__dict__[ ListenerTraits ]
+                self.on_trait_change(
+                    dict[name],
+                    self._trait_delegate_name(
+                        name, self.__class__.__listener_traits__[name][1]
+                    ),
+                    remove=True,
+                )
+                del dict[name]
+                if len(dict) == 0:
+                    del self.__dict__[ListenerTraits]
 
             return
 
@@ -3408,26 +3671,32 @@ class HasTraits ( CHasTraits ):
         # the delegate listener (unless it's already there):
         if name not in dict:
             self._init_trait_delegate_listener(
-                     name, 0, self.__class__.__listener_traits__[ name ][1] )
+                name, 0, self.__class__.__listener_traits__[name][1]
+            )
 
-    def _trait_delegate_name ( self, name, pattern ):
+    def _trait_delegate_name(self, name, pattern):
         """ Returns the fully-formed 'on_trait_change' name for a specified
             delegate.
         """
-        if pattern[-1] == '*':
-            pattern = '%s%s%s' % ( pattern[:-1], self.__class__.__prefix__,
-                                    name )
+        if pattern[-1] == "*":
+            pattern = "%s%s%s" % (
+                pattern[:-1],
+                self.__class__.__prefix__,
+                name,
+            )
 
         return pattern
+
 
 # Patch the definition of _HasTraits to be the real 'HasTraits':
 _HasTraits = HasTraits
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  'HasStrictTraits' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class HasStrictTraits ( HasTraits ):
+
+class HasStrictTraits(HasTraits):
     """ This class guarantees that any object attribute that does not have an
     explicit or wildcard trait definition results in an exception.
 
@@ -3436,11 +3705,14 @@ class HasStrictTraits ( HasTraits ):
     also helps prevent typos and spelling mistakes in attribute names from
     going unnoticed; a misspelled attribute name typically causes an exception.
     """
-    _ = Disallow   # Disallow access to any traits not explicitly defined
 
-#-------------------------------------------------------------------------------
+    _ = Disallow  # Disallow access to any traits not explicitly defined
+
+
+# -------------------------------------------------------------------------------
 #  'HasRequiredTraits' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+
 
 class HasRequiredTraits(HasStrictTraits):
     """ This class builds on the functionality of HasStrictTraits and ensures
@@ -3478,22 +3750,25 @@ class HasRequiredTraits(HasStrictTraits):
     def __init__(self, **traits):
 
         missing_required_traits = [
-            name for name in self.trait_names(required=True)
+            name
+            for name in self.trait_names(required=True)
             if name not in traits
         ]
         if missing_required_traits:
             raise TraitError(
                 "The following required traits were not provided: "
-                "{}.".format(', '.join(sorted(missing_required_traits)))
+                "{}.".format(", ".join(sorted(missing_required_traits)))
             )
 
         super(HasRequiredTraits, self).__init__(**traits)
 
-#-------------------------------------------------------------------------------
-#  'HasPrivateTraits' class:
-#-------------------------------------------------------------------------------
 
-class HasPrivateTraits ( HasTraits ):
+# -------------------------------------------------------------------------------
+#  'HasPrivateTraits' class:
+# -------------------------------------------------------------------------------
+
+
+class HasPrivateTraits(HasTraits):
     """ This class ensures that any public object attribute that does not have
     an explicit or wildcard trait definition results in an exception, but
     "private" attributes (whose names start with '_') have an initial value of
@@ -3504,20 +3779,20 @@ class HasPrivateTraits ( HasTraits ):
     public API. Such attributes do not need to be type-checked, because they are
     manipulated only by the (presumably correct) methods of the class itself.
     """
+
     # Make 'private' traits (leading '_') have no type checking:
-    __ = Any( private = True, transient = True )
+    __ = Any(private=True, transient=True)
 
     # Disallow access to all other traits not explicitly defined:
-    _  = Disallow
+    _ = Disallow
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # ABC classes with traits: (where available)
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 try:
 
     import abc
-
 
     class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
         """ A MetaHasTraits subclass which also inherits from
@@ -3526,8 +3801,8 @@ try:
         .. note:: The ABCMeta class is cooperative and behaves nicely
             with MetaHasTraits, provided it is inherited first.
         """
-        pass
 
+        pass
 
     @six.add_metaclass(ABCMetaHasTraits)
     class ABCHasTraits(HasTraits):
@@ -3537,69 +3812,81 @@ try:
 
         """
 
-
     class ABCHasStrictTraits(ABCHasTraits):
         """ A HasTraits subclass which behaves like HasStrictTraits but
         also enables the features of Abstract Base Classes (ABC). See the
         'abc' module in the standard library for more information.
 
         """
+
         _ = Disallow
+
 
 except ImportError:
     pass
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Singleton classes with traits:
 #
 #  This code is based on a recipe taken from:
 #      http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/66531
 #  Specifically, the implementation of Oren Tirosh is used.
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class SingletonHasTraits ( HasTraits ):
+
+class SingletonHasTraits(HasTraits):
     """ Singleton class that support trait attributes.
     """
-    def __new__ ( cls, *args, **traits ):
-        if not '_the_instance' in cls.__dict__:
-            cls._the_instance = HasTraits.__new__( cls, *args, **traits )
+
+    def __new__(cls, *args, **traits):
+        if not "_the_instance" in cls.__dict__:
+            cls._the_instance = HasTraits.__new__(cls, *args, **traits)
         return cls._the_instance
 
-class SingletonHasStrictTraits ( HasStrictTraits ):
+
+class SingletonHasStrictTraits(HasStrictTraits):
     """ Singleton class that supports strict trait attributes.
 
         Non-trait attributes generate an exception.
     """
-    def __new__ ( cls, *args, **traits ):
-        return SingletonHasTraits.__new__( cls, *args, **traits )
 
-class SingletonHasPrivateTraits ( HasPrivateTraits ):
+    def __new__(cls, *args, **traits):
+        return SingletonHasTraits.__new__(cls, *args, **traits)
+
+
+class SingletonHasPrivateTraits(HasPrivateTraits):
     """ Singleton class that supports trait attributes, with private attributes
         being unchecked.
     """
-    def __new__ ( cls, *args, **traits ):
-        return SingletonHasTraits.__new__( cls, *args, **traits )
 
-#-------------------------------------------------------------------------------
+    def __new__(cls, *args, **traits):
+        return SingletonHasTraits.__new__(cls, *args, **traits)
+
+
+# -------------------------------------------------------------------------------
 #  Defines a 'vetoable' request object and an associated event:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class Vetoable ( HasStrictTraits ):
+
+class Vetoable(HasStrictTraits):
     """ Defines a 'vetoable' request object and an associated event.
     """
+
     # Should the request be vetoed? (Can only be set to 'True')
-    veto = Bool( False )
+    veto = Bool(False)
 
-    def _veto_changed ( self, state ):
-        self._trait_veto_notify( state )
+    def _veto_changed(self, state):
+        self._trait_veto_notify(state)
 
-VetoableEvent = Event( Vetoable )
 
-#-------------------------------------------------------------------------------
+VetoableEvent = Event(Vetoable)
+
+# -------------------------------------------------------------------------------
 #  'MetaInterface' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class MetaInterface ( ABCMetaHasTraits ):
+
+class MetaInterface(ABCMetaHasTraits):
     """ Meta class for interfaces.
 
     Interfaces are simple ABCs with the following features:-
@@ -3610,7 +3897,7 @@ class MetaInterface ( ABCMetaHasTraits ):
     """
 
     @deprecated('use "adapt(adaptee, protocol)" instead.')
-    def __call__ ( self, adaptee, default=AdaptationError ):
+    def __call__(self, adaptee, default=AdaptationError):
         """ Attempt to adapt the adaptee to this interface.
 
         Note that this means that (intentionally ;^) that interfaces
@@ -3622,20 +3909,24 @@ class MetaInterface ( ABCMetaHasTraits ):
 
         return adapt(adaptee, self, default=default)
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  'Interface' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+
 
 @six.add_metaclass(MetaInterface)
-class Interface ( HasTraits ):
+class Interface(HasTraits):
     """ The base class for all interfaces.
     """
 
-#-------------------------------------------------------------------------------
-#  Class decorator to declare the protocols that a class provides.
-#-------------------------------------------------------------------------------
 
-def provides( *protocols ):
+# -------------------------------------------------------------------------------
+#  Class decorator to declare the protocols that a class provides.
+# -------------------------------------------------------------------------------
+
+
+def provides(*protocols):
     """ Class decorator to declare the protocols that a class provides.
 
     Parameters
@@ -3669,26 +3960,31 @@ def provides( *protocols ):
         # Make sure the class does provide the protocols it claims to.
         if CHECK_INTERFACES:
             from .interface_checker import check_implements
+
             check_implements(klass, protocols, CHECK_INTERFACES)
 
         return klass
 
     return wrapped_class
 
-#-------------------------------------------------------------------------------
-#  Return True if the class is an Interface.
-#-------------------------------------------------------------------------------
 
-def isinterface( klass ):
+# -------------------------------------------------------------------------------
+#  Return True if the class is an Interface.
+# -------------------------------------------------------------------------------
+
+
+def isinterface(klass):
     """ Return True if the class is an Interface. """
 
     return isinstance(klass, MetaInterface)
 
-#-------------------------------------------------------------------------------
-#  Declares the interfaces that a class implements.
-#-------------------------------------------------------------------------------
 
-def implements( *interfaces ):
+# -------------------------------------------------------------------------------
+#  Declares the interfaces that a class implements.
+# -------------------------------------------------------------------------------
+
+
+def implements(*interfaces):
     """ Declares the interfaces that a class implements.
 
     Parameters
@@ -3716,25 +4012,29 @@ def implements( *interfaces ):
 
     addClassAdvisor(callback)
 
-#-------------------------------------------------------------------------------
-#  'ISerializable' interface:
-#-------------------------------------------------------------------------------
 
-class ISerializable ( Interface ):
+# -------------------------------------------------------------------------------
+#  'ISerializable' interface:
+# -------------------------------------------------------------------------------
+
+
+class ISerializable(Interface):
     """ A class that implemented ISerializable requires that all HasTraits
         objects saved as part of its state also implement ISerializable.
     """
-#-------------------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------------------
 #  'traits_super' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class traits_super ( super ):
 
-    def __getattribute__ ( self, name ):
+class traits_super(super):
+    def __getattribute__(self, name):
         try:
-            return super( traits_super, self ).__getattribute__( name )
+            return super(traits_super, self).__getattribute__(name)
         except:
             return self._noop
 
-    def _noop ( self, *args, **kw ):
+    def _noop(self, *args, **kw):
         pass

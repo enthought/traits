@@ -1,30 +1,31 @@
 # -*- coding: utf-8 -*-
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  file: line_functions.py
 #  License: LICENSE.TXT
 #  Author: Ioannis Tziakos
 #
 #  Copyright (c) 2011, Enthought, Inc.
 #  All rights reserved.
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 import re
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  Pre-compiled regexes
-#-----------------------------------------------------------------------------
-indent_regex = re.compile(r'\s+')
+# -----------------------------------------------------------------------------
+indent_regex = re.compile(r"\s+")
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  Constants
-#-----------------------------------------------------------------------------
-NEW_LINE = ''
+# -----------------------------------------------------------------------------
+NEW_LINE = ""
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #  Functions to manage indentation
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
 
 def add_indent(lines, indent=4):
     """ Add spaces to indent a list of lines.
@@ -47,7 +48,7 @@ def add_indent(lines, indent=4):
     Empty strings are not changed.
 
     """
-    indent_str = ' ' * indent if indent != 0 else ''
+    indent_str = " " * indent if indent != 0 else ""
     output = []
     for line in lines:
         if is_empty(line):
@@ -86,29 +87,31 @@ def get_indent(line):
     """
     indent = indent_regex.match(line)
     if indent is None:
-        return ''
+        return ""
     else:
         return indent.group()
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #  Functions to detect line type
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
 
 def is_empty(line):
     return not line.strip()
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #  Functions to adjust strings
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
 
 def fix_star(word):
     """ Replace ``*`` with ``\\*`` so that it will be parsed properly by
     docutils.
 
     """
-    return word.replace('*', '\\*')
+    return word.replace("*", "\\*")
 
 
 def fix_backspace(word):
@@ -116,7 +119,7 @@ def fix_backspace(word):
     documentation.
 
     """
-    return word.replace('\\', '\\\\')
+    return word.replace("\\", "\\\\")
 
 
 def fix_trailing_underscore(word):
@@ -124,8 +127,8 @@ def fix_trailing_underscore(word):
     properly in the documentation.
 
     """
-    if word.endswith('_'):
-        word = word.replace('_', '\\_')
+    if word.endswith("_"):
+        word = word.replace("_", "\\_")
     return word
 
 
@@ -154,5 +157,5 @@ def replace_at(word, line, index):
 
     """
     word_length = len(word)
-    result = line[:index] + word + line[(index + word_length):]
-    return result[:len(line)]
+    result = line[:index] + word + line[(index + word_length) :]
+    return result[: len(line)]

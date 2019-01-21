@@ -7,17 +7,17 @@
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 
 # cached_prop.py - Example of @cached_property decorator
-#--[Imports]-------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 import six.moves as sm
 
 from traits.api import HasPrivateTraits, List, Int, Property, cached_property
 
 
-#--[Code]----------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 class TestScores(HasPrivateTraits):
 
     scores = List(Int)
-    average = Property(depends_on='scores')
+    average = Property(depends_on="scores")
 
     @cached_property
     def _get_average(self):

@@ -15,6 +15,7 @@
 Tests for the Bool trait type.
 """
 import six
+
 try:
     import numpy
 except ImportError:

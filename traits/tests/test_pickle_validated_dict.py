@@ -33,4 +33,4 @@ class PickleValidatedDictTestCase(unittest.TestCase):
         try:
             sm.cPickle.loads(x)
         except AttributeError as e:
-            self.fail('Unpickling raised an AttributeError: %s' % e)
+            self.fail("Unpickling raised an AttributeError: %s" % e)

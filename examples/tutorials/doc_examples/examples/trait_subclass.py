@@ -6,14 +6,14 @@
 from traits.api import BaseInt
 
 
-#--[Code]----------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 class OddInt(BaseInt):
 
     # Define the default value
     default_value = 1
 
     # Describe the trait type
-    info_text = 'an odd integer'
+    info_text = "an odd integer"
 
     def validate(self, object, name, value):
         value = super(OddInt, self).validate(object, name, value)

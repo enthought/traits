@@ -23,7 +23,7 @@ class A(HasTraits):
 
     events = List()
 
-    @on_trait_change('alist_items,adict_items,aset_items')
+    @on_trait_change("alist_items,adict_items,aset_items")
     def _receive_events(self, object, name, old, new):
         self.events.append((name, new))
 
@@ -48,9 +48,9 @@ def test_trait_dict_object_persists():
     a = A()
     dict = sm.cPickle.loads(sm.cPickle.dumps(a.adict))
     assert dict.object() is None
-    dict['key'] = 10
+    dict["key"] = 10
     assert len(a.events) == 0
-    a.adict['key'] = 10
+    a.adict["key"] = 10
     assert len(a.events) == 1
     dict2 = sm.cPickle.loads(sm.cPickle.dumps(dict))
     assert dict2.object() is None
@@ -85,12 +85,12 @@ def test_trait_dict_object_copies():
     a = A()
     dict = copy.deepcopy(a.adict)
     assert dict.object() is None
-    dict['key'] = 10
+    dict["key"] = 10
     assert len(a.events) == 0
-    a.adict['key'] = 10
+    a.adict["key"] = 10
     assert len(a.events) == 1
     dict2 = copy.deepcopy(dict)
-    dict2['key2'] = 20
+    dict2["key2"] = 20
     assert dict2.object() is None
 
 
@@ -122,13 +122,13 @@ def test_trait_set_object_operations():
     # Regression test for update methods not coercing in the same way as
     # standard set objects (github issue #288)
     a = A()
-    a.aset.update({10: 'a'})
+    a.aset.update({10: "a"})
     assert a.aset == set([0, 1, 2, 3, 4, 10])
-    a.aset.intersection_update({3: 'b', 4: 'b', 10: 'a', 11: 'b'})
+    a.aset.intersection_update({3: "b", 4: "b", 10: "a", 11: "b"})
     assert a.aset == set([3, 4, 10])
-    a.aset.difference_update({10: 'a', 11: 'b'})
+    a.aset.difference_update({10: "a", 11: "b"})
     assert a.aset == set([3, 4])
-    a.aset.symmetric_difference_update({10: 'a', 4: 'b'})
+    a.aset.symmetric_difference_update({10: "a", 4: "b"})
     assert a.aset == set([3, 10])
 
 

@@ -44,7 +44,7 @@ class ClassWithInstance(HasTraits):
 
 
 class ClassWithClassAttribute(HasTraits):
-    name = 'class defined name'
+    name = "class defined name"
     foo = Str
 
 
@@ -58,7 +58,7 @@ class BarAny(HasTraits):
 
 class BazInstance(HasTraits):
     # A BarInstance owned by this object.
-    other = Instance('BarInstance')
+    other = Instance("BarInstance")
 
     # A Foo owned by this object and not referenced by others.
     unique = Instance(Foo)
@@ -71,7 +71,7 @@ class BazInstance(HasTraits):
     # ref will always reference a Foo that is not owned by any of the objects
     # reachable via owned references, and therefore, that Foo object should
     # not be cloned.
-    ref = Instance(Foo, copy='ref')
+    ref = Instance(Foo, copy="ref")
 
 
 class BarInstance(HasTraits):
@@ -79,7 +79,7 @@ class BarInstance(HasTraits):
     # NOTE: Setting copy to  'ref' will mean that when BarInstance is cloned,
     # the 'other' trait will not be copied, and will still point to the
     # 'other' attribute of the original BarInstance.
-    other = Instance('BazInstance', copy='ref')
+    other = Instance("BazInstance", copy="ref")
 
     # A Foo owned by this object and not referenced by others.
     unique = Instance(Foo)
@@ -92,7 +92,7 @@ class BarInstance(HasTraits):
     # ref will always reference a Foo that is not owned by any of the objects
     # reachable via owned references, and therefore, that Foo object should
     # not be cloned.
-    ref = Instance(Foo, copy='ref')
+    ref = Instance(Foo, copy="ref")
 
 
 class CloneTestCase(unittest.TestCase):
@@ -102,12 +102,12 @@ class CloneTestCase(unittest.TestCase):
         b = ClassWithAny()
 
         f = Foo()
-        f.s = 'the f'
+        f.s = "the f"
 
         b.x = f
 
-        bc = b.clone_traits(traits='all', copy='deep')
-        self.assertNotEqual(id(bc.x), id(f), 'Foo x not cloned')
+        bc = b.clone_traits(traits="all", copy="deep")
+        self.assertNotEqual(id(bc.x), id(f), "Foo x not cloned")
 
         return
 
@@ -115,12 +115,12 @@ class CloneTestCase(unittest.TestCase):
         b = ClassWithInstance()
 
         f = Foo()
-        f.s = 'the f'
+        f.s = "the f"
 
         b.x = f
 
-        bc = b.clone_traits(traits='all', copy='deep')
-        self.assertNotEqual(id(bc.x), id(f), 'Foo x not cloned')
+        bc = b.clone_traits(traits="all", copy="deep")
+        self.assertNotEqual(id(bc.x), id(f), "Foo x not cloned")
 
         return
 
@@ -133,7 +133,7 @@ class CloneTestCase(unittest.TestCase):
         'name'
         """
 
-        s = 'class defined name'
+        s = "class defined name"
 
         c = ClassWithClassAttribute()
 
@@ -143,7 +143,7 @@ class CloneTestCase(unittest.TestCase):
         self.assertEqual(s, c.name)
         self.assertEqual(s, c2.name)
 
-        s2 = 'name class attribute changed via clone'
+        s2 = "name class attribute changed via clone"
         c2.name = s2
         self.assertEqual(s2, c2.name)
 
@@ -177,7 +177,7 @@ class CloneTestCase(unittest.TestCase):
         bar.other = baz
         baz.other = bar
 
-        bar_copy = bar.clone_traits(copy='deep')
+        bar_copy = bar.clone_traits(copy="deep")
 
         self.assertIsNot(bar_copy, bar)
         self.assertIsNot(bar_copy.other, baz)
@@ -186,10 +186,10 @@ class CloneTestCase(unittest.TestCase):
 
     def test_Instance_circular_references(self):
 
-        ref = Foo(s='ref')
-        bar_unique = Foo(s='bar.foo')
-        shared = Foo(s='shared')
-        baz_unique = Foo(s='baz.unique')
+        ref = Foo(s="ref")
+        bar_unique = Foo(s="bar.foo")
+        shared = Foo(s="shared")
+        baz_unique = Foo(s="baz.unique")
 
         baz = BazInstance()
         baz.unique = baz_unique
@@ -238,10 +238,10 @@ class CloneTestCase(unittest.TestCase):
 
     def test_Instance_circular_references_deep(self):
 
-        ref = Foo(s='ref')
-        bar_unique = Foo(s='bar.foo')
-        shared = Foo(s='shared')
-        baz_unique = Foo(s='baz.unique')
+        ref = Foo(s="ref")
+        bar_unique = Foo(s="bar.foo")
+        shared = Foo(s="shared")
+        baz_unique = Foo(s="baz.unique")
 
         baz = BazInstance()
         baz.unique = baz_unique
@@ -256,7 +256,7 @@ class CloneTestCase(unittest.TestCase):
         bar.other = baz
         baz.other = bar
 
-        baz_copy = baz.clone_traits(copy='deep')
+        baz_copy = baz.clone_traits(copy="deep")
 
         # Check Baz and Baz attributes....
         self.assertIsNot(baz_copy, baz)
@@ -276,7 +276,7 @@ class CloneTestCase(unittest.TestCase):
         # object should be the original 'ref' object, since copy was set to
         # 'ref'.
         self.assertIs(baz_copy.ref, bar_copy.ref)
-        self.assertIs(bar_copy.ref,ref)
+        self.assertIs(bar_copy.ref, ref)
 
         # Check references to objects that where cloned, they should reference
         # the new clones not the original objects, except when copy is set
@@ -291,10 +291,11 @@ class CloneTestCase(unittest.TestCase):
         self.assertIsNot(bar_copy.shared, baz.shared)
         self.assertIs(bar_copy.shared, baz_copy.shared)
 
+
 #
 # support running this test individually, from the command-line as a script
 #
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
 
 #### EOF ######################################################################

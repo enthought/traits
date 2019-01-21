@@ -4,11 +4,11 @@
 
 # adapt_metadata.py - Example of using 'adapt' metadata
 
-#--[Imports]-------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Instance
 from interface_definition import IName
 
 
-#--[Code]----------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 class Apartment(HasTraits):
-    renter = Instance(IName, adapt='no')
+    renter = Instance(IName, adapt="no")

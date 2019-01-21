@@ -17,7 +17,6 @@ class E(HasTraits):
 
 
 class TestPropertyDelete(unittest.TestCase):
-
     def test_property_delete(self):
         e = E()
         with self.assertRaises(TraitError):
@@ -28,4 +27,4 @@ class TestPropertyDelete(unittest.TestCase):
     def test_property_reset_traits(self):
         e = E()
         unresetable = e.reset_traits()
-        _py2to3.assertCountEqual(self, unresetable, ['a', 'b'])
+        _py2to3.assertCountEqual(self, unresetable, ["a", "b"])

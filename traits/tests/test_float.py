@@ -67,6 +67,7 @@ class BaseFloatModel(HasTraits):
 
 class CommonFloatTests(object):
     """ Common tests for Float and BaseFloat """
+
     def test_default(self):
         a = self.test_class()
         self.assertEqual(a.value, 0.0)
@@ -139,13 +140,13 @@ class CommonFloatTests(object):
         a = self.test_class()
 
         # Value large enough to be a long on Python 2.
-        a.value = 2**64
+        a.value = 2 ** 64
         self.assertIs(type(a.value), float)
-        self.assertEqual(a.value, 2**64)
+        self.assertEqual(a.value, 2 ** 64)
 
-        a.value_or_none = 2**64
+        a.value_or_none = 2 ** 64
         self.assertIs(type(a.value_or_none), float)
-        self.assertEqual(a.value_or_none, 2**64)
+        self.assertEqual(a.value_or_none, 2 ** 64)
 
     @unittest.skipUnless(numpy_available, "Test requires NumPy")
     def test_accepts_numpy_floats(self):

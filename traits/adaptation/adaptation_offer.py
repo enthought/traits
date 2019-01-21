@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2013, Enthought, Inc.
 # All rights reserved.
 #
@@ -9,7 +9,7 @@
 # Thanks for using Enthought open source!
 #
 # Author: Enthought, Inc.
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ An offer to provide adapters from one protocol to another. """
 
 import six
@@ -35,7 +35,7 @@ class AdaptationOffer(HasTraits):
         template = "<AdaptationOffer: '{from_}' -> '{to}'>"
 
         from_ = self.from_protocol_name
-        to    = self.to_protocol_name
+        to = self.to_protocol_name
 
         return template.format(from_=from_, to=to)
 
@@ -60,6 +60,7 @@ class AdaptationOffer(HasTraits):
     #: accessed.
     from_protocol = Property(Any)
     from_protocol_name = Property(Any)
+
     def _get_from_protocol_name(self):
         return self._get_type_name(self._from_protocol)
 
@@ -71,6 +72,7 @@ class AdaptationOffer(HasTraits):
     #: accessed.
     to_protocol = Property(Any)
     to_protocol_name = Property(Any)
+
     def _get_to_protocol_name(self):
         return self._get_type_name(self._to_protocol)
 
@@ -159,10 +161,11 @@ class AdaptationOffer(HasTraits):
 
         else:
             type_name = "{module}.{name}".format(
-                module = type_or_type_name.__module__,
-                name   = type_or_type_name.__name__
+                module=type_or_type_name.__module__,
+                name=type_or_type_name.__name__,
             )
 
         return type_name
+
 
 #### EOF ######################################################################

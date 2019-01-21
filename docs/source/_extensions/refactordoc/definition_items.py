@@ -1,31 +1,42 @@
 ﻿# -*- coding: utf-8 -*-
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  file: fields.py
 #  License: LICENSE.TXT
 #  Author: Ioannis Tziakos
 #
 #  Copyright (c) 2011, Enthought, Inc.
 #  All rights reserved.
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 import collections
 import re
 
-from .line_functions import (add_indent, fix_star, trim_indent, NEW_LINE,
-                            fix_trailing_underscore)
+from .line_functions import (
+    add_indent,
+    fix_star,
+    trim_indent,
+    NEW_LINE,
+    fix_trailing_underscore,
+)
 
-header_regex = re.compile(r'\s:\s?')
-definition_regex = re.compile(r"""
+header_regex = re.compile(r"\s:\s?")
+definition_regex = re.compile(
+    r"""
 \*{0,2}            #  no, one or two stars
 \w+\s:             #  a word followed by a space and a semicolumn
 (.+)?              #  a definition
 $                  # match at the end of the line
-""", re.VERBOSE)
-function_regex = re.compile(r'\w+\(.*\)\s*')
-signature_regex = re.compile(r'\((.*)\)')
+""",
+    re.VERBOSE,
+)
+function_regex = re.compile(r"\w+\(.*\)\s*")
+signature_regex = re.compile(r"\((.*)\)")
 
 
-class DefinitionItem(collections.namedtuple(
-        'DefinitionItem', ('term', 'classifier', 'definition'))):
+class DefinitionItem(
+    collections.namedtuple(
+        "DefinitionItem", ("term", "classifier", "definition")
+    )
+):
     """ A docstring definition item
 
     Syntax diagram::
@@ -118,9 +129,12 @@ class DefinitionItem(collections.namedtuple(
 
         """
         header = lines[0].strip()
-        term, classifier = header_regex.split(header, maxsplit=1) if \
-                           (' :' in header) else (header, '')
-        trimed_lines = trim_indent(lines[1:]) if (len(lines) > 1) else ['']
+        term, classifier = (
+            header_regex.split(header, maxsplit=1)
+            if (" :" in header)
+            else (header, "")
+        )
+        trimed_lines = trim_indent(lines[1:]) if (len(lines) > 1) else [""]
         definition = [line.rstrip() for line in trimed_lines]
         return cls(term.strip(), classifier.strip(), definition)
 
@@ -165,11 +179,11 @@ class DefinitionItem(collections.namedtuple(
 
 
         """
-        postfix = ' --' if (len(self.definition) > 0) else ''
+        postfix = " --" if (len(self.definition) > 0) else ""
         lines = []
         lines += [self.term]
         lines += [NEW_LINE]
-        lines += ['    *({0})*{1}'.format(self.classifier, postfix)]
+        lines += ["    *({0})*{1}".format(self.classifier, postfix)]
         lines += add_indent(self.definition)  # definition is all ready a list
         lines += [NEW_LINE]
         return lines
@@ -179,17 +193,13 @@ class AttributeItem(DefinitionItem):
     """ Definition that renders the rst output using the attribute directive.
 
     """
-    _normal = (".. attribute:: {0}\n"
-               "    :annotation: = {1}\n"
-               "\n"
-               "{2}\n\n")
-    _no_definition = (".. attribute:: {0}\n"
-                      "    :annotation: = {1}\n\n")
-    _no_classifier = (".. attribute:: {0}\n\n"
-                      "{2}\n\n")
+
+    _normal = ".. attribute:: {0}\n" "    :annotation: = {1}\n" "\n" "{2}\n\n"
+    _no_definition = ".. attribute:: {0}\n" "    :annotation: = {1}\n\n"
+    _no_classifier = ".. attribute:: {0}\n\n" "{2}\n\n"
     _only_term = ".. attribute:: {0}\n\n"
 
-    def to_rst(self, ):
+    def to_rst(self,):
         """ Return the attribute info using the attribute sphinx markup.
 
         Examples
@@ -221,17 +231,17 @@ class AttributeItem(DefinitionItem):
             by sphinx.
 
         """
-        definition = '\n'.join(add_indent(self.definition))
+        definition = "\n".join(add_indent(self.definition))
         template = self.template.format(self.term, self.classifier, definition)
         return template.splitlines()
 
     @property
     def template(self):
-        if self.classifier == '' and self.definition == ['']:
+        if self.classifier == "" and self.definition == [""]:
             template = self._only_term
-        elif self.classifier == '':
+        elif self.classifier == "":
             template = self._no_classifier
-        elif self.definition == ['']:
+        elif self.definition == [""]:
             template = self._no_definition
         else:
             template = self._normal
@@ -242,13 +252,10 @@ class ArgumentItem(DefinitionItem):
     """ A definition item for function argument sections.
 
     """
-    _normal = (":param {0}:\n"
-               "{2}\n"
-               ":type {0}: {1}")
-    _no_definition = (":param {0}:\n"
-                      ":type {0}: {1}")
-    _no_classifier = (":param {0}:\n"
-                      "{2}")
+
+    _normal = ":param {0}:\n" "{2}\n" ":type {0}: {1}"
+    _no_definition = ":param {0}:\n" ":type {0}: {1}"
+    _no_classifier = ":param {0}:\n" "{2}"
     _only_term = ":param {0}:"
 
     def to_rst(self):
@@ -280,17 +287,17 @@ class ArgumentItem(DefinitionItem):
         argument = fix_star(self.term)
         argument = fix_trailing_underscore(argument)
         argument_type = self.classifier
-        definition = '\n'.join(add_indent(self.definition))
+        definition = "\n".join(add_indent(self.definition))
         template = self.template.format(argument, argument_type, definition)
         return template.splitlines()
 
     @property
     def template(self):
-        if self.classifier == '' and self.definition == ['']:
+        if self.classifier == "" and self.definition == [""]:
             template = self._only_term
-        elif self.classifier == '':
+        elif self.classifier == "":
             template = self._no_classifier
-        elif self.definition == ['']:
+        elif self.definition == [""]:
             template = self._no_definition
         else:
             template = self._normal
@@ -302,12 +309,10 @@ class ListItem(DefinitionItem):
 
     """
 
-    _normal = ("**{0}** (*{1}*) --\n"
-               "{2}\n\n")
+    _normal = "**{0}** (*{1}*) --\n" "{2}\n\n"
     _only_term = "**{0}**\n\n"
     _no_definition = "**{0}** (*{1}*)\n\n"
-    _no_classifier = ("**{0}** --\n"
-                      "{2}\n\n")
+    _no_classifier = "**{0}** --\n" "{2}\n\n"
 
     def to_rst(self, prefix=None):
         """ Outputs ListItem in rst using as items in an list.
@@ -342,19 +347,19 @@ class ListItem(DefinitionItem):
 
         """
         indent = 0 if (prefix is None) else len(prefix) + 1
-        definition = '\n'.join(add_indent(self.definition, indent))
+        definition = "\n".join(add_indent(self.definition, indent))
         template = self.template.format(self.term, self.classifier, definition)
         if prefix is not None:
-            template = prefix + ' ' + template
+            template = prefix + " " + template
         return template.splitlines()
 
     @property
     def template(self):
-        if self.classifier == '' and self.definition == ['']:
+        if self.classifier == "" and self.definition == [""]:
             template = self._only_term
-        elif self.classifier == '':
+        elif self.classifier == "":
             template = self._no_classifier
-        elif self.definition == ['']:
+        elif self.definition == [""]:
             template = self._no_definition
         else:
             template = self._normal
@@ -388,20 +393,28 @@ class TableLineItem(DefinitionItem):
         function(arg1, arg2)   This is the best fun
 
         """
-        definition = ' '.join([line.strip() for line in self.definition])
-        term = self.term[:columns[0]]
-        classifier = self.classifier[:columns[1]]
-        definition = definition[:columns[2]]
+        definition = " ".join([line.strip() for line in self.definition])
+        term = self.term[: columns[0]]
+        classifier = self.classifier[: columns[1]]
+        definition = definition[: columns[2]]
 
-        first_column = '' if columns[0] == 0 else '{0:<{first}} '
-        second_column = '' if columns[1] == 0 else '{1:<{second}} '
-        third_column = '' if columns[2] == 0 else '{2:<{third}}'
-        table_line = ''.join((first_column, second_column, third_column))
+        first_column = "" if columns[0] == 0 else "{0:<{first}} "
+        second_column = "" if columns[1] == 0 else "{1:<{second}} "
+        third_column = "" if columns[2] == 0 else "{2:<{third}}"
+        table_line = "".join((first_column, second_column, third_column))
 
         lines = []
-        lines += [table_line.format(term, classifier, definition,
-                  first=columns[0], second=columns[1], third=columns[2])]
-        lines += ['']
+        lines += [
+            table_line.format(
+                term,
+                classifier,
+                definition,
+                first=columns[0],
+                second=columns[1],
+                third=columns[2],
+            )
+        ]
+        lines += [""]
         return lines
 
 
@@ -409,6 +422,7 @@ class MethodItem(DefinitionItem):
     """ A TableLineItem subclass to parse and render class methods.
 
     """
+
     @classmethod
     def is_definition(cls, line):
         """ Check if the definition header is a function signature.
@@ -449,7 +463,7 @@ class MethodItem(DefinitionItem):
         """
         header = lines[0].strip()
         term, classifier, _ = signature_regex.split(header)
-        definition = trim_indent(lines[1:]) if (len(lines) > 1) else ['']
+        definition = trim_indent(lines[1:]) if (len(lines) > 1) else [""]
         return cls(term, classifier, definition)
 
     def to_rst(self, columns=(0, 0)):
@@ -474,25 +488,32 @@ class MethodItem(DefinitionItem):
             :meth:`function <function(arg1, arg2)>` This is the best fun
 
         """
-        definition = ' '.join([line.strip() for line in self.definition])
-        method_role = ':meth:`{0}({1}) <{0}>`'.format(self.term,
-                                                      self.classifier)
-        table_line = '{0:<{first}} {1:<{second}}'
+        definition = " ".join([line.strip() for line in self.definition])
+        method_role = ":meth:`{0}({1}) <{0}>`".format(
+            self.term, self.classifier
+        )
+        table_line = "{0:<{first}} {1:<{second}}"
 
         lines = []
-        lines += [table_line.format(method_role[:columns[0]],
-                                    definition[:columns[1]], first=columns[0],
-                                    second=columns[1])]
+        lines += [
+            table_line.format(
+                method_role[: columns[0]],
+                definition[: columns[1]],
+                first=columns[0],
+                second=columns[1],
+            )
+        ]
         return lines
 
     @property
     def signature(self):
-        return '{}({})'.format(self.term, self.classifier)
+        return "{}({})".format(self.term, self.classifier)
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #  Functions to work with Definition Items
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
 
 def max_attribute_length(items, attr):
     """ Find the max length of the attribute in a list of DefinitionItems.
@@ -506,8 +527,8 @@ def max_attribute_length(items, attr):
         Attribute to look at.
 
     """
-    if attr == 'definition':
-        maximum = max([len(' '.join(item.definition)) for item in items])
+    if attr == "definition":
+        maximum = max([len(" ".join(item.definition)) for item in items])
     else:
         maximum = max([len(getattr(item, attr)) for item in items])
     return maximum
@@ -526,8 +547,8 @@ def max_attribute_index(items, attr):
         Attribute to look at.
 
     """
-    if attr == 'definition':
-        attributes = [len(' '.join(item.definition)) for item in items]
+    if attr == "definition":
+        attributes = [len(" ".join(item.definition)) for item in items]
     else:
         attributes = [len(getattr(item, attr)) for item in items]
 

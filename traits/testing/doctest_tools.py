@@ -10,6 +10,7 @@ import doctest
 from traits.testing.unittest_tools import unittest
 import sys
 
+
 def doctest_for_module(module):
     """ Create a TestCase from a module's doctests that will be run by the
         standard unittest.main().
@@ -43,13 +44,16 @@ def doctest_for_module(module):
     """
 
     class C(unittest.TestCase):
-        def test_dummy(self): pass # Make the test case loader find us
+        def test_dummy(self):
+            pass  # Make the test case loader find us
+
         def run(self, result=None):
             # doctest doesn't like nose.result.TextTestResult objects,
             # so we try to determine if thats what we're dealing
             # with and use its internal result attribute instead
-            if hasattr(result, 'result'):
+            if hasattr(result, "result"):
                 doctest.DocTestSuite(module).run(result.result)
             else:
                 doctest.DocTestSuite(module).run(result)
+
     return C

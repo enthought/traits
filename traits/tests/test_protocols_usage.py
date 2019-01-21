@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 """ Tests for protocols usage. """
 
@@ -24,8 +24,16 @@ import sys
 from traits.testing.unittest_tools import unittest
 
 # Enthought library imports.
-from traits.api import (Bool, HasTraits, Int, Interface, Str, Adapter, adapts,
-                   Property)
+from traits.api import (
+    Bool,
+    HasTraits,
+    Int,
+    Interface,
+    Str,
+    Adapter,
+    adapts,
+    Property,
+)
 
 # NOTE: There is a File class in apptools.io module, but since we want to
 # eliminate dependencies of Traits on other modules, we create another
@@ -63,15 +71,20 @@ class Person(HasTraits):
     age = Int
 
 
-@unittest.skipUnless(sys.version_info < (3,),
-                     "The 'adapts' and 'implements' class advisors "
-                     "are not supported in Python 3.")
+@unittest.skipUnless(
+    sys.version_info < (3,),
+    "The 'adapts' and 'implements' class advisors "
+    "are not supported in Python 3.",
+)
 class ProtocolsUsageTestCase(unittest.TestCase):
     """ Tests for protocols usage. """
+
     def test_adapts(self):
         """ adapts """
+
         class IFoo(Interface):
             """ A simple interface. """
+
             def foo(self):
                 """ The only method for the IFoo interface. """
 
@@ -80,17 +93,18 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
         class BarToIFooAdapter(Adapter):
             """ Adapts from Bar to IFoo. """
+
             adapts(Bar, to=IFoo)
 
             def foo(self):
                 """ An implementation of the single method in the interface."""
-                return 'foo'
+                return "foo"
 
         b = Bar()
 
         # Make sure that the Bar instance can be adapted to 'IFoo'.
         self.assertNotEqual(None, IFoo(b))
-        self.assertEqual('foo', IFoo(b).foo())
+        self.assertEqual("foo", IFoo(b).foo())
 
     def test_factory(self):
         """ factory """
@@ -124,15 +138,15 @@ class ProtocolsUsageTestCase(unittest.TestCase):
             def get_input_stream(self):
                 """ Get an input stream. """
 
-                return file(self.adaptee.path, 'r')
+                return file(self.adaptee.path, "r")
 
         # Create a reference to this file
         cwd = os.path.dirname(os.path.abspath(__file__))
-        f = File(path=os.path.join(cwd, 'test_protocols_usage.py'))
+        f = File(path=os.path.join(cwd, "test_protocols_usage.py"))
         self.assertTrue(f.is_file)
 
         # A reference to the parent folder
-        g = File(path='..')
+        g = File(path="..")
         self.assertTrue(g.is_folder)
 
         # We should be able to adapt the file to an input stream...
@@ -160,7 +174,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
         class FileToIInputStreamAdapter(Adapter):
             """ An adapter from 'File' to 'IInputStream'. """
 
-            adapts(File, to=IInputStream, when='not adaptee.is_folder')
+            adapts(File, to=IInputStream, when="not adaptee.is_folder")
 
             ###################################################################
             # 'IInputStream' interface.
@@ -169,15 +183,15 @@ class ProtocolsUsageTestCase(unittest.TestCase):
             def get_input_stream(self):
                 """ Get an input stream. """
 
-                return file(self.adaptee.path, 'r')
+                return file(self.adaptee.path, "r")
 
         # Create a reference to this file
         cwd = os.path.dirname(os.path.abspath(__file__))
-        f = File(path=os.path.join(cwd, 'test_protocols_usage.py'))
+        f = File(path=os.path.join(cwd, "test_protocols_usage.py"))
         self.assertTrue(f.is_file)
 
         # A reference to the parent folder
-        g = File(path='..')
+        g = File(path="..")
         self.assertTrue(g.is_folder)
 
         # We should be able to adapt the file to an input stream...
@@ -246,8 +260,8 @@ class ProtocolsUsageTestCase(unittest.TestCase):
                 return
 
         # Create some people!
-        fred = Person(name='fred', age=42)
-        wilma = Person(name='wilma', age=35)
+        fred = Person(name="fred", age=42)
+        wilma = Person(name="wilma", age=35)
 
         fred_saveable = ISaveable(fred)
         self.assertEqual(True, fred_saveable.dirty)
@@ -263,14 +277,14 @@ class ProtocolsUsageTestCase(unittest.TestCase):
         self.assertEqual(id(ISaveable(wilma)), id(wilma_saveable))
 
         # Save Fred and Wilma and make sure that the dirty flag is cleared.
-        fred_saveable.save(file('fred.pickle', 'w'))
+        fred_saveable.save(file("fred.pickle", "w"))
         self.assertEqual(False, ISaveable(fred).dirty)
 
-        wilma_saveable.save(file('wilma.pickle', 'w'))
+        wilma_saveable.save(file("wilma.pickle", "w"))
         self.assertEqual(False, ISaveable(wilma).dirty)
 
         # Clean up.
-        for path in ['fred.pickle', 'wilma.pickle']:
+        for path in ["fred.pickle", "wilma.pickle"]:
             if os.access(path, os.W_OK):
                 os.remove(path)
 
@@ -320,5 +334,5 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
 
 # Run the unit tests (if invoked from the command line):
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

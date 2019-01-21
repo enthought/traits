@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2005-2013, Enthought, Inc.
 #  All rights reserved.
@@ -13,14 +13,14 @@
 #  Author:        David C. Morrill
 #  Original Date: 06/21/2002
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 """ Classes that implement and support the Traits change notification mechanism
 """
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Imports:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 from __future__ import absolute_import, print_function
 
@@ -40,9 +40,9 @@ import sys
 from .trait_base import Uninitialized
 from .trait_errors import TraitNotificationError
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Global Data:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 # The thread ID for the user interface thread
 ui_thread = -1
@@ -50,50 +50,55 @@ ui_thread = -1
 # The handler for notifications that must be run on the UI thread
 ui_handler = None
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Sets up the user interface thread handler:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-def set_ui_handler ( handler ):
+
+def set_ui_handler(handler):
     """ Sets up the user interface thread handler.
     """
     global ui_handler, ui_thread
 
     ui_handler = handler
-    ui_thread  = threading.current_thread().ident
+    ui_thread = threading.current_thread().ident
 
-def ui_dispatch( handler, *args, **kw ):
+
+def ui_dispatch(handler, *args, **kw):
     if threading.current_thread().ident == ui_thread:
-        handler( *args, **kw )
+        handler(*args, **kw)
     else:
-        ui_handler( handler, *args, **kw )
+        ui_handler(handler, *args, **kw)
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  'NotificationExceptionHandlerState' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class NotificationExceptionHandlerState ( object ):
 
-    def __init__ ( self, handler, reraise_exceptions, locked ):
-        self.handler            = handler
+class NotificationExceptionHandlerState(object):
+    def __init__(self, handler, reraise_exceptions, locked):
+        self.handler = handler
         self.reraise_exceptions = reraise_exceptions
-        self.locked             = locked
+        self.locked = locked
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  'NotificationExceptionHandler' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class NotificationExceptionHandler ( object ):
 
-    def __init__ ( self ):
+class NotificationExceptionHandler(object):
+    def __init__(self):
         self.traits_logger = None
-        self.main_thread   = None
-        self.thread_local  = thread_local()
+        self.main_thread = None
+        self.thread_local = thread_local()
 
-#-- Private Methods ------------------------------------------------------------
+    # -- Private Methods ------------------------------------------------------------
 
-    def _push_handler ( self, handler = None, reraise_exceptions = False,
-                              main = False, locked = False ):
+    def _push_handler(
+        self, handler=None, reraise_exceptions=False, main=False, locked=False
+    ):
         """ Pushes a new traits notification exception handler onto the stack,
             making it the new exception handler. Returns a
             NotificationExceptionHandlerState object describing the previous
@@ -129,17 +134,20 @@ class NotificationExceptionHandler ( object ):
                 value is False.
         """
         handlers = self._get_handlers()
-        self._check_lock( handlers )
+        self._check_lock(handlers)
         if handler is None:
             handler = self._log_exception
-        handlers.append( NotificationExceptionHandlerState( handler,
-                                                  reraise_exceptions, locked ) )
+        handlers.append(
+            NotificationExceptionHandlerState(
+                handler, reraise_exceptions, locked
+            )
+        )
         if main:
             self.main_thread = handlers
 
         return handlers[-2]
 
-    def _pop_handler ( self ):
+    def _pop_handler(self):
         """ Pops the traits notification exception handler stack, restoring
             the exception handler in effect prior to the most recent
             _push_handler() call. If the stack is empty or locked, a
@@ -150,119 +158,137 @@ class NotificationExceptionHandler ( object ):
             this.
         """
         handlers = self._get_handlers()
-        self._check_lock( handlers )
-        if len( handlers ) > 1:
+        self._check_lock(handlers)
+        if len(handlers) > 1:
             handlers.pop()
         else:
             raise TraitNotificationError(
-                      'Attempted to pop an empty traits notification exception '
-                      'handler stack.' )
+                "Attempted to pop an empty traits notification exception "
+                "handler stack."
+            )
 
-    def _handle_exception ( self, object, trait_name, old, new  ):
+    def _handle_exception(self, object, trait_name, old, new):
         """ Handles a traits notification exception using the handler defined
             by the topmost stack entry for the corresponding thread.
         """
         excp_class, excp = sys.exc_info()[:2]
-        handler_info     = self._get_handlers()[-1]
-        handler_info.handler( object, trait_name, old, new )
-        if (handler_info.reraise_exceptions or
-            isinstance( excp, TraitNotificationError )):
+        handler_info = self._get_handlers()[-1]
+        handler_info.handler(object, trait_name, old, new)
+        if handler_info.reraise_exceptions or isinstance(
+            excp, TraitNotificationError
+        ):
             raise excp
 
-    def _get_handlers ( self ):
+    def _get_handlers(self):
         """ Returns the handler stack associated with the currently executing
             thread.
         """
         thread_local = self.thread_local
-        if isinstance( thread_local, dict ):
-            id       = threading.current_thread().ident
-            handlers = thread_local.get( id )
+        if isinstance(thread_local, dict):
+            id = threading.current_thread().ident
+            handlers = thread_local.get(id)
         else:
-            handlers = getattr( thread_local, 'handlers', None )
+            handlers = getattr(thread_local, "handlers", None)
 
         if handlers is None:
             if self.main_thread is not None:
                 handler = self.main_thread[-1]
             else:
                 handler = NotificationExceptionHandlerState(
-                              self._log_exception, False, False )
-            handlers = [ handler ]
-            if isinstance( thread_local, dict ):
-                thread_local[ id ] = handlers
+                    self._log_exception, False, False
+                )
+            handlers = [handler]
+            if isinstance(thread_local, dict):
+                thread_local[id] = handlers
             else:
                 thread_local.handlers = handlers
 
         return handlers
 
-    def _check_lock ( self, handlers ):
+    def _check_lock(self, handlers):
         """ Raises an exception if the specified handler stack is locked.
         """
         if handlers[-1].locked:
             raise TraitNotificationError(
-                      'The traits notification exception handler is locked. '
-                      'No changes are allowed.' )
+                "The traits notification exception handler is locked. "
+                "No changes are allowed."
+            )
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  This method defines the default notification exception handling
     #  behavior of traits. However, it can be completely overridden by pushing
     #  a new handler using the '_push_handler' method.
     #
     #  It logs any exceptions generated in a trait notification handler.
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    def _log_exception ( self, object, trait_name, old, new ):
+    def _log_exception(self, object, trait_name, old, new):
         """ Logs any exceptions generated in a trait notification handler.
         """
         # When the stack depth is too great, the logger can't always log the
         # message. Make sure that it goes to the console at a minimum:
         excp_class, excp = sys.exc_info()[:2]
-        if ((excp_class is RuntimeError) and
-            (len(excp.args) > 0) and
-            (excp.args[0] == 'maximum recursion depth exceeded')):
-            sys.__stderr__.write( 'Exception occurred in traits notification '
-                'handler for object: %s, trait: %s, old value: %s, '
-                'new value: %s.\n%s\n' % ( object, trait_name, old, new,
-                ''.join( traceback.format_exception( *sys.exc_info() ) ) ) )
+        if (
+            (excp_class is RuntimeError)
+            and (len(excp.args) > 0)
+            and (excp.args[0] == "maximum recursion depth exceeded")
+        ):
+            sys.__stderr__.write(
+                "Exception occurred in traits notification "
+                "handler for object: %s, trait: %s, old value: %s, "
+                "new value: %s.\n%s\n"
+                % (
+                    object,
+                    trait_name,
+                    old,
+                    new,
+                    "".join(traceback.format_exception(*sys.exc_info())),
+                )
+            )
 
         logger = self.traits_logger
         if logger is None:
             import logging
 
-            self.traits_logger = logger = logging.getLogger(
-                                                  'traits' )
+            self.traits_logger = logger = logging.getLogger("traits")
             handler = logging.StreamHandler()
-            handler.setFormatter( logging.Formatter( '%(message)s' ) )
-            logger.addHandler( handler )
-            print('Exception occurred in traits notification handler.\n'
-                  'Please check the log file for details.')
+            handler.setFormatter(logging.Formatter("%(message)s"))
+            logger.addHandler(handler)
+            print(
+                "Exception occurred in traits notification handler.\n"
+                "Please check the log file for details."
+            )
 
         try:
             logger.exception(
-                'Exception occurred in traits notification handler for '
-                'object: %s, trait: %s, old value: %s, new value: %s' %
-                ( object, trait_name, old, new ) )
+                "Exception occurred in traits notification handler for "
+                "object: %s, trait: %s, old value: %s, new value: %s"
+                % (object, trait_name, old, new)
+            )
         except Exception:
             # Ignore anything we can't log the above way:
             pass
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  Traits global notification exception handler:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 notification_exception_handler = NotificationExceptionHandler()
 
 push_exception_handler = notification_exception_handler._push_handler
-pop_exception_handler  = notification_exception_handler._pop_handler
-handle_exception       = notification_exception_handler._handle_exception
+pop_exception_handler = notification_exception_handler._pop_handler
+handle_exception = notification_exception_handler._handle_exception
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Traits global notification event tracer:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 _pre_change_event_tracer = None
 _post_change_event_tracer = None
 
-def set_change_event_tracers( pre_tracer=None, post_tracer=None ):
+
+def set_change_event_tracers(pre_tracer=None, post_tracer=None):
     """ Set the global trait change event tracers.
 
     The global tracers are called whenever a trait change event is dispatched.
@@ -320,9 +346,10 @@ def change_event_tracers(pre_tracer, post_tracer):
         set_change_event_tracers(old_pre_tracer, old_post_tracer)
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  'AbstractStaticChangeNotifyWrapper' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+
 
 class AbstractStaticChangeNotifyWrapper(object):
     """
@@ -334,51 +361,62 @@ class AbstractStaticChangeNotifyWrapper(object):
 
     arguments_transforms = {}
 
-    def __init__ ( self, handler ):
+    def __init__(self, handler):
         arg_count = handler.__code__.co_argcount
         if arg_count > 4:
             raise TraitNotificationError(
-                ('Invalid number of arguments for the static anytrait change '
-                 'notification handler: %s. A maximum of 4 arguments is '
-                 'allowed, but %s were specified.')
-                % ( handler.__name__, arg_count ) )
+                (
+                    "Invalid number of arguments for the static anytrait change "
+                    "notification handler: %s. A maximum of 4 arguments is "
+                    "allowed, but %s were specified."
+                )
+                % (handler.__name__, arg_count)
+            )
         self.argument_transform = self.argument_transforms[arg_count]
 
-        self.handler  = handler
+        self.handler = handler
 
-    def __call__ ( self, object, trait_name, old, new ):
+    def __call__(self, object, trait_name, old, new):
         """ Dispatch to the appropriate handler method. """
 
         if old is not Uninitialized:
             # Extract the arguments needed from the handler.
-            args = self.argument_transform( object, trait_name, old, new )
+            args = self.argument_transform(object, trait_name, old, new)
 
             # Send a description of the change event to the event tracer.
             if _pre_change_event_tracer is not None:
-                _pre_change_event_tracer( object, trait_name, old, new,
-                                          self.handler )
+                _pre_change_event_tracer(
+                    object, trait_name, old, new, self.handler
+                )
 
             try:
                 # Call the handler.
-                self.handler( *args )
+                self.handler(*args)
             except Exception as e:
                 if _post_change_event_tracer is not None:
-                    _post_change_event_tracer( object, trait_name, old, new,
-                                               self.handler,
-                                               exception=e )
-                handle_exception( object, trait_name, old, new )
+                    _post_change_event_tracer(
+                        object, trait_name, old, new, self.handler, exception=e
+                    )
+                handle_exception(object, trait_name, old, new)
             else:
                 if _post_change_event_tracer is not None:
-                    _post_change_event_tracer( object, trait_name, old, new,
-                                               self.handler,
-                                               exception=None )
+                    _post_change_event_tracer(
+                        object,
+                        trait_name,
+                        old,
+                        new,
+                        self.handler,
+                        exception=None,
+                    )
 
-    def equals ( self, handler ):
+    def equals(self, handler):
         return False
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  'StaticAnyTraitChangeNotifyWrapper' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+
 
 class StaticAnyTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
 
@@ -393,9 +431,11 @@ class StaticAnyTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
         4: lambda obj, name, old, new: (obj, name, old, new),
     }
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  'StaticTraitChangeNotifyWrapper' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+
 
 class StaticTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
 
@@ -410,9 +450,11 @@ class StaticTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
         4: lambda obj, name, old, new: (obj, name, old, new),
     }
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  'TraitChangeNotifyWrapper' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+
 
 class TraitChangeNotifyWrapper(object):
     """ Dynamic change notify wrapper.
@@ -433,26 +475,29 @@ class TraitChangeNotifyWrapper(object):
         4: lambda obj, name, old, new: (obj, name, old, new),
     }
 
-    def __init__ ( self, handler, owner, target=None ):
-        self.init( handler, owner, target )
+    def __init__(self, handler, owner, target=None):
+        self.init(handler, owner, target)
 
-    def init ( self, handler, owner, target=None ):
+    def init(self, handler, owner, target=None):
         # If target is not None and handler is a function then the handler
         # will be removed when target is deleted.
-        if type( handler ) is MethodType:
-            func   = handler.__func__
+        if type(handler) is MethodType:
+            func = handler.__func__
             object = handler.__self__
             if object is not None:
-                self.object = weakref.ref( object, self.listener_deleted )
-                self.name   = handler.__name__
-                self.owner  = owner
-                arg_count   = func.__code__.co_argcount - 1
+                self.object = weakref.ref(object, self.listener_deleted)
+                self.name = handler.__name__
+                self.owner = owner
+                arg_count = func.__code__.co_argcount - 1
                 if arg_count > 4:
                     raise TraitNotificationError(
-                        ('Invalid number of arguments for the dynamic trait '
-                         'change notification handler: %s. A maximum of 4 '
-                         'arguments is allowed, but %s were specified.') %
-                        ( func.__name__, arg_count ) )
+                        (
+                            "Invalid number of arguments for the dynamic trait "
+                            "change notification handler: %s. A maximum of 4 "
+                            "arguments is allowed, but %s were specified."
+                        )
+                        % (func.__name__, arg_count)
+                    )
 
                 # We use the unbound method here to prevent cyclic garbage
                 # (issue #100).
@@ -463,19 +508,22 @@ class TraitChangeNotifyWrapper(object):
 
         elif target is not None:
             # Set up so the handler will be removed when the target is deleted.
-            self.object = weakref.ref( target, self.listener_deleted )
+            self.object = weakref.ref(target, self.listener_deleted)
             self.owner = owner
 
         arg_count = handler.__code__.co_argcount
         if arg_count > 4:
             raise TraitNotificationError(
-                ('Invalid number of arguments for the dynamic trait change '
-                 'notification handler: %s. A maximum of 4 arguments is '
-                 'allowed, but %s were specified.') %
-                ( handler.__name__, arg_count ) )
+                (
+                    "Invalid number of arguments for the dynamic trait change "
+                    "notification handler: %s. A maximum of 4 arguments is "
+                    "allowed, but %s were specified."
+                )
+                % (handler.__name__, arg_count)
+            )
 
-        self.name     = None
-        self.handler  = handler
+        self.name = None
+        self.handler = handler
 
         # We use the unbound method here to prevent cyclic garbage
         # (issue #100).
@@ -494,63 +542,66 @@ class TraitChangeNotifyWrapper(object):
         # `notify_listener` is either the *unbound*
         # `_notify_method_listener` or `_notify_function_listener` to
         # prevent cyclic garbage (issue #100).
-        self.notify_listener( self, object, trait_name, old, new )
+        self.notify_listener(self, object, trait_name, old, new)
 
-    def dispatch ( self, handler, *args ):
+    def dispatch(self, handler, *args):
         """ Dispatch the event to the listener.
 
         This method is normally the only one that needs to be overridden in
         a subclass to implement the subclass's dispatch mechanism.
         """
-        handler( *args )
+        handler(*args)
 
-    def equals ( self, handler ):
+    def equals(self, handler):
         if handler is self:
             return True
 
-        if (type( handler ) is MethodType) and (handler.__self__ is not None):
-            return ((handler.__name__ == self.name) and
-                    (handler.__self__ is self.object()))
+        if (type(handler) is MethodType) and (handler.__self__ is not None):
+            return (handler.__name__ == self.name) and (
+                handler.__self__ is self.object()
+            )
 
-        return ((self.name is None) and (handler == self.handler))
+        return (self.name is None) and (handler == self.handler)
 
-    def listener_deleted ( self, ref ):
+    def listener_deleted(self, ref):
         # In multithreaded situations, it's possible for this method to
         # be called after, or concurrently with, the dispose method.
         # Don't raise in that case.
         try:
-            self.owner.remove( self )
+            self.owner.remove(self)
         except ValueError:
             pass
         self.object = self.owner = None
 
-    def dispose ( self ):
+    def dispose(self):
         self.object = None
 
     def _dispatch_change_event(self, object, trait_name, old, new, handler):
         """ Prepare and dispatch a trait change event to a listener. """
 
         # Extract the arguments needed from the handler.
-        args = self.argument_transform( object, trait_name, old, new )
+        args = self.argument_transform(object, trait_name, old, new)
 
         # Send a description of the event to the change event tracer.
         if _pre_change_event_tracer is not None:
-            _pre_change_event_tracer( object, trait_name, old, new, handler )
+            _pre_change_event_tracer(object, trait_name, old, new, handler)
 
         # Dispatch the event to the listener.
         try:
-            self.dispatch( handler, *args )
+            self.dispatch(handler, *args)
         except Exception as e:
             if _post_change_event_tracer is not None:
-                _post_change_event_tracer( object, trait_name, old, new,
-                                           handler, exception=e )
+                _post_change_event_tracer(
+                    object, trait_name, old, new, handler, exception=e
+                )
             # This call needs to be made inside the `except` block in case
             # the handler wants to re-raise the exception.
-            handle_exception( object, trait_name, old, new )
+            handle_exception(object, trait_name, old, new)
         else:
             if _post_change_event_tracer is not None:
-                _post_change_event_tracer( object, trait_name, old, new,
-                                           handler, exception=None )
+                _post_change_event_tracer(
+                    object, trait_name, old, new, handler, exception=None
+                )
 
     def _notify_method_listener(self, object, trait_name, old, new):
         """ Dispatch a trait change event to a method listener. """
@@ -563,22 +614,26 @@ class TraitChangeNotifyWrapper(object):
             obj = obj_weak_ref()
             if obj is not None:
                 # Dynamically resolve the listener by name.
-                listener = getattr( obj, self.name )
-                self._dispatch_change_event( object, trait_name, old, new,
-                                             listener )
+                listener = getattr(obj, self.name)
+                self._dispatch_change_event(
+                    object, trait_name, old, new, listener
+                )
 
     def _notify_function_listener(self, object, trait_name, old, new):
         """ Dispatch a trait change event to a function listener. """
 
         if old is not Uninitialized:
-            self._dispatch_change_event( object, trait_name, old, new,
-                                         self.handler )
+            self._dispatch_change_event(
+                object, trait_name, old, new, self.handler
+            )
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  'ExtendedTraitChangeNotifyWrapper' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
+
+class ExtendedTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
     """ Change notify wrapper for "extended" trait change events..
 
     The "extended notifiers" are set up internally when using extended traits,
@@ -592,13 +647,13 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         """ Prepare and dispatch a trait change event to a listener. """
 
         # Extract the arguments needed from the handler.
-        args = self.argument_transform( object, trait_name, old, new )
+        args = self.argument_transform(object, trait_name, old, new)
 
         # Dispatch the event to the listener.
         try:
-            self.dispatch( handler, *args )
+            self.dispatch(handler, *args)
         except Exception:
-            handle_exception( object, trait_name, old, new )
+            handle_exception(object, trait_name, old, new)
 
     def _notify_method_listener(self, object, trait_name, old, new):
         """ Dispatch a trait change event to a method listener. """
@@ -611,20 +666,23 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
             obj = obj_weak_ref()
             if obj is not None:
                 # Dynamically resolve the listener by name.
-                listener = getattr( obj, self.name )
-                self._dispatch_change_event( object, trait_name, old, new,
-                                             listener )
+                listener = getattr(obj, self.name)
+                self._dispatch_change_event(
+                    object, trait_name, old, new, listener
+                )
 
     def _notify_function_listener(self, object, trait_name, old, new):
         """ Dispatch a trait change event to a function listener. """
 
         self._dispatch_change_event(object, trait_name, old, new, self.handler)
 
-#-------------------------------------------------------------------------------
-#  'FastUITraitChangeNotifyWrapper' class:
-#-------------------------------------------------------------------------------
 
-class FastUITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
+# -------------------------------------------------------------------------------
+#  'FastUITraitChangeNotifyWrapper' class:
+# -------------------------------------------------------------------------------
+
+
+class FastUITraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
     """ Dynamic change notify wrapper, dispatching on the UI thread.
 
     This class is in charge to dispatch trait change events to dynamic
@@ -632,17 +690,19 @@ class FastUITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
     `dispatch` parameter set to 'ui' or 'fast_ui'.
     """
 
-    def dispatch ( self, handler, *args ):
+    def dispatch(self, handler, *args):
         if threading.current_thread().ident == ui_thread:
-            handler( *args )
+            handler(*args)
         else:
-            ui_handler( handler, *args )
+            ui_handler(handler, *args)
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  'NewTraitChangeNotifyWrapper' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class NewTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
+
+class NewTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
     """ Dynamic change notify wrapper, dispatching on a new thread.
 
     This class is in charge to dispatch trait change events to dynamic
@@ -650,5 +710,5 @@ class NewTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
     `dispatch` parameter set to 'new'.
     """
 
-    def dispatch ( self, handler, *args ):
-        Thread( target = handler, args = args ).start()
+    def dispatch(self, handler, *args):
+        Thread(target=handler, args=args).start()
