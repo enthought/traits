@@ -6,6 +6,9 @@ DEV
 
 Enhancements
 
+* CI for documentation (#431)
+* Remove 2to3 fixers (#430)
+* Enthought Sphinx theme for docs (#427)
 * New ``HasRequiredTraits`` class (#419)
 * Free ``HasTraits`` subclasses from hashing/comparing by identity (#410)
 * Unify and fix default list editors (#396)
@@ -16,6 +19,8 @@ Enhancements
 
 Changes
 
+* Fix invalid string escapes (#429)
+* Apply the `black` code reformatting utility on the Traits codebase (#432)
 * Update CI to use edm and etstool module (#420)
 * Clean up ``Float`` and ``BaseFloat`` validation (#393)
 * Merge master into Cython port (#370)
