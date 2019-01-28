@@ -1,4 +1,4 @@
-#----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 # Copyright (c) 2014, Enthought, Inc.
 # All rights reserved.
 #
@@ -9,7 +9,7 @@
 #
 # Thanks for using Enthought open source!
 #
-#----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 import os
 import shutil
 import tempfile
@@ -19,14 +19,16 @@ import unittest
 import six
 
 from traits.util.event_tracer import (
-    SentinelRecord, RecordContainer, MultiThreadRecordContainer)
+    SentinelRecord,
+    RecordContainer,
+    MultiThreadRecordContainer,
+)
 
 
 class TestRecordContainers(unittest.TestCase):
-
     def setUp(self):
         self.directory = tempfile.mkdtemp()
-        self.filename = os.path.join(self.directory, 'myfile')
+        self.filename = os.path.join(self.directory, "myfile")
 
     def tearDown(self):
         shutil.rmtree(self.directory)
@@ -42,9 +44,9 @@ class TestRecordContainers(unittest.TestCase):
         # save records
         container.save_to_file(self.filename)
 
-        with open(self.filename, 'r') as handle:
+        with open(self.filename, "r") as handle:
             lines = handle.readlines()
-        self.assertEqual(lines, ['\n'] * 7)
+        self.assertEqual(lines, ["\n"] * 7)
 
     def test_multi_thread_record_container(self):
         container = MultiThreadRecordContainer()
@@ -64,18 +66,17 @@ class TestRecordContainers(unittest.TestCase):
 
         self.assertEqual(len(container._record_containers), 3)
         for collector in six.itervalues(container._record_containers):
-            self.assertTrue(
-                isinstance(collector._records[0], SentinelRecord))
+            self.assertTrue(isinstance(collector._records[0], SentinelRecord))
             self.assertEqual(len(collector._records), 1)
 
         # save records
         container.save_to_directory(self.directory)
         for name in container._record_containers:
-            filename = os.path.join(self.directory, '{0}.trace'.format(name))
-            with open(filename, 'r') as handle:
+            filename = os.path.join(self.directory, "{0}.trace".format(name))
+            with open(filename, "r") as handle:
                 lines = handle.readlines()
-            self.assertEqual(lines, ['\n'])
+            self.assertEqual(lines, ["\n"])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

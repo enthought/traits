@@ -37,6 +37,7 @@ install:
   - edm run -- python etstool.py install --runtime=${RUNTIME} || exit
 script:
   - edm run -- python etstool.py test --runtime=${RUNTIME} || exit
+  - edm run -- python etstool.py docs --runtime=${RUNTIME} || exit
 
 after_success:
   - edm run -- coverage combine

@@ -14,7 +14,11 @@ else:
     from traits.trait_numeric import Array
 
 from traits.has_traits import (
-    HasStrictTraits, HasTraits, Property, on_trait_change)
+    HasStrictTraits,
+    HasTraits,
+    Property,
+    on_trait_change,
+)
 from traits.trait_errors import TraitError
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
 from traits.testing.unittest_tools import unittest
@@ -27,6 +31,7 @@ class Dummy(HasTraits):
 def _create_subclass():
     class Subclass(HasTraits):
         pass
+
     return Subclass
 
 
@@ -39,7 +44,7 @@ class DelegateMess(HasTraits):
     dummy1 = Instance(Dummy, args=())
     dummy2 = Instance(Dummy2)
 
-    y = DelegatesTo('dummy2')
+    y = DelegatesTo("dummy2")
 
     handler_called = Bool(False)
 
@@ -47,7 +52,7 @@ class DelegateMess(HasTraits):
         # Create `self.dummy1`
         return Dummy2(dummy=self.dummy1)
 
-    @on_trait_change('dummy1.x')
+    @on_trait_change("dummy1.x")
     def _on_dummy1_x(self):
         self.handler_called = True
 
@@ -55,22 +60,22 @@ class DelegateMess(HasTraits):
         """ Force the DelegatesTo listener to hook up first to exercise the
         worst case.
         """
-        for name in ['y', '_on_dummy1_x']:
+        for name in ["y", "_on_dummy1_x"]:
             data = self.__class__.__listener_traits__[name]
-            getattr(self, '_init_trait_%s_listener' % data[0])(name, *data)
+            getattr(self, "_init_trait_%s_listener" % data[0])(name, *data)
 
 
 class DelegateLeak(HasTraits):
-    visible = Property(Bool, depends_on='can_enable')
+    visible = Property(Bool, depends_on="can_enable")
 
-    can_enable = DelegatesTo('flag', prefix='x')
+    can_enable = DelegatesTo("flag", prefix="x")
 
-    flag = Instance(Dummy, kw={'x': 42})
+    flag = Instance(Dummy, kw={"x": 42})
 
 
 class Presenter(HasTraits):
     obj = Instance(Dummy)
-    y = Property(Int(), depends_on='obj.x')
+    y = Property(Int(), depends_on="obj.x")
 
     def _get_y(self):
         return self.obj.x
@@ -81,7 +86,7 @@ class ListUpdatesTest(HasTraits):
     b = List
     events_received = Int(0)
 
-    @on_trait_change('a[], b[]')
+    @on_trait_change("a[], b[]")
     def _receive_events(self):
         self.events_received += 1
 
@@ -89,7 +94,7 @@ class ListUpdatesTest(HasTraits):
 class SimpleProperty(HasTraits):
     x = Int
 
-    y = Property(Int, depends_on='x')
+    y = Property(Int, depends_on="x")
 
     def _get_y(self):
         return self.x + 1
@@ -102,13 +107,12 @@ class ExtendedListenerInList(HasTraits):
 
     changed = Bool(False)
 
-    @on_trait_change(['dummy:x'])
+    @on_trait_change(["dummy:x"])
     def set_changed(self):
         self.changed = True
 
 
 class TestRegression(unittest.TestCase):
-
     def test_default_value_for_no_cache(self):
         """ Make sure that CTrait.default_value_for() does not cache the
         result.
@@ -116,8 +120,8 @@ class TestRegression(unittest.TestCase):
         dummy = Dummy()
         # Nothing in the __dict__ yet.
         self.assertEqual(dummy.__dict__, {})
-        ctrait = dummy.trait('x')
-        default = ctrait.default_value_for(dummy, 'x')
+        ctrait = dummy.trait("x")
+        default = ctrait.default_value_for(dummy, "x")
         self.assertEqual(default, 10)
         self.assertEqual(dummy.__dict__, {})
 
@@ -125,7 +129,7 @@ class TestRegression(unittest.TestCase):
         """ Don't segfault when calling default_value_for on a Property trait.
         """
         # Regression test for enthought/traits#336.
-        y_trait = SimpleProperty.class_traits()['y']
+        y_trait = SimpleProperty.class_traits()["y"]
         simple_property = SimpleProperty()
         self.assertIsNone(y_trait.default_value_for(simple_property, "y"))
 
@@ -143,10 +147,12 @@ class TestRegression(unittest.TestCase):
 
     def test_leaked_property_tuple(self):
         """ the property ctrait constructor shouldn't leak a tuple. """
+
         class A(HasTraits):
             prop = Property()
+
         a = A()
-        self.assertEqual(sys.getrefcount(a.trait('prop').property()), 1)
+        self.assertEqual(sys.getrefcount(a.trait("prop").property()), 1)
 
     def test_delegate_initializer(self):
         mess = DelegateMess()
@@ -159,7 +165,7 @@ class TestRegression(unittest.TestCase):
         TraitChangeNotifyWrappers.
         """
         dummy = Dummy()
-        ctrait = dummy._trait('x', 2)
+        ctrait = dummy._trait("x", 2)
         self.assertEqual(len(ctrait._notifiers(1)), 0)
         presenter = Presenter(obj=dummy)
         self.assertEqual(len(ctrait._notifiers(1)), 1)
@@ -199,7 +205,7 @@ class TestRegression(unittest.TestCase):
             counts.append(len(gc.get_objects()))
 
         # All the counts beyond the warmup period should be the same.
-        self.assertEqual(counts[warmup:-1], counts[warmup+1:])
+        self.assertEqual(counts[warmup:-1], counts[warmup + 1 :])
 
     def test_delegation_refleak(self):
         warmup = 5
@@ -212,32 +218,34 @@ class TestRegression(unittest.TestCase):
             counts.append(len(gc.get_objects()))
 
         # All the counts should be the same.
-        self.assertEqual(counts[warmup:-1], counts[warmup+1:])
+        self.assertEqual(counts[warmup:-1], counts[warmup + 1 :])
 
     def test_hastraits_deepcopy(self):
         # Regression test for enthought/traits#2 and enthought/traits#16
         from copy import deepcopy
+
         a = HasTraits()
-        a.add_trait('foo', Int)
+        a.add_trait("foo", Int)
         a.foo = 1
         with self.assertRaises(TraitError):
-            a.foo = 'a'
+            a.foo = "a"
         copied_a = deepcopy(a)
         with self.assertRaises(TraitError):
-            copied_a.foo = 'a'
+            copied_a.foo = "a"
 
     def test_hastraits_pickle(self):
         # Regression test for enthought/traits#2 and enthought/traits#16
         from pickle import dumps, loads
+
         a = HasTraits()
-        a.add_trait('foo', Int)
+        a.add_trait("foo", Int)
         a.foo = 1
         with self.assertRaises(TraitError):
-            a.foo = 'a'
+            a.foo = "a"
         pickled_a = dumps(a)
         unpickled_a = loads(pickled_a)
         with self.assertRaises(TraitError):
-            unpickled_a.foo = 'a'
+            unpickled_a.foo = "a"
 
     @unittest.skipUnless(numpy_available, "test requires NumPy")
     def test_exception_from_numpy_comparison_ignored(self):
@@ -272,16 +280,16 @@ class TestRegression(unittest.TestCase):
 
         if six.PY2:
             with self.assertRaises(TraitError):
-                StrictDummy(**{b'forbidden': 53})
+                StrictDummy(**{b"forbidden": 53})
 
         # This is the case that used to fail on Python 2.
         with self.assertRaises(TraitError):
-            StrictDummy(**{u'forbidden': 53})
+            StrictDummy(**{u"forbidden": 53})
 
         a = StrictDummy()
         with self.assertRaises(TraitError):
-            setattr(a, u'forbidden', 53)
+            setattr(a, u"forbidden", 53)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

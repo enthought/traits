@@ -3,12 +3,12 @@
 
 # delegate.py --- Example of trait delegation
 
-#--[Imports]-------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 from __future__ import print_function
 from traits.api import DelegatesTo, HasTraits, Instance, Str, TraitError
 
 
-#--[Code]----------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 class Parent(HasTraits):
     first_name = Str
     last_name = Str
@@ -16,33 +16,33 @@ class Parent(HasTraits):
 
 class Child(HasTraits):
     first_name = Str
-    last_name = DelegatesTo('father')
+    last_name = DelegatesTo("father")
     father = Instance(Parent)
     mother = Instance(Parent)
 
 
-#--[Example*]------------------------------------------------------------------
-tony = Parent(first_name='Anthony', last_name='Jones')
-alice = Parent(first_name='Alice', last_name='Smith')
-sally = Child(first_name='Sally', father=tony, mother=alice)
+# --[Example*]------------------------------------------------------------------
+tony = Parent(first_name="Anthony", last_name="Jones")
+alice = Parent(first_name="Alice", last_name="Smith")
+sally = Child(first_name="Sally", father=tony, mother=alice)
 
 # Child delegates its 'last_name' to its 'father' object's 'last_name'
 print(sally.last_name)
 # Output: Jones
 
 # Assign an explicit value to the child's 'last_name'
-sally.last_name = 'Cooper'
+sally.last_name = "Cooper"
 print(tony.last_name)
-#Output: Cooper
+# Output: Cooper
 
 # Validation is still controlled by the father's 'last_name' trait
-print('Attempting to assign a Parent object to a Str trait...\n')
+print("Attempting to assign a Parent object to a Str trait...\n")
 try:
     sally.last_name = sally.mother  # ERR: string expected
 except TraitError as c:
-    print('TraitError: ', c)
+    print("TraitError: ", c)
 
-"""
+r"""
 The exception printed will look similar to the following:
 
 Traceback (most recent call last):

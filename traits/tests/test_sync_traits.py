@@ -8,7 +8,12 @@ from __future__ import absolute_import
 from traits.testing.unittest_tools import unittest, UnittestTools
 
 from traits.api import (
-    HasTraits, Int, List, push_exception_handler, pop_exception_handler)
+    HasTraits,
+    Int,
+    List,
+    push_exception_handler,
+    pop_exception_handler,
+)
 
 
 class A(HasTraits):
@@ -28,7 +33,6 @@ class B(HasTraits):
 
 
 class TestSyncTraits(unittest.TestCase, UnittestTools):
-
     def setUp(self):
         push_exception_handler(lambda *args: None, reraise_exceptions=True)
 
@@ -42,7 +46,7 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         a = A()
         b = B()
 
-        a.sync_trait('t', b)
+        a.sync_trait("t", b)
 
         b.t = 10
         self.assertEqual(a.t, b.t)
@@ -50,11 +54,11 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         self.assertEqual(b.t, a.t)
 
         # Check that we can remove the synchronization
-        a.sync_trait('t', b, remove=True)
+        a.sync_trait("t", b, remove=True)
 
-        with self.assertTraitDoesNotChange(a, 't'):
+        with self.assertTraitDoesNotChange(a, "t"):
             b.t = 5
-        with self.assertTraitDoesNotChange(b, 't'):
+        with self.assertTraitDoesNotChange(b, "t"):
             a.t = 7
 
     def test_sync_alias(self):
@@ -64,9 +68,9 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         a = A()
         b = B()
 
-        a.sync_trait('t', b, 'u')
+        a.sync_trait("t", b, "u")
 
-        with self.assertTraitDoesNotChange(b, 't'):
+        with self.assertTraitDoesNotChange(b, "t"):
             a.t = 5
 
         self.assertEqual(a.t, b.u)
@@ -81,19 +85,19 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         a = A(t=3)
         b = B(t=4)
 
-        a.sync_trait('t', b, mutual=False)
+        a.sync_trait("t", b, mutual=False)
         self.assertEqual(b.t, 3)
 
         a.t = 5
         self.assertEqual(b.t, a.t)
 
-        with self.assertTraitDoesNotChange(a, 't'):
+        with self.assertTraitDoesNotChange(a, "t"):
             b.t = 7
 
         # Remove synchronization
-        a.sync_trait('t', b, remove=True)
+        a.sync_trait("t", b, remove=True)
 
-        with self.assertTraitDoesNotChange(b, 't'):
+        with self.assertTraitDoesNotChange(b, "t"):
             a.t = 12
 
     def test_sync_lists(self):
@@ -103,7 +107,7 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         a = A()
         b = B()
 
-        a.sync_trait('l', b)
+        a.sync_trait("l", b)
 
         # Change entire list.
         a.l = [1, 2, 3]
@@ -113,14 +117,14 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
 
         # Change list items.
         a.l = [7, 8, 9]
-        with self.assertTraitChanges(b, 'l_items'):
+        with self.assertTraitChanges(b, "l_items"):
             a.l[-1] = 20
         self.assertEqual(b.l, [7, 8, 20])
 
         # Remove synchronization
-        a.sync_trait('l', b, remove=True)
+        a.sync_trait("l", b, remove=True)
 
-        with self.assertTraitDoesNotChange(a, 'l'):
+        with self.assertTraitDoesNotChange(a, "l"):
             b.l = [7, 8]
 
     def test_sync_delete(self):
@@ -130,7 +134,7 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         a = A()
         b = B()
 
-        a.sync_trait('t', b)
+        a.sync_trait("t", b)
 
         a.t = 5
         del a
@@ -151,7 +155,7 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         a = A()
         b = B()
 
-        a.sync_trait('t', b, mutual=False)
+        a.sync_trait("t", b, mutual=False)
         del b
 
         try:
@@ -171,9 +175,9 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         def _handle_change():
             change_counter[0] += 1
 
-        b.on_trait_change(_handle_change, 't')
+        b.on_trait_change(_handle_change, "t")
 
-        a.sync_trait('t', b)
+        a.sync_trait("t", b)
         a.t = 17
         self.assertEqual(change_counter, [1])
 
@@ -183,5 +187,5 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         self.assertEqual(change_counter, [1])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

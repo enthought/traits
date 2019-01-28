@@ -4,13 +4,13 @@
 # external_adapter.py - Example of declaring a class as an adapter
 #                       externally to the class
 
-#--[Imports]-------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import adapts
 from interface_definition import IName
 from interface_implementation import Person
 
 
-#--[Code]----------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 class AnotherPersonAdapter(object):
 
     # Implement the adapter's constructor:
@@ -19,7 +19,7 @@ class AnotherPersonAdapter(object):
 
     # Implement the 'IName' interface on behalf of its client:
     def get_name(self):
-        return ('%s %s' % (self.person.first_name,
-                           self.person.last_name))
+        return "%s %s" % (self.person.first_name, self.person.last_name)
+
 
 adapts(AnotherPersonAdapter, Person, IName)

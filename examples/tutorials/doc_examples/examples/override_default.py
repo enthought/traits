@@ -7,7 +7,7 @@
 from traits.api import HasTraits, Range, Str
 
 
-#--[Code]----------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 # Example of overriding a default value for a trait in a subclass:
 
 
@@ -24,11 +24,12 @@ class Manager(Employee):
     # Override the default value for the inherited 'salary_grade' trait:
     salary_grade = 5
 
-#--[Example*]------------------------------------------------------------------
+
+# --[Example*]------------------------------------------------------------------
 # Create an employee and display its initial contents:
-joe = Employee(name='Joe')
+joe = Employee(name="Joe")
 joe.print_traits()
 
 # Now do the same thing for a manager object:
-mike = Manager(name='Mike')
+mike = Manager(name="Mike")
 mike.print_traits()

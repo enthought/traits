@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
@@ -43,37 +43,38 @@ class UndefinedTestCase(unittest.TestCase):
 
     def test_name_change(self):
         b = Bar()
-        b.name = 'first'
-        self.assertEqual(b.name, 'first')
+        b.name = "first"
+        self.assertEqual(b.name, "first")
         return
 
     def test_read_only_write_once(self):
         f = Foo()
 
-        self.assertEqual(f.name, '')
+        self.assertEqual(f.name, "")
         self.assertIs(f.original_name, Undefined)
 
-        f.name = 'first'
-        self.assertEqual(f.name, 'first')
-        self.assertEqual(f.original_name, 'first')
+        f.name = "first"
+        self.assertEqual(f.name, "first")
+        self.assertEqual(f.original_name, "first")
 
-        f.name = 'second'
-        self.assertEqual(f.name, 'second')
-        self.assertEqual(f.original_name, 'first')
+        f.name = "second"
+        self.assertEqual(f.name, "second")
+        self.assertEqual(f.original_name, "first")
 
         return
 
     def test_read_only_write_once_from_constructor(self):
-        f = Foo(name='first')
+        f = Foo(name="first")
 
-        f.name = 'first'
-        self.assertEqual(f.name, 'first')
-        self.assertEqual(f.original_name, 'first')
+        f.name = "first"
+        self.assertEqual(f.name, "first")
+        self.assertEqual(f.original_name, "first")
 
-        f.name = 'second'
-        self.assertEqual(f.name, 'second')
-        self.assertEqual(f.original_name, 'first')
+        f.name = "second"
+        self.assertEqual(f.name, "second")
+        self.assertEqual(f.original_name, "first")
 
         return
+
 
 ### EOF #######################################################################

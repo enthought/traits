@@ -14,7 +14,7 @@
 from traits.api import HasTraits, TraitError
 from traits.testing.unittest_tools import UnittestTools
 
-VALUES = ('value1', 33, None)
+VALUES = ("value1", 33, None)
 
 
 class TupleTestMixin(UnittestTools):
@@ -37,21 +37,21 @@ class TupleTestMixin(UnittestTools):
         # Check that we can assign different values of the correct type.
 
         dummy = self._create_class()
-        with self.assertTraitChanges(dummy, 't1'):
-            dummy.t1 = ('other value 1', 77, None)
-        with self.assertTraitChanges(dummy, 't2'):
-            dummy.t2 = ('other value 2', 99, None)
+        with self.assertTraitChanges(dummy, "t1"):
+            dummy.t1 = ("other value 1", 77, None)
+        with self.assertTraitChanges(dummy, "t2"):
+            dummy.t2 = ("other value 2", 99, None)
 
     def test_invalid_assignment_length(self):
         # Check that assigning a tuple of incorrect length
         # raises a TraitError.
-        self._assign_invalid_values_length(('str', 44))
-        self._assign_invalid_values_length(('str', 33, None, []))
+        self._assign_invalid_values_length(("str", 44))
+        self._assign_invalid_values_length(("str", 33, None, []))
 
     def test_type_checking(self):
         # Test that type checking is done for the 't1' attribute.
         dummy = self._create_class()
-        other_tuple = ('other value', 75, True)
+        other_tuple = ("other value", 75, True)
         with self.assertRaises(TraitError):
             dummy.t1 = other_tuple
         self.assertEqual(dummy.t1, VALUES)
@@ -60,7 +60,7 @@ class TupleTestMixin(UnittestTools):
         try:
             dummy.t2 = other_tuple
         except TraitError:
-            self.fail('Unexpected TraitError when assigning to tuple.')
+            self.fail("Unexpected TraitError when assigning to tuple.")
         self.assertEqual(dummy.t2, other_tuple)
 
     def _assign_invalid_values_length(self, values):

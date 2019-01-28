@@ -18,20 +18,21 @@ def import_symbol(symbol_path):
 
     """
 
-    if ':' in symbol_path:
-        module_name, symbol_name = symbol_path.split(':')
+    if ":" in symbol_path:
+        module_name, symbol_name = symbol_path.split(":")
 
         module = __import__(module_name, {}, {}, [symbol_name], 0)
         symbol = eval(symbol_name, module.__dict__)
 
     else:
-        components  = symbol_path.split('.')
-        module_name = '.'.join(components[:-1])
+        components = symbol_path.split(".")
+        module_name = ".".join(components[:-1])
         symbol_name = components[-1]
 
         module = __import__(module_name, {}, {}, [symbol_name], 0)
         symbol = getattr(module, symbol_name)
 
     return symbol
+
 
 #### EOF ######################################################################

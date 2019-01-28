@@ -20,8 +20,9 @@ def _sphinx_present():
     return True
 
 
-@unittest.skipIf(not _sphinx_present(),
-                 "Sphinx not available. Cannot test documenter")
+@unittest.skipIf(
+    not _sphinx_present(), "Sphinx not available. Cannot test documenter"
+)
 class TestTraitDocumenter(unittest.TestCase):
     """ Tests for the trait documenter. """
 
@@ -38,10 +39,12 @@ class TestTraitDocumenter(unittest.TestCase):
 
         from traits.util.trait_documenter import _get_definition_tokens
 
-        src = textwrap.dedent("""\
+        src = textwrap.dedent(
+            """\
         depth_interval = Property(Tuple(Float, Float),
                                   depends_on="_depth_interval")
-        """)
+        """
+        )
         string_io = six.StringIO(src)
         tokens = tokenize.generate_tokens(string_io.readline)
 
@@ -56,30 +59,34 @@ class TestTraitDocumenter(unittest.TestCase):
 
         from traits.util.trait_documenter import TraitDocumenter
 
-        src = textwrap.dedent("""\
+        src = textwrap.dedent(
+            """\
         class Fake(HasTraits):
 
             #: Test attribute
             test = Property(Bool, label=u"ミスあり")
-        """)
+        """
+        )
         mocked_directive = mock.MagicMock()
 
-        documenter = TraitDocumenter(mocked_directive, 'test', '   ')
-        documenter.object_name = 'Property'
+        documenter = TraitDocumenter(mocked_directive, "test", "   ")
+        documenter.object_name = "Property"
 
         with mock.patch(
-                'traits.util.trait_documenter.inspect.getsource',
-                return_value=src):
+            "traits.util.trait_documenter.inspect.getsource", return_value=src
+        ):
             with mock.patch(
-                ('traits.util.trait_documenter.ClassLevelDocumenter'
-                 '.add_directive_header')
+                (
+                    "traits.util.trait_documenter.ClassLevelDocumenter"
+                    ".add_directive_header"
+                )
             ):
-                documenter.add_directive_header('')
+                documenter.add_directive_header("")
 
         documenter.directive.result.append.assert_called_once()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
 
 # ## EOF ######################################################################

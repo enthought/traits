@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2013, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
@@ -43,13 +43,11 @@ class TestTraitDefaultInitializer(unittest.TestCase):
 
     def test_reset_to_default(self):
         foo = Foo(bar=3)
-        foo.reset_traits(traits=['bar'])
+        foo.reset_traits(traits=["bar"])
         self.assertEqual(foo.bar, 4)
 
     def test_error_propagation_in_default_methods(self):
-
         class FooException(Foo):
-
             def _bar_default(self):
                 1 / 0
 
@@ -57,7 +55,6 @@ class TestTraitDefaultInitializer(unittest.TestCase):
         self.assertRaises(ZeroDivisionError, lambda: foo.bar)
 
         class FooKeyError(Foo):
-
             def _bar_default(self):
                 raise KeyError()
 

@@ -28,7 +28,6 @@ class TraitsObject(HasTraits):
 
 
 class ListHandler(logging.Handler):
-
     def __init__(self):
         logging.Handler.__init__(self)
         self.records = []
@@ -51,18 +50,17 @@ def catch_logs(module_name):
 
 
 class TestTraitGet(UnittestTools, unittest.TestCase):
-
     def test_trait_set(self):
         obj = TraitsObject()
-        obj.trait_set(string='foo')
-        self.assertEqual(obj.string, 'foo')
+        obj.trait_set(string="foo")
+        self.assertEqual(obj.string, "foo")
         self.assertEqual(obj.integer, 0)
 
     def test_trait_get(self):
         obj = TraitsObject()
-        obj.trait_set(string='foo')
-        values = obj.trait_get('string', 'integer')
-        self.assertEqual(values, {'string': 'foo', 'integer': 0})
+        obj.trait_set(string="foo")
+        values = obj.trait_get("string", "integer")
+        self.assertEqual(values, {"string": "foo", "integer": 0})
 
     def test_trait_set_deprecated(self):
         obj = TraitsObject()
@@ -71,20 +69,20 @@ class TestTraitGet(UnittestTools, unittest.TestCase):
             obj.trait_set(integer=1)
 
         with self.assertDeprecated():
-            obj.set(string='foo')
+            obj.set(string="foo")
 
-        self.assertEqual(obj.string, 'foo')
+        self.assertEqual(obj.string, "foo")
         self.assertEqual(obj.integer, 1)
 
     def test_trait_get_deprecated(self):
         obj = TraitsObject()
-        obj.string = 'foo'
+        obj.string = "foo"
         obj.integer = 1
 
         with self.assertNotDeprecated():
-            values = obj.trait_get('integer')
-        self.assertEqual(values, {'integer': 1})
+            values = obj.trait_get("integer")
+        self.assertEqual(values, {"integer": 1})
 
         with self.assertDeprecated():
-            values = obj.get('string')
-        self.assertEqual(values, {'string': 'foo'})
+            values = obj.get("string")
+        self.assertEqual(values, {"string": "foo"})

@@ -23,10 +23,23 @@ from __future__ import absolute_import
 import sys
 
 from traits.testing.unittest_tools import unittest
-from traits.adaptation.api import get_global_adaptation_manager, \
-    set_global_adaptation_manager
-from traits.api import HasTraits, Adapter, adapts, AdaptsTo, \
-    implements, Instance, Int, Interface, List, Supports, TraitError
+from traits.adaptation.api import (
+    get_global_adaptation_manager,
+    set_global_adaptation_manager,
+)
+from traits.api import (
+    HasTraits,
+    Adapter,
+    adapts,
+    AdaptsTo,
+    implements,
+    Instance,
+    Int,
+    Interface,
+    List,
+    Supports,
+    TraitError,
+)
 
 
 # Using the deprecated class advisor "adapts", the registration of adapters
@@ -36,36 +49,28 @@ from traits.api import HasTraits, Adapter, adapts, AdaptsTo, \
 _adaptation_manager = get_global_adaptation_manager()
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #  Test 'Interface' definitions:
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # 'adapts' and 'implements' are not supported in Python 3.
 if sys.version_info < (3,):
 
     class IFoo(Interface):
-
         def get_foo(self):
             """ Returns the current foo. """
 
-
     class IFooPlus(IFoo):
-
         def get_foo_plus(self):
             """ Returns even more foo. """
 
-
     class IAverage(Interface):
-
         def get_average(self):
             """ Returns the average value for the object. """
 
-
     class IList(Interface):
-
         def get_list(self):
             """ Returns the list value for the object. """
-
 
     class Sample(HasTraits):
         s1 = Int(1, sample=True)
@@ -75,7 +80,6 @@ if sys.version_info < (3,):
         i2 = Int(5)
         i3 = Int(6)
 
-
     class SampleList(HasTraits):
 
         implements(IList)
@@ -84,7 +88,6 @@ if sys.version_info < (3,):
 
         def get_list(self):
             return self.data
-
 
     class SampleAverage(HasTraits):
 
@@ -103,18 +106,16 @@ if sys.version_info < (3,):
             average = 0.0
             for item in value:
                 average += item
-            return (average / len(value))
-
+            return average / len(value)
 
     class SampleBad(HasTraits):
         pass
 
-
     class TraitsHolder(HasTraits):
 
-        a_no = Instance(IAverage, adapt='no')
-        a_yes = Instance(IAverage, adapt='yes')
-        a_default = Instance(IAverage, adapt='default')
+        a_no = Instance(IAverage, adapt="no")
+        a_yes = Instance(IAverage, adapt="yes")
+        a_default = Instance(IAverage, adapt="default")
         list_adapted_to = Supports(IList)
         foo_adapted_to = Supports(IFoo)
         foo_plus_adapted_to = Supports(IFooPlus)
@@ -122,15 +123,14 @@ if sys.version_info < (3,):
         foo_adapts_to = AdaptsTo(IFoo)
         foo_plus_adapts_to = AdaptsTo(IFooPlus)
 
-
     class SampleListAdapter(Adapter):
         adapts(Sample, IList)
 
         def get_list(self):
             obj = self.adaptee
-            return [getattr(obj, name)
-                    for name in obj.trait_names(sample=True)]
-
+            return [
+                getattr(obj, name) for name in obj.trait_names(sample=True)
+            ]
 
     class ListAverageAdapter(Adapter):
 
@@ -144,8 +144,7 @@ if sys.version_info < (3,):
             average = 0.0
             for item in value:
                 average += item
-            return (average / len(value))
-
+            return average / len(value)
 
     class SampleFooAdapter(HasTraits):
 
@@ -158,11 +157,9 @@ if sys.version_info < (3,):
 
         def get_foo(self):
             object = self.object
-            return (object.s1 + object.s2 + object.s3)
-
+            return object.s1 + object.s2 + object.s3
 
     class FooPlusAdapter(object):
-
         def __init__(self, obj):
             self.obj = obj
 
@@ -170,14 +167,16 @@ if sys.version_info < (3,):
             return self.obj.get_foo()
 
         def get_foo_plus(self):
-            return (self.obj.get_foo() + 1)
+            return self.obj.get_foo() + 1
 
     adapts(FooPlusAdapter, IFoo, IFooPlus)
 
 
-@unittest.skipUnless(sys.version_info < (3,),
-                     "The 'adapts' and 'implements' class advisors "
-                     "are not supported in Python 3.")
+@unittest.skipUnless(
+    sys.version_info < (3,),
+    "The 'adapts' and 'implements' class advisors "
+    "are not supported in Python 3.",
+)
 class InterfacesTest(unittest.TestCase):
 
     #### 'TestCase' protocol ##################################################
@@ -202,6 +201,7 @@ class InterfacesTest(unittest.TestCase):
     def test_implements_extended(self):
         """ Ensure that subclasses of Interfaces imply the superinterface.
         """
+
         class Test(HasTraits):
             implements(IFooPlus)
 
@@ -219,8 +219,10 @@ class InterfacesTest(unittest.TestCase):
         try:
             ta.a_no = SampleAverage()
         except TraitError:
-            self.fail("Setting instance of interface should not require "
-                      "adaptation")
+            self.fail(
+                "Setting instance of interface should not require "
+                "adaptation"
+            )
 
         # These are not instances of the IAverage interface, and therefore
         # cannot be set to the trait.
@@ -234,17 +236,17 @@ class InterfacesTest(unittest.TestCase):
         ta.a_yes = object = SampleAverage()
         self.assertEqual(ta.a_yes.get_average(), 200.0)
         self.assertIsInstance(ta.a_yes, SampleAverage)
-        self.assertFalse(hasattr(ta, 'a_yes_'))
+        self.assertFalse(hasattr(ta, "a_yes_"))
 
         ta.a_yes = object = SampleList()
         self.assertEqual(ta.a_yes.get_average(), 20.0)
         self.assertIsInstance(ta.a_yes, ListAverageAdapter)
-        self.assertFalse(hasattr(ta, 'a_yes_'))
+        self.assertFalse(hasattr(ta, "a_yes_"))
 
         ta.a_yes = object = Sample()
         self.assertEqual(ta.a_yes.get_average(), 2.0)
         self.assertIsInstance(ta.a_yes, ListAverageAdapter)
-        self.assertFalse(hasattr(ta, 'a_yes_'))
+        self.assertFalse(hasattr(ta, "a_yes_"))
 
         self.assertRaises(TraitError, ta.trait_set, a_yes=SampleBad())
 
@@ -254,21 +256,21 @@ class InterfacesTest(unittest.TestCase):
         ta.a_default = object = SampleAverage()
         self.assertEqual(ta.a_default.get_average(), 200.0)
         self.assertIsInstance(ta.a_default, SampleAverage)
-        self.assertFalse(hasattr(ta, 'a_default_'))
+        self.assertFalse(hasattr(ta, "a_default_"))
 
         ta.a_default = object = SampleList()
         self.assertEqual(ta.a_default.get_average(), 20.0)
         self.assertIsInstance(ta.a_default, ListAverageAdapter)
-        self.assertFalse(hasattr(ta, 'a_default_'))
+        self.assertFalse(hasattr(ta, "a_default_"))
 
         ta.a_default = object = Sample()
         self.assertEqual(ta.a_default.get_average(), 2.0)
         self.assertIsInstance(ta.a_default, ListAverageAdapter)
-        self.assertFalse(hasattr(ta, 'a_default_'))
+        self.assertFalse(hasattr(ta, "a_default_"))
 
         ta.a_default = object = SampleBad()
         self.assertEqual(ta.a_default, None)
-        self.assertFalse(hasattr(ta, 'a_default_'))
+        self.assertFalse(hasattr(ta, "a_default_"))
 
     def test_adapted_to(self):
         ta = TraitsHolder()
@@ -314,12 +316,13 @@ class InterfacesTest(unittest.TestCase):
         self.assertEqual(ta.foo_plus_adapts_to_.get_foo_plus(), 31)
         self.assertIsInstance(ta.foo_plus_adapts_to_, FooPlusAdapter)
 
-    #-- Helper Methods --------------------------------------------------------
+    # -- Helper Methods --------------------------------------------------------
 
     def implements_bad(self):
         class Test(HasTraits):
             implements(Sample)
 
+
 # Run the unit tests (if invoked from the command line):
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

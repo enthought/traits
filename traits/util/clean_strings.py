@@ -1,9 +1,9 @@
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #
 #  Copyright (c) 2006 by Enthought, Inc.
 #  All rights reserved.
 #
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 """ Provides functions that mange strings to avoid characters that would be
     problematic in certain situations.
@@ -22,13 +22,13 @@ def clean_filename(name):
     """
     # The only acceptable characters are alphanumeric (in the current locale)
     # plus a period and dash.
-    wordparts = re.split('[^\w\.\-]+', name)
+    wordparts = re.split(r"[^\w\.\-]+", name)
 
     # Filter out empty strings at the beginning or end of the list.
     wordparts = [x for x in wordparts if x]
 
     # Make sure this is an ASCII-encoded string, not a Unicode string.
-    filename = '_'.join(wordparts).encode('ascii')
+    filename = "_".join(wordparts).encode("ascii")
 
     return filename
 
@@ -67,7 +67,7 @@ def clean_timestamp(dt=None, microseconds=False):
         # The microseconds are largely uninformative but annoying.
         dt = dt.replace(microsecond=0)
 
-    stamp = dt.isoformat().replace(':', '_')
+    stamp = dt.isoformat().replace(":", "_")
 
     return stamp
 
@@ -78,20 +78,19 @@ def python_name(name):
 
     if len(name) > 0:
         # Replace spaces with underscores.
-        name = name.replace(' ', '_').lower()
+        name = name.replace(" ", "_").lower()
 
         # If the name is a Python keyword then prefix it with an
         # underscore.
         if keyword.iskeyword(name):
-            name = '_' + name
+            name = "_" + name
 
         # If the name starts with a digit then prefix it with an
         # underscore.
         if name[0].isdigit():
-            name = '_' + name
+            name = "_" + name
 
     return name
 
 
 ### EOF ######################################################################
-

@@ -55,12 +55,11 @@ class TestDict(unittest.TestCase):
     """ Test cases for dictionary (Dict) traits. """
 
     def test_modified_event(self):
-
         class Foo(HasTraits):
             name = Str
             modified = Event
 
-            @on_trait_change('name')
+            @on_trait_change("name")
             def _fire_modified_event(self):
                 self.modified = True
                 return
@@ -69,38 +68,38 @@ class TestDict(unittest.TestCase):
             foos = Dict(Str, Foo)
             modified = Event
 
-            @on_trait_change('foos_items,foos.modified')
+            @on_trait_change("foos_items,foos.modified")
             def _fire_modified_event(self, obj, trait_name, old, new):
                 self.modified = True
                 return
 
         bar = Bar()
         listener = create_listener()
-        bar.on_trait_change(listener, 'modified')
+        bar.on_trait_change(listener, "modified")
 
         # Assign a completely new dictionary.
-        bar.foos = {'dino': Foo(name='dino')}
+        bar.foos = {"dino": Foo(name="dino")}
         self.assertEqual(1, listener.called)
-        self.assertEqual('modified', listener.trait_name)
+        self.assertEqual("modified", listener.trait_name)
 
         # Add an item to an existing dictionary.
         listener.initialize()
-        fred = Foo(name='fred')
-        bar.foos['fred'] = fred
+        fred = Foo(name="fred")
+        bar.foos["fred"] = fred
         self.assertEqual(1, listener.called)
-        self.assertEqual('modified', listener.trait_name)
+        self.assertEqual("modified", listener.trait_name)
 
         # Modify an item already in the dictionary.
         listener.initialize()
-        fred.name = 'barney'
+        fred.name = "barney"
         self.assertEqual(1, listener.called)
-        self.assertEqual('modified', listener.trait_name)
+        self.assertEqual("modified", listener.trait_name)
 
         # Overwrite an item in the dictionary. This is the one that fails!
         listener.initialize()
-        bar.foos['fred'] = Foo(name='wilma')
+        bar.foos["fred"] = Foo(name="wilma")
         self.assertEqual(1, listener.called)
-        self.assertEqual('modified', listener.trait_name)
+        self.assertEqual("modified", listener.trait_name)
 
         return
 
@@ -112,16 +111,16 @@ class TestDict(unittest.TestCase):
 
         # invalid value
         with self.assertRaises(TraitError):
-            foo.validate(object=HasTraits(), name='bar', value=None)
+            foo.validate(object=HasTraits(), name="bar", value=None)
 
         # valid value
-        result = foo.validate(object=HasTraits(), name='bar', value={})
+        result = foo.validate(object=HasTraits(), name="bar", value={})
         self.assertIsInstance(result, TraitDictObject)
 
         # object is None (check for issue #71)
-        result = foo.validate(object=None, name='bar', value={})
+        result = foo.validate(object=None, name="bar", value={})
         self.assertEqual(result, {})
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, 2006 by Enthought, Inc.
 # All rights reserved.
 #
@@ -10,8 +10,9 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 import os
+
 
 def get_home_directory():
     """ Determine the user's home directory."""
@@ -23,7 +24,7 @@ def get_home_directory():
     #       path = os.path.expanduser('~')
     # The above seems to work on both Windows and Unixes though the docs
     # indicate it might not work as well on Macs.
-    for name in ['HOME', 'USERPROFILE']:
+    for name in ["HOME", "USERPROFILE"]:
         if name in os.environ:
             # Make sure that the path ends with a path separator.
             path = os.environ[name]
@@ -34,6 +35,6 @@ def get_home_directory():
 
     # If all else fails, the current directory will do.
     else:
-        path = ''
+        path = ""
 
     return path

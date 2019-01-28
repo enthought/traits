@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-#--(Adaptation)----------------------------------------------------------------
+# --(Adaptation)----------------------------------------------------------------
 """
 Adaptation
 ==========
@@ -226,28 +226,27 @@ the **IName** interface, otherwise an exception is raised. Try modifying and
 re-running the example code to verify that this is indeed the case.
 """
 
-#--<Imports>-------------------------------------------------------------------
+# --<Imports>-------------------------------------------------------------------
 
 from __future__ import print_function
 from traits.api import *
 
 
-#--[IName Interface]-----------------------------------------------------------
+# --[IName Interface]-----------------------------------------------------------
 # Define the 'IName' interface:
-class IName (Interface):
-
+class IName(Interface):
     def get_name(self):
         """ Returns the name of an object. """
 
 
-#--[Person Class]--------------------------------------------------------------
+# --[Person Class]--------------------------------------------------------------
 class Person(HasTraits):
 
-    first_name = Str('John')
-    last_name = Str('Doe')
+    first_name = Str("John")
+    last_name = Str("Doe")
 
 
-#--[PersonINameAdapter Class]--------------------------------------------------
+# --[PersonINameAdapter Class]--------------------------------------------------
 class PersonINameAdapter(Adapter):
 
     # Declare what interfaces this adapter implements for its client:
@@ -259,25 +258,25 @@ class PersonINameAdapter(Adapter):
     # Implementation of the 'IName' interface on behalf of its client:
     def get_name(self):
         """ Returns the name of an object. """
-        return ('%s %s' % (self.adaptee.first_name, self.adaptee.last_name))
+        return "%s %s" % (self.adaptee.first_name, self.adaptee.last_name)
 
 
-#--[Apartment Class]-----------------------------------------------------------
+# --[Apartment Class]-----------------------------------------------------------
 # Define a class using an object that implements the 'IName' interface:
 class Apartment(HasTraits):
 
     renter = AdaptedTo(IName)
 
 
-#--[Example*]------------------------------------------------------------------
+# --[Example*]------------------------------------------------------------------
 # Create an object implementing the 'IName' interface:
-william = Person(first_name='William', last_name='Adams')
+william = Person(first_name="William", last_name="Adams")
 
 # Create an apartment, and assign 'renter' an object implementing 'IName':
 apt = Apartment(renter=william)
 
 # Verify that the object works correctly:
-print('Renter is:', apt.renter.get_name())
+print("Renter is:", apt.renter.get_name())
 
 # Check the type of object actually assigned to 'renter':
 print(apt.renter)

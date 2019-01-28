@@ -3,13 +3,13 @@
 
 # scratch_adapter.py - Example of writing an adapter from scratch
 
-#--[Imports]-------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Instance, adapts
 from interface_definition import IName
 from interface_implementation import Person
 
 
-#--[Code]----------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 class PersonINameAdapter(HasTraits):
 
     # Declare what interfaces this adapter implements,
@@ -25,5 +25,4 @@ class PersonINameAdapter(HasTraits):
 
     # Implement the 'IName' interface on behalf of its client:
     def get_name(self):
-        return ('%s %s' % (self.client.first_name,
-                self.client.last_name))
+        return "%s %s" % (self.client.first_name, self.client.last_name)

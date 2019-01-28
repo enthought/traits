@@ -15,8 +15,15 @@ from traits.testing.unittest_tools import unittest
 
 # Enthought library imports.
 from traits.adaptation.api import reset_global_adaptation_manager
-from traits.api import Adapter, HasTraits, Instance, Int, Interface, \
-    provides, register_factory
+from traits.api import (
+    Adapter,
+    HasTraits,
+    Instance,
+    Int,
+    Interface,
+    provides,
+    register_factory,
+)
 
 # Local imports.
 from traits.interface_checker import InterfaceError, check_implements
@@ -24,6 +31,7 @@ from traits.interface_checker import InterfaceError, check_implements
 # Make sure implicit interface checking is turned off, so that we can make the
 # checks explicitly:
 from traits import has_traits
+
 has_traits.CHECK_INTERFACES = 0
 
 
@@ -54,7 +62,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         # A class that *does* implement the interface.
         @provides(IFoo)
         class Foo(object):
-
             def foo(self):
                 pass
 
@@ -173,7 +180,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         # A class that does *not* implement the interface.
         @provides(IFoo, IBar, IBaz)
         class Foo(HasTraits):
-
             def foo(self):
                 pass
 
@@ -233,7 +239,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         # A class that does *not* implement the interface.
         @provides(IFoo, IBar, IBaz)
         class Foo(HasTraits):
-
             def foo(self):
                 pass
 
@@ -289,7 +294,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         # A class that does *not* implement the interface.
         @provides(IBaz)
         class Foo(HasTraits):
-
             def foo(self):
                 pass
 
@@ -345,7 +349,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         # A class that does *not* implement the interface.
         @provides(IBaz)
         class Foo(HasTraits):
-
             def foo(self):
                 pass
 
@@ -360,19 +363,15 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         """ Subclasses with incorrect method signatures """
 
         class IFoo(Interface):
-
             def foo(self, argument):
                 pass
 
         @provides(IFoo)
         class Foo(HasTraits):
-
             def foo(self, argument):
                 pass
 
-
         class Bar(Foo):
-
             def foo(self):
                 pass
 
@@ -438,5 +437,5 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
 
 # Entry point for stand-alone testing.
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

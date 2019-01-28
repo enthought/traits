@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-#--(cached_property Decorator)-------------------------------------------------
+# --(cached_property Decorator)-------------------------------------------------
 """
 cached_property Decorator
 =========================
@@ -73,29 +73,29 @@ from traits.api import *
 from traitsui.api import *
 
 
-#--[TestScores Class]----------------------------------------------------------
+# --[TestScores Class]----------------------------------------------------------
 class TestScores(HasPrivateTraits):
 
     scores = List(Int)
-    average = Property(depends_on='scores')
+    average = Property(depends_on="scores")
 
     @cached_property
     def _get_average(self):
         print("...computing average:", end=" ")
         s = self.scores
-        return (float(sm.reduce(lambda n1, n2: n1 + n2, s, 0)) / len(s))
+        return float(sm.reduce(lambda n1, n2: n1 + n2, s, 0)) / len(s)
 
 
-#--[Example*]------------------------------------------------------------------
+# --[Example*]------------------------------------------------------------------
 # Create a sample TestScores object with some sample scores:
 test_scores = TestScores(scores=[89, 93, 76, 84, 62, 96, 75, 81, 69, 90])
 
 # Display the average:
-print('First average:', test_scores.average)
-print('Check that again:', test_scores.average)
+print("First average:", test_scores.average)
+print("Check that again:", test_scores.average)
 
 # Now add a few more late scores into the mix:
 test_scores.scores.extend([85, 61, 70])
 
 # And display the new average:
-print('Second average:', test_scores.average)
+print("Second average:", test_scores.average)

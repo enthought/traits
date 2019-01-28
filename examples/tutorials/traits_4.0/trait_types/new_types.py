@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-#--(Creating New Trait Types)--------------------------------------------------
+# --(Creating New Trait Types)--------------------------------------------------
 """
 Creating New Trait Types
 ========================
@@ -136,12 +136,12 @@ to the preceding section on defining a trait type for additional information
 that applies to properties as well.
 """
 
-#--<Imports>-------------------------------------------------------------------
+# --<Imports>-------------------------------------------------------------------
 from __future__ import print_function
 from traits.api import *
 
 
-#--[DiceRoll Type]-------------------------------------------------------------
+# --[DiceRoll Type]-------------------------------------------------------------
 # Define a type whose value represents the roll of a pair of dice:
 class DiceRoll(TraitType):
 
@@ -149,20 +149,27 @@ class DiceRoll(TraitType):
     default_value = (1, 1)
 
     # Describe the type:
-    info_text = ('a tuple of the form (n,m), where both n and m are integers '
-                 'in the range from 1 to 6 representing a roll of a pair of '
-                 'dice')
+    info_text = (
+        "a tuple of the form (n,m), where both n and m are integers "
+        "in the range from 1 to 6 representing a roll of a pair of "
+        "dice"
+    )
 
     # Validate any value assigned to the trait to make sure it is a valid
     # dice roll:
     def validate(self, object, name, value):
-        if (isinstance(value, tuple) and (len(value) == 2) and
-                (1 <= value[0] <= 6) and (1 <= value[1] <= 6)):
+        if (
+            isinstance(value, tuple)
+            and (len(value) == 2)
+            and (1 <= value[0] <= 6)
+            and (1 <= value[1] <= 6)
+        ):
             return value
 
         self.error(object, name, value)
 
-#--[RandInt Property]----------------------------------------------------------
+
+# --[RandInt Property]----------------------------------------------------------
 
 from random import randint
 
@@ -183,10 +190,13 @@ class RandInt(TraitType):
 
     # Define the type's type information:
     def info(self):
-        return ('a random integer in the range from %d to %d' %
-               (self.low, self.high))
+        return "a random integer in the range from %d to %d" % (
+            self.low,
+            self.high,
+        )
 
-#--[Craps Class]---------------------------------------------------------------
+
+# --[Craps Class]---------------------------------------------------------------
 
 
 # Define a test class containing both new trait types/properties:
@@ -195,7 +205,8 @@ class Craps(HasTraits):
     rolls = List(DiceRoll)
     die = RandInt(1, 6)
 
-#--[Example*]------------------------------------------------------------------
+
+# --[Example*]------------------------------------------------------------------
 
 # Create a test object:
 craps = Craps()
@@ -211,4 +222,4 @@ print(craps.rolls)
 try:
     craps.rolls.append((0, 0))
 except TraitError:
-    print('Assigning an invalid dice roll failed.')
+    print("Assigning an invalid dice roll failed.")

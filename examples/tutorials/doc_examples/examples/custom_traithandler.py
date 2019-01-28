@@ -3,18 +3,16 @@
 
 # custom_traithandler.py --- Example of a custom TraitHandler
 
-#--[Imports]-------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import TraitHandler
 
 
-#--[Code]----------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 class TraitOddInteger(TraitHandler):
-
     def validate(self, object, name, value):
-        if (isinstance(value, int) and
-           (value > 0) and ((value % 2) == 1)):
+        if isinstance(value, int) and (value > 0) and ((value % 2) == 1):
             return value
         self.error(object, name, value)
 
     def info(self):
-        return 'a positive odd integer'
+        return "a positive odd integer"

@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Test whether HasTraits objects with cycles can be garbage collected.
 """
 
@@ -53,6 +53,7 @@ class TestCase(unittest.TestCase):
     def test_simple_cycle_oldstyle_class(self):
         """ Can the garbage collector clean up a cycle with old style class?
         """
+
         class Foo:
             def __init__(self, child=None):
                 self.child = child
@@ -62,6 +63,7 @@ class TestCase(unittest.TestCase):
     def test_simple_cycle_newstyle_class(self):
         """ Can the garbage collector clean up a cycle with new style class?
         """
+
         class Foo(object):
             def __init__(self, child=None):
                 self.child = child
@@ -71,6 +73,7 @@ class TestCase(unittest.TestCase):
     def test_simple_cycle_hastraits(self):
         """ Can the garbage collector clean up a cycle with traits objects?
         """
+
         class Foo(HasTraits):
             child = Any
 
@@ -107,6 +110,7 @@ class TestCase(unittest.TestCase):
     def test_delegates_to(self):
         """ Tests if an object that delegates to another is freed.
         """
+
         class Base(HasTraits):
             """ Object we are delegating to. """
 
@@ -117,7 +121,7 @@ class TestCase(unittest.TestCase):
 
             b = Instance(Base)
 
-            i = DelegatesTo('b')
+            i = DelegatesTo("b")
 
         # Make a pair of object
         b = Base()
@@ -132,5 +136,6 @@ class TestCase(unittest.TestCase):
         ds = [obj for obj in gc.get_objects() if isinstance(obj, Delegates)]
         self.assertEqual(ds, [])
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

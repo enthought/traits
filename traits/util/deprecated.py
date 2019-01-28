@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005-2014, Enthought, Inc.
 # All rights reserved.
 #
@@ -7,7 +7,7 @@
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 """ A decorator for marking methods/functions as deprecated. """
 
@@ -34,5 +34,6 @@ def deprecated(message):
         return wrapper
 
     return decorator
+
 
 #### EOF ######################################################################

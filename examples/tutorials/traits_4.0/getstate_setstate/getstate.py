@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-#--(__getstate__/__setstate__ Changes and Improvements)------------------------
+# --(__getstate__/__setstate__ Changes and Improvements)------------------------
 """
 __getstate__/__setstate__ Changes and Improvements
 ==================================================
@@ -134,7 +134,7 @@ from traits.api import *
 from time import time, sleep
 
 
-#--[Session Class]-------------------------------------------------------------
+# --[Session Class]-------------------------------------------------------------
 class Session(HasTraits):
 
     # The name of the session:
@@ -146,7 +146,8 @@ class Session(HasTraits):
     def _name_changed(self):
         self.created = time()
 
-#--[Example*]------------------------------------------------------------------
+
+# --[Example*]------------------------------------------------------------------
 
 # The following shows an example of pickling and unpickling a Session object.
 # Unfortunately, it is not possible to successfully pickle objects created as
@@ -155,11 +156,11 @@ class Session(HasTraits):
 # this one...
 
 # Create a new session:
-session = Session(name='session_1')
+session = Session(name="session_1")
 
 # Display its contents:
-print('Session name:', session.name)
-print('Session created:', session.created)
+print("Session name:", session.name)
+print("Session created:", session.created)
 
 # # Simulate saving the session to a file/database:
 # saved_session = dumps(session)

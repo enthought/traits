@@ -16,7 +16,7 @@ class TestNew(unittest.TestCase):
 
     def setUp(self):
         self.old_filters = warnings.filters[:]
-        warnings.simplefilter('error', DeprecationWarning)
+        warnings.simplefilter("error", DeprecationWarning)
 
     def tearDown(self):
         warnings.filters[:] = self.old_filters
@@ -41,11 +41,11 @@ class AbstractFoo(ABCHasTraits):
 
 class ConcreteFoo(AbstractFoo):
     def foo(self):
-        return 'foo'
+        return "foo"
 
     @property
     def bar(self):
-        return 'bar'
+        return "bar"
 
 
 class FooLike(HasTraits):
@@ -53,14 +53,15 @@ class FooLike(HasTraits):
     y = Float(20.0)
 
     def foo(self):
-        return 'foo'
+        return "foo"
 
     @property
     def bar(self):
-        return 'bar'
+        return "bar"
 
 
 AbstractFoo.register(FooLike)
+
 
 @six.add_metaclass(abc.ABCMeta)
 class AbstractBar(object):
@@ -75,8 +76,8 @@ class TestABC(unittest.TestCase):
     def test_basic_abc(self):
         self.assertRaises(TypeError, AbstractFoo)
         concrete = ConcreteFoo()
-        self.assertEqual(concrete.foo(), 'foo')
-        self.assertEqual(concrete.bar, 'bar')
+        self.assertEqual(concrete.foo(), "foo")
+        self.assertEqual(concrete.bar, "bar")
         self.assertEqual(concrete.x, 10)
         self.assertEqual(concrete.y, 20.0)
         self.assertTrue(isinstance(concrete, AbstractFoo))
@@ -86,11 +87,13 @@ class TestABC(unittest.TestCase):
         self.assertTrue(isinstance(foolike, AbstractFoo))
 
     def test_post_hoc_mixing(self):
-        class TraitedBar(six.with_metaclass(ABCMetaHasTraits, HasTraits, AbstractBar)):
+        class TraitedBar(
+            six.with_metaclass(ABCMetaHasTraits, HasTraits, AbstractBar)
+        ):
             x = Int(10)
 
             def bar(self):
-                return 'bar'
+                return "bar"
 
         traited = TraitedBar()
         self.assertTrue(isinstance(traited, AbstractBar))

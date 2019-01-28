@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2008, Enthought, Inc.
 #  All rights reserved.
@@ -13,16 +13,16 @@
 #  Author: David C. Morrill
 #  Date:   08/21/2008
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 """ Defines the UStr type and HasUniqueStrings mixin class for efficiently
     creating lists of objects containing traits whose string values must be
     unique within the list.
 """
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Imports:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
@@ -34,111 +34,124 @@ from .trait_value import TraitValue, TypeValue
 from .trait_types import List
 from .trait_handlers import TraitType, NoDefaultSpecified
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  'UStr' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class UStr ( TraitType ):
+
+class UStr(TraitType):
     """ Trait type that ensures that a value assigned to a trait is unique
         within the list it belongs to.
     """
+
     #: The type value to assign to restore the original list item type when a
     #: list item is removed from the monitored list:
     str_type = TraitValue()
 
     #: The informational text describing the trait:
-    info_text = 'a unique string'
+    info_text = "a unique string"
 
-    def __init__ ( self, owner, list_name, str_name,
-                         default_value = NoDefaultSpecified, **metadata ):
+    def __init__(
+        self,
+        owner,
+        list_name,
+        str_name,
+        default_value=NoDefaultSpecified,
+        **metadata
+    ):
         """ Initializes the type.
         """
-        super( UStr, self ).__init__( default_value, **metadata )
+        super(UStr, self).__init__(default_value, **metadata)
 
-        self.owner     = owner
+        self.owner = owner
         self.list_name = list_name
-        self.str_name  = str_name
-        self.ustr_type = TypeValue( self )
-        self.names     = dict( [ ( getattr( item, str_name ), item )
-                                 for item in getattr( owner, list_name ) ] )
-        self.roots     = {}
+        self.str_name = str_name
+        self.ustr_type = TypeValue(self)
+        self.names = dict(
+            [
+                (getattr(item, str_name), item)
+                for item in getattr(owner, list_name)
+            ]
+        )
+        self.roots = {}
         self.available = {}
-        owner.on_trait_change( self._items_modified, list_name + '[]' )
+        owner.on_trait_change(self._items_modified, list_name + "[]")
 
-    def validate ( self, object, name, value ):
+    def validate(self, object, name, value):
         """ Ensures that a value being assigned to a trait is a unique string.
         """
-        if isinstance( value, six.string_types ):
-            names    = self.names
-            old_name = getattr( object, name )
-            if names.get( old_name ) is object:
-                self._remove( old_name )
+        if isinstance(value, six.string_types):
+            names = self.names
+            old_name = getattr(object, name)
+            if names.get(old_name) is object:
+                self._remove(old_name)
 
             if value not in names:
-                names[ value ] = object
+                names[value] = object
                 return value
 
-            available = self.available.get( value )
+            available = self.available.get(value)
             while True:
                 if available is None:
                     new_value = None
                     break
 
                 index = available.pop()
-                if len( available ) == 0:
-                    del self.available[ value ]
+                if len(available) == 0:
+                    del self.available[value]
                     available = None
 
-                new_value = '%s_%d' % ( value, index )
+                new_value = "%s_%d" % (value, index)
                 if new_value not in names:
                     break
 
             if new_value is None:
-                self.roots[ value ] = index = \
-                    self.roots.setdefault( value, 1 ) + 1
-                new_value = '%s_%d' % ( value, index )
+                self.roots[value] = index = self.roots.setdefault(value, 1) + 1
+                new_value = "%s_%d" % (value, index)
 
-            names[ new_value ] = object
+            names[new_value] = object
             return new_value
 
-        self.error( object, name, value )
+        self.error(object, name, value)
 
-    def _remove ( self, name ):
+    def _remove(self, name):
         """ Removes a specified name.
         """
-        self.names.pop( name, None )
-        col = name.rfind( '_' )
+        self.names.pop(name, None)
+        col = name.rfind("_")
         if col >= 0:
             try:
-                index  = int( name[ col + 1: ] )
-                prefix = name[ : col ]
+                index = int(name[col + 1 :])
+                prefix = name[:col]
                 if prefix in self.roots:
                     if prefix not in self.available:
-                        self.available[ prefix ] = set()
-                    self.available[ prefix ].add( index )
+                        self.available[prefix] = set()
+                    self.available[prefix].add(index)
             except:
                 pass
 
-    def _items_modified ( self, object, name, removed, added ):
+    def _items_modified(self, object, name, removed, added):
         """ Handles items being added to or removed from the monitored list.
         """
-        str_name  = self.str_name
-        str_type  = self.str_type
+        str_name = self.str_name
+        str_type = self.str_type
         ustr_type = self.ustr_type
 
         for item in removed:
-            setattr( item, str_name, str_type )
-            self._remove( getattr( item, str_name ) )
+            setattr(item, str_name, str_type)
+            self._remove(getattr(item, str_name))
 
         for item in added:
-            setattr( item, str_name, ustr_type )
-            setattr( item, str_name, getattr( item, str_name ) )
+            setattr(item, str_name, ustr_type)
+            setattr(item, str_name, getattr(item, str_name))
 
-#-------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------
 #  'HasUniqueStrings' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class HasUniqueStrings ( HasTraits ):
+
+class HasUniqueStrings(HasTraits):
     """ Mixin or base class for objects containing lists with items containing
         string valued traits that must be unique.
 
@@ -156,25 +169,24 @@ class HasUniqueStrings ( HasTraits ):
             usa = List( State, unique_string = 'name, abbreviation' )
     """
 
-    #-- Private Traits ---------------------------------------------------------
+    # -- Private Traits ---------------------------------------------------------
 
     # List of UStr traits that have been attached to object list traits:
     _ustr_traits = List
 
-    #-- HasTraits Object Initializer -------------------------------------------
+    # -- HasTraits Object Initializer -------------------------------------------
 
-    def traits_init ( self ):
+    def traits_init(self):
         """ Adds any UStrMonitor objects to list traits with 'unique_string'
             metadata.
         """
-        super( HasUniqueStrings, self ).traits_init()
+        super(HasUniqueStrings, self).traits_init()
 
-        for name, trait in self.traits( unique_string = is_str ).items():
-            for str_name in trait.unique_string.split( ',' ):
-                self._ustr_traits.append( UStr( self, name, str_name.strip() ) )
+        for name, trait in self.traits(unique_string=is_str).items():
+            for str_name in trait.unique_string.split(","):
+                self._ustr_traits.append(UStr(self, name, str_name.strip()))
 
-            items = getattr( self, name )
-            if len( items ) > 0:
-                setattr( self, name, [] )
-                setattr( self, name, items )
-
+            items = getattr(self, name)
+            if len(items) > 0:
+                setattr(self, name, [])
+                setattr(self, name, items)

@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
@@ -13,7 +13,7 @@
 #  Author: David C. Morrill
 #  Date:   11/06/2004
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 """ Adds a "category" capability to Traits-based classes, similar to that
     provided by the Cocoa (Objective-C) environment for the Macintosh.
@@ -25,37 +25,45 @@
     subclassing, categories do not allow overriding trait attributes.
 """
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  Imports:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
 import six
 
 from .has_traits import (
-    MetaHasTraits, update_traits_class_dict, BaseTraits, ClassTraits,
-    InstanceTraits, PrefixTraits, ListenerTraits, ViewTraits,
+    MetaHasTraits,
+    update_traits_class_dict,
+    BaseTraits,
+    ClassTraits,
+    InstanceTraits,
+    PrefixTraits,
+    ListenerTraits,
+    ViewTraits,
 )
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  'MetaCategory' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class MetaCategory ( MetaHasTraits ):
 
-    def __new__ ( cls, class_name, bases, class_dict ):
+class MetaCategory(MetaHasTraits):
+    def __new__(cls, class_name, bases, class_dict):
 
         # Make sure the correct usage is being applied:
-        if len( bases ) > 2:
+        if len(bases) > 2:
             raise TypeError(
-                  "Correct usage is: class FooCategory(Category,Foo):")
+                "Correct usage is: class FooCategory(Category,Foo):"
+            )
 
         # Process any traits-related information in the class dictionary:
         update_traits_class_dict(
-            class_name, bases, class_dict, is_category=True)
+            class_name, bases, class_dict, is_category=True
+        )
 
-        if len( bases ) == 2:
+        if len(bases) == 2:
             category_class = bases[1]
 
             # Update the class and each of the existing subclasses:
@@ -65,27 +73,27 @@ class MetaCategory ( MetaHasTraits ):
                 class_dict.pop(InstanceTraits),
                 class_dict.pop(PrefixTraits),
                 class_dict.pop(ListenerTraits),
-                class_dict.pop(ViewTraits)
+                class_dict.pop(ViewTraits),
             )
 
             # Move all remaining items in our class dictionary to the base
             # class's dictionary:
             for name, value in list(class_dict.items()):
-                if not hasattr( category_class, name ):
-                    setattr( category_class, name, value )
-                    del class_dict[ name ]
+                if not hasattr(category_class, name):
+                    setattr(category_class, name, value)
+                    del class_dict[name]
 
         # Finish building the class using the updated class dictionary:
-        return type.__new__( cls, class_name, bases, class_dict )
+        return type.__new__(cls, class_name, bases, class_dict)
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  'Category' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 
 @six.add_metaclass(MetaCategory)
-class Category ( object ):
+class Category(object):
     """ Used for defining "category" extensions to existing classes.
 
     To define a class as a category, specify "Category," followed by the name

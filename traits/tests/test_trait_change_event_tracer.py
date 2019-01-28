@@ -24,18 +24,18 @@ class Foo(HasTraits):
     def _bar_changed(self):
         pass
 
-    @on_trait_change('bar')
+    @on_trait_change("bar")
     def _on_bar_change_notification(self):
         pass
 
-    @on_trait_change('baz')
+    @on_trait_change("baz")
     def _on_baz_change_notification(self):
         self.bar += 1
 
-    @on_trait_change('fuz')
+    @on_trait_change("fuz")
     def _on_fuz_change_notification(self):
         self.bar += 1
-        raise FuzException('method')
+        raise FuzException("method")
 
 
 class TestChangeEventTracers(unittest.TestCase):
@@ -71,11 +71,12 @@ class TestChangeEventTracers(unittest.TestCase):
 
         def _on_foo_baz_changed(obj, name, old, new):
             pass
-        foo.on_trait_change(_on_foo_baz_changed, 'baz')
+
+        foo.on_trait_change(_on_foo_baz_changed, "baz")
 
         # Set the event tracer and trigger a cascade of change events.
-        pre_tracer=self._collect_pre_notification_events
-        post_tracer=self._collect_post_notification_events
+        pre_tracer = self._collect_pre_notification_events
+        post_tracer = self._collect_post_notification_events
         with trait_notifiers.change_event_tracers(pre_tracer, post_tracer):
             foo.baz = 3
 
@@ -83,18 +84,18 @@ class TestChangeEventTracers(unittest.TestCase):
         self.assertEqual(len(self.post_change_events), 4)
 
         expected_pre_events = [
-            (foo, 'baz', 0.0, 3.0, foo._on_baz_change_notification),
-            (foo, 'bar', 0.0, 1.0, foo._bar_changed.__func__),
-            (foo, 'bar', 0.0, 1.0, foo._on_bar_change_notification),
-            (foo, 'baz', 0.0, 3.0, _on_foo_baz_changed),
+            (foo, "baz", 0.0, 3.0, foo._on_baz_change_notification),
+            (foo, "bar", 0.0, 1.0, foo._bar_changed.__func__),
+            (foo, "bar", 0.0, 1.0, foo._on_bar_change_notification),
+            (foo, "baz", 0.0, 3.0, _on_foo_baz_changed),
         ]
         self.assertEqual(self.pre_change_events, expected_pre_events)
 
         expected_post_events = [
-            (foo, 'bar', 0.0, 1.0, foo._bar_changed.__func__),
-            (foo, 'bar', 0.0, 1.0, foo._on_bar_change_notification),
-            (foo, 'baz', 0.0, 3.0, foo._on_baz_change_notification),
-            (foo, 'baz', 0.0, 3.0, _on_foo_baz_changed),
+            (foo, "bar", 0.0, 1.0, foo._bar_changed.__func__),
+            (foo, "bar", 0.0, 1.0, foo._on_bar_change_notification),
+            (foo, "baz", 0.0, 3.0, foo._on_baz_change_notification),
+            (foo, "baz", 0.0, 3.0, _on_foo_baz_changed),
         ]
         self.assertEqual(self.post_change_events, expected_post_events)
 
@@ -111,12 +112,13 @@ class TestChangeEventTracers(unittest.TestCase):
         foo = Foo()
 
         def _on_foo_fuz_changed(obj, name, old, new):
-            raise FuzException('function')
-        foo.on_trait_change(_on_foo_fuz_changed, 'fuz')
+            raise FuzException("function")
+
+        foo.on_trait_change(_on_foo_fuz_changed, "fuz")
 
         # Set the event tracer and trigger a cascade of change events.
-        pre_tracer=self._collect_pre_notification_events
-        post_tracer=self._collect_post_notification_events
+        pre_tracer = self._collect_pre_notification_events
+        post_tracer = self._collect_post_notification_events
         with trait_notifiers.change_event_tracers(pre_tracer, post_tracer):
             foo.fuz = 3
 
@@ -124,27 +126,27 @@ class TestChangeEventTracers(unittest.TestCase):
         self.assertEqual(len(self.post_change_events), 4)
 
         expected_pre_events = [
-            (foo, 'fuz', 0.0, 3.0, foo._on_fuz_change_notification),
-            (foo, 'bar', 0.0, 1.0, foo._bar_changed.__func__),
-            (foo, 'bar', 0.0, 1.0, foo._on_bar_change_notification),
-            (foo, 'fuz', 0.0, 3.0, _on_foo_fuz_changed),
+            (foo, "fuz", 0.0, 3.0, foo._on_fuz_change_notification),
+            (foo, "bar", 0.0, 1.0, foo._bar_changed.__func__),
+            (foo, "bar", 0.0, 1.0, foo._on_bar_change_notification),
+            (foo, "fuz", 0.0, 3.0, _on_foo_fuz_changed),
         ]
         self.assertEqual(self.pre_change_events, expected_pre_events)
 
         expected_post_events = [
-            (foo, 'bar', 0.0, 1.0, foo._bar_changed.__func__),
-            (foo, 'bar', 0.0, 1.0, foo._on_bar_change_notification),
-            (foo, 'fuz', 0.0, 3.0, foo._on_fuz_change_notification),
-            (foo, 'fuz', 0.0, 3.0, _on_foo_fuz_changed),
+            (foo, "bar", 0.0, 1.0, foo._bar_changed.__func__),
+            (foo, "bar", 0.0, 1.0, foo._on_bar_change_notification),
+            (foo, "fuz", 0.0, 3.0, foo._on_fuz_change_notification),
+            (foo, "fuz", 0.0, 3.0, _on_foo_fuz_changed),
         ]
         self.assertEqual(self.post_change_events, expected_post_events)
 
         self.assertEqual(self.exceptions[:2], [None, None])
         self.assertIsInstance(self.exceptions[2], FuzException)
-        self.assertEqual(self.exceptions[2].args, ('method',))
+        self.assertEqual(self.exceptions[2].args, ("method",))
         self.assertIsInstance(self.exceptions[3], FuzException)
-        self.assertEqual(self.exceptions[3].args, ('function',))
+        self.assertEqual(self.exceptions[3].args, ("function",))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

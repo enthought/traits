@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2013, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Record trait change events in single and multi-threaded environments.
 
 """
@@ -27,11 +27,13 @@ from traits import trait_notifiers
 
 CHANGEMSG = (
     u"{time} {direction:-{direction}{length}} {name!r} changed from "
-    "{old!r} to {new!r} in {class_name!r}\n")
+    "{old!r} to {new!r} in {class_name!r}\n"
+)
 CALLINGMSG = u"{time} {action:>{gap}}: {handler!r} in {source}\n"
 EXITMSG = (
     u"{time} {direction:-{direction}{length}} "
-    "EXIT: {handler!r}{exception}\n")
+    "EXIT: {handler!r}{exception}\n"
+)
 SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE = 9
 
 
@@ -40,10 +42,11 @@ class SentinelRecord(object):
     """ Sentinel record to separate groups of chained change event dispatches.
 
     """
+
     __slots__ = ()
 
     def __str__(self):
-        return u'\n'
+        return u"\n"
 
 
 @six.python_2_unicode_compatible
@@ -52,7 +55,7 @@ class ChangeMessageRecord(object):
 
     """
 
-    __slots__ = ('time', 'indent', 'name', 'old', 'new', 'class_name')
+    __slots__ = ("time", "indent", "name", "old", "new", "class_name")
 
     def __init__(self, time, indent, name, old, new, class_name):
         #: Time stamp in UTC.
@@ -72,7 +75,7 @@ class ChangeMessageRecord(object):
         length = self.indent * 2
         return CHANGEMSG.format(
             time=self.time,
-            direction='>',
+            direction=">",
             name=self.name,
             old=self.old,
             new=self.new,
@@ -87,7 +90,7 @@ class CallingMessageRecord(object):
 
     """
 
-    __slots__ = ('time', 'indent', 'handler', 'source')
+    __slots__ = ("time", "indent", "handler", "source")
 
     def __init__(self, time, indent, handler, source):
         #: Time stamp in UTC.
@@ -103,10 +106,11 @@ class CallingMessageRecord(object):
         gap = self.indent * 2 + SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE
         return CALLINGMSG.format(
             time=self.time,
-            action='CALLING',
+            action="CALLING",
             handler=self.handler,
             source=self.source,
-            gap=gap)
+            gap=gap,
+        )
 
 
 @six.python_2_unicode_compatible
@@ -115,7 +119,7 @@ class ExitMessageRecord(object):
 
     """
 
-    __slots__ = ('time', 'indent', 'handler', 'exception')
+    __slots__ = ("time", "indent", "handler", "exception")
 
     def __init__(self, time, indent, handler, exception):
         #: Time stamp in UTC.
@@ -131,7 +135,7 @@ class ExitMessageRecord(object):
         length = self.indent * 2
         return EXITMSG.format(
             time=self.time,
-            direction='<',
+            direction="<",
             handler=self.handler,
             exception=self.exception,
             length=length,
@@ -159,7 +163,7 @@ class RecordContainer(object):
         """ Save the records into a file.
 
         """
-        with open(filename, 'w') as fh:
+        with open(filename, "w") as fh:
             for record in self._records:
                 fh.write(six.text_type(record))
 
@@ -203,7 +207,8 @@ class MultiThreadRecordContainer(object):
             containers = self._record_containers
             for thread_name, container in six.iteritems(containers):
                 filename = os.path.join(
-                    directory_name, '{0}.trace'.format(thread_name))
+                    directory_name, "{0}.trace".format(thread_name)
+                )
                 container.save_to_file(filename)
 
 
@@ -229,7 +234,7 @@ class ChangeEventRecorder(object):
 
         """
         indent = self.indent
-        time = datetime.utcnow().isoformat(' ')
+        time = datetime.utcnow().isoformat(" ")
         container = self.container
         container.record(
             ChangeMessageRecord(
@@ -239,7 +244,7 @@ class ChangeEventRecorder(object):
                 old=old,
                 new=new,
                 class_name=obj.__class__.__name__,
-            ),
+            )
         )
 
         container.record(
@@ -248,7 +253,7 @@ class ChangeEventRecorder(object):
                 indent=indent,
                 handler=handler.__name__,
                 source=inspect.getsourcefile(handler),
-            ),
+            )
         )
         self.indent += 1
 
@@ -256,13 +261,13 @@ class ChangeEventRecorder(object):
         """ Record a string representation of the trait change return
 
         """
-        time = datetime.utcnow().isoformat(' ')
+        time = datetime.utcnow().isoformat(" ")
         self.indent -= 1
         indent = self.indent
         if exception:
-            exception_msg = ' [EXCEPTION: {}]'.format(exception)
+            exception_msg = " [EXCEPTION: {}]".format(exception)
         else:
-            exception_msg = ''
+            exception_msg = ""
 
         container = self.container
 
@@ -272,7 +277,7 @@ class ChangeEventRecorder(object):
                 indent=indent,
                 handler=handler.__name__,
                 exception=exception_msg,
-            ),
+            )
         )
 
         if indent == 1:
@@ -331,8 +336,7 @@ class MultiThreadChangeEventRecorder(object):
             thread = threading.current_thread().name
             if thread not in self.tracers:
                 container = self.container
-                thread_container = container.get_change_event_collector(
-                    thread)
+                thread_container = container.get_change_event_collector(thread)
                 tracer = ChangeEventRecorder(thread_container)
                 self.tracers[thread] = tracer
                 return tracer
@@ -364,7 +368,8 @@ def record_events():
     container = MultiThreadRecordContainer()
     recorder = MultiThreadChangeEventRecorder(container=container)
     trait_notifiers.set_change_event_tracers(
-        pre_tracer=recorder.pre_tracer, post_tracer=recorder.post_tracer)
+        pre_tracer=recorder.pre_tracer, post_tracer=recorder.post_tracer
+    )
 
     try:
         yield container

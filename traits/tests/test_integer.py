@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2013, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """
 Tests for the Int trait type.
 
@@ -124,8 +124,8 @@ class TestInt(unittest.TestCase):
         self.assertEqual(a.integral, 23)
         self.assertIn(type(a.integral), six.integer_types)
 
-        a.integral = numpy.uint64(2**63 + 2)
-        self.assertEqual(a.integral, 2**63 + 2)
+        a.integral = numpy.uint64(2 ** 63 + 2)
+        self.assertEqual(a.integral, 2 ** 63 + 2)
         self.assertIs(type(a.integral), LONG_TYPE)
 
         with self.assertRaises(TraitError):

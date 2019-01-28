@@ -1,4 +1,4 @@
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #
 #  Copyright (c) 2011, Enthought, Inc.
 #  All rights reserved.
@@ -12,7 +12,7 @@
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 """ A simple topological sort on a dictionary graph.
 """
@@ -22,6 +22,7 @@ class CyclicGraph(Exception):
     """
     Exception for cyclic graphs.
     """
+
     def __init__(self):
         Exception.__init__(self, "Graph is cyclic")
 
@@ -33,6 +34,7 @@ def topological_sort(graph):
     discovered = {}
     explored = {}
     order = []
+
     def explore(node):
         children = graph.get(node, [])
         for child in children:

@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
@@ -28,7 +28,6 @@ class RichCompare(HasTraits):
 
 
 class RichCompareTests:
-
     def bar_changed(self, object, trait, old, new):
         self.changed_object = object
         self.changed_trait = trait
@@ -53,110 +52,110 @@ class RichCompareTests:
 
     def test_id_first_assignment(self):
         ic = IdentityCompare()
-        ic.on_trait_change(self.bar_changed, 'bar')
+        ic.on_trait_change(self.bar_changed, "bar")
 
         self.reset_change_tracker()
 
         default_value = ic.bar
         ic.bar = self.a
-        self.check_tracker(ic, 'bar', default_value, self.a, 1)
+        self.check_tracker(ic, "bar", default_value, self.a, 1)
         return
 
     def test_rich_first_assignment(self):
         rich = RichCompare()
-        rich.on_trait_change(self.bar_changed, 'bar')
+        rich.on_trait_change(self.bar_changed, "bar")
 
         self.reset_change_tracker()
 
         default_value = rich.bar
         rich.bar = self.a
-        self.check_tracker(rich, 'bar', default_value, self.a, 1)
+        self.check_tracker(rich, "bar", default_value, self.a, 1)
         return
 
     def test_id_same_object(self):
         ic = IdentityCompare()
-        ic.on_trait_change(self.bar_changed, 'bar')
+        ic.on_trait_change(self.bar_changed, "bar")
 
         self.reset_change_tracker()
 
         default_value = ic.bar
         ic.bar = self.a
-        self.check_tracker(ic, 'bar', default_value, self.a, 1)
+        self.check_tracker(ic, "bar", default_value, self.a, 1)
 
         ic.bar = self.a
-        self.check_tracker(ic, 'bar', default_value, self.a, 1)
+        self.check_tracker(ic, "bar", default_value, self.a, 1)
         return
 
     def test_rich_same_object(self):
         rich = RichCompare()
-        rich.on_trait_change(self.bar_changed, 'bar')
+        rich.on_trait_change(self.bar_changed, "bar")
 
         self.reset_change_tracker()
 
         default_value = rich.bar
         rich.bar = self.a
-        self.check_tracker(rich, 'bar', default_value, self.a, 1)
+        self.check_tracker(rich, "bar", default_value, self.a, 1)
 
         rich.bar = self.a
-        self.check_tracker(rich, 'bar', default_value, self.a, 1)
+        self.check_tracker(rich, "bar", default_value, self.a, 1)
         return
 
     def test_id_different_object(self):
         ic = IdentityCompare()
-        ic.on_trait_change(self.bar_changed, 'bar')
+        ic.on_trait_change(self.bar_changed, "bar")
 
         self.reset_change_tracker()
 
         default_value = ic.bar
         ic.bar = self.a
-        self.check_tracker(ic, 'bar', default_value, self.a, 1)
+        self.check_tracker(ic, "bar", default_value, self.a, 1)
 
         ic.bar = self.different_from_a
-        self.check_tracker(ic, 'bar', self.a, self.different_from_a, 2)
+        self.check_tracker(ic, "bar", self.a, self.different_from_a, 2)
         return
 
     def test_rich_different_object(self):
         rich = RichCompare()
-        rich.on_trait_change(self.bar_changed, 'bar')
+        rich.on_trait_change(self.bar_changed, "bar")
 
         self.reset_change_tracker()
 
         default_value = rich.bar
         rich.bar = self.a
-        self.check_tracker(rich, 'bar', default_value, self.a, 1)
+        self.check_tracker(rich, "bar", default_value, self.a, 1)
 
         rich.bar = self.different_from_a
-        self.check_tracker(rich, 'bar', self.a, self.different_from_a, 2)
+        self.check_tracker(rich, "bar", self.a, self.different_from_a, 2)
         return
 
     def test_id_different_object_same_as(self):
         ic = IdentityCompare()
-        ic.on_trait_change(self.bar_changed, 'bar')
+        ic.on_trait_change(self.bar_changed, "bar")
 
         self.reset_change_tracker()
 
         default_value = ic.bar
         ic.bar = self.a
-        self.check_tracker(ic, 'bar', default_value, self.a, 1)
+        self.check_tracker(ic, "bar", default_value, self.a, 1)
 
         ic.bar = self.same_as_a
-        self.check_tracker(ic, 'bar', self.a, self.same_as_a, 2)
+        self.check_tracker(ic, "bar", self.a, self.same_as_a, 2)
         return
 
     def test_rich_different_object_same_as(self):
         rich = RichCompare()
-        rich.on_trait_change(self.bar_changed, 'bar')
+        rich.on_trait_change(self.bar_changed, "bar")
 
         self.reset_change_tracker()
 
         default_value = rich.bar
         rich.bar = self.a
-        self.check_tracker(rich, 'bar', default_value, self.a, 1)
+        self.check_tracker(rich, "bar", default_value, self.a, 1)
 
         # Values of a and same_as_a are the same and should therefore not
         # be considered a change.
         rich.bar = self.same_as_a
-        self.check_tracker(rich, 'bar', default_value, self.a, 1)
+        self.check_tracker(rich, "bar", default_value, self.a, 1)
         return
 
 
@@ -174,11 +173,10 @@ class Foo(HasTraits):
 
 
 class RichCompareHasTraitsTestCase(unittest.TestCase, RichCompareTests):
-
     def setUp(self):
-        self.a = Foo(name='a')
-        self.same_as_a = Foo(name='a')
-        self.different_from_a = Foo(name='not a')
+        self.a = Foo(name="a")
+        self.same_as_a = Foo(name="a")
+        self.different_from_a = Foo(name="not a")
         return
 
     def test_assumptions(self):
@@ -188,4 +186,6 @@ class RichCompareHasTraitsTestCase(unittest.TestCase, RichCompareTests):
         self.assertEqual(self.a.name, self.same_as_a.name)
         self.assertNotEqual(self.a.name, self.different_from_a.name)
         return
+
+
 ### EOF

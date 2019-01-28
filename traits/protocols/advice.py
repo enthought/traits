@@ -15,59 +15,66 @@ import sys
 
 from .. import _py2to3
 
-__all__ = ['addClassAdvisor']
+__all__ = ["addClassAdvisor"]
 
 
 def metamethod(func):
     """Wrapper for metaclass method that might be confused w/instance method"""
-    return property(lambda ob: func.__get__(ob,ob.__class__))
+    return property(lambda ob: func.__get__(ob, ob.__class__))
 
 
 if sys.version_info[0] < 3:
     from types import ClassType, InstanceType
-    
+
     ClassicTypes = ClassType
-    
+
     def classicMRO(ob, extendedClassic=False):
         stack = []
         push = stack.insert
         pop = stack.pop
-        push(0,ob)
+        push(0, ob)
         while stack:
             cls = pop()
             yield cls
             p = len(stack)
-            for b in cls.__bases__: push(p,b)
+            for b in cls.__bases__:
+                push(p, b)
         if extendedClassic:
             yield InstanceType
             yield object
-    
-    
+
     def getMRO(ob, extendedClassic=False):
-    
-        if isinstance(ob,ClassicTypes):
-            return classicMRO(ob,extendedClassic)
-    
-        elif isinstance(ob,type):
+
+        if isinstance(ob, ClassicTypes):
+            return classicMRO(ob, extendedClassic)
+
+        elif isinstance(ob, type):
             return ob.__mro__
-    
-        return ob,
+
+        return (ob,)
+
+
 else:
+
     def getMRO(ob, *args, **kwargs):
         if args or kwargs:
-            kwargs.pop('extendedClassic',None)
-            if len(args)>1 or kwargs:
+            kwargs.pop("extendedClassic", None)
+            if len(args) > 1 or kwargs:
                 raise TypeError
             import warnings
-            warnings.warn(DeprecationWarning(
-                """In Python 3 there are no more ols-style classes.
+
+            warnings.warn(
+                DeprecationWarning(
+                    """In Python 3 there are no more ols-style classes.
                 Therefore, extendedClassic has no meaning and should not be used.
                 """
-            ))
-        if isinstance(ob,type):
+                )
+            )
+        if isinstance(ob, type):
             return ob.__mro__
-    
-        return ob,
+
+        return (ob,)
+
 
 try:
     from ._speedups import metamethod, getMRO, classicMRO
@@ -77,7 +84,8 @@ except ImportError:
 
 # property-safe 'super()' for Python 2.2; 2.3 can use super() instead
 
-def supermeta(typ,ob):
+
+def supermeta(typ, ob):
 
     starttype = type(ob)
     mro = starttype.__mro__
@@ -96,8 +104,7 @@ def supermeta(typ,ob):
     typ = type(ob)
 
     class theSuper(object):
-
-        def __getattribute__(self,name):
+        def __getattribute__(self, name):
             for d in mro:
                 if name in d:
                     descr = d[name]
@@ -106,8 +113,8 @@ def supermeta(typ,ob):
                     except AttributeError:
                         return descr
                     else:
-                        return descr(ob,typ)
-            return object.__getattribute__(self,name)
+                        return descr(ob, typ)
+            return object.__getattribute__(self, name)
 
     return theSuper()
 
@@ -122,13 +129,13 @@ def getFrameInfo(frame):
     f_globals = frame.f_globals
 
     sameNamespace = f_locals is f_globals
-    hasModule = '__module__' in f_locals
-    hasName = '__name__' in f_globals
+    hasModule = "__module__" in f_locals
+    hasName = "__name__" in f_globals
 
     sameName = hasModule and hasName
-    sameName = sameName and f_globals['__name__']==f_locals['__module__']
+    sameName = sameName and f_globals["__name__"] == f_locals["__module__"]
 
-    module = hasName and sys.modules.get(f_globals['__name__']) or None
+    module = hasName and sys.modules.get(f_globals["__name__"]) or None
 
     namespaceIsModule = module and module.__dict__ is f_globals
 
@@ -146,7 +153,7 @@ def getFrameInfo(frame):
         # This is probably module-level code, but with a '__module__' variable.
         kind = "unknown"
 
-    return kind,module,f_locals,f_globals
+    return kind, module, f_locals, f_globals
 
 
 def addClassAdvisor(callback, depth=2):
@@ -182,32 +189,32 @@ def addClassAdvisor(callback, depth=2):
     does not.    
     """
     if sys.version_info[0] >= 3:
-        raise NotImplementedError("Class advisors are not possible in python 3.")
-
+        raise NotImplementedError(
+            "Class advisors are not possible in python 3."
+        )
 
     frame = sys._getframe(depth)
     kind, module, caller_locals, caller_globals = getFrameInfo(frame)
 
     if kind not in ("class", "exec"):
-        raise SyntaxError(
-            "Advice must be in the body of a class statement"
-        )
+        raise SyntaxError("Advice must be in the body of a class statement")
 
-    previousMetaclass = caller_locals.get('__metaclass__')
-    defaultMetaclass  = caller_globals.get('__metaclass__', type)  #TODO: This used to be ClassType, but I think this was errornous. Check it!
+    previousMetaclass = caller_locals.get("__metaclass__")
+    defaultMetaclass = caller_globals.get(
+        "__metaclass__", type
+    )  # TODO: This used to be ClassType, but I think this was errornous. Check it!
 
+    def advise(name, bases, cdict):
 
-    def advise(name,bases,cdict):
-
-        if '__metaclass__' in cdict:
-            del cdict['__metaclass__']
+        if "__metaclass__" in cdict:
+            del cdict["__metaclass__"]
 
         if previousMetaclass is None:
-             if bases:
-                 # find best metaclass or use global __metaclass__ if no bases
-                 meta = determineMetaclass(bases)
-             else:
-                 meta = defaultMetaclass
+            if bases:
+                # find best metaclass or use global __metaclass__ if no bases
+                meta = determineMetaclass(bases)
+            else:
+                meta = defaultMetaclass
 
         elif isClassAdvisor(previousMetaclass):
             # special case: we can't compute the "true" metaclass here,
@@ -218,7 +225,7 @@ def addClassAdvisor(callback, depth=2):
         else:
             meta = determineMetaclass(bases, previousMetaclass)
 
-        newClass = meta(name,bases,cdict)
+        newClass = meta(name, bases, cdict)
 
         # this lets the callback replace the class completely, if it wants to
         return callback(newClass)
@@ -228,40 +235,41 @@ def addClassAdvisor(callback, depth=2):
     advise.callback = callback
 
     # install the advisor
-    caller_locals['__metaclass__'] = advise
+    caller_locals["__metaclass__"] = advise
 
 
 def isClassAdvisor(ob):
     """True if 'ob' is a class advisor function"""
-    return isinstance(ob,FunctionType) and hasattr(ob,'previousMetaclass')
+    return isinstance(ob, FunctionType) and hasattr(ob, "previousMetaclass")
 
 
 def determineMetaclass(bases, explicit_mc=None):
 
     """Determine metaclass from 1+ bases and optional explicit __metaclass__"""
 
-    meta = [getattr(b,'__class__',type(b)) for b in bases]
+    meta = [getattr(b, "__class__", type(b)) for b in bases]
 
     if explicit_mc is not None:
         # The explicit metaclass needs to be verified for compatibility
         # as well, and allowed to resolve the incompatible bases, if any
         meta.append(explicit_mc)
 
-    if len(meta)==1:
+    if len(meta) == 1:
         # easy case
         return meta[0]
 
-    candidates = minimalBases(meta) # minimal set of metaclasses
+    candidates = minimalBases(meta)  # minimal set of metaclasses
 
     if not candidates:
         # they're all "classic" classes
         # should never happen in Python 3, so this should be fine
         from types import ClassType
+
         return ClassType
 
-    elif len(candidates)>1:
+    elif len(candidates) > 1:
         # We could auto-combine, but for now we won't...
-        raise TypeError("Incompatible metatypes",bases)
+        raise TypeError("Incompatible metatypes", bases)
 
     # Just one, return it
     return candidates[0]
@@ -275,12 +283,12 @@ def minimalBases(classes):
 
     for m in classes:
         for n in classes:
-            if issubclass(n,m) and m is not n:
+            if issubclass(n, m) and m is not n:
                 break
         else:
             # m has no subclasses in 'classes'
             if m in candidates:
-                candidates.remove(m)    # ensure that we're later in the list
+                candidates.remove(m)  # ensure that we're later in the list
             candidates.append(m)
 
     return candidates
@@ -288,13 +296,14 @@ def minimalBases(classes):
 
 from weakref import ref
 
+
 class StrongRef(object):
 
     """Like a weakref, but for non-weakrefable objects"""
 
-    __slots__ = 'referent'
+    __slots__ = "referent"
 
-    def __init__(self,referent):
+    def __init__(self, referent):
         self.referent = referent
 
     def __call__(self):
@@ -303,20 +312,19 @@ class StrongRef(object):
     def __hash__(self):
         return hash(self.referent)
 
-    def __eq__(self,other):
-        return self.referent==other
+    def __eq__(self, other):
+        return self.referent == other
 
     def __repr__(self):
-        return 'StrongRef(%r)' % self.referent
+        return "StrongRef(%r)" % self.referent
 
 
-def mkRef(ob,*args):
+def mkRef(ob, *args):
     """Return either a weakref or a StrongRef for 'ob'
 
     Note that extra args are forwarded to weakref.ref() if applicable."""
 
     try:
-        return ref(ob,*args)
+        return ref(ob, *args)
     except TypeError:
         return StrongRef(ob)
-

@@ -20,63 +20,63 @@ class StaticNotifiers0(HasTraits):
     fail = Float
 
     def _fail_changed():
-        raise Exception('error')
+        raise Exception("error")
 
 
 class StaticNotifiers1(HasTraits):
     ok = Float
 
     def _ok_changed(self):
-        if not hasattr(self, 'calls'):
+        if not hasattr(self, "calls"):
             self.calls = []
         self.calls.append(True)
 
     fail = Float
 
     def _fail_changed(self):
-        raise Exception('error')
+        raise Exception("error")
 
 
 class StaticNotifiers2(HasTraits):
     ok = Float
 
     def _ok_changed(self, new):
-        if not hasattr(self, 'calls'):
+        if not hasattr(self, "calls"):
             self.calls = []
         self.calls.append(new)
 
     fail = Float
 
     def _fail_changed(self, new):
-        raise Exception('error')
+        raise Exception("error")
 
 
 class StaticNotifiers3(HasTraits):
     ok = Float
 
     def _ok_changed(self, old, new):
-        if not hasattr(self, 'calls'):
+        if not hasattr(self, "calls"):
             self.calls = []
         self.calls.append((old, new))
 
     fail = Float
 
     def _fail_changed(self, old, new):
-        raise Exception('error')
+        raise Exception("error")
 
 
 class StaticNotifiers4(HasTraits):
     ok = Float
 
     def _ok_changed(self, name, old, new):
-        if not hasattr(self, 'calls'):
+        if not hasattr(self, "calls"):
             self.calls = []
         self.calls.append((name, old, new))
 
     fail = Float
 
     def _fail_changed(self, name, old, new):
-        raise Exception('error')
+        raise Exception("error")
 
 
 class TestNotifiers(unittest.TestCase):
@@ -99,7 +99,7 @@ class TestNotifiers(unittest.TestCase):
         self.assertEqual(len(calls_0), 2)
 
         obj.fail = 1
-        self.assertEqual(self.exceptions, [(obj, 'fail', 0, 1)])
+        self.assertEqual(self.exceptions, [(obj, "fail", 0, 1)])
 
     def test_static_notifiers_1(self):
         obj = StaticNotifiers1(ok=2)
@@ -107,30 +107,30 @@ class TestNotifiers(unittest.TestCase):
         self.assertEqual(len(obj.calls), 2)
 
         obj.fail = 1
-        self.assertEqual(self.exceptions, [(obj, 'fail', 0, 1)])
+        self.assertEqual(self.exceptions, [(obj, "fail", 0, 1)])
 
     def test_static_notifiers_2(self):
         obj = StaticNotifiers2(ok=2)
         obj.ok = 3
         self.assertEqual(obj.calls, [2, 3])
         obj.fail = 1
-        self.assertEqual(self.exceptions, [(obj, 'fail', 0, 1)])
+        self.assertEqual(self.exceptions, [(obj, "fail", 0, 1)])
 
     def test_static_notifiers_3(self):
         obj = StaticNotifiers3(ok=2)
         obj.ok = 3
         self.assertEqual(obj.calls, [(0, 2), (2, 3)])
         obj.fail = 1
-        self.assertEqual(self.exceptions, [(obj, 'fail', 0, 1)])
+        self.assertEqual(self.exceptions, [(obj, "fail", 0, 1)])
 
     def test_static_notifiers_4(self):
         obj = StaticNotifiers4(ok=2)
         obj.ok = 3
-        self.assertEqual(obj.calls, [('ok', 0, 2), ('ok', 2, 3)])
+        self.assertEqual(obj.calls, [("ok", 0, 2), ("ok", 2, 3)])
 
         obj.fail = 1
-        self.assertEqual(self.exceptions, [(obj, 'fail', 0, 1)])
+        self.assertEqual(self.exceptions, [(obj, "fail", 0, 1)])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

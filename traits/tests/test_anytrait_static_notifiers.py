@@ -18,14 +18,14 @@ class AnytraitStaticNotifiers0Fail(HasTraits):
     fail = Float
 
     def _anytrait_changed():
-        raise Exception('error')
+        raise Exception("error")
 
 
 class AnytraitStaticNotifiers1(HasTraits):
     ok = Float
 
     def _anytrait_changed(self):
-        if not hasattr(self, 'anycalls'):
+        if not hasattr(self, "anycalls"):
             self.anycalls = []
         self.anycalls.append(True)
 
@@ -34,14 +34,14 @@ class AnytraitStaticNotifiers1Fail(HasTraits):
     fail = Float
 
     def _anytrait_changed(self):
-        raise Exception('error')
+        raise Exception("error")
 
 
 class AnytraitStaticNotifiers2(HasTraits):
     ok = Float
 
     def _anytrait_changed(self, name):
-        if not hasattr(self, 'anycalls'):
+        if not hasattr(self, "anycalls"):
             self.anycalls = []
         self.anycalls.append(name)
 
@@ -50,14 +50,14 @@ class AnytraitStaticNotifiers2Fail(HasTraits):
     fail = Float
 
     def _anytrait_changed(self, name):
-        raise Exception('error')
+        raise Exception("error")
 
 
 class AnytraitStaticNotifiers3(HasTraits):
     ok = Float
 
     def _anytrait_changed(self, name, new):
-        if not hasattr(self, 'anycalls'):
+        if not hasattr(self, "anycalls"):
             self.anycalls = []
         self.anycalls.append((name, new))
 
@@ -66,14 +66,14 @@ class AnytraitStaticNotifiers3Fail(HasTraits):
     fail = Float
 
     def _anytrait_changed(self, name, new):
-        raise Exception('error')
+        raise Exception("error")
 
 
 class AnytraitStaticNotifiers4(HasTraits):
     ok = Float
 
     def _anytrait_changed(self, name, old, new):
-        if not hasattr(self, 'anycalls'):
+        if not hasattr(self, "anycalls"):
             self.anycalls = []
         self.anycalls.append((name, old, new))
 
@@ -82,7 +82,7 @@ class AnytraitStaticNotifiers4Fail(HasTraits):
     fail = Float
 
     def _anytrait_changed(self, name, old, new):
-        raise Exception('error')
+        raise Exception("error")
 
 
 class TestNotifiers(unittest.TestCase):
@@ -125,52 +125,52 @@ class TestNotifiers(unittest.TestCase):
         obj = AnytraitStaticNotifiers2(ok=2)
         obj.ok = 3
 
-        expected = ['trait_added', 'ok', 'ok']
+        expected = ["trait_added", "ok", "ok"]
         self.assertEqual(expected, obj.anycalls)
 
     def test_anytrait_static_notifiers_3(self):
         obj = AnytraitStaticNotifiers3(ok=2)
         obj.ok = 3
 
-        expected = [('trait_added', 'anycalls'),
-                    ('ok', 2),
-                    ('ok', 3)]
+        expected = [("trait_added", "anycalls"), ("ok", 2), ("ok", 3)]
         self.assertEqual(expected, obj.anycalls)
 
     def test_anytrait_static_notifiers_4(self):
         obj = AnytraitStaticNotifiers4(ok=2)
         obj.ok = 3
 
-        expected = [('trait_added', Undefined, 'anycalls'),
-                    ('ok', 0, 2),
-                    ('ok', 2, 3)]
+        expected = [
+            ("trait_added", Undefined, "anycalls"),
+            ("ok", 0, 2),
+            ("ok", 2, 3),
+        ]
         self.assertEqual(expected, obj.anycalls)
 
     def test_anytrait_static_notifiers_0_fail(self):
         obj = AnytraitStaticNotifiers0Fail()
         obj.fail = 1
-        self.assertEqual(self.exceptions, [(obj, 'fail', 0, 1)])
+        self.assertEqual(self.exceptions, [(obj, "fail", 0, 1)])
 
     def test_anytrait_static_notifiers_1_fail(self):
         obj = AnytraitStaticNotifiers1Fail()
         obj.fail = 1
-        self.assertEqual(self.exceptions, [(obj, 'fail', 0, 1)])
+        self.assertEqual(self.exceptions, [(obj, "fail", 0, 1)])
 
     def test_anytrait_static_notifiers_2_fail(self):
         obj = AnytraitStaticNotifiers2Fail()
         obj.fail = 1
-        self.assertEqual(self.exceptions, [(obj, 'fail', 0, 1)])
+        self.assertEqual(self.exceptions, [(obj, "fail", 0, 1)])
 
     def test_anytrait_static_notifiers_3_fail(self):
         obj = AnytraitStaticNotifiers3Fail()
         obj.fail = 1
-        self.assertEqual(self.exceptions, [(obj, 'fail', 0, 1)])
+        self.assertEqual(self.exceptions, [(obj, "fail", 0, 1)])
 
     def test_anytrait_static_notifiers_4_fail(self):
         obj = AnytraitStaticNotifiers4Fail()
         obj.fail = 1
-        self.assertEqual(self.exceptions, [(obj, 'fail', 0, 1)])
+        self.assertEqual(self.exceptions, [(obj, "fail", 0, 1)])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

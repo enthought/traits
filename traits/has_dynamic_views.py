@@ -1,4 +1,4 @@
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #
 #  Copyright (c) 2006, Enthought, Inc.
 #  All rights reserved.
@@ -12,7 +12,7 @@
 #
 #  Author: Dave Peterson <dpeterson@enthought.com>
 #
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 """
 Provides a framework that assembles Traits UI Views at run time,
@@ -95,22 +95,24 @@ from traitsui.api import View, ViewSubElement, ViewElement
 
 # Set up a logger:
 import logging
-logger = logging.getLogger( __name__ )
 
-#-------------------------------------------------------------------------------
+logger = logging.getLogger(__name__)
+
+# -------------------------------------------------------------------------------
 #  'DynamicViewSubElement' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class DynamicViewSubElement ( ViewSubElement ):
+
+class DynamicViewSubElement(ViewSubElement):
     """
     Declares a dynamic sub-element of a dynamic view.
     """
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Trait definitions:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    #-- Public 'DynamicViewSubElement' Interface -------------------------------
+    # -- Public 'DynamicViewSubElement' Interface -------------------------------
 
     #: Keyword arguments passed in during construction of the actual
     #: ViewSubElement instance.
@@ -124,20 +126,22 @@ class DynamicViewSubElement ( ViewSubElement ):
     #: names identifying the sub-elements that compose this element.
     name = Str
 
-#-------------------------------------------------------------------------------
-#  'DynamicView' class:
-#-------------------------------------------------------------------------------
 
-class DynamicView ( HasTraits ):
+# -------------------------------------------------------------------------------
+#  'DynamicView' class:
+# -------------------------------------------------------------------------------
+
+
+class DynamicView(HasTraits):
     """
     Declares a dynamic view.
     """
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Trait definitions:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    #-- Public 'DynamicView' Interface -----------------------------------------
+    # -- Public 'DynamicView' Interface -----------------------------------------
 
     #: The ID of the view.  This is the ID that the view's preferences will be
     #: saved under.
@@ -153,36 +157,37 @@ class DynamicView ( HasTraits ):
 
     #: Indicates whether this view should be the default traits view for objects
     #: it is contributed to.
-    use_as_default = Bool( False )
+    use_as_default = Bool(False)
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #  'HasDynamicViews' class:
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
-class HasDynamicViews ( HasTraits ):
+
+class HasDynamicViews(HasTraits):
     """
     Provides of a framework that builds Traits UI Views at run time,
     when the view is requested, rather than at the time a class is written.
     """
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  Trait definitions:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    #-- Protected 'HasDynamicViews' Interface ----------------------------------
+    # -- Protected 'HasDynamicViews' Interface ----------------------------------
 
     #: The registry of dynamic views.  The key is the view name and the value
     #: is the declaration of the dynamic view.
-    _dynamic_view_registry = Dict( Str, Instance( DynamicView ) )
+    _dynamic_view_registry = Dict(Str, Instance(DynamicView))
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  'HasTraits' interface:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    #-- Public Interface -------------------------------------------------------
+    # -- Public Interface -------------------------------------------------------
 
-    def trait_view ( self, name = None, view_element = None ):
+    def trait_view(self, name=None, view_element=None):
         """ Gets or sets a ViewElement associated with an object's class.
 
             Extended here to build dynamic views and sub-elements.
@@ -194,115 +199,121 @@ class HasDynamicViews ( HasTraits ):
         # this as a request for a dynamic view and let the standard Traits
         # trait_view method be called with it.  Otherwise, compose the dynamic
         # view here.
-        if not isinstance( name, ViewElement ):
+        if not isinstance(name, ViewElement):
 
             # If this is a request for the default view, see if one of our
             # dynamic views should be the default view:
-            if (view_element is None) and (name is None or len( name ) < 1):
+            if (view_element is None) and (name is None or len(name) < 1):
                 for dname, declaration in self._dynamic_view_registry.items():
                     if declaration.use_as_default:
-                        result = self._compose_dynamic_view( dname )
+                        result = self._compose_dynamic_view(dname)
                         break
 
             # Otherwise, handle if this is a request for a dynamic view:
-            elif ((view_element is None) and
-                  (name in self._dynamic_view_registry)):
+            elif (view_element is None) and (
+                name in self._dynamic_view_registry
+            ):
                 result = self._compose_dynamic_view(name)
 
         # If we haven't created a dynamic view so far, then do the standard
         # traits thing to retrieve the UI element:
         if result is None:
-            result = super( HasDynamicViews, self ).trait_view( name,
-                                                                view_element )
+            result = super(HasDynamicViews, self).trait_view(
+                name, view_element
+            )
 
         return result
 
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
     #  'HasDynamicViews' interface:
-    #---------------------------------------------------------------------------
+    # ---------------------------------------------------------------------------
 
-    #-- Public Interface -------------------------------------------------------
+    # -- Public Interface -------------------------------------------------------
 
-    def declare_dynamic_view ( self, declaration ):
+    def declare_dynamic_view(self, declaration):
         """ A convenience method to add a new dynamic view declaration to this
             instance.
         """
-        self._dynamic_view_registry[ declaration.name ] = declaration
+        self._dynamic_view_registry[declaration.name] = declaration
 
-    #-- Protected Interface ----------------------------------------------------
+    # -- Protected Interface ----------------------------------------------------
 
-    def _build_dynamic_sub_element ( self, definition, sub_elements ):
+    def _build_dynamic_sub_element(self, definition, sub_elements):
         """ Returns the fully composed ViewSubElement from the sub-element
             contributions to the dynamic sub-element identified by the
             definition.
         """
-        logger.debug( '\tBuilding dynamic sub-element [%s] with elements [%s]',
-                      definition.name, sub_elements )
+        logger.debug(
+            "\tBuilding dynamic sub-element [%s] with elements [%s]",
+            definition.name,
+            sub_elements,
+        )
 
-        return definition.klass( *sub_elements, **definition.keywords )
+        return definition.klass(*sub_elements, **definition.keywords)
 
-
-    def _build_dynamic_view (self, declaration, sub_elements, handler ):
+    def _build_dynamic_view(self, declaration, sub_elements, handler):
         """ Returns a Traits View representing the specified dynamic view
             composed out of the provided view sub-elements.
 
             Implemented as a separate method to allow implementors to override
             the way in which the instantiated view is configured.
         """
-        logger.debug( '\tBuilding dynamic view [%s] with elements [%s]',
-                      declaration.name, sub_elements )
+        logger.debug(
+            "\tBuilding dynamic view [%s] with elements [%s]",
+            declaration.name,
+            sub_elements,
+        )
 
         return View(
             # The view id allows the user's customization of this view, if any,
             # to be persisted when the view is closed and then that persisted
             # configuration to be applied when the view is next shown:
-            id = declaration.id,
-
+            id=declaration.id,
             # Include the specified handler:
-            handler = handler,
-
+            handler=handler,
             # Build the view out of the sub-elements:
             *sub_elements,
-
             # Include the declaration's keywords.
             **declaration.keywords
         )
 
-
-    def _compose_dynamic_sub_element ( self, definition ):
+    def _compose_dynamic_sub_element(self, definition):
         """ Returns a dynamic UI element composed from its contributed parts.
         """
-        logger.debug( 'Composing dynamic sub-element named [%s] for [%s]',
-                      definition.name, self )
+        logger.debug(
+            "Composing dynamic sub-element named [%s] for [%s]",
+            definition.name,
+            self,
+        )
 
         # Retrieve the set of elements that make up this sub-element:
-        elements = self._get_dynamic_elements( definition.name )
+        elements = self._get_dynamic_elements(definition.name)
 
         # Build the sub-element:
-        return self._build_dynamic_sub_element( definition, elements )
+        return self._build_dynamic_sub_element(definition, elements)
 
-    def _compose_dynamic_view ( self, name ):
+    def _compose_dynamic_view(self, name):
         """ Returns a dynamic view composed from its contributed parts.
         """
-        logger.debug( 'Composing dynamic view [%s] for [%s]', name, self )
+        logger.debug("Composing dynamic view [%s] for [%s]", name, self)
 
         # Retrieve the declaration of this dynamic view:
-        declaration = self._dynamic_view_registry[ name ]
+        declaration = self._dynamic_view_registry[name]
 
         # Retrieve the set of elements that make up the view:
-        elements = self._get_dynamic_elements( declaration.name )
+        elements = self._get_dynamic_elements(declaration.name)
 
         # Build a handler that delegates to the contribution handlers if any
         # exist:
-        handler  = None
-        handlers = self._get_dynamic_handlers( declaration.name, elements )
-        if len( handlers ) > 0:
-            handler = DelegatingHandler( sub_handlers = handlers )
+        handler = None
+        handlers = self._get_dynamic_handlers(declaration.name, elements)
+        if len(handlers) > 0:
+            handler = DelegatingHandler(sub_handlers=handlers)
 
         # Build the view:
-        return self._build_dynamic_view( declaration, elements, handler )
+        return self._build_dynamic_view(declaration, elements, handler)
 
-    def _get_dynamic_elements ( self, name ):
+    def _get_dynamic_elements(self, name):
         """ Returns a list of the current elements meant to go into the
             composition of a dynamic view or subelement with the specified
             name.
@@ -310,60 +321,66 @@ class HasDynamicViews ( HasTraits ):
 
         # Determine the metadata names used to find the sub-elements included
         # within this dynamic element:
-        name                = name.replace(' ', '_')
-        order_trait_name    = '_%s_order' % name
-        priority_trait_name = '_%s_priority' % name
+        name = name.replace(" ", "_")
+        order_trait_name = "_%s_order" % name
+        priority_trait_name = "_%s_priority" % name
 
         # Now find all of the current sub-elements that we will use when
         # composing our element:
-        all_elements = [ self.trait_view( g )
-                         for g in self.trait_views( klass = ViewSubElement ) ]
-        elements = [ e for e in all_elements
-                     if hasattr( e, order_trait_name ) and
-                        (getattr( e, order_trait_name ) is not None) ]
+        all_elements = [
+            self.trait_view(g) for g in self.trait_views(klass=ViewSubElement)
+        ]
+        elements = [
+            e
+            for e in all_elements
+            if hasattr(e, order_trait_name)
+            and (getattr(e, order_trait_name) is not None)
+        ]
 
         # Filter out any overridden elements.  This means taking out the
         # element with the lower priority whenever two elements have the
         # same order value:
         filtered = {}
         for e in elements:
-            order    = getattr( e, order_trait_name )
-            priority = getattr( e, priority_trait_name ) or 0
-            current  = filtered.setdefault( order, e )
+            order = getattr(e, order_trait_name)
+            priority = getattr(e, priority_trait_name) or 0
+            current = filtered.setdefault(order, e)
             if current is not e:
-                current_priority = getattr( current, priority_trait_name )
+                current_priority = getattr(current, priority_trait_name)
                 if current_priority < priority:
-                    filtered[ order ] = e
+                    filtered[order] = e
 
         # Sort the contributed elements by their display ordering values:
         ordering = sorted(filtered)
-        elements = [ filtered[ order ] for order in ordering ]
+        elements = [filtered[order] for order in ordering]
 
         # Replace any dynamic sub-element with their full composition.
         # NOTE: We can't do this in the override of 'trait_view' because
         # then we get into infinite loops when a dynamic view subelement is
         # found as a child:
-        for i in range( len( elements ) ):
-            if isinstance( elements[i], DynamicViewSubElement ):
-                e = elements.pop( i )
-                composed = self._compose_dynamic_sub_element( e )
-                elements.insert( i, composed )
+        for i in range(len(elements)):
+            if isinstance(elements[i], DynamicViewSubElement):
+                e = elements.pop(i)
+                composed = self._compose_dynamic_sub_element(e)
+                elements.insert(i, composed)
 
         return elements
 
-    def _get_dynamic_handlers( self, name, elements ):
+    def _get_dynamic_handlers(self, name, elements):
         """ Return a list of the handlers associated with the current elements
             meant to go into the dynamic view of the specified name.
         """
 
         # Determine the metadata name used to declare a handler:
-        name         = name.replace(' ', '_')
-        handler_name = '_%s_handler' % name
+        name = name.replace(" ", "_")
+        handler_name = "_%s_handler" % name
 
-        handlers = [ getattr(e, handler_name) for e in elements
-                     if hasattr( e, handler_name ) and
-                        (getattr( e, handler_name ) is not None) ]
-        logger.debug( '\tFound sub-handlers: %s', handlers )
+        handlers = [
+            getattr(e, handler_name)
+            for e in elements
+            if hasattr(e, handler_name)
+            and (getattr(e, handler_name) is not None)
+        ]
+        logger.debug("\tFound sub-handlers: %s", handlers)
 
         return handlers
-

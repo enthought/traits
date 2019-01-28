@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2013, Enthought, Inc.
 # All rights reserved.
 #
@@ -9,7 +9,7 @@
 # Thanks for using Enthought open source!
 #
 # Author: Enthought, Inc.
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Base classes for adapters.
 
 Adapters do not have to inherit from these classes, as long as their
@@ -41,7 +41,7 @@ class Adapter(HasTraits):
     def __init__(self, adaptee, **traits):
         """ Constructor. """
 
-        traits['adaptee'] = adaptee
+        traits["adaptee"] = adaptee
         super(Adapter, self).__init__(**traits)
 
         return
@@ -49,7 +49,7 @@ class Adapter(HasTraits):
     adaptee = Any
 
 
-def adapts(from_, to, extra=None, factory=None, cached=False, when=''):
+def adapts(from_, to, extra=None, factory=None, cached=False, when=""):
     """ A class advisor for declaring adapters.
 
     Parameters
@@ -89,7 +89,9 @@ def adapts(from_, to, extra=None, factory=None, cached=False, when=''):
     else:
         adapter = None
 
-    @deprecated("use the 'register_factory' function from 'traits.api' instead")
+    @deprecated(
+        "use the 'register_factory' function from 'traits.api' instead"
+    )
     def callback(klass):
         """ Called when the class has been created. """
 
@@ -119,9 +121,10 @@ def adapts(from_, to, extra=None, factory=None, cached=False, when=''):
 
             adapter_factory = klass
 
-            if when != '':
+            if when != "":
+
                 def _conditional_factory(adaptee, *args, **kw):
-                    namespace = {'adaptee': adaptee}
+                    namespace = {"adaptee": adaptee}
 
                     if eval(when, namespace, namespace):
                         return klass(adaptee, *args, **kw)
@@ -155,5 +158,6 @@ def adapts(from_, to, extra=None, factory=None, cached=False, when=''):
 
     else:
         addClassAdvisor(callback)
+
 
 #### EOF ######################################################################

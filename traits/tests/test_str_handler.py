@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
@@ -26,7 +26,7 @@ from traits.trait_base import strx
 def validator(object, name, value):
     if isinstance(value, six.string_types):
         # arbitrary rule for testing
-        if value.find('fail') < 0:
+        if value.find("fail") < 0:
             return value
         else:
             raise TraitError
@@ -37,10 +37,10 @@ def validator(object, name, value):
 # Validation via Handler
 class MyHandler(TraitHandler):
     def validate(self, object, name, value):
-        #print 'myvalidate "%s" %s' % (value, type(value))
+        # print 'myvalidate "%s" %s' % (value, type(value))
         try:
             value = strx(value)
-            if value.find('fail') < 0:
+            if value.find("fail") < 0:
                 return value
         except:
             pass
@@ -54,37 +54,37 @@ class MyHandler(TraitHandler):
 
 
 class Foo(HasTraits):
-    s = Trait('', validator)
+    s = Trait("", validator)
 
 
 class Bar(HasTraits):
-    s = Trait('', MyHandler())
+    s = Trait("", MyHandler())
 
 
 class StrHandlerCase(unittest.TestCase):
-
     def test_validator_function(self):
         f = Foo()
-        self.assertEqual(f.s, '')
+        self.assertEqual(f.s, "")
 
-        f.s = 'ok'
-        self.assertEqual(f.s, 'ok')
+        f.s = "ok"
+        self.assertEqual(f.s, "ok")
 
-        self.assertRaises(TraitError, setattr, f, 's', 'should fail.')
-        self.assertEqual(f.s, 'ok')
+        self.assertRaises(TraitError, setattr, f, "s", "should fail.")
+        self.assertEqual(f.s, "ok")
 
         return
 
     def test_validator_handler(self):
         b = Bar()
-        self.assertEqual(b.s, '')
+        self.assertEqual(b.s, "")
 
-        b.s = 'ok'
-        self.assertEqual(b.s, 'ok')
+        b.s = "ok"
+        self.assertEqual(b.s, "ok")
 
-        self.assertRaises(TraitError, setattr, b, 's', 'should fail.')
-        self.assertEqual(b.s, 'ok')
+        self.assertRaises(TraitError, setattr, b, "s", "should fail.")
+        self.assertEqual(b.s, "ok")
 
         return
+
 
 ### EOF
