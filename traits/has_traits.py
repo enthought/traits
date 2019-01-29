@@ -3980,40 +3980,6 @@ def isinterface(klass):
 
 
 # -------------------------------------------------------------------------------
-#  Declares the interfaces that a class implements.
-# -------------------------------------------------------------------------------
-
-
-def implements(*interfaces):
-    """ Declares the interfaces that a class implements.
-
-    Parameters
-    ----------
-    *interfaces :
-        A list of interface classes that the containing class implements.
-
-    Description
-    -----------
-    Registers each specified interface with the interface manager as an
-    interface that the containing class implements. Each specified interface
-    must be a subclass of **Interface**. This function should only be
-    called from directly within a class body.
-
-    .. deprecated:: 4.4
-       Use the ``provides`` class decorator instead.
-
-    """
-
-    callback = provides(*interfaces)
-    callback = deprecated(
-        "'the 'implements' class advisor has been deprecated. "
-        "Use the 'provides' class decorator."
-    )(callback)
-
-    addClassAdvisor(callback)
-
-
-# -------------------------------------------------------------------------------
 #  'ISerializable' interface:
 # -------------------------------------------------------------------------------
 
