@@ -10,9 +10,3 @@ Class
 .. autoclass:: Adapter
 
     .. automethod:: __init__
-
-
-Function
---------
-
-.. autofunction:: adapts
