@@ -4,6 +4,8 @@ Traits CHANGELOG
 Release 5.0.0
 -------------
 
+Released : 29 January 2019
+
 This major release accumulates more than an year's worth of improvements,
 changes and bug fixes to the code base.
 
