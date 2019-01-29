@@ -1002,10 +1002,8 @@ Migration guide
 The implementation of the adaptation mechanism changed in Traits 4.4.0 from
 one based on PyProtocols to a new, smaller, and more robust implementation.
 
-Code written against ``traits.protocols`` will continue to work, although
-the `traits.protocols` API has been deprecated and its members will log a
-warning the first time they are accessed. The ``traits.protocols`` package
-will be removed in Traits 5.0 .
+Code written against ``traits.protocols`` will not work any longer as the
+``traits.protocols`` API has been removed in Traits 5.0.0 .
 
 This is a list of replacements for the old API:
 
