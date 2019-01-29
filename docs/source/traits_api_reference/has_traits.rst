@@ -69,8 +69,6 @@ Functions
 
 .. autofunction:: get_delegate_pattern
 
-.. autofunction:: implements
-
 .. autofunction:: on_trait_change
 
 .. autofunction:: property_depends_on

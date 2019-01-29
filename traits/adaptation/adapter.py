@@ -21,7 +21,6 @@ constructor takes the object to be adapted as the first and only
 
 from traits.has_traits import HasTraits
 from traits.trait_types import Any
-from traits.util.deprecated import deprecated
 
 
 class PurePythonAdapter(object):

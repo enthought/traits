@@ -41,12 +41,3 @@
     :members:
     :undoc-members:
     :show-inheritance:
-
-:mod:`cached_adapter_factory` Module
-------------------------------------
-
-.. automodule:: traits.adaptation.cached_adapter_factory
-    :members:
-    :undoc-members:
-    :show-inheritance:
-

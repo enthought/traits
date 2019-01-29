@@ -8,7 +8,6 @@ Traits core
     :maxdepth: 1
 
     traits
-    adapter
     category
     has_traits
     has_dynamic_views
