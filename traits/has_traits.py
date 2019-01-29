@@ -85,8 +85,6 @@ from .trait_base import (
 
 from .trait_errors import TraitError
 
-from .protocols.advice import addClassAdvisor
-
 from .util.deprecated import deprecated
 
 # -------------------------------------------------------------------------------

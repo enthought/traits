@@ -179,7 +179,6 @@ from .has_traits import (
     MetaHasTraits,
     Vetoable,
     VetoableEvent,
-    implements,
     traits_super,
     on_trait_change,
     cached_property,
@@ -232,7 +231,7 @@ from .trait_value import (
     DefaultValue,
 )
 
-from .adaptation.adapter import Adapter, adapts
+from .adaptation.adapter import Adapter
 from .adaptation.adaptation_error import AdaptationError
 from .adaptation.adaptation_manager import (
     adapt,

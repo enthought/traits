@@ -559,11 +559,11 @@ class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
 
         from traits.api import (
             Adapter,
-            adapts,
             HasTraits,
             Instance,
             Int,
             Interface,
+            provides,
         )
 
         class IFoo(Interface):
@@ -583,8 +583,9 @@ class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
         #
         # 'adapts' is also deprecated, so expect a warning message when you
         # run the tests.
+        @provides(IFoo)
         class BazToIFooAdapter(Adapter):
-            adapts(Baz, IFoo)
+            pass
 
         baz = Baz()
         bar = Bar()

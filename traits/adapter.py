@@ -32,8 +32,4 @@ class Adapter(traits.adaptation.adapter.Adapter):
         super(Adapter, self).__init__(adaptee, **traits)
 
 
-adapts = deprecated("use 'adapts' in 'traits.api' instead")(
-    traits.adaptation.adapter.adapts
-)
-
 #### EOF ######################################################################
