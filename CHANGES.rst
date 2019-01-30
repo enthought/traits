@@ -12,9 +12,9 @@ changes and bug fixes to the code base.
 A few highlights of this release are :
 
 * Removal of 2to3 fixers and the use of six to provide Python 2/3 compatibility
-* Removal of deprecated `traits.protocols` submodule and related utils.
-* New `HasRequiredTraits` class
-* Better IPython tab completion for `HasTraits` subclasses
+* Removal of deprecated ``traits.protocols`` submodule and related utils.
+* New ``HasRequiredTraits`` class
+* Better IPython tab completion for ``HasTraits`` subclasses
 
 Changes summary since 4.6.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -34,9 +34,9 @@ Enhancements
 
 Changes
 
-* Remove deprecated `traits.protocols` submodule and related utils (#435)
+* Remove deprecated ``traits.protocols`` submodule and related utils (#435)
 * Fix invalid string escapes (#429)
-* Apply the `black` code reformatting utility on the Traits codebase (#432)
+* Apply the "black" code reformatting utility on the Traits codebase (#432)
 * Update CI to use edm and etstool module (#420)
 * Clean up ``Float`` and ``BaseFloat`` validation (#393)
 * Merge master into Cython port (#370)
