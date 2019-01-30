@@ -1,21 +1,21 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
     
-    <title>traits_listener Module &mdash; Traits 4 User Manual</title>
+    <title>traits_listener Module &mdash; Traits 5 User Manual</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.6.0',
+        VERSION:     '5.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,24 +24,61 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="Traits 4 User Manual" href="../index.html" />
-    <link rel="up" title="API Reference" href="index.html" />
-    <link rel="next" title="trait_notifiers Module" href="trait_notifiers.html" />
-    <link rel="prev" title="trait_value Module" href="trait_value.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="trait_notifiers Module" href="trait_notifiers.html" >
+    <link rel="prev" title="trait_value Module" href="trait_value.html" > 
   </head>
-  <body role="document">
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
+  
+    <li><a href="#"><code class="docutils literal"><span class="pre">traits_listener</span></code> Module</a></li>
   
 
-    <div class="document">
-      <div class="documentwrapper">
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="trait_notifiers.html" title="trait_notifiers Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="trait_value.html" title="trait_value Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.traits_listener">
 <span id="traits-listener-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">traits_listener</span></code> Module<a class="headerlink" href="#module-traits.traits_listener" title="Permalink to this headline">¶</a></h1>
@@ -57,9 +94,9 @@ patterns.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>text</strong> (<em>str</em>) &#8211; The text to indent.</li>
-<li><strong>first_line</strong> (<em>bool, optional</em>) &#8211; If False, then the first line will not be indented (default: True).</li>
-<li><strong>n</strong> (<em>int, optional</em>) &#8211; The level of indentation (default: 1).</li>
-<li><strong>width</strong> (<em>int, optional</em>) &#8211; The number of spaces in each level of indentation (default: 4).</li>
+<li><strong>first_line</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If False, then the first line will not be indented (default: True).</li>
+<li><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) &#8211; The level of indentation (default: 1).</li>
+<li><strong>width</strong> (<em>int</em><em>, </em><em>optional</em>) &#8211; The number of spaces in each level of indentation (default: 4).</li>
 </ul>
 </td>
 </tr>
@@ -151,7 +188,7 @@ patterns.</p>
 
 <dl class="attribute">
 <dt id="traits.traits_listener.ListenerItem.metadata_defined">
-<code class="descname">metadata_defined</code><em class="property"> = Bool( True )</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.metadata_defined" title="Permalink to this definition">¶</a></dt>
+<code class="descname">metadata_defined</code><em class="property"> = Bool(True)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.metadata_defined" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does the specified metadata need to be defined (True) or not defined
 (False)?</p>
 </dd></dl>
@@ -176,47 +213,47 @@ patterns.</p>
 
 <dl class="attribute">
 <dt id="traits.traits_listener.ListenerItem.priority">
-<code class="descname">priority</code><em class="property"> = Bool( False )</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.priority" title="Permalink to this definition">¶</a></dt>
+<code class="descname">priority</code><em class="property"> = Bool(False)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.priority" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does the handler go at the beginning (True) or end (False) of the
 notification handlers list?</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.traits_listener.ListenerItem.next">
-<code class="descname">next</code><em class="property"> = Instance( ListenerBase )</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.next" title="Permalink to this definition">¶</a></dt>
+<code class="descname">next</code><em class="property"> = Instance(ListenerBase)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.next" title="Permalink to this definition">¶</a></dt>
 <dd><p>The next level (if any) of ListenerBase object to be called when any of
 this object&#8217;s listened-to traits is changed:</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.traits_listener.ListenerItem.type">
-<code class="descname">type</code><em class="property"> = Enum( ANY_LISTENER, SRC_LISTENER, DST_LISTENER )</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">type</code><em class="property"> = Enum(ANY_LISTENER, SRC_LISTENER, DST_LISTENER)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.type" title="Permalink to this definition">¶</a></dt>
 <dd><p>The type of handler being used:</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.traits_listener.ListenerItem.notify">
-<code class="descname">notify</code><em class="property"> = Bool( True )</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.notify" title="Permalink to this definition">¶</a></dt>
+<code class="descname">notify</code><em class="property"> = Bool(True)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.notify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Should changes to this item generate a notification to the handler?</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.traits_listener.ListenerItem.deferred">
-<code class="descname">deferred</code><em class="property"> = Bool( False )</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.deferred" title="Permalink to this definition">¶</a></dt>
+<code class="descname">deferred</code><em class="property"> = Bool(False)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.deferred" title="Permalink to this definition">¶</a></dt>
 <dd><p>Should registering listeners for items reachable from this listener item
 be deferred until the associated trait is first read or set?</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.traits_listener.ListenerItem.is_any_trait">
-<code class="descname">is_any_trait</code><em class="property"> = Bool( False )</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.is_any_trait" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_any_trait</code><em class="property"> = Bool(False)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.is_any_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is this an &#8216;any_trait&#8217; change listener, or does it create explicit
 listeners for each individual trait?</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.traits_listener.ListenerItem.is_list_handler">
-<code class="descname">is_list_handler</code><em class="property"> = Bool( False )</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.is_list_handler" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_list_handler</code><em class="property"> = Bool(False)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.is_list_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the associated handler a special list handler that handles both
 &#8216;foo&#8217; and &#8216;foo_items&#8217; events by receiving a list of &#8216;deleted&#8217; and &#8216;added&#8217;
 items as the &#8216;old&#8217; and &#8216;new&#8217; arguments?</p>
@@ -224,7 +261,7 @@ items as the &#8216;old&#8217; and &#8216;new&#8217; arguments?</p>
 
 <dl class="attribute">
 <dt id="traits.traits_listener.ListenerItem.active">
-<code class="descname">active</code><em class="property"> = Instance( WeakKeyDictionary, () )</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.active" title="Permalink to this definition">¶</a></dt>
+<code class="descname">active</code><em class="property"> = Instance(WeakIDKeyDict, ())</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.active" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dictionary mapping objects to a list of all current active
 (<em>name</em>, <em>type</em>) listener pairs, where <em>type</em> defines the type of
 listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).</p>
@@ -406,7 +443,7 @@ be deferred until the associated trait is first read or set?</p>
 
 <dl class="attribute">
 <dt id="traits.traits_listener.ListenerParser.listener">
-<code class="descname">listener</code><em class="property"> = Instance( ListenerBase )</em><a class="headerlink" href="#traits.traits_listener.ListenerParser.listener" title="Permalink to this definition">¶</a></dt>
+<code class="descname">listener</code><em class="property"> = Instance(ListenerBase)</em><a class="headerlink" href="#traits.traits_listener.ListenerParser.listener" title="Permalink to this definition">¶</a></dt>
 <dd><p>The ListenerBase object resulting from parsing <strong>text</strong></p>
 </dd></dl>
 
@@ -481,34 +518,28 @@ ListenerBase objects described by the text.</p>
 
           </div>
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+          </div>
+      <div class="spc-rightsidebar span3">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p><div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">API Reference</a><ul>
-      <li>Previous: <a href="trait_value.html" title="previous chapter"><code class="docutils literal"><span class="pre">trait_value</span></code> Module</a></li>
-      <li>Next: <a href="trait_notifiers.html" title="next chapter"><code class="docutils literal"><span class="pre">trait_notifiers</span></code> Module</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/traits_api_reference/traits_listener.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trait_value.html"
+                        title="previous chapter"><code class="docutils literal"><span class="pre">trait_value</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trait_notifiers.html"
+                        title="next chapter"><code class="docutils literal"><span class="pre">trait_notifiers</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/traits_listener.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -516,22 +547,31 @@ ListenerBase objects described by the text.</p>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
+        </div>
+      </div>
     </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
     <div class="footer">
-      &copy;2008-2016, Enthought.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
-      |
-      <a href="../_sources/traits_api_reference/traits_listener.txt"
-          rel="nofollow">Page source</a>
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2016, Enthought
+      </li>
+      <li>
+      Last updated on Jan 30, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      </li>
+    </ul>
     </div>
-
-    
-
-    
+    </div>
+    </div>
   </body>
 </html>

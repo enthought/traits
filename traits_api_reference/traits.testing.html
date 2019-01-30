@@ -1,21 +1,21 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
     
-    <title>testing Package &mdash; Traits 4 User Manual</title>
+    <title>testing Package &mdash; Traits 5 User Manual</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.6.0',
+        VERSION:     '5.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,24 +24,61 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="Traits 4 User Manual" href="../index.html" />
-    <link rel="up" title="API Reference" href="index.html" />
-    <link rel="next" title="util Package" href="traits.util.html" />
-    <link rel="prev" title="protocols Package" href="traits.protocols.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="util Package" href="traits.util.html" >
+    <link rel="prev" title="protocols Package" href="traits.protocols.html" > 
   </head>
-  <body role="document">
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
+  
+    <li><a href="#"><code class="docutils literal"><span class="pre">testing</span></code> Package</a></li>
   
 
-    <div class="document">
-      <div class="documentwrapper">
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="traits.util.html" title="util Package"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="traits.protocols.html" title="protocols Package"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body" id="spc-section-body">
             
   <div class="section" id="testing-package">
 <h1><code class="xref py py-mod docutils literal"><span class="pre">testing</span></code> Package<a class="headerlink" href="#testing-package" title="Permalink to this headline">¶</a></h1>
@@ -74,7 +111,7 @@ standard unittest.main().</p>
 <span class="k">class</span> <span class="nc">FooDocTest</span><span class="p">(</span><span class="n">doctest_for_module</span><span class="p">(</span><span class="n">foo</span><span class="p">)):</span>
     <span class="k">pass</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="c1"># This will run and report both FooTestCase and the doctests in</span>
     <span class="c1"># module foo.</span>
     <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
@@ -121,7 +158,7 @@ a performance-measuring test.</p>
 Classes.</p>
 <dl class="function">
 <dt id="traits.testing.unittest_tools.reverse_assertion">
-<code class="descclassname">traits.testing.unittest_tools.</code><code class="descname">reverse_assertion</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#reverse_assertion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.reverse_assertion" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.testing.unittest_tools.</code><code class="descname">reverse_assertion</code><span class="sig-paren">(</span><em>context</em>, <em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#reverse_assertion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.reverse_assertion" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
@@ -157,7 +194,7 @@ not well-defined, and may depend on dictionary ordering.</p>
 
 <span class="n">my_class</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 
-<span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChangesExactly</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">3.0</span>
 </pre></div>
 </div>
@@ -168,10 +205,10 @@ not well-defined, and may depend on dictionary ordering.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) &#8211; The HasTraits class instance whose class trait will change.</li>
 <li><strong>trait</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen to.</li>
-<li><strong>count</strong> (<em>int or None, optional</em>) &#8211; The expected number of times the event should be fired. When None
+<li><strong>count</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em>) &#8211; The expected number of times the event should be fired. When None
 (default value) there is no check for the number of times the
 change event was fired.</li>
-<li><strong>callableObj</strong> (<em>callable, optional</em>) &#8211; A callable object that will trigger the expected trait change.
+<li><strong>callableObj</strong> (<em>callable</em><em>, </em><em>optional</em>) &#8211; A callable object that will trigger the expected trait change.
 When None (default value) a trigger is expected to be called
 under the context manger returned by this method.</li>
 <li><strong>*args</strong> &#8211; List of positional arguments for <code class="docutils literal"><span class="pre">callableObj</span></code></li>
@@ -212,7 +249,7 @@ execution of the provided function.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) &#8211; The HasTraits class instance whose class trait will change.</li>
 <li><strong>trait</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen to.</li>
-<li><strong>callableObj</strong> (<em>callable, optional</em>) &#8211; A callable object that should not trigger a change in the
+<li><strong>callableObj</strong> (<em>callable</em><em>, </em><em>optional</em>) &#8211; A callable object that should not trigger a change in the
 passed trait.  When None (default value) a trigger is expected
 to be called under the context manger returned by this method.</li>
 <li><strong>*args</strong> &#8211; List of positional arguments for <code class="docutils literal"><span class="pre">callableObj</span></code></li>
@@ -254,7 +291,7 @@ in which case None is returned.</p>
 
 <dl class="method">
 <dt id="traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync">
-<code class="descname">assertTraitChangesAsync</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitChangesAsync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync" title="Permalink to this definition">¶</a></dt>
+<code class="descname">assertTraitChangesAsync</code><span class="sig-paren">(</span><em>obj</em>, <em>trait</em>, <em>count=1</em>, <em>timeout=5.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitChangesAsync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assert an object trait eventually changes.</p>
 <p>Context manager used to assert that the given trait changes at
 least <cite>count</cite> times within the given timeout, as a result of
@@ -273,8 +310,8 @@ execution of the body of the corresponding with block.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) &#8211; The HasTraits class instance whose class trait will change.</li>
 <li><strong>trait</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen to.</li>
-<li><strong>count</strong> (<em>int, optional</em>) &#8211; The expected number of times the event should be fired.</li>
-<li><strong>timeout</strong> (<em>float or None, optional</em>) &#8211; The amount of time in seconds to wait for the specified number
+<li><strong>count</strong> (<em>int</em><em>, </em><em>optional</em>) &#8211; The expected number of times the event should be fired.</li>
+<li><strong>timeout</strong> (<em>float</em><em> or </em><em>None</em><em>, </em><em>optional</em>) &#8211; The amount of time in seconds to wait for the specified number
 of changes. None can be used to indicate no timeout.</li>
 </ul>
 </td>
@@ -297,7 +334,7 @@ of changes. None can be used to indicate no timeout.</li>
 <li><strong>condition</strong> (<em>callable</em>) &#8211; A function that will be called when the specified trait
 changes.  This should accept <code class="docutils literal"><span class="pre">obj</span></code> and should return a
 Boolean indicating whether the condition is satisfied or not.</li>
-<li><strong>timeout</strong> (<em>float or None, optional</em>) &#8211; The amount of time in seconds to wait for the condition to
+<li><strong>timeout</strong> (<em>float</em><em> or </em><em>None</em><em>, </em><em>optional</em>) &#8211; The amount of time in seconds to wait for the condition to
 become true.  None can be used to indicate no timeout.</li>
 </ul>
 </td>
@@ -308,14 +345,14 @@ become true.  None can be used to indicate no timeout.</li>
 
 <dl class="method">
 <dt id="traits.testing.unittest_tools.UnittestTools.assertDeprecated">
-<code class="descname">assertDeprecated</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertDeprecated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertDeprecated" title="Permalink to this definition">¶</a></dt>
+<code class="descname">assertDeprecated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertDeprecated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertDeprecated" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assert that the code inside the with block is deprecated.  Intended
 for testing uses of traits.util.deprecated.deprecated.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.testing.unittest_tools.UnittestTools.assertNotDeprecated">
-<code class="descname">assertNotDeprecated</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertNotDeprecated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertNotDeprecated" title="Permalink to this definition">¶</a></dt>
+<code class="descname">assertNotDeprecated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertNotDeprecated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertNotDeprecated" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assert that the code inside the with block is not deprecated.  Intended
 for testing uses of traits.util.deprecated.deprecated.</p>
 </dd></dl>
@@ -328,11 +365,11 @@ for testing uses of traits.util.deprecated.deprecated.</p>
 
           </div>
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+          </div>
+      <div class="spc-rightsidebar span3">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -344,29 +381,23 @@ for testing uses of traits.util.deprecated.deprecated.</p>
 </ul>
 </li>
 </ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">API Reference</a><ul>
-      <li>Previous: <a href="traits.protocols.html" title="previous chapter"><code class="docutils literal"><span class="pre">protocols</span></code> Package</a></li>
-      <li>Next: <a href="traits.util.html" title="next chapter"><code class="docutils literal"><span class="pre">util</span></code> Package</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/traits_api_reference/traits.testing.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="traits.protocols.html"
+                        title="previous chapter"><code class="docutils literal"><span class="pre">protocols</span></code> Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="traits.util.html"
+                        title="next chapter"><code class="docutils literal"><span class="pre">util</span></code> Package</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/traits.testing.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -374,22 +405,31 @@ for testing uses of traits.util.deprecated.deprecated.</p>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
+        </div>
+      </div>
     </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
     <div class="footer">
-      &copy;2008-2016, Enthought.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
-      |
-      <a href="../_sources/traits_api_reference/traits.testing.txt"
-          rel="nofollow">Page source</a>
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2016, Enthought
+      </li>
+      <li>
+      Last updated on Jan 30, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      </li>
+    </ul>
     </div>
-
-    
-
-    
+    </div>
+    </div>
   </body>
 </html>

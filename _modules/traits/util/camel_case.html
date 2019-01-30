@@ -1,21 +1,21 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
     
-    <title>traits.util.camel_case &mdash; Traits 4 User Manual</title>
+    <title>traits.util.camel_case &mdash; Traits 5 User Manual</title>
     
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '4.6.0',
+        VERSION:     '5.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,22 +24,51 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../../../_static/et.ico"/>
-    <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" />
-   
-  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
   </head>
-  <body role="document">
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li>
+  
+    <li><a href="#">traits.util.camel_case</a></li>
   
 
-    <div class="document">
-      <div class="documentwrapper">
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body" id="spc-section-body">
             
   <h1>Source code for traits.util.camel_case</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; Defines utility functions for operating on camel case names.</span>
@@ -48,9 +77,12 @@
 <span class="c1"># Standard library imports.</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
+<span class="kn">import</span> <span class="nn">six.moves</span> <span class="k">as</span> <span class="nn">sm</span>
+
 <span class="c1">###############################################################################</span>
 <span class="c1"># Classes</span>
 <span class="c1">###############################################################################</span>
+
 
 <div class="viewcode-block" id="CamelCaseToPython"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.camel_case.CamelCaseToPython">[docs]</a><span class="k">class</span> <span class="nc">CamelCaseToPython</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Simple functor class to convert names from camel case to idiomatic</span>
@@ -63,13 +95,13 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">patn</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">r&#39;([A-Z0-9]+)([a-z0-9]*)&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nd_patn</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">r&#39;(\D[123])_D&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patn</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([A-Z0-9]+)([a-z0-9]*)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nd_patn</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\D[123])_D&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">patn</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_repl</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nd_patn</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">r&#39;\1d&#39;</span><span class="p">,</span> <span class="n">ret</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;_&#39;</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nd_patn</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\1d&quot;</span><span class="p">,</span> <span class="n">ret</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;_&quot;</span><span class="p">:</span>
             <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="k">return</span> <span class="n">ret</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
@@ -78,11 +110,12 @@
         <span class="n">g2</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">g1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">g2</span><span class="p">:</span>
-                <span class="k">return</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">g1</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">g1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">g2</span>
+                <span class="k">return</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">g1</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">g1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">g2</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">g1</span>
+                <span class="k">return</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">g1</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">g1</span> <span class="o">+</span> <span class="n">g2</span></div>
+            <span class="k">return</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">g1</span> <span class="o">+</span> <span class="n">g2</span></div>
+
 
 <span class="c1">###############################################################################</span>
 <span class="c1"># Functions</span>
@@ -90,6 +123,7 @@
 
 <span class="c1"># Instantiate a converter.</span>
 <span class="n">camel_case_to_python</span> <span class="o">=</span> <span class="n">CamelCaseToPython</span><span class="p">()</span>
+
 
 <div class="viewcode-block" id="camel_case_to_words"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.camel_case.camel_case_to_words">[docs]</a><span class="k">def</span> <span class="nf">camel_case_to_words</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Convert a camel case string into words separated by spaces.</span>
@@ -103,34 +137,26 @@
         <span class="c1"># We detect a word boundary if the character we are looking at is</span>
         <span class="c1"># upper case, but the character preceding it is lower case.</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">islower</span><span class="p">()</span> <span class="ow">and</span> <span class="n">c</span><span class="o">.</span><span class="n">isupper</span><span class="p">():</span>
-            <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">c</span>
+            <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">c</span>
 
         <span class="k">return</span> <span class="n">s</span> <span class="o">+</span> <span class="n">c</span>
 
-    <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">add_space_between_words</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">sm</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">add_space_between_words</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+          </div>
+      <div class="spc-rightsidebar span3">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../../index.html">
-              <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p><div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../../index.html">Documentation overview</a><ul>
-  <li><a href="../../index.html">Module code</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -138,19 +164,31 @@
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
+        </div>
+      </div>
     </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
     <div class="footer">
-      &copy;2008-2016, Enthought.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2016, Enthought
+      </li>
+      <li>
+      Last updated on Jan 30, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      </li>
+    </ul>
     </div>
-
-    
-
-    
+    </div>
+    </div>
   </body>
 </html>

@@ -1,21 +1,21 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
     
-    <title>has_traits Module &mdash; Traits 4 User Manual</title>
+    <title>has_traits Module &mdash; Traits 5 User Manual</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.6.0',
+        VERSION:     '5.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,24 +24,61 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="Traits 4 User Manual" href="../index.html" />
-    <link rel="up" title="API Reference" href="index.html" />
-    <link rel="next" title="has_dynamic_views Module" href="has_dynamic_views.html" />
-    <link rel="prev" title="category Module" href="category.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="has_dynamic_views Module" href="has_dynamic_views.html" >
+    <link rel="prev" title="category Module" href="category.html" > 
   </head>
-  <body role="document">
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
+  
+    <li><a href="#"><code class="docutils literal"><span class="pre">has_traits</span></code> Module</a></li>
   
 
-    <div class="document">
-      <div class="documentwrapper">
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="has_dynamic_views.html" title="has_dynamic_views Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="category.html" title="category Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.has_traits">
 <span id="has-traits-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">has_traits</span></code> Module<a class="headerlink" href="#module-traits.has_traits" title="Permalink to this headline">¶</a></h1>
@@ -81,7 +118,13 @@ specified ViewElements object.</p>
 <dl class="class">
 <dt id="traits.has_traits.MetaHasTraits">
 <em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">MetaHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="classmethod">
+<dd><p>Controls the creation of HasTraits classes.</p>
+<p>The heavy work is done by the <cite>create_traits_meta_dict</cite> function, which
+takes the <code class="docutils literal"><span class="pre">class_dict</span></code> dictionary of class members and extracts and
+processes the trait declarations in it. The trait declarations are then
+added back to the class dictionary and passed off to the __new__ method
+of the type superclass, to be added to the class.</p>
+<dl class="classmethod">
 <dt id="traits.has_traits.MetaHasTraits.add_listener">
 <em class="property">classmethod </em><code class="descname">add_listener</code><span class="sig-paren">(</span><em>listener</em>, <em>class_name=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits.add_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits.add_listener" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a class creation listener.</p>
@@ -109,41 +152,15 @@ when <em>any</em> class is created.</p>
 <dl class="method">
 <dt id="traits.has_traits.MetaInterface.__init__">
 <code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.has_traits.MetaInterface.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.MetaInterface.__call__">
-<code class="descname">__call__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface.__call__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__call__</code><span class="sig-paren">(</span><em>adaptee</em>, <em>default=&lt;class 'traits.adaptation.adaptation_error.AdaptationError'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempt to adapt the adaptee to this interface.</p>
 <p>Note that this means that (intentionally ;^) that interfaces
 cannot be instantiated!</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.has_traits.MetaHasTraitsObject">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">MetaHasTraitsObject</code><span class="sig-paren">(</span><em>cls</em>, <em>class_name</em>, <em>bases</em>, <em>class_dict</em>, <em>is_category</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs all of the meta-class processing needed to convert any
-subclass of HasTraits into a well-formed traits class.</p>
-<dl class="method">
-<dt id="traits.has_traits.MetaHasTraitsObject.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>cls</em>, <em>class_name</em>, <em>bases</em>, <em>class_dict</em>, <em>is_category</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Processes all of the traits related data in the class dictionary.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.has_traits.MetaHasTraitsObject.add_traits_meta_data">
-<code class="descname">add_traits_meta_data</code><span class="sig-paren">(</span><em>bases</em>, <em>class_dict</em>, <em>base_traits</em>, <em>class_traits</em>, <em>instance_traits</em>, <em>prefix_traits</em>, <em>listeners</em>, <em>view_elements</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject.add_traits_meta_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject.add_traits_meta_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the Traits metadata to the class dictionary.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.has_traits.MetaHasTraitsObject.migrate_property">
-<code class="descname">migrate_property</code><span class="sig-paren">(</span><em>name</em>, <em>property</em>, <em>property_info</em>, <em>class_dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject.migrate_property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject.migrate_property" title="Permalink to this definition">¶</a></dt>
-<dd><p>Migrates an existing property to the class being defined
-(allowing for method overrides).</p>
 </dd></dl>
 
 </dd></dl>
@@ -164,7 +181,7 @@ For example:</p>
 <span class="go">&gt;&gt;&gt;bob = Person()</span>
 <span class="go">&gt;&gt;&gt;bob.temp_lunch = &#39;sandwich&#39;</span>
 <span class="go">&gt;&gt;&gt;bob.add_trait(&#39;favorite_sport&#39;, Str(&#39;football&#39;))</span>
-<span class="go">&gt;&gt;&gt;print bob.trait_names()</span>
+<span class="go">&gt;&gt;&gt;print(bob.trait_names())</span>
 <span class="go">[&#39;trait_added&#39;, &#39;age&#39;, &#39;name&#39;]</span>
 </pre></div>
 </div>
@@ -192,7 +209,7 @@ attribute <em>favorite_sport</em> are not listed.</p>
 
 <dl class="attribute">
 <dt id="traits.has_traits.HasTraits.trait_added">
-<code class="descname">trait_added</code><em class="property"> = Event( basestring )</em><a class="headerlink" href="#traits.has_traits.HasTraits.trait_added" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trait_added</code><em class="property"> = Event(six.string_types[0])</em><a class="headerlink" href="#traits.has_traits.HasTraits.trait_added" title="Permalink to this definition">¶</a></dt>
 <dd><p>An event fired when a new trait is dynamically added to the object</p>
 </dd></dl>
 
@@ -319,7 +336,7 @@ name/value pairs for <em>all</em> traits defined on the object.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.get">
-<code class="descname">get</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.get" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get</code><span class="sig-paren">(</span><em>*names</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for getting object trait attributes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -383,7 +400,7 @@ in a lambda function. For example, you can write:</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.set">
-<code class="descname">set</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.set" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set</code><span class="sig-paren">(</span><em>trait_change_notify=True</em>, <em>**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for setting object trait attributes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -563,7 +580,7 @@ cloned.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>view</strong> (<em>View or string</em>) &#8211; A View object (or its name) that defines a user interface for
+<li><strong>view</strong> (<em>View</em><em> or </em><em>string</em>) &#8211; A View object (or its name) that defines a user interface for
 editing trait attribute values of the current object. If the view is
 defined as an attribute on this class, use the name of the attribute.
 Otherwise, use a reference to the view object. If this attribute is
@@ -574,7 +591,7 @@ window for the object&#8217;s UI window.</li>
 <strong>traitsui.view.kind_trait</strong> trait for values and
 their meanings. If <em>kind</em> is unspecified or None, the <strong>kind</strong>
 attribute of the View object is used.</li>
-<li><strong>context</strong> (<em>object or dictionary</em>) &#8211; A single object or a dictionary of string/object pairs, whose trait
+<li><strong>context</strong> (<em>object</em><em> or </em><em>dictionary</em>) &#8211; A single object or a dictionary of string/object pairs, whose trait
 attributes are to be edited. If not specified, the current object is
 used.</li>
 <li><strong>handler</strong> (<em>Handler</em>) &#8211; A handler object used for event handling in the dialog box. If
@@ -717,7 +734,7 @@ them. If the user confirms the dialog box (by clicking <strong>OK</strong>),
 the new values are written to the file. If this parameter is not
 specified, the values are loaded from the in-memory object, and are
 not persisted when the dialog box is closed.</li>
-<li><strong>view</strong> (<em>View or str</em>) &#8211; A View object (or its name) that defines a user interface for
+<li><strong>view</strong> (<em>View</em><em> or </em><em>str</em>) &#8211; A View object (or its name) that defines a user interface for
 editing trait attribute values of the current object. If the view is
 defined as an attribute on this class, use the name of the attribute.
 Otherwise, use a reference to the view object. If this attribute is
@@ -730,7 +747,7 @@ attribute of the View object is used.</li>
 specifies an existing file, setting <em>edit</em> to False loads the
 saved values from that file into the object without requiring
 user interaction.</li>
-<li><strong>context</strong> (<em>object or dictionary</em>) &#8211; A single object or a dictionary of string/object pairs, whose trait
+<li><strong>context</strong> (<em>object</em><em> or </em><em>dictionary</em>) &#8211; A single object or a dictionary of string/object pairs, whose trait
 attributes are to be edited. If not specified, the current object is
 used</li>
 <li><strong>handler</strong> (<em>Handler</em>) &#8211; A handler object used for event handling in the dialog box. If
@@ -1056,17 +1073,13 @@ with the following information:</p>
 <em>handler</em> may report an <em>_items</em> changed event. If in the previous
 example, <em>bar</em> is a List, and a new item is added to <em>bar</em>, then
 the information passed to <em>handler</em> would be:</p>
-<ul>
-<li><p class="first">object: object.foo</p>
-</li>
-<li><p class="first">name:   bar_items</p>
-</li>
-<li><p class="first">old:    Undefined</p>
-</li>
+<ul class="simple">
+<li>object: object.foo</li>
+<li>name:   bar_items</li>
+<li>old:    Undefined</li>
 <li><dl class="first docutils">
 <dt>new:    TraitListEvent whose <em>added</em> trait contains the new item</dt>
-<dd><p class="first last">added to <em>bar</em>.</p>
-</dd>
+<dd>added to <em>bar</em>.</dd>
 </dl>
 </li>
 </ul>
@@ -1339,17 +1352,13 @@ with the following information:</p>
 <em>handler</em> may report an <em>_items</em> changed event. If in the previous
 example, <em>bar</em> is a List, and a new item is added to <em>bar</em>, then
 the information passed to <em>handler</em> would be:</p>
-<ul>
-<li><p class="first">object: object.foo</p>
-</li>
-<li><p class="first">name:   bar_items</p>
-</li>
-<li><p class="first">old:    Undefined</p>
-</li>
+<ul class="simple">
+<li>object: object.foo</li>
+<li>name:   bar_items</li>
+<li>old:    Undefined</li>
 <li><dl class="first docutils">
 <dt>new:    TraitListEvent whose <em>added</em> trait contains the new item</dt>
-<dd><p class="first last">added to <em>bar</em>.</p>
-</dd>
+<dd>added to <em>bar</em>.</dd>
 </dl>
 </li>
 </ul>
@@ -1389,9 +1398,9 @@ trait attribute on another object.</p>
 <li><strong>object</strong> (<em>object</em>) &#8211; The object with which to synchronize.</li>
 <li><strong>alias</strong> (<em>str</em>) &#8211; Name of the trait attribute on <em>other</em>; if None or omitted, same
 as <em>name</em>.</li>
-<li><strong>mutual</strong> (<em>bool or int</em>) &#8211; Indicates whether synchronization is mutual (True or non-zero)
+<li><strong>mutual</strong> (<em>bool</em><em> or </em><em>int</em>) &#8211; Indicates whether synchronization is mutual (True or non-zero)
 or one-way (False or zero)</li>
-<li><strong>remove</strong> (<em>bool or int</em>) &#8211; Indicates whether synchronization is being added (False or zero)
+<li><strong>remove</strong> (<em>bool</em><em> or </em><em>int</em>) &#8211; Indicates whether synchronization is being added (False or zero)
 or removed (True or non-zero)</li>
 </ul>
 </td>
@@ -1617,6 +1626,39 @@ going unnoticed; a misspelled attribute name typically causes an exception.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="traits.has_traits.HasRequiredTraits">
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">HasRequiredTraits</code><span class="sig-paren">(</span><em>**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasRequiredTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasRequiredTraits" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class builds on the functionality of HasStrictTraits and ensures
+that any object attribute with <cite>required=True</cite> in its metadata must be
+passed as an argument on object initialization.</p>
+<p>This can be useful in cases where an object has traits which are required
+for it to function correctly.</p>
+<p class="rubric">Raises</p>
+<dl class="docutils">
+<dt>TraitError</dt>
+<dd>If a required trait is not passed as an argument.</dd>
+</dl>
+<p class="rubric">Usage</p>
+<p>A class with required traits:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">RequiredTest</span><span class="p">(</span><span class="n">HasRequiredTraits</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">required_trait</span> <span class="o">=</span> <span class="n">Any</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">non_required_trait</span> <span class="o">=</span> <span class="n">Any</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Creating an instance of a HasRequiredTraits subclass:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">required_trait</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">non_required_trait</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance2</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">required_trait</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Forgetting to specify a required trait:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">non_required_trait</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="go">traits.trait_errors.TraitError: The following required traits were not</span>
+<span class="go">provided: required_trait.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
 <dt id="traits.has_traits.HasPrivateTraits">
 <em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">HasPrivateTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#HasPrivateTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasPrivateTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class ensures that any public object attribute that does not have
@@ -1752,28 +1794,6 @@ delegate trait.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="traits.has_traits.implements">
-<code class="descclassname">traits.has_traits.</code><code class="descname">implements</code><span class="sig-paren">(</span><em>*interfaces</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#implements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.implements" title="Permalink to this definition">¶</a></dt>
-<dd><p>Declares the interfaces that a class implements.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*interfaces</strong> &#8211; A list of interface classes that the containing class implements.</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Description</p>
-<p>Registers each specified interface with the interface manager as an
-interface that the containing class implements. Each specified interface
-must be a subclass of <strong>Interface</strong>. This function should only be
-called from directly within a class body.</p>
-<div class="deprecated">
-<p><span class="versionmodified">Deprecated since version 4.4: </span>Use the <code class="docutils literal"><span class="pre">provides</span></code> class decorator instead.</p>
-</div>
-</dd></dl>
-
-<dl class="function">
 <dt id="traits.has_traits.on_trait_change">
 <code class="descclassname">traits.has_traits.</code><code class="descname">on_trait_change</code><span class="sig-paren">(</span><em>name</em>, <em>post_init=False</em>, <em>dispatch='same'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#on_trait_change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.on_trait_change" title="Permalink to this definition">¶</a></dt>
 <dd><p>Marks the following method definition as being a handler for the
@@ -1850,11 +1870,11 @@ deleted then the function is not called.</p>
 
           </div>
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+          </div>
+      <div class="spc-rightsidebar span3">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -1865,29 +1885,23 @@ deleted then the function is not called.</p>
 </ul>
 </li>
 </ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">API Reference</a><ul>
-      <li>Previous: <a href="category.html" title="previous chapter"><code class="docutils literal"><span class="pre">category</span></code> Module</a></li>
-      <li>Next: <a href="has_dynamic_views.html" title="next chapter"><code class="docutils literal"><span class="pre">has_dynamic_views</span></code> Module</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/traits_api_reference/has_traits.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="category.html"
+                        title="previous chapter"><code class="docutils literal"><span class="pre">category</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="has_dynamic_views.html"
+                        title="next chapter"><code class="docutils literal"><span class="pre">has_dynamic_views</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/has_traits.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -1895,22 +1909,31 @@ deleted then the function is not called.</p>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
+        </div>
+      </div>
     </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
     <div class="footer">
-      &copy;2008-2016, Enthought.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
-      |
-      <a href="../_sources/traits_api_reference/has_traits.txt"
-          rel="nofollow">Page source</a>
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2016, Enthought
+      </li>
+      <li>
+      Last updated on Jan 30, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      </li>
+    </ul>
     </div>
-
-    
-
-    
+    </div>
+    </div>
   </body>
 </html>

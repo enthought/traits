@@ -1,21 +1,21 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
     
-    <title>traits.ustr_trait &mdash; Traits 4 User Manual</title>
+    <title>traits.ustr_trait &mdash; Traits 5 User Manual</title>
     
-    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" >
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.6.0',
+        VERSION:     '5.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,25 +24,54 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../../_static/et.ico"/>
-    <link rel="top" title="Traits 4 User Manual" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" />
-   
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../../index.html" >
+    <link rel="up" title="Module code" href="../index.html" > 
   </head>
-  <body role="document">
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="../index.html" accesskey="U">Module code</a></li>
+  
+    <li><a href="#">traits.ustr_trait</a></li>
   
 
-    <div class="document">
-      <div class="documentwrapper">
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body" id="spc-section-body">
             
   <h1>Source code for traits.ustr_trait</h1><div class="highlight"><pre>
-<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span></span><span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1">#</span>
 <span class="c1">#  Copyright (c) 2008, Enthought, Inc.</span>
 <span class="c1">#  All rights reserved.</span>
@@ -57,130 +86,145 @@
 <span class="c1">#  Author: David C. Morrill</span>
 <span class="c1">#  Date:   08/21/2008</span>
 <span class="c1">#</span>
-<span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
 
 <span class="sd">&quot;&quot;&quot; Defines the UStr type and HasUniqueStrings mixin class for efficiently</span>
 <span class="sd">    creating lists of objects containing traits whose string values must be</span>
 <span class="sd">    unique within the list.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 <span class="c1">#  Imports:</span>
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 
-<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="kn">import</span> <span class="n">is_str</span>
-<span class="kn">from</span> <span class="nn">.has_traits</span> <span class="kn">import</span> <span class="n">HasTraits</span>
-<span class="kn">from</span> <span class="nn">.trait_value</span> <span class="kn">import</span> <span class="n">TraitValue</span><span class="p">,</span> <span class="n">TypeValue</span>
-<span class="kn">from</span> <span class="nn">.trait_types</span> <span class="kn">import</span> <span class="n">List</span>
-<span class="kn">from</span> <span class="nn">.trait_handlers</span> <span class="kn">import</span> <span class="n">TraitType</span><span class="p">,</span> <span class="n">NoDefaultSpecified</span>
+<span class="kn">import</span> <span class="nn">six</span>
 
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="n">is_str</span>
+<span class="kn">from</span> <span class="nn">.has_traits</span> <span class="k">import</span> <span class="n">HasTraits</span>
+<span class="kn">from</span> <span class="nn">.trait_value</span> <span class="k">import</span> <span class="n">TraitValue</span><span class="p">,</span> <span class="n">TypeValue</span>
+<span class="kn">from</span> <span class="nn">.trait_types</span> <span class="k">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">.trait_handlers</span> <span class="k">import</span> <span class="n">TraitType</span><span class="p">,</span> <span class="n">NoDefaultSpecified</span>
+
+<span class="c1"># -------------------------------------------------------------------------------</span>
 <span class="c1">#  &#39;UStr&#39; class:</span>
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="UStr"><a class="viewcode-back" href="../../traits_api_reference/ustr_trait.html#traits.ustr_trait.UStr">[docs]</a><span class="k">class</span> <span class="nc">UStr</span> <span class="p">(</span> <span class="n">TraitType</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="UStr"><a class="viewcode-back" href="../../traits_api_reference/ustr_trait.html#traits.ustr_trait.UStr">[docs]</a><span class="k">class</span> <span class="nc">UStr</span><span class="p">(</span><span class="n">TraitType</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Trait type that ensures that a value assigned to a trait is unique</span>
 <span class="sd">        within the list it belongs to.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1">#: The type value to assign to restore the original list item type when a</span>
     <span class="c1">#: list item is removed from the monitored list:</span>
     <span class="n">str_type</span> <span class="o">=</span> <span class="n">TraitValue</span><span class="p">()</span>
 
     <span class="c1">#: The informational text describing the trait:</span>
-    <span class="n">info_text</span> <span class="o">=</span> <span class="s1">&#39;a unique string&#39;</span>
+    <span class="n">info_text</span> <span class="o">=</span> <span class="s2">&quot;a unique string&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">list_name</span><span class="p">,</span> <span class="n">str_name</span><span class="p">,</span>
-                         <span class="n">default_value</span> <span class="o">=</span> <span class="n">NoDefaultSpecified</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">owner</span><span class="p">,</span>
+        <span class="n">list_name</span><span class="p">,</span>
+        <span class="n">str_name</span><span class="p">,</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="n">NoDefaultSpecified</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">metadata</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Initializes the type.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span> <span class="n">UStr</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span> <span class="n">default_value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span> <span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UStr</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">default_value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">owner</span>     <span class="o">=</span> <span class="n">owner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">owner</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">list_name</span> <span class="o">=</span> <span class="n">list_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">str_name</span>  <span class="o">=</span> <span class="n">str_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ustr_type</span> <span class="o">=</span> <span class="n">TypeValue</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">names</span>     <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span> <span class="p">[</span> <span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">item</span><span class="p">,</span> <span class="n">str_name</span> <span class="p">),</span> <span class="n">item</span> <span class="p">)</span>
-                                 <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">owner</span><span class="p">,</span> <span class="n">list_name</span> <span class="p">)</span> <span class="p">]</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">roots</span>     <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">str_name</span> <span class="o">=</span> <span class="n">str_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ustr_type</span> <span class="o">=</span> <span class="n">TypeValue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">str_name</span><span class="p">),</span> <span class="n">item</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">list_name</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">roots</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">available</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">owner</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">_items_modified</span><span class="p">,</span> <span class="n">list_name</span> <span class="o">+</span> <span class="s1">&#39;[]&#39;</span> <span class="p">)</span>
+        <span class="n">owner</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_items_modified</span><span class="p">,</span> <span class="n">list_name</span> <span class="o">+</span> <span class="s2">&quot;[]&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="UStr.validate"><a class="viewcode-back" href="../../traits_api_reference/ustr_trait.html#traits.ustr_trait.UStr.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+<div class="viewcode-block" id="UStr.validate"><a class="viewcode-back" href="../../traits_api_reference/ustr_trait.html#traits.ustr_trait.UStr.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Ensures that a value being assigned to a trait is a unique string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="nb">basestring</span> <span class="p">):</span>
-            <span class="n">names</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span>
-            <span class="n">old_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span> <span class="p">)</span>
-            <span class="k">if</span> <span class="n">names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">old_name</span> <span class="p">)</span> <span class="ow">is</span> <span class="nb">object</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span> <span class="n">old_name</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span>
+            <span class="n">old_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">old_name</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">object</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">old_name</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
-                <span class="n">names</span><span class="p">[</span> <span class="n">value</span> <span class="p">]</span> <span class="o">=</span> <span class="nb">object</span>
+                <span class="n">names</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="nb">object</span>
                 <span class="k">return</span> <span class="n">value</span>
 
-            <span class="n">available</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">available</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
-            <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">available</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="n">new_value</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="n">available</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">available</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">available</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">new_value</span> <span class="o">=</span> <span class="kc">None</span>
                     <span class="k">break</span>
 
                 <span class="n">index</span> <span class="o">=</span> <span class="n">available</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">available</span> <span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">available</span><span class="p">[</span> <span class="n">value</span> <span class="p">]</span>
-                    <span class="n">available</span> <span class="o">=</span> <span class="bp">None</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">available</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">available</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>
+                    <span class="n">available</span> <span class="o">=</span> <span class="kc">None</span>
 
-                <span class="n">new_value</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">index</span> <span class="p">)</span>
+                <span class="n">new_value</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">new_value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
                     <span class="k">break</span>
 
-            <span class="k">if</span> <span class="n">new_value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">roots</span><span class="p">[</span> <span class="n">value</span> <span class="p">]</span> <span class="o">=</span> <span class="n">index</span> <span class="o">=</span> \
-                    <span class="bp">self</span><span class="o">.</span><span class="n">roots</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-                <span class="n">new_value</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">index</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="n">new_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">roots</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">roots</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">new_value</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
 
-            <span class="n">names</span><span class="p">[</span> <span class="n">new_value</span> <span class="p">]</span> <span class="o">=</span> <span class="nb">object</span>
+            <span class="n">names</span><span class="p">[</span><span class="n">new_value</span><span class="p">]</span> <span class="o">=</span> <span class="nb">object</span>
             <span class="k">return</span> <span class="n">new_value</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_remove</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Removes a specified name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
-        <span class="n">col</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span> <span class="s1">&#39;_&#39;</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">col</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">index</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">name</span><span class="p">[</span> <span class="n">col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span> <span class="p">]</span> <span class="p">)</span>
-                <span class="n">prefix</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span> <span class="p">:</span> <span class="n">col</span> <span class="p">]</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="n">col</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:])</span>
+                <span class="n">prefix</span> <span class="o">=</span> <span class="n">name</span><span class="p">[:</span><span class="n">col</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roots</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">prefix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">available</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">available</span><span class="p">[</span> <span class="n">prefix</span> <span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">available</span><span class="p">[</span> <span class="n">prefix</span> <span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">index</span> <span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">available</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">available</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
             <span class="k">except</span><span class="p">:</span>
                 <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">_items_modified</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">added</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_items_modified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles items being added to or removed from the monitored list.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">str_name</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_name</span>
-        <span class="n">str_type</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_type</span>
+        <span class="n">str_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_name</span>
+        <span class="n">str_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_type</span>
         <span class="n">ustr_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ustr_type</span>
 
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">removed</span><span class="p">:</span>
-            <span class="nb">setattr</span><span class="p">(</span> <span class="n">item</span><span class="p">,</span> <span class="n">str_name</span><span class="p">,</span> <span class="n">str_type</span> <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">item</span><span class="p">,</span> <span class="n">str_name</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">str_name</span><span class="p">,</span> <span class="n">str_type</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">str_name</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">added</span><span class="p">:</span>
-            <span class="nb">setattr</span><span class="p">(</span> <span class="n">item</span><span class="p">,</span> <span class="n">str_name</span><span class="p">,</span> <span class="n">ustr_type</span> <span class="p">)</span>
-            <span class="nb">setattr</span><span class="p">(</span> <span class="n">item</span><span class="p">,</span> <span class="n">str_name</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">item</span><span class="p">,</span> <span class="n">str_name</span> <span class="p">)</span> <span class="p">)</span></div>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">str_name</span><span class="p">,</span> <span class="n">ustr_type</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">str_name</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">str_name</span><span class="p">))</span></div>
 
-<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="c1"># -------------------------------------------------------------------------------</span>
 <span class="c1">#  &#39;HasUniqueStrings&#39; class:</span>
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="HasUniqueStrings"><a class="viewcode-back" href="../../traits_api_reference/ustr_trait.html#traits.ustr_trait.HasUniqueStrings">[docs]</a><span class="k">class</span> <span class="nc">HasUniqueStrings</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="HasUniqueStrings"><a class="viewcode-back" href="../../traits_api_reference/ustr_trait.html#traits.ustr_trait.HasUniqueStrings">[docs]</a><span class="k">class</span> <span class="nc">HasUniqueStrings</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Mixin or base class for objects containing lists with items containing</span>
 <span class="sd">        string valued traits that must be unique.</span>
 
@@ -198,51 +242,42 @@
 <span class="sd">            usa = List( State, unique_string = &#39;name, abbreviation&#39; )</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1">#-- Private Traits ---------------------------------------------------------</span>
+    <span class="c1"># -- Private Traits ---------------------------------------------------------</span>
 
     <span class="c1"># List of UStr traits that have been attached to object list traits:</span>
     <span class="n">_ustr_traits</span> <span class="o">=</span> <span class="n">List</span>
 
-    <span class="c1">#-- HasTraits Object Initializer -------------------------------------------</span>
+    <span class="c1"># -- HasTraits Object Initializer -------------------------------------------</span>
 
-<div class="viewcode-block" id="HasUniqueStrings.traits_init"><a class="viewcode-back" href="../../traits_api_reference/ustr_trait.html#traits.ustr_trait.HasUniqueStrings.traits_init">[docs]</a>    <span class="k">def</span> <span class="nf">traits_init</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+<div class="viewcode-block" id="HasUniqueStrings.traits_init"><a class="viewcode-back" href="../../traits_api_reference/ustr_trait.html#traits.ustr_trait.HasUniqueStrings.traits_init">[docs]</a>    <span class="k">def</span> <span class="nf">traits_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Adds any UStrMonitor objects to list traits with &#39;unique_string&#39;</span>
 <span class="sd">            metadata.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span> <span class="n">HasUniqueStrings</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">traits_init</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HasUniqueStrings</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">traits_init</span><span class="p">()</span>
 
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">trait</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">traits</span><span class="p">(</span> <span class="n">unique_string</span> <span class="o">=</span> <span class="n">is_str</span> <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">str_name</span> <span class="ow">in</span> <span class="n">trait</span><span class="o">.</span><span class="n">unique_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="s1">&#39;,&#39;</span> <span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_ustr_traits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">UStr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">str_name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">trait</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">traits</span><span class="p">(</span><span class="n">unique_string</span><span class="o">=</span><span class="n">is_str</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">str_name</span> <span class="ow">in</span> <span class="n">trait</span><span class="o">.</span><span class="n">unique_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_ustr_traits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">UStr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">str_name</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
 
-            <span class="n">items</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">items</span> <span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">setattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
-                <span class="nb">setattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">items</span> <span class="p">)</span></div></div>
-
+            <span class="n">items</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="p">[])</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+          </div>
+      <div class="spc-rightsidebar span3">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../index.html">
-              <img class="logo" src="../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p><div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../index.html">Module code</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
+              <img class="logo" src="../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -250,19 +285,31 @@
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
+        </div>
+      </div>
     </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
     <div class="footer">
-      &copy;2008-2016, Enthought.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2016, Enthought
+      </li>
+      <li>
+      Last updated on Jan 30, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      </li>
+    </ul>
     </div>
-
-    
-
-    
+    </div>
+    </div>
   </body>
 </html>
