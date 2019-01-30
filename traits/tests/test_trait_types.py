@@ -18,7 +18,20 @@
 """ Unit test case for testing trait types created by subclassing TraitType.
 """
 
-from traits.testing.unittest_tools import unittest
+import os
+import sys
+import tempfile
+import textwrap
+import shutil
+import subprocess
+import unittest
+
+try:
+    import numpy  # noqa F401
+except ImportError:
+    numpy_available = False
+else:
+    numpy_available = True
 
 from traits.api import Float, TraitType
 
@@ -35,28 +48,31 @@ class TraitTypesTest(unittest.TestCase):
         LazyProperty().as_ctrait()
         self.assertFalse(Float().transient)
 
+    @unittest.skipUnless(numpy_available, "test requires NumPy")
     def test_numpy_validators_loaded_if_numpy_present(self):
-        # If 'numpy' is available, the numpy validators should be loaded.
-
-        # Make sure that numpy is present on this machine.
-        try:
+        # If 'numpy' is available, the numpy validators should be loaded,
+        # even if numpy is imported after traits.
+        test_script = textwrap.dedent("""
+            from traits.trait_types import float_fast_validate
             import numpy
-        except ImportError:
-            self.skipTest("numpy library not found.")
 
-        # Remove numpy from the list of imported modules.
-        import sys
+            if numpy.floating in float_fast_validate:
+                print("Success")
+            else:
+                print("Failure")
+        """)
+        this_python = sys.executable
+        tmpdir = tempfile.mkdtemp()
+        try:
+            tmpfile = os.path.join(tmpdir, "test_script.py")
+            with open(tmpfile, "w") as f:
+                f.write(test_script)
+            cmd = [this_python, tmpfile]
+            output = subprocess.check_output(cmd).decode("utf-8")
+        finally:
+            shutil.rmtree(tmpdir)
 
-        del sys.modules["numpy"]
-        for k in list(sys.modules):
-            if k.startswith("numpy."):
-                del sys.modules[k]
-
-        # Check that the validators contain the numpy types.
-        from traits.trait_types import float_fast_validate
-        import numpy
-
-        self.assertIn(numpy.floating, float_fast_validate)
+        self.assertEqual(output.strip(), "Success")
 
 
 # Run the unit tests (if invoked from the command line):
