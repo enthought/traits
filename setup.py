@@ -8,8 +8,8 @@ import sys
 from setuptools import setup, Extension, find_packages
 
 MAJOR = 5
-MINOR = 0
-MICRO = 1
+MINOR = 1
+MICRO = 0
 
 IS_RELEASED = False
 
