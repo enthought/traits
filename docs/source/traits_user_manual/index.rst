@@ -1,4 +1,4 @@
-Traits 4 User Manual
+Traits 5 User Manual
 ====================
 
 .. toctree::
