@@ -1,5 +1,5 @@
 ====================
-Traits 4 User Manual
+Traits 5 User Manual
 ====================
 
 :Authors: David C. Morrill, Janet M. Swisher
