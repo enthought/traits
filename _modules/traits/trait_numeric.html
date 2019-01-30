@@ -1,21 +1,21 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
     
-    <title>traits.trait_numeric &mdash; Traits 4 User Manual</title>
+    <title>traits.trait_numeric &mdash; Traits 5 User Manual</title>
     
-    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" >
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.6.0',
+        VERSION:     '5.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,25 +24,54 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../../_static/et.ico"/>
-    <link rel="top" title="Traits 4 User Manual" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" />
-   
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../../index.html" >
+    <link rel="up" title="Module code" href="../index.html" > 
   </head>
-  <body role="document">
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="../index.html" accesskey="U">Module code</a></li>
+  
+    <li><a href="#">traits.trait_numeric</a></li>
   
 
-    <div class="document">
-      <div class="documentwrapper">
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body" id="spc-section-body">
             
   <h1>Source code for traits.trait_numeric</h1><div class="highlight"><pre>
-<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span></span><span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1">#</span>
 <span class="c1">#  Copyright (c) 2005, Enthought, Inc.</span>
 <span class="c1">#  All rights reserved.</span>
@@ -57,63 +86,73 @@
 <span class="c1">#  Author: David C. Morrill</span>
 <span class="c1">#  Date:   12/13/2004</span>
 <span class="c1">#</span>
-<span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
 
 <span class="sd">&quot;&quot;&quot; Trait definitions related to the numpy library.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 <span class="c1">#  Imports:</span>
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="kn">import</span> <span class="n">SequenceTypes</span>
-<span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span>
-<span class="kn">from</span> <span class="nn">.trait_handlers</span> <span class="kn">import</span> <span class="n">TraitType</span><span class="p">,</span> <span class="n">OBJECT_IDENTITY_COMPARE</span>
-<span class="kn">from</span> <span class="nn">.trait_types</span> <span class="kn">import</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Int</span> <span class="k">as</span> <span class="n">TInt</span><span class="p">,</span> <span class="n">Float</span> <span class="k">as</span> <span class="n">TFloat</span>
+<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="n">SequenceTypes</span>
+<span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
+<span class="kn">from</span> <span class="nn">.trait_handlers</span> <span class="k">import</span> <span class="n">TraitType</span><span class="p">,</span> <span class="n">OBJECT_IDENTITY_COMPARE</span>
+<span class="kn">from</span> <span class="nn">.trait_types</span> <span class="k">import</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Int</span> <span class="k">as</span> <span class="n">TInt</span><span class="p">,</span> <span class="n">Float</span> <span class="k">as</span> <span class="n">TFloat</span>
 
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 <span class="c1">#  Deferred imports from numpy:</span>
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 
-<span class="n">ndarray</span> <span class="o">=</span> <span class="bp">None</span>
-<span class="n">asarray</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">asarray</span> <span class="o">=</span> <span class="kc">None</span>
 
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 <span class="c1">#  numpy dtype mapping:</span>
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="dtype2trait"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.dtype2trait">[docs]</a><span class="k">def</span> <span class="nf">dtype2trait</span> <span class="p">(</span> <span class="n">dtype</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="dtype2trait"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.dtype2trait">[docs]</a><span class="k">def</span> <span class="nf">dtype2trait</span><span class="p">(</span><span class="n">dtype</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Get the corresponding trait for a numpy dtype.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="kn">import</span> <span class="nn">numpy</span>
 
-    <span class="k">if</span> <span class="n">dtype</span><span class="o">.</span><span class="n">char</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">typecodes</span><span class="p">[</span><span class="s1">&#39;Float&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">dtype</span><span class="o">.</span><span class="n">char</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">typecodes</span><span class="p">[</span><span class="s2">&quot;Float&quot;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">TFloat</span>
 
-    <span class="k">elif</span> <span class="n">dtype</span><span class="o">.</span><span class="n">char</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">typecodes</span><span class="p">[</span><span class="s1">&#39;AllInteger&#39;</span><span class="p">]:</span>
+    <span class="k">elif</span> <span class="n">dtype</span><span class="o">.</span><span class="n">char</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">typecodes</span><span class="p">[</span><span class="s2">&quot;AllInteger&quot;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">TInt</span>
 
-    <span class="k">elif</span> <span class="n">dtype</span><span class="o">.</span><span class="n">char</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">dtype</span><span class="o">.</span><span class="n">char</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Str</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Any</span></div>
 
-<span class="c1">#-------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;AbstractArray&#39; trait base class:</span>
-<span class="c1">#-------------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="AbstractArray"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray">[docs]</a><span class="k">class</span> <span class="nc">AbstractArray</span> <span class="p">(</span> <span class="n">TraitType</span> <span class="p">):</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;AbstractArray&#39; trait base class:</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="AbstractArray"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray">[docs]</a><span class="k">class</span> <span class="nc">AbstractArray</span><span class="p">(</span><span class="n">TraitType</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Abstract base class for defining numpy-based arrays.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
-                         <span class="nb">coerce</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">typecode</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">coerce</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">typecode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">metadata</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns an AbstractArray trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">global</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">asarray</span>
@@ -121,207 +160,236 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">numpy</span>
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span> <span class="s2">&quot;Using Array or CArray trait types requires the &quot;</span>
-                              <span class="s2">&quot;numpy package to be installed.&quot;</span> <span class="p">)</span>
+            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
+                <span class="s2">&quot;Using Array or CArray trait types requires the &quot;</span>
+                <span class="s2">&quot;numpy package to be installed.&quot;</span>
+            <span class="p">)</span>
 
-        <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">asarray</span><span class="p">,</span> <span class="n">ndarray</span>
+        <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">asarray</span><span class="p">,</span> <span class="n">ndarray</span>
 
         <span class="c1"># Mark this as being an &#39;array&#39; trait:</span>
-        <span class="n">metadata</span><span class="p">[</span> <span class="s1">&#39;array&#39;</span> <span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;array&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># Normally use object identity to detect array values changing:</span>
-        <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span> <span class="s1">&#39;comparison_mode&#39;</span><span class="p">,</span> <span class="n">OBJECT_IDENTITY_COMPARE</span> <span class="p">)</span>
+        <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;comparison_mode&quot;</span><span class="p">,</span> <span class="n">OBJECT_IDENTITY_COMPARE</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">typecode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span> <span class="s1">&#39;typecode is a deprecated argument; use dtype &#39;</span>
-                           <span class="s1">&#39;instead&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">typecode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;typecode is a deprecated argument; use dtype &quot;</span> <span class="s2">&quot;instead&quot;</span><span class="p">,</span>
+                <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="p">)</span>
 
-            <span class="k">if</span> <span class="p">(</span><span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">typecode</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span> <span class="s1">&#39;Inconsistent usage of the dtype and &#39;</span>
-                                  <span class="s1">&#39;typecode arguments; use dtype alone.&#39;</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">typecode</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
+                    <span class="s2">&quot;Inconsistent usage of the dtype and &quot;</span>
+                    <span class="s2">&quot;typecode arguments; use dtype alone.&quot;</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">dtype</span> <span class="o">=</span> <span class="n">typecode</span>
 
-        <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="c1"># Convert the argument into an actual numpy dtype object:</span>
-                <span class="n">dtype</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span> <span class="n">dtype</span> <span class="p">)</span>
+                <span class="n">dtype</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span> <span class="s1">&#39;could not convert </span><span class="si">%r</span><span class="s1"> to a numpy dtype&#39;</span> <span class="o">%</span>
-                                  <span class="n">dtype</span> <span class="p">)</span>
+                <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
+                    <span class="s2">&quot;could not convert </span><span class="si">%r</span><span class="s2"> to a numpy dtype&quot;</span> <span class="o">%</span> <span class="n">dtype</span>
+                <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">shape</span><span class="p">,</span> <span class="n">SequenceTypes</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">SequenceTypes</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">shape</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="p">((</span><span class="n">item</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span>
-                        <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span> <span class="n">item</span><span class="p">,</span> <span class="n">SequenceTypes</span> <span class="p">)</span> <span class="ow">and</span>
-                         <span class="p">(</span><span class="nb">len</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span>
-                         <span class="p">(</span><span class="nb">type</span><span class="p">(</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span>
-                         <span class="p">((</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">((</span><span class="nb">type</span><span class="p">(</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span>
-                           <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))))):</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="p">(</span><span class="n">item</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+                        <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">)</span>
+                        <span class="ow">or</span> <span class="p">(</span>
+                            <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">SequenceTypes</span><span class="p">)</span>
+                            <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+                            <span class="ow">and</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">)</span>
+                            <span class="ow">and</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+                            <span class="ow">and</span> <span class="p">(</span>
+                                <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+                                <span class="ow">or</span> <span class="p">(</span>
+                                    <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">)</span>
+                                    <span class="ow">and</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                                <span class="p">)</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="p">):</span>
                         <span class="k">continue</span>
 
-                    <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="s2">&quot;shape should be a list or tuple&quot;</span>
+                    <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span><span class="s2">&quot;shape should be a list or tuple&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="s2">&quot;shape should be a list or tuple&quot;</span>
+                <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span><span class="s2">&quot;shape should be a list or tuple&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_for_dtype_and_shape</span><span class="p">(</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_for_dtype_and_shape</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span>  <span class="o">=</span> <span class="n">dtype</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span>  <span class="o">=</span> <span class="n">shape</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span> <span class="o">=</span> <span class="nb">coerce</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span> <span class="o">=</span> <span class="n">coerce</span>
 
-        <span class="nb">super</span><span class="p">(</span> <span class="n">AbstractArray</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span> <span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AbstractArray</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AbstractArray.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+<div class="viewcode-block" id="AbstractArray.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that the value is a valid array.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># Make sure the value is an array:</span>
-            <span class="n">type_value</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">ndarray</span> <span class="p">):</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">SequenceTypes</span> <span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="n">asarray</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="p">)</span>
+            <span class="n">type_value</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">SequenceTypes</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="n">asarray</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
             <span class="c1"># Make sure the array is of the right type:</span>
-            <span class="k">if</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span>
-                <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">):</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coerce</span><span class="p">:</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="p">)</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># XXX: this also coerces.</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="n">asarray</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="p">)</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
             <span class="c1"># If no shape requirements, then return the value:</span>
             <span class="n">trait_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span>
-            <span class="k">if</span> <span class="n">trait_shape</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">trait_shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">value</span>
 
             <span class="c1"># Else make sure that the value&#39;s shape is compatible:</span>
             <span class="n">value_shape</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">trait_shape</span> <span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span> <span class="n">value_shape</span> <span class="p">):</span>
-                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">value_shape</span> <span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">trait_shape</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">value_shape</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value_shape</span><span class="p">):</span>
                     <span class="n">item</span> <span class="o">=</span> <span class="n">trait_shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
                             <span class="k">if</span> <span class="n">dim</span> <span class="o">!=</span> <span class="n">item</span><span class="p">:</span>
                                 <span class="k">break</span>
-                        <span class="k">elif</span> <span class="p">((</span><span class="n">dim</span> <span class="o">&lt;</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">or</span>
-                              <span class="p">((</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">dim</span> <span class="o">&gt;</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))):</span>
+                        <span class="k">elif</span> <span class="p">(</span><span class="n">dim</span> <span class="o">&lt;</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">or</span> <span class="p">(</span>
+                            <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">dim</span> <span class="o">&gt;</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="p">):</span>
                             <span class="k">break</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">value</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractArray.info"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+<div class="viewcode-block" id="AbstractArray.info"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns descriptive information about the trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">dtype</span> <span class="o">=</span> <span class="n">shape</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">shape</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">shape</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="n">item</span> <span class="o">=</span> <span class="s1">&#39;*&#39;</span>
-                <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                        <span class="n">item</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">..&#39;</span> <span class="o">%</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">item</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+                <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">item</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">..&quot;</span> <span class="o">%</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">item</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">..</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">item</span>
-                <span class="n">shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span>
-            <span class="n">shape</span> <span class="o">=</span> <span class="s1">&#39; with shape </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="nb">tuple</span><span class="p">(</span> <span class="n">shape</span> <span class="p">),</span> <span class="p">)</span>
+                        <span class="n">item</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">..</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span>
+                <span class="n">shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="s2">&quot; with shape </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">shape</span><span class="p">),)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># FIXME: restore nicer descriptions of dtypes.</span>
-            <span class="n">dtype</span> <span class="o">=</span> <span class="s1">&#39; of </span><span class="si">%s</span><span class="s1"> values&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot; of </span><span class="si">%s</span><span class="s2"> values&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span>
 
-        <span class="k">return</span> <span class="s1">&#39;an array</span><span class="si">%s%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span> <span class="p">)</span></div>
+        <span class="k">return</span> <span class="s2">&quot;an array</span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractArray.create_editor"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray.create_editor">[docs]</a>    <span class="k">def</span> <span class="nf">create_editor</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+<div class="viewcode-block" id="AbstractArray.create_editor"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray.create_editor">[docs]</a>    <span class="k">def</span> <span class="nf">create_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the default UI editor for the trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">editor</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">editor</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="n">auto_set</span> <span class="o">=</span> <span class="bp">False</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_set</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">auto_set</span> <span class="o">=</span> <span class="bp">True</span>
-        <span class="n">enter_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">enter_set</span> <span class="ow">or</span> <span class="bp">False</span>
+        <span class="n">auto_set</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_set</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">auto_set</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">enter_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">enter_set</span> <span class="ow">or</span> <span class="kc">False</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">ArrayEditor</span>
-            <span class="n">editor</span> <span class="o">=</span> <span class="n">ArrayEditor</span><span class="p">(</span> <span class="n">auto_set</span><span class="o">=</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="o">=</span><span class="n">enter_set</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">ArrayEditor</span>
+
+            <span class="n">editor</span> <span class="o">=</span> <span class="n">ArrayEditor</span><span class="p">(</span><span class="n">auto_set</span><span class="o">=</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="o">=</span><span class="n">enter_set</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">TupleEditor</span>
+            <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TupleEditor</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">types</span> <span class="o">=</span> <span class="n">Any</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">types</span> <span class="o">=</span> <span class="n">dtype2trait</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="p">)</span>
-            <span class="n">editor</span> <span class="o">=</span> <span class="n">TupleEditor</span><span class="p">(</span> <span class="n">types</span>     <span class="o">=</span> <span class="n">types</span><span class="p">,</span>
-                                  <span class="n">labels</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="ow">or</span> <span class="p">[],</span>
-                                  <span class="n">cols</span>      <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">,</span>
-                                  <span class="n">auto_set</span>  <span class="o">=</span> <span class="n">auto_set</span><span class="p">,</span>
-                                  <span class="n">enter_set</span> <span class="o">=</span> <span class="n">enter_set</span>  <span class="p">)</span>
+                <span class="n">types</span> <span class="o">=</span> <span class="n">dtype2trait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="n">editor</span> <span class="o">=</span> <span class="n">TupleEditor</span><span class="p">(</span>
+                <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span>
+                <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="ow">or</span> <span class="p">[],</span>
+                <span class="n">cols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">auto_set</span><span class="o">=</span><span class="n">auto_set</span><span class="p">,</span>
+                <span class="n">enter_set</span><span class="o">=</span><span class="n">enter_set</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">editor</span></div>
 
-    <span class="c1">#-- Private Methods --------------------------------------------------------</span>
+    <span class="c1"># -- Private Methods --------------------------------------------------------</span>
 
-<div class="viewcode-block" id="AbstractArray.get_default_value"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray.get_default_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_value</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+<div class="viewcode-block" id="AbstractArray.get_default_value"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray.get_default_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the default value constructor for the type (called from the</span>
 <span class="sd">            trait factory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span> <span class="mi">7</span><span class="p">,</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_default_value</span><span class="p">,</span>
-                 <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span> <span class="p">),</span> <span class="p">),</span> <span class="bp">None</span> <span class="p">)</span> <span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">copy_default_value</span><span class="p">,</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span><span class="p">),),</span>
+                <span class="kc">None</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractArray.copy_default_value"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray.copy_default_value">[docs]</a>    <span class="k">def</span> <span class="nf">copy_default_value</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+<div class="viewcode-block" id="AbstractArray.copy_default_value"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray.copy_default_value">[docs]</a>    <span class="k">def</span> <span class="nf">copy_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns a copy of the default value (called from the C code on</span>
 <span class="sd">            first reference to a trait with no current value).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">_default_for_dtype_and_shape</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_default_for_dtype_and_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Invent a suitable default value for a given dtype and shape. &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">zeros</span>
+        <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">zeros</span>
 
-        <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Compatibility with the default of Traits 2.0</span>
             <span class="n">dt</span> <span class="o">=</span> <span class="nb">int</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">dt</span> <span class="o">=</span> <span class="n">dtype</span>
-        <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span> <span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="p">),</span> <span class="n">dt</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="mi">0</span><span class="p">,),</span> <span class="n">dt</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">size</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">shape</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">item</span> <span class="o">=</span> <span class="mi">1</span>
-                <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span> <span class="ow">in</span> <span class="n">SequenceTypes</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="ow">in</span> <span class="n">SequenceTypes</span><span class="p">:</span>
                     <span class="c1"># Given a (minimum-allowed-length, maximum-allowed_length)</span>
                     <span class="c1"># pair for a particular axis, use the minimum.</span>
                     <span class="n">item</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">size</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span> <span class="n">size</span><span class="p">,</span> <span class="n">dt</span> <span class="p">)</span>
+                <span class="n">size</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">value</span></div>
 
 
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 <span class="c1">#  &#39;Array&#39; trait:</span>
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="Array"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.Array">[docs]</a><span class="k">class</span> <span class="nc">Array</span> <span class="p">(</span> <span class="n">AbstractArray</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="Array"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.Array">[docs]</a><span class="k">class</span> <span class="nc">Array</span><span class="p">(</span><span class="n">AbstractArray</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Defines a trait whose value must be a numpy array.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
-                   <span class="n">typecode</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">typecode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns an Array trait.</span>
 
 <span class="sd">        Parameters</span>
@@ -356,20 +424,24 @@
 <span class="sd">        right shape to the specified *dtype* (just like numpy&#39;s **array**</span>
 <span class="sd">        does).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span> <span class="n">Array</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span>
-                                       <span class="n">typecode</span> <span class="o">=</span> <span class="n">typecode</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span> <span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Array</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">typecode</span><span class="o">=</span><span class="n">typecode</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span>
+        <span class="p">)</span></div>
 
-<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="c1"># -------------------------------------------------------------------------------</span>
 <span class="c1">#  &#39;CArray&#39; trait:</span>
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="CArray"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.CArray">[docs]</a><span class="k">class</span> <span class="nc">CArray</span> <span class="p">(</span> <span class="n">AbstractArray</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="CArray"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.CArray">[docs]</a><span class="k">class</span> <span class="nc">CArray</span><span class="p">(</span><span class="n">AbstractArray</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Defines a trait whose value must be a numpy array, with casting</span>
 <span class="sd">        allowed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
-                   <span class="n">typecode</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">typecode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns a CArray trait.</span>
 
 <span class="sd">        Parameters</span>
@@ -404,63 +476,64 @@
 <span class="sd">        lists of the right shape to the specified *dtype* (just like</span>
 <span class="sd">        numpy&#39;s **array** does).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span> <span class="n">CArray</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span>
-                                        <span class="n">typecode</span> <span class="o">=</span> <span class="n">typecode</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span> <span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CArray</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">typecode</span><span class="o">=</span><span class="n">typecode</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span>
+        <span class="p">)</span></div>
 
 
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 <span class="c1">#  &#39;ArrayOrNone&#39; trait</span>
-<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="ArrayOrNone"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.ArrayOrNone">[docs]</a><span class="k">class</span> <span class="nc">ArrayOrNone</span> <span class="p">(</span> <span class="n">CArray</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="ArrayOrNone"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.ArrayOrNone">[docs]</a><span class="k">class</span> <span class="nc">ArrayOrNone</span><span class="p">(</span><span class="n">CArray</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A trait whose value may be either a NumPy array or None, with</span>
 <span class="sd">        casting allowed.  The default is None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span> <span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
         <span class="c1"># Normally use object identity to detect array values changing:</span>
-        <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span> <span class="s1">&#39;comparison_mode&#39;</span><span class="p">,</span> <span class="n">OBJECT_IDENTITY_COMPARE</span> <span class="p">)</span>
-        <span class="nb">super</span><span class="p">(</span> <span class="n">ArrayOrNone</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span> <span class="p">)</span>
+        <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;comparison_mode&quot;</span><span class="p">,</span> <span class="n">OBJECT_IDENTITY_COMPARE</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ArrayOrNone</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">value</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span> <span class="n">ArrayOrNone</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">ArrayOrNone</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_default_value</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">dv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span>
-        <span class="k">if</span> <span class="n">dv</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dv</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">dv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dv</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span> <span class="mi">7</span><span class="p">,</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy_default_value</span><span class="p">,</span>
-                          <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">dv</span> <span class="p">),</span> <span class="p">),</span> <span class="bp">None</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">copy_default_value</span><span class="p">,</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dv</span><span class="p">),),</span>
+                    <span class="kc">None</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_default_for_dtype_and_shape</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_default_for_dtype_and_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
         <span class="c1"># For ArrayOrNone, if no default is explicitly specified, we</span>
         <span class="c1"># always default to `None`.</span>
-        <span class="k">return</span> <span class="bp">None</span></div>
+        <span class="k">return</span> <span class="kc">None</span></div>
 </pre></div>
 
           </div>
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+          </div>
+      <div class="spc-rightsidebar span3">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../index.html">
-              <img class="logo" src="../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p><div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../index.html">Module code</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
+              <img class="logo" src="../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -468,19 +541,31 @@
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
+        </div>
+      </div>
     </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
     <div class="footer">
-      &copy;2008-2016, Enthought.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2016, Enthought
+      </li>
+      <li>
+      Last updated on Jan 30, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      </li>
+    </ul>
     </div>
-
-    
-
-    
+    </div>
+    </div>
   </body>
 </html>

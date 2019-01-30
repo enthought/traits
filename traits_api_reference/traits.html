@@ -1,21 +1,21 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
     
-    <title>traits Module &mdash; Traits 4 User Manual</title>
+    <title>traits Module &mdash; Traits 5 User Manual</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.6.0',
+        VERSION:     '5.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,24 +24,61 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="Traits 4 User Manual" href="../index.html" />
-    <link rel="up" title="API Reference" href="index.html" />
-    <link rel="next" title="adapter Module" href="adapter.html" />
-    <link rel="prev" title="API Reference" href="index.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="category Module" href="category.html" >
+    <link rel="prev" title="API Reference" href="index.html" > 
   </head>
-  <body role="document">
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
+  
+    <li><a href="#"><code class="docutils literal"><span class="pre">traits</span></code> Module</a></li>
   
 
-    <div class="document">
-      <div class="documentwrapper">
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="category.html" title="category Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="index.html" title="API Reference"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.traits">
 <span id="traits-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">traits</span></code> Module<a class="headerlink" href="#module-traits.traits" title="Permalink to this headline">¶</a></h1>
@@ -310,18 +347,18 @@ as the keyword. This feature lets you associate metadata with a trait.</p>
 <p>The following predefined keywords are accepted:</p>
 <p class="rubric">Keywords</p>
 <dl class="docutils">
-<dt>desc</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">str</span><dd>Describes the intended meaning of the trait. It is used in
+<dt>desc <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>Describes the intended meaning of the trait. It is used in
 exception messages and fly-over help in user interfaces.</dd>
-<dt>label</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">str</span><dd>Provides a human-readable name for the trait. It is used to label user
+<dt>label <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>Provides a human-readable name for the trait. It is used to label user
 interface editors for traits.</dd>
-<dt>editor</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">traits.api.Editor</span><dd>Instance of a subclass Editor object to use when creating a user
+<dt>editor <span class="classifier-delimiter">:</span> <span class="classifier">traits.api.Editor</span></dt>
+<dd>Instance of a subclass Editor object to use when creating a user
 interface editor for the trait. See the &#8220;Traits UI User Guide&#8221; for
 more information on trait editors.</dd>
-<dt>comparison_mode</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">int</span><dd><p class="first">Indicates when trait change notifications should be generated based upon
+<dt>comparison_mode <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first">Indicates when trait change notifications should be generated based upon
 the result of comparing the old and new values of a trait assignment:</p>
 <ul class="last simple">
 <li>0 (NO_COMPARE): The values are not compared and a trait change
@@ -333,8 +370,8 @@ old and new values are not equal using Python&#8217;s
 &#8216;rich comparison&#8217; operator. This is the default.</li>
 </ul>
 </dd>
-<dt>rich_compare</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd><p class="first">Indicates whether the basis for considering a trait attribute value to
+<dt>rich_compare <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first">Indicates whether the basis for considering a trait attribute value to
 have changed is a &#8220;rich&#8221; comparison (True, the default), or simple
 object identity (False). This attribute can be useful in cases
 where a detailed comparison of two objects is very expensive, or where
@@ -430,11 +467,11 @@ original value.</p>
 
           </div>
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+          </div>
+      <div class="spc-rightsidebar span3">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -445,29 +482,23 @@ original value.</p>
 </ul>
 </li>
 </ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">API Reference</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">API Reference</a></li>
-      <li>Next: <a href="adapter.html" title="next chapter"><code class="docutils literal"><span class="pre">adapter</span></code> Module</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/traits_api_reference/traits.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">API Reference</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="category.html"
+                        title="next chapter"><code class="docutils literal"><span class="pre">category</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/traits.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -475,22 +506,31 @@ original value.</p>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
+        </div>
+      </div>
     </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
     <div class="footer">
-      &copy;2008-2016, Enthought.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
-      |
-      <a href="../_sources/traits_api_reference/traits.txt"
-          rel="nofollow">Page source</a>
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2016, Enthought
+      </li>
+      <li>
+      Last updated on Jan 30, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      </li>
+    </ul>
     </div>
-
-    
-
-    
+    </div>
+    </div>
   </body>
 </html>

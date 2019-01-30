@@ -1,21 +1,21 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
     
-    <title>traits.util.resource &mdash; Traits 4 User Manual</title>
+    <title>traits.util.resource &mdash; Traits 5 User Manual</title>
     
-    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '4.6.0',
+        VERSION:     '5.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,25 +24,54 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../../../_static/et.ico"/>
-    <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" />
-   
-  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
   </head>
-  <body role="document">
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li>
+  
+    <li><a href="#">traits.util.resource</a></li>
   
 
-    <div class="document">
-      <div class="documentwrapper">
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body" id="spc-section-body">
             
   <h1>Source code for traits.util.resource</h1><div class="highlight"><pre>
-<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span></span><span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># Copyright (c) 2005, Enthought, Inc.</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
@@ -54,7 +83,7 @@
 <span class="c1">#</span>
 <span class="c1"># Author: Enthought, Inc.</span>
 <span class="c1"># Description: &lt;Enthought util package component&gt;</span>
-<span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="sd">&quot;&quot;&quot; Utility functions for managing and finding resources (ie. images/files etc).</span>
 
 <span class="sd">    get_path :           Returns the absolute path of a class or instance</span>
@@ -74,7 +103,7 @@
 
 <span class="c1"># Standard library imports.</span>
 <span class="kn">import</span> <span class="nn">inspect</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">distutils.sysconfig</span> <span class="kn">import</span> <span class="n">get_python_lib</span>
+<span class="kn">from</span> <span class="nn">distutils.sysconfig</span> <span class="k">import</span> <span class="n">get_python_lib</span>
 
 
 <div class="viewcode-block" id="get_path"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.resource.get_path">[docs]</a><span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
@@ -90,15 +119,15 @@
             <span class="n">klass</span> <span class="o">=</span> <span class="n">path</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">klass</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">__class__</span>
+            <span class="n">klass</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="vm">__class__</span>
 
         <span class="c1"># Get the name of the module that the class was loaded from.</span>
-        <span class="n">module_name</span> <span class="o">=</span> <span class="n">klass</span><span class="o">.</span><span class="n">__module__</span>
+        <span class="n">module_name</span> <span class="o">=</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__module__</span>
 
         <span class="c1"># Look the module up.</span>
         <span class="n">module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">module_name</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">module_name</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
             <span class="n">dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()]</span>
             <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
@@ -106,11 +135,12 @@
                     <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Get the path to the module.</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">__file__</span><span class="p">)</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">path</span></div>
 
-<div class="viewcode-block" id="create_unique_name"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.resource.create_unique_name">[docs]</a><span class="k">def</span> <span class="nf">create_unique_name</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="create_unique_name"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.resource.create_unique_name">[docs]</a><span class="k">def</span> <span class="nf">create_unique_name</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Creates a name starting with &#39;prefix&#39; that is not in &#39;names&#39;. &quot;&quot;&quot;</span>
 
     <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
@@ -122,7 +152,8 @@
 
     <span class="k">return</span> <span class="n">name</span></div>
 
-<div class="viewcode-block" id="find_resource"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.resource.find_resource">[docs]</a><span class="k">def</span> <span class="nf">find_resource</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">,</span> <span class="n">alt_path</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">return_path</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="find_resource"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.resource.find_resource">[docs]</a><span class="k">def</span> <span class="nf">find_resource</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">,</span> <span class="n">alt_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_path</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns a file object or file path pointing to the desired resource.</span>
 
 <span class="sd">    Parameters</span>
@@ -167,7 +198,7 @@
         <span class="c1"># image path. This method works in all cases as long as setuptools is</span>
         <span class="c1"># installed. If setuptools isn&#39;t installed, the backup sys.path[0]</span>
         <span class="c1"># method is used.</span>
-        <span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">resource_stream</span><span class="p">,</span> <span class="n">working_set</span><span class="p">,</span> <span class="n">Requirement</span>
+        <span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="k">import</span> <span class="n">resource_stream</span><span class="p">,</span> <span class="n">working_set</span><span class="p">,</span> <span class="n">Requirement</span>
 
         <span class="c1"># Get a requirement for the project</span>
         <span class="n">requirement</span> <span class="o">=</span> <span class="n">Requirement</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
@@ -193,21 +224,21 @@
             <span class="k">if</span> <span class="n">return_path</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">full_path</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
 
         <span class="c1"># Get the image using sys.path[0], which is the directory that the</span>
         <span class="c1"># running script lives in. The path to the file is then constructed by</span>
         <span class="c1"># navigating from the script&#39;s location. This method only works if this</span>
         <span class="c1"># script is called directly from the command line using</span>
         <span class="c1"># &#39;python %SOMEPATH%/&lt;script&gt;&#39;</span>
-        <span class="k">if</span> <span class="n">alt_path</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">alt_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="n">return_path</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alt_path</span><span class="p">)</span>
 
         <span class="c1"># Try to open the file, return None on exception</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alt_path</span><span class="p">),</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alt_path</span><span class="p">),</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="k">return</span></div>
 
@@ -224,11 +255,13 @@
 <span class="sd">        The return value in always None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fi</span> <span class="o">=</span> <span class="n">find_resource</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">fi</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource not found for project &quot;</span><span class="si">%s</span><span class="s1">&quot;: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
-                           <span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">fi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s1">&#39;Resource not found for project &quot;</span><span class="si">%s</span><span class="s1">&quot;: </span><span class="si">%s</span><span class="s1">&#39;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">)</span>
+        <span class="p">)</span>
 
-    <span class="n">fo</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+    <span class="n">fo</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
     <span class="n">fo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
     <span class="n">fo</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
@@ -240,25 +273,17 @@
 
           </div>
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+          </div>
+      <div class="spc-rightsidebar span3">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../../index.html">
-              <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p><div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../../index.html">Documentation overview</a><ul>
-  <li><a href="../../index.html">Module code</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -266,19 +291,31 @@
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
+        </div>
+      </div>
     </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
     <div class="footer">
-      &copy;2008-2016, Enthought.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2016, Enthought
+      </li>
+      <li>
+      Last updated on Jan 30, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      </li>
+    </ul>
     </div>
-
-    
-
-    
+    </div>
+    </div>
   </body>
 </html>

@@ -1,21 +1,21 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
     
-    <title>trait_types Module &mdash; Traits 4 User Manual</title>
+    <title>trait_types Module &mdash; Traits 5 User Manual</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.6.0',
+        VERSION:     '5.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,24 +24,61 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="Traits 4 User Manual" href="../index.html" />
-    <link rel="up" title="API Reference" href="index.html" />
-    <link rel="next" title="trait_value Module" href="trait_value.html" />
-    <link rel="prev" title="trait_numeric Module" href="trait_numeric.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="trait_value Module" href="trait_value.html" >
+    <link rel="prev" title="trait_numeric Module" href="trait_numeric.html" > 
   </head>
-  <body role="document">
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
+  
+    <li><a href="#"><code class="docutils literal"><span class="pre">trait_types</span></code> Module</a></li>
   
 
-    <div class="document">
-      <div class="documentwrapper">
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="trait_value.html" title="trait_value Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="trait_numeric.html" title="trait_numeric Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.trait_types">
 <span id="trait-types-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">trait_types</span></code> Module<a class="headerlink" href="#module-traits.trait_types" title="Permalink to this headline">¶</a></h1>
@@ -137,12 +174,12 @@ validator.</p>
 <dt id="traits.trait_types.BaseLong.evaluate">
 <code class="descname">evaluate</code><a class="headerlink" href="#traits.trait_types.BaseLong.evaluate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The function to use for evaluating strings to this type:</p>
-<p>alias of <code class="xref py py-class docutils literal"><span class="pre">long</span></code></p>
+<p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.BaseLong.default_value">
-<code class="descname">default_value</code><em class="property"> = 0L</em><a class="headerlink" href="#traits.trait_types.BaseLong.default_value" title="Permalink to this definition">¶</a></dt>
+<code class="descname">default_value</code><em class="property"> = 0</em><a class="headerlink" href="#traits.trait_types.BaseLong.default_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>The default value for the trait:</p>
 </dd></dl>
 
@@ -174,7 +211,7 @@ validator.</p>
 validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Long.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (11, &lt;type 'long'&gt;, None, &lt;type 'int'&gt;, &lt;type 'numpy.integer'&gt;)</em><a class="headerlink" href="#traits.trait_types.Long.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'int'&gt;, None, &lt;class 'int'&gt;, &lt;class 'numpy.integer'&gt;)</em><a class="headerlink" href="#traits.trait_types.Long.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -225,7 +262,7 @@ validator.</p>
 validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Float.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (11, &lt;type 'float'&gt;, &lt;type 'numpy.floating'&gt;, None, &lt;type 'int'&gt;, &lt;type 'long'&gt;, &lt;type 'numpy.integer'&gt;)</em><a class="headerlink" href="#traits.trait_types.Float.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (21,)</em><a class="headerlink" href="#traits.trait_types.Float.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -276,7 +313,7 @@ validator.</p>
 fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Complex.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (11, &lt;type 'complex'&gt;, &lt;type 'numpy.complexfloating'&gt;, None, &lt;type 'float'&gt;, &lt;type 'numpy.floating'&gt;, &lt;type 'int'&gt;, &lt;type 'numpy.integer'&gt;)</em><a class="headerlink" href="#traits.trait_types.Complex.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'complex'&gt;, &lt;class 'numpy.complexfloating'&gt;, None, &lt;class 'float'&gt;, &lt;class 'numpy.floating'&gt;, &lt;class 'int'&gt;, &lt;class 'numpy.integer'&gt;)</em><a class="headerlink" href="#traits.trait_types.Complex.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -320,7 +357,7 @@ fast validator.</p>
 fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Str.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (11, &lt;type 'basestring'&gt;)</em><a class="headerlink" href="#traits.trait_types.Str.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'str'&gt;)</em><a class="headerlink" href="#traits.trait_types.Str.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -345,7 +382,7 @@ when used in a View.</p>
 <dd><p>Defines a trait whose value must be a Python unicode string.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.BaseUnicode.default_value">
-<code class="descname">default_value</code><em class="property"> = u''</em><a class="headerlink" href="#traits.trait_types.BaseUnicode.default_value" title="Permalink to this definition">¶</a></dt>
+<code class="descname">default_value</code><em class="property"> = ''</em><a class="headerlink" href="#traits.trait_types.BaseUnicode.default_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>The default value for the trait:</p>
 </dd></dl>
 
@@ -377,7 +414,7 @@ when used in a View.</p>
 C-level fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Unicode.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (11, &lt;type 'unicode'&gt;, None, &lt;type 'str'&gt;)</em><a class="headerlink" href="#traits.trait_types.Unicode.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'str'&gt;, None, &lt;class 'str'&gt;)</em><a class="headerlink" href="#traits.trait_types.Unicode.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -389,7 +426,7 @@ C-level fast validator.</p>
 <dd><p>Defines a trait whose value must be a Python bytes string.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.BaseBytes.default_value">
-<code class="descname">default_value</code><em class="property"> = ''</em><a class="headerlink" href="#traits.trait_types.BaseBytes.default_value" title="Permalink to this definition">¶</a></dt>
+<code class="descname">default_value</code><em class="property"> = b''</em><a class="headerlink" href="#traits.trait_types.BaseBytes.default_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>The default value for the trait:</p>
 </dd></dl>
 
@@ -427,7 +464,7 @@ C-level fast validator.</p>
 C-level fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Bytes.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (11, &lt;type 'str'&gt;)</em><a class="headerlink" href="#traits.trait_types.Bytes.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'bytes'&gt;)</em><a class="headerlink" href="#traits.trait_types.Bytes.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -478,7 +515,7 @@ C-level fast validator.</p>
 fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Bool.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (11, &lt;type 'bool'&gt;, None, &lt;type 'numpy.bool_'&gt;)</em><a class="headerlink" href="#traits.trait_types.Bool.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'bool'&gt;, None, &lt;class 'numpy.bool_'&gt;)</em><a class="headerlink" href="#traits.trait_types.Bool.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -512,7 +549,7 @@ coercions of non-int values to int.</p>
 coercions of non-int values to int using a C-level fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CInt.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (12, &lt;type 'int'&gt;)</em><a class="headerlink" href="#traits.trait_types.CInt.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'int'&gt;)</em><a class="headerlink" href="#traits.trait_types.CInt.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -527,7 +564,7 @@ coercions of non-long values to long.</p>
 <dt id="traits.trait_types.BaseCLong.evaluate">
 <code class="descname">evaluate</code><a class="headerlink" href="#traits.trait_types.BaseCLong.evaluate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The function to use for evaluating strings to this type:</p>
-<p>alias of <code class="xref py py-class docutils literal"><span class="pre">long</span></code></p>
+<p>alias of <code class="xref py py-class docutils literal"><span class="pre">int</span></code></p>
 </dd></dl>
 
 <dl class="method">
@@ -546,7 +583,7 @@ coercions of non-long values to long.</p>
 coercions of non-long values to long using a C-level fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CLong.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (12, &lt;type 'long'&gt;)</em><a class="headerlink" href="#traits.trait_types.CLong.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'int'&gt;)</em><a class="headerlink" href="#traits.trait_types.CLong.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -580,7 +617,7 @@ coercions of non-float values to float.</p>
 coercions of non-float values to float using a C-level fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CFloat.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (12, &lt;type 'float'&gt;)</em><a class="headerlink" href="#traits.trait_types.CFloat.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'float'&gt;)</em><a class="headerlink" href="#traits.trait_types.CFloat.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -615,7 +652,7 @@ coercions of non-complex values to complex using a C-level fast
 validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CComplex.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (12, &lt;type 'complex'&gt;)</em><a class="headerlink" href="#traits.trait_types.CComplex.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'complex'&gt;)</em><a class="headerlink" href="#traits.trait_types.CComplex.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -643,7 +680,7 @@ coercions of non-string values to string using a C-level fast
 validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CStr.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (7, ((12, &lt;type 'str'&gt;), (12, &lt;type 'unicode'&gt;)))</em><a class="headerlink" href="#traits.trait_types.CStr.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (7, ((12, &lt;class 'str'&gt;), (12, &lt;class 'str'&gt;)))</em><a class="headerlink" href="#traits.trait_types.CStr.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -671,7 +708,7 @@ supports coercions of non-unicode values to unicode using a C-level
 fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CUnicode.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (12, &lt;type 'unicode'&gt;)</em><a class="headerlink" href="#traits.trait_types.CUnicode.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'str'&gt;)</em><a class="headerlink" href="#traits.trait_types.CUnicode.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -699,7 +736,7 @@ supports coercions of non-bytes values bytes using a C-level
 fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CBytes.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (12, &lt;type 'str'&gt;)</em><a class="headerlink" href="#traits.trait_types.CBytes.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'bytes'&gt;)</em><a class="headerlink" href="#traits.trait_types.CBytes.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -734,7 +771,7 @@ coercions of non-boolean values to boolean using a C-level fast
 validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CBool.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (12, &lt;type 'bool'&gt;)</em><a class="headerlink" href="#traits.trait_types.CBool.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'bool'&gt;)</em><a class="headerlink" href="#traits.trait_types.CBool.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -807,7 +844,7 @@ regular expression.</p>
 code in some language.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Code.metadata">
-<code class="descname">metadata</code><em class="property"> = {'editor': &lt;function code_editor at 0x105927230&gt;}</em><a class="headerlink" href="#traits.trait_types.Code.metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">metadata</code><em class="property"> = {'editor': &lt;function code_editor&gt;}</em><a class="headerlink" href="#traits.trait_types.Code.metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>The standard metadata for the trait:</p>
 </dd></dl>
 
@@ -821,7 +858,7 @@ being HTML. By default the value is parsed and displayed as HTML in
 TraitsUI views. The validation of the value does not enforce HTML syntax.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.HTML.metadata">
-<code class="descname">metadata</code><em class="property"> = {'editor': &lt;function html_editor at 0x1059272a8&gt;}</em><a class="headerlink" href="#traits.trait_types.HTML.metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">metadata</code><em class="property"> = {'editor': &lt;function html_editor&gt;}</em><a class="headerlink" href="#traits.trait_types.HTML.metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>The standard metadata for the trait:</p>
 </dd></dl>
 
@@ -836,7 +873,7 @@ length or matching a regular expression.</p>
 PasswordEditor in TraitsUI views, which obscures text entered by the user.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Password.metadata">
-<code class="descname">metadata</code><em class="property"> = {'editor': &lt;function password_editor at 0x1059270c8&gt;}</em><a class="headerlink" href="#traits.trait_types.Password.metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">metadata</code><em class="property"> = {'editor': &lt;function password_editor&gt;}</em><a class="headerlink" href="#traits.trait_types.Password.metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>The standard metadata for the trait:</p>
 </dd></dl>
 
@@ -921,7 +958,7 @@ and whose default value is the object containing the trait.</p>
 <dd><p>Defines a trait whose value must be a Python function.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Function.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (11, &lt;type 'function'&gt;)</em><a class="headerlink" href="#traits.trait_types.Function.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'function'&gt;)</em><a class="headerlink" href="#traits.trait_types.Function.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -939,7 +976,7 @@ and whose default value is the object containing the trait.</p>
 <dd><p>Defines a trait whose value must be a Python method.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Method.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (11, &lt;type 'instancemethod'&gt;)</em><a class="headerlink" href="#traits.trait_types.Method.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'method'&gt;)</em><a class="headerlink" href="#traits.trait_types.Method.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -952,30 +989,12 @@ and whose default value is the object containing the trait.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="traits.trait_types.Class">
-<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Class</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a trait whose value must be an old-style Python class.</p>
-<dl class="attribute">
-<dt id="traits.trait_types.Class.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (11, &lt;type 'classobj'&gt;)</em><a class="headerlink" href="#traits.trait_types.Class.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="traits.trait_types.Class.info_text">
-<code class="descname">info_text</code><em class="property"> = 'an old-style class'</em><a class="headerlink" href="#traits.trait_types.Class.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="traits.trait_types.Module">
 <em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Module</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Module" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines a trait whose value must be a Python module.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Module.fast_validate">
-<code class="descname">fast_validate</code><em class="property"> = (11, &lt;type 'module'&gt;)</em><a class="headerlink" href="#traits.trait_types.Module.fast_validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'module'&gt;)</em><a class="headerlink" href="#traits.trait_types.Module.fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>The C-level fast validator to use:</p>
 </dd></dl>
 
@@ -1032,7 +1051,7 @@ details on wildcards.</p>
 
 <dl class="attribute">
 <dt id="traits.trait_types.Constant.metadata">
-<code class="descname">metadata</code><em class="property"> = {'transient': True, 'type': 'constant'}</em><a class="headerlink" href="#traits.trait_types.Constant.metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">metadata</code><em class="property"> = {'type': 'constant', 'transient': True}</em><a class="headerlink" href="#traits.trait_types.Constant.metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>The standard metadata for the trait:</p>
 </dd></dl>
 
@@ -1050,7 +1069,7 @@ details on wildcards.</p>
 
 <dl class="attribute">
 <dt id="traits.trait_types.Delegate.metadata">
-<code class="descname">metadata</code><em class="property"> = {'transient': False, 'type': 'delegate'}</em><a class="headerlink" href="#traits.trait_types.Delegate.metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">metadata</code><em class="property"> = {'type': 'delegate', 'transient': False}</em><a class="headerlink" href="#traits.trait_types.Delegate.metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>The standard metadata for the trait:</p>
 </dd></dl>
 
@@ -1133,7 +1152,7 @@ the trait.</p>
 editor is a Python shell.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.PythonValue.metadata">
-<code class="descname">metadata</code><em class="property"> = {'editor': &lt;function shell_editor at 0x105927320&gt;}</em><a class="headerlink" href="#traits.trait_types.PythonValue.metadata" title="Permalink to this definition">¶</a></dt>
+<code class="descname">metadata</code><em class="property"> = {'editor': &lt;function shell_editor&gt;}</em><a class="headerlink" href="#traits.trait_types.PythonValue.metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>The standard metadata for the trait:</p>
 </dd></dl>
 
@@ -1310,7 +1329,7 @@ using a C-level fast validator.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>types</strong> (<em>zero or more arguments</em>) &#8211; Definition of the default and allowed tuples. If the first item of
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>types</strong> (<em>zero</em><em> or </em><em>more arguments</em>) &#8211; Definition of the default and allowed tuples. If the first item of
 <em>types</em> is a tuple, it is used as the default value.
 The remaining argument list is used to form a tuple that constrains
 the  values assigned to the returned trait. The trait&#8217;s value must
@@ -1398,12 +1417,12 @@ using a C-level fast validator.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>types</strong> (<em>zero or more arguments</em>) &#8211; Definition of the default and allowed tuples. (see
+<li><strong>types</strong> (<em>zero</em><em> or </em><em>more arguments</em>) &#8211; Definition of the default and allowed tuples. (see
 <a class="reference internal" href="#traits.trait_types.BaseTuple" title="traits.trait_types.BaseTuple"><code class="xref py py-class docutils literal"><span class="pre">BaseTuple</span></code></a> for more details)</li>
-<li><strong>fvalidate</strong> (<em>callable, optional</em>) &#8211; A callable to provide the additional custom validation for the
+<li><strong>fvalidate</strong> (<em>callable</em><em>, </em><em>optional</em>) &#8211; A callable to provide the additional custom validation for the
 tuple. The callable will be passed the tuple value and should
 return True or False.</li>
-<li><strong>fvalidate_info</strong> (<em>string, optional</em>) &#8211; A string describing the custom validation to use for the error
+<li><strong>fvalidate_info</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; A string describing the custom validation to use for the error
 messages.</li>
 </ul>
 </td>
@@ -1860,18 +1879,6 @@ or one of its subclasses.</p>
 </dd></dl>
 
 <dl class="data">
-<dt id="traits.trait_types.ListClass">
-<code class="descclassname">traits.trait_types.</code><code class="descname">ListClass</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#traits.trait_types.ListClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of class values; default value is [].</p>
-</dd></dl>
-
-<dl class="data">
-<dt id="traits.trait_types.ListInstance">
-<code class="descclassname">traits.trait_types.</code><code class="descname">ListInstance</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#traits.trait_types.ListInstance" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of instance values; default value is [].</p>
-</dd></dl>
-
-<dl class="data">
 <dt id="traits.trait_types.ListThis">
 <code class="descclassname">traits.trait_types.</code><code class="descname">ListThis</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#traits.trait_types.ListThis" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of container type values; default value is [].</p>
@@ -1948,11 +1955,11 @@ with list values can be assigned. The default value is {}.</p>
 
           </div>
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+          </div>
+      <div class="spc-rightsidebar span3">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -1963,29 +1970,23 @@ with list values can be assigned. The default value is {}.</p>
 </ul>
 </li>
 </ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  <li><a href="index.html">API Reference</a><ul>
-      <li>Previous: <a href="trait_numeric.html" title="previous chapter"><code class="docutils literal"><span class="pre">trait_numeric</span></code> Module</a></li>
-      <li>Next: <a href="trait_value.html" title="next chapter"><code class="docutils literal"><span class="pre">trait_value</span></code> Module</a></li>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/traits_api_reference/trait_types.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trait_numeric.html"
+                        title="previous chapter"><code class="docutils literal"><span class="pre">trait_numeric</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trait_value.html"
+                        title="next chapter"><code class="docutils literal"><span class="pre">trait_value</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/trait_types.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -1993,22 +1994,31 @@ with list values can be assigned. The default value is {}.</p>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
+        </div>
+      </div>
     </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
     <div class="footer">
-      &copy;2008-2016, Enthought.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
-      |
-      <a href="../_sources/traits_api_reference/trait_types.txt"
-          rel="nofollow">Page source</a>
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2016, Enthought
+      </li>
+      <li>
+      Last updated on Jan 30, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      </li>
+    </ul>
     </div>
-
-    
-
-    
+    </div>
+    </div>
   </body>
 </html>

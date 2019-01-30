@@ -1,21 +1,21 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
     
-    <title>Traits Documentation &mdash; Traits 4 User Manual</title>
+    <title>Traits Documentation &mdash; Traits 5 User Manual</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="_static/css/spc-extend.css">
+    <link rel="stylesheet" href="_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" >
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '4.6.0',
+        VERSION:     '5.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,22 +24,50 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="shortcut icon" href="_static/et.ico"/>
-    <link rel="top" title="Traits 4 User Manual" href="#" />
-    <link rel="next" title="Traits 4 User Manual" href="traits_user_manual/index.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <script type="text/javascript" src="_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="_static/img/favicon.ico">
+    <link rel="search" title="Search" href="search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="#" >
+    <link rel="next" title="Traits 5 User Manual" href="traits_user_manual/index.html" > 
   </head>
-  <body role="document">
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
   
 
-    <div class="document">
-      <div class="documentwrapper">
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="traits_user_manual/index.html" title="Traits 5 User Manual"
+           accesskey="N">next</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body" id="spc-section-body">
             
   <div class="section" id="traits-documentation">
 <h1>Traits Documentation<a class="headerlink" href="#traits-documentation" title="Permalink to this headline">¶</a></h1>
@@ -47,8 +75,8 @@
 <h2>User Reference<a class="headerlink" href="#user-reference" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="traits_user_manual/index.html">Traits 4 User Manual</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/front.html">Traits 4 User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="traits_user_manual/index.html">Traits 5 User Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/front.html">Traits 5 User Manual</a></li>
 <li class="toctree-l2"><a class="reference internal" href="traits_user_manual/intro.html">Introduction</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="traits_user_manual/intro.html#what-are-traits">What Are Traits?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="traits_user_manual/intro.html#background">Background</a></li>
@@ -112,7 +140,6 @@
 <li class="toctree-l1"><a class="reference internal" href="traits_api_reference/index.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="traits_api_reference/index.html#traits-core">Traits core</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.html"><code class="docutils literal"><span class="pre">traits</span></code> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/adapter.html"><code class="docutils literal"><span class="pre">adapter</span></code> Module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="traits_api_reference/category.html"><code class="docutils literal"><span class="pre">category</span></code> Module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="traits_api_reference/has_traits.html"><code class="docutils literal"><span class="pre">has_traits</span></code> Module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="traits_api_reference/has_dynamic_views.html"><code class="docutils literal"><span class="pre">has_dynamic_views</span></code> Module</a></li>
@@ -150,11 +177,11 @@
 
           </div>
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+          </div>
+      <div class="spc-rightsidebar span3">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="#">
-              <img class="logo" src="_static/e-logo-rev.png" alt="Logo"/>
+              <img class="logo" src="_static/img/e-logo.png" alt="Logo">
             </a></p>
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
@@ -164,26 +191,20 @@
 </ul>
 </li>
 </ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="traits_user_manual/index.html" title="next chapter">Traits 4 User Manual</a></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/index.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="traits_user_manual/index.html"
+                        title="next chapter">Traits 5 User Manual</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="_sources/index.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
@@ -191,22 +212,31 @@
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
+        </div>
+      </div>
     </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
     <div class="footer">
-      &copy;2008-2016, Enthought.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
-      
-      |
-      <a href="_sources/index.txt"
-          rel="nofollow">Page source</a>
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2016, Enthought
+      </li>
+      <li>
+      Last updated on Jan 30, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      </li>
+    </ul>
     </div>
-
-    
-
-    
+    </div>
+    </div>
   </body>
 </html>
