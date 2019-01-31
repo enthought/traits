@@ -13,6 +13,7 @@
 # All configuration values have a default value; values that are commented out
 # serve to show the default value.
 from __future__ import print_function
+import datetime
 import io
 import os
 import sys
@@ -153,7 +154,7 @@ master_doc = "index"
 
 # General substitutions.
 project = "traits"
-copyright = "2008-2016, Enthought"
+copyright = "2008-{date.year}, Enthought Inc".format(date=datetime.date.today())
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
