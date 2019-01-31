@@ -9,7 +9,7 @@
 
 from __future__ import absolute_import
 
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits.trait_types import Dict, Event, Str, TraitDictObject
 from traits.has_traits import HasTraits, on_trait_change
@@ -120,7 +120,3 @@ class TestDict(unittest.TestCase):
         # object is None (check for issue #71)
         result = foo.validate(object=None, name="bar", value={})
         self.assertEqual(result, {})
-
-
-if __name__ == "__main__":
-    unittest.main()

@@ -2,7 +2,7 @@ import os
 
 import six
 
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits.api import File, HasTraits, TraitError
 

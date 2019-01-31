@@ -7,7 +7,7 @@
 
 # Standard library imports
 import doctest
-from traits.testing.unittest_tools import unittest
+import unittest
 import sys
 
 

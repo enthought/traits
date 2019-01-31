@@ -22,7 +22,7 @@ except ImportError:
 else:
     numpy_available = True
 
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits.api import HasTraits, String
 

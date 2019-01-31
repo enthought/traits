@@ -9,7 +9,7 @@ listeners to `a:b` when `a` changes.
 from traits import _py2to3
 
 from traits.api import Float, HasTraits, List
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits import trait_notifiers
 
@@ -251,7 +251,3 @@ class TestExtendedNotifiers(unittest.TestCase):
         # 10 failures: 5 are from the internal extended listeners, see
         # test_extended_notifiers_methods_failing
         self.assertEqual([(obj, "fail", 0, 1)] * 10, self.exceptions)
-
-
-if __name__ == "__main__":
-    unittest.main()

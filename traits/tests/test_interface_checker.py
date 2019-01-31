@@ -11,7 +11,7 @@
 from __future__ import absolute_import
 
 # Standard library imports.
-from traits.testing.unittest_tools import unittest
+import unittest
 
 # Enthought library imports.
 from traits.adaptation.api import reset_global_adaptation_manager
@@ -434,8 +434,3 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         self.assertNotEqual(None, i_foo)
         self.assertEqual(FooToIFooAdapter, type(i_foo))
         return
-
-
-# Entry point for stand-alone testing.
-if __name__ == "__main__":
-    unittest.main()

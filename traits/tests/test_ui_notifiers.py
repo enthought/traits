@@ -33,7 +33,7 @@ import threading
 import time
 
 from traits.api import Callable, Float, HasTraits, on_trait_change
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits import trait_notifiers
 
@@ -137,7 +137,3 @@ class TestDecoratorUINotifiers(BaseTestUINotifiers, unittest.TestCase):
 
     def obj_factory(self):
         return CalledAsDecorator(callback=self.on_foo_notifications)
-
-
-if __name__ == "__main__":
-    unittest.main()

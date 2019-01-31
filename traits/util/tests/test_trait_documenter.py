@@ -4,11 +4,13 @@
 
 import textwrap
 import tokenize
+import unittest
 
-import mock
 import six
-
-from traits.testing.unittest_tools import unittest
+if six.PY2:
+    import mock
+else:
+    import unittest.mock as mock
 
 
 def _sphinx_present():
@@ -83,10 +85,5 @@ class TestTraitDocumenter(unittest.TestCase):
             ):
                 documenter.add_directive_header("")
 
-        documenter.directive.result.append.assert_called_once()
-
-
-if __name__ == "__main__":
-    unittest.main()
-
-# ## EOF ######################################################################
+        self.assertEqual(
+            len(documenter.directive.result.append.mock_calls), 1)

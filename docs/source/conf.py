@@ -18,6 +18,9 @@ import io
 import os
 import sys
 
+import six
+
+
 # The docset build will use slightly different formatting rules
 BUILD_DOCSET = bool(os.environ.get("BUILD_DOCSET"))
 
@@ -73,15 +76,19 @@ def mock_modules():
     else:
         return
 
-    try:
-        from mock import MagicMock
-    except ImportError:
-        if len(MOCK_MODULES) != 0:
-            print(
-                "NOTE: TraitsUI is not installed and mock is not available to "
-                "mock the missing modules, some classes will not be documented"
-            )
-            return
+    if six.PY2:
+        try:
+            from mock import MagicMock
+        except ImportError:
+            if len(MOCK_MODULES) != 0:
+                print(
+                    "NOTE: TraitsUI is not installed and mock is not "
+                    "available to mock the missing modules, some classes "
+                    "will not be documented"
+                )
+                return
+    else:
+        from unittest.mock import MagicMock
 
     # Create the custom types for the HasTraits based traitsui objects.
     TYPES = {

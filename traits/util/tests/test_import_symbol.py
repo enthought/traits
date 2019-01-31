@@ -2,7 +2,7 @@
 
 
 from traits.util.api import import_symbol
-from traits.testing.unittest_tools import unittest
+import unittest
 
 
 class TestImportSymbol(unittest.TestCase):
@@ -36,9 +36,3 @@ class TestImportSymbol(unittest.TestCase):
         self.assertEqual(symbol, import_symbol)
 
         return
-
-
-if __name__ == "__main__":
-    unittest.main()
-
-#### EOF ######################################################################

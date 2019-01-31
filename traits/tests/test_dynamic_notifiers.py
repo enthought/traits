@@ -4,7 +4,7 @@ import gc
 from traits import _py2to3
 
 from traits.api import Event, Float, HasTraits, List, on_trait_change
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits import trait_notifiers
 
@@ -330,7 +330,3 @@ class TestDynamicNotifiers(unittest.TestCase):
         # When an object with dynamic listeners has no more references,
         # it should not create cyclic garbage.
         self.assertEqual(gc.collect(), 0)
-
-
-if __name__ == "__main__":
-    unittest.main()

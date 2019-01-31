@@ -18,7 +18,7 @@ Tests for the ArrayOrNone TraitType.
 
 from __future__ import absolute_import
 
-from traits.testing.unittest_tools import unittest
+import unittest
 
 try:
     import numpy
@@ -27,8 +27,8 @@ except ImportError:
 else:
     numpy_available = True
 
-from traits.testing.unittest_tools import UnittestTools
 from traits.api import ArrayOrNone, HasTraits, NO_COMPARE, TraitError
+from traits.testing.unittest_tools import UnittestTools
 
 
 if numpy_available:

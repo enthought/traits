@@ -1,6 +1,6 @@
 """ Tests for the the "anytrait" static notifiers. """
 from traits.api import Float, HasTraits, Undefined
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits import trait_notifiers
 
@@ -170,7 +170,3 @@ class TestNotifiers(unittest.TestCase):
         obj = AnytraitStaticNotifiers4Fail()
         obj.fail = 1
         self.assertEqual(self.exceptions, [(obj, "fail", 0, 1)])
-
-
-if __name__ == "__main__":
-    unittest.main()

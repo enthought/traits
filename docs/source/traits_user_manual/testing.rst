@@ -101,11 +101,11 @@ Using Mocks
 Trying to mock a method in a |HasStrictTraits| instance will raise an error
 because the |HasStrictTraits| machinery does not allow any modification of
 the methods and attributes of a |HasStrictTraits| instance. To circumvent the
-|HasStrictTraits| machinery, and mock methods using `the mock library`_,
-please follow the logic in the example below::
+|HasStrictTraits| machinery, and mock methods using ``unittest.mock`` or
+`the mock library`_, please follow the logic in the example below::
 
     from traits.api import HasStrictTraits, Float
-    from mock import Mock
+    from unittest.mock import Mock
 
     class MyClass(HasStrictTraits):
 

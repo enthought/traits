@@ -26,7 +26,7 @@ else:
 import six
 
 from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
-from traits.testing.unittest_tools import unittest
+import unittest
 
 if six.PY2:
     LONG_TYPE = long

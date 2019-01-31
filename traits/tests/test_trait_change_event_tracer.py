@@ -1,7 +1,7 @@
 """ Tests for the trait change event tracer. """
 
 from traits.api import Float, HasTraits, on_trait_change
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits import trait_notifiers
 
@@ -146,7 +146,3 @@ class TestChangeEventTracers(unittest.TestCase):
         self.assertEqual(self.exceptions[2].args, ("method",))
         self.assertIsInstance(self.exceptions[3], FuzException)
         self.assertEqual(self.exceptions[3].args, ("function",))
-
-
-if __name__ == "__main__":
-    unittest.main()

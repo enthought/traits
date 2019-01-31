@@ -15,11 +15,11 @@
 
 import contextlib
 import gc
+import unittest
 
-from traits.testing.unittest_tools import unittest, UnittestTools
-
-from traits.trait_types import Str, WeakRef
 from traits.has_traits import HasTraits
+from traits.trait_types import Str, WeakRef
+from traits.testing.unittest_tools import UnittestTools
 
 
 class Eggs(HasTraits):

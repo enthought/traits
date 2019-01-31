@@ -17,7 +17,7 @@ import six.moves as sm
 
 from traits import _py2to3
 
-from traits.testing.unittest_tools import unittest
+import unittest
 from traits.api import (
     Bool,
     Event,
@@ -435,7 +435,3 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         with self.assertRaises(self.failureException):
             with self.assertNotDeprecated():
                 old_and_dull_caller()
-
-
-if __name__ == "__main__":
-    unittest.main()

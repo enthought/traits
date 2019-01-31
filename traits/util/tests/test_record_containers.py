@@ -76,7 +76,3 @@ class TestRecordContainers(unittest.TestCase):
             with open(filename, "r") as handle:
                 lines = handle.readlines()
             self.assertEqual(lines, ["\n"])
-
-
-if __name__ == "__main__":
-    unittest.main()

@@ -16,7 +16,7 @@ from __future__ import absolute_import
 
 import six
 
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits.api import HasTraits, Trait, TraitError, TraitHandler
 from traits.trait_base import strx

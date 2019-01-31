@@ -5,7 +5,7 @@ import sys
 from traits.adaptation.api import AdaptationManager, adapt
 import traits.adaptation.tests.abc_examples
 import traits.adaptation.tests.interface_examples
-from traits.testing.unittest_tools import unittest
+import unittest
 
 
 class TestAdaptationManagerWithABC(unittest.TestCase):

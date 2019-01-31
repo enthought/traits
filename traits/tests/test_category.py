@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits.api import HasTraits, Category, Str
 
@@ -104,12 +104,3 @@ class CategoryTestCase(unittest.TestCase):
         except SystemError:
             pass
         return
-
-
-#
-# support running this test individually, from the command-line as a script
-#
-if __name__ == "__main__":
-    unittest.main()
-
-#### EOF ######################################################################

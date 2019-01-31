@@ -1,4 +1,4 @@
-from traits.testing.unittest_tools import unittest
+import unittest
 from traits.has_traits import (
     update_traits_class_dict,
     on_trait_change,
@@ -200,7 +200,3 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             class_dict[BaseTraits]["my_trait"],
             class_dict[ClassTraits]["my_trait"],
         )
-
-
-if __name__ == "__main__":
-    unittest.main()

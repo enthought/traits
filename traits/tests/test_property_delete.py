@@ -6,7 +6,7 @@ property trait (regression tests for Github issue #67).
 
 from traits import _py2to3
 from traits.api import Any, HasTraits, Int, Property, TraitError
-from traits.testing.unittest_tools import unittest
+import unittest
 
 
 class E(HasTraits):

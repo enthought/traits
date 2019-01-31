@@ -10,6 +10,8 @@ properly.
 The tests need a Cython version > 0.19 and a compiler.
 
 """
+import unittest
+
 try:
     import cython
 
@@ -17,8 +19,7 @@ try:
 except ImportError:
     no_cython = True
 
-
-from traits.testing.unittest_tools import unittest, UnittestTools
+from traits.testing.unittest_tools import UnittestTools
 
 
 def has_no_compiler():

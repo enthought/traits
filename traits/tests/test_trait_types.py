@@ -18,7 +18,7 @@
 """ Unit test case for testing trait types created by subclassing TraitType.
 """
 
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits.api import Float, TraitType
 
@@ -57,8 +57,3 @@ class TraitTypesTest(unittest.TestCase):
         import numpy
 
         self.assertIn(numpy.floating, float_fast_validate)
-
-
-# Run the unit tests (if invoked from the command line):
-if __name__ == "__main__":
-    unittest.main()

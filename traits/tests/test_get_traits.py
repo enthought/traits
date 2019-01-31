@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits.api import (
     Float,
@@ -84,9 +84,3 @@ class GetTraitTestCase(unittest.TestCase):
         self.assertIn("baz", dir(b))
         self.assertIn("num", dir(b))
         self.assertIn("edit_traits", dir(b))
-
-
-### EOF #######################################################################
-
-if __name__ == "__main__":
-    unittest.main()

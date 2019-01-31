@@ -15,7 +15,7 @@ if six.PY2:
 else:
     LONG_TYPE = int
 
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits.api import HasTraits, Int, Range, Long, TraitError
 
@@ -48,7 +48,3 @@ class TraitIntRangeLong(unittest.TestCase):
         self.assertRaises(
             TraitError, a.trait_set, r=LONG_TYPE(9223372036854775808)
         )
-
-
-if __name__ == "__main__":
-    unittest.main()

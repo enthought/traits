@@ -14,11 +14,11 @@ from __future__ import absolute_import
 
 from contextlib import contextmanager
 import logging
+import unittest
 
 import traits.has_traits
-from traits.testing.unittest_tools import unittest, UnittestTools
-
 from traits.api import HasTraits, Str, Int
+from traits.testing.unittest_tools import UnittestTools
 
 
 class TraitsObject(HasTraits):

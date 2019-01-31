@@ -4,7 +4,7 @@
 
 from traits.adaptation.api import reset_global_adaptation_manager
 from traits.api import HasTraits, Instance, List, register_factory, TraitError
-from traits.testing.unittest_tools import unittest
+import unittest
 
 
 class Foo(HasTraits):

@@ -18,7 +18,7 @@ from __future__ import absolute_import
 
 import gc
 import time
-from traits.testing.unittest_tools import unittest
+import unittest
 
 # Enthought library imports
 from traits.api import HasTraits, Any, DelegatesTo, Instance, Int
@@ -135,7 +135,3 @@ class TestCase(unittest.TestCase):
         # See if we still have a Delegates
         ds = [obj for obj in gc.get_objects() if isinstance(obj, Delegates)]
         self.assertEqual(ds, [])
-
-
-if __name__ == "__main__":
-    unittest.main()
