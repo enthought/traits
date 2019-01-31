@@ -1,9 +1,10 @@
 """ Test the Adapter class. """
 
 
+import unittest
+
 from traits.api import on_trait_change
 from traits.adaptation.api import Adapter
-import unittest
 
 
 class TestAdapter(unittest.TestCase):

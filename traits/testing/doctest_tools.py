@@ -7,8 +7,8 @@
 
 # Standard library imports
 import doctest
-import unittest
 import sys
+import unittest
 
 
 def doctest_for_module(module):

@@ -10,6 +10,7 @@
 # ------------------------------------------------------------------------------
 
 import unittest
+
 from traits.api import HasTraits, Int
 
 

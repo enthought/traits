@@ -8,9 +8,9 @@
 
 from __future__ import absolute_import
 
-import six.moves as sm
-
 import unittest
+
+import six.moves as sm
 
 from traits.api import Dict, HasTraits, Int, List
 

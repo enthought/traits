@@ -1,4 +1,5 @@
 import unittest
+
 from traits.has_traits import (
     update_traits_class_dict,
     on_trait_change,

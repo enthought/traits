@@ -1,5 +1,7 @@
 """ Test the setting/getting/resetting/using the global adaptation manager. """
 
+import unittest
+
 from traits.adaptation.api import (
     adapt,
     AdaptationError,
@@ -15,7 +17,6 @@ from traits.adaptation.api import (
     supports_protocol,
 )
 import traits.adaptation.tests.abc_examples
-import unittest
 
 
 class TestGlobalAdaptationManager(unittest.TestCase):

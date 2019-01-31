@@ -3,10 +3,11 @@
 ##############################################################################
 
 """ Tests for the static notifiers. """
-from traits.api import Float, HasTraits
 import unittest
 
 from traits import trait_notifiers
+from traits.api import Float, HasTraits
+
 
 calls_0 = []
 

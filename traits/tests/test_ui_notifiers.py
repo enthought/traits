@@ -11,6 +11,10 @@ At present, `dispatch='ui'` and `dispatch='fast_ui'` have the same effect.
 
 """
 
+import threading
+import time
+import unittest
+
 # Preamble: Try importing Qt, and set QT_FOUND to True on success.
 try:
     from pyface.util.guisupport import get_app_qt4, start_event_loop_qt4
@@ -29,13 +33,8 @@ else:
     QT_FOUND = True
 
 
-import threading
-import time
-
-from traits.api import Callable, Float, HasTraits, on_trait_change
-import unittest
-
 from traits import trait_notifiers
+from traits.api import Callable, Float, HasTraits, on_trait_change
 
 
 class CalledAsMethod(HasTraits):

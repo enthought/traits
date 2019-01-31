@@ -10,9 +10,9 @@ notification really occurs on a separate thread.
 """
 import threading
 import time
+import unittest
 
 from traits.api import Float, HasTraits
-import unittest
 
 
 class Foo(HasTraits):

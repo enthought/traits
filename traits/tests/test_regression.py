@@ -1,6 +1,7 @@
 """ General regression tests for a variety of bugs. """
 import gc
 import sys
+import unittest
 
 import six
 import six.moves as sm
@@ -21,7 +22,6 @@ from traits.has_traits import (
 )
 from traits.trait_errors import TraitError
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
-import unittest
 
 
 class Dummy(HasTraits):

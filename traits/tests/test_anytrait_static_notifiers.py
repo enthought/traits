@@ -1,8 +1,9 @@
 """ Tests for the the "anytrait" static notifiers. """
-from traits.api import Float, HasTraits, Undefined
 import unittest
 
 from traits import trait_notifiers
+from traits.api import Float, HasTraits, Undefined
+
 
 anycalls_0 = []
 

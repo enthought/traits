@@ -1,8 +1,7 @@
 import os
+import unittest
 
 import six
-
-import unittest
 
 from traits.api import File, HasTraits, TraitError
 

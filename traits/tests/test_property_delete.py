@@ -4,9 +4,10 @@ property trait (regression tests for Github issue #67).
 
 """
 
+import unittest
+
 from traits import _py2to3
 from traits.api import Any, HasTraits, Int, Property, TraitError
-import unittest
 
 
 class E(HasTraits):

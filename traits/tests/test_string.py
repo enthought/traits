@@ -15,14 +15,14 @@
 Tests for the String trait type.
 
 """
+import unittest
+
 try:
     import numpy
 except ImportError:
     numpy_available = False
 else:
     numpy_available = True
-
-import unittest
 
 from traits.api import HasTraits, String
 

@@ -5,12 +5,9 @@ Unit tests for the `HasTraits.class_traits` class function.
 
 from __future__ import absolute_import
 
-import six
-
-from traits import _py2to3
-
 import unittest
 
+from traits import _py2to3
 from traits.api import HasTraits, Int, List, Str
 
 

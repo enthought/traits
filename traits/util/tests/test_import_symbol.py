@@ -1,8 +1,8 @@
 """ Tests for the import manager. """
 
+import unittest
 
 from traits.util.api import import_symbol
-import unittest
 
 
 class TestImportSymbol(unittest.TestCase):

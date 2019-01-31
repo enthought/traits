@@ -1,12 +1,10 @@
 """ Tests for the dynamic notifiers. """
 import gc
-
-from traits import _py2to3
-
-from traits.api import Event, Float, HasTraits, List, on_trait_change
 import unittest
 
+from traits import _py2to3
 from traits import trait_notifiers
+from traits.api import Event, Float, HasTraits, List, on_trait_change
 
 
 class DynamicNotifiers(HasTraits):

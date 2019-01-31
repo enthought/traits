@@ -6,12 +6,11 @@ add/remove traits listeners when one of the intermediate traits changes.
 For example, in a listener for the extended trait `a.b`, we need to add/remove
 listeners to `a:b` when `a` changes.
 """
-from traits import _py2to3
-
-from traits.api import Float, HasTraits, List
 import unittest
 
+from traits import _py2to3
 from traits import trait_notifiers
+from traits.api import Float, HasTraits, List
 
 
 class ExtendedNotifiers(HasTraits):

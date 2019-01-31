@@ -8,16 +8,16 @@
 
 from __future__ import absolute_import
 
+import unittest
+
 import six
+
+from traits.api import HasTraits, Int, Range, Long, TraitError
 
 if six.PY2:
     LONG_TYPE = long
 else:
     LONG_TYPE = int
-
-import unittest
-
-from traits.api import HasTraits, Int, Range, Long, TraitError
 
 
 class A(HasTraits):
