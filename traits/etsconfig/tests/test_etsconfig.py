@@ -381,6 +381,3 @@ if __name__ == "__main__":
     suite.addTest(ETSConfigTestCase("_test_default_application_home"))
 
     unittest.TextTestRunner(verbosity=2).run(suite)
-
-
-#### EOF ######################################################################

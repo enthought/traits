@@ -512,6 +512,3 @@ class ETSConfig(object):
 # could have just made everything class methods, but that always seems a bit
 # gorpy, especially with properties etc.
 ETSConfig = ETSConfig()
-
-
-#### EOF ######################################################################

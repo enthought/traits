@@ -144,6 +144,3 @@ class TestCopyableTraitNameQueries(unittest.TestCase):
             ],
             sorted(names),
         )
-
-
-### EOF

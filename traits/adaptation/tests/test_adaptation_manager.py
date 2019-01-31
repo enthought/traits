@@ -540,6 +540,3 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         self.assertEqual(obj, self.adaptation_manager.adapt(obj, IFoo))
 
         return
-
-
-#### EOF ######################################################################

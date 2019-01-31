@@ -34,6 +34,3 @@ def deprecated(message):
         return wrapper
 
     return decorator
-
-
-#### EOF ######################################################################

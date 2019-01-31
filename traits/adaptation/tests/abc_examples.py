@@ -290,5 +290,3 @@ class IGenericToIEnd(Adapter):
 
 
 IEnd.register(IGenericToIEnd)
-
-#### EOF ######################################################################

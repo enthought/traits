@@ -281,6 +281,3 @@ class TestCopyTraitsCopyDeepSharedRef(
         TestCopyTraitsSharedCopyRef.setUp(self)
         self.baz2.copy_traits(self.baz, copy="deep")
         return
-
-
-### EOF

@@ -186,6 +186,3 @@ class RichCompareHasTraitsTestCase(unittest.TestCase, RichCompareTests):
         self.assertEqual(self.a.name, self.same_as_a.name)
         self.assertNotEqual(self.a.name, self.different_from_a.name)
         return
-
-
-### EOF

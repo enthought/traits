@@ -144,5 +144,3 @@ for _ in range(N_ITERATIONS):
     adaptation_manager.adapt(foo, ABC0)
 time_per_iter = (time.time() - start_time) / float(N_ITERATIONS) * 1000.0
 print("apptools using ABCs: %.3f msec per iteration" % time_per_iter)
-
-#### EOF #######################################################################
