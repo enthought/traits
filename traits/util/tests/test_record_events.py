@@ -142,7 +142,3 @@ class TestRecordEvents(unittest.TestCase):
                 )
             self.assertTrue("CALLING" in lines[1])
             self.assertTrue("EXIT" in lines[2])
-
-
-if __name__ == "__main__":
-    unittest.main()

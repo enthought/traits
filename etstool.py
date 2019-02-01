@@ -76,7 +76,6 @@ how to run commands within an EDM enviornment.
 
 import glob
 import os
-import platform
 import subprocess
 import sys
 from shutil import rmtree, copy as copyfile
@@ -85,15 +84,20 @@ from contextlib import contextmanager
 
 import click
 
-dependencies = {
+# Dependencies common to both Python 2 and Python 3.
+common_dependencies = {
     "coverage",
     "cython",
     "Sphinx",
-    "mock",
     "nose",
     "numpy",
     "pyqt",
     "traitsui",
+}
+
+# Python 2-specific dependencies.
+python2_dependencies = {
+    "mock",
 }
 
 supported_runtimes = ["2.7.13", "3.5.2", "3.6.0"]
@@ -114,6 +118,9 @@ def install(runtime, environment, docs):
 
     """
     parameters = get_parameters(runtime, environment)
+    dependencies = common_dependencies.copy()
+    if runtime.startswith("2."):
+        dependencies.update(python2_dependencies)
     packages = ' '.join(dependencies)
     # edm commands to setup the development environment
     commands = [

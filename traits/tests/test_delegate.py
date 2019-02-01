@@ -9,7 +9,7 @@
 
 from __future__ import absolute_import
 
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits.api import Delegate, HasTraits, Instance, Str
 
@@ -333,8 +333,3 @@ class DelegateTestCase(unittest.TestCase):
         # Do not expect '_u_changed' to be called.
         self.assertEqual(baz_u_handler_self, None)
         return
-
-
-if __name__ == "__main__":
-    unittest.main()
-# EOF #

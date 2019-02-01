@@ -16,7 +16,7 @@
 
 from __future__ import absolute_import
 
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits.api import (
     Any,
@@ -870,8 +870,3 @@ class OnTraitChangeTest(unittest.TestCase):
         )
         cur.next = link
         return link
-
-
-# Run the unit tests (if invoked from the command line):
-if __name__ == "__main__":
-    unittest.main()

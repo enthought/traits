@@ -74,7 +74,3 @@ class TestAsyncTraitWait(unittest.TestCase):
 
         # assertSucceeds!
         t.join()
-
-
-if __name__ == "__main__":
-    unittest.main()

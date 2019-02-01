@@ -1,6 +1,7 @@
 """ General regression tests for a variety of bugs. """
 import gc
 import sys
+import unittest
 
 import six
 import six.moves as sm
@@ -21,7 +22,6 @@ from traits.has_traits import (
 )
 from traits.trait_errors import TraitError
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
-from traits.testing.unittest_tools import unittest
 
 
 class Dummy(HasTraits):
@@ -289,7 +289,3 @@ class TestRegression(unittest.TestCase):
         a = StrictDummy()
         with self.assertRaises(TraitError):
             setattr(a, u"forbidden", 53)
-
-
-if __name__ == "__main__":
-    unittest.main()

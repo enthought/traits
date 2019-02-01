@@ -14,6 +14,8 @@
 """
 Tests for the Bool trait type.
 """
+import unittest
+
 import six
 
 try:
@@ -23,7 +25,6 @@ except ImportError:
 else:
     numpy_available = True
 
-from traits.testing.unittest_tools import unittest
 from traits.api import Bool, Dict, HasTraits, Int, TraitError
 
 

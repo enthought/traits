@@ -8,9 +8,9 @@
 
 from __future__ import absolute_import
 
-from traits.api import HasTraits, Instance, Int
+import unittest
 
-from traits.testing.unittest_tools import unittest
+from traits.api import HasTraits, Instance, Int
 
 
 class Bar(HasTraits):

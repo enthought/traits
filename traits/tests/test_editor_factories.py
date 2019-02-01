@@ -16,14 +16,14 @@ Tests for Editor factories.
 
 """
 
+import unittest
+
 try:
     import traitsui
 
     HAS_TRAITSUI = True
 except ImportError:
     HAS_TRAITSUI = False
-
-from traits.testing.unittest_tools import unittest
 
 from traits.traits import multi_line_text_editor
 

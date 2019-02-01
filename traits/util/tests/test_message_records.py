@@ -71,7 +71,3 @@ class TestMessageRecords(unittest.TestCase):
 
         # Check initialization
         self.assertRaises(TypeError, CallingMessageRecord, sdd=0)
-
-
-if __name__ == "__main__":
-    unittest.main()

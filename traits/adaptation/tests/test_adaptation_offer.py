@@ -1,10 +1,9 @@
 """ Test the adaptation offers. """
 
-
 import sys
+import unittest
 
 from traits.adaptation.adaptation_offer import AdaptationOffer
-from traits.testing.unittest_tools import unittest
 
 
 class TestAdaptationOffer(unittest.TestCase):
@@ -47,9 +46,3 @@ class TestAdaptationOffer(unittest.TestCase):
         from traits.adaptation.tests.lazy_examples import IFoo
 
         self.assertIs(to_protocol, IFoo)
-
-
-if __name__ == "__main__":
-    unittest.main()
-
-#### EOF ######################################################################

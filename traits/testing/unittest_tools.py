@@ -17,7 +17,11 @@ import contextlib
 import threading
 import sys
 import warnings
-import unittest  # noqa
+
+# Support for 'from traits.testing.unittest_tools import unittest',
+# which was used to make unittest2 available under the name unittest
+# on Python 2.6. We keep the import for now, for backwards compatibility.
+import unittest  # noqa: F401
 
 from traits.api import (
     Any,

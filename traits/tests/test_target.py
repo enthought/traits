@@ -15,7 +15,7 @@
 """
 
 # Standard library imports
-from traits.testing.unittest_tools import unittest
+import unittest
 
 # Enthought library imports
 from traits.api import HasTraits, Instance, Int
@@ -78,7 +78,3 @@ class TestCase(unittest.TestCase):
         parent.child.i = 0
         # The count should be 1
         self.assertEqual(self.count, 1)
-
-
-if __name__ == "__main__":
-    unittest.main()

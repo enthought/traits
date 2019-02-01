@@ -12,7 +12,7 @@
 
 from __future__ import absolute_import
 
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits.api import HasTraits, Instance, Str, Any, Property
 
@@ -290,12 +290,3 @@ class CloneTestCase(unittest.TestCase):
         # should reference the new clone.
         self.assertIsNot(bar_copy.shared, baz.shared)
         self.assertIs(bar_copy.shared, baz_copy.shared)
-
-
-#
-# support running this test individually, from the command-line as a script
-#
-if __name__ == "__main__":
-    unittest.main()
-
-#### EOF ######################################################################

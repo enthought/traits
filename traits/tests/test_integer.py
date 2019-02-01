@@ -20,13 +20,9 @@ from __future__ import absolute_import
 
 import decimal
 import sys
+import unittest
 
 import six
-
-if six.PY2:
-    LONG_TYPE = long
-else:
-    LONG_TYPE = int
 
 try:
     import numpy
@@ -35,9 +31,12 @@ except ImportError:
 else:
     numpy_available = True
 
-from traits.testing.unittest_tools import unittest
-
 from traits.api import HasTraits, Int, TraitError
+
+if six.PY2:
+    LONG_TYPE = long
+else:
+    LONG_TYPE = int
 
 
 class A(HasTraits):

@@ -1,5 +1,5 @@
 # Standard library imports.
-from traits.testing.unittest_tools import unittest
+import unittest
 
 # Local imports.
 from traits.util.camel_case import camel_case_to_python, camel_case_to_words
@@ -49,7 +49,3 @@ class CamelCaseTestCase(unittest.TestCase):
         """ Does CamelCase -> words work?
         """
         self.assertEqual(camel_case_to_words("FooBarBaz"), "Foo Bar Baz")
-
-
-if __name__ == "__main__":
-    unittest.main()
