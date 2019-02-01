@@ -10,9 +10,9 @@ notification really occurs on a separate thread.
 """
 import threading
 import time
+import unittest
 
 from traits.api import Float, HasTraits
-from traits.testing.unittest_tools import unittest
 
 
 class Foo(HasTraits):
@@ -42,7 +42,3 @@ class TestNewNotifiers(unittest.TestCase):
 
         this_thread_id = threading.current_thread().ident
         self.assertNotEqual(this_thread_id, notifications[0][0])
-
-
-if __name__ == "__main__":
-    unittest.main()

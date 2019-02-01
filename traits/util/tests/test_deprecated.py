@@ -9,8 +9,9 @@
 # Thanks for using Enthought open source!
 # ------------------------------------------------------------------------------
 
+import unittest
+
 from traits.testing.api import UnittestTools
-from traits.testing.unittest_tools import unittest
 from traits.util.api import deprecated
 
 

@@ -1,9 +1,10 @@
 """ Test the Adapter class. """
 
 
+import unittest
+
 from traits.api import on_trait_change
 from traits.adaptation.api import Adapter
-from traits.testing.unittest_tools import unittest
 
 
 class TestAdapter(unittest.TestCase):
@@ -34,9 +35,3 @@ class TestAdapter(unittest.TestCase):
         foo_adapter = FooAdapter(adaptee="1234")
         self.assertEqual(foo_adapter.adaptee_notifier_called, True)
         self.assertEqual(foo_adapter.post_init_notifier_called, False)
-
-
-if __name__ == "__main__":
-    unittest.main()
-
-#### EOF ######################################################################

@@ -73,8 +73,3 @@ class TraitTypesTest(unittest.TestCase):
             shutil.rmtree(tmpdir)
 
         self.assertEqual(output.strip(), "Success")
-
-
-# Run the unit tests (if invoked from the command line):
-if __name__ == "__main__":
-    unittest.main()

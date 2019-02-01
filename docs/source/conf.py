@@ -13,9 +13,13 @@
 # All configuration values have a default value; values that are commented out
 # serve to show the default value.
 from __future__ import print_function
+import datetime
 import io
 import os
 import sys
+
+import six
+
 
 # The docset build will use slightly different formatting rules
 BUILD_DOCSET = bool(os.environ.get("BUILD_DOCSET"))
@@ -72,15 +76,19 @@ def mock_modules():
     else:
         return
 
-    try:
-        from mock import MagicMock
-    except ImportError:
-        if len(MOCK_MODULES) != 0:
-            print(
-                "NOTE: TraitsUI is not installed and mock is not available to "
-                "mock the missing modules, some classes will not be documented"
-            )
-            return
+    if six.PY2:
+        try:
+            from mock import MagicMock
+        except ImportError:
+            if len(MOCK_MODULES) != 0:
+                print(
+                    "NOTE: TraitsUI is not installed and mock is not "
+                    "available to mock the missing modules, some classes "
+                    "will not be documented"
+                )
+                return
+    else:
+        from unittest.mock import MagicMock
 
     # Create the custom types for the HasTraits based traitsui objects.
     TYPES = {
@@ -153,7 +161,7 @@ master_doc = "index"
 
 # General substitutions.
 project = "traits"
-copyright = "2008-2016, Enthought"
+copyright = "2008-{date.year}, Enthought Inc".format(date=datetime.date.today())
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.

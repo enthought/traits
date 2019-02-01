@@ -5,7 +5,7 @@ functions correctly.
 
 from __future__ import absolute_import
 
-from traits.testing.unittest_tools import unittest, UnittestTools
+import unittest
 
 from traits.api import (
     HasTraits,
@@ -14,6 +14,7 @@ from traits.api import (
     push_exception_handler,
     pop_exception_handler,
 )
+from traits.testing.unittest_tools import UnittestTools
 
 
 class A(HasTraits):
@@ -185,7 +186,3 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         del b
         a.t = 42
         self.assertEqual(change_counter, [1])
-
-
-if __name__ == "__main__":
-    unittest.main()

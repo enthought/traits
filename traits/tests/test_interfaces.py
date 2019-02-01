@@ -16,7 +16,7 @@
 
 from __future__ import absolute_import
 
-from traits.testing.unittest_tools import unittest
+import unittest
 
 from traits.api import (
     HasTraits,
@@ -307,8 +307,3 @@ class InterfacesTest(unittest.TestCase):
     def test_decorated_class_name_and_docstring(self):
         self.assertEqual(SampleList.__name__, "SampleList")
         self.assertEqual(SampleList.__doc__, "SampleList docstring.")
-
-
-# Run the unit tests (if invoked from the command line):
-if __name__ == "__main__":
-    unittest.main()

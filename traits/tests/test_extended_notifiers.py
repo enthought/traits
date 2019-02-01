@@ -6,12 +6,11 @@ add/remove traits listeners when one of the intermediate traits changes.
 For example, in a listener for the extended trait `a.b`, we need to add/remove
 listeners to `a:b` when `a` changes.
 """
+import unittest
+
 from traits import _py2to3
-
-from traits.api import Float, HasTraits, List
-from traits.testing.unittest_tools import unittest
-
 from traits import trait_notifiers
+from traits.api import Float, HasTraits, List
 
 
 class ExtendedNotifiers(HasTraits):
@@ -251,7 +250,3 @@ class TestExtendedNotifiers(unittest.TestCase):
         # 10 failures: 5 are from the internal extended listeners, see
         # test_extended_notifiers_methods_failing
         self.assertEqual([(obj, "fail", 0, 1)] * 10, self.exceptions)
-
-
-if __name__ == "__main__":
-    unittest.main()

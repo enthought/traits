@@ -16,8 +16,6 @@ import six
 import six.moves as sm
 
 from traits import _py2to3
-
-from traits.testing.unittest_tools import unittest
 from traits.api import (
     Bool,
     Event,
@@ -28,6 +26,11 @@ from traits.api import (
     on_trait_change,
 )
 from traits.testing.api import UnittestTools
+# unittest_tools provides a reference to unittest for historical reasons, and
+# downstream packages may still be doing "from traits.testing.unittest_tools
+# import unittest". We keep this import as-is (instead of doing a simple
+# "import unittest") to make sure we don't break those packages.
+from traits.testing.unittest_tools import unittest
 from traits.util.api import deprecated
 
 
@@ -435,7 +438,3 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         with self.assertRaises(self.failureException):
             with self.assertNotDeprecated():
                 old_and_dull_caller()
-
-
-if __name__ == "__main__":
-    unittest.main()

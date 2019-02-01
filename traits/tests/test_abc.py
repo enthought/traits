@@ -1,11 +1,10 @@
 """ Test the ABC functionality.
 """
 import abc
+import unittest
 import warnings
 
 import six
-
-from traits.testing.unittest_tools import unittest
 
 from traits.api import ABCHasTraits, ABCMetaHasTraits, HasTraits, Int, Float
 

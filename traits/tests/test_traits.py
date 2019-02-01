@@ -16,10 +16,9 @@
 from __future__ import absolute_import, print_function
 
 import sys
+import unittest
 
 import six
-
-from traits.testing.unittest_tools import unittest
 
 from traits.api import (
     Any,

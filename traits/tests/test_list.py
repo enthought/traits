@@ -9,10 +9,9 @@
 from __future__ import absolute_import
 
 import sys
+import unittest
 
 import six.moves as sm
-
-from traits.testing.unittest_tools import unittest
 
 from traits.api import CList, HasTraits, Instance, Int, List, Str, TraitError
 
