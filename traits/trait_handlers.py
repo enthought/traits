@@ -2572,7 +2572,7 @@ class TraitListObject(list):
             excp.set_prefix("Each element of the")
             raise excp
 
-    if sys.version_info[0] < 3:
+    if six.PY2:
 
         def __setslice__(self, i, j, values):
             self.__setitem__(slice(i, j), values)
@@ -2614,7 +2614,7 @@ class TraitListObject(list):
                 self.name_items, TraitListEvent(index, removed)
             )
 
-    if sys.version_info[0] < 3:
+    if six.PY2:
 
         def __delslice__(self, i, j):
             self.__delitem__(slice(i, j))
@@ -2776,7 +2776,7 @@ class TraitListObject(list):
         else:
             self.len_error(len(self) - 1)
 
-    if sys.version_info[0] < 3:
+    if six.PY2:
 
         def sort(self, cmp=None, key=None, reverse=False):
             removed = self[:]

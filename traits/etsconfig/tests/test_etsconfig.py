@@ -10,10 +10,7 @@ import sys
 import tempfile
 import time
 
-if sys.version_info[:2] == (2, 6):
-    import unittest2 as unittest
-else:
-    import unittest
+import unittest
 
 # Enthought library imports.
 from traits.etsconfig.etsconfig import ETSConfig, ETSToolkitError

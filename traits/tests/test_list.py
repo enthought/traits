@@ -8,9 +8,9 @@
 
 from __future__ import absolute_import
 
-import sys
 import unittest
 
+import six
 import six.moves as sm
 
 from traits.api import CList, HasTraits, Instance, Int, List, Str, TraitError
@@ -302,7 +302,7 @@ class ListTestCase(unittest.TestCase):
         except ImportError:
             pass
         else:
-            if sys.version_info[0] < 3:
+            if six.PY2:
                 f.ints = array([1, 2, 3])
                 self.assertEqual(f.ints, [1, 2, 3])
             else:
@@ -355,14 +355,14 @@ class ListTestCase(unittest.TestCase):
         f.l.sort(key=lambda x: -ord(x), reverse=True)
         self.assertEqual(f.l, ["a", "b", "c", "d"])
 
-    @unittest.skipIf(sys.version_info[0] >= 3, "Not for Python 3")
+    @unittest.skipIf(six.PY3, "Not for Python 3")
     def test_sort_cmp(self):
         f = Foo()
         f.l = ["a", "c", "b", "d"]
         f.l.sort(cmp=lambda x, y: ord(x) - ord(y))
         self.assertEqual(f.l, ["a", "b", "c", "d"])
 
-    @unittest.skipIf(sys.version_info[0] < 3, "Not for Python 2")
+    @unittest.skipIf(six.PY2, "Not for Python 2")
     def test_sort_cmp_error(self):
         f = Foo()
         f.l = ["a", "c", "b", "d"]

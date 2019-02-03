@@ -576,7 +576,7 @@ PythonTypes = (
     NoneType,
 )
 
-if sys.version_info[0] < 3:
+if six.PY2:
     from types import InstanceType, ClassType
 
     PythonTypes = (

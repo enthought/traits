@@ -30,7 +30,6 @@ from __future__ import absolute_import, division, print_function
 import copy as copy_module
 import weakref
 import re
-import sys
 
 from types import FunctionType, MethodType
 
@@ -129,7 +128,7 @@ WrapperTypes = (
     StaticTraitChangeNotifyWrapper,
 )
 
-if sys.version_info[0] >= 3:
+if six.PY3:
     # in python 3, unbound methods do not exist anymore, they're just functions
     BoundMethodTypes = (MethodType,)
     UnboundMethodTypes = (FunctionType,)
