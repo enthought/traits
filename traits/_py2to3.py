@@ -95,11 +95,3 @@ else:
                 self.close()
                 raise
             return tuple(ret)
-
-
-if six.PY2:
-    def assertCountEqual(self, itemsA, itemsB):
-        self.assertItemsEqual(itemsA, itemsB)
-else:
-    def assertCountEqual(self, itemsA, itemsB):
-        self.assertCountEqual(itemsA, itemsB)

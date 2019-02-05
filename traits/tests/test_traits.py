@@ -588,7 +588,7 @@ class BytesTest(StringTest):
         (b"",),
         None,
         True,
-    ] + (version_dependent if six.PY3 else [])
+    ] + ([] if six.PY2 else version_dependent)
 
     def coerce(self, value):
         return bytes(value)
@@ -638,7 +638,7 @@ class CoercibleBytesTest(StringTest):
         {10: "foo"},
         True,
     ] + (version_dependent if six.PY2 else [])
-    _bad_values = version_dependent if six.PY3 else []
+    _bad_values = [] if six.PY2 else version_dependent
 
     def coerce(self, value):
         return bytes(value)

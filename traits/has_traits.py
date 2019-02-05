@@ -128,13 +128,14 @@ WrapperTypes = (
     StaticTraitChangeNotifyWrapper,
 )
 
-if six.PY3:
+if six.PY2:
+    BoundMethodTypes = (MethodType,)
+    UnboundMethodTypes = (MethodType,)
+else:
     # in python 3, unbound methods do not exist anymore, they're just functions
     BoundMethodTypes = (MethodType,)
     UnboundMethodTypes = (FunctionType,)
-else:
-    BoundMethodTypes = (MethodType,)
-    UnboundMethodTypes = (MethodType,)
+
 
 FunctionTypes = (FunctionType,)
 

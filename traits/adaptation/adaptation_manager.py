@@ -16,8 +16,9 @@
 from heapq import heappop, heappush
 import inspect
 import itertools
-import six
 import functools
+
+import six
 
 from traits.adaptation.adaptation_error import AdaptationError
 from traits.has_traits import HasTraits

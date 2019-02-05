@@ -15,7 +15,6 @@ import warnings
 import six
 import six.moves as sm
 
-from traits import _py2to3
 from traits.api import (
     Bool,
     Event,
@@ -307,7 +306,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         for t in threads:
             t.join()
 
-        _py2to3.assertCountEqual(
+        six.assertCountEqual(
             self,
             event_collector.events,
             list(sm.range(events_per_thread)) * thread_count,

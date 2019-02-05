@@ -355,7 +355,7 @@ class ListTestCase(unittest.TestCase):
         f.l.sort(key=lambda x: -ord(x), reverse=True)
         self.assertEqual(f.l, ["a", "b", "c", "d"])
 
-    @unittest.skipIf(six.PY3, "Not for Python 3")
+    @unittest.skipUnless(six.PY2, "Not for Python 3")
     def test_sort_cmp(self):
         f = Foo()
         f.l = ["a", "c", "b", "d"]
