@@ -6,7 +6,8 @@ property trait (regression tests for Github issue #67).
 
 import unittest
 
-from traits import _py2to3
+import six
+
 from traits.api import Any, HasTraits, Int, Property, TraitError
 
 
@@ -28,4 +29,4 @@ class TestPropertyDelete(unittest.TestCase):
     def test_property_reset_traits(self):
         e = E()
         unresetable = e.reset_traits()
-        _py2to3.assertCountEqual(self, unresetable, ["a", "b"])
+        six.assertCountEqual(self, unresetable, ["a", "b"])

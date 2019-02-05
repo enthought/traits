@@ -15,7 +15,6 @@
 Tests for the Float trait type.
 
 """
-import sys
 import unittest
 
 try:
@@ -124,7 +123,7 @@ class CommonFloatTests(object):
         a.float_or_text = u"not a float"
         self.assertEqual(a.float_or_text, u"not a float")
 
-    @unittest.skipUnless(sys.version_info < (3,), "Not applicable to Python 3")
+    @unittest.skipUnless(six.PY2, "Not applicable to Python 3")
     def test_accepts_small_long(self):
         a = self.test_class()
         a.value = LONG_TYPE(2)
@@ -135,7 +134,7 @@ class CommonFloatTests(object):
         self.assertIs(type(a.value_or_none), float)
         self.assertEqual(a.value_or_none, 2.0)
 
-    @unittest.skipUnless(sys.version_info < (3,), "Not applicable to Python 3")
+    @unittest.skipUnless(six.PY2, "Not applicable to Python 3")
     def test_accepts_large_long(self):
         a = self.test_class()
 

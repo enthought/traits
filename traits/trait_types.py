@@ -30,6 +30,7 @@ import re
 import sys
 from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
+import uuid
 
 import six
 
@@ -44,7 +45,6 @@ from .trait_base import (
     ClassTypes,
     Undefined,
     TraitsCache,
-    python_version,
 )
 
 from .trait_handlers import (
@@ -1210,7 +1210,7 @@ class Method(TraitType):
     info_text = "a method"
 
 
-if sys.version_info[0] < 3:
+if six.PY2:
     from types import ClassType
 
     class Class(TraitType):
@@ -3655,44 +3655,40 @@ class Symbol(TraitType):
             )
 
 
-if python_version >= 2.5:
+# ---------------------------------------------------------------------------
+#  'UUID' trait:
+# ---------------------------------------------------------------------------
 
-    import uuid
+class UUID(TraitType):
+    """ Defines a trait whose value is a globally unique UUID (type 4).
+    """
 
-    # ---------------------------------------------------------------------------
-    #  'UUID' trait:
-    # ---------------------------------------------------------------------------
+    #: A description of the type of value this trait accepts:
+    info_text = "a read-only UUID"
 
-    class UUID(TraitType):
-        """ Defines a trait whose value is a globally unique UUID (type 4).
+    def __init__(self, **metadata):
+        """ Returns a UUID trait.
         """
+        super(UUID, self).__init__(None, **metadata)
 
-        #: A description of the type of value this trait accepts:
-        info_text = "a read-only UUID"
+    def validate(self, object, name, value):
+        """ Raises an error, since no values can be assigned to the trait.
+        """
+        raise TraitError(
+            "The '%s' trait of %s instance is a read-only "
+            "UUID." % (name, class_of(object))
+        )
 
-        def __init__(self, **metadata):
-            """ Returns a UUID trait.
-            """
-            super(UUID, self).__init__(None, **metadata)
+    def get_default_value(self):
+        return (
+            CALLABLE_AND_ARGS_DEFAULT_VALUE,
+            (self._create_uuid, (), None),
+        )
 
-        def validate(self, object, name, value):
-            """ Raises an error, since no values can be assigned to the trait.
-            """
-            raise TraitError(
-                "The '%s' trait of %s instance is a read-only "
-                "UUID." % (name, class_of(object))
-            )
+    # -- Private Methods ---------------------------------------------------
 
-        def get_default_value(self):
-            return (
-                CALLABLE_AND_ARGS_DEFAULT_VALUE,
-                (self._create_uuid, (), None),
-            )
-
-        # -- Private Methods ---------------------------------------------------
-
-        def _create_uuid(self):
-            return uuid.uuid4()
+    def _create_uuid(self):
+        return uuid.uuid4()
 
 
 # -------------------------------------------------------------------------------
@@ -3823,7 +3819,7 @@ ListFunction = List(FunctionType)
 #: List of method values; default value is [].
 ListMethod = List(MethodType)
 
-if sys.version_info[0] < 3:
+if six.PY2:
     from types import ClassType, InstanceType
 
     #: List of class values; default value is [].

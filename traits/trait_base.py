@@ -41,10 +41,6 @@ from .etsconfig.api import ETSConfig
 # backwards compatibility: trait_base used to provide a patched enumerate
 enumerate = enumerate
 
-# Set the Python version being used:
-vi = sys.version_info
-python_version = vi[0] + (float(vi[1]) / 10.0)
-
 # -------------------------------------------------------------------------------
 #  Constants:
 # -------------------------------------------------------------------------------

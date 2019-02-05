@@ -15,7 +15,6 @@
 #  Imports
 from __future__ import absolute_import, print_function
 
-import sys
 import unittest
 
 import six
@@ -291,7 +290,7 @@ class CoercibleLongTest(AnyTraitTest):
         u"10",
         u"-10",
     ]
-    if sys.version_info[0] < 3:
+    if six.PY2:
         _good_values.extend(["10L", "-10L", u"10L", u"-10L"])
     _bad_values = [
         "10.1",
@@ -431,7 +430,7 @@ class FloatTest(AnyTraitTest):
         u"-10.1",
     ]
 
-    if sys.version_info[0] < 3:
+    if six.PY2:
         _good_values.extend([LONG_TYPE(-10), LONG_TYPE(10)])
 
     def coerce(self, value):
@@ -573,7 +572,7 @@ class BytesTest(StringTest):
 
     _default_value = b"bytes"
     _good_values = [b"", b"10", b"-10"] + (
-        version_dependent if sys.version_info[0] == 2 else []
+        version_dependent if six.PY2 else []
     )
     _bad_values = [
         10,
@@ -589,7 +588,7 @@ class BytesTest(StringTest):
         (b"",),
         None,
         True,
-    ] + (version_dependent if sys.version_info[0] == 3 else [])
+    ] + ([] if six.PY2 else version_dependent)
 
     def coerce(self, value):
         return bytes(value)
@@ -638,8 +637,8 @@ class CoercibleBytesTest(StringTest):
         set([10]),
         {10: "foo"},
         True,
-    ] + (version_dependent if sys.version_info[0] == 2 else [])
-    _bad_values = version_dependent if sys.version_info[0] == 3 else []
+    ] + (version_dependent if six.PY2 else [])
+    _bad_values = [] if six.PY2 else version_dependent
 
     def coerce(self, value):
         return bytes(value)
