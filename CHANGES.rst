@@ -1,6 +1,15 @@
 Traits CHANGELOG
 ================
 
+DEV
+---
+
+Changes
+
+* Replace usage of ``sys.version_info`` with six.PYX. Note that
+  ``python_version``, derived from ``sys.version_info``, has also been removed
+  from the traits API. (#449)
+
 Release 5.0.0
 -------------
 
