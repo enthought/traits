@@ -45,7 +45,6 @@ from .trait_base import (
     ClassTypes,
     Undefined,
     TraitsCache,
-    python_version,
 )
 
 from .trait_handlers import (
