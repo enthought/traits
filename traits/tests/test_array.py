@@ -54,6 +54,3 @@ class ArrayTestCase(unittest.TestCase):
         self.assertEqual(f.event_fired, True)
 
         return
-
-
-#### EOF ######################################################################

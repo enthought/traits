@@ -14,6 +14,3 @@ class IBarToIFoo(object):
 
 class IFoo(object):
     pass
-
-
-#### EOF ######################################################################

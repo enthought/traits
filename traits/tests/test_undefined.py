@@ -75,6 +75,3 @@ class UndefinedTestCase(unittest.TestCase):
         self.assertEqual(f.original_name, "first")
 
         return
-
-
-### EOF #######################################################################

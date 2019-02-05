@@ -193,6 +193,3 @@ def store_resource(project, resource_path, filename):
     fo.close()
 
     fi.close()
-
-
-#### EOF ######################################################################

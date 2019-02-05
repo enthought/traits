@@ -166,6 +166,3 @@ class AdaptationOffer(HasTraits):
             )
 
         return type_name
-
-
-#### EOF ######################################################################

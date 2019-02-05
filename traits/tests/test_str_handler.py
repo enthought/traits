@@ -85,6 +85,3 @@ class StrHandlerCase(unittest.TestCase):
         self.assertEqual(b.s, "ok")
 
         return
-
-
-### EOF

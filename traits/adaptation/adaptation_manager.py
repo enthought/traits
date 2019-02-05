@@ -448,6 +448,3 @@ def supports_protocol(obj, protocol):
 def provides_protocol(type_, protocol):
     """ Does the given type provide (i.e implement) a given protocol? """
     return AdaptationManager.provides_protocol(type_, protocol)
-
-
-#### EOF ######################################################################

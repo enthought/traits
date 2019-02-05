@@ -225,6 +225,3 @@ class IStartToISpecific(Adapter):
 @provides(IEnd)
 class IGenericToIEnd(Adapter):
     pass
-
-
-#### EOF ######################################################################
