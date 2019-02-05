@@ -12,6 +12,9 @@ if six.PY2:
 else:
     LONG_TYPE = int
 
+str_find = str.find
+str_rfind = str.rfind
+
 if six.PY2:
     from types import InstanceType, ClassType
 
