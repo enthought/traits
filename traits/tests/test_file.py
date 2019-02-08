@@ -48,3 +48,14 @@ class FileTestCase(unittest.TestCase):
         example_model = FastExampleModel(file_name=__file__)
         example_model.path = "."
         example_model.path = u"."
+
+
+class TestCreateEditor(unittest.TestCase):
+    def test_exists_controls_editor_dialog_style(self):
+        x = File(exists=True)
+        editor = x.create_editor()
+        self.assertEqual(editor.dialog_style, "open")
+
+        x = File(exists=False)
+        editor = x.create_editor()
+        self.assertEqual(editor.dialog_style, "save")
