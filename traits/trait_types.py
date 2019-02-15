@@ -1651,7 +1651,7 @@ class BaseFile(BaseStr):
             filter=self.filter or [],
             auto_set=self.auto_set,
             entries=self.entries,
-            dialog_style="open" if self.exists else "save"
+            dialog_style="open" if self.exists else "save",
         )
         return editor
 
