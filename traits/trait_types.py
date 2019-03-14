@@ -3138,9 +3138,9 @@ class BaseInstance(BaseClass):
 
             self.default_value_type = dvt = CALLABLE_AND_ARGS_DEFAULT_VALUE
             self.default_value = dv = (
-                self.create_default_value,
-                dv.args,
-                dv.kw,
+                _base_instance_default_value,
+                (self, dv.args, dv.kw),
+                None,
             )
 
         return (dvt, dv)
@@ -3211,6 +3211,10 @@ class BaseInstance(BaseClass):
                     return
         if handler.fast_validate is not None:
             trait.set_validate(handler.fast_validate)
+
+
+def _base_instance_default_value(self, args, kw):
+    return self.create_default_value(*args, **kw)
 
 
 class Instance(BaseInstance):
