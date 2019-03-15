@@ -3214,6 +3214,14 @@ class BaseInstance(BaseClass):
 
 
 def _base_instance_default_value(self, args, kw):
+    """
+    Default value generator for BaseInstance traits.
+
+    This is a separate function rather than a method on ``BaseInstance`` in
+    order to avoid pickleability issues on Python 2.
+
+    Ref: enthought/traits#452.
+    """
     return self.create_default_value(*args, **kw)
 
 
