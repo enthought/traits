@@ -3399,7 +3399,7 @@ class Type(BaseClass):
 
         return (
             CALLABLE_AND_ARGS_DEFAULT_VALUE,
-            (self.resolve_default_value, (), None),
+            (_type_resolve_default_value, (self,), None),
         )
 
     def resolve_default_value(self):
@@ -3416,6 +3416,18 @@ class Type(BaseClass):
                 )
 
         return self.klass
+
+
+def _type_resolve_default_value(self):
+    """
+    Default value generator for Type traits.
+
+    This is a separate function rather than a method on ``Type`` in
+    order to avoid pickleability issues on Python 2.
+
+    Ref: enthought/traits#452.
+    """
+    return self.resolve_default_value()
 
 
 # -------------------------------------------------------------------------------
