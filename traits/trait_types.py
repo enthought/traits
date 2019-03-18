@@ -3707,13 +3707,8 @@ class UUID(TraitType):
     def get_default_value(self):
         return (
             CALLABLE_AND_ARGS_DEFAULT_VALUE,
-            (self._create_uuid, (), None),
+            (uuid.uuid4, (), None),
         )
-
-    # -- Private Methods ---------------------------------------------------
-
-    def _create_uuid(self):
-        return uuid.uuid4()
 
 
 # -------------------------------------------------------------------------------
