@@ -3675,10 +3675,27 @@ class UUID(TraitType):
     def validate(self, object, name, value):
         """ Raises an error, since no values can be assigned to the trait.
         """
-        raise TraitError(
-            "The '%s' trait of %s instance is a read-only "
-            "UUID." % (name, class_of(object))
-        )
+        if not self.can_init:
+            raise TraitError(
+                "The '%s' trait of %s instance is a read-only "
+                "UUID." % (name, class_of(object))
+            )
+
+        if object.traits_inited():
+            msg = ("Initializable UUID trait is read-only "
+                   "after initialization")
+            raise TraitError(msg)
+
+        if isinstance(value, uuid.UUID):
+            return value
+
+        try:
+            # Construct the UUID from a string
+            return uuid.UUID(value)
+        except ValueError:
+            msg = ("The '{}' trait of '{}' expects an RFC 4122-compatible "
+                   "UUID value, but '{}' was given")
+            raise TraitError(msg.format(name, type(object).__name__, value))
 
     def get_default_value(self):
         return (
