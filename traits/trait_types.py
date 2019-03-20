@@ -3662,6 +3662,25 @@ class Symbol(TraitType):
 
 class UUID(TraitType):
     """ Defines a trait whose value is a globally unique UUID (type 4).
+
+    Passing `can_init=True` allows the UUID value to be set during
+    object instantiation, e.g.::
+
+        class A(HasTraits):
+            id = UUID
+
+        class B(HasTraits):
+            id = UUID(can_init=True)
+
+        # TraitError!
+        A(id=uuid.uuid4())
+
+        # Okay!
+        B(id=uuid.uuid4())
+
+    Note however that in both cases, the UUID trait is set automatically
+    to a `uuid.UUID` instance (assuming none is provided during initialization
+    in the latter case).
     """
 
     #: A description of the type of value this trait accepts:
