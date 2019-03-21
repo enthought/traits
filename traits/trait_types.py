@@ -3686,10 +3686,11 @@ class UUID(TraitType):
     #: A description of the type of value this trait accepts:
     info_text = "a read-only UUID"
 
-    def __init__(self, **metadata):
+    def __init__(self, can_init=False, **metadata):
         """ Returns a UUID trait.
         """
         super(UUID, self).__init__(None, **metadata)
+        self.can_init = can_init
 
     def validate(self, object, name, value):
         """ Raises an error, since no values can be assigned to the trait.
