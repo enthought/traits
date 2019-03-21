@@ -35,17 +35,24 @@ def git_version():
         return out
 
     try:
+        encoded_git_revision = _minimal_ext_cmd(['git', 'rev-parse', 'HEAD'])
+    except OSError:
+        git_revision = "Unknown"
+    else:
+        git_revision = encoded_git_revision.decode("ascii").strip()
+
+    try:
         out = _minimal_ext_cmd(['git', 'describe', '--tags'])
     except OSError:
         out = ''
 
-    git_description = out.strip().decode('ascii')
+    git_description = out.decode('ascii').strip()
     expr = r'.*?\-(?P<count>\d+)-g(?P<hash>[a-fA-F0-9]+)'
     match = re.match(expr, git_description)
     if match is None:
-        git_revision, git_count = 'Unknown', '0'
+        git_count = '0'
     else:
-        git_revision, git_count = match.group('hash'), match.group('count')
+        git_count = match.group('count')
 
     return git_revision, git_count
 
