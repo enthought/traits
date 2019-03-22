@@ -3662,23 +3662,60 @@ class Symbol(TraitType):
 
 class UUID(TraitType):
     """ Defines a trait whose value is a globally unique UUID (type 4).
+
+    Passing `can_init=True` allows the UUID value to be set during
+    object instantiation, e.g.::
+
+        class A(HasTraits):
+            id = UUID
+
+        class B(HasTraits):
+            id = UUID(can_init=True)
+
+        # TraitError!
+        A(id=uuid.uuid4())
+
+        # Okay!
+        B(id=uuid.uuid4())
+
+    Note however that in both cases, the UUID trait is set automatically
+    to a `uuid.UUID` instance (assuming none is provided during initialization
+    in the latter case).
     """
 
     #: A description of the type of value this trait accepts:
     info_text = "a read-only UUID"
 
-    def __init__(self, **metadata):
+    def __init__(self, can_init=False, **metadata):
         """ Returns a UUID trait.
         """
         super(UUID, self).__init__(None, **metadata)
+        self.can_init = can_init
 
     def validate(self, object, name, value):
         """ Raises an error, since no values can be assigned to the trait.
         """
-        raise TraitError(
-            "The '%s' trait of %s instance is a read-only "
-            "UUID." % (name, class_of(object))
-        )
+        if not self.can_init:
+            raise TraitError(
+                "The '%s' trait of %s instance is a read-only "
+                "UUID." % (name, class_of(object))
+            )
+
+        if object.traits_inited():
+            msg = ("Initializable UUID trait is read-only "
+                   "after initialization")
+            raise TraitError(msg)
+
+        if isinstance(value, uuid.UUID):
+            return value
+
+        try:
+            # Construct the UUID from a string
+            return uuid.UUID(value)
+        except ValueError:
+            msg = ("The '{}' trait of '{}' expects an RFC 4122-compatible "
+                   "UUID value, but '{}' was given")
+            raise TraitError(msg.format(name, type(object).__name__, value))
 
     def get_default_value(self):
         return (
