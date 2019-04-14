@@ -485,7 +485,6 @@ class MetaHasTraits(type):
     _listeners = {}
 
     def __new__(cls, class_name, bases, class_dict):
-        annotations = class_dict.get('__annotations__', {})
         update_traits_class_dict(
             class_name, bases, class_dict, is_category=False
         )
