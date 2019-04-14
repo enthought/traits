@@ -33,13 +33,16 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         bases = (object,)
         class_dict = {"attr": "something"}
         is_category = False
+        annotations = {"annotation": "some_value"}
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict, is_category,
+                                 annotations)
 
         # Then; Check that the original Python-level class attributes are still
         # present in the class dictionary.
         self.assertEqual(class_dict["attr"], "something")
+        self.assertEqual(annotations["annotation"], "some_value")
 
         # Other traits dictionaries should be empty.
         for kind in (BaseTraits, ClassTraits, ListenerTraits, InstanceTraits):
@@ -57,9 +60,11 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             "_validate_my_property": _dummy_validator,
         }
         is_category = False
+        annotations = {}
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict, is_category,
+                                 annotations)
 
         # Then
         self.assertEqual(class_dict[ListenerTraits], {})
@@ -85,9 +90,11 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         bases = (object,)
         class_dict = {"attr": "something", "my_int": Int}
         is_category = False
+        annotations = {}
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict, is_category,
+                                 annotations)
 
         # Then
         self.assertEqual(class_dict[ListenerTraits], {})
@@ -112,9 +119,11 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         bases = (object,)
         class_dict = {"attr": "something", "my_int_": Int}  # prefix trait
         is_category = False
+        annotations = {}
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict, is_category,
+                                 annotations)
 
         # Then
         for kind in (BaseTraits, ClassTraits, ListenerTraits, InstanceTraits):
@@ -137,9 +146,11 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         bases = (object,)
         class_dict = {"attr": "something", "my_listener": listener}
         is_category = False
+        annotations = {}
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict, is_category,
+                                 annotations)
 
         # Then
         self.assertEqual(class_dict[BaseTraits], {})
@@ -168,9 +179,11 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             "my_property": property(_dummy_getter),
         }
         is_category = False
+        annotations = {}
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict, is_category,
+                                 annotations)
 
         # Then
         self.assertEqual(class_dict[BaseTraits], {})
@@ -187,9 +200,11 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         bases = (Base,)
         class_dict = {"attr": "something", "my_trait": Float()}
         is_category = False
+        annotations = {}
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict, is_category,
+                                 annotations)
 
         # Then
         self.assertEqual(class_dict[InstanceTraits], {})
@@ -201,3 +216,63 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             class_dict[BaseTraits]["my_trait"],
             class_dict[ClassTraits]["my_trait"],
         )
+
+    def test_annotation_trait(self):
+        # Given
+        class_name = "MyClass"
+        bases = (object,)
+        class_dict = {"attr": "something"}
+        is_category = False
+        annotations = {"my_int": Int}
+
+        # When
+        update_traits_class_dict(class_name, bases, class_dict, is_category,
+                                 annotations)
+
+        # Then
+        self.assertEqual(class_dict[ListenerTraits], {})
+        self.assertEqual(class_dict[InstanceTraits], {})
+
+        # Both ClassTraits and BaseTraits should contain a single trait (the
+        # Int trait)
+        self.assertEqual(len(class_dict[BaseTraits]), 1)
+        self.assertEqual(len(class_dict[ClassTraits]), 1)
+        self.assertIs(
+            class_dict[BaseTraits]["my_int"], class_dict[ClassTraits]["my_int"]
+        )
+
+        # The class_dict should still have the entry for `attr`, but not
+        # `my_int`.
+        self.assertEqual(class_dict["attr"], "something")
+        self.assertNotIn("my_int", class_dict)
+        self.assertEqual(class_dict[BaseTraits]["my_int"].default_value()[1], 0)
+
+    def test_annotation_trait_with_value(self):
+        # Given
+        class_name = "MyClass"
+        bases = (object,)
+        class_dict = {"attr": "something", "my_int": 5}
+        is_category = False
+        annotations = {"my_int": Int}
+
+        # When
+        update_traits_class_dict(class_name, bases, class_dict, is_category,
+                                 annotations)
+
+        # Then
+        self.assertEqual(class_dict[ListenerTraits], {})
+        self.assertEqual(class_dict[InstanceTraits], {})
+
+        # Both ClassTraits and BaseTraits should contain a single trait (the
+        # Int trait)
+        self.assertEqual(len(class_dict[BaseTraits]), 1)
+        self.assertEqual(len(class_dict[ClassTraits]), 1)
+        self.assertIs(
+            class_dict[BaseTraits]["my_int"], class_dict[ClassTraits]["my_int"]
+        )
+
+        # The class_dict should still have the entry for `attr`, but not
+        # `my_int`.
+        self.assertEqual(class_dict["attr"], "something")
+        self.assertNotIn("my_int", class_dict)
+        self.assertEqual(class_dict[BaseTraits]["my_int"].default_value()[1], 5)

@@ -485,8 +485,10 @@ class MetaHasTraits(type):
     _listeners = {}
 
     def __new__(cls, class_name, bases, class_dict):
+        annotations = class_dict.get('__annotations__', {})
         update_traits_class_dict(
-            class_name, bases, class_dict, is_category=False
+            class_name, bases, class_dict, is_category=False,
+            annotations=annotations
         )
 
         # Finish building the class using the updated class dictionary:
@@ -521,7 +523,8 @@ class MetaHasTraits(type):
     remove_listener = classmethod(remove_listener)
 
 
-def update_traits_class_dict(class_name, bases, class_dict, is_category):
+def update_traits_class_dict(class_name, bases, class_dict, is_category,
+                             annotations={}):
     """ Processes all of the traits related data in the class dictionary.
 
     This is called during the construction of a new HasTraits class. The first
@@ -539,6 +542,8 @@ def update_traits_class_dict(class_name, bases, class_dict, is_category):
         A dictionary of class members.
     is_category : bool
         Whether this is a Category subclass.
+    annotations : dict
+        Any trait types using type annotation syntax.
 
     """
     # Create the various class dictionaries, lists and objects needed to
@@ -560,6 +565,13 @@ def update_traits_class_dict(class_name, bases, class_dict, is_category):
     inherited_class_traits = [
         base.__dict__.get(ClassTraits) for base in hastraits_bases
     ]
+
+    # Reprocess any annotations.
+    for name, annotation in annotations.items():
+        if name in class_dict:
+            default_value = class_dict[name]
+            annotation = annotation(default_value=default_value)
+        class_dict[name] = annotation
 
     # Move all trait definitions from the class dictionary to the
     # appropriate trait class dictionaries:

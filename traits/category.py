@@ -59,8 +59,10 @@ class MetaCategory(MetaHasTraits):
             )
 
         # Process any traits-related information in the class dictionary:
+        annotations = class_dict.get('__annotations__', {})
         update_traits_class_dict(
-            class_name, bases, class_dict, is_category=True
+            class_name, bases, class_dict, is_category=False,
+            annotations=annotations
         )
 
         if len(bases) == 2:
