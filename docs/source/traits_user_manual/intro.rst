@@ -113,6 +113,23 @@ package. These features are elaborated in the rest of this guide.
     # (if a supported GUI toolkit is installed)
     moe.configure_traits()
 
+In Python 3.6 and above, where variable annotations are supported, you can
+use that syntax as an alternative for validation and initialization:
+
+.. index:: examples; variable annotation
+
+::
+
+    from traits.api import HasTraits, Int, Str
+    class Parent(HasTraits):
+
+        # VALIDATION: 'age' must be an integer:
+        age: Int
+
+        # INITIALIZATION: last_name' is initialized to '':
+        last_name: Str = ''
+
+
 Background
 ----------
 Python does not require the data type of variables to be declared. As any

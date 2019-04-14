@@ -52,6 +52,19 @@ the Traits package, which requires that values assigned be of the standard
 Python type **float**. The value 150.0 specifies the default value of the
 trait.
 
+For versions of Python which support it, this can alternatively be written
+using variable type annotation.
+
+.. index::
+   single: examples; minimal variable annotation
+
+::
+
+    from traits.api import HasTraits, Float
+
+    class Person(HasTraits):
+        weight: Float = 150.0
+
 The value associated with each class-level attribute determines the
 characteristics of the instance attribute identified by the attribute name.
 For example::
