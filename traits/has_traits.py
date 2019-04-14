@@ -568,10 +568,12 @@ def update_traits_class_dict(class_name, bases, class_dict, is_category,
 
     # Reprocess any annotations.
     for name, annotation in annotations.items():
-        if name in class_dict:
-            default_value = class_dict[name]
-            annotation = annotation(default_value=default_value)
-        class_dict[name] = annotation
+        annotation = _check_trait(annotation)
+        if isinstance(annotation, CTrait):
+            if name in class_dict:
+                default_value = class_dict[name]
+                annotation = annotation(default_value=default_value)
+            class_dict[name] = annotation
 
     # Move all trait definitions from the class dictionary to the
     # appropriate trait class dictionaries:
