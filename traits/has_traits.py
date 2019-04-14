@@ -567,6 +567,12 @@ def update_traits_class_dict(class_name, bases, class_dict, is_category):
         annotation = _check_trait(annotation)
         if isinstance(annotation, CTrait):
             if name in class_dict:
+                if annotation.type in CantHaveDefaultValue:
+                    raise TraitError(
+                        "Cannot specify a default value "
+                        "for the %s trait '%s'."
+                        % (annotation.type, name)
+                    )
                 default_value = class_dict[name]
                 annotation = annotation(default_value=default_value)
             class_dict[name] = annotation

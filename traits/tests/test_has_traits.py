@@ -11,7 +11,8 @@ from traits.has_traits import (
     HasTraits,
 )
 from traits.traits import ForwardProperty, generic_trait
-from traits.trait_types import Float, Int
+from traits.trait_errors import TraitError
+from traits.trait_types import Event, Float, Int
 
 
 def _dummy_getter(self):
@@ -276,3 +277,16 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         self.assertEqual(class_dict["attr"], "something")
         self.assertNotIn("my_int", class_dict)
         self.assertEqual(class_dict[BaseTraits]["my_int"].default_value()[1], 5)
+
+    def test_annotation_no_default_trait_with_value(self):
+        # Given
+        class_name = "MyClass"
+        bases = (object,)
+        class_dict = {"my_event": 5}
+        is_category = False
+        annotations = {"my_event": Event}
+        class_dict['__annotations__'] = annotations
+
+        # When
+        with self.assertRaises(TraitError):
+            update_traits_class_dict(class_name, bases, class_dict, is_category)
