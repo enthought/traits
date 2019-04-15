@@ -1,14 +1,43 @@
 Traits CHANGELOG
 ================
 
-DEV
----
+Release 5.1.0
+-------------
+
+Released: 2019-04-15
+
+Enhancements
+
+* Make UUID trait initializable. (#459)
+* Change default ``FileEditor`` behavior for a ``File`` trait based on
+  whether ``exists=True`` is specified for that trait. (#451)
 
 Changes
 
-* Replace usage of ``sys.version_info`` with six.PYX. Note that
-  ``python_version``, derived from ``sys.version_info``, has also been removed
-  from the traits API. (#449)
+* The changes made in #373 to make dynamically-added traits pickleable have
+  been reverted. (#462)
+* ``traits.api.python_version`` has been removed. Internals have been
+  refactored to use ``six.PY2`` in preference to ``sys.version_info``.
+  (#449)
+* Don't depend on the 3rd party ``mock`` library on Python 3; use
+  ``unittest.mock`` instead. (#446)
+
+Fixes
+
+* Fix a fragile NumPy-related test that failed (``RuntimeError: empty_like
+  method already has a docstring``) with the newest version of NumPy.
+  (#443)
+
+Miscellaneous
+
+* ``traits._version.git_revision`` now gives the full commit hash (for local
+  builds) instead of an abbreviated 7 hex-digit version. (#453)
+* Fix copyright years in documentation build. (#445)
+* Rename ``README.txt`` to ``README.rst``, so that GitHub renders it nicely.
+* Code cleanups: remove "EOF" markers from code. Remove ``__main__`` blocks
+  for unit tests. Remove imports of ``unittest`` from ``unittest_tools``.
+  (#448, #446)
+
 
 Release 5.0.0
 -------------
