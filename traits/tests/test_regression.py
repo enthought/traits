@@ -220,33 +220,6 @@ class TestRegression(unittest.TestCase):
         # All the counts should be the same.
         self.assertEqual(counts[warmup:-1], counts[warmup + 1 :])
 
-    def test_hastraits_deepcopy(self):
-        # Regression test for enthought/traits#2 and enthought/traits#16
-        from copy import deepcopy
-
-        a = HasTraits()
-        a.add_trait("foo", Int)
-        a.foo = 1
-        with self.assertRaises(TraitError):
-            a.foo = "a"
-        copied_a = deepcopy(a)
-        with self.assertRaises(TraitError):
-            copied_a.foo = "a"
-
-    def test_hastraits_pickle(self):
-        # Regression test for enthought/traits#2 and enthought/traits#16
-        from pickle import dumps, loads
-
-        a = HasTraits()
-        a.add_trait("foo", Int)
-        a.foo = 1
-        with self.assertRaises(TraitError):
-            a.foo = "a"
-        pickled_a = dumps(a)
-        unpickled_a = loads(pickled_a)
-        with self.assertRaises(TraitError):
-            unpickled_a.foo = "a"
-
     @unittest.skipUnless(numpy_available, "test requires NumPy")
     def test_exception_from_numpy_comparison_ignored(self):
         # Regression test for enthought/traits#376.
