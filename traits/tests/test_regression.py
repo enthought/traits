@@ -20,6 +20,7 @@ from traits.has_traits import (
     Property,
     on_trait_change,
 )
+from traits.trait_errors import TraitError
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
 
 
