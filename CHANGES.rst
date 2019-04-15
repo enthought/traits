@@ -10,7 +10,7 @@ Enhancements
 
 * Make UUID trait initializable. (#459)
 * Change default ``FileEditor`` behavior for a ``File`` trait based on
-  whether ``exists=True`` is specified for that trait. (#451)
+  whether ``exists=True`` is specified for that trait. (#451, #467)
 
 Changes
 
@@ -37,6 +37,8 @@ Miscellaneous
 * Code cleanups: remove "EOF" markers from code. Remove ``__main__`` blocks
   for unit tests. Remove imports of ``unittest`` from ``unittest_tools``.
   (#448, #446)
+* Update Travis CI and Appveyor configurations to run tests against
+  all PR branches, not just PRs against master. (#466)
 
 
 Release 5.0.0
