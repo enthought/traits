@@ -16,10 +16,6 @@ environment:
 matrix:
   fast_finish: true
 
-branches:
-  only:
-    - master
-
 cache:
   - C:\Users\appveyor\.cache -> appveyor-clean-cache.txt
   - C:\Users\appveyor\AppData\Local\pip\Cache -> appveyor-clean-cache.txt
