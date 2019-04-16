@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
@@ -57,6 +58,10 @@
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
     </ul>
               
 	    </div>
@@ -496,12 +501,12 @@
         <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;comparison_mode&quot;</span><span class="p">,</span> <span class="n">OBJECT_IDENTITY_COMPARE</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ArrayOrNone</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="ArrayOrNone.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.ArrayOrNone.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">value</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">ArrayOrNone</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">ArrayOrNone</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">get_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ArrayOrNone.get_default_value"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.ArrayOrNone.get_default_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">dv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span>
         <span class="k">if</span> <span class="n">dv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dv</span><span class="p">)</span>
@@ -513,7 +518,7 @@
                     <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dv</span><span class="p">),),</span>
                     <span class="kc">None</span><span class="p">,</span>
                 <span class="p">),</span>
-            <span class="p">)</span>
+            <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_default_for_dtype_and_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
         <span class="c1"># For ArrayOrNone, if no default is explicitly specified, we</span>
@@ -531,12 +536,14 @@
             </a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -555,13 +562,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

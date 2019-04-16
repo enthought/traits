@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
@@ -57,6 +58,10 @@
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
     </ul>
               
 	    </div>
@@ -89,8 +94,9 @@
 <span class="kn">from</span> <span class="nn">heapq</span> <span class="k">import</span> <span class="n">heappop</span><span class="p">,</span> <span class="n">heappush</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">functools</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
 
 <span class="kn">from</span> <span class="nn">traits.adaptation.adaptation_error</span> <span class="k">import</span> <span class="n">AdaptationError</span>
 <span class="kn">from</span> <span class="nn">traits.has_traits</span> <span class="k">import</span> <span class="n">HasTraits</span>
@@ -112,8 +118,8 @@
 
     <span class="c1">#### &#39;AdaptationManager&#39; class protocol ###################################</span>
 
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="AdaptationManager.mro_distance_to_protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.mro_distance_to_protocol">[docs]</a>    <span class="k">def</span> <span class="nf">mro_distance_to_protocol</span><span class="p">(</span><span class="n">from_type</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptationManager.mro_distance_to_protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.mro_distance_to_protocol">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">mro_distance_to_protocol</span><span class="p">(</span><span class="n">from_type</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return the distance in the MRO from &#39;from_type&#39; to &#39;to_protocol&#39;.</span>
 
 <span class="sd">        If `from_type` provides `to_protocol`, returns the distance between</span>
@@ -147,8 +153,8 @@
 
         <span class="k">return</span> <span class="n">distance</span></div>
 
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="AdaptationManager.provides_protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.provides_protocol">[docs]</a>    <span class="k">def</span> <span class="nf">provides_protocol</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
+<div class="viewcode-block" id="AdaptationManager.provides_protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.provides_protocol">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">provides_protocol</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Does the given type provide (i.e implement) a given protocol?</span>
 
 <span class="sd">        Parameters</span>
@@ -337,7 +343,7 @@
             <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_applicable_offers</span><span class="p">(</span><span class="n">current_protocol</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
 
             <span class="c1"># Sort by weight first, then by from_protocol type.</span>
-            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
                 <span class="n">edges</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="nb">cmp</span><span class="o">=</span><span class="n">_by_weight_then_from_protocol_specificity</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># functools.cmp_to_key is available from 2.7 and 3.2</span>
@@ -521,9 +527,6 @@
 <div class="viewcode-block" id="provides_protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.provides_protocol">[docs]</a><span class="k">def</span> <span class="nf">provides_protocol</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Does the given type provide (i.e implement) a given protocol? &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">AdaptationManager</span><span class="o">.</span><span class="n">provides_protocol</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span></div>
-
-
-<span class="c1">#### EOF ######################################################################</span>
 </pre></div>
 
           </div>
@@ -536,12 +539,14 @@
             </a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -560,13 +565,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

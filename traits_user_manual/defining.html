@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -59,6 +60,10 @@
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
       <li class="active">
         <a href="notification.html" title="Trait Notification"
            accesskey="N">next</a>
@@ -101,7 +106,7 @@ HasTraits class in the Traits package (or from a subclass of HasTraits). The
 following example defines a class called Person that has a single trait
 attribute <strong>weight</strong>, which is initialized to 150.0 and can only take floating
 point values.</p>
-<div class="highlight-default" id="index-3"><div class="highlight"><pre><span></span><span class="c1"># minimal.py --- Minimal example of using traits.</span>
+<div class="highlight-default notranslate" id="index-3"><div class="highlight"><pre><span></span><span class="c1"># minimal.py --- Minimal example of using traits.</span>
 
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span>
 
@@ -111,14 +116,14 @@ point values.</p>
 </div>
 <p id="index-4">In this example, the attribute named <strong>weight</strong> specifies that the class has a
 corresponding trait called <strong>weight</strong>. The value associated with the attribute
-<strong>weight</strong> (i.e., <code class="docutils literal"><span class="pre">Float(150.0)</span></code>) specifies a predefined trait provided with
+<strong>weight</strong> (i.e., <code class="docutils literal notranslate"><span class="pre">Float(150.0)</span></code>) specifies a predefined trait provided with
 the Traits package, which requires that values assigned be of the standard
 Python type <strong>float</strong>. The value 150.0 specifies the default value of the
 trait.</p>
 <p>The value associated with each class-level attribute determines the
 characteristics of the instance attribute identified by the attribute name.
 For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minimal</span> <span class="k">import</span> <span class="n">Person</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minimal</span> <span class="k">import</span> <span class="n">Person</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># instantiate the class</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">joe</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Show the default value</span>
@@ -137,7 +142,7 @@ For example:</p>
 <p>In this example, <strong>joe</strong> is an instance of the Person class defined in the
 previous example. The <strong>joe</strong> object has an instance attribute <strong>weight</strong>,
 whose initial value is the default value of the Person.weight trait (150.0),
-and whose assignment is governed by the Person.weight trait&#8217;s validation
+and whose assignment is governed by the Person.weight trait’s validation
 rules. Assigning an integer to <strong>weight</strong> is acceptable because there is no
 loss of precision (but assigning a float to an Int trait would cause an error).</p>
 <p>The Traits package allows creation of a wide variety of trait types, ranging
@@ -150,14 +155,14 @@ used Python data types. In the simplest case, you can assign the trait name
 to an attribute of a class derived from HasTraits; any instances of the class
 will have that attribute initialized to the built-in default value for the
 trait. For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">account_balance</span> <span class="o">=</span> <span class="n">Float</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">account_balance</span> <span class="o">=</span> <span class="n">Float</span>
 </pre></div>
 </div>
 <p>This statement defines an attribute whose value must be a floating point
 number, and whose initial value is 0.0 (the built-in default value for Floats).</p>
 <p>If you want to use an initial value other than the built-in default, you can
 pass it as an argument to the trait:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">account_balance</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">account_balance</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Most predefined traits are callable, <a class="footnote-reference" href="#id15" id="id3">[2]</a> and can accept a default value and
@@ -217,23 +222,23 @@ in the following table.</p>
 <tr class="row-odd"><td>Str</td>
 <td>CStr</td>
 <td>String</td>
-<td>&#8216;&#8217;</td>
+<td>‘’</td>
 </tr>
 <tr class="row-even"><td>Unicode</td>
 <td>CUnicode</td>
 <td>Unicode</td>
-<td>u&#8217;&#8216;</td>
+<td>u’‘</td>
 </tr>
 <tr class="row-odd"><td>Bytes</td>
 <td>CBytes</td>
 <td>Bytes</td>
-<td>b&#8217;&#8216;</td>
+<td>b’‘</td>
 </tr>
 </tbody>
 </table>
 <div class="section" id="trait-type-coercion">
 <span id="index-12"></span><span id="id5"></span><h4>Trait Type Coercion<a class="headerlink" href="#trait-type-coercion" title="Permalink to this headline">¶</a></h4>
-<p>For trait attributes defined using the predefined &#8220;coercing&#8221;
+<p>For trait attributes defined using the predefined “coercing”
 traits, if a value is assigned to a trait attribute that is not of the type
 defined for the trait, but it can be coerced to the required type, then the
 coerced value is assigned to the attribute. If the value cannot be coerced to
@@ -269,7 +274,7 @@ lists traits that coerce values, and the types that each coerces.</p>
 </div>
 <div class="section" id="trait-type-casting">
 <span id="index-14"></span><span id="id6"></span><h4>Trait Type Casting<a class="headerlink" href="#trait-type-casting" title="Permalink to this headline">¶</a></h4>
-<p>For trait attributes defined using the predefined &#8220;casting&#8221;
+<p>For trait attributes defined using the predefined “casting”
 traits, if a value is assigned to a trait attribute that is not of the type
 defined for the trait, but it can be cast to the required type, then the cast
 value is assigned to the attribute. If the value cannot be cast to the required
@@ -286,7 +291,7 @@ Python built-in functions for type conversion:</p>
 </ul>
 <p id="index-15">The following example illustrates the difference between coercing traits and
 casting traits:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">CFloat</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">CFloat</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Person</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
 <span class="gp">... </span>   <span class="n">weight</span>  <span class="o">=</span> <span class="n">Float</span>
 <span class="gp">... </span>   <span class="n">cweight</span> <span class="o">=</span> <span class="n">CFloat</span>
@@ -341,8 +346,8 @@ the table.</p>
 <em>value</em> = None, <em>typecode</em> = None, **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-odd"><td>Button</td>
-<td>Button( [<em>label</em> = &#8216;&#8217;, <em>image</em> = None, <em>style</em> =
-&#8216;button&#8217;, <em>orientation</em> = &#8216;vertical&#8217;, <em>width_padding</em> =
+<td>Button( [<em>label</em> = ‘’, <em>image</em> = None, <em>style</em> =
+‘button’, <em>orientation</em> = ‘vertical’, <em>width_padding</em> =
 7, <em>height_padding</em> = 5, **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-even"><td>Callable</td>
@@ -356,8 +361,8 @@ the table.</p>
 <td>Class( [<em>value</em>, **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-odd"><td>Code</td>
-<td>Code( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
-<em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
+<td>Code( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
+<em>regex</em> = ‘’, **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-even"><td>Color</td>
 <td>Color( [*<em>args</em>, **<em>metadata</em>] )</td>
@@ -380,14 +385,14 @@ DictStrStr</td>
 <em>value</em> = None, <em>items</em> = True, **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-even"><td>Directory</td>
-<td>Directory( [<em>value</em> = &#8216;&#8217;, <em>auto_set</em> = False, <em>entries</em> =
+<td>Directory( [<em>value</em> = ‘’, <em>auto_set</em> = False, <em>entries</em> =
 10, <em>exists</em> = False, **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-odd"><td>Disallow</td>
 <td>n/a</td>
 </tr>
 <tr class="row-even"><td>Either</td>
-<td>Either( <em>val1</em>[, <em>val2</em>, ..., <em>valN</em>,
+<td>Either( <em>val1</em>[, <em>val2</em>, …, <em>valN</em>,
 **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-odd"><td>Enum</td>
@@ -397,13 +402,13 @@ DictStrStr</td>
 <td>Event( [<em>trait</em> = None, **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-odd"><td>Expression</td>
-<td>Expression( [<em>value</em> = &#8216;0&#8217;, **<em>metadata</em>] )</td>
+<td>Expression( [<em>value</em> = ‘0’, **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-even"><td>false</td>
 <td>n/a</td>
 </tr>
 <tr class="row-odd"><td>File</td>
-<td>File( [<em>value</em> = &#8216;&#8217;, <em>filter</em> = None, <em>auto_set</em> = False,
+<td>File( [<em>value</em> = ‘’, <em>filter</em> = None, <em>auto_set</em> = False,
 <em>entries</em> = 10, <em>exists</em> = False,  **<em>metadata</em> ] )</td>
 </tr>
 <tr class="row-even"><td>Font</td>
@@ -419,8 +424,8 @@ DictStrStr</td>
 <td>n/a</td>
 </tr>
 <tr class="row-even"><td>HTML</td>
-<td>HTML( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
-<em>regex</em> = &#8216;&#8217;,  **<em>metadata</em> ] )</td>
+<td>HTML( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
+<em>regex</em> = ‘’,  **<em>metadata</em> ] )</td>
 </tr>
 <tr class="row-odd"><td>Instance</td>
 <td>Instance( [<em>klass</em> = None, <em>factory</em> = None, <em>args</em> =
@@ -448,8 +453,8 @@ ListUnicode</td>
 <td>Module ( [**<em>metadata</em>] )</td>
 </tr>
 <tr class="row-odd"><td>Password</td>
-<td>Password( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> =
-sys.maxint, <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
+<td>Password( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> =
+sys.maxint, <em>regex</em> = ‘’, **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-even"><td>Property</td>
 <td><p class="first">Property( [<em>fget</em> = None, <em>fset</em> = None, <em>fvalidate</em> =
@@ -473,7 +478,7 @@ None, <em>force</em> = False, <em>handler</em> = None, <em>trait</em> = None,
 <td>ReadOnly( [<em>value</em> = Undefined, **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-odd"><td>Regex</td>
-<td>Regex( [<em>value</em> = &#8216;&#8217;, <em>regex</em> = &#8216;.*&#8217;, **<em>metadata</em>])</td>
+<td>Regex( [<em>value</em> = ‘’, <em>regex</em> = ‘.*’, **<em>metadata</em>])</td>
 </tr>
 <tr class="row-even"><td>RGBColor</td>
 <td>RGBColor( [*<em>args</em>, **<em>metadata</em>] )</td>
@@ -486,15 +491,15 @@ None, <em>force</em> = False, <em>handler</em> = None, <em>trait</em> = None,
 **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-odd"><td>String</td>
-<td>String( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> =
-sys.maxint, <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
+<td>String( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> =
+sys.maxint, <em>regex</em> = ‘’, **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-even"><td>This</td>
 <td>n/a</td>
 </tr>
 <tr class="row-odd"><td>ToolbarButton</td>
-<td>ToolbarButton( [<em>label</em> = &#8216;&#8217;, <em>image</em> = None, <em>style</em> =
-&#8216;toolbar&#8217;, <em>orientation</em> = &#8216;vertical&#8217;, <em>width_padding</em> =
+<td>ToolbarButton( [<em>label</em> = ‘’, <em>image</em> = None, <em>style</em> =
+‘toolbar’, <em>orientation</em> = ‘vertical’, <em>width_padding</em> =
 2, <em>height_padding</em> = 2, **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-even"><td>true</td>
@@ -519,11 +524,11 @@ NoDefaultSpecified, ***metadata</em>])</td>
 </tr>
 <tr class="row-even"><td>ValidatedTuple</td>
 <td>ValidatedTuple( [*<em>traits</em>, <em>fvalidate</em> = None,
-<em>fvalidate_info</em> = &#8216;&#8217; , **<em>metadata</em>] )</td>
+<em>fvalidate_info</em> = ‘’ , **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-odd"><td>WeakRef</td>
-<td>WeakRef( [<em>klass</em> = &#8216;traits.HasTraits&#8217;,
-<em>allow_none</em> = False, <em>adapt</em> = &#8216;yes&#8217;, **<em>metadata</em>])</td>
+<td>WeakRef( [<em>klass</em> = ‘traits.HasTraits’,
+<em>allow_none</em> = False, <em>adapt</em> = ‘yes’, **<em>metadata</em>])</td>
 </tr>
 </tbody>
 </table>
@@ -534,7 +539,7 @@ NoDefaultSpecified, ***metadata</em>])</td>
 class (or a subclass) as the enclosing class. The default value of This is
 None; the default value of <strong>self</strong> is the object containing the attribute.</p>
 <p id="index-27">The following is an example of using This:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># this.py --- Example of This predefined trait</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># this.py --- Example of This predefined trait</span>
 
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">This</span>
 
@@ -545,7 +550,7 @@ None; the default value of <strong>self</strong> is the object containing the at
 <p>This example defines an Employee class, which has a <strong>manager</strong> trait
 attribute, which accepts only other Employee instances as its value. It might
 be more intuitive to write the following:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># bad_self_ref.py --- Non-working example with self- referencing</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># bad_self_ref.py --- Non-working example with self- referencing</span>
 <span class="c1">#                     class definition</span>
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
 <span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -558,7 +563,7 @@ main reason for providing the This trait.</p>
 <p>Note that if a trait attribute is defined using This on one class and is
 referenced on an instance of a subclass, the This trait verifies values based
 on the class on which it was defined. For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">This</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">This</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 <span class="gp">... </span>   <span class="n">manager</span> <span class="o">=</span> <span class="n">This</span>
 <span class="gp">...</span>
@@ -581,9 +586,9 @@ on the class on which it was defined. For example:</p>
 Either trait is intended for attributes that may take a value of more than
 a single trait type, including None. The default value of Either is None, even
 if None is not one of the types the user explicitly defines in the constructor,
-but a different default value can be provided using the <code class="docutils literal"><span class="pre">default</span></code> argument.</p>
+but a different default value can be provided using the <code class="docutils literal notranslate"><span class="pre">default</span></code> argument.</p>
 <p id="index-29">The following is an example of using Either:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># either.py --- Example of Either predefined trait</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># either.py --- Example of Either predefined trait</span>
 
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Either</span><span class="p">,</span> <span class="n">Str</span>
 
@@ -594,7 +599,7 @@ but a different default value can be provided using the <code class="docutils li
 <p>This example defines an Employee class, which has a <strong>manager_name</strong> trait
 attribute, which accepts either an Str instance or None as its value, and
 will raise a TraitError if a value of any other type is assigned. For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Either</span><span class="p">,</span> <span class="n">Str</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Either</span><span class="p">,</span> <span class="n">Str</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">manager_name</span> <span class="o">=</span> <span class="n">Either</span><span class="p">(</span><span class="n">Str</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 <span class="gp">...</span>
@@ -624,7 +629,7 @@ value.</p>
 <p id="index-31">A trait defined in this fashion can accept only values that are contained in
 the list of permitted values. The default value is the first value specified;
 it is also a valid value for assignment.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">InventoryItem</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 <span class="gp">... </span>   <span class="n">name</span>  <span class="o">=</span> <span class="n">Str</span> <span class="c1"># String value, default is &#39;&#39;</span>
 <span class="gp">... </span>   <span class="n">stock</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;many&#39;</span><span class="p">)</span>
@@ -648,14 +653,14 @@ it is also a valid value for assignment.</p>
 <span class="go">&lt;type &#39;int&#39;&gt; was specified.</span>
 </pre></div>
 </div>
-<p>This defines an <code class="xref py py-class docutils literal"><span class="pre">InventoryItem</span></code> class, with two trait attributes,
+<p>This defines an <code class="xref py py-class docutils literal notranslate"><span class="pre">InventoryItem</span></code> class, with two trait attributes,
 <strong>name</strong>, and <strong>stock</strong>. The name attribute is simply a string. The <strong>stock</strong>
 attribute has an initial value of None, and can be assigned the values None, 0,
-1, 2, 3, and &#8216;many&#8217;. The example then creates an instance of the InventoryItem
+1, 2, 3, and ‘many’. The example then creates an instance of the InventoryItem
 class named <strong>hats</strong>, and assigns values to its attributes.</p>
 <p>When the list of possible values can change during the lifetime of the object,
 one can specify <strong>another trait</strong> that holds the list of possible values:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">List</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">List</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">InventoryItem</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 <span class="gp">... </span>   <span class="n">possible_stock_states</span> <span class="o">=</span> <span class="n">List</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;many&#39;</span><span class="p">])</span>
 <span class="gp">... </span>   <span class="n">stock</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;possible_stock_states&quot;</span><span class="p">)</span>
@@ -704,20 +709,20 @@ and can be queried:</p>
 returns Undefined.</li>
 <li><strong>default_kind</strong>: Returns a string describing the type of value returned by
 the default attribute for the trait. The possible values are:<ul>
-<li><code class="docutils literal"><span class="pre">value</span></code>: The default attribute returns the actual default value.</li>
-<li><code class="docutils literal"><span class="pre">list</span></code>: A copy of the list default value.</li>
-<li><code class="docutils literal"><span class="pre">dict</span></code>: A copy of the dictionary default value.</li>
-<li><code class="docutils literal"><span class="pre">self</span></code>: The default value is the object the trait is bound to; the
+<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: The default attribute returns the actual default value.</li>
+<li><code class="docutils literal notranslate"><span class="pre">list</span></code>: A copy of the list default value.</li>
+<li><code class="docutils literal notranslate"><span class="pre">dict</span></code>: A copy of the dictionary default value.</li>
+<li><code class="docutils literal notranslate"><span class="pre">self</span></code>: The default value is the object the trait is bound to; the
 <strong>default</strong> attribute returns Undefined.</li>
-<li><code class="docutils literal"><span class="pre">factory</span></code>: The default value is created by calling a factory; the
+<li><code class="docutils literal notranslate"><span class="pre">factory</span></code>: The default value is created by calling a factory; the
 <strong>default</strong> attribute returns Undefined.</li>
-<li><code class="docutils literal"><span class="pre">method</span></code>: The default value is created by calling a method on the object
+<li><code class="docutils literal notranslate"><span class="pre">method</span></code>: The default value is created by calling a method on the object
 the trait is bound to; the <strong>default</strong> attribute returns Undefined.</li>
 </ul>
 </li>
 <li><strong>delegate</strong>: The name of the attribute on this object that references the
 object that this object delegates to.</li>
-<li><strong>inner_traits</strong>: Returns a tuple containing the &#8220;inner&#8221; traits
+<li><strong>inner_traits</strong>: Returns a tuple containing the “inner” traits
 for the trait. For most traits, this is empty, but for List and Dict traits,
 it contains the traits that define the items in the list or the keys and
 values in the dictionary.</li>
@@ -727,11 +732,11 @@ See <a class="reference internal" href="deferring.html#deferring-traits"><span c
 <li><strong>trait_type</strong>: Returns the type of the trait, which is typically a handler
 derived from TraitType.</li>
 <li><strong>type</strong>: One of the following, depending on the nature of the trait:<ul>
-<li><code class="docutils literal"><span class="pre">constant</span></code></li>
-<li><code class="docutils literal"><span class="pre">delegate</span></code></li>
-<li><code class="docutils literal"><span class="pre">event</span></code></li>
-<li><code class="docutils literal"><span class="pre">property</span></code></li>
-<li><code class="docutils literal"><span class="pre">trait</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">constant</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">delegate</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">event</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">property</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">trait</span></code></li>
 </ul>
 </li>
 </ul>
@@ -750,7 +755,7 @@ for more information on trait editors.</li>
 <li><strong>label</strong>: A string providing a human-readable name for the trait. It is
 used to label trait attribute values in user interface trait editors.</li>
 <li><strong>rich_compare</strong>: A Boolean indicating whether the basis for considering a
-trait attribute value to have changed is a &#8220;rich&#8221; comparison (True, the
+trait attribute value to have changed is a “rich” comparison (True, the
 default), or simple object identity (False). This attribute can be useful
 in cases where a detailed comparison of two objects is very expensive, or
 where you do not care if the details of an object change, as long as the
@@ -774,7 +779,7 @@ False, as doing so is likely to create unintended consequences. See
 <div class="section" id="accessing-metadata-attributes">
 <span id="index-43"></span><span id="id14"></span><h3>Accessing Metadata Attributes<a class="headerlink" href="#accessing-metadata-attributes" title="Permalink to this headline">¶</a></h3>
 <p id="index-44">Here is an example of setting trait metadata using keyword arguments:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># keywords.py --- Example of trait keywords</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># keywords.py --- Example of trait keywords</span>
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -787,16 +792,16 @@ False, as doing so is likely to create unintended consequences. See
 </pre></div>
 </div>
 <p>In this example, in a user interface editor for a Person object, the labels
-&#8220;First Name&#8221; and &#8220;Last Name&#8221; would be used for entry
+“First Name” and “Last Name” would be used for entry
 fields corresponding to the <strong>first_name</strong> and <strong>last_name</strong> trait attributes.
 If the user interface editor supports rollover tips, then the <strong>first_name</strong>
-field would display &#8220;first or personal name&#8221; when the user moves
-the mouse over it; the last_name field would display &#8220;last or family
-name&#8221; when moused over.</p>
+field would display “first or personal name” when the user moves
+the mouse over it; the last_name field would display “last or family
+name” when moused over.</p>
 <p>To get the value of a trait metadata attribute, you can use the trait() method
 on a HasTraits object to get a reference to a specific trait, and then access
 the metadata attribute:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># metadata.py --- Example of accessing trait metadata attributes</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># metadata.py --- Example of accessing trait metadata attributes</span>
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> \
                                  <span class="n">Instance</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">TraitType</span>
 
@@ -868,7 +873,7 @@ existing traits.</td></tr>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Defining Traits: Initialization and Validation</a><ul>
 <li><a class="reference internal" href="#predefined-traits">Predefined Traits</a><ul>
@@ -908,12 +913,14 @@ existing traits.</td></tr>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -932,13 +939,13 @@ existing traits.</td></tr>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
@@ -57,6 +58,10 @@
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
     </ul>
               
 	    </div>
@@ -90,7 +95,11 @@
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">import</span> <span class="nn">unittest</span>  <span class="c1"># noqa</span>
+
+<span class="c1"># Support for &#39;from traits.testing.unittest_tools import unittest&#39;,</span>
+<span class="c1"># which was used to make unittest2 available under the name unittest</span>
+<span class="c1"># on Python 2.6. We keep the import for now, for backwards compatibility.</span>
+<span class="kn">import</span> <span class="nn">unittest</span>  <span class="c1"># noqa: F401</span>
 
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
@@ -196,8 +205,8 @@
         <span class="k">return</span> <span class="kc">False</span>
 
 
-<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-<div class="viewcode-block" id="reverse_assertion"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.reverse_assertion">[docs]</a><span class="k">def</span> <span class="nf">reverse_assertion</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+<div class="viewcode-block" id="reverse_assertion"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.reverse_assertion">[docs]</a><span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">reverse_assertion</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
     <span class="n">context</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">context</span>
@@ -429,8 +438,8 @@
                 <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assertTraitDoesNotChange</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">_py2to3</span><span class="o">.</span><span class="n">nested_context_mgrs</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
 
-    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-<div class="viewcode-block" id="UnittestTools.assertTraitChangesAsync"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync">[docs]</a>    <span class="k">def</span> <span class="nf">assertTraitChangesAsync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">):</span>
+<div class="viewcode-block" id="UnittestTools.assertTraitChangesAsync"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync">[docs]</a>    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">assertTraitChangesAsync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Assert an object trait eventually changes.</span>
 
 <span class="sd">        Context manager used to assert that the given trait changes at</span>
@@ -540,8 +549,8 @@
             <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;always&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">w</span>
 
-    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-<div class="viewcode-block" id="UnittestTools.assertDeprecated"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertDeprecated">[docs]</a>    <span class="k">def</span> <span class="nf">assertDeprecated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UnittestTools.assertDeprecated"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertDeprecated">[docs]</a>    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">assertDeprecated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Assert that the code inside the with block is deprecated.  Intended</span>
 <span class="sd">        for testing uses of traits.util.deprecated.deprecated.</span>
@@ -555,8 +564,8 @@
             <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Expected a DeprecationWarning, &quot;</span> <span class="s2">&quot;but none was issued&quot;</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-<div class="viewcode-block" id="UnittestTools.assertNotDeprecated"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertNotDeprecated">[docs]</a>    <span class="k">def</span> <span class="nf">assertNotDeprecated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UnittestTools.assertNotDeprecated"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertNotDeprecated">[docs]</a>    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">assertNotDeprecated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Assert that the code inside the with block is not deprecated.  Intended</span>
 <span class="sd">        for testing uses of traits.util.deprecated.deprecated.</span>
@@ -582,12 +591,14 @@
             </a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -606,13 +617,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

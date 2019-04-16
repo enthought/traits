@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -52,13 +53,17 @@
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
   
-    <li><a href="#"><code class="docutils literal"><span class="pre">has_dynamic_views</span></code> Module</a></li>
+    <li><a href="#"><code class="docutils literal notranslate"><span class="pre">has_dynamic_views</span></code> Module</a></li>
   
 
     </ul>
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
       <li class="active">
         <a href="interface_checker.html" title="interface_checker Module"
            accesskey="N">next</a>
@@ -81,11 +86,11 @@
           <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.has_dynamic_views">
-<span id="has-dynamic-views-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">has_dynamic_views</span></code> Module<a class="headerlink" href="#module-traits.has_dynamic_views" title="Permalink to this headline">¶</a></h1>
+<span id="has-dynamic-views-module"></span><h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">has_dynamic_views</span></code> Module<a class="headerlink" href="#module-traits.has_dynamic_views" title="Permalink to this headline">¶</a></h1>
 <p>Provides a framework that assembles Traits UI Views at run time,
 when the view is requested, rather than at the time a class is written.</p>
-<p>This capability is particularly useful when the object being &#8216;viewed&#8217; with a
-Traits UI is part of a plug-in application &#8211; such as Envisage.  In general,
+<p>This capability is particularly useful when the object being ‘viewed’ with a
+Traits UI is part of a plug-in application – such as Envisage.  In general,
 this capability allows:</p>
 <ul class="simple">
 <li>The GUI for an object can be extendable by contributions
@@ -100,9 +105,9 @@ need to exist at the time the view is requested.</p>
 <p>Users of this framework create a dynamic view by registering a DynamicView
 declaration.  That declaration includes a name that forms the basis for the
 metadata attributes that are used to identify and order the desired view
-sub-elements into the view&#8217;s composition.  In addition, the declaration
+sub-elements into the view’s composition.  In addition, the declaration
 includes any data to be passed into the constructor of the dynamic view and
-the id that should be used to persist the user&#8217;s customization of the view.</p>
+the id that should be used to persist the user’s customization of the view.</p>
 <p>Additionally, this framework allows sub-elements themselves to also be
 dynamically composed of further sub-elements.</p>
 <p>For example, a dynamic view could be composed of two sub-elements:</p>
@@ -132,7 +137,7 @@ picking the first element encountered that has the highest
 priority value. The other elements with the same view order are
 not displayed at all.</dd>
 </dl>
-<p>In addition, dynamic view contributions can also provide a &#8216;handler&#8217;, which
+<p>In addition, dynamic view contributions can also provide a ‘handler’, which
 behaves like a normal Traits Handler.  That is, it can contain methods that
 are called when model values change and can access  the Traits UIInfo
 object representing the actual UI instances.  To provide a handler, append the
@@ -177,7 +182,7 @@ names identifying the sub-elements that compose this element.</p>
 <dl class="attribute">
 <dt id="traits.has_dynamic_views.DynamicView.id">
 <code class="descname">id</code><em class="property"> = Str</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicView.id" title="Permalink to this definition">¶</a></dt>
-<dd><p>The ID of the view.  This is the ID that the view&#8217;s preferences will be
+<dd><p>The ID of the view.  This is the ID that the view’s preferences will be
 saved under.</p>
 </dd></dl>
 
@@ -212,7 +217,7 @@ when the view is requested, rather than at the time a class is written.</p>
 <dl class="method">
 <dt id="traits.has_dynamic_views.HasDynamicViews.trait_view">
 <code class="descname">trait_view</code><span class="sig-paren">(</span><em>name=None</em>, <em>view_element=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_dynamic_views.html#HasDynamicViews.trait_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_dynamic_views.HasDynamicViews.trait_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets or sets a ViewElement associated with an object&#8217;s class.</p>
+<dd><p>Gets or sets a ViewElement associated with an object’s class.</p>
 <p>Extended here to build dynamic views and sub-elements.</p>
 </dd></dl>
 
@@ -237,9 +242,9 @@ instance.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">has_dynamic_views</span></code> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">has_dynamic_views</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 </ul>
 </li>
@@ -247,10 +252,10 @@ instance.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="has_traits.html"
-                        title="previous chapter"><code class="docutils literal"><span class="pre">has_traits</span></code> Module</a></p>
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">has_traits</span></code> Module</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="interface_checker.html"
-                        title="next chapter"><code class="docutils literal"><span class="pre">interface_checker</span></code> Module</a></p>
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">interface_checker</span></code> Module</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/has_dynamic_views.rst.txt"
@@ -258,12 +263,14 @@ instance.</p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -282,13 +289,13 @@ instance.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

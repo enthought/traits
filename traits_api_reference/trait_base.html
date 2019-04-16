@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -52,13 +53,17 @@
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
   
-    <li><a href="#"><code class="docutils literal"><span class="pre">trait_base</span></code> Module</a></li>
+    <li><a href="#"><code class="docutils literal notranslate"><span class="pre">trait_base</span></code> Module</a></li>
   
 
     </ul>
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
       <li class="active">
         <a href="trait_errors.html" title="trait_errors Module"
            accesskey="N">next</a>
@@ -81,18 +86,18 @@
           <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.trait_base">
-<span id="trait-base-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">trait_base</span></code> Module<a class="headerlink" href="#module-traits.trait_base" title="Permalink to this headline">¶</a></h1>
+<span id="trait-base-module"></span><h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">trait_base</span></code> Module<a class="headerlink" href="#module-traits.trait_base" title="Permalink to this headline">¶</a></h1>
 <p>Defines common, low-level capabilities needed by the Traits package.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="data">
 <dt id="traits.trait_base.Uninitialized">
 <code class="descclassname">traits.trait_base.</code><code class="descname">Uninitialized</code><em class="property"> = &lt;uninitialized&gt;</em><a class="headerlink" href="#traits.trait_base.Uninitialized" title="Permalink to this definition">¶</a></dt>
-<dd><p>When the first reference to a trait is a &#8216;get&#8217; reference, the default value of
+<dd><p>When the first reference to a trait is a ‘get’ reference, the default value of
 the trait is implicitly assigned and returned as the value of the trait.
 Because of this implicit assignment, a trait change notification is
-generated with the Uninitialized object as the &#8216;old&#8217; value of the trait, and
-the default trait value as the &#8216;new&#8217; value. This allows other parts of the
+generated with the Uninitialized object as the ‘old’ value of the trait, and
+the default trait value as the ‘new’ value. This allows other parts of the
 traits package to recognize the assignment as the implicit default value
 assignment, and treat it specially.</p>
 </dd></dl>
@@ -118,7 +123,7 @@ type-checked method signature.</p>
 <dl class="data">
 <dt id="traits.trait_base.Self">
 <code class="descclassname">traits.trait_base.</code><code class="descname">Self</code><em class="property"> = &lt;self&gt;</em><a class="reference internal" href="../_modules/traits/trait_base.html#Self"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.Self" title="Permalink to this definition">¶</a></dt>
-<dd><p>Singleton object that references the current &#8216;object&#8217;.</p>
+<dd><p>Singleton object that references the current ‘object’.</p>
 </dd></dl>
 
 </div>
@@ -135,23 +140,23 @@ argument is not of a type in StringTypes.</p>
 <dt id="traits.trait_base.class_of">
 <code class="descclassname">traits.trait_base.</code><code class="descname">class_of</code><span class="sig-paren">(</span><em>object</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#class_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.class_of" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string containing the class name of an object with the
-correct indefinite article (&#8216;a&#8217; or &#8216;an&#8217;) preceding it (e.g., &#8216;an Image&#8217;,
-&#8216;a PlotValue&#8217;).</p>
+correct indefinite article (‘a’ or ‘an’) preceding it (e.g., ‘an Image’,
+‘a PlotValue’).</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.add_article">
 <code class="descclassname">traits.trait_base.</code><code class="descname">add_article</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#add_article"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.add_article" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a string containing the correct indefinite article (&#8216;a&#8217; or &#8216;an&#8217;)
+<dd><p>Returns a string containing the correct indefinite article (‘a’ or ‘an’)
 prefixed to the specified string.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.user_name_for">
 <code class="descclassname">traits.trait_base.</code><code class="descname">user_name_for</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#user_name_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.user_name_for" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a &#8220;user-friendly&#8221; version of a string, with the first letter
+<dd><p>Returns a “user-friendly” version of a string, with the first letter
 capitalized and with underscore characters replaced by spaces. For example,
-<code class="docutils literal"><span class="pre">user_name_for('user_name_for')</span></code> returns <code class="docutils literal"><span class="pre">'User</span> <span class="pre">name</span> <span class="pre">for'</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">user_name_for('user_name_for')</span></code> returns <code class="docutils literal notranslate"><span class="pre">'User</span> <span class="pre">name</span> <span class="pre">for'</span></code>.</p>
 </dd></dl>
 
 <dl class="function">
@@ -170,27 +175,27 @@ does not exist.</p>
 <dl class="function">
 <dt id="traits.trait_base.get_module_name">
 <code class="descclassname">traits.trait_base.</code><code class="descname">get_module_name</code><span class="sig-paren">(</span><em>level=2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#get_module_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.get_module_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the name of the module that the caller&#8217;s caller is located in.</p>
+<dd><p>Returns the name of the module that the caller’s caller is located in.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.get_resource_path">
 <code class="descclassname">traits.trait_base.</code><code class="descname">get_resource_path</code><span class="sig-paren">(</span><em>level=2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#get_resource_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.get_resource_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a resource path calculated from the caller&#8217;s stack.</p>
+<dd><p>Returns a resource path calculated from the caller’s stack.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.xgetattr">
 <code class="descclassname">traits.trait_base.</code><code class="descname">xgetattr</code><span class="sig-paren">(</span><em>object</em>, <em>xname</em>, <em>default=&lt;undefined&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#xgetattr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.xgetattr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the value of an extended object attribute name of the form:
-name[.name2[.name3...]].</p>
+name[.name2[.name3…]].</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.xsetattr">
 <code class="descclassname">traits.trait_base.</code><code class="descname">xsetattr</code><span class="sig-paren">(</span><em>object</em>, <em>xname</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#xsetattr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.xsetattr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the value of an extended object attribute name of the form:
-name[.name2[.name3...]].</p>
+name[.name2[.name3…]].</p>
 </dd></dl>
 
 <dl class="function">
@@ -230,9 +235,9 @@ name[.name2[.name3...]].</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">trait_base</span></code> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">trait_base</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#functions">Functions</a></li>
 </ul>
@@ -241,10 +246,10 @@ name[.name2[.name3...]].</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="interface_checker.html"
-                        title="previous chapter"><code class="docutils literal"><span class="pre">interface_checker</span></code> Module</a></p>
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">interface_checker</span></code> Module</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="trait_errors.html"
-                        title="next chapter"><code class="docutils literal"><span class="pre">trait_errors</span></code> Module</a></p>
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">trait_errors</span></code> Module</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/trait_base.rst.txt"
@@ -252,12 +257,14 @@ name[.name2[.name3...]].</p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -276,13 +283,13 @@ name[.name2[.name3...]].</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

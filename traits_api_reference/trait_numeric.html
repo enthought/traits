@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -52,13 +53,17 @@
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
   
-    <li><a href="#"><code class="docutils literal"><span class="pre">trait_numeric</span></code> Module</a></li>
+    <li><a href="#"><code class="docutils literal notranslate"><span class="pre">trait_numeric</span></code> Module</a></li>
   
 
     </ul>
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
       <li class="active">
         <a href="trait_types.html" title="trait_types Module"
            accesskey="N">next</a>
@@ -81,7 +86,7 @@
           <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.trait_numeric">
-<span id="trait-numeric-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">trait_numeric</span></code> Module<a class="headerlink" href="#module-traits.trait_numeric" title="Permalink to this headline">¶</a></h1>
+<span id="trait-numeric-module"></span><h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">trait_numeric</span></code> Module<a class="headerlink" href="#module-traits.trait_numeric" title="Permalink to this headline">¶</a></h1>
 <p>Trait definitions related to the numpy library.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
@@ -134,6 +139,19 @@ first reference to a trait with no current value).</p>
 <em class="property">class </em><code class="descclassname">traits.trait_numeric.</code><code class="descname">ArrayOrNone</code><span class="sig-paren">(</span><em>*args</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#ArrayOrNone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.ArrayOrNone" title="Permalink to this definition">¶</a></dt>
 <dd><p>A trait whose value may be either a NumPy array or None, with
 casting allowed.  The default is None.</p>
+<dl class="method">
+<dt id="traits.trait_numeric.ArrayOrNone.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#ArrayOrNone.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.ArrayOrNone.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a valid array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_numeric.ArrayOrNone.get_default_value">
+<code class="descname">get_default_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_numeric.html#ArrayOrNone.get_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.ArrayOrNone.get_default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default value constructor for the type (called from the
+trait factory.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -164,9 +182,9 @@ allowed.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">trait_numeric</span></code> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">trait_numeric</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#function">Function</a></li>
 </ul>
@@ -175,10 +193,10 @@ allowed.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="trait_handlers.html"
-                        title="previous chapter"><code class="docutils literal"><span class="pre">trait_handlers</span></code> Module</a></p>
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">trait_handlers</span></code> Module</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="trait_types.html"
-                        title="next chapter"><code class="docutils literal"><span class="pre">trait_types</span></code> Module</a></p>
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">trait_types</span></code> Module</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/trait_numeric.rst.txt"
@@ -186,12 +204,14 @@ allowed.</p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -210,13 +230,13 @@ allowed.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -52,13 +53,17 @@
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
   
-    <li><a href="#"><code class="docutils literal"><span class="pre">category</span></code> Module</a></li>
+    <li><a href="#"><code class="docutils literal notranslate"><span class="pre">category</span></code> Module</a></li>
   
 
     </ul>
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
       <li class="active">
         <a href="has_traits.html" title="has_traits Module"
            accesskey="N">next</a>
@@ -81,8 +86,8 @@
           <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.category">
-<span id="category-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">category</span></code> Module<a class="headerlink" href="#module-traits.category" title="Permalink to this headline">¶</a></h1>
-<p>Adds a &#8220;category&#8221; capability to Traits-based classes, similar to that
+<span id="category-module"></span><h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">category</span></code> Module<a class="headerlink" href="#module-traits.category" title="Permalink to this headline">¶</a></h1>
+<p>Adds a “category” capability to Traits-based classes, similar to that
 provided by the Cocoa (Objective-C) environment for the Macintosh.</p>
 <p>You can use categories to extend an existing HasTraits class, as an
 alternative to subclassing. An advantage of categories over subclassing is
@@ -99,11 +104,11 @@ subclassing, categories do not allow overriding trait attributes.</p>
 <dl class="class">
 <dt id="traits.category.Category">
 <em class="property">class </em><code class="descclassname">traits.category.</code><code class="descname">Category</code><a class="reference internal" href="../_modules/traits/category.html#Category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.category.Category" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used for defining &#8220;category&#8221; extensions to existing classes.</p>
-<p>To define a class as a category, specify &#8220;Category,&#8221; followed by the name
+<dd><p>Used for defining “category” extensions to existing classes.</p>
+<p>To define a class as a category, specify “Category,” followed by the name
 of the base class name in the base class list.</p>
 <p>The following example demonstrates defining a category:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Category</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Category</span>
 
 <span class="k">class</span> <span class="nc">Base</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s2">&quot;Base x&quot;</span><span class="p">)</span>
@@ -127,9 +132,9 @@ of the base class name in the base class list.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">category</span></code> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">category</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 </ul>
 </li>
@@ -137,10 +142,10 @@ of the base class name in the base class list.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="traits.html"
-                        title="previous chapter"><code class="docutils literal"><span class="pre">traits</span></code> Module</a></p>
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">traits</span></code> Module</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="has_traits.html"
-                        title="next chapter"><code class="docutils literal"><span class="pre">has_traits</span></code> Module</a></p>
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">has_traits</span></code> Module</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/category.rst.txt"
@@ -148,12 +153,14 @@ of the base class name in the base class list.</p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -172,13 +179,13 @@ of the base class name in the base class list.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

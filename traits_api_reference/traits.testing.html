@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -52,13 +53,17 @@
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
   
-    <li><a href="#"><code class="docutils literal"><span class="pre">testing</span></code> Package</a></li>
+    <li><a href="#"><code class="docutils literal notranslate"><span class="pre">testing</span></code> Package</a></li>
   
 
     </ul>
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
       <li class="active">
         <a href="traits.util.html" title="util Package"
            accesskey="N">next</a>
@@ -81,26 +86,26 @@
           <div class="body" id="spc-section-body">
             
   <div class="section" id="testing-package">
-<h1><code class="xref py py-mod docutils literal"><span class="pre">testing</span></code> Package<a class="headerlink" href="#testing-package" title="Permalink to this headline">¶</a></h1>
+<h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">testing</span></code> Package<a class="headerlink" href="#testing-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2><code class="xref py py-mod docutils literal"><span class="pre">testing</span></code> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">testing</span></code> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-traits.testing"></span><p>Scripts and assert tools related to running unit tests.</p>
 <p>These scripts also allow running test suites in separate processes and
 aggregating the results.</p>
 </div>
 <div class="section" id="module-traits.testing.doctest_tools">
-<span id="doctest-tools-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">doctest_tools</span></code> Module<a class="headerlink" href="#module-traits.testing.doctest_tools" title="Permalink to this headline">¶</a></h2>
+<span id="doctest-tools-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">doctest_tools</span></code> Module<a class="headerlink" href="#module-traits.testing.doctest_tools" title="Permalink to this headline">¶</a></h2>
 <p>Tools for having doctest and unittest work together more nicely.</p>
-<p>Eclipse&#8217;s PyDev plugin will run your unittest files for you very nicely.
+<p>Eclipse’s PyDev plugin will run your unittest files for you very nicely.
 The doctest_for_module function allows you to easily run the doctest for a
 module along side your standard unit tests within Eclipse.</p>
 <dl class="function">
 <dt id="traits.testing.doctest_tools.doctest_for_module">
 <code class="descclassname">traits.testing.doctest_tools.</code><code class="descname">doctest_for_module</code><span class="sig-paren">(</span><em>module</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/doctest_tools.html#doctest_for_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.doctest_tools.doctest_for_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a TestCase from a module&#8217;s doctests that will be run by the
+<dd><p>Create a TestCase from a module’s doctests that will be run by the
 standard unittest.main().</p>
 <p>Example tests/test_foo.py:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
 
 <span class="kn">import</span> <span class="nn">foo</span>
 <span class="kn">from</span> <span class="nn">traits.testing.api</span> <span class="k">import</span> <span class="n">doctest_for_module</span>
@@ -118,11 +123,11 @@ standard unittest.main().</p>
 </pre></div>
 </div>
 <p>Alternatively, you can say:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">FooDocTest</span> <span class="o">=</span> <span class="n">doctest_for_module</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FooDocTest</span> <span class="o">=</span> <span class="n">doctest_for_module</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>instead of:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FooDocTest</span><span class="p">(</span><span class="n">doctest_for_module</span><span class="p">(</span><span class="n">foo</span><span class="p">)):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FooDocTest</span><span class="p">(</span><span class="n">doctest_for_module</span><span class="p">(</span><span class="n">foo</span><span class="p">)):</span>
     <span class="k">pass</span>
 </pre></div>
 </div>
@@ -130,8 +135,8 @@ standard unittest.main().</p>
 
 </div>
 <div class="section" id="module-traits.testing.nose_tools">
-<span id="nose-tools-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">nose_tools</span></code> Module<a class="headerlink" href="#module-traits.testing.nose_tools" title="Permalink to this headline">¶</a></h2>
-<p>Non-standard functions for the &#8216;nose&#8217; testing framework.</p>
+<span id="nose-tools-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">nose_tools</span></code> Module<a class="headerlink" href="#module-traits.testing.nose_tools" title="Permalink to this headline">¶</a></h2>
+<p>Non-standard functions for the ‘nose’ testing framework.</p>
 <dl class="function">
 <dt id="traits.testing.nose_tools.skip">
 <code class="descclassname">traits.testing.nose_tools.</code><code class="descname">skip</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/nose_tools.html#skip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.nose_tools.skip" title="Permalink to this definition">¶</a></dt>
@@ -153,7 +158,7 @@ a performance-measuring test.</p>
 
 </div>
 <div class="section" id="module-traits.testing.unittest_tools">
-<span id="trait-assert-tools-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">trait_assert_tools</span></code> Module<a class="headerlink" href="#module-traits.testing.unittest_tools" title="Permalink to this headline">¶</a></h2>
+<span id="trait-assert-tools-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">trait_assert_tools</span></code> Module<a class="headerlink" href="#module-traits.testing.unittest_tools" title="Permalink to this headline">¶</a></h2>
 <p>Trait assert mixin class to simplify test implementation for Trait
 Classes.</p>
 <dl class="function">
@@ -164,7 +169,7 @@ Classes.</p>
 <dl class="class">
 <dt id="traits.testing.unittest_tools.UnittestTools">
 <em class="property">class </em><code class="descclassname">traits.testing.unittest_tools.</code><code class="descname">UnittestTools</code><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Mixin class to augment the unittest.TestCase class with useful trait
 related assert methods.</p>
 <dl class="method">
@@ -179,17 +184,17 @@ the with statement (similar to the assertRaises method). Please note
 that in that case the context manager returns itself and the user
 can introspect the information of:</p>
 <ul class="simple">
-<li>The last event fired by accessing the <code class="docutils literal"><span class="pre">event</span></code> attribute of the
+<li>The last event fired by accessing the <code class="docutils literal notranslate"><span class="pre">event</span></code> attribute of the
 returned object.</li>
-<li>All the fired events by accessing the <code class="docutils literal"><span class="pre">events</span></code> attribute of
+<li>All the fired events by accessing the <code class="docutils literal notranslate"><span class="pre">events</span></code> attribute of
 the return object.</li>
 </ul>
-<p>Note that in the case of chained properties (trait &#8216;foo&#8217; depends on
-&#8216;bar&#8217;, which in turn depends on &#8216;baz&#8217;), the order in which the
-corresponding trait events appear in the <code class="docutils literal"><span class="pre">events</span></code> attribute is
+<p>Note that in the case of chained properties (trait ‘foo’ depends on
+‘bar’, which in turn depends on ‘baz’), the order in which the
+corresponding trait events appear in the <code class="docutils literal notranslate"><span class="pre">events</span></code> attribute is
 not well-defined, and may depend on dictionary ordering.</p>
 <p><strong>Example</strong>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">number</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
 
 <span class="n">my_class</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -203,23 +208,23 @@ not well-defined, and may depend on dictionary ordering.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) &#8211; The HasTraits class instance whose class trait will change.</li>
-<li><strong>trait</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen to.</li>
-<li><strong>count</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em>) &#8211; The expected number of times the event should be fired. When None
+<li><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance whose class trait will change.</li>
+<li><strong>trait</strong> (<em>str</em>) – The extended trait name of trait changes to listen to.</li>
+<li><strong>count</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – The expected number of times the event should be fired. When None
 (default value) there is no check for the number of times the
 change event was fired.</li>
-<li><strong>callableObj</strong> (<em>callable</em><em>, </em><em>optional</em>) &#8211; A callable object that will trigger the expected trait change.
+<li><strong>callableObj</strong> (<em>callable</em><em>, </em><em>optional</em>) – A callable object that will trigger the expected trait change.
 When None (default value) a trigger is expected to be called
 under the context manger returned by this method.</li>
-<li><strong>*args</strong> &#8211; List of positional arguments for <code class="docutils literal"><span class="pre">callableObj</span></code></li>
-<li><strong>**kwargs</strong> &#8211; Dict of keyword value pairs to be passed to the <code class="docutils literal"><span class="pre">callableObj</span></code></li>
+<li><strong>*args</strong> – List of positional arguments for <code class="docutils literal notranslate"><span class="pre">callableObj</span></code></li>
+<li><strong>**kwargs</strong> – Dict of keyword value pairs to be passed to the <code class="docutils literal notranslate"><span class="pre">callableObj</span></code></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>context</strong> (<em>context manager or None</em>) &#8211;
-If <code class="docutils literal"><span class="pre">callableObj</span></code> is None, an assertion context manager is returned,
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>context</strong> (<em>context manager or None</em>) –
+If <code class="docutils literal notranslate"><span class="pre">callableObj</span></code> is None, an assertion context manager is returned,
 inside of which a trait-change trigger can be invoked. Otherwise,
-the context is used internally with <code class="docutils literal"><span class="pre">callableObj</span></code> as the trigger,
+the context is used internally with <code class="docutils literal notranslate"><span class="pre">callableObj</span></code> as the trigger,
 in which case None is returned.</p>
 </td>
 </tr>
@@ -228,10 +233,10 @@ in which case None is returned.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <ul class="last simple">
-<li>Checking if the provided <code class="docutils literal"><span class="pre">trait</span></code> corresponds to valid traits in
+<li>Checking if the provided <code class="docutils literal notranslate"><span class="pre">trait</span></code> corresponds to valid traits in
 the class is not implemented yet.</li>
 <li>Using the functional version of the assert method requires the
-<code class="docutils literal"><span class="pre">count</span></code> argument to be given even if it is None.</li>
+<code class="docutils literal notranslate"><span class="pre">count</span></code> argument to be given even if it is None.</li>
 </ul>
 </div>
 </dd></dl>
@@ -247,20 +252,20 @@ execution of the provided function.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) &#8211; The HasTraits class instance whose class trait will change.</li>
-<li><strong>trait</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen to.</li>
-<li><strong>callableObj</strong> (<em>callable</em><em>, </em><em>optional</em>) &#8211; A callable object that should not trigger a change in the
+<li><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance whose class trait will change.</li>
+<li><strong>trait</strong> (<em>str</em>) – The extended trait name of trait changes to listen to.</li>
+<li><strong>callableObj</strong> (<em>callable</em><em>, </em><em>optional</em>) – A callable object that should not trigger a change in the
 passed trait.  When None (default value) a trigger is expected
 to be called under the context manger returned by this method.</li>
-<li><strong>*args</strong> &#8211; List of positional arguments for <code class="docutils literal"><span class="pre">callableObj</span></code></li>
-<li><strong>**kwargs</strong> &#8211; Dict of keyword value pairs to be passed to the <code class="docutils literal"><span class="pre">callableObj</span></code></li>
+<li><strong>*args</strong> – List of positional arguments for <code class="docutils literal notranslate"><span class="pre">callableObj</span></code></li>
+<li><strong>**kwargs</strong> – Dict of keyword value pairs to be passed to the <code class="docutils literal notranslate"><span class="pre">callableObj</span></code></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>context</strong> (<em>context manager or None</em>) &#8211;
-If <code class="docutils literal"><span class="pre">callableObj</span></code> is None, an assertion context manager is returned,
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>context</strong> (<em>context manager or None</em>) –
+If <code class="docutils literal notranslate"><span class="pre">callableObj</span></code> is None, an assertion context manager is returned,
 inside of which a trait-change trigger can be invoked. Otherwise,
-the context is used internally with <code class="docutils literal"><span class="pre">callableObj</span></code> as the trigger,
+the context is used internally with <code class="docutils literal notranslate"><span class="pre">callableObj</span></code> as the trigger,
 in which case None is returned.</p>
 </td>
 </tr>
@@ -279,9 +284,9 @@ in which case None is returned.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>objects</strong> (<em>list of HasTraits</em>) &#8211; The HasTraits class instances whose traits will change.</li>
-<li><strong>traits_modified</strong> (<em>list of str</em>) &#8211; The extended trait names of trait expected to change.</li>
-<li><strong>traits_not_modified</strong> (<em>list of str</em>) &#8211; The extended trait names of traits not expected to change.</li>
+<li><strong>objects</strong> (<em>list of HasTraits</em>) – The HasTraits class instances whose traits will change.</li>
+<li><strong>traits_modified</strong> (<em>list of str</em>) – The extended trait names of trait expected to change.</li>
+<li><strong>traits_not_modified</strong> (<em>list of str</em>) – The extended trait names of traits not expected to change.</li>
 </ul>
 </td>
 </tr>
@@ -298,7 +303,7 @@ least <cite>count</cite> times within the given timeout, as a result of
 execution of the body of the corresponding with block.</p>
 <p>The trait changes are permitted to occur asynchronously.</p>
 <p><strong>Example usage</strong>:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChangesAsync</span><span class="p">(</span><span class="n">my_object</span><span class="p">,</span> <span class="s1">&#39;SomeEvent&#39;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChangesAsync</span><span class="p">(</span><span class="n">my_object</span><span class="p">,</span> <span class="s1">&#39;SomeEvent&#39;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
     <span class="o">&lt;</span><span class="n">do</span> <span class="n">stuff</span> <span class="n">that</span> <span class="n">should</span> <span class="n">cause</span> <span class="n">my_object</span><span class="o">.</span><span class="n">SomeEvent</span> <span class="n">to</span> <span class="n">be</span>
     <span class="n">fired</span> <span class="n">at</span> <span class="n">least</span> <span class="mi">4</span> <span class="n">times</span> <span class="n">within</span> <span class="n">the</span> <span class="nb">next</span> <span class="mi">5</span> <span class="n">seconds</span><span class="o">&gt;</span>
 </pre></div>
@@ -308,10 +313,10 @@ execution of the body of the corresponding with block.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) &#8211; The HasTraits class instance whose class trait will change.</li>
-<li><strong>trait</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen to.</li>
-<li><strong>count</strong> (<em>int</em><em>, </em><em>optional</em>) &#8211; The expected number of times the event should be fired.</li>
-<li><strong>timeout</strong> (<em>float</em><em> or </em><em>None</em><em>, </em><em>optional</em>) &#8211; The amount of time in seconds to wait for the specified number
+<li><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance whose class trait will change.</li>
+<li><strong>trait</strong> (<em>str</em>) – The extended trait name of trait changes to listen to.</li>
+<li><strong>count</strong> (<em>int</em><em>, </em><em>optional</em>) – The expected number of times the event should be fired.</li>
+<li><strong>timeout</strong> (<em>float</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – The amount of time in seconds to wait for the specified number
 of changes. None can be used to indicate no timeout.</li>
 </ul>
 </td>
@@ -329,12 +334,12 @@ of changes. None can be used to indicate no timeout.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) &#8211; The HasTraits class instance who&#8217;s traits will change.</li>
-<li><strong>trait</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen to.</li>
-<li><strong>condition</strong> (<em>callable</em>) &#8211; A function that will be called when the specified trait
-changes.  This should accept <code class="docutils literal"><span class="pre">obj</span></code> and should return a
+<li><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance who’s traits will change.</li>
+<li><strong>trait</strong> (<em>str</em>) – The extended trait name of trait changes to listen to.</li>
+<li><strong>condition</strong> (<em>callable</em>) – A function that will be called when the specified trait
+changes.  This should accept <code class="docutils literal notranslate"><span class="pre">obj</span></code> and should return a
 Boolean indicating whether the condition is satisfied or not.</li>
-<li><strong>timeout</strong> (<em>float</em><em> or </em><em>None</em><em>, </em><em>optional</em>) &#8211; The amount of time in seconds to wait for the condition to
+<li><strong>timeout</strong> (<em>float</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – The amount of time in seconds to wait for the condition to
 become true.  None can be used to indicate no timeout.</li>
 </ul>
 </td>
@@ -371,23 +376,23 @@ for testing uses of traits.util.deprecated.deprecated.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">testing</span></code> Package</a><ul>
-<li><a class="reference internal" href="#id1"><code class="docutils literal"><span class="pre">testing</span></code> Package</a></li>
-<li><a class="reference internal" href="#module-traits.testing.doctest_tools"><code class="docutils literal"><span class="pre">doctest_tools</span></code> Module</a></li>
-<li><a class="reference internal" href="#module-traits.testing.nose_tools"><code class="docutils literal"><span class="pre">nose_tools</span></code> Module</a></li>
-<li><a class="reference internal" href="#module-traits.testing.unittest_tools"><code class="docutils literal"><span class="pre">trait_assert_tools</span></code> Module</a></li>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">testing</span></code> Package</a><ul>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">testing</span></code> Package</a></li>
+<li><a class="reference internal" href="#module-traits.testing.doctest_tools"><code class="docutils literal notranslate"><span class="pre">doctest_tools</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.testing.nose_tools"><code class="docutils literal notranslate"><span class="pre">nose_tools</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.testing.unittest_tools"><code class="docutils literal notranslate"><span class="pre">trait_assert_tools</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="traits.protocols.html"
-                        title="previous chapter"><code class="docutils literal"><span class="pre">protocols</span></code> Package</a></p>
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">protocols</span></code> Package</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="traits.util.html"
-                        title="next chapter"><code class="docutils literal"><span class="pre">util</span></code> Package</a></p>
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">util</span></code> Package</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/traits.testing.rst.txt"
@@ -395,12 +400,14 @@ for testing uses of traits.util.deprecated.deprecated.</p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -419,13 +426,13 @@ for testing uses of traits.util.deprecated.deprecated.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>
