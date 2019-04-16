@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -52,13 +53,17 @@
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
   
-    <li><a href="#"><code class="docutils literal"><span class="pre">traits</span></code> Module</a></li>
+    <li><a href="#"><code class="docutils literal notranslate"><span class="pre">traits</span></code> Module</a></li>
   
 
     </ul>
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
       <li class="active">
         <a href="category.html" title="category Module"
            accesskey="N">next</a>
@@ -81,8 +86,8 @@
           <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.traits">
-<span id="traits-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">traits</span></code> Module<a class="headerlink" href="#module-traits.traits" title="Permalink to this headline">¶</a></h1>
-<p>Defines the &#8216;core&#8217; traits for the Traits package. A trait is a type definition
+<span id="traits-module"></span><h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits</span></code> Module<a class="headerlink" href="#module-traits.traits" title="Permalink to this headline">¶</a></h1>
+<p>Defines the ‘core’ traits for the Traits package. A trait is a type definition
 that can be used for normal Python object attributes, giving the attributes
 some additional characteristics:</p>
 <dl class="docutils">
@@ -92,7 +97,7 @@ initialized in the class constructor or elsewhere.</dd>
 <dt>Validation:</dt>
 <dd>Trait attributes have flexible, type-checked values.</dd>
 <dt>Delegation:</dt>
-<dd>Trait attributes&#8217; values can be delegated to other objects.</dd>
+<dd>Trait attributes’ values can be delegated to other objects.</dd>
 <dt>Notification:</dt>
 <dd>Trait attributes can automatically notify interested parties when
 their values change.</dd>
@@ -103,8 +108,8 @@ edited or displayed)</dd>
 </dl>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">&#8216;trait&#8217; is a synonym for &#8216;property&#8217;, but is used instead of the
-word &#8216;property&#8217; to differentiate it from the Python language &#8216;property&#8217;
+<p class="last">‘trait’ is a synonym for ‘property’, but is used instead of the
+word ‘property’ to differentiate it from the Python language ‘property’
 feature.</p>
 </div>
 <div class="section" id="classes">
@@ -133,7 +138,7 @@ feature.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>full</strong> (<em>bool</em>) &#8211; Indicates whether to return the value of the <em>help</em> attribute of
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>full</strong> (<em>bool</em>) – Indicates whether to return the value of the <em>help</em> attribute of
 the trait itself.</td>
 </tr>
 </tbody>
@@ -141,7 +146,7 @@ the trait itself.</td>
 <p class="rubric">Description</p>
 <p>If <em>full</em> is False or the trait does not have a <strong>help</strong> string,
 the returned string is constructed from the <strong>desc</strong> attribute on the
-trait and the <strong>info</strong> string on the trait&#8217;s handler.</p>
+trait and the <strong>info</strong> string on the trait’s handler.</p>
 </dd></dl>
 
 <dl class="method">
@@ -234,10 +239,10 @@ which must be in <em>ConstantTypes</em>.</td>
 </tr>
 <tr class="row-odd"><td>Trait(<em>default</em>,
 <em>other1</em>,
-<em>other2</em>, ...)</td>
+<em>other2</em>, …)</td>
 <td>Trait(None,
 0, 1, 2,
-&#8216;many&#8217;)</td>
+‘many’)</td>
 <td>The trait accepts any of the
 enumerated values, with the first
 value being the default value. The
@@ -250,10 +255,10 @@ list.</td>
 </tr>
 <tr class="row-even"><td>Trait([<em>default</em>,
 <em>other1</em>,
-<em>other2</em>, ...])</td>
+<em>other2</em>, …])</td>
 <td>Trait([None,
 0, 1, 2,
-&#8216;many&#8217;])</td>
+‘many’])</td>
 <td>Similar to the previous format, but
 takes an explicit list or a list
 variable.</td>
@@ -270,7 +275,7 @@ appropriate form of zero, False,
 or emtpy string, set or sequence.</td>
 </tr>
 <tr class="row-even"><td>Trait(<em>class</em>)</td>
-<td><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+<td><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
    <span class="k">pass</span>
 <span class="n">foo</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span>
 <span class="n">MyClass</span><span class="p">)</span>
@@ -284,7 +289,7 @@ cannot be assigned as a value.</td>
 </tr>
 <tr class="row-odd"><td>Trait(None,
 <em>class</em>)</td>
-<td><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+<td><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
   <span class="k">pass</span>
 <span class="n">foo</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span>
 <span class="kc">None</span><span class="p">,</span> <span class="n">MyClass</span><span class="p">)</span>
@@ -295,7 +300,7 @@ cannot be assigned as a value.</td>
 None <em>can</em> be assigned as a value.</td>
 </tr>
 <tr class="row-even"><td>Trait(<em>instance</em>)</td>
-<td><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+<td><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
    <span class="k">pass</span>
 <span class="n">i</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="n">foo</span> <span class="o">=</span>
@@ -324,11 +329,11 @@ validated by an object derived from
 <em>handler</em> |
 <em>trait</em> }+ )</td>
 <td>Trait(0.0, 0.0
-&#8216;stuff&#8217;,
+‘stuff’,
 TupleType)</td>
 <td>This is the most general form of
 the function. The notation:
-<code class="docutils literal"><span class="pre">{...|...|...}+</span></code> means a list of
+<code class="docutils literal notranslate"><span class="pre">{...|...|...}+</span></code> means a list of
 one or more of any of the items
 listed between the braces. Thus, the
 most general form of the function
@@ -336,7 +341,7 @@ consists of a default value,
 followed by one or more of several
 possible items. A trait defined by
 multiple items is called a
-&#8220;compound&#8221; trait.</td>
+“compound” trait.</td>
 </tr>
 </tbody>
 </table>
@@ -355,7 +360,7 @@ exception messages and fly-over help in user interfaces.</dd>
 interface editors for traits.</dd>
 <dt>editor <span class="classifier-delimiter">:</span> <span class="classifier">traits.api.Editor</span></dt>
 <dd>Instance of a subclass Editor object to use when creating a user
-interface editor for the trait. See the &#8220;Traits UI User Guide&#8221; for
+interface editor for the trait. See the “Traits UI User Guide” for
 more information on trait editors.</dd>
 <dt>comparison_mode <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
 <dd><p class="first">Indicates when trait change notifications should be generated based upon
@@ -366,20 +371,20 @@ notification is generated on each assignment.</li>
 <li>1 (OBJECT_IDENTITY_COMPARE): A trait change notification is
 generated if the old and new values are not the same object.</li>
 <li>2 (RICH_COMPARE): A trait change notification is generated if the
-old and new values are not equal using Python&#8217;s
-&#8216;rich comparison&#8217; operator. This is the default.</li>
+old and new values are not equal using Python’s
+‘rich comparison’ operator. This is the default.</li>
 </ul>
 </dd>
 <dt>rich_compare <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
 <dd><p class="first">Indicates whether the basis for considering a trait attribute value to
-have changed is a &#8220;rich&#8221; comparison (True, the default), or simple
+have changed is a “rich” comparison (True, the default), or simple
 object identity (False). This attribute can be useful in cases
 where a detailed comparison of two objects is very expensive, or where
 you do not care whether the details of an object change, as long as the
 same object is used.</p>
 <blockquote class="last">
 <div><div class="deprecated">
-<p><span class="versionmodified">Deprecated since version 3.0.3: </span>Use <code class="docutils literal"><span class="pre">comparison_mode</span></code> instead</p>
+<p><span class="versionmodified">Deprecated since version 3.0.3: </span>Use <code class="docutils literal notranslate"><span class="pre">comparison_mode</span></code> instead</p>
 </div>
 </div></blockquote>
 </dd>
@@ -473,9 +478,9 @@ original value.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">traits</span></code> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">traits</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#functions">Functions</a></li>
 <li><a class="reference internal" href="#private-classes">Private Classes</a></li>
@@ -488,7 +493,7 @@ original value.</p>
                         title="previous chapter">API Reference</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="category.html"
-                        title="next chapter"><code class="docutils literal"><span class="pre">category</span></code> Module</a></p>
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">category</span></code> Module</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/traits.rst.txt"
@@ -496,12 +501,14 @@ original value.</p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -520,13 +527,13 @@ original value.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

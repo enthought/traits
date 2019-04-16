@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
@@ -57,6 +58,10 @@
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
     </ul>
               
 	    </div>
@@ -103,6 +108,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">isdir</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">,</span> <span class="n">ModuleType</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
 
 <span class="kn">import</span> <span class="nn">six</span>
 
@@ -117,7 +123,6 @@
     <span class="n">ClassTypes</span><span class="p">,</span>
     <span class="n">Undefined</span><span class="p">,</span>
     <span class="n">TraitsCache</span><span class="p">,</span>
-    <span class="n">python_version</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.trait_handlers</span> <span class="k">import</span> <span class="p">(</span>
@@ -1224,11 +1229,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_none</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_none</span>
 
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="This.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.This.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">object</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">value</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">validate_failed</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_failed</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">validate_none</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">object</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
@@ -1236,8 +1241,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">validate_failed</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;an instance of the same type as the receiver&quot;</span>
+<div class="viewcode-block" id="This.info"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.This.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;an instance of the same type as the receiver&quot;</span></div>
 
     <span class="k">def</span> <span class="nf">info_none</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;an instance of the same type as the receiver or None&quot;</span>
@@ -1283,7 +1288,7 @@
     <span class="n">info_text</span> <span class="o">=</span> <span class="s2">&quot;a method&quot;</span></div>
 
 
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">ClassType</span>
 
     <span class="k">class</span> <span class="nc">Class</span><span class="p">(</span><span class="n">TraitType</span><span class="p">):</span>
@@ -1717,15 +1722,16 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">create_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseFile.create_editor"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseFile.create_editor">[docs]</a>    <span class="k">def</span> <span class="nf">create_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">traitsui.editors.file_editor</span> <span class="k">import</span> <span class="n">FileEditor</span>
 
         <span class="n">editor</span> <span class="o">=</span> <span class="n">FileEditor</span><span class="p">(</span>
             <span class="nb">filter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filter</span> <span class="ow">or</span> <span class="p">[],</span>
             <span class="n">auto_set</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auto_set</span><span class="p">,</span>
             <span class="n">entries</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">,</span>
+            <span class="n">dialog_style</span><span class="o">=</span><span class="s2">&quot;open&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exists</span> <span class="k">else</span> <span class="s2">&quot;save&quot;</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">editor</span></div>
+        <span class="k">return</span> <span class="n">editor</span></div></div>
 
 
 <div class="viewcode-block" id="File"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.File">[docs]</a><span class="k">class</span> <span class="nc">File</span><span class="p">(</span><span class="n">BaseFile</span><span class="p">):</span>
@@ -1824,11 +1830,11 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">create_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDirectory.create_editor"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseDirectory.create_editor">[docs]</a>    <span class="k">def</span> <span class="nf">create_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">traitsui.editors.directory_editor</span> <span class="k">import</span> <span class="n">DirectoryEditor</span>
 
         <span class="n">editor</span> <span class="o">=</span> <span class="n">DirectoryEditor</span><span class="p">(</span><span class="n">auto_set</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">entries</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">editor</span></div>
+        <span class="k">return</span> <span class="n">editor</span></div></div>
 
 
 <div class="viewcode-block" id="Directory"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Directory">[docs]</a><span class="k">class</span> <span class="nc">Directory</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">):</span>
@@ -3568,7 +3574,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">view</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Button</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">create_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Button.create_editor"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Button.create_editor">[docs]</a>    <span class="k">def</span> <span class="nf">create_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">ButtonEditor</span>
 
         <span class="n">editor</span> <span class="o">=</span> <span class="n">ButtonEditor</span><span class="p">(</span>
@@ -3581,7 +3587,7 @@
             <span class="n">height_padding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height_padding</span><span class="p">,</span>
             <span class="n">view</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">editor</span></div>
+        <span class="k">return</span> <span class="n">editor</span></div></div>
 
 
 <span class="c1"># -------------------------------------------------------------------------------</span>
@@ -3728,44 +3734,77 @@
             <span class="p">)</span></div>
 
 
-<span class="k">if</span> <span class="n">python_version</span> <span class="o">&gt;=</span> <span class="mf">2.5</span><span class="p">:</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;UUID&#39; trait:</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
 
-    <span class="kn">import</span> <span class="nn">uuid</span>
+<div class="viewcode-block" id="UUID"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.UUID">[docs]</a><span class="k">class</span> <span class="nc">UUID</span><span class="p">(</span><span class="n">TraitType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Defines a trait whose value is a globally unique UUID (type 4).</span>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  &#39;UUID&#39; trait:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="sd">    Passing `can_init=True` allows the UUID value to be set during</span>
+<span class="sd">    object instantiation, e.g.::</span>
 
-<div class="viewcode-block" id="UUID"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.UUID">[docs]</a>    <span class="k">class</span> <span class="nc">UUID</span><span class="p">(</span><span class="n">TraitType</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Defines a trait whose value is a globally unique UUID (type 4).</span>
+<span class="sd">        class A(HasTraits):</span>
+<span class="sd">            id = UUID</span>
+
+<span class="sd">        class B(HasTraits):</span>
+<span class="sd">            id = UUID(can_init=True)</span>
+
+<span class="sd">        # TraitError!</span>
+<span class="sd">        A(id=uuid.uuid4())</span>
+
+<span class="sd">        # Okay!</span>
+<span class="sd">        B(id=uuid.uuid4())</span>
+
+<span class="sd">    Note however that in both cases, the UUID trait is set automatically</span>
+<span class="sd">    to a `uuid.UUID` instance (assuming none is provided during initialization</span>
+<span class="sd">    in the latter case).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#: A description of the type of value this trait accepts:</span>
+    <span class="n">info_text</span> <span class="o">=</span> <span class="s2">&quot;a read-only UUID&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">can_init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a UUID trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UUID</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">can_init</span> <span class="o">=</span> <span class="n">can_init</span>
 
-        <span class="c1">#: A description of the type of value this trait accepts:</span>
-        <span class="n">info_text</span> <span class="o">=</span> <span class="s2">&quot;a read-only UUID&quot;</span>
-
-        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot; Returns a UUID trait.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">UUID</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
-
-<div class="viewcode-block" id="UUID.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.UUID.validate">[docs]</a>        <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot; Raises an error, since no values can be assigned to the trait.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="UUID.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.UUID.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Raises an error, since no values can be assigned to the trait.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">can_init</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
                 <span class="s2">&quot;The &#39;</span><span class="si">%s</span><span class="s2">&#39; trait of </span><span class="si">%s</span><span class="s2"> instance is a read-only &quot;</span>
                 <span class="s2">&quot;UUID.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">class_of</span><span class="p">(</span><span class="nb">object</span><span class="p">))</span>
-            <span class="p">)</span></div>
-
-        <span class="k">def</span> <span class="nf">get_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">return</span> <span class="p">(</span>
-                <span class="n">CALLABLE_AND_ARGS_DEFAULT_VALUE</span><span class="p">,</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_uuid</span><span class="p">,</span> <span class="p">(),</span> <span class="kc">None</span><span class="p">),</span>
             <span class="p">)</span>
 
-        <span class="c1"># -- Private Methods ---------------------------------------------------</span>
+        <span class="k">if</span> <span class="nb">object</span><span class="o">.</span><span class="n">traits_inited</span><span class="p">():</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Initializable UUID trait is read-only &quot;</span>
+                   <span class="s2">&quot;after initialization&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">_create_uuid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span></div>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Construct the UUID from a string</span>
+            <span class="k">return</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The &#39;</span><span class="si">{}</span><span class="s2">&#39; trait of &#39;</span><span class="si">{}</span><span class="s2">&#39; expects an RFC 4122-compatible &quot;</span>
+                   <span class="s2">&quot;UUID value, but &#39;</span><span class="si">{}</span><span class="s2">&#39; was given&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="UUID.get_default_value"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.UUID.get_default_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">CALLABLE_AND_ARGS_DEFAULT_VALUE</span><span class="p">,</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_uuid</span><span class="p">,</span> <span class="p">(),</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+    <span class="c1"># -- Private Methods ---------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_create_uuid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span></div>
 
 
 <span class="c1"># -------------------------------------------------------------------------------</span>
@@ -3896,7 +3935,7 @@
 <span class="c1">#: List of method values; default value is [].</span>
 <span class="n">ListMethod</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">MethodType</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">ClassType</span><span class="p">,</span> <span class="n">InstanceType</span>
 
     <span class="c1">#: List of class values; default value is [].</span>
@@ -3949,12 +3988,14 @@
             </a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -3973,13 +4014,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

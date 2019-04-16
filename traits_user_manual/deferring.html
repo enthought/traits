@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -60,6 +61,10 @@
               
     <ul class="nav nav-pills pull-right">
       <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
         <a href="custom.html" title="Custom Traits"
            accesskey="N">next</a>
       </li>
@@ -87,18 +92,18 @@ attributes to defer their definition and value to another object than the one
 the attribute is defined on. This has many applications, especially in cases
 where objects are logically contained within other objects and may wish to
 inherit or derive some attributes from the object they are contained in or
-associated with. Deferring leverages the common &#8220;has-a&#8221; relationship between
-objects, rather than the &#8220;is-a&#8221; relationship that class inheritance provides.</p>
-<p id="index-1">There are two ways that a trait attribute can defer to another object&#8217;s
+associated with. Deferring leverages the common “has-a” relationship between
+objects, rather than the “is-a” relationship that class inheritance provides.</p>
+<p id="index-1">There are two ways that a trait attribute can defer to another object’s
 attribute: <em>delegation</em> and <em>prototyping</em>. In delegation, the deferring
 attribute is a complete reflection of the delegate attribute. Both the value and
 validation of the delegate attribute are used for the deferring attribute;
 changes to either one are reflected in both. In prototyping, the deferring
 attribute gets its value and validation from the prototype attribute, <em>until the
 deferring attribute is explicitly changed</em>. At that point, while the deferring
-attribute still uses the prototype&#8217;s validation, the link between the values is
+attribute still uses the prototype’s validation, the link between the values is
 broken, and the two attributes can change independently. This is essentially a
-&#8220;copy on write&#8221; scheme.</p>
+“copy on write” scheme.</p>
 <p>The concepts of delegation and prototyping are implemented in the Traits package
 by two classes derived from TraitType: DelegatesTo and PrototypedFrom. <a class="footnote-reference" href="#id8" id="id1">[5]</a></p>
 <div class="section" id="delegatesto">
@@ -117,14 +122,14 @@ whenever:</p>
 <li>The object referenced by the trait named in the <em>delegate</em> parameter changes.</li>
 <li>The delegating attribute is explicitly changed.</li>
 </ul>
-<p>Changes to the delegating attribute are propagated to the delegate object&#8217;s
+<p>Changes to the delegating attribute are propagated to the delegate object’s
 attribute.</p>
 <p>The <em>prefix</em> and <em>listenable</em> parameters to the initializer function specify
 additional information about how to do the delegation.</p>
 <p id="index-3">If <em>prefix</em> is the empty string or omitted, the delegation is to an attribute
 of the delegate object with the same name as the trait defined by the
 DelegatesTo object. Consider the following example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># delegate.py --- Example of trait delegation</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># delegate.py --- Example of trait delegation</span>
 <span class="kn">from</span> <span class="nn">traits.api</span> \
     <span class="kn">import</span> <span class="nn">DelegatesTo</span><span class="o">,</span> <span class="nn">HasTraits</span><span class="o">,</span> <span class="nn">Instance</span><span class="o">,</span> <span class="nn">Str</span>
 
@@ -160,7 +165,7 @@ DelegatesTo object. Consider the following example:</p>
 </pre></div>
 </div>
 <p>A Child object delegates its <strong>last_name</strong> attribute value to its <strong>father</strong>
-object&#8217;s <strong>last_name</strong> attribute. Because the <em>prefix</em> parameter was not
+object’s <strong>last_name</strong> attribute. Because the <em>prefix</em> parameter was not
 specified in the DelegatesTo initializer, the attribute name on the delegatee is
 the same as the original attribute name. Thus, the <strong>last_name</strong> of a Child is
 the same as the <strong>last_name</strong> of its <strong>father</strong>. When either the <strong>last_name</strong>
@@ -194,16 +199,16 @@ depending on the format of the prefix string:</p>
 <ul class="simple">
 <li>If <em>prefix</em> is a valid Python attribute name, then the original attribute
 name is replaced by prefix when looking up the deferred-to attribute.</li>
-<li>If <em>prefix</em> ends with an asterisk (&#8216;*&#8217;), and is longer than one character,
+<li>If <em>prefix</em> ends with an asterisk (‘*’), and is longer than one character,
 then <em>prefix</em>, minus the trailing asterisk, is added to the front of the
 original attribute name when looking up the object attribute.</li>
-<li>If <em>prefix</em> is equal to a single asterisk (&#8216;*&#8217;), the value of the object
-class&#8217;s <strong>__prefix__</strong> attribute is added to the front of the original
+<li>If <em>prefix</em> is equal to a single asterisk (‘*’), the value of the object
+class’s <strong>__prefix__</strong> attribute is added to the front of the original
 attribute name when looking up the object attribute.</li>
 </ul>
 <p id="index-6">Each of these three possibilities is illustrated in the following example, using
 PrototypedFrom:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># prototype_prefix.py --- Examples of PrototypedFrom()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># prototype_prefix.py --- Examples of PrototypedFrom()</span>
 <span class="c1">#                         prefix parameter</span>
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> \
     <span class="n">PrototypedFrom</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Str</span>
@@ -252,7 +257,7 @@ hooking up complicated listeners under the covers. Hooking up these listeners
 can be rather more expensive than hooking up other listeners. Since a common use
 case of deferring is to have a large number of deferred attributes for static
 object hierarchies, this feature can be turned off by setting
-<code class="docutils literal"><span class="pre">listenable=False</span></code> in order to speed up instantiation.</p>
+<code class="docutils literal notranslate"><span class="pre">listenable=False</span></code> in order to speed up instantiation.</p>
 </div>
 </div>
 <div class="section" id="notification-with-deferring">
@@ -265,7 +270,7 @@ as well as on the deferred-to object. This behavior is new in Traits version
 3.0. In previous versions, only handlers for the deferred-to object (the object
 directly changed) were notified. This behavior is shown in the following
 example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># deferring_notification.py -- Example of notification with deferring</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># deferring_notification.py -- Example of notification with deferring</span>
 <span class="kn">from</span> <span class="nn">traits.api</span> \
     <span class="kn">import</span> <span class="nn">HasTraits</span><span class="o">,</span> <span class="nn">Instance</span><span class="o">,</span> <span class="nn">PrototypedFrom</span><span class="o">,</span> <span class="nn">Str</span>
 
@@ -307,10 +312,10 @@ example:</p>
 </pre></div>
 </div>
 <p>Initially, changing the last name of the father triggers notification on both
-the father and the son. Explicitly setting the son&#8217;s last name breaks the
-deferring link to the father; therefore changing the father&#8217;s last name does not
-notify the son. When the son reverts to using the father&#8217;s last name (by
-deleting the explicit value), changes to the father&#8217;s last name again affect and
+the father and the son. Explicitly setting the son’s last name breaks the
+deferring link to the father; therefore changing the father’s last name does not
+notify the son. When the son reverts to using the father’s last name (by
+deleting the explicit value), changes to the father’s last name again affect and
 notif</p>
 <p class="rubric">Footnotes</p>
 <table class="docutils footnote" frame="void" id="id8" rules="none">
@@ -333,7 +338,7 @@ incongruous.</td></tr>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Deferring Trait Definitions</a><ul>
 <li><a class="reference internal" href="#delegatesto">DelegatesTo</a></li>
@@ -361,12 +366,14 @@ incongruous.</td></tr>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -385,13 +392,13 @@ incongruous.</td></tr>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

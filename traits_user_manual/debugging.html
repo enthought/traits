@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -60,6 +61,10 @@
               
     <ul class="nav nav-pills pull-right">
       <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
         <a href="../traits_api_reference/index.html" title="API Reference"
            accesskey="N">next</a>
       </li>
@@ -88,9 +93,9 @@
 encountered in a trait-change handler. This behavior is often preferred in
 applications, since you usually want to avoid critical failures in
 applications. However, when debugging these errors, the
-<code class="docutils literal"><span class="pre">logging.Logger.exception</span></code> only displays the tip of the traceback. For example,
-the following code changes a <code class="docutils literal"><span class="pre">constant</span></code>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span>
+<code class="docutils literal notranslate"><span class="pre">logging.Logger.exception</span></code> only displays the tip of the traceback. For example,
+the following code changes a <code class="docutils literal notranslate"><span class="pre">constant</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span>
 
 <span class="k">class</span> <span class="nc">Curmudgeon</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">constant</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -101,9 +106,9 @@ the following code changes a <code class="docutils literal"><span class="pre">co
 <span class="n">c</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mi">42</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal"><span class="pre">constant</span></code> trait-change handler raises an exception that is caught and
+<p>The <code class="docutils literal notranslate"><span class="pre">constant</span></code> trait-change handler raises an exception that is caught and
 logged:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ne">Exception</span> <span class="n">occurred</span> <span class="ow">in</span> <span class="n">traits</span> <span class="n">notification</span> <span class="n">handler</span><span class="o">.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ne">Exception</span> <span class="n">occurred</span> <span class="ow">in</span> <span class="n">traits</span> <span class="n">notification</span> <span class="n">handler</span><span class="o">.</span>
 <span class="n">Please</span> <span class="n">check</span> <span class="n">the</span> <span class="n">log</span> <span class="n">file</span> <span class="k">for</span> <span class="n">details</span><span class="o">.</span>
 <span class="ne">Exception</span> <span class="n">occurred</span> <span class="ow">in</span> <span class="n">traits</span> <span class="n">notification</span> <span class="n">handler</span> <span class="k">for</span> <span class="nb">object</span><span class="p">:</span>
 <span class="o">&lt;</span><span class="n">__main__</span><span class="o">.</span><span class="n">Curmudgeon</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x107603050</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">trait</span><span class="p">:</span> <span class="n">constant</span><span class="p">,</span> <span class="n">old</span> <span class="n">value</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">new</span> <span class="n">value</span><span class="p">:</span> <span class="mi">42</span>
@@ -116,14 +121,14 @@ logged:</p>
 <p>This logged exception, however, only contains the tip of the traceback. This
 makes debugging a bit difficult. You can force exceptions to be re-raised
 by adding a custom exception handler:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">push_exception_handler</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">push_exception_handler</span>
 <span class="n">push_exception_handler</span><span class="p">(</span><span class="n">reraise_exceptions</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>(For example, you could add this to the top of the original code block.)</p>
 <p>Re-running the original code example with this custom handler will now raise
 the following traceback:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
   <span class="n">File</span> <span class="s2">&quot;curmudgeon.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">15</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
     <span class="n">c</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mi">42</span>
   <span class="o">...</span>
@@ -133,18 +138,18 @@ the following traceback:</p>
 </pre></div>
 </div>
 <p>Notice that this traceback has information about <em>where</em> we changed
-<code class="docutils literal"><span class="pre">constant</span></code>.  Note: This is a toy example; use <code class="docutils literal"><span class="pre">Constant</span></code> from
-<code class="docutils literal"><span class="pre">traits.api</span></code> if you actually want a constant trait.</p>
+<code class="docutils literal notranslate"><span class="pre">constant</span></code>.  Note: This is a toy example; use <code class="docutils literal notranslate"><span class="pre">Constant</span></code> from
+<code class="docutils literal notranslate"><span class="pre">traits.api</span></code> if you actually want a constant trait.</p>
 </div>
 <div class="section" id="tracing-traits-change-events">
 <h2>Tracing Traits Change Events<a class="headerlink" href="#tracing-traits-change-events" title="Permalink to this headline">¶</a></h2>
 <p>Occasionally it is necessary to find the chain of event dispatches in traits
-classes. To help with debugging, a <a class="reference internal" href="../traits_api_reference/traits.util.html#traits.util.event_tracer.record_events" title="traits.util.event_tracer.record_events"><code class="xref py py-func docutils literal"><span class="pre">record_events()</span></code></a> context manager is provided
+classes. To help with debugging, a <a class="reference internal" href="../traits_api_reference/traits.util.html#traits.util.event_tracer.record_events" title="traits.util.event_tracer.record_events"><code class="xref py py-func docutils literal notranslate"><span class="pre">record_events()</span></code></a> context manager is provided
 in mod:<cite>traits.util.event_tracer</cite>. Trait change events taking place inside the
 context block will be recorded in a change event container (see example below)
 and can be saved to files (a file for each thread) for further inspection.</p>
 <p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">traits.util.event_tracer</span> <span class="kn">import</span> <span class="n">record_events</span>
 
 
@@ -178,7 +183,7 @@ and can be saved to files (a file for each thread) for further inspection.</p>
 </div>
 <p>Running the above example will write a file named MAinThread.trace in the
 local folder. The file contents will be similar to the lines below:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.779000</span> <span class="o">-&gt;</span> <span class="s1">&#39;number&#39;</span> <span class="n">changed</span> <span class="kn">from</span> <span class="mf">2.0</span> <span class="n">to</span> <span class="mf">4.7</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.779000</span> <span class="o">-&gt;</span> <span class="s1">&#39;number&#39;</span> <span class="n">changed</span> <span class="kn">from</span> <span class="mf">2.0</span> <span class="n">to</span> <span class="mf">4.7</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.779000</span>     <span class="n">CALLING</span><span class="p">:</span> <span class="s1">&#39;_add_number_to_list&#39;</span> <span class="ow">in</span> <span class="n">example</span><span class="o">.</span><span class="n">py</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span> <span class="o">---&gt;</span> <span class="s1">&#39;list_of_numbers_items&#39;</span> <span class="n">changed</span> <span class="kn">from</span> <span class="o">&lt;</span><span class="n">undefined</span><span class="o">&gt;</span> <span class="n">to</span> <span class="o">&lt;</span><span class="n">traits</span><span class="o">.</span><span class="n">trait_handlers</span><span class="o">.</span><span class="n">TraitListEvent</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x03C85AF0</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="s1">&#39;MyModel&#39;</span>
 <span class="mi">2014</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="mi">21</span> <span class="mi">14</span><span class="p">:</span><span class="mi">11</span><span class="p">:</span><span class="mf">20.780000</span>       <span class="n">CALLING</span><span class="p">:</span> <span class="s1">&#39;handle_list_items_special&#39;</span> <span class="ow">in</span> <span class="n">C</span><span class="p">:</span>\<span class="n">Users</span>\<span class="n">itziakos</span>\<span class="n">Projects</span>\<span class="n">traits</span>\<span class="n">traits</span>\<span class="n">traits_listener</span><span class="o">.</span><span class="n">py</span>
@@ -214,7 +219,7 @@ local folder. The file contents will be similar to the lines below:</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Tips for debugging Traits</a><ul>
 <li><a class="reference internal" href="#re-raising-exceptions-in-change-handlers">Re-raising exceptions in change handlers</a></li>
@@ -236,12 +241,14 @@ local folder. The file contents will be similar to the lines below:</p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -260,13 +267,13 @@ local folder. The file contents will be similar to the lines below:</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

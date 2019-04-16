@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -60,6 +61,10 @@
               
     <ul class="nav nav-pills pull-right">
       <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
         <a href="debugging.html" title="Tips for debugging Traits"
            accesskey="N">next</a>
       </li>
@@ -85,32 +90,32 @@
 <div class="section" id="testing-traits-classes">
 <span id="testing-trait-classes"></span><h2>Testing Traits Classes<a class="headerlink" href="#testing-traits-classes" title="Permalink to this headline">¶</a></h2>
 <p>A mixin class is provided to facilitate writing tests for HasTraits classes.
-The following methods are available when <a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools" title="traits.testing.unittest_tools.UnittestTools"><code class="xref py py-class docutils literal"><span class="pre">UnittestTools</span></code></a> is added as a
-mixin class in the developer&#8217;s test cases.</p>
+The following methods are available when <a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools" title="traits.testing.unittest_tools.UnittestTools"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnittestTools</span></code></a> is added as a
+mixin class in the developer’s test cases.</p>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChanges" title="traits.testing.unittest_tools.UnittestTools.assertTraitChanges"><code class="xref py py-obj docutils literal"><span class="pre">assertTraitChanges</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChanges" title="traits.testing.unittest_tools.UnittestTools.assertTraitChanges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assertTraitChanges</span></code></a></td>
 <td>Assert an object trait changes a given number of times.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange" title="traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange"><code class="xref py py-obj docutils literal"><span class="pre">assertTraitDoesNotChange</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange" title="traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assertTraitDoesNotChange</span></code></a></td>
 <td>Assert an object trait does not change.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges" title="traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges"><code class="xref py py-obj docutils literal"><span class="pre">assertMultiTraitChanges</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges" title="traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assertMultiTraitChanges</span></code></a></td>
 <td>Assert that traits on multiple objects do or do not change.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync" title="traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync"><code class="xref py py-obj docutils literal"><span class="pre">assertTraitChangesAsync</span></code></a></td>
+<tr class="row-even"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync" title="traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assertTraitChangesAsync</span></code></a></td>
 <td>Assert an object trait eventually changes.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue" title="traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue"><code class="xref py py-obj docutils literal"><span class="pre">assertEventuallyTrue</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue" title="traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assertEventuallyTrue</span></code></a></td>
 <td>Assert that the given condition is eventually true.</td>
 </tr>
 </tbody>
 </table>
-<p>The above assert methods, except <a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue" title="traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue"><code class="xref py py-func docutils literal"><span class="pre">assertEventuallyTrue()</span></code></a>, can be used as
+<p>The above assert methods, except <a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue" title="traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue"><code class="xref py py-func docutils literal notranslate"><span class="pre">assertEventuallyTrue()</span></code></a>, can be used as
 context managers, which at entry, hook a trait listeners on the class for the
 desired events and record the arguments passed to the change handler at every
 fired event. This way the developer can easily assert that specific events
@@ -121,7 +126,7 @@ name, thus care is required to safeguard against spelling mistakes in the
 names of the traits that we need to assert the behaviour.</p>
 <p>The following example demonstrates the basic usage of the mixin class in a
 TestCase:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">on_trait_change</span>
 <span class="kn">from</span> <span class="nn">traits.testing.api</span> <span class="k">import</span> <span class="n">UnittestTools</span>
 
@@ -186,13 +191,13 @@ TestCase:</p>
 </div>
 <div class="section" id="using-mocks">
 <h2>Using Mocks<a class="headerlink" href="#using-mocks" title="Permalink to this headline">¶</a></h2>
-<p>Trying to mock a method in a <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal"><span class="pre">HasStrictTraits</span></code></a> instance will raise an error
-because the <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal"><span class="pre">HasStrictTraits</span></code></a> machinery does not allow any modification of
-the methods and attributes of a <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal"><span class="pre">HasStrictTraits</span></code></a> instance. To circumvent the
-<a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal"><span class="pre">HasStrictTraits</span></code></a> machinery, and mock methods using <a class="reference external" href="https://pypi.python.org/pypi/mock">the mock library</a>,
-please follow the logic in the example below:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasStrictTraits</span><span class="p">,</span> <span class="n">Float</span>
-<span class="kn">from</span> <span class="nn">mock</span> <span class="k">import</span> <span class="n">Mock</span>
+<p>Trying to mock a method in a <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasStrictTraits</span></code></a> instance will raise an error
+because the <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasStrictTraits</span></code></a> machinery does not allow any modification of
+the methods and attributes of a <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasStrictTraits</span></code></a> instance. To circumvent the
+<a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasStrictTraits</span></code></a> machinery, and mock methods using <code class="docutils literal notranslate"><span class="pre">unittest.mock</span></code> or
+<a class="reference external" href="https://pypi.python.org/pypi/mock">the mock library</a>, please follow the logic in the example below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasStrictTraits</span><span class="p">,</span> <span class="n">Float</span>
+<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="k">import</span> <span class="n">Mock</span>
 
 <span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
 
@@ -215,7 +220,7 @@ please follow the logic in the example below:</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The above method will not work for mocking <a class="reference internal" href="../traits_api_reference/traits.html#traits.traits.Property" title="traits.traits.Property"><code class="xref py py-func docutils literal"><span class="pre">Property()</span></code></a> setters,
+<p class="last">The above method will not work for mocking <a class="reference internal" href="../traits_api_reference/traits.html#traits.traits.Property" title="traits.traits.Property"><code class="xref py py-func docutils literal notranslate"><span class="pre">Property()</span></code></a> setters,
 getters and validators.</p>
 </div>
 </div>
@@ -230,7 +235,7 @@ getters and validators.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Testing</a><ul>
 <li><a class="reference internal" href="#testing-traits-classes">Testing Traits Classes</a></li>
@@ -252,12 +257,14 @@ getters and validators.</p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -276,13 +283,13 @@ getters and validators.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -52,13 +53,17 @@
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
   
-    <li><a href="#"><code class="docutils literal"><span class="pre">ustr_trait</span></code> Module</a></li>
+    <li><a href="#"><code class="docutils literal notranslate"><span class="pre">ustr_trait</span></code> Module</a></li>
   
 
     </ul>
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
       <li class="active">
         <a href="traits.adaptation.html" title="adaptation Package"
            accesskey="N">next</a>
@@ -81,14 +86,14 @@
           <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.ustr_trait">
-<span id="ustr-trait-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">ustr_trait</span></code> Module<a class="headerlink" href="#module-traits.ustr_trait" title="Permalink to this headline">¶</a></h1>
+<span id="ustr-trait-module"></span><h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">ustr_trait</span></code> Module<a class="headerlink" href="#module-traits.ustr_trait" title="Permalink to this headline">¶</a></h1>
 <p>Defines the UStr type and HasUniqueStrings mixin class for efficiently
 creating lists of objects containing traits whose string values must be
 unique within the list.</p>
 <dl class="class">
 <dt id="traits.ustr_trait.UStr">
 <em class="property">class </em><code class="descclassname">traits.ustr_trait.</code><code class="descname">UStr</code><span class="sig-paren">(</span><em>owner</em>, <em>list_name</em>, <em>str_name</em>, <em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ustr_trait.html#UStr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.ustr_trait.UStr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trait_handlers.html#traits.trait_handlers.TraitType" title="traits.trait_handlers.TraitType"><code class="xref py py-class docutils literal"><span class="pre">traits.trait_handlers.TraitType</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="trait_handlers.html#traits.trait_handlers.TraitType" title="traits.trait_handlers.TraitType"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.trait_handlers.TraitType</span></code></a></p>
 <p>Trait type that ensures that a value assigned to a trait is unique
 within the list it belongs to.</p>
 <dl class="attribute">
@@ -115,25 +120,25 @@ list item is removed from the monitored list:</p>
 <dl class="class">
 <dt id="traits.ustr_trait.HasUniqueStrings">
 <em class="property">class </em><code class="descclassname">traits.ustr_trait.</code><code class="descname">HasUniqueStrings</code><a class="reference internal" href="../_modules/traits/ustr_trait.html#HasUniqueStrings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.ustr_trait.HasUniqueStrings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal"><span class="pre">traits.has_traits.HasTraits</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></a></p>
 <p>Mixin or base class for objects containing lists with items containing
 string valued traits that must be unique.</p>
 <p>List traits within the class that contain items which have string traits
 which must be unique should indicate this by attaching metadata of the
 form:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">unique_string</span> <span class="o">=</span> <span class="s1">&#39;trait1, trait2, ..., traitn&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unique_string</span> <span class="o">=</span> <span class="s1">&#39;trait1, trait2, ..., traitn&#39;</span>
 </pre></div>
 </div>
-<p>where each &#8216;traiti&#8217; value is the name of a trait within each list item
+<p>where each ‘traiti’ value is the name of a trait within each list item
 that must contain unique string data.</p>
 <p>For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">usa</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">State</span><span class="p">,</span> <span class="n">unique_string</span> <span class="o">=</span> <span class="s1">&#39;name, abbreviation&#39;</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usa</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">State</span><span class="p">,</span> <span class="n">unique_string</span> <span class="o">=</span> <span class="s1">&#39;name, abbreviation&#39;</span> <span class="p">)</span>
 </pre></div>
 </div>
 <dl class="method">
 <dt id="traits.ustr_trait.HasUniqueStrings.traits_init">
 <code class="descname">traits_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ustr_trait.html#HasUniqueStrings.traits_init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.ustr_trait.HasUniqueStrings.traits_init" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds any UStrMonitor objects to list traits with &#8216;unique_string&#8217;
+<dd><p>Adds any UStrMonitor objects to list traits with ‘unique_string’
 metadata.</p>
 </dd></dl>
 
@@ -152,10 +157,10 @@ metadata.</p>
             </a></p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="trait_notifiers.html"
-                        title="previous chapter"><code class="docutils literal"><span class="pre">trait_notifiers</span></code> Module</a></p>
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">trait_notifiers</span></code> Module</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="traits.adaptation.html"
-                        title="next chapter"><code class="docutils literal"><span class="pre">adaptation</span></code> Package</a></p>
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">adaptation</span></code> Package</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/ustr_trait.rst.txt"
@@ -163,12 +168,14 @@ metadata.</p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -187,13 +194,13 @@ metadata.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

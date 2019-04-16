@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
@@ -57,6 +58,10 @@
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
     </ul>
               
 	    </div>
@@ -103,7 +108,6 @@
 <span class="kn">import</span> <span class="nn">copy</span> <span class="k">as</span> <span class="nn">copy_module</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span>
 
@@ -202,13 +206,14 @@
     <span class="n">StaticTraitChangeNotifyWrapper</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
+    <span class="n">BoundMethodTypes</span> <span class="o">=</span> <span class="p">(</span><span class="n">MethodType</span><span class="p">,)</span>
+    <span class="n">UnboundMethodTypes</span> <span class="o">=</span> <span class="p">(</span><span class="n">MethodType</span><span class="p">,)</span>
+<span class="k">else</span><span class="p">:</span>
     <span class="c1"># in python 3, unbound methods do not exist anymore, they&#39;re just functions</span>
     <span class="n">BoundMethodTypes</span> <span class="o">=</span> <span class="p">(</span><span class="n">MethodType</span><span class="p">,)</span>
     <span class="n">UnboundMethodTypes</span> <span class="o">=</span> <span class="p">(</span><span class="n">FunctionType</span><span class="p">,)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">BoundMethodTypes</span> <span class="o">=</span> <span class="p">(</span><span class="n">MethodType</span><span class="p">,)</span>
-    <span class="n">UnboundMethodTypes</span> <span class="o">=</span> <span class="p">(</span><span class="n">MethodType</span><span class="p">,)</span>
+
 
 <span class="n">FunctionTypes</span> <span class="o">=</span> <span class="p">(</span><span class="n">FunctionType</span><span class="p">,)</span>
 
@@ -1174,8 +1179,8 @@
 <span class="c1"># -------------------------------------------------------------------------------</span>
 
 
-<span class="nd">@six</span><span class="o">.</span><span class="n">add_metaclass</span><span class="p">(</span><span class="n">MetaHasTraits</span><span class="p">)</span>
-<div class="viewcode-block" id="HasTraits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits">[docs]</a><span class="k">class</span> <span class="nc">HasTraits</span><span class="p">(</span><span class="n">CHasTraits</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits">[docs]</a><span class="nd">@six</span><span class="o">.</span><span class="n">add_metaclass</span><span class="p">(</span><span class="n">MetaHasTraits</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">HasTraits</span><span class="p">(</span><span class="n">CHasTraits</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Enables any Python class derived from it to have trait attributes.</span>
 
 <span class="sd">    Most of the methods of HasTraits operated by default only on the trait</span>
@@ -1590,9 +1595,6 @@
                 <span class="p">]</span>
             <span class="p">)</span>
         <span class="p">)</span>
-        <span class="c1"># Add all instance traits</span>
-        <span class="n">inst_traits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_traits</span><span class="p">()</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;__instance_traits__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inst_traits</span>
 
         <span class="c1"># If this object implements ISerializable, make sure that all</span>
         <span class="c1"># contained HasTraits objects in its persisted state also implement</span>
@@ -1636,10 +1638,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Otherwise, apply the Traits 3.0 restore logic:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_init_trait_listeners</span><span class="p">()</span>
-            <span class="n">inst_traits</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;__instance_traits__&quot;</span><span class="p">,</span> <span class="p">{})</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span><span class="n">trait_change_notify</span><span class="o">=</span><span class="n">trait_change_notify</span><span class="p">,</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">inst_traits</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">inst_traits</span><span class="p">[</span><span class="n">attr</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_post_init_trait_listeners</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">traits_init</span><span class="p">()</span>
 
@@ -1689,8 +1688,8 @@
         <span class="k">return</span> <span class="n">result</span></div>
 
     <span class="c1"># Defines the deprecated alias for &#39;trait_get&#39;</span>
-    <span class="nd">@deprecated</span><span class="p">(</span><span class="s1">&#39;use &quot;HasTraits.trait_get&quot; instead&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="HasTraits.get"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">names</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits.get"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.get">[docs]</a>    <span class="nd">@deprecated</span><span class="p">(</span><span class="s1">&#39;use &quot;HasTraits.trait_get&quot; instead&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">names</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait_get</span><span class="p">(</span><span class="o">*</span><span class="n">names</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
 
     <span class="n">get</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">trait_get</span><span class="o">.</span><span class="vm">__doc__</span>
@@ -1747,8 +1746,8 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
     <span class="c1"># Defines the deprecated alias for &#39;trait_set&#39;</span>
-    <span class="nd">@deprecated</span><span class="p">(</span><span class="s1">&#39;use &quot;HasTraits.trait_set&quot; instead&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="HasTraits.set"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait_change_notify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits.set"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.set">[docs]</a>    <span class="nd">@deprecated</span><span class="p">(</span><span class="s1">&#39;use &quot;HasTraits.trait_set&quot; instead&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait_change_notify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span>
             <span class="n">trait_change_notify</span><span class="o">=</span><span class="n">trait_change_notify</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span>
         <span class="p">)</span></div>
@@ -2008,9 +2007,6 @@
         <span class="n">new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
         <span class="n">memo</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span> <span class="o">=</span> <span class="n">new</span>
         <span class="n">new</span><span class="o">.</span><span class="n">_init_trait_listeners</span><span class="p">()</span>
-        <span class="n">inst_traits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_traits</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">inst_traits</span><span class="p">:</span>
-            <span class="n">new</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">inst_traits</span><span class="p">[</span><span class="n">attr</span><span class="p">])</span>
         <span class="n">new</span><span class="o">.</span><span class="n">copy_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">traits</span><span class="p">,</span> <span class="n">memo</span><span class="p">,</span> <span class="n">copy</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
         <span class="n">new</span><span class="o">.</span><span class="n">_post_init_trait_listeners</span><span class="p">()</span>
         <span class="n">new</span><span class="o">.</span><span class="n">traits_init</span><span class="p">()</span>
@@ -3875,8 +3871,8 @@
 
         <span class="k">pass</span></div>
 
-    <span class="nd">@six</span><span class="o">.</span><span class="n">add_metaclass</span><span class="p">(</span><span class="n">ABCMetaHasTraits</span><span class="p">)</span>
-<div class="viewcode-block" id="ABCHasTraits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.ABCHasTraits">[docs]</a>    <span class="k">class</span> <span class="nc">ABCHasTraits</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="viewcode-block" id="ABCHasTraits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.ABCHasTraits">[docs]</a>    <span class="nd">@six</span><span class="o">.</span><span class="n">add_metaclass</span><span class="p">(</span><span class="n">ABCMetaHasTraits</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">ABCHasTraits</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; A HasTraits subclass which enables the features of Abstract</span>
 <span class="sd">        Base Classes (ABC). See the &#39;abc&#39; module in the standard library</span>
 <span class="sd">        for more information.</span>
@@ -3967,8 +3963,8 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="nd">@deprecated</span><span class="p">(</span><span class="s1">&#39;use &quot;adapt(adaptee, protocol)&quot; instead.&#39;</span><span class="p">)</span>
-<div class="viewcode-block" id="MetaInterface.__call__"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaInterface.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">AdaptationError</span><span class="p">):</span>
+<div class="viewcode-block" id="MetaInterface.__call__"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaInterface.__call__">[docs]</a>    <span class="nd">@deprecated</span><span class="p">(</span><span class="s1">&#39;use &quot;adapt(adaptee, protocol)&quot; instead.&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">AdaptationError</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Attempt to adapt the adaptee to this interface.</span>
 
 <span class="sd">        Note that this means that (intentionally ;^) that interfaces</span>
@@ -3986,8 +3982,8 @@
 <span class="c1"># -------------------------------------------------------------------------------</span>
 
 
-<span class="nd">@six</span><span class="o">.</span><span class="n">add_metaclass</span><span class="p">(</span><span class="n">MetaInterface</span><span class="p">)</span>
-<div class="viewcode-block" id="Interface"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.Interface">[docs]</a><span class="k">class</span> <span class="nc">Interface</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="viewcode-block" id="Interface"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.Interface">[docs]</a><span class="nd">@six</span><span class="o">.</span><span class="n">add_metaclass</span><span class="p">(</span><span class="n">MetaInterface</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Interface</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; The base class for all interfaces.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -4087,12 +4083,14 @@
             </a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -4111,13 +4109,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

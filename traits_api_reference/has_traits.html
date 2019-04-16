@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -52,13 +53,17 @@
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
   
-    <li><a href="#"><code class="docutils literal"><span class="pre">has_traits</span></code> Module</a></li>
+    <li><a href="#"><code class="docutils literal notranslate"><span class="pre">has_traits</span></code> Module</a></li>
   
 
     </ul>
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
       <li class="active">
         <a href="has_dynamic_views.html" title="has_dynamic_views Module"
            accesskey="N">next</a>
@@ -81,7 +86,7 @@
           <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.has_traits">
-<span id="has-traits-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">has_traits</span></code> Module<a class="headerlink" href="#module-traits.has_traits" title="Permalink to this headline">¶</a></h1>
+<span id="has-traits-module"></span><h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">has_traits</span></code> Module<a class="headerlink" href="#module-traits.has_traits" title="Permalink to this headline">¶</a></h1>
 <p>Defines the HasTraits class, along with several useful subclasses and
 associated metaclasses.</p>
 <div class="section" id="classes">
@@ -93,7 +98,7 @@ associated metaclasses.</p>
 <dl class="method">
 <dt id="traits.has_traits.ViewElement.replace_include">
 <code class="descname">replace_include</code><span class="sig-paren">(</span><em>view_elements</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traitsui/view_element.html#ViewElement.replace_include"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ViewElement.replace_include" title="Permalink to this definition">¶</a></dt>
-<dd><p>Searches the current object&#8217;s <strong>content</strong> attribute for objects that
+<dd><p>Searches the current object’s <strong>content</strong> attribute for objects that
 have an <strong>id</strong> attribute, and replaces each one with an Include object
 with the same <strong>id</strong> value, and puts the replaced object into the
 specified ViewElements object.</p>
@@ -101,7 +106,7 @@ specified ViewElements object.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>view_elements</strong> (<em>ViewElements object</em>) &#8211; Object containing Group, Item, and Include objects</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>view_elements</strong> (<em>ViewElements object</em>) – Object containing Group, Item, and Include objects</td>
 </tr>
 </tbody>
 </table>
@@ -120,7 +125,7 @@ specified ViewElements object.</p>
 <em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">MetaHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Controls the creation of HasTraits classes.</p>
 <p>The heavy work is done by the <cite>create_traits_meta_dict</cite> function, which
-takes the <code class="docutils literal"><span class="pre">class_dict</span></code> dictionary of class members and extracts and
+takes the <code class="docutils literal notranslate"><span class="pre">class_dict</span></code> dictionary of class members and extracts and
 processes the trait declarations in it. The trait declarations are then
 added back to the class dictionary and passed off to the __new__ method
 of the type superclass, to be added to the class.</p>
@@ -147,7 +152,7 @@ when <em>any</em> class is created.</p>
 <p>Interfaces are simple ABCs with the following features:-</p>
 <ol class="arabic simple">
 <li>They cannot be instantiated (they are interfaces, not implementations!).</li>
-<li>Calling them is equivalent to calling &#8216;adapt&#8217;.</li>
+<li>Calling them is equivalent to calling ‘adapt’.</li>
 </ol>
 <dl class="method">
 <dt id="traits.has_traits.MetaInterface.__init__">
@@ -174,7 +179,7 @@ attributes explicitly defined in the class definition. They do not operate
 on trait attributes defined by way of wildcards or by calling
 <strong>add_trait()</strong>.
 For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;class Person(HasTraits):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;class Person(HasTraits):</span>
 <span class="gp">... </span>   <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
 <span class="gp">... </span>   <span class="n">age</span>  <span class="o">=</span> <span class="n">Int</span>
 <span class="gp">... </span>   <span class="n">temp_</span> <span class="o">=</span> <span class="n">Any</span>
@@ -195,12 +200,12 @@ attribute <em>favorite_sport</em> are not listed.</p>
 <code class="descname">wrappers</code><em class="property"> =</em><a class="headerlink" href="#traits.has_traits.HasTraits.wrappers" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><div class="line-block">
-<div class="line">{&#8216;same&#8217;: TraitChangeNotifyWrapper,</div>
+<div class="line">{‘same’: TraitChangeNotifyWrapper,</div>
 <div class="line-block">
-<div class="line">&#8216;extended&#8217;: ExtendedTraitChangeNotifyWrapper,</div>
-<div class="line">&#8216;new&#8217;: NewTraitChangeNotifyWrapper,</div>
-<div class="line">&#8216;fast_ui&#8217;: FastUITraitChangeNotifyWrapper,</div>
-<div class="line">&#8216;ui&#8217;: FastUITraitChangeNotifyWrapper}</div>
+<div class="line">‘extended’: ExtendedTraitChangeNotifyWrapper,</div>
+<div class="line">‘new’: NewTraitChangeNotifyWrapper,</div>
+<div class="line">‘fast_ui’: FastUITraitChangeNotifyWrapper,</div>
+<div class="line">‘ui’: FastUITraitChangeNotifyWrapper}</div>
 </div>
 </div>
 </div></blockquote>
@@ -230,8 +235,8 @@ monitors.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>handler</strong> (<em>function</em>) &#8211; The function to add or remove as a monitor.</li>
-<li><strong>remove</strong> (<em>bool</em>) &#8211; Flag indicating whether to remove (True) or add the specified
+<li><strong>handler</strong> (<em>function</em>) – The function to add or remove as a monitor.</li>
+<li><strong>remove</strong> (<em>bool</em>) – Flag indicating whether to remove (True) or add the specified
 handler as a monitor for this class.</li>
 </ul>
 </td>
@@ -253,8 +258,8 @@ removed from the active monitor list.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; Name of the attribute to add.</li>
-<li><strong>*trait</strong> &#8211; A trait or a value that can be converted to a trait using Trait()
+<li><strong>name</strong> (<em>str</em>) – Name of the attribute to add.</li>
+<li><strong>*trait</strong> – A trait or a value that can be converted to a trait using Trait()
 Trait definition of the attribute. It can be a single value or
 a list equivalent to an argument list for the Trait() function.</li>
 </ul>
@@ -284,7 +289,7 @@ a list equivalent to an argument list for the Trait() function.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>all</strong> (<em>bool</em>) &#8211; Indicates whether to return all subclasses of this class. If
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>all</strong> (<em>bool</em>) – Indicates whether to return all subclasses of this class. If
 False, only immediate subclasses are returned.</td>
 </tr>
 </tbody>
@@ -299,7 +304,7 @@ False, only immediate subclasses are returned.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*interfaces</strong> &#8211; One or more traits Interface (sub)classes.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*interfaces</strong> – One or more traits Interface (sub)classes.</td>
 </tr>
 </tbody>
 </table>
@@ -317,9 +322,9 @@ otherwise.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> (<em>list of strings</em>) &#8211; A list of trait attribute names whose values are requested.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> (<em>list of strings</em>) – A list of trait attribute names whose values are requested.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> (<em>dict</em>) &#8211;
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> (<em>dict</em>) –
 A dictionary whose keys are the names passed as arguments and whose
 values are the corresponding trait values.</td>
 </tr>
@@ -342,9 +347,9 @@ name/value pairs for <em>all</em> traits defined on the object.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> (<em>list of strings</em>) &#8211; A list of trait attribute names whose values are requested.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> (<em>list of strings</em>) – A list of trait attribute names whose values are requested.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> (<em>dict</em>) &#8211;
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> (<em>dict</em>) –
 A dictionary whose keys are the names passed as arguments and whose
 values are the corresponding trait values.</td>
 </tr>
@@ -368,15 +373,15 @@ name/value pairs for <em>all</em> traits defined on the object.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>trait_change_notify</strong> (<em>bool</em>) &#8211; If <strong>True</strong> (the default), then each value assigned may generate a
+<li><strong>trait_change_notify</strong> (<em>bool</em>) – If <strong>True</strong> (the default), then each value assigned may generate a
 trait change notification. If <strong>False</strong>, then no trait change
 notifications will be generated. (see also: trait_setq)</li>
-<li><strong>**traits</strong> &#8211; Key/value pairs, the trait attributes and their values to be
+<li><strong>**traits</strong> – Key/value pairs, the trait attributes and their values to be
 set</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> &#8211;
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> –
 The method returns this object, after setting attributes.</p>
 </td>
 </tr>
@@ -388,11 +393,11 @@ attribute and sets the corresponding trait attribute to the value
 specified. This is a useful shorthand when a number of trait attributes
 need to be set on an object, or a trait attribute value needs to be set
 in a lambda function. For example, you can write:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>instead of:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span>
 <span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">27</span>
 </pre></div>
 </div>
@@ -407,15 +412,15 @@ in a lambda function. For example, you can write:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>trait_change_notify</strong> (<em>bool</em>) &#8211; If <strong>True</strong> (the default), then each value assigned may generate a
+<li><strong>trait_change_notify</strong> (<em>bool</em>) – If <strong>True</strong> (the default), then each value assigned may generate a
 trait change notification. If <strong>False</strong>, then no trait change
 notifications will be generated. (see also: trait_setq)</li>
-<li><strong>**traits</strong> &#8211; Key/value pairs, the trait attributes and their values to be
+<li><strong>**traits</strong> – Key/value pairs, the trait attributes and their values to be
 set</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> &#8211;
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> –
 The method returns this object, after setting attributes.</p>
 </td>
 </tr>
@@ -427,11 +432,11 @@ attribute and sets the corresponding trait attribute to the value
 specified. This is a useful shorthand when a number of trait attributes
 need to be set on an object, or a trait attribute value needs to be set
 in a lambda function. For example, you can write:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>instead of:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span>
 <span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">27</span>
 </pre></div>
 </div>
@@ -445,11 +450,11 @@ in a lambda function. For example, you can write:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**traits</strong> &#8211; Key/value pairs, the trait attributes and their values to be set.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**traits</strong> – Key/value pairs, the trait attributes and their values to be set.
 No trait change notifications will be generated for any values
 assigned (see also: trait_set).</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>self</strong> &#8211;
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>self</strong> –
 The method returns this object, after setting attributes.</td>
 </tr>
 </tbody>
@@ -460,11 +465,11 @@ attribute and sets the corresponding trait attribute to the value
 specified. This is a useful shorthand when a number of trait attributes
 need to be set on an object, or a trait attribute value needs to be set
 in a lambda function. For example, you can write:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">trait_setq</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">trait_setq</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>instead of:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span>
 <span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">27</span>
 </pre></div>
 </div>
@@ -473,15 +478,15 @@ in a lambda function. For example, you can write:</p>
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.reset_traits">
 <code class="descname">reset_traits</code><span class="sig-paren">(</span><em>traits=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.reset_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.reset_traits" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resets some or all of an object&#8217;s trait attributes to their default
+<dd><p>Resets some or all of an object’s trait attributes to their default
 values.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>traits</strong> (<em>list of strings</em>) &#8211; Names of trait attributes to reset.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>traits</strong> (<em>list of strings</em>) – Names of trait attributes to reset.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>unresetable</strong> (<em>list of strings</em>) &#8211;
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>unresetable</strong> (<em>list of strings</em>) –
 A list of attributes that the method was unable to reset, which is
 empty if all the attributes were successfully reset.</td>
 </tr>
@@ -512,24 +517,24 @@ traits.</p>
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.copy_traits">
 <code class="descname">copy_traits</code><span class="sig-paren">(</span><em>other</em>, <em>traits=None</em>, <em>memo=None</em>, <em>copy=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.copy_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.copy_traits" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copies another object&#8217;s trait attributes into this one.</p>
+<dd><p>Copies another object’s trait attributes into this one.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>other</strong> (<em>object</em>) &#8211; The object whose trait attribute values should be copied.</li>
-<li><strong>traits</strong> (<em>list of strings</em>) &#8211; A list of names of trait attributes to copy. If None or
+<li><strong>other</strong> (<em>object</em>) – The object whose trait attribute values should be copied.</li>
+<li><strong>traits</strong> (<em>list of strings</em>) – A list of names of trait attributes to copy. If None or
 unspecified, the set of names returned by trait_names() is used.
-If &#8216;all&#8217; or an empty list, the set of names returned by
+If ‘all’ or an empty list, the set of names returned by
 all_trait_names() is used.</li>
-<li><strong>memo</strong> (<em>dict</em>) &#8211; A dictionary of objects that have already been copied.</li>
-<li><strong>copy</strong> (<em>None | 'deep' | 'shallow'</em>) &#8211; The type of copy to perform on any trait that does not have
-explicit &#8216;copy&#8217; metadata. A value of None means &#8216;copy reference&#8217;.</li>
+<li><strong>memo</strong> (<em>dict</em>) – A dictionary of objects that have already been copied.</li>
+<li><strong>copy</strong> (<em>None | 'deep' | 'shallow'</em>) – The type of copy to perform on any trait that does not have
+explicit ‘copy’ metadata. A value of None means ‘copy reference’.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>unassignable</strong> (<em>list of strings</em>) &#8211;
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>unassignable</strong> (<em>list of strings</em>) –
 A list of attributes that the method was unable to copy, which is
 empty if all the attributes were successfully copied.</p>
 </td>
@@ -548,15 +553,15 @@ specified set of traits.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>traits</strong> (<em>list of strings</em>) &#8211; The list of names of the trait attributes to copy.</li>
-<li><strong>memo</strong> (<em>dict</em>) &#8211; A dictionary of objects that have already been copied.</li>
-<li><strong>copy</strong> (<em>str</em>) &#8211; The type of copy <code class="docutils literal"><span class="pre">deep</span></code> or <code class="docutils literal"><span class="pre">shallow</span></code> to perform on any trait
-that does not have explicit &#8216;copy&#8217; metadata. A value of None means
-&#8216;copy reference&#8217;.</li>
+<li><strong>traits</strong> (<em>list of strings</em>) – The list of names of the trait attributes to copy.</li>
+<li><strong>memo</strong> (<em>dict</em>) – A dictionary of objects that have already been copied.</li>
+<li><strong>copy</strong> (<em>str</em>) – The type of copy <code class="docutils literal notranslate"><span class="pre">deep</span></code> or <code class="docutils literal notranslate"><span class="pre">shallow</span></code> to perform on any trait
+that does not have explicit ‘copy’ metadata. A value of None means
+‘copy reference’.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>new</strong> &#8211;
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>new</strong> –
 The newly cloned object.</p>
 </td>
 </tr>
@@ -565,7 +570,7 @@ The newly cloned object.</p>
 <p class="rubric">Description</p>
 <p>Creates a new object that is a clone of the current object. If <em>traits</em>
 is None (the default), then all explicit trait attributes defined
-for this object are cloned. If <em>traits</em> is &#8216;all&#8217; or an empty list, the
+for this object are cloned. If <em>traits</em> is ‘all’ or an empty list, the
 list of traits returned by all_trait_names() is used; otherwise,
 <em>traits</em> must be a list of the names of the trait attributes to be
 cloned.</p>
@@ -580,26 +585,26 @@ cloned.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>view</strong> (<em>View</em><em> or </em><em>string</em>) &#8211; A View object (or its name) that defines a user interface for
+<li><strong>view</strong> (<em>View</em><em> or </em><em>string</em>) – A View object (or its name) that defines a user interface for
 editing trait attribute values of the current object. If the view is
 defined as an attribute on this class, use the name of the attribute.
 Otherwise, use a reference to the view object. If this attribute is
 not specified, the View object returned by trait_view() is used.</li>
-<li><strong>parent</strong> (<em>toolkit control</em>) &#8211; The reference to a user interface component to use as the parent
-window for the object&#8217;s UI window.</li>
-<li><strong>kind</strong> (<em>str</em>) &#8211; The type of user interface window to create. See the
+<li><strong>parent</strong> (<em>toolkit control</em>) – The reference to a user interface component to use as the parent
+window for the object’s UI window.</li>
+<li><strong>kind</strong> (<em>str</em>) – The type of user interface window to create. See the
 <strong>traitsui.view.kind_trait</strong> trait for values and
 their meanings. If <em>kind</em> is unspecified or None, the <strong>kind</strong>
 attribute of the View object is used.</li>
-<li><strong>context</strong> (<em>object</em><em> or </em><em>dictionary</em>) &#8211; A single object or a dictionary of string/object pairs, whose trait
+<li><strong>context</strong> (<em>object</em><em> or </em><em>dictionary</em>) – A single object or a dictionary of string/object pairs, whose trait
 attributes are to be edited. If not specified, the current object is
 used.</li>
-<li><strong>handler</strong> (<em>Handler</em>) &#8211; A handler object used for event handling in the dialog box. If
+<li><strong>handler</strong> (<em>Handler</em>) – A handler object used for event handling in the dialog box. If
 None, the default handler for Traits UI is used.</li>
-<li><strong>id</strong> (<em>str</em>) &#8211; A unique ID for persisting preferences about this user interface,
+<li><strong>id</strong> (<em>str</em>) – A unique ID for persisting preferences about this user interface,
 such as size and position. If not specified, no user preferences
 are saved.</li>
-<li><strong>scrollable</strong> (<em>bool</em>) &#8211; Indicates whether the dialog box should be scrollable. When set to
+<li><strong>scrollable</strong> (<em>bool</em>) – Indicates whether the dialog box should be scrollable. When set to
 True, scroll bars appear on the dialog box if it is not large enough
 to display all of the items in the view at one time.</li>
 </ul>
@@ -622,14 +627,14 @@ traits.</p>
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_view">
 <code class="descname">trait_view</code><span class="sig-paren">(</span><em>name=None</em>, <em>view_element=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets or sets a ViewElement associated with an object&#8217;s class.</p>
+<dd><p>Gets or sets a ViewElement associated with an object’s class.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; Name of a view element</li>
-<li><strong>view_element</strong> (<a class="reference internal" href="#traits.has_traits.ViewElement" title="traits.has_traits.ViewElement"><em>ViewElement</em></a>) &#8211; View element to associate</li>
+<li><strong>name</strong> (<em>str</em>) – Name of a view element</li>
+<li><strong>view_element</strong> (<a class="reference internal" href="#traits.has_traits.ViewElement" title="traits.has_traits.ViewElement"><em>ViewElement</em></a>) – View element to associate</li>
 </ul>
 </td>
 </tr>
@@ -640,9 +645,9 @@ traits.</p>
 </table>
 <p class="rubric">Description</p>
 <p>If both <em>name</em> and <em>view_element</em> are specified, the view element is
-associated with <em>name</em> for the current object&#8217;s class. (That is,
+associated with <em>name</em> for the current object’s class. (That is,
 <em>view_element</em> is added to the ViewElements object associated with
-the current object&#8217;s class, indexed by <em>name</em>.)</p>
+the current object’s class, indexed by <em>name</em>.)</p>
 <p>If only <em>name</em> is specified, the function returns the view element
 object associated with <em>name</em>, or None if <em>name</em> has no associated
 view element. View elements retrieved by this function are those that
@@ -651,7 +656,7 @@ associated with a name by a previous call to this method.</p>
 <p>If neither <em>name</em> nor <em>view_element</em> is specified, the method returns a
 View object, based on the following order of preference:</p>
 <ol class="arabic simple">
-<li>If there is a View object named <code class="docutils literal"><span class="pre">traits_view</span></code> associated with the
+<li>If there is a View object named <code class="docutils literal notranslate"><span class="pre">traits_view</span></code> associated with the
 current object, it is returned.</li>
 <li>If there is exactly one View object associated the current
 object, it is returned.</li>
@@ -663,7 +668,7 @@ non-event trait attributes on the current object.</li>
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.default_traits_view">
 <code class="descname">default_traits_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.default_traits_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.default_traits_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the name of the default traits view for the object&#8217;s class.</p>
+<dd><p>Returns the name of the default traits view for the object’s class.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -676,12 +681,12 @@ non-event trait attributes on the current object.</li>
 <dt id="traits.has_traits.HasTraits.trait_views">
 <code class="descname">trait_views</code><span class="sig-paren">(</span><em>klass=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_views"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_views" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of the names of all view elements associated with the
-current object&#8217;s class.</p>
+current object’s class.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>klass</strong> (<em>class</em>) &#8211; <p>A class, such that all returned names must correspond to instances
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>klass</strong> (<em>class</em>) – <p>A class, such that all returned names must correspond to instances
 of this class. Possible values include:</p>
 <ul class="simple">
 <li>Group</li>
@@ -702,7 +707,7 @@ objects that are instances of the specified class are returned.</p>
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_view_elements">
 <code class="descname">trait_view_elements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_view_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_view_elements" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the ViewElements object associated with the object&#8217;s
+<dd><p>Returns the ViewElements object associated with the object’s
 class.</p>
 <p>The returned object can be used to access all the view elements
 associated with the class.</p>
@@ -726,36 +731,36 @@ attributes, as if it were a complete, self-contained GUI application.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filename</strong> (<em>str</em>) &#8211; The name (including path) of a file that contains a pickled
+<li><strong>filename</strong> (<em>str</em>) – The name (including path) of a file that contains a pickled
 representation of the current object. When this parameter is
 specified, the method reads the corresponding file (if it exists)
-to restore the saved values of the object&#8217;s traits before displaying
+to restore the saved values of the object’s traits before displaying
 them. If the user confirms the dialog box (by clicking <strong>OK</strong>),
 the new values are written to the file. If this parameter is not
 specified, the values are loaded from the in-memory object, and are
 not persisted when the dialog box is closed.</li>
-<li><strong>view</strong> (<em>View</em><em> or </em><em>str</em>) &#8211; A View object (or its name) that defines a user interface for
+<li><strong>view</strong> (<em>View</em><em> or </em><em>str</em>) – A View object (or its name) that defines a user interface for
 editing trait attribute values of the current object. If the view is
 defined as an attribute on this class, use the name of the attribute.
 Otherwise, use a reference to the view object. If this attribute is
 not specified, the View object returned by trait_view() is used.</li>
-<li><strong>kind</strong> (<em>str</em>) &#8211; The type of user interface window to create. See the
+<li><strong>kind</strong> (<em>str</em>) – The type of user interface window to create. See the
 <strong>traitsui.view.kind_trait</strong> trait for values and
 their meanings. If <em>kind</em> is unspecified or None, the <strong>kind</strong>
 attribute of the View object is used.</li>
-<li><strong>edit</strong> (<em>bool</em>) &#8211; Indicates whether to display a user interface. If <em>filename</em>
+<li><strong>edit</strong> (<em>bool</em>) – Indicates whether to display a user interface. If <em>filename</em>
 specifies an existing file, setting <em>edit</em> to False loads the
 saved values from that file into the object without requiring
 user interaction.</li>
-<li><strong>context</strong> (<em>object</em><em> or </em><em>dictionary</em>) &#8211; A single object or a dictionary of string/object pairs, whose trait
+<li><strong>context</strong> (<em>object</em><em> or </em><em>dictionary</em>) – A single object or a dictionary of string/object pairs, whose trait
 attributes are to be edited. If not specified, the current object is
 used</li>
-<li><strong>handler</strong> (<em>Handler</em>) &#8211; A handler object used for event handling in the dialog box. If
+<li><strong>handler</strong> (<em>Handler</em>) – A handler object used for event handling in the dialog box. If
 None, the default handler for Traits UI is used.</li>
-<li><strong>id</strong> (<em>str</em>) &#8211; A unique ID for persisting preferences about this user interface,
+<li><strong>id</strong> (<em>str</em>) – A unique ID for persisting preferences about this user interface,
 such as size and position. If not specified, no user preferences
 are saved.</li>
-<li><strong>scrollable</strong> (<em>bool</em>) &#8211; Indicates whether the dialog box should be scrollable. When set to
+<li><strong>scrollable</strong> (<em>bool</em>) – Indicates whether the dialog box should be scrollable. When set to
 True, scroll bars appear on the dialog box if it is not large enough
 to display all of the items in the view at one time.</li>
 </ul>
@@ -778,7 +783,7 @@ modified before displaying the dialog box. If <em>filename</em> is unspecified
 or None, no pickling or unpickling occurs.</p>
 <p>If <em>edit</em> is True (the default), a dialog box for editing the
 current object is displayed. If <em>edit</em> is False or None, no
-dialog box is displayed. You can use <code class="docutils literal"><span class="pre">edit=False</span></code> if you want the
+dialog box is displayed. You can use <code class="docutils literal notranslate"><span class="pre">edit=False</span></code> if you want the
 object to be restored from the contents of <em>filename</em>, without being
 modified by the user.</p>
 </dd></dl>
@@ -820,7 +825,7 @@ attributes on the current object, in an easily readable format.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show_help</strong> (<em>bool</em>) &#8211; Indicates whether to display additional descriptive information.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show_help</strong> (<em>bool</em>) – Indicates whether to display additional descriptive information.</td>
 </tr>
 </tbody>
 </table>
@@ -836,15 +841,15 @@ matching a specified pattern is modified, or removes the association.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>handler</strong> (<em>function</em>) &#8211; A trait notification function for the <em>name</em> trait attribute, with
+<li><strong>handler</strong> (<em>function</em>) – A trait notification function for the <em>name</em> trait attribute, with
 one of the signatures described below.</li>
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the trait attribute whose value changes trigger the
+<li><strong>name</strong> (<em>str</em>) – The name of the trait attribute whose value changes trigger the
 notification. The <em>name</em> can specify complex patterns of trait
 changes using an extended <em>name</em> syntax, which is described below.</li>
-<li><strong>remove</strong> (<em>bool</em>) &#8211; If True, removes the previously-set association between
+<li><strong>remove</strong> (<em>bool</em>) – If True, removes the previously-set association between
 <em>handler</em> and <em>name</em>; if False (the default), creates the
 association.</li>
-<li><strong>dispatch</strong> (<em>str</em>) &#8211; <p>A string indicating the thread on which notifications must be run.
+<li><strong>dispatch</strong> (<em>str</em>) – <p>A string indicating the thread on which notifications must be run.
 Possible values are:</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -857,19 +862,19 @@ Possible values are:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">same</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">same</span></code></td>
 <td>Run notifications on the same thread as this one.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ui</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ui</span></code></td>
 <td>Run notifications on the UI thread. If the current
 thread is the UI thread, the notifications are executed
 immediately; otherwise, they are placed on the UI
 event queue.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">fast_ui</span></code></td>
-<td>Alias for <code class="docutils literal"><span class="pre">ui</span></code>.</td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">fast_ui</span></code></td>
+<td>Alias for <code class="docutils literal notranslate"><span class="pre">ui</span></code>.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">new</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">new</span></code></td>
 <td>Run notifications in a new thread.</td>
 </tr>
 </tbody>
@@ -887,15 +892,15 @@ is None, <em>handler</em> is invoked when any trait attribute on the
 object is changed.</p>
 <p>The <em>name</em> parameter is a single <em>xname</em> or a list of <em>xname</em> names,
 where an <em>xname</em> is an extended name of the form:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">xname2</span><span class="p">[(</span><span class="s1">&#39;.&#39;</span><span class="o">|</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="n">xname2</span><span class="p">]</span><span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xname2</span><span class="p">[(</span><span class="s1">&#39;.&#39;</span><span class="o">|</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="n">xname2</span><span class="p">]</span><span class="o">*</span>
 </pre></div>
 </div>
 <p>An <em>xname2</em> is of the form:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span> <span class="n">xname3</span> <span class="o">|</span> <span class="s1">&#39;[&#39;</span><span class="n">xname3</span><span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="n">xname3</span><span class="p">]</span><span class="o">*</span><span class="s1">&#39;]&#39;</span> <span class="p">)</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span> <span class="n">xname3</span> <span class="o">|</span> <span class="s1">&#39;[&#39;</span><span class="n">xname3</span><span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="n">xname3</span><span class="p">]</span><span class="o">*</span><span class="s1">&#39;]&#39;</span> <span class="p">)</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>An <em>xname3</em> is of the form:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s1">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s1">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
 </pre></div>
 </div>
 <p>A <em>name</em> is any valid Python attribute name. The semantic meaning of
@@ -911,7 +916,7 @@ this notation is as follows:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">item1.item2</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">item1.item2</span></code></td>
 <td>means <em>item1</em> is a trait containing an
 object (or objects if <em>item1</em> is a
 list or dict) with a trait called
@@ -919,58 +924,58 @@ list or dict) with a trait called
 <em>item2</em> cause a notification to be
 generated.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">item1:item2</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">item1:item2</span></code></td>
 <td>means <em>item1</em> is a trait containing an
 object (or objects if <em>item1</em> is a
 list or dict) with a trait called
 <em>item2</em>. Changes to <em>item2</em> cause a
 notification to be generated, while
 changes to <em>item1</em> do not (i.e., the
-&#8216;:&#8217; indicates that changes to the
+‘:’ indicates that changes to the
 <em>link</em> object should not be reported).</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">[</span> <span class="pre">item1,</span> <span class="pre">item2,</span> <span class="pre">...,</span> <span class="pre">itemN</span> <span class="pre">]</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">item1,</span> <span class="pre">item2,</span> <span class="pre">...,</span> <span class="pre">itemN</span> <span class="pre">]</span></code></td>
 <td>A list which matches any of the
 specified items. Note that at the
 topmost level, the surrounding square
 brackets are optional.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">name?</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">name?</span></code></td>
 <td>If the current object does not have an
 attribute called <em>name</em>, the reference
-can be ignored. If the &#8216;?&#8217; character
+can be ignored. If the ‘?’ character
 is omitted, the current object must
 have a trait called <em>name</em>, otherwise
 an exception will be raised.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">prefix+</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">prefix+</span></code></td>
 <td>Matches any trait on the object whose
 name begins with <em>prefix</em>.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">+metadata_name</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">+metadata_name</span></code></td>
 <td>Matches any trait on the object having
 <em>metadata_name</em> metadata.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">-metadata_name</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-metadata_name</span></code></td>
 <td>Matches any trait on the object which
 does not have <em>metadata_name</em>
 metadata.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">prefix+metadata_name</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">prefix+metadata_name</span></code></td>
 <td>Matches any trait on the object whose
 name begins with <em>prefix</em> and which
 has <em>metadata_name</em> metadata.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">prefix-metadata_name</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">prefix-metadata_name</span></code></td>
 <td>Matches any trait on the object
 whose name begins with <em>prefix</em> and
 which does not have <em>metadata_name</em>
 metadata.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">+</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">+</span></code></td>
 <td>Matches all traits on the object.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">pattern*</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">pattern*</span></code></td>
 <td>Matches object graphs where <em>pattern</em>
 occurs one or more times (useful for
 setting up listeners on recursive data
@@ -991,49 +996,49 @@ lists).</td>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo,bar,baz</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo,bar,baz</span></code></td>
 <td>Listen for trait changes to <em>object.foo</em>,
 <em>object.bar</em>, and <em>object.baz</em>.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">['foo','bar','baz']</span></code></td>
-<td>Equivalent to &#8216;foo,bar,baz&#8217;, but may be more
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">['foo','bar','baz']</span></code></td>
+<td>Equivalent to ‘foo,bar,baz’, but may be more
 useful in cases where the individual items are
 computed.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo.bar.baz</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo.bar.baz</span></code></td>
 <td>Listen for trait changes to
 <em>object.foo.bar.baz</em> and report changes to
 <em>object.foo</em>, <em>object.foo.bar</em> or
 <em>object.foo.bar.baz</em>.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">foo:bar:baz</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">foo:bar:baz</span></code></td>
 <td>Listen for changes to <em>object.foo.bar.baz</em>, and
 only report changes to <em>object.foo.bar.baz</em>.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo.[bar,baz]</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo.[bar,baz]</span></code></td>
 <td>Listen for trait changes to <em>object.foo.bar</em>
 and <em>object.foo.baz</em>.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">[left,right]*.name</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[left,right]*.name</span></code></td>
 <td>Listen for trait changes to the <em>name</em> trait of
 each node of a tree having <em>left</em> and <em>right</em>
 links to other tree nodes, and where <em>object</em>
 the method is applied to the root node of the
 tree.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">+dirty</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">+dirty</span></code></td>
 <td>Listen for trait changes on any trait in the
-<em>object</em> which has the &#8216;dirty&#8217; metadata set.</td>
+<em>object</em> which has the ‘dirty’ metadata set.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">foo.+dirty</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">foo.+dirty</span></code></td>
 <td>Listen for trait changes on any trait in
-<em>object.foo</em> which has the &#8216;dirty&#8217; metadata
+<em>object.foo</em> which has the ‘dirty’ metadata
 set.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo.[bar,-dirty]</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo.[bar,-dirty]</span></code></td>
 <td>Listen for trait changes on <em>object.foo.bar</em> or
 any trait on <em>object.foo</em> which does not have
-&#8216;dirty&#8217; metadata set.</td>
+‘dirty’ metadata set.</td>
 </tr>
 </tbody>
 </table>
@@ -1041,12 +1046,12 @@ any trait on <em>object.foo</em> which does not have
 pattern can be traits of type Instance, List or Dict. In the case
 of List and Dict traits, the subsequent portion of the pattern is
 applied to each item in the list, or value in the dictionary.</p>
-<p>For example, if the self.children is a list, &#8216;children.name&#8217;
+<p>For example, if the self.children is a list, ‘children.name’
 listens for trait changes to the <em>name</em> trait for each item in the
 self.children list.</p>
 <p>Note that items added to or removed from a list or dictionary in
 the pattern will cause the <em>handler</em> routine to be invoked as well,
-since this is treated as an <em>implied</em> change to the item&#8217;s trait
+since this is treated as an <em>implied</em> change to the item’s trait
 being monitored.</p>
 <p>The signature of the <em>handler</em> supplied also has an effect on
 how changes to intermediate traits are processed. The five valid
@@ -1061,7 +1066,7 @@ handler signatures are:</p>
 <p>For signatures 1, 4 and 5, any change to any element of a path
 being listened to invokes the handler with information about the
 particular element that was modified (e.g., if the item being
-monitored is &#8216;foo.bar.baz&#8217;, a change to &#8216;bar&#8217; will call <em>handler</em>
+monitored is ‘foo.bar.baz’, a change to ‘bar’ will call <em>handler</em>
 with the following information:</p>
 <ul class="simple">
 <li>object: object.foo</li>
@@ -1094,15 +1099,15 @@ intermediate trait or any subsequent intermediate trait preceding
 the final trait is a List or Dict, then a TraitError is raised,
 since the effective value for the final trait cannot in general be
 resolved unambiguously. To prevent TraitErrors in this case, use the
-&#8216;:&#8217; separator to suppress notifications for changes to any of the
+‘:’ separator to suppress notifications for changes to any of the
 intermediate links.</p>
 <p>Handler signature 1 also has the special characteristic that if a
-final trait is a List or Dict, it will automatically handle &#8216;_items&#8217;
+final trait is a List or Dict, it will automatically handle ‘_items’
 changed events for the final trait as well. This can be useful in
 cases where the <em>handler</em> only needs to know that some aspect of the
 final trait has been changed. For all other <em>handler</em> signatures,
-you must explicitly specify the &#8216;xxx_items&#8217; trait if you want to
-be notified of changes to any of the items of the &#8216;xxx&#8217; trait.</p>
+you must explicitly specify the ‘xxx_items’ trait if you want to
+be notified of changes to any of the items of the ‘xxx’ trait.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1115,15 +1120,15 @@ matching a specified pattern is modified, or removes the association.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>handler</strong> (<em>function</em>) &#8211; A trait notification function for the <em>name</em> trait attribute, with
+<li><strong>handler</strong> (<em>function</em>) – A trait notification function for the <em>name</em> trait attribute, with
 one of the signatures described below.</li>
-<li><strong>name</strong> (<em>str</em>) &#8211; The name of the trait attribute whose value changes trigger the
+<li><strong>name</strong> (<em>str</em>) – The name of the trait attribute whose value changes trigger the
 notification. The <em>name</em> can specify complex patterns of trait
 changes using an extended <em>name</em> syntax, which is described below.</li>
-<li><strong>remove</strong> (<em>bool</em>) &#8211; If True, removes the previously-set association between
+<li><strong>remove</strong> (<em>bool</em>) – If True, removes the previously-set association between
 <em>handler</em> and <em>name</em>; if False (the default), creates the
 association.</li>
-<li><strong>dispatch</strong> (<em>str</em>) &#8211; <p>A string indicating the thread on which notifications must be run.
+<li><strong>dispatch</strong> (<em>str</em>) – <p>A string indicating the thread on which notifications must be run.
 Possible values are:</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -1136,19 +1141,19 @@ Possible values are:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">same</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">same</span></code></td>
 <td>Run notifications on the same thread as this one.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ui</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ui</span></code></td>
 <td>Run notifications on the UI thread. If the current
 thread is the UI thread, the notifications are executed
 immediately; otherwise, they are placed on the UI
 event queue.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">fast_ui</span></code></td>
-<td>Alias for <code class="docutils literal"><span class="pre">ui</span></code>.</td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">fast_ui</span></code></td>
+<td>Alias for <code class="docutils literal notranslate"><span class="pre">ui</span></code>.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">new</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">new</span></code></td>
 <td>Run notifications in a new thread.</td>
 </tr>
 </tbody>
@@ -1166,15 +1171,15 @@ is None, <em>handler</em> is invoked when any trait attribute on the
 object is changed.</p>
 <p>The <em>name</em> parameter is a single <em>xname</em> or a list of <em>xname</em> names,
 where an <em>xname</em> is an extended name of the form:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">xname2</span><span class="p">[(</span><span class="s1">&#39;.&#39;</span><span class="o">|</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="n">xname2</span><span class="p">]</span><span class="o">*</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xname2</span><span class="p">[(</span><span class="s1">&#39;.&#39;</span><span class="o">|</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="n">xname2</span><span class="p">]</span><span class="o">*</span>
 </pre></div>
 </div>
 <p>An <em>xname2</em> is of the form:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span> <span class="n">xname3</span> <span class="o">|</span> <span class="s1">&#39;[&#39;</span><span class="n">xname3</span><span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="n">xname3</span><span class="p">]</span><span class="o">*</span><span class="s1">&#39;]&#39;</span> <span class="p">)</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span> <span class="n">xname3</span> <span class="o">|</span> <span class="s1">&#39;[&#39;</span><span class="n">xname3</span><span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="n">xname3</span><span class="p">]</span><span class="o">*</span><span class="s1">&#39;]&#39;</span> <span class="p">)</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>An <em>xname3</em> is of the form:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s1">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s1">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
 </pre></div>
 </div>
 <p>A <em>name</em> is any valid Python attribute name. The semantic meaning of
@@ -1190,7 +1195,7 @@ this notation is as follows:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">item1.item2</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">item1.item2</span></code></td>
 <td>means <em>item1</em> is a trait containing an
 object (or objects if <em>item1</em> is a
 list or dict) with a trait called
@@ -1198,58 +1203,58 @@ list or dict) with a trait called
 <em>item2</em> cause a notification to be
 generated.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">item1:item2</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">item1:item2</span></code></td>
 <td>means <em>item1</em> is a trait containing an
 object (or objects if <em>item1</em> is a
 list or dict) with a trait called
 <em>item2</em>. Changes to <em>item2</em> cause a
 notification to be generated, while
 changes to <em>item1</em> do not (i.e., the
-&#8216;:&#8217; indicates that changes to the
+‘:’ indicates that changes to the
 <em>link</em> object should not be reported).</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">[</span> <span class="pre">item1,</span> <span class="pre">item2,</span> <span class="pre">...,</span> <span class="pre">itemN</span> <span class="pre">]</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">item1,</span> <span class="pre">item2,</span> <span class="pre">...,</span> <span class="pre">itemN</span> <span class="pre">]</span></code></td>
 <td>A list which matches any of the
 specified items. Note that at the
 topmost level, the surrounding square
 brackets are optional.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">name?</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">name?</span></code></td>
 <td>If the current object does not have an
 attribute called <em>name</em>, the reference
-can be ignored. If the &#8216;?&#8217; character
+can be ignored. If the ‘?’ character
 is omitted, the current object must
 have a trait called <em>name</em>, otherwise
 an exception will be raised.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">prefix+</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">prefix+</span></code></td>
 <td>Matches any trait on the object whose
 name begins with <em>prefix</em>.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">+metadata_name</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">+metadata_name</span></code></td>
 <td>Matches any trait on the object having
 <em>metadata_name</em> metadata.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">-metadata_name</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-metadata_name</span></code></td>
 <td>Matches any trait on the object which
 does not have <em>metadata_name</em>
 metadata.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">prefix+metadata_name</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">prefix+metadata_name</span></code></td>
 <td>Matches any trait on the object whose
 name begins with <em>prefix</em> and which
 has <em>metadata_name</em> metadata.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">prefix-metadata_name</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">prefix-metadata_name</span></code></td>
 <td>Matches any trait on the object
 whose name begins with <em>prefix</em> and
 which does not have <em>metadata_name</em>
 metadata.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">+</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">+</span></code></td>
 <td>Matches all traits on the object.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">pattern*</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">pattern*</span></code></td>
 <td>Matches object graphs where <em>pattern</em>
 occurs one or more times (useful for
 setting up listeners on recursive data
@@ -1270,49 +1275,49 @@ lists).</td>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo,bar,baz</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo,bar,baz</span></code></td>
 <td>Listen for trait changes to <em>object.foo</em>,
 <em>object.bar</em>, and <em>object.baz</em>.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">['foo','bar','baz']</span></code></td>
-<td>Equivalent to &#8216;foo,bar,baz&#8217;, but may be more
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">['foo','bar','baz']</span></code></td>
+<td>Equivalent to ‘foo,bar,baz’, but may be more
 useful in cases where the individual items are
 computed.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo.bar.baz</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo.bar.baz</span></code></td>
 <td>Listen for trait changes to
 <em>object.foo.bar.baz</em> and report changes to
 <em>object.foo</em>, <em>object.foo.bar</em> or
 <em>object.foo.bar.baz</em>.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">foo:bar:baz</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">foo:bar:baz</span></code></td>
 <td>Listen for changes to <em>object.foo.bar.baz</em>, and
 only report changes to <em>object.foo.bar.baz</em>.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo.[bar,baz]</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo.[bar,baz]</span></code></td>
 <td>Listen for trait changes to <em>object.foo.bar</em>
 and <em>object.foo.baz</em>.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">[left,right]*.name</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[left,right]*.name</span></code></td>
 <td>Listen for trait changes to the <em>name</em> trait of
 each node of a tree having <em>left</em> and <em>right</em>
 links to other tree nodes, and where <em>object</em>
 the method is applied to the root node of the
 tree.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">+dirty</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">+dirty</span></code></td>
 <td>Listen for trait changes on any trait in the
-<em>object</em> which has the &#8216;dirty&#8217; metadata set.</td>
+<em>object</em> which has the ‘dirty’ metadata set.</td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">foo.+dirty</span></code></td>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">foo.+dirty</span></code></td>
 <td>Listen for trait changes on any trait in
-<em>object.foo</em> which has the &#8216;dirty&#8217; metadata
+<em>object.foo</em> which has the ‘dirty’ metadata
 set.</td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo.[bar,-dirty]</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo.[bar,-dirty]</span></code></td>
 <td>Listen for trait changes on <em>object.foo.bar</em> or
 any trait on <em>object.foo</em> which does not have
-&#8216;dirty&#8217; metadata set.</td>
+‘dirty’ metadata set.</td>
 </tr>
 </tbody>
 </table>
@@ -1320,12 +1325,12 @@ any trait on <em>object.foo</em> which does not have
 pattern can be traits of type Instance, List or Dict. In the case
 of List and Dict traits, the subsequent portion of the pattern is
 applied to each item in the list, or value in the dictionary.</p>
-<p>For example, if the self.children is a list, &#8216;children.name&#8217;
+<p>For example, if the self.children is a list, ‘children.name’
 listens for trait changes to the <em>name</em> trait for each item in the
 self.children list.</p>
 <p>Note that items added to or removed from a list or dictionary in
 the pattern will cause the <em>handler</em> routine to be invoked as well,
-since this is treated as an <em>implied</em> change to the item&#8217;s trait
+since this is treated as an <em>implied</em> change to the item’s trait
 being monitored.</p>
 <p>The signature of the <em>handler</em> supplied also has an effect on
 how changes to intermediate traits are processed. The five valid
@@ -1340,7 +1345,7 @@ handler signatures are:</p>
 <p>For signatures 1, 4 and 5, any change to any element of a path
 being listened to invokes the handler with information about the
 particular element that was modified (e.g., if the item being
-monitored is &#8216;foo.bar.baz&#8217;, a change to &#8216;bar&#8217; will call <em>handler</em>
+monitored is ‘foo.bar.baz’, a change to ‘bar’ will call <em>handler</em>
 with the following information:</p>
 <ul class="simple">
 <li>object: object.foo</li>
@@ -1373,15 +1378,15 @@ intermediate trait or any subsequent intermediate trait preceding
 the final trait is a List or Dict, then a TraitError is raised,
 since the effective value for the final trait cannot in general be
 resolved unambiguously. To prevent TraitErrors in this case, use the
-&#8216;:&#8217; separator to suppress notifications for changes to any of the
+‘:’ separator to suppress notifications for changes to any of the
 intermediate links.</p>
 <p>Handler signature 1 also has the special characteristic that if a
-final trait is a List or Dict, it will automatically handle &#8216;_items&#8217;
+final trait is a List or Dict, it will automatically handle ‘_items’
 changed events for the final trait as well. This can be useful in
 cases where the <em>handler</em> only needs to know that some aspect of the
 final trait has been changed. For all other <em>handler</em> signatures,
-you must explicitly specify the &#8216;xxx_items&#8217; trait if you want to
-be notified of changes to any of the items of the &#8216;xxx&#8217; trait.</p>
+you must explicitly specify the ‘xxx_items’ trait if you want to
+be notified of changes to any of the items of the ‘xxx’ trait.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1394,13 +1399,13 @@ trait attribute on another object.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; Name of the trait attribute on this object.</li>
-<li><strong>object</strong> (<em>object</em>) &#8211; The object with which to synchronize.</li>
-<li><strong>alias</strong> (<em>str</em>) &#8211; Name of the trait attribute on <em>other</em>; if None or omitted, same
+<li><strong>name</strong> (<em>str</em>) – Name of the trait attribute on this object.</li>
+<li><strong>object</strong> (<em>object</em>) – The object with which to synchronize.</li>
+<li><strong>alias</strong> (<em>str</em>) – Name of the trait attribute on <em>other</em>; if None or omitted, same
 as <em>name</em>.</li>
-<li><strong>mutual</strong> (<em>bool</em><em> or </em><em>int</em>) &#8211; Indicates whether synchronization is mutual (True or non-zero)
+<li><strong>mutual</strong> (<em>bool</em><em> or </em><em>int</em>) – Indicates whether synchronization is mutual (True or non-zero)
 or one-way (False or zero)</li>
-<li><strong>remove</strong> (<em>bool</em><em> or </em><em>int</em>) &#8211; Indicates whether synchronization is being added (False or zero)
+<li><strong>remove</strong> (<em>bool</em><em> or </em><em>int</em>) – Indicates whether synchronization is being added (False or zero)
 or removed (True or non-zero)</li>
 </ul>
 </td>
@@ -1425,8 +1430,8 @@ be updated, but not vice versa.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; Name of the attribute to add.</li>
-<li><strong>*trait</strong> &#8211; Trait or a value that can be converted to a trait by Trait().
+<li><strong>name</strong> (<em>str</em>) – Name of the attribute to add.</li>
+<li><strong>*trait</strong> – Trait or a value that can be converted to a trait by Trait().
 Trait definition for <em>name</em>. If more than one value is specified,
 it is equivalent to passing the entire list of values to Trait().</li>
 </ul>
@@ -1444,9 +1449,9 @@ it is equivalent to passing the entire list of values to Trait().</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; Name of the attribute to remove.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Name of the attribute to remove.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> (<em>bool</em>) &#8211;
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> (<em>bool</em>) –
 True if the trait was successfully removed.</td>
 </tr>
 </tbody>
@@ -1462,10 +1467,10 @@ True if the trait was successfully removed.</td>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; Name of the attribute whose trait definition is to be returned.</li>
-<li><strong>force</strong> (<em>bool</em>) &#8211; Indicates whether to return a trait definition if <em>name</em> is
+<li><strong>name</strong> (<em>str</em>) – Name of the attribute whose trait definition is to be returned.</li>
+<li><strong>force</strong> (<em>bool</em>) – Indicates whether to return a trait definition if <em>name</em> is
 not explicitly defined.</li>
-<li><strong>copy</strong> (<em>bool</em>) &#8211; Indicates whether to return the original trait definition or a
+<li><strong>copy</strong> (<em>bool</em>) – Indicates whether to return the original trait definition or a
 copy.</li>
 </ul>
 </td>
@@ -1491,7 +1496,7 @@ definition found is returned unmodified (the default).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; Name of the attribute whose trait definition is returned.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Name of the attribute whose trait definition is returned.</td>
 </tr>
 </tbody>
 </table>
@@ -1500,7 +1505,7 @@ definition found is returned unmodified (the default).</p>
 different result only in the case where the trait attribute defined by
 <em>name</em> is a delegate. In this case, the base_trait() method follows the
 delegation chain until a non-delegated trait attribute is reached, and
-returns the definition of that attribute&#8217;s trait as the result.</p>
+returns the definition of that attribute’s trait as the result.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1519,7 +1524,7 @@ attributes of this object that match the set of <em>metadata</em> criteria.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**metadata</strong> &#8211; Criteria for selecting trait attributes.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**metadata</strong> – Criteria for selecting trait attributes.</td>
 </tr>
 </tbody>
 </table>
@@ -1552,7 +1557,7 @@ attributes of the class that match the set of <em>metadata</em> criteria.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**metadata</strong> &#8211; Criteria for selecting trait attributes.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**metadata</strong> – Criteria for selecting trait attributes.</td>
 </tr>
 </tbody>
 </table>
@@ -1585,7 +1590,7 @@ match the set of <em>metadata</em> criteria specified.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**metadata</strong> &#8211; Criteria for selecting trait attributes.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**metadata</strong> – Criteria for selecting trait attributes.</td>
 </tr>
 </tbody>
 </table>
@@ -1603,7 +1608,7 @@ match the set of <em>metadata</em> criteria specified.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**metadata</strong> &#8211; Criteria for selecting trait attributes.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**metadata</strong> – Criteria for selecting trait attributes.</td>
 </tr>
 </tbody>
 </table>
@@ -1640,18 +1645,18 @@ for it to function correctly.</p>
 </dl>
 <p class="rubric">Usage</p>
 <p>A class with required traits:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">RequiredTest</span><span class="p">(</span><span class="n">HasRequiredTraits</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">RequiredTest</span><span class="p">(</span><span class="n">HasRequiredTraits</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">required_trait</span> <span class="o">=</span> <span class="n">Any</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">non_required_trait</span> <span class="o">=</span> <span class="n">Any</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Creating an instance of a HasRequiredTraits subclass:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">required_trait</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">non_required_trait</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">required_trait</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">non_required_trait</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance2</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">required_trait</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Forgetting to specify a required trait:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">non_required_trait</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">non_required_trait</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
 <span class="go">traits.trait_errors.TraitError: The following required traits were not</span>
 <span class="go">provided: required_trait.</span>
 </pre></div>
@@ -1663,10 +1668,10 @@ for it to function correctly.</p>
 <em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">HasPrivateTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#HasPrivateTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasPrivateTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class ensures that any public object attribute that does not have
 an explicit or wildcard trait definition results in an exception, but
-&#8220;private&#8221; attributes (whose names start with &#8216;_&#8217;) have an initial value of
+“private” attributes (whose names start with ‘_’) have an initial value of
 <strong>None</strong>, and are not type-checked.</p>
 <p>This feature is useful in cases where a class needs private attributes to
-keep track of its internal object state, which are not part of the class&#8217;s
+keep track of its internal object state, which are not part of the class’s
 public API. Such attributes do not need to be type-checked, because they are
 manipulated only by the (presumably correct) methods of the class itself.</p>
 </dd></dl>
@@ -1694,7 +1699,7 @@ being unchecked.</p>
 <dl class="class">
 <dt id="traits.has_traits.Vetoable">
 <em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">Vetoable</code><a class="reference internal" href="../_modules/traits/has_traits.html#Vetoable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.Vetoable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a &#8216;vetoable&#8217; request object and an associated event.</p>
+<dd><p>Defines a ‘vetoable’ request object and an associated event.</p>
 </dd></dl>
 
 <dl class="class">
@@ -1738,7 +1743,7 @@ with MetaHasTraits, provided it is inherited first.</p>
 <dt id="traits.has_traits.ABCHasTraits">
 <em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">ABCHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#ABCHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCHasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>A HasTraits subclass which enables the features of Abstract
-Base Classes (ABC). See the &#8216;abc&#8217; module in the standard library
+Base Classes (ABC). See the ‘abc’ module in the standard library
 for more information.</p>
 </dd></dl>
 
@@ -1747,7 +1752,7 @@ for more information.</p>
 <em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">ABCHasStrictTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#ABCHasStrictTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCHasStrictTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>A HasTraits subclass which behaves like HasStrictTraits but
 also enables the features of Abstract Base Classes (ABC). See the
-&#8216;abc&#8217; module in the standard library for more information.</p>
+‘abc’ module in the standard library for more information.</p>
 </dd></dl>
 
 </div>
@@ -1756,7 +1761,7 @@ also enables the features of Abstract Base Classes (ABC). See the
 <dl class="function">
 <dt id="traits.has_traits.cached_property">
 <code class="descclassname">traits.has_traits.</code><code class="descname">cached_property</code><span class="sig-paren">(</span><em>function</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#cached_property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.cached_property" title="Permalink to this definition">¶</a></dt>
-<dd><p>Marks the following method definition as being a &#8220;cached property&#8221;.
+<dd><p>Marks the following method definition as being a “cached property”.
 That is, it is a property getter which, for performance reasons, caches
 its most recently computed result in an attribute whose name is of the
 form: <em>_traits_cache_name</em>, where <em>name</em> is the name of the property. A
@@ -1764,7 +1769,7 @@ method marked as being a cached property needs only to compute and
 return its result. The &#64;cached_property decorator automatically wraps
 the decorated method in cache management code, eliminating the need to
 write boilerplate cache management code explicitly. For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file_name</span> <span class="o">=</span> <span class="n">File</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">file_name</span> <span class="o">=</span> <span class="n">File</span>
 <span class="n">file_contents</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">depends_on</span> <span class="o">=</span> <span class="s1">&#39;file_name&#39;</span> <span class="p">)</span>
 
 <span class="nd">@cached_property</span>
@@ -1789,7 +1794,7 @@ For details, see the traits.traits.Property() function.</p>
 <dl class="function">
 <dt id="traits.has_traits.get_delegate_pattern">
 <code class="descclassname">traits.has_traits.</code><code class="descname">get_delegate_pattern</code><span class="sig-paren">(</span><em>name</em>, <em>trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#get_delegate_pattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.get_delegate_pattern" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the correct &#8216;delegate&#8217; listener pattern for a specified name and
+<dd><p>Returns the correct ‘delegate’ listener pattern for a specified name and
 delegate trait.</p>
 </dd></dl>
 
@@ -1812,7 +1817,7 @@ will not cause the handler to be invoked.</p>
 <dl class="function">
 <dt id="traits.has_traits.property_depends_on">
 <code class="descclassname">traits.has_traits.</code><code class="descname">property_depends_on</code><span class="sig-paren">(</span><em>dependency</em>, <em>settable=False</em>, <em>flushable=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#property_depends_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.property_depends_on" title="Permalink to this definition">¶</a></dt>
-<dd><p>Marks the following method definition as being a &#8220;cached property&#8221;
+<dd><p>Marks the following method definition as being a “cached property”
 that depends on the specified extended trait names. That is, it is a
 property getter which, for performance reasons, caches its most recently
 computed result in an attribute whose name is of the form:
@@ -1823,7 +1828,7 @@ decorated method in cache management code that will cache the most
 recently computed value and flush the cache when any of the specified
 dependencies are modified, thus eliminating the need to write
 boilerplate cache management code explicitly. For example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file_name</span> <span class="o">=</span> <span class="n">File</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">file_name</span> <span class="o">=</span> <span class="n">File</span>
 <span class="n">file_contents</span> <span class="o">=</span> <span class="n">Property</span>
 
 <span class="nd">@property_depends_on</span><span class="p">(</span> <span class="s1">&#39;file_name&#39;</span> <span class="p">)</span>
@@ -1849,7 +1854,7 @@ code, is returned.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*protocols</strong> &#8211; A list of protocols (Interface classes or Python ABCs) that the
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*protocols</strong> – A list of protocols (Interface classes or Python ABCs) that the
 decorated class provides.</td>
 </tr>
 </tbody>
@@ -1876,9 +1881,9 @@ deleted then the function is not called.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">has_traits</span></code> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">has_traits</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#abc-classes">ABC classes</a></li>
 <li><a class="reference internal" href="#functions">Functions</a></li>
@@ -1888,10 +1893,10 @@ deleted then the function is not called.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="category.html"
-                        title="previous chapter"><code class="docutils literal"><span class="pre">category</span></code> Module</a></p>
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">category</span></code> Module</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="has_dynamic_views.html"
-                        title="next chapter"><code class="docutils literal"><span class="pre">has_dynamic_views</span></code> Module</a></p>
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">has_dynamic_views</span></code> Module</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/has_traits.rst.txt"
@@ -1899,12 +1904,14 @@ deleted then the function is not called.</p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -1923,13 +1930,13 @@ deleted then the function is not called.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

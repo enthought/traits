@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -59,6 +60,10 @@
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
       <li class="active">
         <a href="defining.html" title="Defining Traits: Initialization and Validation"
            accesskey="N">next</a>
@@ -123,7 +128,7 @@ other parts of the program that the value has changed.</li>
 <ul class="simple" id="index-4">
 <li><strong>Visualization</strong>: User interfaces that allow a user to <em>interactively
 modify</em> the values of trait attributes can be automatically constructed using
-the traits&#8217; definitions. This feature requires that a supported GUI
+the traits’ definitions. This feature requires that a supported GUI
 toolkit be installed. However, if this feature is not used, the Traits package
 does not otherwise require GUI support. For details on the visualization
 features of Traits, see the <a class="reference external" href="http://docs.enthought.com/traitsui/traitsui_user_manual/index.html">TraitsUI User Manual</a>.</li>
@@ -134,7 +139,7 @@ within the class. Trait attributes defined by a class are automatically
 inherited by any subclass derived from the class.</p>
 <p>The following example <a class="footnote-reference" href="#id3" id="id2">[1]</a> illustrates each of the features of the Traits
 package. These features are elaborated in the rest of this guide.</p>
-<div class="highlight-default" id="index-5"><div class="highlight"><pre><span></span><span class="c1"># all_traits_features.py --- Shows primary features of the Traits</span>
+<div class="highlight-default notranslate" id="index-5"><div class="highlight"><pre><span></span><span class="c1"># all_traits_features.py --- Shows primary features of the Traits</span>
 <span class="c1">#                            package</span>
 
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Delegate</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span>\
@@ -196,12 +201,12 @@ attributes attempt to accept a wide variety and style of values. For example,
 a color-related attribute of a Chaco object might accept any of the following
 as legal values for the color red:</p>
 <ul class="simple">
-<li>&#8216;red&#8217;</li>
+<li>‘red’</li>
 <li>0xFF0000</li>
 <li>( 1.0, 0.0, 0.0, 1.0 )</li>
 </ul>
 <p>Thus, the user might write:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">plotitem</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plotitem</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
 </pre></div>
 </div>
 <p>In a predecessor to Chaco, providing such flexibility came at a cost:</p>
@@ -219,21 +224,21 @@ were usually widely separated in terms of the logic flow of the program.</li>
 checking that:</p>
 <ul class="simple">
 <li>Allows for flexibility in the set of values an attribute can have, such as
-allowing &#8216;red&#8217;, 0xFF0000 and ( 1.0, 0.0, 0.0, 1.0 ) as equivalent ways of
+allowing ‘red’, 0xFF0000 and ( 1.0, 0.0, 0.0, 1.0 ) as equivalent ways of
 expressing the color red.</li>
 <li>Catches illegal value assignments at the point of error, and provides a
 meaningful and useful explanation of the error and the set of allowable
 values.</li>
-<li>Eliminates the need for an object&#8217;s implementation to map user-supplied
+<li>Eliminates the need for an object’s implementation to map user-supplied
 attribute values into a separate internal representation.</li>
 </ul>
 <p>In the process of meeting these design goals, the Traits package evolved into
 a useful component in its own right, satisfying all of the above requirements
 and introducing several additional, powerful features of its own. In projects
 where the Traits package has been used, it has proven valuable for enhancing
-programmers&#8217; ability to understand code, during both concurrent
+programmers’ ability to understand code, during both concurrent
 development and maintenance.</p>
-<p>The Traits 5.0.0 package works with versions 2.7 and 3.4 and later of
+<p>The Traits 5.1.0 package works with versions 2.7 and 3.4 and later of
 Python.  It is similar in some ways to the Python property language feature.
 Standard Python properties provide the similar capabilities to the Traits
 package, but with more work on the part of the programmer.</p>
@@ -261,7 +266,7 @@ individually, or view them in a tutorial program by running:</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Introduction</a><ul>
 <li><a class="reference internal" href="#what-are-traits">What Are Traits?</a></li>
@@ -283,12 +288,14 @@ individually, or view them in a tutorial program by running:</p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -307,13 +314,13 @@ individually, or view them in a tutorial program by running:</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>

@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.0.0',
+        VERSION:     '5.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
@@ -51,13 +52,17 @@
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li>
   
-    <li><a href="#"><code class="docutils literal"><span class="pre">util</span></code> Package</a></li>
+    <li><a href="#"><code class="docutils literal notranslate"><span class="pre">util</span></code> Package</a></li>
   
 
     </ul>
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
       <li class="active">
         <a href="traits.testing.html" title="testing Package"
            accesskey="P">previous</a>
@@ -76,9 +81,9 @@
           <div class="body" id="spc-section-body">
             
   <div class="section" id="util-package">
-<h1><code class="xref py py-mod docutils literal"><span class="pre">util</span></code> Package<a class="headerlink" href="#util-package" title="Permalink to this headline">¶</a></h1>
+<h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">util</span></code> Package<a class="headerlink" href="#util-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2><code class="xref py py-mod docutils literal"><span class="pre">util</span></code> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">util</span></code> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-traits.util"></span><p>Utility functions, part of the Traits project.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -90,7 +95,7 @@
 </table>
 </div>
 <div class="section" id="module-traits.util.async_trait_wait">
-<span id="async-trait-wait-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">async_trait_wait</span></code> Module<a class="headerlink" href="#module-traits.util.async_trait_wait" title="Permalink to this headline">¶</a></h2>
+<span id="async-trait-wait-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">async_trait_wait</span></code> Module<a class="headerlink" href="#module-traits.util.async_trait_wait" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="traits.util.async_trait_wait.wait_for_condition">
 <code class="descclassname">traits.util.async_trait_wait.</code><code class="descname">wait_for_condition</code><span class="sig-paren">(</span><em>condition</em>, <em>obj</em>, <em>trait</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/async_trait_wait.html#wait_for_condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.async_trait_wait.wait_for_condition" title="Permalink to this definition">¶</a></dt>
@@ -109,24 +114,24 @@ no timeout.</p>
 of a possible change: whenever the trait changes, the condition is
 re-evaluated.  The condition will also be evaluated on entering
 this function.</p>
-<p>Note that in cases of unusual timing it&#8217;s possible for the condition to be
-evaluated one more time <em>after</em> the <code class="docutils literal"><span class="pre">wait_for_condition</span></code> call has
+<p>Note that in cases of unusual timing it’s possible for the condition to be
+evaluated one more time <em>after</em> the <code class="docutils literal notranslate"><span class="pre">wait_for_condition</span></code> call has
 returned.</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-traits.util.camel_case">
-<span id="camel-case-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">camel_case</span></code> Module<a class="headerlink" href="#module-traits.util.camel_case" title="Permalink to this headline">¶</a></h2>
+<span id="camel-case-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">camel_case</span></code> Module<a class="headerlink" href="#module-traits.util.camel_case" title="Permalink to this headline">¶</a></h2>
 <p>Defines utility functions for operating on camel case names.</p>
 <dl class="class">
 <dt id="traits.util.camel_case.CamelCaseToPython">
 <em class="property">class </em><code class="descclassname">traits.util.camel_case.</code><code class="descname">CamelCaseToPython</code><a class="reference internal" href="../_modules/traits/util/camel_case.html#CamelCaseToPython"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.camel_case.CamelCaseToPython" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Simple functor class to convert names from camel case to idiomatic
 Python variable names.</p>
 <dl class="docutils">
 <dt>For example::</dt>
-<dd><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">camel2python</span> <span class="o">=</span> <span class="n">CamelCaseToPython</span>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">camel2python</span> <span class="o">=</span> <span class="n">CamelCaseToPython</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">camel2python</span><span class="p">(</span><span class="s1">&#39;XMLActor2DToSGML&#39;</span><span class="p">)</span>
 <span class="go">&#39;xml_actor2d_to_sgml&#39;</span>
 </pre></div>
@@ -141,7 +146,7 @@ Python variable names.</p>
 <dd><p>Convert a camel case string into words separated by spaces.</p>
 <dl class="docutils">
 <dt>For example::</dt>
-<dd><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">camel_case_to_words</span><span class="p">(</span><span class="s1">&#39;CamelCase&#39;</span><span class="p">)</span>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">camel_case_to_words</span><span class="p">(</span><span class="s1">&#39;CamelCase&#39;</span><span class="p">)</span>
 <span class="go">&#39;Camel Case&#39;</span>
 </pre></div>
 </div>
@@ -151,7 +156,7 @@ Python variable names.</p>
 
 </div>
 <div class="section" id="module-traits.util.clean_strings">
-<span id="clean-strings-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">clean_strings</span></code> Module<a class="headerlink" href="#module-traits.util.clean_strings" title="Permalink to this headline">¶</a></h2>
+<span id="clean-strings-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">clean_strings</span></code> Module<a class="headerlink" href="#module-traits.util.clean_strings" title="Permalink to this headline">¶</a></h2>
 <p>Provides functions that mange strings to avoid characters that would be
 problematic in certain situations.</p>
 <dl class="function">
@@ -170,8 +175,8 @@ is provided, then uses the current time.</p>
 <p class="rubric">Description</p>
 <p>The timestamp is in ISO-8601 format with the following exceptions:</p>
 <ul class="simple">
-<li>Colons &#8216;:&#8217; are replaced by underscores &#8216;_&#8217;.</li>
-<li>Microseconds are not displayed if the &#8216;microseconds&#8217; parameter is
+<li>Colons ‘:’ are replaced by underscores ‘_’.</li>
+<li>Microseconds are not displayed if the ‘microseconds’ parameter is
 False.</li>
 </ul>
 <table class="docutils field-list" frame="void" rules="none">
@@ -179,8 +184,8 @@ False.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>dt</strong> (<em>None</em><em> or </em><em>datetime.datetime</em>) &#8211; If None, then the current time is used.</li>
-<li><strong>microseconds</strong> (<em>bool</em>) &#8211; Display microseconds or not.</li>
+<li><strong>dt</strong> (<em>None</em><em> or </em><em>datetime.datetime</em>) – If None, then the current time is used.</li>
+<li><strong>microseconds</strong> (<em>bool</em>) – Display microseconds or not.</li>
 </ul>
 </td>
 </tr>
@@ -199,7 +204,7 @@ False.</li>
 
 </div>
 <div class="section" id="module-traits.util.deprecated">
-<span id="deprecated-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">deprecated</span></code> Module<a class="headerlink" href="#module-traits.util.deprecated" title="Permalink to this headline">¶</a></h2>
+<span id="deprecated-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">deprecated</span></code> Module<a class="headerlink" href="#module-traits.util.deprecated" title="Permalink to this headline">¶</a></h2>
 <p>A decorator for marking methods/functions as deprecated.</p>
 <dl class="function">
 <dt id="traits.util.deprecated.deprecated">
@@ -209,25 +214,25 @@ False.</li>
 
 </div>
 <div class="section" id="module-traits.util.home_directory">
-<span id="home-directory-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">home_directory</span></code> Module<a class="headerlink" href="#module-traits.util.home_directory" title="Permalink to this headline">¶</a></h2>
+<span id="home-directory-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">home_directory</span></code> Module<a class="headerlink" href="#module-traits.util.home_directory" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="traits.util.home_directory.get_home_directory">
 <code class="descclassname">traits.util.home_directory.</code><code class="descname">get_home_directory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/home_directory.html#get_home_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.home_directory.get_home_directory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine the user&#8217;s home directory.</p>
+<dd><p>Determine the user’s home directory.</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-traits.util.resource">
-<span id="resource-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">resource</span></code> Module<a class="headerlink" href="#module-traits.util.resource" title="Permalink to this headline">¶</a></h2>
+<span id="resource-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">resource</span></code> Module<a class="headerlink" href="#module-traits.util.resource" title="Permalink to this headline">¶</a></h2>
 <p>Utility functions for managing and finding resources (ie. images/files etc).</p>
 <p>get_path :           Returns the absolute path of a class or instance</p>
 <dl class="docutils">
 <dt>create_unique_name <span class="classifier-delimiter">:</span> <span class="classifier">Creates a name with a given prefix that is not in a</span></dt>
 <dd>given list of existing names. The separator between the
 prefix and the rest of the name can also be specified
-(default is a &#8216;_&#8217;)</dd>
+(default is a ‘_’)</dd>
 <dt>find_resource:       Given a setuptools project specification string</dt>
-<dd>(&#8216;MyProject&gt;=2.1&#8217;) and a partial path leading from the
+<dd>(‘MyProject&gt;=2.1’) and a partial path leading from the
 projects base directory to the desired resource, will
 return either an opened file object or, if specified, a
 full path to the resource.</dd>
@@ -236,13 +241,13 @@ full path to the resource.</dd>
 <dt id="traits.util.resource.get_path">
 <code class="descclassname">traits.util.resource.</code><code class="descname">get_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/resource.html#get_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.get_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an absolute path for the specified path.</p>
-<p>&#8216;path&#8217; can be a string, class or instance.</p>
+<p>‘path’ can be a string, class or instance.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.util.resource.create_unique_name">
 <code class="descclassname">traits.util.resource.</code><code class="descname">create_unique_name</code><span class="sig-paren">(</span><em>prefix</em>, <em>names</em>, <em>separator='_'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/resource.html#create_unique_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.create_unique_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a name starting with &#8216;prefix&#8217; that is not in &#8216;names&#8217;.</p>
+<dd><p>Creates a name starting with ‘prefix’ that is not in ‘names’.</p>
 </dd></dl>
 
 <dl class="function">
@@ -254,22 +259,22 @@ full path to the resource.</dd>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>project</strong> (<em>str</em>) &#8211; The name of the project to look for the resource in. Can be the name or
-a requirement string. Ex: &#8216;MyProject&#8217;, &#8216;MyProject&gt;1.0&#8217;, &#8216;MyProject==1.1&#8217;</li>
-<li><strong>resource_path</strong> (<em>str</em>) &#8211; The path to the file from inside the package. If the file desired is
-MyProject/data/image.jpg, resource_path would be &#8216;data/image.jpg&#8217;.</li>
-<li><strong>alt_path</strong> (<em>str</em>) &#8211; The path to the resource relative to the location of the application&#8217;s
+<li><strong>project</strong> (<em>str</em>) – The name of the project to look for the resource in. Can be the name or
+a requirement string. Ex: ‘MyProject’, ‘MyProject&gt;1.0’, ‘MyProject==1.1’</li>
+<li><strong>resource_path</strong> (<em>str</em>) – The path to the file from inside the package. If the file desired is
+MyProject/data/image.jpg, resource_path would be ‘data/image.jpg’.</li>
+<li><strong>alt_path</strong> (<em>str</em>) – The path to the resource relative to the location of the application’s
 top-level script (the one with __main__). If this function is called in
 code/scripts/myscript.py and the resource is code/data/image.jpg, the
-alt_path would be &#8216;../data/image.jpg&#8217;. This path is only used if the
+alt_path would be ‘../data/image.jpg’. This path is only used if the
 resource cannot be found using setuptools.</li>
-<li><strong>return_path</strong> (<em>bool</em>) &#8211; Determines whether the function should return a file object or a full
+<li><strong>return_path</strong> (<em>bool</em>) – Determines whether the function should return a file object or a full
 path to the resource.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>file</strong> (<em>file object or file path</em>) &#8211;
-A file object containing the resource. If return_path is True, &#8216;file&#8217;
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>file</strong> (<em>file object or file path</em>) –
+A file object containing the resource. If return_path is True, ‘file’
 will be the full path to the resource. If the file is not found or
 cannot be opened, None is returned.</p>
 </td>
@@ -301,29 +306,29 @@ The return value in always None.</p>
 
 </div>
 <div class="section" id="module-traits.util.import_symbol">
-<span id="import-symbol-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">import_symbol</span></code> Module<a class="headerlink" href="#module-traits.util.import_symbol" title="Permalink to this headline">¶</a></h2>
+<span id="import-symbol-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">import_symbol</span></code> Module<a class="headerlink" href="#module-traits.util.import_symbol" title="Permalink to this headline">¶</a></h2>
 <p>A function to import symbols.</p>
 <dl class="function">
 <dt id="traits.util.import_symbol.import_symbol">
 <code class="descclassname">traits.util.import_symbol.</code><code class="descname">import_symbol</code><span class="sig-paren">(</span><em>symbol_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/import_symbol.html#import_symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.import_symbol.import_symbol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import the symbol defined by the specified symbol path.</p>
 <p class="rubric">Examples</p>
-<p>import_symbol(&#8216;tarfile:TarFile&#8217;) -&gt; TarFile
-import_symbol(&#8216;tarfile:TarFile.open&#8217;) -&gt; TarFile.open</p>
+<p>import_symbol(‘tarfile:TarFile’) -&gt; TarFile
+import_symbol(‘tarfile:TarFile.open’) -&gt; TarFile.open</p>
 <p>To allow compatibility with old-school traits symbol names we also allow
 all-dotted paths, but in this case you can only import top-level names
 from the module.</p>
-<p>import_symbol(&#8216;tarfile.TarFile&#8217;) -&gt; TarFile</p>
+<p>import_symbol(‘tarfile.TarFile’) -&gt; TarFile</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-traits.util.toposort">
-<span id="toposort-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">toposort</span></code> Module<a class="headerlink" href="#module-traits.util.toposort" title="Permalink to this headline">¶</a></h2>
+<span id="toposort-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">toposort</span></code> Module<a class="headerlink" href="#module-traits.util.toposort" title="Permalink to this headline">¶</a></h2>
 <p>A simple topological sort on a dictionary graph.</p>
 <dl class="exception">
 <dt id="traits.util.toposort.CyclicGraph">
 <em class="property">exception </em><code class="descclassname">traits.util.toposort.</code><code class="descname">CyclicGraph</code><a class="reference internal" href="../_modules/traits/util/toposort.html#CyclicGraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.toposort.CyclicGraph" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Exception for cyclic graphs.</p>
 </dd></dl>
 
@@ -335,7 +340,7 @@ from the module.</p>
 
 </div>
 <div class="section" id="module-traits.util.trait_documenter">
-<span id="trait-documenter-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">trait_documenter</span></code> Module<a class="headerlink" href="#module-traits.util.trait_documenter" title="Permalink to this headline">¶</a></h2>
+<span id="trait-documenter-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">trait_documenter</span></code> Module<a class="headerlink" href="#module-traits.util.trait_documenter" title="Permalink to this headline">¶</a></h2>
 <p>A Trait Documenter
 (Subclassed from the autodoc ClassLevelDocumenter)</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -349,7 +354,7 @@ from the module.</p>
 <dl class="class">
 <dt id="traits.util.trait_documenter.TraitDocumenter">
 <em class="property">class </em><code class="descclassname">traits.util.trait_documenter.</code><code class="descname">TraitDocumenter</code><span class="sig-paren">(</span><em>directive</em>, <em>name</em>, <em>indent=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sphinx.ext.autodoc.ClassLevelDocumenter</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx.ext.autodoc.ClassLevelDocumenter</span></code></p>
 <p>Specialized Documenter subclass for trait attributes.</p>
 <p>The class defines a new documenter that recovers the trait definition
 signature of module level and class level traits.</p>
@@ -411,7 +416,7 @@ advised.</p>
 <dl class="method">
 <dt id="traits.util.trait_documenter.TraitDocumenter.add_directive_header">
 <code class="descname">add_directive_header</code><span class="sig-paren">(</span><em>sig</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter.add_directive_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.add_directive_header" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the directive header &#8216;attribute&#8217; with the annotation
+<dd><p>Add the directive header ‘attribute’ with the annotation
 option set to the trait definition.</p>
 </dd></dl>
 
@@ -425,7 +430,7 @@ option set to the trait definition.</p>
 
 </div>
 <div class="section" id="module-traits.util.event_tracer">
-<span id="event-tracer-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">event_tracer</span></code> Module<a class="headerlink" href="#module-traits.util.event_tracer" title="Permalink to this headline">¶</a></h2>
+<span id="event-tracer-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">event_tracer</span></code> Module<a class="headerlink" href="#module-traits.util.event_tracer" title="Permalink to this headline">¶</a></h2>
 <p>Record trait change events in single and multi-threaded environments.</p>
 <dl class="class">
 <dt id="traits.util.event_tracer.SentinelRecord">
@@ -630,7 +635,7 @@ events for each thread in a separate file.</p>
 <code class="descclassname">traits.util.event_tracer.</code><code class="descname">record_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#record_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.record_events" title="Permalink to this definition">¶</a></dt>
 <dd><p>Multi-threaded trait change event tracer.</p>
 <p class="rubric">Usage</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">trace_recorder</span> <span class="k">import</span> <span class="n">record_events</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">trace_recorder</span> <span class="k">import</span> <span class="n">record_events</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">record_events</span><span class="p">()</span> <span class="k">as</span> <span class="n">change_event_container</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="n">my_model</span><span class="o">.</span><span class="n">some_trait</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">change_event_container</span><span class="o">.</span><span class="n">save_to_directory</span><span class="p">(</span><span class="s1">&#39;C:\dev</span><span class="se">\t</span><span class="s1">race&#39;</span><span class="p">)</span>
@@ -639,7 +644,7 @@ events for each thread in a separate file.</p>
 <p>This will install a tracer that will record all events that occur from
 setting of some_trait on the my_model instance.</p>
 <p>The results will be stored in one file per running thread in the
-directory &#8216;C:devtrace&#8217;.  The files are named after the thread being
+directory ‘C:devtrace’.  The files are named after the thread being
 traced.</p>
 </dd></dl>
 
@@ -655,27 +660,27 @@ traced.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">util</span></code> Package</a><ul>
-<li><a class="reference internal" href="#id1"><code class="docutils literal"><span class="pre">util</span></code> Package</a></li>
-<li><a class="reference internal" href="#module-traits.util.async_trait_wait"><code class="docutils literal"><span class="pre">async_trait_wait</span></code> Module</a></li>
-<li><a class="reference internal" href="#module-traits.util.camel_case"><code class="docutils literal"><span class="pre">camel_case</span></code> Module</a></li>
-<li><a class="reference internal" href="#module-traits.util.clean_strings"><code class="docutils literal"><span class="pre">clean_strings</span></code> Module</a></li>
-<li><a class="reference internal" href="#module-traits.util.deprecated"><code class="docutils literal"><span class="pre">deprecated</span></code> Module</a></li>
-<li><a class="reference internal" href="#module-traits.util.home_directory"><code class="docutils literal"><span class="pre">home_directory</span></code> Module</a></li>
-<li><a class="reference internal" href="#module-traits.util.resource"><code class="docutils literal"><span class="pre">resource</span></code> Module</a></li>
-<li><a class="reference internal" href="#module-traits.util.import_symbol"><code class="docutils literal"><span class="pre">import_symbol</span></code> Module</a></li>
-<li><a class="reference internal" href="#module-traits.util.toposort"><code class="docutils literal"><span class="pre">toposort</span></code> Module</a></li>
-<li><a class="reference internal" href="#module-traits.util.trait_documenter"><code class="docutils literal"><span class="pre">trait_documenter</span></code> Module</a></li>
-<li><a class="reference internal" href="#module-traits.util.event_tracer"><code class="docutils literal"><span class="pre">event_tracer</span></code> Module</a></li>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">util</span></code> Package</a><ul>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">util</span></code> Package</a></li>
+<li><a class="reference internal" href="#module-traits.util.async_trait_wait"><code class="docutils literal notranslate"><span class="pre">async_trait_wait</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.camel_case"><code class="docutils literal notranslate"><span class="pre">camel_case</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.clean_strings"><code class="docutils literal notranslate"><span class="pre">clean_strings</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.deprecated"><code class="docutils literal notranslate"><span class="pre">deprecated</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.home_directory"><code class="docutils literal notranslate"><span class="pre">home_directory</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.resource"><code class="docutils literal notranslate"><span class="pre">resource</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.import_symbol"><code class="docutils literal notranslate"><span class="pre">import_symbol</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.toposort"><code class="docutils literal notranslate"><span class="pre">toposort</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.trait_documenter"><code class="docutils literal notranslate"><span class="pre">trait_documenter</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.event_tracer"><code class="docutils literal notranslate"><span class="pre">event_tracer</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="traits.testing.html"
-                        title="previous chapter"><code class="docutils literal"><span class="pre">testing</span></code> Package</a></p>
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">testing</span></code> Package</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/traits.util.rst.txt"
@@ -683,12 +688,14 @@ traced.</p>
   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -707,13 +714,13 @@ traced.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2016, Enthought
+        &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jan 30, 2019.
+      Last updated on Apr 16, 2019.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.5.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
       </li>
     </ul>
     </div>
