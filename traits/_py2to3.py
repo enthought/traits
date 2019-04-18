@@ -17,8 +17,15 @@ else:
 # use from traitsui.
 # Once that PR is merged and a new release of traitsui is available, we can
 # remove these aliases for good.
-str_find = str.find
-str_rfind = str.rfind
+if six.PY2:
+    import string
+
+    str_find = string.find
+    str_rfind = string.rfind
+else:
+    str_find = str.find
+    str_rfind = str.rfind
+
 
 if six.PY2:
     from types import InstanceType, ClassType
@@ -80,10 +87,10 @@ else:
 
     class nested_context_mgrs(ExitStack):
         """ Emulation of python 2's :py:class:`contextlib.nested`.
-        
+
         It has gone from python 3 due to it's deprecation status
         in python 2.
-        
+
         Note that :py:class:`contextlib.nested` was deprecated for
         a reason: It has issues with context managers that fail
         during init. The same caveats also apply here.

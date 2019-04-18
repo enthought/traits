@@ -1,6 +1,16 @@
 Traits CHANGELOG
 ================
 
+Release 5.1.1
+-------------
+
+Released: 2019-04-18
+
+Fixes
+
+* Revert a change (#449) which accidentally broke external uses of
+  ``_py2to3.str_find`` and ``_py2to3.str_rfind``. (#472)
+
 Release 5.1.0
 -------------
 
