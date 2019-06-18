@@ -95,12 +95,19 @@ common_dependencies = {
     "traitsui",
 }
 
+# Dependencies we install from source for testing
+source_dependencies = {
+    "traitsui"
+}
+
 # Python 2-specific dependencies.
 python2_dependencies = {
     "mock",
 }
 
 supported_runtimes = ["2.7.13", "3.5.2", "3.6.0"]
+
+github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
 
 @click.group()
 def cli():
@@ -111,7 +118,8 @@ def cli():
 @click.option('--runtime', default='3.6')
 @click.option('--environment', default=None)
 @click.option('--docs/--no-docs', default=True)
-def install(runtime, environment, docs):
+@click.option('--source/--no-source', default=False)
+def install(runtime, environment, docs, source):
     """ Install project and dependencies into a clean EDM environment and
     optionally install further dependencies required for building
     documentation.
@@ -130,6 +138,16 @@ def install(runtime, environment, docs):
     ]
     click.echo("Creating environment '{environment}'".format(**parameters))
     execute(commands, parameters)
+    if source:
+        commands = ["edm plumbing remove-package --environment {environment} --force " + ' '.join(source_dependencies)]
+        execute(commands, parameters)
+        source_pkgs = [github_url_fmt.format(pkg) for pkg in source_dependencies]
+        commands = [
+            "python -m pip install {pkg} --no-deps".format(pkg=pkg)
+            for pkg in source_pkgs
+        ]
+        commands = ["edm run -e {environment} -- " + command for command in commands]
+        execute(commands, parameters)
     if docs:
         commands = [
             "edm run -e {environment} -- pip install -r "
