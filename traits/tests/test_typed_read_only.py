@@ -14,6 +14,12 @@
 #  Date:   05/24/2019
 #
 # ------------------------------------------------------------------------------
+import unittest
+
+
+from traits.api import (
+    HasStrictTraits, Int, List, TraitError, TypedReadOnly, Undefined)
+
 
 class Dummy(HasStrictTraits):
 
@@ -33,7 +39,6 @@ class Dummy(HasStrictTraits):
 
     def _value_2_changed(self, old, new):
         self.events_2.append((old, new))
-
 
 
 class TestTypedReadOnly(unittest.TestCase):
