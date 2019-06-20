@@ -983,6 +983,51 @@ class ReadOnly(TraitType):
 ReadOnly = ReadOnly()
 
 
+class TypedReadOnly(TraitType):
+    """ A typed write once read many trait.
+
+        The trait allows a compatible value (default is ``Any``) to be
+        assigned to the attribute if the current value is the
+        ``Undefined`` object. Once any other value is assigned, no
+        further assignment is allowed. Normally, the initial
+        assignment to the attribute is performed in the class
+        constructor, based on information passed to the
+        constructor. If the read-only value is known in advance of
+        run-time, use the ``Constant()`` function instead of
+        ``TypedReadOnly`` to define the trait.
+    """
+
+    def __init__(self, trait=Any, **metadata):
+        if isinstance(trait, type):
+            self.inner_traits = (trait(),)
+        else:
+            self.inner_traits = (trait,)
+        super(TypedReadOnly, self).__init__(**metadata)
+
+    def get(self, object, name, trait):
+        inner_trait = self.inner_traits[0]
+        value = inner_trait.get_value(object, name, trait)
+        if value is Undefined:
+            return inner_trait.get_default_value()[1]
+        else:
+            return value
+
+    def set(self, object, name, value):
+        cname = TraitsCache + name
+        old = object.__dict__.get(cname, Undefined)
+        if old is Undefined:
+            value = self.inner_traits[0].validate(object, name, value)
+            object.__dict__[cname] = value
+            object.trait_property_changed(name, old, value)
+        else:
+            message = u'Cannot set {!r} of {!r} more than once.'
+            raise TraitError(message.format(name, object.__class__.__name__))
+
+
+# Create a singleton instance as the trait:
+TypedReadOnly = TypedReadOnly()
+
+
 class Disallow(TraitType):
     """ A trait that prevents any value from being assigned or read.
 
