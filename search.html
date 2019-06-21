@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html>
@@ -15,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '5.1.0',
+        VERSION:     '5.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,6 +26,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <script type="text/javascript" src="_static/js/copybutton.js"></script>
     <script type="text/javascript" src="_static/js/wrap_on_dot.js"></script>
+    <script type="text/javascript" src="_static/searchtools.js"></script>
     <link rel="shortcut icon" href="_static/img/favicon.ico">
     <link rel="search" title="Search" href="#" >
     <link rel="top" title="Traits 5 User Manual" href="index.html" >
@@ -54,11 +54,7 @@
     <ul class="nav nav-pills pull-left">
 	
         <li class="active"><a href="index.html">Traits 5 User Manual</a></li>
-	
-  
-    <li><a href="#">Search</a></li>
-  
-
+	 
     </ul>
               
               
@@ -81,15 +77,23 @@
           <div class="body" id="spc-section-body">
             
   <h1 id="search-documentation">Search</h1>
+  <div id="fallback" class="admonition warning">
+  <script type="text/javascript">$('#fallback').hide();</script>
   <p>
-    Enter your search words into the box below and click 
-    <strong>search</strong>. Note that the search function automatically
-    searches for  <em>all</em> of the words. Pages containing some but not all
-    of them  won't appear in the result list.
+    Please activate JavaScript to enable the search
+    functionality.
+  </p>
+  </div>
+  <p>
+    From here you can search these documents. Enter your search
+    words into the box below and click "search". Note that the search
+    function will automatically search for all of the words. Pages
+    containing fewer words won't appear in the result list.
   </p>
   <form action="" method="get">
     <input type="text" name="q" value="" />
     <input type="submit" value="search" />
+    <span id="search-progress" style="padding-left: 10px"></span>
   </form>
   
   <div id="search-results">
@@ -123,7 +127,7 @@
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Apr 16, 2019.
+      Last updated on Jun 21, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
