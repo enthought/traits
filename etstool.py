@@ -88,10 +88,11 @@ import click
 common_dependencies = {
     "coverage",
     "cython",
-    "Sphinx",
+    "enthought_sphinx_theme",
     "nose",
     "numpy",
     "pyqt",
+    "Sphinx",
     "traitsui",
 }
 
