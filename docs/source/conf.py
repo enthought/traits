@@ -227,8 +227,7 @@ except ImportError as exc:
 
     msg = """Can't find Enthought Sphinx Theme, using default.
                 Exception was: {}
-                Enthought Sphinx Theme can be downloaded from
-                https://github.com/enthought/enthought-sphinx-theme"""
+                Enthought Sphinx Theme can be installed from PyPI or EDM"""
     warnings.warn(RuntimeWarning(msg.format(exc)))
 
     # Use old defaults if enthought-sphinx-theme not available
