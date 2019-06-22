@@ -16,7 +16,6 @@
 # ------------------------------------------------------------------------------
 import unittest
 
-
 from traits.api import (
     HasStrictTraits, Int, List, TraitError, TypedReadOnly, Undefined)
 
