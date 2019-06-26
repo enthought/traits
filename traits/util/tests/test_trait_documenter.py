@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 """ Tests for the trait documenter. """
 
+import contextlib
+import io
+import os
+import shutil
 import textwrap
+import tempfile
 import tokenize
 import unittest
 try:
@@ -11,7 +16,6 @@ except ImportError:
     # Python 2: need to use 3rd-party mock.
     import mock
 
-import pkg_resources
 import six
 
 try:
@@ -117,12 +121,14 @@ class TestTraitDocumenter(unittest.TestCase):
 
     def test_abbreviated_annotations(self):
         # Regression test for enthought/traits#493.
-        directive = self.create_test_directive()
-        documenter = TraitDocumenter(directive, __name__ + ".MyTestClass.bar")
-        documenter.generate(all_members=True)
+        with self.create_test_directive() as directive:
+            documenter = TraitDocumenter(
+                directive, __name__ + ".MyTestClass.bar")
+            documenter.generate(all_members=True)
+            result = directive.result
 
         # Find annotations line.
-        for item in directive.result:
+        for item in result:
             if item.lstrip().startswith(":annotation:"):
                 break
         else:
@@ -132,6 +138,7 @@ class TestTraitDocumenter(unittest.TestCase):
         self.assertIn("First line", item)
         self.assertNotIn("\n", item)
 
+    @contextlib.contextmanager
     def create_test_directive(self):
         """
         Helper function to create a a "directive" suitable
@@ -142,13 +149,21 @@ class TestTraitDocumenter(unittest.TestCase):
         directive : DocumenterBridge
 
         """
-        srcdir = pkg_resources.resource_filename(
-            "traits.util.tests",
-            "data/"
-        )
-        srcdir = path(srcdir)
+        with self.tmpdir() as tmpdir:
+            # The configuration file must exist, but it's okay if it's empty.
+            conf_file = os.path.join(tmpdir, "conf.py")
+            with io.open(conf_file, "w", encoding="utf-8") as f:
+                pass
 
-        app = SphinxTestApp(srcdir=srcdir)
-        app.builder.env.app = app
-        app.builder.env.temp_data["docname"] = "dummy"
-        return DocumenterBridge(app.env, LoggingReporter(''), Options(), 1)
+            app = SphinxTestApp(srcdir=path(tmpdir))
+            app.builder.env.app = app
+            app.builder.env.temp_data["docname"] = "dummy"
+            yield DocumenterBridge(app.env, LoggingReporter(''), Options(), 1)
+
+    @contextlib.contextmanager
+    def tmpdir(self):
+        tmpdir = tempfile.mkdtemp()
+        try:
+            yield tmpdir
+        finally:
+            shutil.rmtree(tmpdir)
