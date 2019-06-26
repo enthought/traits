@@ -152,7 +152,7 @@ class TestTraitDocumenter(unittest.TestCase):
         with self.tmpdir() as tmpdir:
             # The configuration file must exist, but it's okay if it's empty.
             conf_file = os.path.join(tmpdir, "conf.py")
-            with io.open(conf_file, "w", encoding="utf-8") as f:
+            with io.open(conf_file, "w", encoding="utf-8"):
                 pass
 
             app = SphinxTestApp(srcdir=path(tmpdir))
