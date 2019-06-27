@@ -5,8 +5,8 @@ import contextlib
 import io
 import os
 import shutil
-import textwrap
 import tempfile
+import textwrap
 import tokenize
 import unittest
 try:
