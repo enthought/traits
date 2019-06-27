@@ -30,8 +30,8 @@ from traits.api import HasTraits, Int
 if sphinx_available:
     from sphinx.ext.autodoc import Options
     from sphinx.ext.autodoc.directive import DocumenterBridge
-    from sphinx.testing.util import SphinxTestApp
     from sphinx.testing.path import path
+    from sphinx.testing.util import SphinxTestApp
     from sphinx.util.docutils import LoggingReporter
 
     from traits.util.trait_documenter import (
@@ -142,12 +142,13 @@ class TestTraitDocumenter(unittest.TestCase):
     def create_test_directive(self):
         """
         Helper function to create a a "directive" suitable
-        for instantiating the TraitDocumenter with.
+        for instantiating the TraitDocumenter with, along with resources
+        to support that directive, and clean up the resources afterwards.
 
         Returns
         -------
-        directive : DocumenterBridge
-
+        contextmanager
+            A context manager that returns a DocumenterBridge instance.
         """
         with self.tmpdir() as tmpdir:
             # The configuration file must exist, but it's okay if it's empty.
@@ -162,6 +163,14 @@ class TestTraitDocumenter(unittest.TestCase):
 
     @contextlib.contextmanager
     def tmpdir(self):
+        """
+        Helper function to create a temporary directory.
+
+        Returns
+        -------
+        contextmanager
+            Context manager that returns the path to a temporary directory.
+        """
         tmpdir = tempfile.mkdtemp()
         try:
             yield tmpdir
