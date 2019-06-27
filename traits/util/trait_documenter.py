@@ -112,6 +112,12 @@ class TraitDocumenter(ClassLevelDocumenter):
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
         definition = self._get_trait_definition()
+
+        # Workaround for enthought/traits#493: if the definition is multiline,
+        # throw away all lines after the first.
+        if "\n" in definition:
+            definition = definition.partition("\n")[0] + u" …"
+
         self.add_line(u"   :annotation: = {0}".format(definition), "<autodoc>")
 
     # Private Interface #####################################################
