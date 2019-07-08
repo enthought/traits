@@ -1,6 +1,17 @@
 Traits CHANGELOG
 ================
 
+Release 5.1.2
+-------------
+
+Released: 2019-04-18
+
+Fixes
+
+* Traits documenter no longer generates bad reST for multi-line
+  annotations. (#494)
+
+
 Release 5.1.1
 -------------
 
