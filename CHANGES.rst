@@ -4,7 +4,7 @@ Traits CHANGELOG
 Release 5.1.2
 -------------
 
-Released: 2019-04-18
+Released: 2019-07-08
 
 Fixes
 
