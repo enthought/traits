@@ -1,6 +1,17 @@
 Traits CHANGELOG
 ================
 
+Release 5.1.2
+-------------
+
+Released: 2019-07-08
+
+Fixes
+
+* Traits documenter no longer generates bad reST for traits whose definition
+  spans multiple source lines. (#494)
+
+
 Release 5.1.1
 -------------
 
