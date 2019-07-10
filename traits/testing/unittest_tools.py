@@ -43,7 +43,7 @@ class _AssertTraitChangesContext(object):
     Attributes
     ----------
     obj : HasTraits
-        The HasTraits class instance who's class trait will change.
+        The HasTraits class instance whose class trait will change.
 
     xname : str
         The extended trait name of trait changes to listen to.
@@ -71,7 +71,7 @@ class _AssertTraitChangesContext(object):
         Parameters
         ----------
         obj : HasTraits
-            The HasTraits class instance who's class trait will change.
+            The HasTraits class instance whose class trait will change.
 
         xname : str
             The extended trait name of trait changes to listen to.
@@ -426,7 +426,7 @@ class UnittestTools(object):
         Parameters
         ----------
         obj : HasTraits
-            The HasTraits class instance who's traits will change.
+            The HasTraits class instance whose traits will change.
 
         trait : str
             The extended trait name of trait changes to listen to.
