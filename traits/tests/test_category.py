@@ -15,6 +15,7 @@
 from __future__ import absolute_import
 
 import unittest
+import warnings
 
 from traits.api import HasTraits, Category, Str
 
@@ -45,6 +46,16 @@ class CategoryTestCase(unittest.TestCase):
     def setUp(self):
         self.base = Base()
         return
+
+    def test_category_deprecated(self):
+        return
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", DeprecationWarning)
+
+            class BaseExtension(Category, Base):
+                ext = Str("BaseExtension")
+
+        import pdb; pdb.set_trace()
 
     def test_base_category(self):
         """ Base class with traits """

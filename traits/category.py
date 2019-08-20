@@ -31,6 +31,8 @@
 
 from __future__ import absolute_import
 
+import warnings
+
 import six
 
 from .has_traits import (
@@ -51,6 +53,14 @@ from .has_traits import (
 
 class MetaCategory(MetaHasTraits):
     def __new__(cls, class_name, bases, class_dict):
+        # Categories are deprecated. See enthought/traits#319 for rationale.
+        warnings.warn(
+            (
+                "Use of the Category class is deprecated. Category will be "
+                "removed in a future version of Traits."
+            ),
+            DeprecationWarning,
+        )
 
         # Make sure the correct usage is being applied:
         if len(bases) > 2:
