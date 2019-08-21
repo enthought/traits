@@ -33,7 +33,7 @@ to create a test environment from the current codebase and::
 
 to run tests in that environment.  You can remove the environment with::
 
-    python etstool.py cleanup --runtime=...
+    python etstool.py clean --runtime=...
 
 If you make changes you will either need to remove and re-install the
 environment or manually update the environment using ``edm``, as
@@ -43,7 +43,7 @@ environment.  You can update with::
 
     python etstool.py update --runtime=...
 
-You can run install, test and cleanup all at once with::
+You can run install, test and clean all at once with::
 
     python etstool.py test-clean --runtime=...
 
@@ -243,7 +243,7 @@ def docs(edm, runtime, environment):
 @edm_option
 @runtime_option
 @click.option('--environment', default=None)
-def cleanup(edm, runtime, environment):
+def clean(edm, runtime, environment):
     """ Remove a development environment.
 
     """
@@ -251,24 +251,27 @@ def cleanup(edm, runtime, environment):
     commands = [
         "{edm} environments remove {environment} --purge -y"
     ]
-    click.echo("Cleaning up environment '{environment}'".format(**parameters))
+    click.echo("Removing environment '{environment}'".format(**parameters))
     execute(commands, parameters)
-    click.echo('Done cleanup')
+    click.echo("Environment removed.")
 
 
 @cli.command(name='test-clean')
 @runtime_option
 def test_clean(runtime):
-    """ Run tests in a clean environment, cleaning up afterwards
+    """ Run tests and build documentation.
+
+    Run tests and build documentation in a clean environment, cleaning up
+    afterwards.
 
     """
     args = ['--runtime={}'.format(runtime)]
+    install(args=args, standalone_mode=False)
     try:
-        install(args=args, standalone_mode=False)
         test(args=args, standalone_mode=False)
         docs(args=args, standalone_mode=False)
     finally:
-        cleanup(args=args, standalone_mode=False)
+        clean(args=args, standalone_mode=False)
 
 
 @cli.command()
@@ -290,7 +293,7 @@ def update(edm, runtime, environment):
 
 @cli.command(name='test-all')
 def test_all():
-    """ Run test_clean across all supported environment combinations.
+    """ Run test-clean across all supported environment combinations.
 
     """
     error = False
