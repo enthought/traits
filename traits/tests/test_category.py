@@ -48,7 +48,6 @@ class CategoryTestCase(unittest.TestCase):
         return
 
     def test_category_deprecated(self):
-        return
         with warnings.catch_warnings(record=True) as warn_msgs:
             warnings.simplefilter("always", DeprecationWarning)
 
