@@ -53,6 +53,7 @@ from .has_traits import (
 
 class MetaCategory(MetaHasTraits):
     def __new__(cls, class_name, bases, class_dict):
+
         # Make sure the correct usage is being applied:
         if len(bases) > 2:
             raise TypeError(
