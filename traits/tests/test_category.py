@@ -106,9 +106,7 @@ class CategoryTestCase(unittest.TestCase):
         return
 
     def test_subclasses_dont_modify_category_base_class(self):
-        # Regression test for enthought/traits#507
-        from traits.api import Category, HasTraits, Str
-
+        # Regression test for enthought/traits#507.
         self.assertEqual(Category.__class_traits__, {})
 
         class A(HasTraits):
