@@ -48,11 +48,13 @@ class CategoryTestCase(unittest.TestCase):
         return
 
     def test_category_deprecated(self):
+        class A(HasTraits):
+            a = Str()
+
         with warnings.catch_warnings(record=True) as warn_msgs:
             warnings.simplefilter("always", DeprecationWarning)
-
-            class BaseExtension(Category, Base):
-                ext = Str("BaseExtension")
+            class B(Category, A):
+                b = Str()
 
         # Expect one warning message, originating from the point where
         # the class is defined.
