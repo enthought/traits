@@ -69,7 +69,7 @@ installed by `pip`).
 
 Other changes to commands should be a straightforward change to the listed
 commands for each task. See the EDM documentation for more information about
-how to run commands within an EDM enviornment.
+how to run commands within an EDM environment.
 
 """
 
@@ -146,15 +146,16 @@ def install(runtime, environment, docs, source):
     packages = ' '.join(dependencies)
     # edm commands to setup the development environment
     commands = [
-        "edm environments create {environment} --force --version={runtime}",
-        "edm install -y -e {environment} " + packages,
-        "edm run -e {environment} -- python -m pip install --no-deps .",
+        "{edm} environments create {environment} --force --version={runtime}",
+        "{edm} install -y -e {environment} " + packages,
+        "{edm} run -e {environment} -- python -m pip install --no-deps .",
     ]
     click.echo("Creating environment '{environment}'".format(**parameters))
     execute(commands, parameters)
     if source:
         commands = [
-            "edm plumbing remove-package --environment {environment} --force "
+            "{edm} plumbing remove-package "
+            "--environment {environment} --force "
             + ' '.join(source_dependencies)
         ]
         execute(commands, parameters)
@@ -165,11 +166,11 @@ def install(runtime, environment, docs, source):
             for pkg in source_pkgs
         ]
         commands = [
-            "edm run -e {environment} -- " + command for command in commands]
+            "{edm} run -e {environment} -- " + command for command in commands]
         execute(commands, parameters)
     if docs:
         commands = [
-            "edm run -e {environment} -- pip install -r "
+            "{edm} run -e {environment} -- pip install -r "
             "ci-doc-requirements.txt --no-dependencies"
         ]
         execute(commands, parameters)
@@ -191,7 +192,7 @@ def test(runtime, environment):
     environ['PYTHONUNBUFFERED'] = "1"
 
     commands = [
-        "edm run -e {environment} -- coverage run -p -m nose.core -v traits "
+        "{edm} run -e {environment} -- coverage run -p -m nose.core -v traits "
         "--nologcapture"
     ]
 
@@ -218,7 +219,7 @@ def docs(runtime, environment):
     """
     parameters = get_parameters(runtime, environment)
     commands = [
-        "edm run -e {environment} -- sphinx-build -b html "
+        "{edm} run -e {environment} -- sphinx-build -b html "
         "-d build/doctrees source build/html",
     ]
     with do_in_existingdir(os.path.join(os.getcwd(), 'docs')):
@@ -234,8 +235,8 @@ def cleanup(runtime, environment):
     """
     parameters = get_parameters(runtime, environment)
     commands = [
-        "edm run -e {environment} -- python setup.py clean",
-        "edm environments remove {environment} --purge -y"
+        "{edm} run -e {environment} -- python setup.py clean",
+        "{edm} environments remove {environment} --purge -y"
     ]
     click.echo("Cleaning up environment '{environment}'".format(**parameters))
     execute(commands, parameters)
@@ -266,7 +267,7 @@ def update(runtime, environment):
     """
     parameters = get_parameters(runtime, environment)
     commands = [
-        "edm run -e {environment} -- python -m pip install --no-deps .",
+        "{edm} run -e {environment} -- python -m pip install --no-deps .",
     ]
     click.echo("Re-installing in  '{environment}'".format(**parameters))
     execute(commands, parameters)
@@ -299,6 +300,7 @@ def test_all():
 def get_parameters(runtime, environment):
     """ Set up parameters dictionary for format() substitution """
     parameters = {
+        'edm': locate_edm(),
         'runtime': runtime,
         'environment': environment
     }
@@ -372,6 +374,38 @@ def execute(commands, parameters):
         except subprocess.CalledProcessError as exc:
             print(exc)
             sys.exit(1)
+
+
+def locate_edm():
+    """
+    Locate an EDM executable, and raise a click exception if not found.
+
+    Returns
+    -------
+    edm : str
+        Path to the EDM executable to use.
+    """
+    if sys.platform == "win32":
+        cmd = ["where", "edm"]
+    else:
+        cmd = ["which", "edm"]
+
+    try:
+        cmd_output = subprocess.check_output(cmd)
+    except subprocess.CalledProcessError:
+        raise click.ClickException(
+            "This script requires EDM, but no EDM executable was found.")
+
+    # Don't try to be clever; just use the first candidate.
+    edm_candidates = cmd_output.decode("utf-8").splitlines()
+    edm = edm_candidates[0]
+
+    # On Windows, resolve edm.bat to the executable it wraps (the edm.bat
+    # wrapper mangles command lines in problematic ways).
+    if sys.platform == "win32" and os.path.basename(edm) == "edm.bat":
+        edm = os.path.join(os.path.dirname(edm), "embedded", "edm.exe")
+
+    return edm
 
 
 if __name__ == '__main__':
