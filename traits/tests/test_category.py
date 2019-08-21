@@ -54,7 +54,12 @@ class CategoryTestCase(unittest.TestCase):
             class BaseExtension(Category, Base):
                 ext = Str("BaseExtension")
 
-        import pdb; pdb.set_trace()
+        # Expect one warning message, originating from the point where
+        # the class is defined.
+        self.assertEqual(len(warn_msgs), 1)
+        warn_msg = warn_msgs[0]
+        self.assertIn("Category class is deprecated", str(warn_msg.message))
+        self.assertIn("test_category", warn_msg.filename)
 
     def test_base_category(self):
         """ Base class with traits """

@@ -69,6 +69,7 @@ class MetaCategory(MetaHasTraits):
                     "will be removed in a future version of Traits."
                 ),
                 DeprecationWarning,
+                stacklevel=2,
             )
 
         # Process any traits-related information in the class dictionary:
