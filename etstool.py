@@ -235,7 +235,6 @@ def cleanup(runtime, environment):
     """
     parameters = get_parameters(runtime, environment)
     commands = [
-        "{edm} run -e {environment} -- python setup.py clean",
         "{edm} environments remove {environment} --purge -y"
     ]
     click.echo("Cleaning up environment '{environment}'".format(**parameters))
