@@ -105,9 +105,6 @@ CHECK_INTERFACES = 0
 #  require Traits to work, because they subclass Traits, but the Traits
 #  meta-class programming support uses them, so Traits can't be subclassed
 #  until they are defined.
-#
-#  Note: We need to look at whether the Category support could be used to
-#        allow us to implement this better.
 # -------------------------------------------------------------------------------
 
 
@@ -519,7 +516,7 @@ class MetaHasTraits(type):
         MetaHasTraits._listeners[class_name].remove(listener)
 
 
-def update_traits_class_dict(class_name, bases, class_dict, is_category):
+def update_traits_class_dict(class_name, bases, class_dict, is_category=False):
     """ Processes all of the traits related data in the class dictionary.
 
     This is called during the construction of a new HasTraits class. The first
@@ -535,8 +532,12 @@ def update_traits_class_dict(class_name, bases, class_dict, is_category):
         The base classes for the HasTraits class.
     class_dict : dict
         A dictionary of class members.
-    is_category : bool
-        Whether this is a Category subclass.
+    is_category : bool, optional
+        Whether this is a Category subclass. The default is False.
+
+    .. deprecated:: 5.2
+       The category extension mechanism is deprecated, and the is_category
+       option will be removed in a future version of Traits.
 
     """
     # Create the various class dictionaries, lists and objects needed to
@@ -1313,6 +1314,11 @@ class HasTraits(CHasTraits):
     @classmethod
     def add_trait_category(cls, category):
         """ Adds a trait category to a class.
+
+        .. deprecated:: 5.2
+           The category extension mechanism is deprecated, and this method
+           will be removed in a future version of Traits.
+
         """
         if issubclass(category, HasTraits):
             cls._add_trait_category(

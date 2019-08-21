@@ -53,6 +53,7 @@ class CategoryTestCase(unittest.TestCase):
 
         with warnings.catch_warnings(record=True) as warn_msgs:
             warnings.simplefilter("always", DeprecationWarning)
+
             class B(Category, A):
                 b = Str()
 

@@ -56,7 +56,7 @@ class MetaCategory(MetaHasTraits):
     Metaclass providing magic for the category extension mechanism.
 
     .. deprecated:: 5.2
-       The Category extension mechanism is deprecated, and the Category
+       The category extension mechanism is deprecated, and the Category
        and MetaCategory classes will be removed in a future version of Traits.
 
     """
@@ -120,7 +120,7 @@ class Category(object):
     """ Used for defining "category" extensions to existing classes.
 
     .. deprecated:: 5.2
-       The Category extension mechanism is deprecated, and the Category
+       The category extension mechanism is deprecated, and the Category
        and MetaCategory classes will be removed in a future version of Traits.
 
     To define a class as a category, specify "Category," followed by the name
