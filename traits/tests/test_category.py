@@ -109,7 +109,7 @@ class CategoryTestCase(unittest.TestCase):
         # Regression test for enthought/traits#507
         from traits.api import Category, HasTraits, Str
 
-        self.assertFalse(Category.__class_traits__)
+        self.assertEqual(Category.__class_traits__, {})
 
         class A(HasTraits):
             a = Str()
@@ -120,4 +120,4 @@ class CategoryTestCase(unittest.TestCase):
         class C(Category, A):
             c = Str()
 
-        self.assertFalse(Category.__class_traits__)
+        self.assertEqual(Category.__class_traits__, {})
