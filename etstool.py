@@ -111,14 +111,6 @@ default_runtime = "3.6"
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
 
 
-@click.group()
-def cli():
-    """
-    Developer and CI support commands for Traits.
-    """
-    pass
-
-
 edm_option = click.option(
     "--edm",
     help=(
@@ -136,6 +128,14 @@ runtime_option = click.option(
     show_default=True,
     help="Python runtime version for the development environment",
 )
+
+
+@click.group()
+def cli():
+    """
+    Developer and CI support commands for Traits.
+    """
+    pass
 
 
 @cli.command()
@@ -258,12 +258,16 @@ def cleanup(edm, runtime, environment):
 
 
 @cli.command(name='test-clean')
+@edm_option
 @runtime_option
-def test_clean(runtime):
+def test_clean(edm, runtime):
     """ Run tests in a clean environment, cleaning up afterwards
 
     """
     args = ['--runtime={}'.format(runtime)]
+    if edm is not None:
+        args.append('--edm={}'.format(edm))
+
     try:
         install(args=args, standalone_mode=False)
         test(args=args, standalone_mode=False)
@@ -290,13 +294,17 @@ def update(edm, runtime, environment):
 
 
 @cli.command(name='test-all')
-def test_all():
+@edm_option
+def test_all(edm):
     """ Run test_clean across all supported environment combinations.
 
     """
     error = False
     for runtime in supported_runtimes:
         args = ['--runtime={}'.format(runtime)]
+        if edm is not None:
+            args.append('--edm={}'.format(edm))
+
         try:
             test_clean(args, standalone_mode=True)
         except SystemExit as exc:
@@ -395,20 +403,28 @@ def execute(commands, parameters):
 
 def locate_edm():
     """
-    Locate an EDM executable, and raise a click exception if not found.
+    Locate an EDM executable if it exists, else raise an exception.
+
+    Returns the first EDM executable found on the path. On Windows, if that
+    executable turns out to be the "edm.bat" batch file, replaces it with the
+    executable that it wraps: the batch file adds another level of command-line
+    mangling that interferes with things like specifying version restrictions.
 
     Returns
     -------
     edm : str
         Path to the EDM executable to use.
-    """
-    if sys.platform == "win32":
-        cmd = ["where", "edm"]
-    else:
-        cmd = ["which", "edm"]
 
+    Raises
+    ------
+    click.ClickException
+        If no EDM executable is found in the path.
+    """
+    # Once Python 2 no longer needs to be supported, we should use
+    # shutil.which instead.
+    which_cmd = "where" if sys.platform == "win32" else "which"
     try:
-        cmd_output = subprocess.check_output(cmd)
+        cmd_output = subprocess.check_output([which_cmd, "edm"])
     except subprocess.CalledProcessError:
         raise click.ClickException(
             "This script requires EDM, but no EDM executable was found.")
@@ -417,8 +433,7 @@ def locate_edm():
     edm_candidates = cmd_output.decode("utf-8").splitlines()
     edm = edm_candidates[0]
 
-    # On Windows, resolve edm.bat to the executable it wraps (the edm.bat
-    # wrapper mangles command lines in problematic ways).
+    # Resolve edm.bat on Windows.
     if sys.platform == "win32" and os.path.basename(edm) == "edm.bat":
         edm = os.path.join(os.path.dirname(edm), "embedded", "edm.exe")
 
