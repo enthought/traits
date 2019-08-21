@@ -153,14 +153,19 @@ def install(runtime, environment, docs, source):
     click.echo("Creating environment '{environment}'".format(**parameters))
     execute(commands, parameters)
     if source:
-        commands = ["edm plumbing remove-package --environment {environment} --force " + ' '.join(source_dependencies)]
+        commands = [
+            "edm plumbing remove-package --environment {environment} --force "
+            + ' '.join(source_dependencies)
+        ]
         execute(commands, parameters)
-        source_pkgs = [github_url_fmt.format(pkg) for pkg in source_dependencies]
+        source_pkgs = [
+            github_url_fmt.format(pkg) for pkg in source_dependencies]
         commands = [
             "python -m pip install {pkg} --no-deps".format(pkg=pkg)
             for pkg in source_pkgs
         ]
-        commands = ["edm run -e {environment} -- " + command for command in commands]
+        commands = [
+            "edm run -e {environment} -- " + command for command in commands]
         execute(commands, parameters)
     if docs:
         commands = [
@@ -337,6 +342,7 @@ def do_in_tempdir(files=(), capture_files=()):
     finally:
         os.chdir(old_path)
         rmtree(path)
+
 
 @contextmanager
 def do_in_existingdir(path):
