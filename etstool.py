@@ -13,15 +13,14 @@
 Tasks for Test Runs
 ===================
 
-This file is intended to be used with a python environment with the
-click library to automate the process of setting up test environments
-and running the test within them.  This improves repeatability and
+This file is intended to be used in a Python environment equipped with the
+click library, to automate the process of setting up test environments
+and running the tests within them.  This improves repeatability and
 reliability of tests be removing many of the variables around the
 developer's particular Python environment.  Test environment setup and
-package management is performed using `EDM
-http://docs.enthought.com/edm/`_
+package management is performed using `EDM http://docs.enthought.com/edm/`_
 
-To use this to run you tests, you will need to install EDM and click
+To use this to run your tests, you will need to install EDM and click
 into your working environment.  You will also need to have git
 installed to access required source code from github repositories.
 You can then do::
@@ -38,22 +37,22 @@ to run tests in that environment.  You can remove the environment with::
 
 If you make changes you will either need to remove and re-install the
 environment or manually update the environment using ``edm``, as
-the install performs a ``python setup.py install`` rather than a ``develop``,
+the install performs a ``pip install .`` rather than a ``pip install -e .``,
 so changes in your code will not be automatically mirrored in the test
-environment.  You can update with a command like::
+environment.  You can update with::
 
-    edm run --environment ... -- python setup.py install
+    python etstool.py update --runtime=...
 
-You can run all three tasks at once with::
+You can run install, test and cleanup all at once with::
 
     python etstool.py test-clean --runtime=...
 
-which will create, install, run tests, and then clean-up the environment.  And
+which will create, install, run tests, and then clean up the environment.  And
 you can run tests in all supported runtimes::
 
     python etstool.py test-all
 
-Currently supported runtime values are ``2.7`` and ``3.5``.  Not all
+Currently supported runtime values are ``2.7``, ``3.5`` and ``3.6``.  Not all
 combinations of runtimes will work, but the tasks will fail with
 a clear error if that is the case.
 
@@ -106,17 +105,31 @@ python2_dependencies = {
     "mock",
 }
 
-supported_runtimes = ["2.7.13", "3.5.2", "3.6.0"]
+supported_runtimes = ["2.7", "3.5", "3.6"]
+default_runtime = "3.6"
 
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
 
+
 @click.group()
 def cli():
+    """
+    Developer and CI support commands for Traits.
+    """
     pass
 
 
+runtime_option = click.option(
+    '--runtime',
+    default=default_runtime,
+    type=click.Choice(supported_runtimes),
+    show_default=True,
+    help="Python runtime version for the development environment",
+)
+
+
 @cli.command()
-@click.option('--runtime', default='3.6')
+@runtime_option
 @click.option('--environment', default=None)
 @click.option('--docs/--no-docs', default=True)
 @click.option('--source/--no-source', default=False)
@@ -161,7 +174,7 @@ def install(runtime, environment, docs, source):
 
 
 @cli.command()
-@click.option('--runtime', default='3.6')
+@runtime_option
 @click.option('--environment', default=None)
 def test(runtime, environment):
     """ Run the test suite in a given environment.
@@ -192,7 +205,7 @@ def test(runtime, environment):
 
 
 @cli.command()
-@click.option('--runtime', default='3.6')
+@runtime_option
 @click.option('--environment', default=None)
 def docs(runtime, environment):
     """ Build the html documentation.
@@ -208,7 +221,7 @@ def docs(runtime, environment):
 
 
 @cli.command()
-@click.option('--runtime', default='3.6')
+@runtime_option
 @click.option('--environment', default=None)
 def cleanup(runtime, environment):
     """ Remove a development environment.
@@ -225,7 +238,7 @@ def cleanup(runtime, environment):
 
 
 @cli.command(name='test-clean')
-@click.option('--runtime', default='3.6')
+@runtime_option
 def test_clean(runtime):
     """ Run tests in a clean environment, cleaning up afterwards
 
@@ -240,14 +253,16 @@ def test_clean(runtime):
 
 
 @cli.command()
-@click.option('--runtime', default='3.6')
+@runtime_option
 @click.option('--environment', default=None)
 def update(runtime, environment):
     """ Update/Reinstall package into environment.
 
     """
     parameters = get_parameters(runtime, environment)
-    commands = ["edm run -e {environment} -- python setup.py install"]
+    commands = [
+        "edm run -e {environment} -- python -m pip install --no-deps .",
+    ]
     click.echo("Re-installing in  '{environment}'".format(**parameters))
     execute(commands, parameters)
     click.echo('Done update')
@@ -354,4 +369,4 @@ def execute(commands, parameters):
 
 
 if __name__ == '__main__':
-    cli()
+    cli(prog_name="python etstool.py")
