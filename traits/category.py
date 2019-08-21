@@ -52,6 +52,14 @@ from .has_traits import (
 
 
 class MetaCategory(MetaHasTraits):
+    """
+    Metaclass providing magic for the category extension mechanism.
+
+    .. deprecated:: 5.2
+       The Category extension mechanism is deprecated, and the Category
+       and MetaCategory classes will be removed in a future version of Traits.
+
+    """
     def __new__(cls, class_name, bases, class_dict):
 
         # Make sure the correct usage is being applied:
@@ -110,6 +118,10 @@ class MetaCategory(MetaHasTraits):
 @six.add_metaclass(MetaCategory)
 class Category(object):
     """ Used for defining "category" extensions to existing classes.
+
+    .. deprecated:: 5.2
+       The Category extension mechanism is deprecated, and the Category
+       and MetaCategory classes will be removed in a future version of Traits.
 
     To define a class as a category, specify "Category," followed by the name
     of the base class name in the base class list.
