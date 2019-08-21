@@ -1347,6 +1347,13 @@ class HasTraits(CHasTraits):
         # Update the class and each of the existing subclasses:
         for subclass in [cls] + cls.trait_subclasses(True):
 
+            # The list of subclasses may include other Category
+            # subclasses. Those don't have the full complement of
+            # special dictionary attributes (ClassTraits and friends),
+            # so we shouldn't update them.
+            if BaseTraits not in subclass.__dict__:
+                continue
+
             # Merge the 'base_traits':
             subclass_traits = getattr(subclass, BaseTraits)
             for name, value in base_traits.items():

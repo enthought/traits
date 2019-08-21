@@ -104,3 +104,20 @@ class CategoryTestCase(unittest.TestCase):
         except SystemError:
             pass
         return
+
+    def test_subclasses_dont_modify_category_base_class(self):
+        # Regression test for enthought/traits#507
+        from traits.api import Category, HasTraits, Str
+
+        self.assertFalse(Category.__class_traits__)
+
+        class A(HasTraits):
+            a = Str()
+
+        class B(Category, A):
+            b = Str()
+
+        class C(Category, A):
+            c = Str()
+
+        self.assertFalse(Category.__class_traits__)
