@@ -1,7 +1,8 @@
-# Copyright (c) 2008-2013 by Enthought, Inc.
+# Copyright (c) 2008-2019 by Enthought, Inc.
 # All rights reserved.
 import os
 import re
+import runpy
 import subprocess
 import sys
 
@@ -58,6 +59,10 @@ def git_version():
 
 
 def write_version_py(filename='traits/_version.py'):
+    """
+    Obtain version information, write it to traits/_version.py, and
+    return the full version as a string.
+    """
     template = """\
 # THIS FILE IS GENERATED FROM TRAITS SETUP.PY
 version = '{version}'
@@ -76,13 +81,14 @@ if not is_released:
         git_rev, dev_num = git_version()
     elif os.path.exists('traits/_version.py'):
         # must be a source distribution, use existing version file
+        _version_globals = runpy.run_path("traits/_version.py")
         try:
-            from traits._version import git_revision as git_rev
-            from traits._version import full_version as full_v
-        except ImportError:
-            raise ImportError("Unable to import git_revision. Try removing "
-                              "traits/_version.py and the build directory "
-                              "before building.")
+            git_rev = _version_globals["git_revision"]
+            full_v = _version_globals["full_version"]
+        except KeyError:
+            raise RuntimeError(
+                "git_revision not found in traits/_version.py. Try removing "
+                "traits/_version.py and the build directory before building.")
 
         match = re.match(r'.*?\.dev(?P<dev_num>\d+)', full_v)
         if match is None:
@@ -101,6 +107,8 @@ if not is_released:
                                  full_version=fullversion,
                                  git_revision=git_rev,
                                  is_released=IS_RELEASED))
+
+    return fullversion
 
 
 def check_python_version():
@@ -124,8 +132,7 @@ def check_python_version():
 
 if __name__ == "__main__":
     check_python_version()
-    write_version_py()
-    from traits import __version__, __requires__
+    full_version = write_version_py()
 
     ctraits = Extension(
         'traits.ctraits',
@@ -134,11 +141,6 @@ if __name__ == "__main__":
         )
 
     def additional_commands():
-        # Pygments 2 isn't supported on Python 3 versions earlier than 3.3, so
-        # don't make the documentation command available there.
-        if (3,) <= sys.version_info < (3, 3):
-            return {}
-
         try:
             from sphinx.setup_command import BuildDoc
         except ImportError:
@@ -148,7 +150,7 @@ if __name__ == "__main__":
 
     setup(
         name='traits',
-        version=__version__,
+        version=full_version,
         url='http://docs.enthought.com/traits',
         author='David C. Morrill, et. al.',
         author_email='info@enthought.com',
@@ -178,7 +180,7 @@ if __name__ == "__main__":
         description='explicitly typed attributes for Python',
         long_description=open('README.rst').read(),
         download_url='https://github.com/enthought/traits',
-        install_requires=__requires__,
+        install_requires=["six"],
         ext_modules=[ctraits],
         license='BSD',
         maintainer='ETS Developers',
