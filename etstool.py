@@ -116,7 +116,7 @@ edm_option = click.option(
     help=(
         "Path to the EDM executable to use. The default is to use the first "
         "EDM found in the path. The EDM executable can also be specified "
-        "by setting the ETSTOOL_EDM variable."
+        "by setting the ETSTOOL_EDM environment variable."
     ),
     envvar="ETSTOOL_EDM",
 )
