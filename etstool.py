@@ -114,7 +114,7 @@ github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
 @click.group()
 def cli():
     """
-    Developer and CI support for Traits.
+    Developer and CI support commands for Traits.
     """
     pass
 
