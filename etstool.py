@@ -69,7 +69,7 @@ installed by `pip`).
 
 Other changes to commands should be a straightforward change to the listed
 commands for each task. See the EDM documentation for more information about
-how to run commands within an EDM environment.
+how to run commands within an EDM enviornment.
 
 """
 
@@ -114,7 +114,7 @@ github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
 @click.group()
 def cli():
     """
-    Developer and continuous integration support for Traits.
+    Developer and CI support for Traits.
     """
     pass
 
@@ -249,7 +249,8 @@ def cleanup(edm, runtime, environment):
     """
     parameters = get_parameters(edm, runtime, environment)
     commands = [
-        "{edm} environments remove {environment} --purge -y"
+        "{edm} run -e {environment} -- python setup.py clean",
+        "{edm} environments remove {environment} --purge -y",
     ]
     click.echo("Cleaning up environment '{environment}'".format(**parameters))
     execute(commands, parameters)
