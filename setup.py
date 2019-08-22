@@ -3,7 +3,6 @@
 
 from __future__ import absolute_import, print_function
 
-import io
 import os
 import runpy
 import subprocess
@@ -92,7 +91,7 @@ def write_version_file(version, git_revision):
     git_revision : str
         The full commit hash for the current Git revision.
     """
-    with io.open(VERSION_FILE, "w", encoding="utf-8") as version_file:
+    with open(VERSION_FILE, "w") as version_file:
         version_file.write(
             VERSION_FILE_TEMPLATE.format(
                 version=str(version), git_revision=git_revision
