@@ -77,7 +77,7 @@ import glob
 import os
 import subprocess
 import sys
-from shutil import copy as copyfile, rmtree
+from shutil import rmtree, copy as copyfile
 from tempfile import mkdtemp
 from contextlib import contextmanager
 
