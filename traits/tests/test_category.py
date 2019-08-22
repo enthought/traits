@@ -15,6 +15,7 @@
 from __future__ import absolute_import
 
 import unittest
+import warnings
 
 from traits.api import HasTraits, Category, Str
 
@@ -45,6 +46,23 @@ class CategoryTestCase(unittest.TestCase):
     def setUp(self):
         self.base = Base()
         return
+
+    def test_category_deprecated(self):
+        class A(HasTraits):
+            a = Str()
+
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", DeprecationWarning)
+
+            class B(Category, A):
+                b = Str()
+
+        # Expect one warning message, originating from the point where
+        # the class is defined.
+        self.assertEqual(len(warn_msgs), 1)
+        warn_msg = warn_msgs[0]
+        self.assertIn("Category class is deprecated", str(warn_msg.message))
+        self.assertIn("test_category", warn_msg.filename)
 
     def test_base_category(self):
         """ Base class with traits """
@@ -104,3 +122,18 @@ class CategoryTestCase(unittest.TestCase):
         except SystemError:
             pass
         return
+
+    def test_subclasses_dont_modify_category_base_class(self):
+        # Regression test for enthought/traits#507.
+        self.assertEqual(Category.__class_traits__, {})
+
+        class A(HasTraits):
+            a = Str()
+
+        class B(Category, A):
+            b = Str()
+
+        class C(Category, A):
+            c = Str()
+
+        self.assertEqual(Category.__class_traits__, {})
