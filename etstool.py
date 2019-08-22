@@ -77,10 +77,9 @@ import glob
 import os
 import subprocess
 import sys
-from contextlib import contextmanager
-from shutil import copy as copyfile
-from shutil import rmtree
+from shutil import copy as copyfile, rmtree
 from tempfile import mkdtemp
+from contextlib import contextmanager
 
 import click
 
