@@ -1,12 +1,12 @@
 from __future__ import absolute_import
 
-from traits._version import full_version as __version__
+try:
+    from traits._version import full_version as __version__
+except ImportError:
+    __version__ = "unknown"
 
 # Add a NullHandler so 'traits' loggers don't complain when they get used.
 import logging
-
-
-__requires__ = ["six"]
 
 
 class NullHandler(logging.Handler):
