@@ -40,10 +40,10 @@ from __future__ import unicode_literals
 
 #: The full version of the package, including a development suffix
 #: for unreleased versions of the package.
-version = '{version}'
+version = "{version}"
 
 #: The Git revision from which this release was made.
-git_revision = '{git_revision}'
+git_revision = "{git_revision}"
 """
 
 # Git executable to use to get revision information.
@@ -98,7 +98,7 @@ def write_version_file(version, git_revision):
 
     Parameters
     ----------
-    version : packaging.version.Version
+    version : str
         Package version.
     git_revision : str
         The full commit hash for the current Git revision.
@@ -137,7 +137,7 @@ def git_version():
 
     Returns
     -------
-    version : packaging.version.Version
+    version : str
         Package version.
     git_revision : str
         The full commit hash for the current Git revision.
@@ -166,7 +166,7 @@ def resolve_version():
 
     Returns
     -------
-    version : packaging.version.Version
+    version : str
         Package version.
     git_revision : str
         The full commit hash for the current Git revision.
