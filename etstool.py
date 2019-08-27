@@ -130,7 +130,7 @@ runtime_option = click.option(
 
 @cli.command()
 @runtime_option
-@click.option('--environment', default=None)
+@click.option('--environment', default=None, help='Name of the EDM environment to install')
 @click.option('--docs/--no-docs', default=True)
 @click.option('--source/--no-source', default=False)
 def install(runtime, environment, docs, source):
@@ -180,7 +180,7 @@ def install(runtime, environment, docs, source):
 
 @cli.command()
 @runtime_option
-@click.option('--environment', default=None)
+@click.option('--environment', default=None, help='Name of EDM environment to test.')
 def test(runtime, environment):
     """ Run the test suite in a given environment.
 
@@ -211,7 +211,7 @@ def test(runtime, environment):
 
 @cli.command()
 @runtime_option
-@click.option('--environment', default=None)
+@click.option('--environment', default=None, help='Name of EDM environment to build docs for.')
 def docs(runtime, environment):
     """ Build the html documentation.
 
@@ -227,7 +227,7 @@ def docs(runtime, environment):
 
 @cli.command()
 @runtime_option
-@click.option('--environment', default=None)
+@click.option('--environment', default=None, help='Name of EDM environment to remove.')
 def cleanup(runtime, environment):
     """ Remove a development environment.
 
@@ -259,7 +259,7 @@ def test_clean(runtime):
 
 @cli.command()
 @runtime_option
-@click.option('--environment', default=None)
+@click.option('--environment', default=None, help='Name of EDM environment to update.')
 def update(runtime, environment):
     """ Update/Reinstall package into environment.
 
