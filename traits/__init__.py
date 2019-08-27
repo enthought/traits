@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 try:
-    from traits._version import full_version as __version__
+    from traits.version import version as __version__
 except ImportError:
     # If we get here, we're using a source tree that hasn't been created via
     # the setup script. That likely also means that the ctraits extension
