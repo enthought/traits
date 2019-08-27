@@ -144,10 +144,14 @@ def install(runtime, environment, docs, source):
     if runtime.startswith("2."):
         dependencies.update(python2_dependencies)
     packages = ' '.join(dependencies)
-    # edm commands to setup the development environment
+
+    # EDM commands to setup the development environment. The installation
+    # of TraitsUI from EDM installs Traits as a dependency, so we need
+    # to explicitly uninstall it before re-installing from source.
     commands = [
         "edm environments create {environment} --force --version={runtime}",
         "edm install -y -e {environment} " + packages,
+        "edm plumbing remove-package -e {environment} traits",
         "edm run -e {environment} -- python -m pip install --no-deps .",
     ]
     click.echo("Creating environment '{environment}'".format(**parameters))
