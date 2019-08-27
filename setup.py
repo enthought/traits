@@ -5,7 +5,7 @@ import os
 import runpy
 import subprocess
 
-import packaging.version
+import pkg_resources
 import setuptools
 
 # Version information; update this by hand when making a new bugfix or feature
@@ -115,7 +115,7 @@ def read_version_file():
     """
     version_info = runpy.run_path(VERSION_FILE)
     return (
-        packaging.version.Version(version_info["version"]),
+        pkg_resources.parse_version(version_info["version"]),
         version_info["git_revision"],
     )
 
@@ -140,7 +140,7 @@ def git_version():
         because there's no Git repository here).
     """
     git_count, git_revision = _git_info()
-    version = packaging.version.Version(
+    version = pkg_resources.parse_version(
         (RELEASED_VERSION if IS_RELEASED else UNRELEASED_VERSION).format(
             major=MAJOR, minor=MINOR, micro=MICRO, dev=git_count
         )
