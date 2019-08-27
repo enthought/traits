@@ -70,7 +70,7 @@ def _git_info(commit="HEAD"):
     -------
     git_count : int
         Number of revisions from this commit to the initial commit.
-    git_revision : str
+    git_revision : unicode
         Commit hash for HEAD.
 
     Raises
@@ -98,9 +98,9 @@ def write_version_file(version, git_revision):
 
     Parameters
     ----------
-    version : str
+    version : unicode
         Package version.
-    git_revision : str
+    git_revision : unicode
         The full commit hash for the current Git revision.
     """
     with open(VERSION_FILE, "w") as version_file:
@@ -137,9 +137,9 @@ def git_version():
 
     Returns
     -------
-    version : str
+    version : unicode
         Package version.
-    git_revision : str
+    git_revision : unicode
         The full commit hash for the current Git revision.
 
     Raises
@@ -166,9 +166,9 @@ def resolve_version():
 
     Returns
     -------
-    version : str
+    version : unicode
         Package version.
-    git_revision : str
+    git_revision : unicode
         The full commit hash for the current Git revision.
     """
     if os.path.isdir(GIT_DIRECTORY):
