@@ -3,14 +3,9 @@ import unittest
 
 import six
 
-try:
-    import traitsui
-    HAS_TRAITSUI = True
-except ImportError:
-    HAS_TRAITSUI = False
-
 from traits.api import File, HasTraits, TraitError
-
+from traits.util.import_handler import import_handler
+traitsui, traitsui_available = import_handler('traitsui')
 
 class ExampleModel(HasTraits):
     file_name = File(exists=True)
@@ -58,7 +53,7 @@ class FileTestCase(unittest.TestCase):
 
 class TestCreateEditor(unittest.TestCase):
 
-    @unittest.skipUnless(HAS_TRAITSUI, "This test needs traitsui")
+    @unittest.skipUnless(traitsui_available, "This test needs traitsui")
     def test_exists_controls_editor_dialog_style(self):
         x = File(exists=True)
         editor = x.create_editor()
