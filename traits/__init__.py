@@ -15,6 +15,6 @@ except ImportError:
 # Add a NullHandler so 'traits' loggers don't complain when they get used.
 import logging
 
-logging.getLogger("traits").addHandler(logging.NullHandler())
+logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 del logging
