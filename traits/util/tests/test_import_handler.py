@@ -11,3 +11,32 @@
 #  Thanks for using Enthought open source!
 #
 # -----------------------------------------------------------------------------
+
+import sys
+from types import ModuleType
+import unittest
+
+from traits.util.import_handler import import_handler
+
+
+class MockModule(ModuleType):
+    """Mock module as object for testing"""
+    pass
+
+
+# Assign to sys modules to allow import
+sys.modules['mock_module'] = MockModule(name='mock')
+
+
+class TestImportHandler(unittest.TestCase):
+
+    def test_import_succeeds(self):
+
+        import_success, module = import_handler('mock_module')
+        self.assertTrue(import_success)
+        self.assertEqual(module.__name__, 'mock')
+
+    def test_import_fails(self):
+
+        import_success, module = import_handler('unavailable_module')
+        self.assertFalse(import_success)
