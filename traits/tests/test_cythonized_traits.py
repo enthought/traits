@@ -31,7 +31,7 @@ def has_no_compiler():
         return True
 
 
-def cython_unavailable():
+def cython_version():
     if cython_unavailable:
         return None
     from Cython.Compiler.Version import version
