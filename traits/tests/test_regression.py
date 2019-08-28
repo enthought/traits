@@ -6,7 +6,7 @@ import unittest
 import six
 import six.moves as sm
 
-
+print('hellow')
 from traits.has_traits import (
     HasStrictTraits,
     HasTraits,
