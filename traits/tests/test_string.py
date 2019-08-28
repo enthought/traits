@@ -17,14 +17,10 @@ Tests for the String trait type.
 """
 import unittest
 
-try:
-    import numpy
-except ImportError:
-    numpy_available = False
-else:
-    numpy_available = True
-
 from traits.api import HasTraits, String
+from traits.util.import_handler import import_handler
+
+numpy, numpy_available = import_handler('numpy')
 
 
 class A(HasTraits):

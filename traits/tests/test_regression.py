@@ -6,13 +6,6 @@ import unittest
 import six
 import six.moves as sm
 
-try:
-    import numpy
-except ImportError:
-    numpy_available = False
-else:
-    numpy_available = True
-    from traits.trait_numeric import Array
 
 from traits.has_traits import (
     HasStrictTraits,
@@ -22,6 +15,12 @@ from traits.has_traits import (
 )
 from traits.trait_errors import TraitError
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
+from traits.util.import_handler import import_handler
+
+numpy, numpy_available = import_handler('numpy')
+
+if numpy_available:
+    from traits.trait_numeric import Array
 
 
 class Dummy(HasTraits):

@@ -18,13 +18,6 @@ import unittest
 
 import six
 
-try:
-    import numpy
-except ImportError:
-    numpy_available = False
-else:
-    numpy_available = True
-
 from traits.api import Bool, Dict, HasTraits, Int, TraitError
 
 

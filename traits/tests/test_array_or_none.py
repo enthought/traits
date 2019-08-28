@@ -20,15 +20,11 @@ from __future__ import absolute_import
 
 import unittest
 
-try:
-    import numpy
-except ImportError:
-    numpy_available = False
-else:
-    numpy_available = True
-
 from traits.api import ArrayOrNone, HasTraits, NO_COMPARE, TraitError
 from traits.testing.unittest_tools import UnittestTools
+from traits.util.import_handler import import_handler
+
+numpy, numpy_available = import_handler('numpy')
 
 
 if numpy_available:

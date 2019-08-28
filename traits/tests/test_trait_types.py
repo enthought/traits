@@ -26,14 +26,10 @@ import shutil
 import subprocess
 import unittest
 
-try:
-    import numpy  # noqa F401
-except ImportError:
-    numpy_available = False
-else:
-    numpy_available = True
-
 from traits.api import Float, TraitType
+from traits.util.import_handler import import_handler
+
+numpy, numpy_available = import_handler('numpy')
 
 
 class TraitTypesTest(unittest.TestCase):

@@ -17,15 +17,12 @@ Tests for the Float trait type.
 """
 import unittest
 
-try:
-    import numpy
-except ImportError:
-    numpy_available = False
-else:
-    numpy_available = True
 import six
 
 from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
+from traits.util.import_handler import import_handler
+
+numpy, numpy_available = import_handler('numpy')
 
 if six.PY2:
     LONG_TYPE = long
