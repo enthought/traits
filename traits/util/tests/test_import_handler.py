@@ -40,3 +40,4 @@ class TestImportHandler(unittest.TestCase):
 
         import_success, module = import_handler('unavailable_module')
         self.assertFalse(import_success)
+        self.assertIsNone(module)
