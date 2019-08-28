@@ -18,14 +18,11 @@ except ImportError:
 
 import six
 
-try:
-    import sphinx  # noqa: F401
-except ImportError:
-    sphinx_available = False
-else:
-    sphinx_available = True
-
 from traits.api import HasTraits, Int
+from traits.util.import_handler import import_handler
+
+sphinx, sphinx_available = import_handler('sphinx')
+
 
 if sphinx_available:
     from sphinx.ext.autodoc import Options
