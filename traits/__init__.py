@@ -1,3 +1,6 @@
+# Copyright (c) 2008-2019 by Enthought, Inc.
+# All rights reserved.
+
 from __future__ import absolute_import
 
 try:
@@ -12,19 +15,6 @@ except ImportError:
 # Add a NullHandler so 'traits' loggers don't complain when they get used.
 import logging
 
+logging.getLogger(__name__).addHandler(logging.NullHandler())
 
-class NullHandler(logging.Handler):
-    def handle(self, record):
-        pass
-
-    def emit(self, record):
-        pass
-
-    def createLock(self):
-        self.lock = None
-
-
-logger = logging.getLogger(__name__)
-logger.addHandler(NullHandler())
-
-del logging, logger, NullHandler
+del logging
