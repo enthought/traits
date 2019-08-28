@@ -1210,20 +1210,6 @@ class Method(TraitType):
     info_text = "a method"
 
 
-if six.PY2:
-    from types import ClassType
-
-    class Class(TraitType):
-        """ Defines a trait whose value must be an old-style Python class.
-        """
-
-        #: The C-level fast validator to use:
-        fast_validate = (11, ClassType)
-
-        #: A description of the type of value this trait accepts:
-        info_text = "an old-style class"
-
-
 class Module(TraitType):
     """ Defines a trait whose value must be a Python module.
     """
@@ -3404,6 +3390,17 @@ class Type(BaseClass):
                 )
 
         return self.klass
+
+
+# -------------------------------------------------------------------------------
+#  'Subclass' trait:
+# -------------------------------------------------------------------------------
+
+
+class Subclass(Type):
+    """Alias for 'Type' trait."""
+    def __init__(self, value=None, klass=None, allow_none=True, **metadata):
+        super().__init__(value, klass, allow_none, **metadata)
 
 
 # -------------------------------------------------------------------------------

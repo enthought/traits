@@ -134,7 +134,7 @@ from .trait_types import (
 )
 
 try:
-    from .trait_types import Class, ListClass, ListInstance
+    from .trait_types import ListClass, ListInstance
 except ImportError:
     # Python 3 does not have old-style classes anymore, so Class does not exist
     # interestingly, ListInstance is not equivalent to List(Instance), but
