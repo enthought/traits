@@ -26,14 +26,14 @@ def import_handler(name):
 
     Returns
     -------
-    Tuple(Bool, None/module)
+    Tuple(None/module, Bool)
         Tuple containing a bool (whether or not a module is available) and the
         module object itself.
 
     """
     try:
         module = importlib.import_module(name)
-        return True, module
+        return module, True
 
     except ImportError:
-        return False, None
+        return None, False

@@ -32,12 +32,12 @@ class TestImportHandler(unittest.TestCase):
 
     def test_import_succeeds(self):
 
-        import_success, module = import_handler('mock_module')
+        module, import_success = import_handler('mock_module')
         self.assertTrue(import_success)
         self.assertEqual(module.__name__, 'mock')
 
     def test_import_fails(self):
 
-        import_success, module = import_handler('unavailable_module')
+        module, import_success = import_handler('unavailable_module')
         self.assertFalse(import_success)
         self.assertIsNone(module)
