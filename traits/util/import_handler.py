@@ -16,7 +16,7 @@ import importlib
 
 def import_handler(name):
     """
-    Handle import errors
+    Handle import errors if module is unavailable.
 
     Parameters
     ----------
