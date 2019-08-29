@@ -1,6 +1,8 @@
 import unittest
 
 from traits.has_traits import (
+    Any,
+    object_name_generator,
     update_traits_class_dict,
     on_trait_change,
     BaseTraits,
@@ -201,3 +203,23 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             class_dict[BaseTraits]["my_trait"],
             class_dict[ClassTraits]["my_trait"],
         )
+
+
+class DummyClass(object):
+
+    # Dummy Trait
+    a = Any()
+
+    # Dummy method
+    def b(self):
+        pass
+
+
+class TestUtilityFunctions(unittest.TestCase):
+
+    def test_each_trait_method(self):
+
+        result = list(object_name_generator(1))
+        expected = ['b']
+
+        self.assertEqual(result, expected)

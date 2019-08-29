@@ -1098,6 +1098,15 @@ def weak_arg(arg):
 # -------------------------------------------------------------------------------
 #  'HasTraits' class:
 # -------------------------------------------------------------------------------
+def object_name_generator(object):
+    """ Generates each (name, method) pair for a specified object.
+    """
+    dic = {}
+    for klass in object.__class__.__mro__:
+        for name, method in klass.__dict__.items():
+            if (type(method) is FunctionType) and (name not in dic):
+                dic[name] = True
+                yield name
 
 
 @six.add_metaclass(MetaHasTraits)
@@ -1786,7 +1795,7 @@ class HasTraits(CHasTraits):
             the object. This enables tab-completion in IPython.
         """
         trait_names = self.trait_names()
-        method_names = [method for method in self._each_trait_method(self)]
+        method_names = [method for method in object_name_generator(self)]
         class_attrs = list(vars(self.__class__).keys())
         return trait_names + method_names + class_attrs
 
@@ -3429,7 +3438,7 @@ class HasTraits(CHasTraits):
             prefix += "_"
         n = len(prefix)
         traits = self.__base_traits__
-        for name in self._each_trait_method(object):
+        for name in object_name_generator(object):
             if name[:n] == prefix:
                 if name[-8:] == "_changed":
                     short_name = name[n:-8]
@@ -3456,15 +3465,7 @@ class HasTraits(CHasTraits):
     #  Generates each (name, method) pair for a specified object:
     # ---------------------------------------------------------------------------
 
-    def _each_trait_method(self, object):
-        """ Generates each (name, method) pair for a specified object.
-        """
-        dic = {}
-        for klass in object.__class__.__mro__:
-            for name, method in klass.__dict__.items():
-                if (type(method) is FunctionType) and (name not in dic):
-                    dic[name] = True
-                    yield name
+
 
     # ---------------------------------------------------------------------------
     #  Handles adding/removing listeners for a generic 'Instance' trait:
