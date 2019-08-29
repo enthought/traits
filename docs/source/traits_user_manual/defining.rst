@@ -234,7 +234,7 @@ casting traits::
 Other Predefined Traits
 ```````````````````````
 The Traits package provides a number of other predefined traits besides those
-for simple types, corresponding to other commonly used data types; these
+for simple types, corresponding to other commonly used data types; ::these
 predefined traits are listed in the following table. Refer to  the
 *Traits API Reference*, in the section for the module traits.traits,
 for details. Most can be used either as simple names, which use their built-in
@@ -242,7 +242,7 @@ default values, or as callables, which can take additional arguments. If the
 trait cannot be used as a simple name, it is omitted from the Name column of
 the table.
 
-.. index:: Any(), Array(), Button(), Callable(), CArray(), Class(), Code()
+.. index:: Any(), Array(), Button(), Callable(), CArray(), Code()
 .. index:: Color(), CSet(), Constant(), Dict()
 .. index:: Directory(), Disallow, Either(), Enum()
 .. index:: Event(), Expression(), false, File(), Font()
@@ -276,8 +276,6 @@ the table.
 +------------------+----------------------------------------------------------+
 | CArray           | CArray( [*dtype* = None, *shape* = None, *value* = None, |
 |                  | *typecode* = None, \*\*\ *metadata*] )                   |
-+------------------+----------------------------------------------------------+
-| Class            | Class( [*value*, \*\*\ *metadata*] )                     |
 +------------------+----------------------------------------------------------+
 | Code             | Code( [*value* = '', *minlen* = 0, *maxlen* = sys.maxint,|
 |                  | *regex* = '', \*\*\ *metadata*] )                        |
@@ -332,11 +330,9 @@ the table.
 |                  | *module* = None, \*\*\ *metadata*] )                     |
 +------------------+----------------------------------------------------------+
 | List, ListBool,  | List([*trait* = None, *value* = None, *minlen* = 0,      |
-| ListClass,       | *maxlen* = sys.maxint, *items* = True, \*\*\ *metadata*])|
 | ListComplex,     |                                                          |
 | ListFloat,       |                                                          |
 | ListFunction,    |                                                          |
-| ListInstance,    |                                                          |
 | ListInt,         |                                                          |
 | ListMethod,      |                                                          |
 | ListStr,         |                                                          |

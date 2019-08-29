@@ -99,8 +99,6 @@ Traits
 
 .. autoclass:: Method
 
-.. autoclass:: Class
-
 .. autoclass:: Module
 
 .. autoclass:: Python
@@ -201,10 +199,6 @@ Traits
 .. autodata:: ListFunction
 
 .. autodata:: ListMethod
-
-.. autodata:: ListClass
-
-.. autodata:: ListInstance
 
 .. autodata:: ListThis
 
