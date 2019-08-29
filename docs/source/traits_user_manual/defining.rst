@@ -242,7 +242,7 @@ default values, or as callables, which can take additional arguments. If the
 trait cannot be used as a simple name, it is omitted from the Name column of
 the table.
 
-.. index:: Any(), Array(), Button(), Callable(), CArray(), Class(), Code()
+.. index:: Any(), Array(), Button(), Callable(), CArray(), Code()
 .. index:: Color(), CSet(), Constant(), Dict()
 .. index:: Directory(), Disallow, Either(), Enum()
 .. index:: Event(), Expression(), false, File(), Font()
