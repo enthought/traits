@@ -99,8 +99,6 @@ Traits
 
 .. autoclass:: Method
 
-.. autoclass:: Class
-
 .. autoclass:: Module
 
 .. autoclass:: Python
