@@ -3843,15 +3843,6 @@ ListFunction = List(FunctionType)
 #: List of method values; default value is [].
 ListMethod = List(MethodType)
 
-if six.PY2:
-    from types import ClassType, InstanceType
-
-    #: List of class values; default value is [].
-    ListClass = List(ClassType)
-
-    #: List of instance values; default value is [].
-    ListInstance = List(InstanceType)
-
 #: List of container type values; default value is [].
 ListThis = List(ThisClass)
 

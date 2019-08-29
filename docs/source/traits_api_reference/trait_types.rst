@@ -200,10 +200,6 @@ Traits
 
 .. autodata:: ListMethod
 
-.. autodata:: ListClass
-
-.. autodata:: ListInstance
-
 .. autodata:: ListThis
 
 .. autodata:: DictStrAny
