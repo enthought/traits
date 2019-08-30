@@ -219,7 +219,7 @@ class TestUtilityFunctions(unittest.TestCase):
 
     def test_each_trait_method(self):
 
-        result = list(object_name_generator(1))
+        result = list(object_name_generator(DummyClass()))
         expected = ['b']
 
         self.assertEqual(result, expected)
