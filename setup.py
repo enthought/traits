@@ -17,6 +17,11 @@ MINOR = 2
 MICRO = 0
 IS_RELEASED = False
 
+# If this file is part of a Git export (for example created with "git archive",
+# or downloaded from GitHub), ARCHIVE_COMMIT_HASH gives the full hash of the
+# commit that was exported.
+ARCHIVE_COMMIT_HASH = "$Format:%H$"
+
 # Templates for version strings.
 RELEASED_VERSION = u"{major}.{minor}.{micro}"
 UNRELEASED_VERSION = u"{major}.{minor}.{micro}.dev{dev}"
