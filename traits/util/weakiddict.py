@@ -9,7 +9,11 @@ the iteration. As this is not a common use for such caches, we have not
 bothered to make these dicts robust to that case.
 """
 
-import collections
+try:
+    from collections.abc import MutableMapping
+except ImportError:
+    from collections import MutableMapping
+
 from weakref import ref
 
 
@@ -22,7 +26,7 @@ def _remover(key_id, id_dict_ref):
     return callback
 
 
-class WeakIDDict(collections.MutableMapping):
+class WeakIDDict(MutableMapping):
     """ A weak-key-value dictionary that uses the id() of the key for
     comparisons.
     """
