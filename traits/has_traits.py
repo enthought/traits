@@ -2949,7 +2949,7 @@ class HasTraits(CHasTraits):
         del locked[name]
 
     def _sync_trait_items_modified(self, object, name, old, event):
-        n0 = event.index
+        n0 = 0 if event.index is None else event.index
         n1 = n0 + len(event.removed)
         name = name[:-6]
         info = self.__sync_trait__
