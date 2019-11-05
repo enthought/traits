@@ -510,6 +510,7 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(i1.calls, {x: 3 for x in range(5)})
         self.assertEqual(i1.ref.value, 3)
 
+    @unittest.expectedFailure  # Github issue #537
     def test_instance2(self):
         i2 = Instance2(tc=self)
 
@@ -628,6 +629,7 @@ class OnTraitChangeTest(unittest.TestCase):
         )
         self.assertEqual(i3.ref.value, [0, 1, 2, 3])
 
+    @unittest.expectedFailure  # Github issue #537
     def test_instance4(self):
         i4 = Instance4(tc=self)
 
@@ -670,6 +672,7 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(i4.calls,  {0: 1, 1: 0, 2: 0, 3: 0, 4: 0})
         self.assertEqual(i4.ref.value, {0: 0, 1: 1, 2: 2, 3: 3})
 
+    @unittest.expectedFailure  # Github issue #538
     def test_list1(self):
         l1 = List1(tc=self)
         for i in range(3):
@@ -682,7 +685,7 @@ class OnTraitChangeTest(unittest.TestCase):
                 type_new=TraitListEvent,
             )
             l1.refs.append(ac)
-        self.assertEqual(l1.calls, {0: 3, 3: 3, 4: 3})  # FIXME
+        self.assertEqual(l1.calls, {0: 3, 3: 3, 4: 3})
         for i in range(3):
             self.assertEqual(l1.refs[i].value, 0)
 
@@ -723,6 +726,7 @@ class OnTraitChangeTest(unittest.TestCase):
     def test_list3(self):
         self.check_list(List3(tc=self))
 
+    @unittest.expectedFailure  # Github issue #538
     def test_dict1(self):
         d1 = Dict1(tc=self)
         for i in range(3):
@@ -735,7 +739,7 @@ class OnTraitChangeTest(unittest.TestCase):
                 type_new=TraitDictEvent,
             )
             d1.refs[i] = ac
-        self.assertEqual(d1.calls, {0: 3, 3: 3, 4: 3})  # FIXME
+        self.assertEqual(d1.calls, {0: 3, 3: 3, 4: 3})
         for i in range(3):
             self.assertEqual(d1.refs[i].value, 0)
 
