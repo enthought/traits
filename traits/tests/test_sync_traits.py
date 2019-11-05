@@ -128,33 +128,6 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         with self.assertTraitDoesNotChange(a, "l"):
             b.l = [7, 8]
 
-    def test_sync_lists_partial_slice(self):
-        """ Test synchronization of list traits when there is a partial slice.
-
-        Regression test for enthought/traits#540
-        """
-
-        a = A()
-        b = B()
-
-        a.sync_trait("l", b)
-
-        # Change entire list.
-        a.l = [1, 2, 3]
-        self.assertEqual(a.l, b.l)
-        b.l = [4, 5]
-        self.assertEqual(a.l, b.l)
-
-        # Change list items with an empty slice.
-        with self.assertTraitChanges(b, "l_items"):
-            a.l[:] = [7]
-        self.assertEqual(b.l, [7])
-
-        # Change list items with a partial slice.
-        with self.assertTraitChanges(b, "l_items"):
-            a.l[:0] = [6]
-        self.assertEqual(b.l, [6, 7])
-
     def test_sync_delete(self):
         """ Test that deleting a synchronized trait works.
         """
