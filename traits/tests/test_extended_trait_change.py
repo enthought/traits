@@ -26,7 +26,6 @@ from traits.api import (
     Int,
     List,
     Property,
-    Set,
     TraitDictEvent,
     TraitError,
     TraitListEvent,
