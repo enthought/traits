@@ -313,7 +313,13 @@ class Array(AbstractArray):
     """
 
     def __init__(
-        self, dtype=None, shape=None, value=None, typecode=None, **metadata
+        self,
+        dtype=None,
+        shape=None,
+        value=None,
+        typecode=None,
+        casting="unsafe",
+        **metadata
     ):
         """ Returns an Array trait.
 
@@ -350,7 +356,13 @@ class Array(AbstractArray):
         does).
         """
         super(Array, self).__init__(
-            dtype, shape, value, False, typecode=typecode, **metadata
+            dtype,
+            shape,
+            value,
+            False,
+            typecode=typecode,
+            casting=casting,
+            **metadata
         )
 
 
@@ -365,7 +377,13 @@ class CArray(AbstractArray):
     """
 
     def __init__(
-        self, dtype=None, shape=None, value=None, typecode=None, **metadata
+        self,
+        dtype=None,
+        shape=None,
+        value=None,
+        typecode=None, 
+        casting="unsafe",
+        **metadata
     ):
         """ Returns a CArray trait.
 
@@ -402,7 +420,13 @@ class CArray(AbstractArray):
         numpy's **array** does).
         """
         super(CArray, self).__init__(
-            dtype, shape, value, True, typecode=typecode, **metadata
+            dtype,
+            shape,
+            value,
+            True,
+            typecode=typecode,
+            casting=casting,
+            **metadata
         )
 
 
