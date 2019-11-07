@@ -341,6 +341,10 @@ class Array(AbstractArray):
             second dimension must be at least 2.)
         value : numpy array
             A default value for the array.
+        casting : str
+            Casting rule for ``numpy.ndarray.astype``. Values that cannot be
+            cast to a supplied ``dtype`` according to this rule cannot be
+            assigned.
 
         Default Value
         -------------
@@ -404,6 +408,10 @@ class CArray(AbstractArray):
             second dimension must be at least 2.)
         value : numpy array
             A default value for the array.
+        casting : str
+            Casting rule for ``numpy.ndarray.astype``. Values that cannot be
+            cast to a supplied ``dtype`` according to this rule cannot be
+            assigned.
 
         Default Value
         -------------
