@@ -20,7 +20,7 @@ except ImportError:
 else:
     numpy_available = True
 
-from traits.api import Array, Bool, HasTraits
+from traits.api import Array, Bool, HasTraits, TraitError
 
 
 if numpy_available:
@@ -33,11 +33,9 @@ if numpy_available:
         def _a_changed(self):
             self.event_fired = True
 
-
+@unittest.skipUnless(numpy_available, "numpy not available")
 class ArrayTestCase(unittest.TestCase):
     """ Test cases for delegated traits. """
-
-    @unittest.skipUnless(numpy_available, "numpy not available")
     def test_zero_to_one_element(self):
         """ Test that an event fires when an Array trait changes from zero to
         one element.
@@ -54,3 +52,19 @@ class ArrayTestCase(unittest.TestCase):
         self.assertEqual(f.event_fired, True)
 
         return
+
+    def test_safe_casting(self):
+        class Bar(HasTraits):
+            unsafe_f32 = Array(dtype="float32")
+            safe_f32 = Array(dtype="float32", casting="safe")
+
+        f64 = numpy.array([1], dtype="float64")
+        f32 = numpy.array([1], dtype="float32")
+
+        b = Bar()
+
+        b.unsafe_f32 = f32
+        b.unsafe_f32 = f64
+        b.safe_f32 = f32
+        with self.assertRaises(TraitError):
+            b.safe_f32 = f64

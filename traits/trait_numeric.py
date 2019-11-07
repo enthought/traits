@@ -78,6 +78,7 @@ class AbstractArray(TraitType):
         value=None,
         coerce=False,
         typecode=None,
+        casting="unsafe",
         **metadata
     ):
         """ Returns an AbstractArray trait.
@@ -155,6 +156,7 @@ class AbstractArray(TraitType):
         self.dtype = dtype
         self.shape = shape
         self.coerce = coerce
+        self.casting = casting
 
         super(AbstractArray, self).__init__(value, **metadata)
 
@@ -174,11 +176,7 @@ class AbstractArray(TraitType):
 
             # Make sure the array is of the right type:
             if (self.dtype is not None) and (value.dtype != self.dtype):
-                if self.coerce:
-                    value = value.astype(self.dtype)
-                else:
-                    # XXX: this also coerces.
-                    value = asarray(value, self.dtype)
+                value = value.astype(self.dtype, casting=self.casting)
 
             # If no shape requirements, then return the value:
             trait_shape = self.shape
