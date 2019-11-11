@@ -18,7 +18,7 @@ Tests for the String trait type.
 import unittest
 
 from traits.api import HasTraits, String
-from traits.util.import_handler import import_handler
+from traits.testing.import_handler import import_handler
 
 numpy, numpy_available = import_handler('numpy')
 

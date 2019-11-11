@@ -27,7 +27,7 @@ import subprocess
 import unittest
 
 from traits.api import Float, TraitType
-from traits.util.import_handler import import_handler
+from traits.testing.import_handler import import_handler
 
 numpy, numpy_available = import_handler('numpy')
 

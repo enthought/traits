@@ -19,7 +19,7 @@ except ImportError:
 import six
 
 from traits.api import HasTraits, Int
-from traits.util.import_handler import import_handler
+from traits.testing.import_handler import import_handler
 
 sphinx, sphinx_available = import_handler('sphinx')
 

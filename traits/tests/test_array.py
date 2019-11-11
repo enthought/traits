@@ -14,7 +14,7 @@ from __future__ import absolute_import
 import unittest
 
 from traits.api import Array, Bool, HasTraits
-from traits.util.import_handler import import_handler
+from traits.testing.import_handler import import_handler
 
 numpy, numpy_available = import_handler('numpy')
 

@@ -19,7 +19,7 @@ Tests for Editor factories.
 import unittest
 
 from traits.traits import multi_line_text_editor
-from traits.util.import_handler import import_handler
+from traits.testing.import_handler import import_handler
 traitsui, traitsui_available = import_handler('traitsui')
 
 

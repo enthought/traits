@@ -20,7 +20,7 @@ import unittest
 import six
 
 from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
-from traits.util.import_handler import import_handler
+from traits.testing.import_handler import import_handler
 
 numpy, numpy_available = import_handler('numpy')
 

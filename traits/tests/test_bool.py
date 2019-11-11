@@ -19,7 +19,7 @@ import unittest
 import six
 
 from traits.api import Bool, Dict, HasTraits, Int, TraitError
-from traits.util.import_handler import import_handler
+from traits.testing.import_handler import import_handler
 
 numpy, numpy_available = import_handler('numpy')
 

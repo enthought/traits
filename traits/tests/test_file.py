@@ -4,7 +4,7 @@ import unittest
 import six
 
 from traits.api import File, HasTraits, TraitError
-from traits.util.import_handler import import_handler
+from traits.testing.import_handler import import_handler
 traitsui, traitsui_available = import_handler('traitsui')
 
 class ExampleModel(HasTraits):

@@ -14,7 +14,7 @@ from traits.has_traits import (
 )
 from traits.trait_errors import TraitError
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
-from traits.util.import_handler import import_handler
+from traits.testing.import_handler import import_handler
 
 numpy, numpy_available = import_handler('numpy')
 
