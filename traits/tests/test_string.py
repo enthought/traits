@@ -20,7 +20,8 @@ import unittest
 from traits.api import HasTraits, String
 from traits.testing.import_handler import import_handler
 
-numpy, numpy_available = import_handler('numpy')
+numpy = import_handler('numpy')
+requires_numpy = unittest.skipIf(numpy is None, "numpy not available")
 
 
 class A(HasTraits):
@@ -28,7 +29,7 @@ class A(HasTraits):
 
 
 class TestString(unittest.TestCase):
-    @unittest.skipUnless(numpy_available, "numpy not available")
+    @requires_numpy
     def test_accepts_numpy_string(self):
         numpy_string = numpy.str_("this is a numpy string!")
         a = A()

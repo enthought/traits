@@ -27,7 +27,9 @@ import six
 from traits.api import HasTraits, Int, TraitError
 from traits.testing.import_handler import import_handler
 
-numpy, numpy_available = import_handler('numpy')
+numpy = import_handler('numpy')
+requires_numpy = unittest.skipIf(numpy is None, "numpy not available")
+
 
 if six.PY2:
     LONG_TYPE = long
@@ -112,7 +114,7 @@ class TestInt(unittest.TestCase):
         with self.assertRaises(TraitError):
             a.integral = "23"
 
-    @unittest.skipUnless(numpy_available, "numpy not available")
+    @requires_numpy
     def test_numpy_types(self):
         a = A()
         a.integral = numpy.int32(23)

@@ -22,7 +22,9 @@ import six
 from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
 from traits.testing.import_handler import import_handler
 
-numpy, numpy_available = import_handler('numpy')
+numpy = import_handler('numpy')
+requires_numpy = unittest.skipIf(numpy is None, "numpy not available")
+
 
 if six.PY2:
     LONG_TYPE = long
@@ -144,7 +146,7 @@ class CommonFloatTests(object):
         self.assertIs(type(a.value_or_none), float)
         self.assertEqual(a.value_or_none, 2 ** 64)
 
-    @unittest.skipUnless(numpy_available, "Test requires NumPy")
+    @requires_numpy
     def test_accepts_numpy_floats(self):
         test_values = [
             numpy.float64(2.3),

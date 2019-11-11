@@ -24,10 +24,11 @@ from traits.api import ArrayOrNone, HasTraits, NO_COMPARE, TraitError
 from traits.testing.unittest_tools import UnittestTools
 from traits.testing.import_handler import import_handler
 
-numpy, numpy_available = import_handler('numpy')
+numpy = import_handler('numpy')
+requires_numpy = unittest.skipIf(numpy is None, "numpy not available")
 
 
-if numpy_available:
+if numpy is not None:
     # Use of `ArrayOrNone` requires NumPy to be installed.
 
     class Foo(HasTraits):
@@ -42,7 +43,7 @@ if numpy_available:
         maybe_array_no_compare = ArrayOrNone(comparison_mode=NO_COMPARE)
 
 
-@unittest.skipUnless(numpy_available, "numpy not available")
+@requires_numpy
 class TestArrayOrNone(unittest.TestCase, UnittestTools):
     """
     Tests for the ArrayOrNone TraitType.

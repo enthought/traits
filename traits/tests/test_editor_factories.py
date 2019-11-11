@@ -20,10 +20,11 @@ import unittest
 
 from traits.traits import multi_line_text_editor
 from traits.testing.import_handler import import_handler
-traitsui, traitsui_available = import_handler('traitsui')
+traitsui = import_handler('traitsui')
+requires_traitsui = unittest.skipIf(traitsui is None, "TraitsUI not available")
 
 
-@unittest.skipUnless(traitsui_available, "This test needs traitsui")
+@requires_traitsui
 class TestMultiLineEditor(unittest.TestCase):
     def test_auto_set_default(self):
         a = multi_line_text_editor(auto_set=False)

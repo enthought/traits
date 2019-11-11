@@ -16,9 +16,10 @@ from traits.trait_errors import TraitError
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
 from traits.testing.import_handler import import_handler
 
-numpy, numpy_available = import_handler('numpy')
+numpy = import_handler('numpy')
+requires_numpy = unittest.skipIf(numpy is None, "numpy not available")
 
-if numpy_available:
+if numpy is not None:
     from traits.trait_numeric import Array
 
 
@@ -218,7 +219,7 @@ class TestRegression(unittest.TestCase):
         # All the counts should be the same.
         self.assertEqual(counts[warmup:-1], counts[warmup + 1 :])
 
-    @unittest.skipUnless(numpy_available, "test requires NumPy")
+    @requires_numpy
     def test_exception_from_numpy_comparison_ignored(self):
         # Regression test for enthought/traits#376.
 

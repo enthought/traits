@@ -21,7 +21,9 @@ import six
 from traits.api import Bool, Dict, HasTraits, Int, TraitError
 from traits.testing.import_handler import import_handler
 
-numpy, numpy_available = import_handler('numpy')
+numpy = import_handler('numpy')
+requires_numpy = unittest.skipIf(numpy is None, "numpy not available")
+
 
 if six.PY2:
     LONG_TYPE = long
@@ -59,14 +61,14 @@ class TestBool(unittest.TestCase):
         self.assertEqual(type(a.foo), bool)
         self.assertFalse(a.foo)
 
-    @unittest.skipUnless(numpy_available, "numpy not available")
+    @requires_numpy
     def test_accepts_numpy_bool(self):
         # A bool trait should accept a NumPy bool_.
         a = A()
         a.foo = numpy.bool_(True)
         self.assertTrue(a.foo)
 
-    @unittest.skipUnless(numpy_available, "numpy not available")
+    @requires_numpy
     def test_numpy_bool_retrieved_as_bool(self):
         a = A()
         a.foo = numpy.bool_(True)
@@ -75,7 +77,7 @@ class TestBool(unittest.TestCase):
         a.foo = numpy.bool_(False)
         self.assertIsInstance(a.foo, bool)
 
-    @unittest.skipUnless(numpy_available, "numpy not available")
+    @requires_numpy
     def test_numpy_bool_accepted_as_dict_value(self):
         # Regression test for enthought/traits#299.
         class HasBoolDict(HasTraits):
@@ -85,7 +87,7 @@ class TestBool(unittest.TestCase):
         has_bool_dict.foo[1] = numpy.bool_(True)
         self.assertTrue(has_bool_dict.foo[1])
 
-    @unittest.skipUnless(numpy_available, "numpy not available")
+    @requires_numpy
     def test_numpy_bool_accepted_as_dict_key(self):
         # Regression test for enthought/traits#299.
         class HasBoolDict(HasTraits):

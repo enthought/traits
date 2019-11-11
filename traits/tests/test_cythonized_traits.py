@@ -15,12 +15,11 @@ import unittest
 from traits.testing.unittest_tools import UnittestTools
 from traits.testing.import_handler import import_handler
 
-cython, cython_available = import_handler('cython')
-cython_unavailable = not cython_available
+cython = import_handler('cython')
 
 
 def has_no_compiler():
-    if cython_unavailable:
+    if cython is None:
         return True
     # Easy way to check if we have access to a compiler
     code = "return 1+1"
@@ -32,7 +31,7 @@ def has_no_compiler():
 
 
 def cython_version():
-    if cython_unavailable:
+    if cython is None:
         return None
     from Cython.Compiler.Version import version
 

@@ -16,10 +16,11 @@ import unittest
 from traits.api import Array, Bool, HasTraits
 from traits.testing.import_handler import import_handler
 
-numpy, numpy_available = import_handler('numpy')
+numpy = import_handler('numpy')
+requires_numpy = unittest.skipIf(numpy is None, "numpy not available")
 
 
-if numpy_available:
+if numpy is not None:
     # Use of `Array` requires NumPy to be installed.
 
     class Foo(HasTraits):
@@ -33,7 +34,7 @@ if numpy_available:
 class ArrayTestCase(unittest.TestCase):
     """ Test cases for delegated traits. """
 
-    @unittest.skipUnless(numpy_available, "numpy not available")
+    @requires_numpy
     def test_zero_to_one_element(self):
         """ Test that an event fires when an Array trait changes from zero to
         one element.

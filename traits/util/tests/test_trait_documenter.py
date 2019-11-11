@@ -21,10 +21,11 @@ import six
 from traits.api import HasTraits, Int
 from traits.testing.import_handler import import_handler
 
-sphinx, sphinx_available = import_handler('sphinx')
+sphinx = import_handler('sphinx')
+requires_sphinx = unittest.skipIf(sphinx is None, "Sphinx not available")
 
 
-if sphinx_available:
+if sphinx is not None:
     from sphinx.ext.autodoc import Options
     from sphinx.ext.autodoc.directive import DocumenterBridge
     from sphinx.testing.path import path
@@ -35,11 +36,6 @@ if sphinx_available:
         _get_definition_tokens,
         TraitDocumenter,
     )
-
-skip_unless_sphinx_present = unittest.skipUnless(
-    sphinx_available,
-    "Sphinx is not available. Cannot test documenter.",
-)
 
 
 class MyTestClass(HasTraits):
@@ -57,7 +53,7 @@ class MyTestClass(HasTraits):
     """)
 
 
-@skip_unless_sphinx_present
+@requires_sphinx
 class TestTraitDocumenter(unittest.TestCase):
     """ Tests for the trait documenter. """
 
