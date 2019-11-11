@@ -15,6 +15,8 @@
 import importlib
 import unittest
 
+import six
+
 
 def optional_import(name):
     """
@@ -51,3 +53,6 @@ requires_sphinx = unittest.skipIf(sphinx is None, "Sphinx not available")
 
 traitsui = optional_import("traitsui")
 requires_traitsui = unittest.skipIf(traitsui is None, "TraitsUI not available")
+
+requires_python2 = unittest.skipUnless(six.PY2, "Applicable only to Python 2")
+conflicts_with_python2 = unittest.skipIf(six.PY2, "Does not apply to Python 2")
