@@ -126,7 +126,7 @@ class Instance1(HasTraits):
 
     ref = Instance(ArgCheckBase, ())
 
-    calls = calls = Dict({x: 0 for x in range(5)})
+    calls = Dict({x: 0 for x in range(5)})
     exp_object = Any
     exp_name = Any
     dst_name = Any
