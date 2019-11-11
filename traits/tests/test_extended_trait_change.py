@@ -122,9 +122,10 @@ class ArgCheckDecorator(ArgCheckBase):
         self.tc.assertEqual(new, self.value)
 
 
-class Instance1(HasTraits):
+class BaseInstance(HasTraits):
 
-    ref = Instance(ArgCheckBase, ())
+    #: An instance with a value trait we want to listen to.
+    ref = Instance(HasTraits)
 
     calls = Dict({x: 0 for x in range(5)})
     exp_object = Any
@@ -135,6 +136,9 @@ class Instance1(HasTraits):
     dst_new = Any
     tc = Any
 
+
+class InstanceValueListener(BaseInstance):
+
     @on_trait_change("ref.value")
     def arg_check0(self):
         self.calls[0] += 1
@@ -166,12 +170,27 @@ class Instance1(HasTraits):
         self.tc.assertEqual(new, self.exp_new)
 
 
-class Instance2(Instance1):
+class InstanceSimpleValue(InstanceValueListener):
 
+    #: An instance with a simple value trait we want to listen to.
+    ref = Instance(ArgCheckBase, ())
+
+
+class InstanceListValue(InstanceValueListener):
+
+    #: An instance with a list value trait we want to listen to.
     ref = Instance(ArgCheckList, ())
 
 
-class Instance3(Instance2):
+class InstanceDictValue(InstanceValueListener):
+
+    ref = Instance(ArgCheckDict, ())
+
+
+class InstanceValueListListener(BaseInstance):
+
+    #: An instance with a list value trait we want to listen to.
+    ref = Instance(ArgCheckList, ())
 
     @on_trait_change("ref.value[]")
     def arg_check0(self):
@@ -202,11 +221,6 @@ class Instance3(Instance2):
         self.tc.assertEqual(name, self.exp_name)
         self.tc.assertEqual(old, self.exp_old)
         self.tc.assertEqual(new, self.exp_new)
-
-
-class Instance4(Instance1):
-
-    ref = Instance(ArgCheckDict, ())
 
 
 class List1(HasTraits):
@@ -466,8 +480,8 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(ac.calls, (3 * 5))
         self.assertEqual(ac.value, 3)
 
-    def test_instance1(self):
-        i1 = Instance1(tc=self)
+    def test_instance_simple_value(self):
+        i1 = InstanceSimpleValue(tc=self)
         for i in range(3):
             i1.trait_set(
                 exp_object=i1.ref,
@@ -510,8 +524,8 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(i1.ref.value, 3)
 
     @unittest.expectedFailure  # Github issue #537
-    def test_instance2(self):
-        i2 = Instance2(tc=self)
+    def test_instance_list_value(self):
+        i2 = InstanceListValue(tc=self)
 
         i2.trait_set(
             exp_object=i2.ref,
@@ -554,8 +568,8 @@ class OnTraitChangeTest(unittest.TestCase):
         )
         self.assertEqual(i2.ref.value, [0, 1, 2, 3])
 
-    def test_instance3(self):
-        i3 = Instance3(tc=self)
+    def test_instance_value_list_listener(self):
+        i3 = InstanceValueListListener(tc=self)
 
         i3.trait_set(
             exp_object=i3.ref,
@@ -629,8 +643,8 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(i3.ref.value, [0, 1, 2, 3])
 
     @unittest.expectedFailure  # Github issue #537
-    def test_instance4(self):
-        i4 = Instance4(tc=self)
+    def test_instance_dict_value(self):
+        i4 = InstanceDictValue(tc=self)
 
         i4.trait_set(
             exp_object=i4.ref,
