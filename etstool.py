@@ -111,6 +111,7 @@ default_runtime = "3.6"
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
 
 
+# Click options shared by multiple commands.
 edm_option = click.option(
     "--edm",
     help=(
@@ -120,13 +121,17 @@ edm_option = click.option(
     ),
     envvar="ETSTOOL_EDM",
 )
-
 runtime_option = click.option(
     '--runtime',
     default=default_runtime,
     type=click.Choice(supported_runtimes),
     show_default=True,
     help="Python runtime version for the development environment",
+)
+editable_option = click.option(
+    '--editable/--not-editable',
+    default=False,
+    help="Install main package in 'editable' mode?  [default: --not-editable]",
 )
 
 
@@ -142,9 +147,10 @@ def cli():
 @edm_option
 @runtime_option
 @click.option('--environment', default=None, help='Name of the EDM environment to install')
+@editable_option
 @click.option('--docs/--no-docs', default=True)
 @click.option('--source/--no-source', default=False)
-def install(edm, runtime, environment, docs, source):
+def install(edm, runtime, environment, editable, docs, source):
     """ Install project and dependencies into a clean EDM environment and
     optionally install further dependencies required for building
     documentation.
@@ -163,8 +169,19 @@ def install(edm, runtime, environment, docs, source):
         "{edm} environments create {environment} --force --version={runtime}",
         "{edm} install -y -e {environment} " + packages,
         "{edm} plumbing remove-package -e {environment} traits",
-        "{edm} run -e {environment} -- python -m pip install --no-deps .",
     ]
+    if editable:
+        install_cmd = (
+            "{edm} run -e {environment} -- "
+            "python -m pip install --editable . --no-dependencies"
+        )
+    else:
+        install_cmd = (
+            "{edm} run -e {environment} -- "
+            "python -m pip install . --no-dependencies"
+        )
+    commands.append(install_cmd)
+
     click.echo("Creating environment '{environment}'".format(**parameters))
     execute(commands, parameters)
     if source:
@@ -284,14 +301,23 @@ def test_clean(edm, runtime):
 @edm_option
 @runtime_option
 @click.option('--environment', default=None, help='Name of EDM environment to update.')
-def update(edm, runtime, environment):
+@editable_option
+def update(edm, runtime, environment, editable):
     """ Update/Reinstall package into environment.
 
     """
     parameters = get_parameters(edm, runtime, environment)
-    commands = [
-        "{edm} run -e {environment} -- python -m pip install --no-deps .",
-    ]
+    if editable:
+        install_cmd = (
+            "{edm} run -e {environment} -- "
+            "python -m pip install --editable . --no-dependencies"
+        )
+    else:
+        install_cmd = (
+            "{edm} run -e {environment} -- "
+            "python -m pip install . --no-dependencies"
+        )
+    commands = [install_cmd]
     click.echo("Re-installing in  '{environment}'".format(**parameters))
     execute(commands, parameters)
     click.echo('Done update')

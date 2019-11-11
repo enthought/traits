@@ -3160,7 +3160,7 @@ class BaseInstance(BaseClass):
 
     def init_fast_validate(self):
         """ Does nothing for the BaseInstance' class. Used by the 'Instance',
-            'AdaptedTo' and 'AdaptsTo' classes to set up the C-level fast
+            'Supports' and 'AdaptsTo' classes to set up the C-level fast
             validator.
         """
         pass
@@ -3247,7 +3247,7 @@ class Supports(Instance):
     def as_ctrait(self):
         """ Returns a CTrait corresponding to the trait defined by this class.
         """
-        return self.modify_ctrait(super(AdaptedTo, self).as_ctrait())
+        return self.modify_ctrait(super(Supports, self).as_ctrait())
 
     def modify_ctrait(self, ctrait):
 
