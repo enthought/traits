@@ -19,7 +19,7 @@ Tests for Editor factories.
 import unittest
 
 from traits.traits import multi_line_text_editor
-from traits.testing.import_handler import requires_traitsui
+from traits.testing.optional_dependencies import requires_traitsui
 
 
 @requires_traitsui

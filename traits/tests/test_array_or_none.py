@@ -22,7 +22,7 @@ import unittest
 
 from traits.api import ArrayOrNone, HasTraits, NO_COMPARE, TraitError
 from traits.testing.unittest_tools import UnittestTools
-from traits.testing.import_handler import numpy, requires_numpy
+from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
 if numpy is not None:

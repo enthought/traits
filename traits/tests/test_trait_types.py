@@ -27,7 +27,7 @@ import subprocess
 import unittest
 
 from traits.api import Float, TraitType
-from traits.testing.import_handler import requires_numpy
+from traits.testing.optional_dependencies import requires_numpy
 
 
 class TraitTypesTest(unittest.TestCase):

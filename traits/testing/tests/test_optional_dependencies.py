@@ -16,7 +16,7 @@ import sys
 from types import ModuleType
 import unittest
 
-from traits.testing.import_handler import import_handler
+from traits.testing.optional_dependencies import import_handler
 
 
 class MockModule(ModuleType):

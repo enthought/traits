@@ -18,7 +18,7 @@ Tests for the String trait type.
 import unittest
 
 from traits.api import HasTraits, String
-from traits.testing.import_handler import numpy, requires_numpy
+from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
 class A(HasTraits):

@@ -19,7 +19,7 @@ except ImportError:
 import six
 
 from traits.api import HasTraits, Int
-from traits.testing.import_handler import sphinx, requires_sphinx
+from traits.testing.optional_dependencies import sphinx, requires_sphinx
 
 
 if sphinx is not None:

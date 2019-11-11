@@ -20,7 +20,7 @@ import unittest
 import six
 
 from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
-from traits.testing.import_handler import numpy, requires_numpy
+from traits.testing.optional_dependencies import numpy, requires_numpy
 
 if six.PY2:
     LONG_TYPE = long
