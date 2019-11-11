@@ -22,7 +22,7 @@ def import_handler(name):
     Parameters
     ----------
     name : Str
-        The name of the module being imported, lower case.
+        The name of the module being imported.
 
     Returns
     -------
