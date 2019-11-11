@@ -4,9 +4,7 @@ import unittest
 import six
 
 from traits.api import File, HasTraits, TraitError
-from traits.testing.import_handler import import_handler
-traitsui = import_handler('traitsui')
-requires_traitsui = unittest.skipIf(traitsui is None, "TraitsUI not available")
+from traits.testing.import_handler import requires_traitsui
 
 
 class ExampleModel(HasTraits):

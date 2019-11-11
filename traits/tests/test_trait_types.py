@@ -27,10 +27,7 @@ import subprocess
 import unittest
 
 from traits.api import Float, TraitType
-from traits.testing.import_handler import import_handler
-
-numpy = import_handler('numpy')
-requires_numpy = unittest.skipIf(numpy is None, "numpy not available")
+from traits.testing.import_handler import requires_numpy
 
 
 class TraitTypesTest(unittest.TestCase):

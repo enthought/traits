@@ -13,9 +13,7 @@ The tests need a Cython version > 0.19 and a compiler.
 import unittest
 
 from traits.testing.unittest_tools import UnittestTools
-from traits.testing.import_handler import import_handler
-
-cython = import_handler('cython')
+from traits.testing.import_handler import cython
 
 
 def has_no_compiler():

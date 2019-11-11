@@ -19,9 +19,7 @@ Tests for Editor factories.
 import unittest
 
 from traits.traits import multi_line_text_editor
-from traits.testing.import_handler import import_handler
-traitsui = import_handler('traitsui')
-requires_traitsui = unittest.skipIf(traitsui is None, "TraitsUI not available")
+from traits.testing.import_handler import requires_traitsui
 
 
 @requires_traitsui

@@ -19,10 +19,7 @@ except ImportError:
 import six
 
 from traits.api import HasTraits, Int
-from traits.testing.import_handler import import_handler
-
-sphinx = import_handler('sphinx')
-requires_sphinx = unittest.skipIf(sphinx is None, "Sphinx not available")
+from traits.testing.import_handler import sphinx, requires_sphinx
 
 
 if sphinx is not None:

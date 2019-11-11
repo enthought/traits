@@ -22,10 +22,7 @@ import unittest
 
 from traits.api import ArrayOrNone, HasTraits, NO_COMPARE, TraitError
 from traits.testing.unittest_tools import UnittestTools
-from traits.testing.import_handler import import_handler
-
-numpy = import_handler('numpy')
-requires_numpy = unittest.skipIf(numpy is None, "numpy not available")
+from traits.testing.import_handler import numpy, requires_numpy
 
 
 if numpy is not None:

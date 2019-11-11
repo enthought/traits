@@ -14,10 +14,7 @@ from traits.has_traits import (
 )
 from traits.trait_errors import TraitError
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
-from traits.testing.import_handler import import_handler
-
-numpy = import_handler('numpy')
-requires_numpy = unittest.skipIf(numpy is None, "numpy not available")
+from traits.testing.import_handler import numpy, requires_numpy
 
 if numpy is not None:
     from traits.trait_numeric import Array
