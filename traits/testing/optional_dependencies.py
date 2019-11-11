@@ -16,9 +16,9 @@ import importlib
 import unittest
 
 
-def import_handler(name):
+def optional_import(name):
     """
-    Handle import errors if module is unavailable.
+    Optionally import a module, returning None if that module is unavailable.
 
     Parameters
     ----------
@@ -40,14 +40,14 @@ def import_handler(name):
 
 
 # Commonly-used unittest skip decorators.
-cython = import_handler("cython")
+cython = optional_import("cython")
 requires_cython = unittest.skipIf(cython is None, "Cython not available")
 
-numpy = import_handler("numpy")
+numpy = optional_import("numpy")
 requires_numpy = unittest.skipIf(numpy is None, "NumPy not available")
 
-sphinx = import_handler("sphinx")
+sphinx = optional_import("sphinx")
 requires_sphinx = unittest.skipIf(sphinx is None, "Sphinx not available")
 
-traitsui = import_handler("traitsui")
+traitsui = optional_import("traitsui")
 requires_traitsui = unittest.skipIf(traitsui is None, "TraitsUI not available")

@@ -16,7 +16,7 @@ import sys
 from types import ModuleType
 import unittest
 
-from traits.testing.optional_dependencies import import_handler
+from traits.testing.optional_dependencies import optional_import
 
 
 class MockModule(ModuleType):
@@ -32,10 +32,10 @@ class TestImportHandler(unittest.TestCase):
 
     def test_import_succeeds(self):
 
-        module = import_handler('mock_module')
+        module = optional_import('mock_module')
         self.assertEqual(module.__name__, 'mock')
 
     def test_import_fails(self):
 
-        module = import_handler('unavailable_module')
+        module = optional_import('unavailable_module')
         self.assertIsNone(module)
