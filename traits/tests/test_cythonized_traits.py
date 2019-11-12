@@ -12,18 +12,12 @@ The tests need a Cython version > 0.19 and a compiler.
 """
 import unittest
 
-try:
-    import cython
-
-    no_cython = False
-except ImportError:
-    no_cython = True
-
 from traits.testing.unittest_tools import UnittestTools
+from traits.testing.optional_dependencies import cython
 
 
 def has_no_compiler():
-    if no_cython:
+    if cython is None:
         return True
     # Easy way to check if we have access to a compiler
     code = "return 1+1"
@@ -35,7 +29,7 @@ def has_no_compiler():
 
 
 def cython_version():
-    if no_cython:
+    if cython is None:
         return None
     from Cython.Compiler.Version import version
 
