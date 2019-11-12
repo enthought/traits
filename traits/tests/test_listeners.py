@@ -84,7 +84,7 @@ class GenerateFailingEvents(HasTraits):
 
 
 class Test_Listeners(unittest.TestCase):
-    def test(self):
+    def test_listeners(self):
         global events
 
         # FIXME: comparing floats

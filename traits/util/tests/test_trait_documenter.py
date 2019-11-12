@@ -111,7 +111,7 @@ class TestTraitDocumenter(unittest.TestCase):
 
     def test_abbreviated_annotations(self):
         # Regression test for enthought/traits#493.
-        with self.create_test_directive() as directive:
+        with self.create_directive() as directive:
             documenter = TraitDocumenter(
                 directive, __name__ + ".MyTestClass.bar")
             documenter.generate(all_members=True)
@@ -129,7 +129,7 @@ class TestTraitDocumenter(unittest.TestCase):
         self.assertNotIn("\n", item)
 
     @contextlib.contextmanager
-    def create_test_directive(self):
+    def create_directive(self):
         """
         Helper function to create a a "directive" suitable
         for instantiating the TraitDocumenter with, along with resources

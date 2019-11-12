@@ -26,7 +26,7 @@ class C(HasTraits):
 
 
 class PickleValidatedDictTestCase(unittest.TestCase):
-    def test(self):
+    def test_pickle_validated_dict(self):
 
         # And we must unpickle one
         x = sm.cPickle.dumps(C())
