@@ -14,6 +14,8 @@
 
 from __future__ import absolute_import, print_function
 
+import unittest
+
 from traits.api import HasTraits, Property
 
 
@@ -56,25 +58,26 @@ def on_anyvalue_changed(value):
     print("on_anyvalue_changed:", value)
 
 
-def test_property_notifications():
-    Test_1().value = "test 1"
-    Test_2().value = "test 2"
-    Test_3().value = "test 3"
+class TestPropertyNotifications(unittest.TestCase):
+    def test_property_notifications(self):
+        Test_1().value = "test 1"
+        Test_2().value = "test 2"
+        Test_3().value = "test 3"
 
-    test_4 = Test()
-    test_4.on_trait_change(on_value_changed, "value")
-    test_4.value = "test 4"
+        test_4 = Test()
+        test_4.on_trait_change(on_value_changed, "value")
+        test_4.value = "test 4"
 
-    test_5 = Test()
-    test_5.on_trait_change(on_anyvalue_changed)
-    test_5.value = "test 5"
+        test_5 = Test()
+        test_5.on_trait_change(on_anyvalue_changed)
+        test_5.value = "test 5"
 
-    test_6 = Test()
-    test_6.on_trait_change(on_value_changed, "value")
-    test_6.on_trait_change(on_anyvalue_changed)
-    test_6.value = "test 6"
+        test_6 = Test()
+        test_6.on_trait_change(on_value_changed, "value")
+        test_6.on_trait_change(on_anyvalue_changed)
+        test_6.value = "test 6"
 
-    test_7 = Test_3()
-    test_7.on_trait_change(on_value_changed, "value")
-    test_7.on_trait_change(on_anyvalue_changed)
-    test_7.value = "test 7"
+        test_7 = Test_3()
+        test_7.on_trait_change(on_value_changed, "value")
+        test_7.on_trait_change(on_anyvalue_changed)
+        test_7.value = "test 7"
