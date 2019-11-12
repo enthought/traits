@@ -1210,20 +1210,6 @@ class Method(TraitType):
     info_text = "a method"
 
 
-if six.PY2:
-    from types import ClassType
-
-    class Class(TraitType):
-        """ Defines a trait whose value must be an old-style Python class.
-        """
-
-        #: The C-level fast validator to use:
-        fast_validate = (11, ClassType)
-
-        #: A description of the type of value this trait accepts:
-        info_text = "an old-style class"
-
-
 class Module(TraitType):
     """ Defines a trait whose value must be a Python module.
     """
@@ -3174,7 +3160,7 @@ class BaseInstance(BaseClass):
 
     def init_fast_validate(self):
         """ Does nothing for the BaseInstance' class. Used by the 'Instance',
-            'AdaptedTo' and 'AdaptsTo' classes to set up the C-level fast
+            'Supports' and 'AdaptsTo' classes to set up the C-level fast
             validator.
         """
         pass
@@ -3261,7 +3247,7 @@ class Supports(Instance):
     def as_ctrait(self):
         """ Returns a CTrait corresponding to the trait defined by this class.
         """
-        return self.modify_ctrait(super(AdaptedTo, self).as_ctrait())
+        return self.modify_ctrait(super(Supports, self).as_ctrait())
 
     def modify_ctrait(self, ctrait):
 
@@ -3856,15 +3842,6 @@ ListFunction = List(FunctionType)
 
 #: List of method values; default value is [].
 ListMethod = List(MethodType)
-
-if six.PY2:
-    from types import ClassType, InstanceType
-
-    #: List of class values; default value is [].
-    ListClass = List(ClassType)
-
-    #: List of instance values; default value is [].
-    ListInstance = List(InstanceType)
 
 #: List of container type values; default value is [].
 ListThis = List(ThisClass)

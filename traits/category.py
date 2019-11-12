@@ -31,6 +31,8 @@
 
 from __future__ import absolute_import
 
+import warnings
+
 import six
 
 from .has_traits import (
@@ -50,12 +52,33 @@ from .has_traits import (
 
 
 class MetaCategory(MetaHasTraits):
+    """
+    Metaclass providing magic for the category extension mechanism.
+
+    .. deprecated:: 5.2
+       The category extension mechanism is deprecated, and the Category
+       and MetaCategory classes will be removed in a future version of Traits.
+
+    """
     def __new__(cls, class_name, bases, class_dict):
 
         # Make sure the correct usage is being applied:
         if len(bases) > 2:
             raise TypeError(
                 "Correct usage is: class FooCategory(Category,Foo):"
+            )
+
+        # Categories are deprecated. Only warn if len(bases) == 2 to avoid
+        # a spurious warning when creating the Category class itself.
+        if len(bases) == 2:
+            # See enthought/traits#319 for deprecation rationale.
+            warnings.warn(
+                (
+                    "Use of the Category class is deprecated. Category "
+                    "will be removed in a future version of Traits."
+                ),
+                DeprecationWarning,
+                stacklevel=2,
             )
 
         # Process any traits-related information in the class dictionary:
@@ -95,6 +118,10 @@ class MetaCategory(MetaHasTraits):
 @six.add_metaclass(MetaCategory)
 class Category(object):
     """ Used for defining "category" extensions to existing classes.
+
+    .. deprecated:: 5.2
+       The category extension mechanism is deprecated, and the Category
+       and MetaCategory classes will be removed in a future version of Traits.
 
     To define a class as a category, specify "Category," followed by the name
     of the base class name in the base class list.

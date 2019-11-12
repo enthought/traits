@@ -26,14 +26,8 @@ import shutil
 import subprocess
 import unittest
 
-try:
-    import numpy  # noqa F401
-except ImportError:
-    numpy_available = False
-else:
-    numpy_available = True
-
 from traits.api import Float, TraitType
+from traits.testing.optional_dependencies import requires_numpy
 
 
 class TraitTypesTest(unittest.TestCase):
@@ -48,7 +42,7 @@ class TraitTypesTest(unittest.TestCase):
         LazyProperty().as_ctrait()
         self.assertFalse(Float().transient)
 
-    @unittest.skipUnless(numpy_available, "test requires NumPy")
+    @requires_numpy
     def test_numpy_validators_loaded_if_numpy_present(self):
         # If 'numpy' is available, the numpy validators should be loaded,
         # even if numpy is imported after traits.

@@ -1,0 +1,2 @@
+# For archives, substitute the commit hash in the setup.py file.
+/setup.py export-subst

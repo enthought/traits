@@ -6,14 +6,6 @@ import unittest
 import six
 import six.moves as sm
 
-try:
-    import numpy
-except ImportError:
-    numpy_available = False
-else:
-    numpy_available = True
-    from traits.trait_numeric import Array
-
 from traits.has_traits import (
     HasStrictTraits,
     HasTraits,
@@ -22,6 +14,10 @@ from traits.has_traits import (
 )
 from traits.trait_errors import TraitError
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
+from traits.testing.optional_dependencies import numpy, requires_numpy
+
+if numpy is not None:
+    from traits.trait_numeric import Array
 
 
 class Dummy(HasTraits):
@@ -220,7 +216,7 @@ class TestRegression(unittest.TestCase):
         # All the counts should be the same.
         self.assertEqual(counts[warmup:-1], counts[warmup + 1 :])
 
-    @unittest.skipUnless(numpy_available, "test requires NumPy")
+    @requires_numpy
     def test_exception_from_numpy_comparison_ignored(self):
         # Regression test for enthought/traits#376.
 

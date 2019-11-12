@@ -14,6 +14,10 @@ import six
 import six.moves as sm
 
 from traits.api import CList, HasTraits, Instance, Int, List, Str, TraitError
+from traits.testing.optional_dependencies import (
+    conflicts_with_python2,
+    requires_python2,
+)
 
 
 class Foo(HasTraits):
@@ -355,14 +359,14 @@ class ListTestCase(unittest.TestCase):
         f.l.sort(key=lambda x: -ord(x), reverse=True)
         self.assertEqual(f.l, ["a", "b", "c", "d"])
 
-    @unittest.skipUnless(six.PY2, "Not for Python 3")
+    @requires_python2
     def test_sort_cmp(self):
         f = Foo()
         f.l = ["a", "c", "b", "d"]
         f.l.sort(cmp=lambda x, y: ord(x) - ord(y))
         self.assertEqual(f.l, ["a", "b", "c", "d"])
 
-    @unittest.skipIf(six.PY2, "Not for Python 2")
+    @conflicts_with_python2
     def test_sort_cmp_error(self):
         f = Foo()
         f.l = ["a", "c", "b", "d"]
