@@ -13,41 +13,11 @@ The tests need a Cython version > 0.19 and a compiler.
 import unittest
 
 from traits.testing.unittest_tools import UnittestTools
-from traits.testing.optional_dependencies import cython
+from traits.testing.optional_dependencies import cython, requires_cython
 
 
-def has_no_compiler():
-    if cython is None:
-        return True
-    # Easy way to check if we have access to a compiler
-    code = "return 1+1"
-    try:
-        cython.inline(code)
-        return False
-    except:
-        return True
-
-
-def cython_version():
-    if cython is None:
-        return None
-    from Cython.Compiler.Version import version
-
-    return tuple(int(v) for v in version.split("."))
-
-
-SKIP_TEST = has_no_compiler()
-
-
-# Cython 0.19 implementation of safe_type fails while parsing some of the
-# code. We provide a very basic implementation that always returns object
-# (we don't need any particular optimizations)
-def _always_object_type(arg, context):
-    return "object"
-
-
+@requires_cython
 class CythonizedTraitsTestCase(unittest.TestCase, UnittestTools):
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_simple_default_methods(self):
 
         code = """
@@ -62,11 +32,14 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(code)
+        obj = cython.inline(
+            code,
+            force=True,
+            language_level="3",
+        )
 
         self.assertEqual(obj.name, "Joe")
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_basic_events(self):
 
         code = """
@@ -78,12 +51,15 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(code)
+        obj = cython.inline(
+            code,
+            force=True,
+            language_level="3",
+        )
 
         with self.assertTraitChanges(obj, "name", count=1):
             obj.name = "changing_name"
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_static_handlers(self):
 
         code = """
@@ -99,14 +75,17 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(code, get_type=_always_object_type, force=True)
+        obj = cython.inline(
+            code,
+            force=True,
+            language_level="3",
+        )
 
         with self.assertTraitChanges(obj, "value", count=1):
             obj.name = "changing_name"
 
         self.assertEqual(obj.value, 1)
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_on_trait_change_decorator(self):
 
         code = """
@@ -125,10 +104,8 @@ return Test()
 
         obj = cython.inline(
             code,
-            get_type=_always_object_type,
             force=True,
-            locals={},
-            globals={},
+            language_level="3",
         )
 
         with self.assertTraitChanges(obj, "value", count=1):
@@ -136,7 +113,6 @@ return Test()
 
         self.assertEqual(obj.value, 1)
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_properties(self):
 
         code = """
@@ -155,10 +131,8 @@ return Test()
 
         obj = cython.inline(
             code,
-            get_type=_always_object_type,
             force=True,
-            locals={},
-            globals={},
+            language_level="3",
         )
 
         self.assertEqual(obj.name_len, len(obj.name))
@@ -167,11 +141,11 @@ return Test()
         obj.name = "Bob"
         self.assertEqual(obj.name_len, len(obj.name))
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_properties_with_standard_getter(self):
 
         code = """
 from traits.api import HasTraits, Str, Int, Property
+from traits.api import Unicode
 
 class Test(HasTraits):
     name = Str
@@ -186,10 +160,8 @@ return Test()
 
         obj = cython.inline(
             code,
-            get_type=_always_object_type,
             force=True,
-            locals={},
-            globals={},
+            language_level="3",
         )
 
         self.assertEqual(obj.name_len, len(obj.name))
@@ -198,7 +170,6 @@ return Test()
         obj.name = "Bob"
         self.assertEqual(obj.name_len, len(obj.name))
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_aliasing(self):
 
         code = """
@@ -222,10 +193,8 @@ return Test()
 
         obj = cython.inline(
             code,
-            get_type=_always_object_type,
             force=True,
-            locals={},
-            globals={},
+            language_level="3",
         )
 
         self.assertEqual(obj.funky_name, obj.name)
@@ -234,7 +203,6 @@ return Test()
         obj.name = "Bob"
         self.assertEqual(obj.funky_name, obj.name)
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_aliasing_different_scope(self):
 
         code = """
@@ -254,7 +222,11 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(code, get_type=_always_object_type)
+        obj = cython.inline(
+            code,
+            force=True,
+            language_level="3",
+        )
 
         self.assertEqual(obj.funky_name, obj.name)
 
@@ -262,7 +234,6 @@ return Test()
         obj.name = "Bob"
         self.assertEqual(obj.funky_name, obj.name)
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_lambda_failure(self):
 
         # Lambda function are converted like builtins when cythonized which
@@ -288,10 +259,8 @@ return Test()
         try:
             cython.inline(
                 code,
-                get_type=_always_object_type,
                 force=True,
-                locals={},
-                globals={},
+                language_level="3",
             )
         except:
             # We suppose we have an exception. Because of the usage of the
