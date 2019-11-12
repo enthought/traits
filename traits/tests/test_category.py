@@ -89,7 +89,7 @@ class CategoryTestCase(unittest.TestCase):
         Seems like the declaration of the subclass (BasePlusPlus) should fail.
         """
         try:
-            x = self.base.pp
+            self.base.pp
             self.fail(
                 msg="base.pp should have thrown AttributeError "
                 "as Category subclassing is not supported."
@@ -97,7 +97,7 @@ class CategoryTestCase(unittest.TestCase):
         except AttributeError:
             pass
 
-        basepp = BasePlusPlus()
+        BasePlusPlus()
         return
 
     def test_subclass_instance_category(self):
@@ -130,10 +130,13 @@ class CategoryTestCase(unittest.TestCase):
         class A(HasTraits):
             a = Str()
 
-        class B(Category, A):
-            b = Str()
+        with warnings.catch_warnings(record=True):
+            warnings.simplefilter("always", DeprecationWarning)
 
-        class C(Category, A):
-            c = Str()
+            class B(Category, A):
+                b = Str()
+
+            class C(Category, A):
+                c = Str()
 
         self.assertEqual(Category.__class_traits__, {})
