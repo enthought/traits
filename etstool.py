@@ -232,7 +232,8 @@ def test(edm, runtime, environment):
     environ["PYTHONUNBUFFERED"] = "1"
 
     commands = [
-        "{edm} run -e {environment} -- coverage run -p -m unittest discover -v traits"
+        "{edm} run -e {environment} -- "
+        "coverage run -p -m unittest discover -v traits"
     ]
 
     # We run in a tempdir to avoid accidentally picking up wrong traits
