@@ -93,8 +93,7 @@ class test_base2(unittest.TestCase):
         list[index1:index2:step] = value
 
     # This avoids using a method name that contains 'test' so that this is not
-    # called by the tester directly, as nose looks for all tests, regardless of
-    # the handler at the bottom of this file.
+    # called by the tester directly.
     def check_values(
         self,
         name,
