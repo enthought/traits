@@ -83,7 +83,7 @@ class GenerateFailingEvents(HasTraits):
         raise RuntimeError
 
 
-class Test_Listeners(unittest.TestCase):
+class TestListeners(unittest.TestCase):
     def test_listeners(self):
         global events
 
