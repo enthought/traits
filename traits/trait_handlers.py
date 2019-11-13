@@ -2537,7 +2537,7 @@ class TraitListObject(list):
                     # In this case, we return a TraitListEvent with an
                     # index=key.start and the removed and added lists as they
                     # are.
-                    index = key.start
+                    index = 0 if key.start is None else key.start
                 else:
                     # Otherwise, we have an extended slice which was handled,
                     # badly, by __setitem__ before. In this case, we return the
@@ -2594,7 +2594,7 @@ class TraitListObject(list):
             if step == 1:
                 # FIXME: See corresponding comment in __setitem__() for
                 # explanation.
-                index = key.start
+                index = 0 if key.start is None else key.start
             else:
                 index = key
                 removed = [removed]

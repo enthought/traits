@@ -83,8 +83,8 @@ class GenerateFailingEvents(HasTraits):
         raise RuntimeError
 
 
-class Test_Listeners(unittest.TestCase):
-    def test(self):
+class TestListeners(unittest.TestCase):
+    def test_listeners(self):
         global events
 
         # FIXME: comparing floats

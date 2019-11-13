@@ -17,15 +17,11 @@ Tests for the Float trait type.
 """
 import unittest
 
-try:
-    import numpy
-except ImportError:
-    numpy_available = False
-else:
-    numpy_available = True
 import six
 
 from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
+from traits.testing.optional_dependencies import (
+    numpy, requires_numpy, requires_python2)
 
 if six.PY2:
     LONG_TYPE = long
@@ -123,7 +119,7 @@ class CommonFloatTests(object):
         a.float_or_text = u"not a float"
         self.assertEqual(a.float_or_text, u"not a float")
 
-    @unittest.skipUnless(six.PY2, "Not applicable to Python 3")
+    @requires_python2
     def test_accepts_small_long(self):
         a = self.test_class()
         a.value = LONG_TYPE(2)
@@ -134,7 +130,7 @@ class CommonFloatTests(object):
         self.assertIs(type(a.value_or_none), float)
         self.assertEqual(a.value_or_none, 2.0)
 
-    @unittest.skipUnless(six.PY2, "Not applicable to Python 3")
+    @requires_python2
     def test_accepts_large_long(self):
         a = self.test_class()
 
@@ -147,7 +143,7 @@ class CommonFloatTests(object):
         self.assertIs(type(a.value_or_none), float)
         self.assertEqual(a.value_or_none, 2 ** 64)
 
-    @unittest.skipUnless(numpy_available, "Test requires NumPy")
+    @requires_numpy
     def test_accepts_numpy_floats(self):
         test_values = [
             numpy.float64(2.3),

@@ -18,16 +18,11 @@ except ImportError:
 
 import six
 
-try:
-    import sphinx  # noqa: F401
-except ImportError:
-    sphinx_available = False
-else:
-    sphinx_available = True
-
 from traits.api import HasTraits, Int
+from traits.testing.optional_dependencies import sphinx, requires_sphinx
 
-if sphinx_available:
+
+if sphinx is not None:
     from sphinx.ext.autodoc import Options
     from sphinx.ext.autodoc.directive import DocumenterBridge
     from sphinx.testing.path import path
@@ -38,11 +33,6 @@ if sphinx_available:
         _get_definition_tokens,
         TraitDocumenter,
     )
-
-skip_unless_sphinx_present = unittest.skipUnless(
-    sphinx_available,
-    "Sphinx is not available. Cannot test documenter.",
-)
 
 
 class MyTestClass(HasTraits):
@@ -60,7 +50,7 @@ class MyTestClass(HasTraits):
     """)
 
 
-@skip_unless_sphinx_present
+@requires_sphinx
 class TestTraitDocumenter(unittest.TestCase):
     """ Tests for the trait documenter. """
 
@@ -121,7 +111,7 @@ class TestTraitDocumenter(unittest.TestCase):
 
     def test_abbreviated_annotations(self):
         # Regression test for enthought/traits#493.
-        with self.create_test_directive() as directive:
+        with self.create_directive() as directive:
             documenter = TraitDocumenter(
                 directive, __name__ + ".MyTestClass.bar")
             documenter.generate(all_members=True)
@@ -139,7 +129,7 @@ class TestTraitDocumenter(unittest.TestCase):
         self.assertNotIn("\n", item)
 
     @contextlib.contextmanager
-    def create_test_directive(self):
+    def create_directive(self):
         """
         Helper function to create a a "directive" suitable
         for instantiating the TraitDocumenter with, along with resources

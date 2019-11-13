@@ -93,8 +93,7 @@ class test_base2(unittest.TestCase):
         list[index1:index2:step] = value
 
     # This avoids using a method name that contains 'test' so that this is not
-    # called by the tester directly, as nose looks for all tests, regardless of
-    # the handler at the bottom of this file.
+    # called by the tester directly.
     def check_values(
         self,
         name,
@@ -1337,8 +1336,10 @@ class test_list_value(test_base2):
         self.assertLastTraitListEventEqual(3, [], [5])
         self.obj.alist[0:2] = [6, 7]
         self.assertLastTraitListEventEqual(0, [2, 3], [6, 7])
+        self.obj.alist[:2] = [4, 5]
+        self.assertLastTraitListEventEqual(0, [6, 7], [4, 5])
         self.obj.alist[0:2:1] = [8, 9]
-        self.assertLastTraitListEventEqual(0, [6, 7], [8, 9])
+        self.assertLastTraitListEventEqual(0, [4, 5], [8, 9])
         old_event = self.last_event
         self.obj.alist[0:2:1] = [8, 9]
         # If no values changed, no new TraitListEvent will be generated.
@@ -1352,6 +1353,14 @@ class test_list_value(test_base2):
         self.obj.alist = [1, 2, 3, 4]
         del self.obj.alist[2:4]
         self.assertLastTraitListEventEqual(2, [3, 4], [])
+        self.obj.alist[:0] = [5, 6, 7, 8]
+        self.assertLastTraitListEventEqual(0, [], [5, 6, 7, 8])
+        del self.obj.alist[:2]
+        self.assertLastTraitListEventEqual(0, [5, 6], [])
+        del self.obj.alist[0:2]
+        self.assertLastTraitListEventEqual(0, [7, 8], [])
+        del self.obj.alist[:]
+        self.assertLastTraitListEventEqual(0, [1, 2], [])
 
     def _record_trait_list_event(self, object, name, old, new):
         self.last_event = new

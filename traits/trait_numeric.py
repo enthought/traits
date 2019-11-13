@@ -385,7 +385,7 @@ class CArray(AbstractArray):
         dtype=None,
         shape=None,
         value=None,
-        typecode=None, 
+        typecode=None,
         casting="unsafe",
         **metadata
     ):

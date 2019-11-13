@@ -17,14 +17,8 @@ Tests for the String trait type.
 """
 import unittest
 
-try:
-    import numpy
-except ImportError:
-    numpy_available = False
-else:
-    numpy_available = True
-
 from traits.api import HasTraits, String
+from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
 class A(HasTraits):
@@ -32,7 +26,7 @@ class A(HasTraits):
 
 
 class TestString(unittest.TestCase):
-    @unittest.skipUnless(numpy_available, "numpy not available")
+    @requires_numpy
     def test_accepts_numpy_string(self):
         numpy_string = numpy.str_("this is a numpy string!")
         a = A()
