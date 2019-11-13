@@ -12,6 +12,7 @@ from __future__ import absolute_import
 
 # Standard library imports.
 import unittest
+import warnings
 
 # Enthought library imports.
 from traits.adaptation.api import reset_global_adaptation_manager
@@ -392,7 +393,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         class Bar(HasTraits):
             foo = Instance(IFoo)
 
-        b = Bar(foo=Foo())
+        Bar(foo=Foo())
 
         return
 
@@ -407,9 +408,18 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             pass
 
         f = Foo()
-        self.assertEqual(f, IFoo(f))
 
-        return
+        # Adaptation via direct instantiation of interfaces is deprecated, so
+        # catch the warning to keep the test run output clean.
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", DeprecationWarning)
+            self.assertEqual(f, IFoo(f))
+
+        self.assertEqual(len(warn_msgs), 1)
+        warn_msg = warn_msgs[0]
+        self.assertIn(
+            'use "adapt(adaptee, protocol)" instead', str(warn_msg.message))
+        self.assertIn("test_interface_checker", warn_msg.filename)
 
     def test_adaptation(self):
         """ adaptation """
@@ -428,9 +438,17 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         f = Foo()
 
-        # Make sure adaptation works.
-        i_foo = IFoo(f)
+        # Make sure adaptation works. Adaptation via direct instantiation of
+        # Interface classes is deprecated, so suppress the warning.
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", DeprecationWarning)
+            i_foo = IFoo(f)
 
         self.assertNotEqual(None, i_foo)
         self.assertEqual(FooToIFooAdapter, type(i_foo))
-        return
+
+        self.assertEqual(len(warn_msgs), 1)
+        warn_msg = warn_msgs[0]
+        self.assertIn(
+            'use "adapt(adaptee, protocol)" instead', str(warn_msg.message))
+        self.assertIn("test_interface_checker", warn_msg.filename)

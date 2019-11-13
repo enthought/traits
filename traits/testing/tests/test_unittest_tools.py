@@ -405,12 +405,15 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         def old_and_dull_caller():
             old_and_dull()
 
-        # Pollute the registry by pre-calling the function.
-        old_and_dull_caller()
+        with warnings.catch_warnings(record=True):
+            warnings.simplefilter("always", DeprecationWarning)
 
-        # Check that we can still detect the DeprecationWarning.
-        with self.assertDeprecated():
+            # Pollute the registry by pre-calling the function.
             old_and_dull_caller()
+
+            # Check that we can still detect the DeprecationWarning.
+            with self.assertDeprecated():
+                old_and_dull_caller()
 
     def test_assert_not_deprecated_failures(self):
         with self.assertRaises(self.failureException):
@@ -430,10 +433,13 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         def old_and_dull_caller():
             old_and_dull()
 
-        # Pollute the registry by pre-calling the function.
-        old_and_dull_caller()
+        with warnings.catch_warnings(record=True):
+            warnings.simplefilter("always", DeprecationWarning)
 
-        # Check that we can still detect the DeprecationWarning.
-        with self.assertRaises(self.failureException):
-            with self.assertNotDeprecated():
-                old_and_dull_caller()
+            # Pollute the registry by pre-calling the function.
+            old_and_dull_caller()
+
+            # Check that we can still detect the DeprecationWarning.
+            with self.assertRaises(self.failureException):
+                with self.assertNotDeprecated():
+                    old_and_dull_caller()
