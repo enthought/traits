@@ -32,12 +32,7 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(
-            code,
-            force=True,
-            language_level="3",
-        )
-
+        obj = self.execute(code)
         self.assertEqual(obj.name, "Joe")
 
     def test_basic_events(self):
@@ -51,12 +46,7 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(
-            code,
-            force=True,
-            language_level="3",
-        )
-
+        obj = self.execute(code)
         with self.assertTraitChanges(obj, "name", count=1):
             obj.name = "changing_name"
 
@@ -75,12 +65,7 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(
-            code,
-            force=True,
-            language_level="3",
-        )
-
+        obj = self.execute(code)
         with self.assertTraitChanges(obj, "value", count=1):
             obj.name = "changing_name"
 
@@ -102,12 +87,7 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(
-            code,
-            force=True,
-            language_level="3",
-        )
-
+        obj = self.execute(code)
         with self.assertTraitChanges(obj, "value", count=1):
             obj.name = "changing_name"
 
@@ -129,12 +109,7 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(
-            code,
-            force=True,
-            language_level="3",
-        )
-
+        obj = self.execute(code)
         self.assertEqual(obj.name_len, len(obj.name))
 
         # Assert dependency works
@@ -158,12 +133,7 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(
-            code,
-            force=True,
-            language_level="3",
-        )
-
+        obj = self.execute(code)
         self.assertEqual(obj.name_len, len(obj.name))
 
         # Assert dependency works
@@ -191,12 +161,7 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(
-            code,
-            force=True,
-            language_level="3",
-        )
-
+        obj = self.execute(code)
         self.assertEqual(obj.funky_name, obj.name)
 
         # Assert dependency works
@@ -222,53 +187,20 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(
-            code,
-            force=True,
-            language_level="3",
-        )
-
+        obj = self.execute(code)
         self.assertEqual(obj.funky_name, obj.name)
 
         # Assert dependency works
         obj.name = "Bob"
         self.assertEqual(obj.funky_name, obj.name)
 
-    def test_on_trait_lambda_failure(self):
-
-        # Lambda function are converted like builtins when cythonized which
-        # causes the following code to fail
-
-        code = """
-from traits.api import HasTraits, Str, Int, Property
-
-def Alias(name):
-    return Property(
-        lambda obj: getattr(obj, name),
-        lambda obj, value: setattr(obj, name, value)
-    )
-
-class Test(HasTraits):
-    name = Str
-
-    funky_name = Alias('name')
-
-return Test()
-"""
-
-        try:
-            cython.inline(
-                code,
-                force=True,
-                language_level="3",
-            )
-        except:
-            # We suppose we have an exception. Because of the usage of the
-            # skipIf decorator on the test, we can't use an expectedFailure
-            # decorator as they don't play well together.
-            pass
-        else:
-            self.fail(
-                "Unexpected results. Cython was not managing lambda as regular"
-                " functions. Behaviour changed ..."
-            )
+    def execute(self, code):
+        """
+        Helper function to execute the given code under cython.inline and
+        return the result.
+        """
+        return cython.inline(
+            code,
+            force=True,
+            language_level="3",
+        )
