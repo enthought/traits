@@ -13,9 +13,6 @@ environment:
     - RUNTIME: '3.5'
     - RUNTIME: '3.6'
 
-matrix:
-  fast_finish: true
-
 cache:
   - C:\Users\appveyor\.cache -> appveyor-clean-cache.txt
   - C:\Users\appveyor\AppData\Local\pip\Cache -> appveyor-clean-cache.txt
