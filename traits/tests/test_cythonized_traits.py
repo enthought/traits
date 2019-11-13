@@ -135,7 +135,6 @@ return Test()
 
         code = """
 from traits.api import HasTraits, Str, Int, Property
-from traits.api import Unicode
 
 class Test(HasTraits):
     name = Str
