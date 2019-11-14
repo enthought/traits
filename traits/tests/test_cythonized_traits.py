@@ -10,44 +10,29 @@ properly.
 The tests need a Cython version > 0.19 and a compiler.
 
 """
+import sys
 import unittest
+
+import six
 
 from traits.testing.unittest_tools import UnittestTools
 from traits.testing.optional_dependencies import cython
 
-
-def has_no_compiler():
-    if cython is None:
-        return True
-    # Easy way to check if we have access to a compiler
-    code = "return 1+1"
-    try:
-        cython.inline(code)
-        return False
-    except:
-        return True
-
-
-def cython_version():
-    if cython is None:
-        return None
-    from Cython.Compiler.Version import version
-
-    return tuple(int(v) for v in version.split("."))
+if cython is None:
+    skip_reason = "Cython is not installed"
+elif sys.platform == "win32" and six.PY2:
+    # Tests are failing for undiagnosed reasons on Windows / Python 2.7.
+    # Ref: enthought/traits#557.
+    skip_reason = (
+        "Compilation issues with Windows / Python 2.7. "
+        "See enthought/traits#557"
+    )
+else:
+    skip_reason = None
 
 
-SKIP_TEST = has_no_compiler()
-
-
-# Cython 0.19 implementation of safe_type fails while parsing some of the
-# code. We provide a very basic implementation that always returns object
-# (we don't need any particular optimizations)
-def _always_object_type(arg, context):
-    return "object"
-
-
+@unittest.skipIf(skip_reason, skip_reason)
 class CythonizedTraitsTestCase(unittest.TestCase, UnittestTools):
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_simple_default_methods(self):
 
         code = """
@@ -62,11 +47,9 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(code)
-
+        obj = self.execute(code)
         self.assertEqual(obj.name, "Joe")
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_basic_events(self):
 
         code = """
@@ -78,12 +61,10 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(code)
-
+        obj = self.execute(code)
         with self.assertTraitChanges(obj, "name", count=1):
             obj.name = "changing_name"
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_static_handlers(self):
 
         code = """
@@ -99,14 +80,12 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(code, get_type=_always_object_type, force=True)
-
+        obj = self.execute(code)
         with self.assertTraitChanges(obj, "value", count=1):
             obj.name = "changing_name"
 
         self.assertEqual(obj.value, 1)
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_on_trait_change_decorator(self):
 
         code = """
@@ -123,20 +102,12 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(
-            code,
-            get_type=_always_object_type,
-            force=True,
-            locals={},
-            globals={},
-        )
-
+        obj = self.execute(code)
         with self.assertTraitChanges(obj, "value", count=1):
             obj.name = "changing_name"
 
         self.assertEqual(obj.value, 1)
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_properties(self):
 
         code = """
@@ -153,21 +124,13 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(
-            code,
-            get_type=_always_object_type,
-            force=True,
-            locals={},
-            globals={},
-        )
-
+        obj = self.execute(code)
         self.assertEqual(obj.name_len, len(obj.name))
 
         # Assert dependency works
         obj.name = "Bob"
         self.assertEqual(obj.name_len, len(obj.name))
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_properties_with_standard_getter(self):
 
         code = """
@@ -184,21 +147,13 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(
-            code,
-            get_type=_always_object_type,
-            force=True,
-            locals={},
-            globals={},
-        )
-
+        obj = self.execute(code)
         self.assertEqual(obj.name_len, len(obj.name))
 
         # Assert dependency works
         obj.name = "Bob"
         self.assertEqual(obj.name_len, len(obj.name))
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_aliasing(self):
 
         code = """
@@ -220,21 +175,13 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(
-            code,
-            get_type=_always_object_type,
-            force=True,
-            locals={},
-            globals={},
-        )
-
+        obj = self.execute(code)
         self.assertEqual(obj.funky_name, obj.name)
 
         # Assert dependency works
         obj.name = "Bob"
         self.assertEqual(obj.funky_name, obj.name)
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
     def test_on_trait_aliasing_different_scope(self):
 
         code = """
@@ -254,52 +201,20 @@ class Test(HasTraits):
 return Test()
 """
 
-        obj = cython.inline(code, get_type=_always_object_type)
-
+        obj = self.execute(code)
         self.assertEqual(obj.funky_name, obj.name)
 
         # Assert dependency works
         obj.name = "Bob"
         self.assertEqual(obj.funky_name, obj.name)
 
-    @unittest.skipIf(SKIP_TEST, "Missing Cython and/or compiler")
-    def test_on_trait_lambda_failure(self):
-
-        # Lambda function are converted like builtins when cythonized which
-        # causes the following code to fail
-
-        code = """
-from traits.api import HasTraits, Str, Int, Property
-
-def Alias(name):
-    return Property(
-        lambda obj: getattr(obj, name),
-        lambda obj, value: setattr(obj, name, value)
-    )
-
-class Test(HasTraits):
-    name = Str
-
-    funky_name = Alias('name')
-
-return Test()
-"""
-
-        try:
-            cython.inline(
-                code,
-                get_type=_always_object_type,
-                force=True,
-                locals={},
-                globals={},
-            )
-        except:
-            # We suppose we have an exception. Because of the usage of the
-            # skipIf decorator on the test, we can't use an expectedFailure
-            # decorator as they don't play well together.
-            pass
-        else:
-            self.fail(
-                "Unexpected results. Cython was not managing lambda as regular"
-                " functions. Behaviour changed ..."
-            )
+    def execute(self, code):
+        """
+        Helper function to execute the given code under cython.inline and
+        return the result.
+        """
+        return cython.inline(
+            code,
+            force=True,
+            language_level="3",
+        )
