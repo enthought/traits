@@ -7,8 +7,6 @@
 Classes
 -------
 
-.. autoclass:: ViewElement
-
 .. autoclass:: MetaHasTraits
 
 .. autoclass:: MetaInterface
