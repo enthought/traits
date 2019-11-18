@@ -3,9 +3,7 @@ environment:
 
   global:
     PYTHONUNBUFFERED: "1"
-    INSTALL_EDM_VERSION: "1.9.2"
-    # We're having trouble setting up EDM 1.10.0.
-    # See PR #420 for details.
+    INSTALL_EDM_VERSION: "2.0.0"
 
   matrix:
 
@@ -18,7 +16,7 @@ cache:
   - C:\Users\appveyor\AppData\Local\pip\Cache -> appveyor-clean-cache.txt
 
 init:
-  - ps: $Env:path = "C:/Enthought/edm;" + $Env:path
+  - ps: $Env:path = "C:/Enthought/Enthought/edm;" + $Env:path
   - ps: md C:/Users/appveyor/.cache -Force
 
 install:
