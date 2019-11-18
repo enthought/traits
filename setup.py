@@ -15,7 +15,7 @@ import setuptools
 MAJOR = 5
 MINOR = 2
 MICRO = 0
-IS_RELEASED = False
+IS_RELEASED = True
 
 # If this file is part of a Git export (for example created with "git archive",
 # or downloaded from GitHub), ARCHIVE_COMMIT_HASH gives the full hash of the
