@@ -234,7 +234,7 @@ casting traits::
 Other Predefined Traits
 ```````````````````````
 The Traits package provides a number of other predefined traits besides those
-for simple types, corresponding to other commonly used data types; ::these
+for simple types, corresponding to other commonly used data types; these
 predefined traits are listed in the following table. Refer to  the
 *Traits API Reference*, in the section for the module traits.traits,
 for details. Most can be used either as simple names, which use their built-in
