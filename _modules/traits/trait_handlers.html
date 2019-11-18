@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '5.1.1',
+        VERSION:     '5.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -2609,7 +2609,7 @@
                     <span class="c1"># In this case, we return a TraitListEvent with an</span>
                     <span class="c1"># index=key.start and the removed and added lists as they</span>
                     <span class="c1"># are.</span>
-                    <span class="n">index</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span>
+                    <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># Otherwise, we have an extended slice which was handled,</span>
                     <span class="c1"># badly, by __setitem__ before. In this case, we return the</span>
@@ -2666,7 +2666,7 @@
             <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="c1"># FIXME: See corresponding comment in __setitem__() for</span>
                 <span class="c1"># explanation.</span>
-                <span class="n">index</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">index</span> <span class="o">=</span> <span class="n">key</span>
                 <span class="n">removed</span> <span class="o">=</span> <span class="p">[</span><span class="n">removed</span><span class="p">]</span>
@@ -3636,7 +3636,7 @@
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jun 21, 2019.
+      Last updated on Nov 18, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.

@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.1.1',
+        VERSION:     '5.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -119,16 +119,17 @@ wider range of cases, such as interactions with other components.</li>
 <li><strong>object</strong> (<em>object</em>) – The object whose attribute is being assigned.</li>
 <li><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</li>
 <li><strong>value</strong> (<em>object</em>) – The proposed new value for the attribute.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method is called by the validate</strong><strong>(</strong><strong>) </strong><strong>method when an assigned value</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>not valid. Raising a TraitError exception either notifies the user of</strong> (<em>is</em>) – </li>
+<li><strong>problem</strong><strong>, </strong><strong>or</strong><strong>, </strong><strong>in the case of compound traits</strong><strong>, </strong><strong>provides a chance for</strong> (<em>the</em>) – </li>
+<li><strong>trait handler to handle to validate the value.</strong> (<em>another</em>) – </li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method is called by the validate() method when an assigned value
-is not valid. Raising a TraitError exception either notifies the user of
-the problem, or, in the case of compound traits, provides a chance for
-another trait handler to handle to validate the value.</p>
 </dd></dl>
 
 <dl class="method">
@@ -144,26 +145,27 @@ trait handler.</p>
 <li><strong>object</strong> (<em>object</em>) – The object whose attribute is being assigned.</li>
 <li><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</li>
 <li><strong>value</strong> – The proposed new value for the attribute.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>string should be a phrase describing the type defined by the</strong> (<em>The</em>) – </li>
+<li><strong>subclass</strong><strong>, </strong><strong>rather than a complete sentence. For example</strong><strong>, </strong><strong>use</strong> (<a class="reference internal" href="#traits.trait_handlers.TraitHandler" title="traits.trait_handlers.TraitHandler"><em>TraitHandler</em></a>) – </li>
+<li><strong>phrase</strong><strong>, </strong><strong>&quot;a square sprocket&quot; instead of the sentence</strong><strong>, </strong><strong>&quot;The value must</strong> (<em>the</em>) – </li>
+<li><strong>a square sprocket.&quot; The value returned by full_info</strong><strong>(</strong><strong>) </strong><strong>is combined</strong> (<em>be</em>) – </li>
+<li><strong>other information whenever an error occurs and therefore makes more</strong> (<em>with</em>) – </li>
+<li><strong>to the user if the result is a phrase. The full_info</strong><strong>(</strong><strong>) </strong><strong>method is</strong> (<em>sense</em>) – </li>
+<li><strong>in purpose and use to the info attribute of a validator</strong> (<em>similar</em>) – </li>
+<li><strong>function.</strong> – </li>
+<li><strong>that the result can include information specific to the particular</strong> (<em>Note</em>) – </li>
+<li><strong>handler instance. For example</strong><strong>, </strong><strong>TraitRange instances return a</strong> (<em>trait</em>) – </li>
+<li><strong>indicating the range of values acceptable to the handler</strong><strong> (</strong><strong>e.g.</strong><strong>,</strong> (<em>string</em>) – </li>
+<li><strong>integer in the range from 1 to 9&quot;</strong><strong>)</strong><strong> If the full_info</strong><strong>(</strong><strong>) </strong><strong>method is not</strong> (<em>&quot;an</em>) – </li>
+<li><strong>the default method returns the value of calling the info</strong><strong>(</strong><strong>)</strong> (<em>overridden</em><em>,</em>) – </li>
+<li><strong>method.</strong> – </li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by full_info() is combined
-with other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The full_info() method is
-similar in purpose and use to the <strong>info</strong> attribute of a validator
-function.</p>
-<p>Note that the result can include information specific to the particular
-trait handler instance. For example, TraitRange instances return a
-string indicating the range of values acceptable to the handler (e.g.,
-“an integer in the range from 1 to 9”). If the full_info() method is not
-overridden, the default method returns the value of calling the info()
-method.</p>
 </dd></dl>
 
 <dl class="method">
@@ -215,17 +217,21 @@ trait.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method only needs to be specified if traits defined using this</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>handler require a non-default trait editor in trait user</strong> (<em>trait</em>) – </li>
+<li><strong>The default implementation of this method returns a trait</strong> (<em>interfaces.</em>) – </li>
+<li><strong>that allows the user to type an arbitrary string as the value.</strong> (<em>editor</em>) – </li>
+<li><strong>more information on trait user interfaces</strong><strong>, </strong><strong>refer to the *Traits UI</strong> (<em>For</em>) – </li>
+<li><strong>Guide*.</strong> (<em>User</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method only needs to be specified if traits defined using this
-trait handler require a non-default trait editor in trait user
-interfaces. The default implementation of this method returns a trait
-editor that allows the user to type an arbitrary string as the value.</p>
-<p>For more information on trait user interfaces, refer to the <em>Traits UI
-User Guide</em>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -452,21 +458,25 @@ is validate().</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 </dd></dl>
@@ -518,17 +528,21 @@ trait.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method only needs to be specified if traits defined using this</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>handler require a non-default trait editor in trait user</strong> (<em>trait</em>) – </li>
+<li><strong>The default implementation of this method returns a trait</strong> (<em>interfaces.</em>) – </li>
+<li><strong>that allows the user to type an arbitrary string as the value.</strong> (<em>editor</em>) – </li>
+<li><strong>more information on trait user interfaces</strong><strong>, </strong><strong>refer to the *Traits UI</strong> (<em>For</em>) – </li>
+<li><strong>Guide*.</strong> (<em>User</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method only needs to be specified if traits defined using this
-trait handler require a non-default trait editor in trait user
-interfaces. The default implementation of this method returns a trait
-editor that allows the user to type an arbitrary string as the value.</p>
-<p>For more information on trait user interfaces, refer to the <em>Traits UI
-User Guide</em>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -546,10 +560,10 @@ non-string types result in a TraitError being raised. The handler then
 makes sure that the resulting string is within the specified length range
 and that it matches the regular expression.</p>
 <p class="rubric">Example</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">TraitString</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;^[A-Za-z]*$&#39;</span><span class="p">))</span>
-</pre></div>
-</div>
+<dl class="docutils">
+<dt>class Person(HasTraits):</dt>
+<dd>name = Trait(‘’, TraitString(maxlen=50, regex=r’^[A-Za-z]*$’))</dd>
+</dl>
 <p>This example defines a <strong>Person</strong> class with a <strong>name</strong> attribute, which
 must be a string of between 0 and 50 characters that consist of only
 upper and lower case letters.</p>
@@ -568,21 +582,25 @@ upper and lower case letters.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -681,21 +699,25 @@ The following table lists the allowed coercions.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -728,17 +750,21 @@ trait.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method only needs to be specified if traits defined using this</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>handler require a non-default trait editor in trait user</strong> (<em>trait</em>) – </li>
+<li><strong>The default implementation of this method returns a trait</strong> (<em>interfaces.</em>) – </li>
+<li><strong>that allows the user to type an arbitrary string as the value.</strong> (<em>editor</em>) – </li>
+<li><strong>more information on trait user interfaces</strong><strong>, </strong><strong>refer to the *Traits UI</strong> (<em>For</em>) – </li>
+<li><strong>Guide*.</strong> (<em>User</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method only needs to be specified if traits defined using this
-trait handler require a non-default trait editor in trait user
-interfaces. The default implementation of this method returns a trait
-editor that allows the user to type an arbitrary string as the value.</p>
-<p>For more information on trait user interfaces, refer to the <em>Traits UI
-User Guide</em>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -796,21 +822,25 @@ also between Float and CFloat), consider the following example:</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 </dd></dl>
@@ -837,21 +867,25 @@ and <strong>self</strong>, and the elements of ListThis.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -884,17 +918,21 @@ trait.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method only needs to be specified if traits defined using this</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>handler require a non-default trait editor in trait user</strong> (<em>trait</em>) – </li>
+<li><strong>The default implementation of this method returns a trait</strong> (<em>interfaces.</em>) – </li>
+<li><strong>that allows the user to type an arbitrary string as the value.</strong> (<em>editor</em>) – </li>
+<li><strong>more information on trait user interfaces</strong><strong>, </strong><strong>refer to the *Traits UI</strong> (<em>For</em>) – </li>
+<li><strong>Guide*.</strong> (<em>User</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method only needs to be specified if traits defined using this
-trait handler require a non-default trait editor in trait user
-interfaces. The default implementation of this method returns a trait
-editor that allows the user to type an arbitrary string as the value.</p>
-<p>For more information on trait user interfaces, refer to the <em>Traits UI
-User Guide</em>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -932,21 +970,25 @@ as its value.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -1005,21 +1047,25 @@ class.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -1068,21 +1114,25 @@ Trait() function.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -1130,21 +1180,25 @@ that take a list of possible values</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -1177,17 +1231,21 @@ trait.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method only needs to be specified if traits defined using this</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>handler require a non-default trait editor in trait user</strong> (<em>trait</em>) – </li>
+<li><strong>The default implementation of this method returns a trait</strong> (<em>interfaces.</em>) – </li>
+<li><strong>that allows the user to type an arbitrary string as the value.</strong> (<em>editor</em>) – </li>
+<li><strong>more information on trait user interfaces</strong><strong>, </strong><strong>refer to the *Traits UI</strong> (<em>For</em>) – </li>
+<li><strong>Guide*.</strong> (<em>User</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method only needs to be specified if traits defined using this
-trait handler require a non-default trait editor in trait user
-interfaces. The default implementation of this method returns a trait
-editor that allows the user to type an arbitrary string as the value.</p>
-<p>For more information on trait user interfaces, refer to the <em>Traits UI
-User Guide</em>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1207,10 +1265,10 @@ to the constructor is described by [<em>s</em><sub>1</sub>, <em>s</em><sub>2</su
 is a valid value, then the actual value assigned to the trait attribute is
 the corresponding <em>s</em><sub>i</sub> value that <em>v</em> matched.</p>
 <p class="rubric">Example</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">married</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="n">TraitPrefixList</span><span class="p">(</span><span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
+<dl class="docutils">
+<dt>class Person(HasTraits):</dt>
+<dd>married = Trait(‘no’, TraitPrefixList(‘yes’, ‘no’)</dd>
+</dl>
 <p>The Person class has a <strong>married</strong> trait that accepts any of the
 strings ‘y’, ‘ye’, ‘yes’, ‘n’, or ‘no’ as valid values. However, the actual
 values assigned as the value of the trait attribute are limited to either
@@ -1234,21 +1292,25 @@ and is not based on a brute force set of comparisons.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -1281,17 +1343,21 @@ trait.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method only needs to be specified if traits defined using this</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>handler require a non-default trait editor in trait user</strong> (<em>trait</em>) – </li>
+<li><strong>The default implementation of this method returns a trait</strong> (<em>interfaces.</em>) – </li>
+<li><strong>that allows the user to type an arbitrary string as the value.</strong> (<em>editor</em>) – </li>
+<li><strong>more information on trait user interfaces</strong><strong>, </strong><strong>refer to the *Traits UI</strong> (<em>For</em>) – </li>
+<li><strong>Guide*.</strong> (<em>User</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method only needs to be specified if traits defined using this
-trait handler require a non-default trait editor in trait user
-interfaces. The default implementation of this method returns a trait
-editor that allows the user to type an arbitrary string as the value.</p>
-<p>For more information on trait user interfaces, refer to the <em>Traits UI
-User Guide</em>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1311,16 +1377,14 @@ attribute name with an underscore (‘_’) appended. Mapped trait attributes
 can be used to allow a variety of user-friendly input values to be mapped to
 a set of internal, program-friendly values.</p>
 <p class="rubric">Example</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;class Person(HasTraits):</span>
-<span class="gp">... </span>   <span class="n">married</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="n">TraitMap</span><span class="p">({</span><span class="s1">&#39;yes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">})</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="go">&gt;&gt;&gt;bob = Person()</span>
-<span class="go">&gt;&gt;&gt;print bob.married</span>
-<span class="go">yes</span>
-<span class="go">&gt;&gt;&gt;print bob.married_</span>
-<span class="go">1</span>
-</pre></div>
-</div>
+<p>&gt;&gt;&gt;class Person(HasTraits):
+…    married = Trait(‘yes’, TraitMap({‘yes’: 1, ‘no’: 0 })
+&gt;&gt;&gt;
+&gt;&gt;&gt;bob = Person()
+&gt;&gt;&gt;print bob.married
+yes
+&gt;&gt;&gt;print <a href="#id23"><span class="problematic" id="id24">bob.married_</span></a>
+1</p>
 <p>In this example, the default value of the <strong>married</strong> attribute of the
 Person class is ‘yes’. Because this attribute is defined using
 TraitPrefixList, instances of Person have another attribute,
@@ -1341,21 +1405,25 @@ to the key ‘yes’.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -1388,17 +1456,21 @@ trait.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method only needs to be specified if traits defined using this</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>handler require a non-default trait editor in trait user</strong> (<em>trait</em>) – </li>
+<li><strong>The default implementation of this method returns a trait</strong> (<em>interfaces.</em>) – </li>
+<li><strong>that allows the user to type an arbitrary string as the value.</strong> (<em>editor</em>) – </li>
+<li><strong>more information on trait user interfaces</strong><strong>, </strong><strong>refer to the *Traits UI</strong> (<em>For</em>) – </li>
+<li><strong>Guide*.</strong> (<em>User</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method only needs to be specified if traits defined using this
-trait handler require a non-default trait editor in trait user
-interfaces. The default implementation of this method returns a trait
-editor that allows the user to type an arbitrary string as the value.</p>
-<p>For more information on trait user interfaces, refer to the <em>Traits UI
-User Guide</em>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1414,10 +1486,8 @@ one and only one key <em>k</em> in the dictionary. The actual values assigned to
 the trait attribute is <em>k</em>, and its corresponding mapped attribute is
 <em>map*[*k</em>].</p>
 <p class="rubric">Example</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;true&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">}</span>
-<span class="n">boolean_map</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="n">TraitPrefixMap</span><span class="p">(</span><span class="n">mapping</span><span class="p">))</span>
-</pre></div>
-</div>
+<p>mapping = {‘true’: 1, ‘yes’: 1, ‘false’: 0, ‘no’: 0 }
+boolean_map = Trait(‘true’, TraitPrefixMap(mapping))</p>
 <p>This example defines a Boolean trait that accepts any prefix of ‘true’,
 ‘yes’, ‘false’, or ‘no’, and maps them to 1 or 0.</p>
 <dl class="method">
@@ -1435,21 +1505,25 @@ the trait attribute is <em>k</em>, and its corresponding mapped attribute is
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -1496,21 +1570,25 @@ mapped value of the trait.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -1564,21 +1642,25 @@ case, any non-mapped traits or trait handlers use identity mapping.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -1594,26 +1676,27 @@ trait handler.</p>
 <li><strong>object</strong> (<em>object</em>) – The object whose attribute is being assigned.</li>
 <li><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</li>
 <li><strong>value</strong> – The proposed new value for the attribute.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>string should be a phrase describing the type defined by the</strong> (<em>The</em>) – </li>
+<li><strong>subclass</strong><strong>, </strong><strong>rather than a complete sentence. For example</strong><strong>, </strong><strong>use</strong> (<a class="reference internal" href="#traits.trait_handlers.TraitHandler" title="traits.trait_handlers.TraitHandler"><em>TraitHandler</em></a>) – </li>
+<li><strong>phrase</strong><strong>, </strong><strong>&quot;a square sprocket&quot; instead of the sentence</strong><strong>, </strong><strong>&quot;The value must</strong> (<em>the</em>) – </li>
+<li><strong>a square sprocket.&quot; The value returned by full_info</strong><strong>(</strong><strong>) </strong><strong>is combined</strong> (<em>be</em>) – </li>
+<li><strong>other information whenever an error occurs and therefore makes more</strong> (<em>with</em>) – </li>
+<li><strong>to the user if the result is a phrase. The full_info</strong><strong>(</strong><strong>) </strong><strong>method is</strong> (<em>sense</em>) – </li>
+<li><strong>in purpose and use to the info attribute of a validator</strong> (<em>similar</em>) – </li>
+<li><strong>function.</strong> – </li>
+<li><strong>that the result can include information specific to the particular</strong> (<em>Note</em>) – </li>
+<li><strong>handler instance. For example</strong><strong>, </strong><strong>TraitRange instances return a</strong> (<em>trait</em>) – </li>
+<li><strong>indicating the range of values acceptable to the handler</strong><strong> (</strong><strong>e.g.</strong><strong>,</strong> (<em>string</em>) – </li>
+<li><strong>integer in the range from 1 to 9&quot;</strong><strong>)</strong><strong> If the full_info</strong><strong>(</strong><strong>) </strong><strong>method is not</strong> (<em>&quot;an</em>) – </li>
+<li><strong>the default method returns the value of calling the info</strong><strong>(</strong><strong>)</strong> (<em>overridden</em><em>,</em>) – </li>
+<li><strong>method.</strong> – </li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by full_info() is combined
-with other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The full_info() method is
-similar in purpose and use to the <strong>info</strong> attribute of a validator
-function.</p>
-<p>Note that the result can include information specific to the particular
-trait handler instance. For example, TraitRange instances return a
-string indicating the range of values acceptable to the handler (e.g.,
-“an integer in the range from 1 to 9”). If the full_info() method is not
-overridden, the default method returns the value of calling the info()
-method.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1646,17 +1729,21 @@ trait.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method only needs to be specified if traits defined using this</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>handler require a non-default trait editor in trait user</strong> (<em>trait</em>) – </li>
+<li><strong>The default implementation of this method returns a trait</strong> (<em>interfaces.</em>) – </li>
+<li><strong>that allows the user to type an arbitrary string as the value.</strong> (<em>editor</em>) – </li>
+<li><strong>more information on trait user interfaces</strong><strong>, </strong><strong>refer to the *Traits UI</strong> (<em>For</em>) – </li>
+<li><strong>Guide*.</strong> (<em>User</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method only needs to be specified if traits defined using this
-trait handler require a non-default trait editor in trait user
-interfaces. The default implementation of this method returns a trait
-editor that allows the user to type an arbitrary string as the value.</p>
-<p>For more information on trait user interfaces, refer to the <em>Traits UI
-User Guide</em>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1669,12 +1756,11 @@ specified length, with elements that are of specified types.</p>
 <p>TraitTuple is the underlying handler for the predefined trait <strong>Tuple</strong>,
 and the trait factory Tuple().</p>
 <p class="rubric">Example</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rank</span> <span class="o">=</span> <span class="n">Range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span>
-<span class="n">suit</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;Hearts&#39;</span><span class="p">,</span> <span class="s1">&#39;Diamonds&#39;</span><span class="p">,</span> <span class="s1">&#39;Spades&#39;</span><span class="p">,</span> <span class="s1">&#39;Clubs&#39;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">Card</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">value</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="n">TraitTuple</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span> <span class="n">suit</span><span class="p">))</span>
-</pre></div>
-</div>
+<p>rank = Range(1, 13)
+suit = Trait(‘Hearts’, ‘Diamonds’, ‘Spades’, ‘Clubs’)
+class Card(HasTraits):</p>
+<blockquote>
+<div>value = Trait(TraitTuple(rank, suit))</div></blockquote>
 <p>This example defines a Card class, which has a <strong>value</strong> trait attribute,
 which must be a tuple of two elments. The first element must be an integer
 in the range from 1 to 13, and the second element must be one of the four
@@ -1694,21 +1780,25 @@ strings, ‘Hearts’, ‘Diamonds’, ‘Spades’, or ‘Clubs’.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -1724,26 +1814,27 @@ trait handler.</p>
 <li><strong>object</strong> (<em>object</em>) – The object whose attribute is being assigned.</li>
 <li><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</li>
 <li><strong>value</strong> – The proposed new value for the attribute.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>string should be a phrase describing the type defined by the</strong> (<em>The</em>) – </li>
+<li><strong>subclass</strong><strong>, </strong><strong>rather than a complete sentence. For example</strong><strong>, </strong><strong>use</strong> (<a class="reference internal" href="#traits.trait_handlers.TraitHandler" title="traits.trait_handlers.TraitHandler"><em>TraitHandler</em></a>) – </li>
+<li><strong>phrase</strong><strong>, </strong><strong>&quot;a square sprocket&quot; instead of the sentence</strong><strong>, </strong><strong>&quot;The value must</strong> (<em>the</em>) – </li>
+<li><strong>a square sprocket.&quot; The value returned by full_info</strong><strong>(</strong><strong>) </strong><strong>is combined</strong> (<em>be</em>) – </li>
+<li><strong>other information whenever an error occurs and therefore makes more</strong> (<em>with</em>) – </li>
+<li><strong>to the user if the result is a phrase. The full_info</strong><strong>(</strong><strong>) </strong><strong>method is</strong> (<em>sense</em>) – </li>
+<li><strong>in purpose and use to the info attribute of a validator</strong> (<em>similar</em>) – </li>
+<li><strong>function.</strong> – </li>
+<li><strong>that the result can include information specific to the particular</strong> (<em>Note</em>) – </li>
+<li><strong>handler instance. For example</strong><strong>, </strong><strong>TraitRange instances return a</strong> (<em>trait</em>) – </li>
+<li><strong>indicating the range of values acceptable to the handler</strong><strong> (</strong><strong>e.g.</strong><strong>,</strong> (<em>string</em>) – </li>
+<li><strong>integer in the range from 1 to 9&quot;</strong><strong>)</strong><strong> If the full_info</strong><strong>(</strong><strong>) </strong><strong>method is not</strong> (<em>&quot;an</em>) – </li>
+<li><strong>the default method returns the value of calling the info</strong><strong>(</strong><strong>)</strong> (<em>overridden</em><em>,</em>) – </li>
+<li><strong>method.</strong> – </li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by full_info() is combined
-with other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The full_info() method is
-similar in purpose and use to the <strong>info</strong> attribute of a validator
-function.</p>
-<p>Note that the result can include information specific to the particular
-trait handler instance. For example, TraitRange instances return a
-string indicating the range of values acceptable to the handler (e.g.,
-“an integer in the range from 1 to 9”). If the full_info() method is not
-overridden, the default method returns the value of calling the info()
-method.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1755,17 +1846,21 @@ trait.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method only needs to be specified if traits defined using this</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>handler require a non-default trait editor in trait user</strong> (<em>trait</em>) – </li>
+<li><strong>The default implementation of this method returns a trait</strong> (<em>interfaces.</em>) – </li>
+<li><strong>that allows the user to type an arbitrary string as the value.</strong> (<em>editor</em>) – </li>
+<li><strong>more information on trait user interfaces</strong><strong>, </strong><strong>refer to the *Traits UI</strong> (<em>For</em>) – </li>
+<li><strong>Guide*.</strong> (<em>User</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method only needs to be specified if traits defined using this
-trait handler require a non-default trait editor in trait user
-interfaces. The default implementation of this method returns a trait
-editor that allows the user to type an arbitrary string as the value.</p>
-<p>For more information on trait user interfaces, refer to the <em>Traits UI
-User Guide</em>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1790,21 +1885,25 @@ User Guide</em>.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -1846,12 +1945,12 @@ assigned to the trait attribute do not violate the list’s type and length
 constraints. TraitList is the underlying handler for the predefined
 list-based traits.</p>
 <p class="rubric">Example</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Card</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="k">pass</span>
-<span class="k">class</span> <span class="nc">Hand</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">cards</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">([],</span> <span class="n">TraitList</span><span class="p">(</span><span class="n">Trait</span><span class="p">(</span><span class="n">Card</span><span class="p">),</span> <span class="n">maxlen</span><span class="o">=</span><span class="mi">52</span><span class="p">))</span>
-</pre></div>
-</div>
+<dl class="docutils">
+<dt>class Card(HasTraits):</dt>
+<dd>pass</dd>
+<dt>class Hand(HasTraits):</dt>
+<dd>cards = Trait([], TraitList(Trait(Card), maxlen=52))</dd>
+</dl>
 <p>This example defines a Hand class, which has a <strong>cards</strong> trait attribute,
 which is a list of Card objects and can have from 0 to 52 items in the
 list.</p>
@@ -1870,21 +1969,25 @@ list.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -1900,26 +2003,27 @@ trait handler.</p>
 <li><strong>object</strong> (<em>object</em>) – The object whose attribute is being assigned.</li>
 <li><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</li>
 <li><strong>value</strong> – The proposed new value for the attribute.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>string should be a phrase describing the type defined by the</strong> (<em>The</em>) – </li>
+<li><strong>subclass</strong><strong>, </strong><strong>rather than a complete sentence. For example</strong><strong>, </strong><strong>use</strong> (<a class="reference internal" href="#traits.trait_handlers.TraitHandler" title="traits.trait_handlers.TraitHandler"><em>TraitHandler</em></a>) – </li>
+<li><strong>phrase</strong><strong>, </strong><strong>&quot;a square sprocket&quot; instead of the sentence</strong><strong>, </strong><strong>&quot;The value must</strong> (<em>the</em>) – </li>
+<li><strong>a square sprocket.&quot; The value returned by full_info</strong><strong>(</strong><strong>) </strong><strong>is combined</strong> (<em>be</em>) – </li>
+<li><strong>other information whenever an error occurs and therefore makes more</strong> (<em>with</em>) – </li>
+<li><strong>to the user if the result is a phrase. The full_info</strong><strong>(</strong><strong>) </strong><strong>method is</strong> (<em>sense</em>) – </li>
+<li><strong>in purpose and use to the info attribute of a validator</strong> (<em>similar</em>) – </li>
+<li><strong>function.</strong> – </li>
+<li><strong>that the result can include information specific to the particular</strong> (<em>Note</em>) – </li>
+<li><strong>handler instance. For example</strong><strong>, </strong><strong>TraitRange instances return a</strong> (<em>trait</em>) – </li>
+<li><strong>indicating the range of values acceptable to the handler</strong><strong> (</strong><strong>e.g.</strong><strong>,</strong> (<em>string</em>) – </li>
+<li><strong>integer in the range from 1 to 9&quot;</strong><strong>)</strong><strong> If the full_info</strong><strong>(</strong><strong>) </strong><strong>method is not</strong> (<em>&quot;an</em>) – </li>
+<li><strong>the default method returns the value of calling the info</strong><strong>(</strong><strong>)</strong> (<em>overridden</em><em>,</em>) – </li>
+<li><strong>method.</strong> – </li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by full_info() is combined
-with other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The full_info() method is
-similar in purpose and use to the <strong>info</strong> attribute of a validator
-function.</p>
-<p>Note that the result can include information specific to the particular
-trait handler instance. For example, TraitRange instances return a
-string indicating the range of values acceptable to the handler (e.g.,
-“an integer in the range from 1 to 9”). If the full_info() method is not
-overridden, the default method returns the value of calling the info()
-method.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1931,17 +2035,21 @@ trait.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method only needs to be specified if traits defined using this</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>handler require a non-default trait editor in trait user</strong> (<em>trait</em>) – </li>
+<li><strong>The default implementation of this method returns a trait</strong> (<em>interfaces.</em>) – </li>
+<li><strong>that allows the user to type an arbitrary string as the value.</strong> (<em>editor</em>) – </li>
+<li><strong>more information on trait user interfaces</strong><strong>, </strong><strong>refer to the *Traits UI</strong> (<em>For</em>) – </li>
+<li><strong>Guide*.</strong> (<em>User</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method only needs to be specified if traits defined using this
-trait handler require a non-default trait editor in trait user
-interfaces. The default implementation of this method returns a trait
-editor that allows the user to type an arbitrary string as the value.</p>
-<p>For more information on trait user interfaces, refer to the <em>Traits UI
-User Guide</em>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -2079,10 +2187,10 @@ made after the dictionary is assigned to the trait attribute satisfy the
 type constraints. TraitDict is the underlying handler for the
 dictionary-based predefined traits, and the Dict() trait factory.</p>
 <p class="rubric">Example</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WorkoutClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">member_weights</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">({},</span> <span class="n">TraitDict</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span>
-</pre></div>
-</div>
+<dl class="docutils">
+<dt>class WorkoutClass(HasTraits):</dt>
+<dd>member_weights = Trait({}, TraitDict(str, float))</dd>
+</dl>
 <p>This example defines a WorkoutClass class containing a <em>member_weights</em>
 trait attribute whose value must be a dictionary containing keys that
 are strings (i.e., the members’ names) and whose associated values must
@@ -2102,21 +2210,25 @@ be floats (i.e., their most recently recorded weight).</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">If the new value is valid, this method must return either the original
-value passed to it, or an alternate value to be assigned in place of the
-original value. Whatever value this method returns is the actual value
-assigned to <em>object.name</em>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>If the new value is valid, this method must return either the original</em></li>
+<li><em>value passed to it, or an alternate value to be assigned in place of the</em></li>
+<li><em>original value. Whatever value this method returns is the actual value</em></li>
+<li><em>assigned to *object.name</em>.*</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method *must</em> be implemented by subclasses of TraitHandler. It is*</li>
+<li><em>called whenever a new value is assigned to a trait attribute defined</em></li>
+<li><em>using this trait handler.</em></li>
+<li><em>If the value received by validate() is not valid for the trait</em></li>
+<li><em>attribute, the method must called the predefined error() method to</em></li>
+<li><em>raise a TraitError exception</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
 </dd></dl>
 
 <dl class="method">
@@ -2132,26 +2244,27 @@ trait handler.</p>
 <li><strong>object</strong> (<em>object</em>) – The object whose attribute is being assigned.</li>
 <li><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</li>
 <li><strong>value</strong> – The proposed new value for the attribute.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>string should be a phrase describing the type defined by the</strong> (<em>The</em>) – </li>
+<li><strong>subclass</strong><strong>, </strong><strong>rather than a complete sentence. For example</strong><strong>, </strong><strong>use</strong> (<a class="reference internal" href="#traits.trait_handlers.TraitHandler" title="traits.trait_handlers.TraitHandler"><em>TraitHandler</em></a>) – </li>
+<li><strong>phrase</strong><strong>, </strong><strong>&quot;a square sprocket&quot; instead of the sentence</strong><strong>, </strong><strong>&quot;The value must</strong> (<em>the</em>) – </li>
+<li><strong>a square sprocket.&quot; The value returned by full_info</strong><strong>(</strong><strong>) </strong><strong>is combined</strong> (<em>be</em>) – </li>
+<li><strong>other information whenever an error occurs and therefore makes more</strong> (<em>with</em>) – </li>
+<li><strong>to the user if the result is a phrase. The full_info</strong><strong>(</strong><strong>) </strong><strong>method is</strong> (<em>sense</em>) – </li>
+<li><strong>in purpose and use to the info attribute of a validator</strong> (<em>similar</em>) – </li>
+<li><strong>function.</strong> – </li>
+<li><strong>that the result can include information specific to the particular</strong> (<em>Note</em>) – </li>
+<li><strong>handler instance. For example</strong><strong>, </strong><strong>TraitRange instances return a</strong> (<em>trait</em>) – </li>
+<li><strong>indicating the range of values acceptable to the handler</strong><strong> (</strong><strong>e.g.</strong><strong>,</strong> (<em>string</em>) – </li>
+<li><strong>integer in the range from 1 to 9&quot;</strong><strong>)</strong><strong> If the full_info</strong><strong>(</strong><strong>) </strong><strong>method is not</strong> (<em>&quot;an</em>) – </li>
+<li><strong>the default method returns the value of calling the info</strong><strong>(</strong><strong>)</strong> (<em>overridden</em><em>,</em>) – </li>
+<li><strong>method.</strong> – </li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by full_info() is combined
-with other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The full_info() method is
-similar in purpose and use to the <strong>info</strong> attribute of a validator
-function.</p>
-<p>Note that the result can include information specific to the particular
-trait handler instance. For example, TraitRange instances return a
-string indicating the range of values acceptable to the handler (e.g.,
-“an integer in the range from 1 to 9”). If the full_info() method is not
-overridden, the default method returns the value of calling the info()
-method.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2163,17 +2276,21 @@ trait.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method only needs to be specified if traits defined using this</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>handler require a non-default trait editor in trait user</strong> (<em>trait</em>) – </li>
+<li><strong>The default implementation of this method returns a trait</strong> (<em>interfaces.</em>) – </li>
+<li><strong>that allows the user to type an arbitrary string as the value.</strong> (<em>editor</em>) – </li>
+<li><strong>more information on trait user interfaces</strong><strong>, </strong><strong>refer to the *Traits UI</strong> (<em>For</em>) – </li>
+<li><strong>Guide*.</strong> (<em>User</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method only needs to be specified if traits defined using this
-trait handler require a non-default trait editor in trait user
-interfaces. The default implementation of this method returns a trait
-editor that allows the user to type an arbitrary string as the value.</p>
-<p>For more information on trait user interfaces, refer to the <em>Traits UI
-User Guide</em>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -2305,7 +2422,7 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jun 21, 2019.
+      Last updated on Nov 18, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.

@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '5.1.1',
+        VERSION:     '5.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -177,9 +177,6 @@
 <span class="c1">#  require Traits to work, because they subclass Traits, but the Traits</span>
 <span class="c1">#  meta-class programming support uses them, so Traits can&#39;t be subclassed</span>
 <span class="c1">#  until they are defined.</span>
-<span class="c1">#</span>
-<span class="c1">#  Note: We need to look at whether the Category support could be used to</span>
-<span class="c1">#        allow us to implement this better.</span>
 <span class="c1"># -------------------------------------------------------------------------------</span>
 
 
@@ -575,7 +572,8 @@
 
         <span class="k">return</span> <span class="n">klass</span>
 
-<div class="viewcode-block" id="MetaHasTraits.add_listener"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaHasTraits.add_listener">[docs]</a>    <span class="k">def</span> <span class="nf">add_listener</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">listener</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="MetaHasTraits.add_listener"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaHasTraits.add_listener">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_listener</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">listener</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Adds a class creation listener.</span>
 
 <span class="sd">        If the class name is the empty string then the listener will be called</span>
@@ -583,17 +581,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">MetaHasTraits</span><span class="o">.</span><span class="n">_listeners</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span></div>
 
-    <span class="n">add_listener</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">add_listener</span><span class="p">)</span>
-
-<div class="viewcode-block" id="MetaHasTraits.remove_listener"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaHasTraits.remove_listener">[docs]</a>    <span class="k">def</span> <span class="nf">remove_listener</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">listener</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="MetaHasTraits.remove_listener"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaHasTraits.remove_listener">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">remove_listener</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">listener</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Removes a class creation listener.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">MetaHasTraits</span><span class="o">.</span><span class="n">_listeners</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span></div>
-
-    <span class="n">remove_listener</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">remove_listener</span><span class="p">)</span></div>
+        <span class="n">MetaHasTraits</span><span class="o">.</span><span class="n">_listeners</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">update_traits_class_dict</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">is_category</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">update_traits_class_dict</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">is_category</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Processes all of the traits related data in the class dictionary.</span>
 
 <span class="sd">    This is called during the construction of a new HasTraits class. The first</span>
@@ -609,8 +604,12 @@
 <span class="sd">        The base classes for the HasTraits class.</span>
 <span class="sd">    class_dict : dict</span>
 <span class="sd">        A dictionary of class members.</span>
-<span class="sd">    is_category : bool</span>
-<span class="sd">        Whether this is a Category subclass.</span>
+<span class="sd">    is_category : bool, optional</span>
+<span class="sd">        Whether this is a Category subclass. The default is False.</span>
+
+<span class="sd">    .. deprecated:: 5.2</span>
+<span class="sd">       The category extension mechanism is deprecated, and the is_category</span>
+<span class="sd">       option will be removed in a future version of Traits.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Create the various class dictionaries, lists and objects needed to</span>
@@ -1246,7 +1245,8 @@
     <span class="c1">#  Adds/Removes a trait instance creation monitor:</span>
     <span class="c1"># ---------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="HasTraits.trait_monitor"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.trait_monitor">[docs]</a>    <span class="k">def</span> <span class="nf">trait_monitor</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits.trait_monitor"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.trait_monitor">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">trait_monitor</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds or removes the specified *handler* from the list of active</span>
 <span class="sd">        monitors.</span>
 
@@ -1276,13 +1276,12 @@
         <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">_HasTraits_monitors</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">cls</span><span class="p">,</span> <span class="n">handler</span><span class="p">))</span></div>
 
-    <span class="n">trait_monitor</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">trait_monitor</span><span class="p">)</span>
-
     <span class="c1"># ---------------------------------------------------------------------------</span>
     <span class="c1">#  Add a new class trait (i.e. applies to all instances and subclasses):</span>
     <span class="c1"># ---------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="HasTraits.add_class_trait"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.add_class_trait">[docs]</a>    <span class="k">def</span> <span class="nf">add_class_trait</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">trait</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits.add_class_trait"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.add_class_trait">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_class_trait</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">trait</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Adds a named trait attribute to this class.</span>
 
 <span class="sd">        Parameters</span>
@@ -1313,8 +1312,7 @@
         <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">trait_subclasses</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
             <span class="n">subclass</span><span class="o">.</span><span class="n">_add_class_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
 
-    <span class="n">add_class_trait</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">add_class_trait</span><span class="p">)</span>
-
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_add_class_trait</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">is_subclass</span><span class="p">):</span>
         <span class="c1"># Get a reference to the class&#39;s dictionary and &#39;prefix&#39; traits:</span>
         <span class="n">class_dict</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span>
@@ -1381,14 +1379,18 @@
         <span class="c1"># Finally, add the new trait to the class trait dictionary:</span>
         <span class="n">class_traits</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">trait</span>
 
-    <span class="n">_add_class_trait</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">_add_class_trait</span><span class="p">)</span>
-
     <span class="c1"># ---------------------------------------------------------------------------</span>
     <span class="c1">#  Adds a &#39;category&#39; to the class:</span>
     <span class="c1"># ---------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="HasTraits.add_trait_category"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.add_trait_category">[docs]</a>    <span class="k">def</span> <span class="nf">add_trait_category</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">category</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits.add_trait_category"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.add_trait_category">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_trait_category</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">category</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Adds a trait category to a class.</span>
+
+<span class="sd">        .. deprecated:: 5.2</span>
+<span class="sd">           The category extension mechanism is deprecated, and this method</span>
+<span class="sd">           will be removed in a future version of Traits.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">):</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_add_trait_category</span><span class="p">(</span>
@@ -1406,12 +1408,11 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
                     <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-    <span class="n">add_trait_category</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">add_trait_category</span><span class="p">)</span>
-
     <span class="c1"># ---------------------------------------------------------------------------</span>
     <span class="c1">#  Adds a &#39;category&#39; to the class:</span>
     <span class="c1"># ---------------------------------------------------------------------------</span>
 
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_add_trait_category</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">base_traits</span><span class="p">,</span>
@@ -1423,6 +1424,13 @@
     <span class="p">):</span>
         <span class="c1"># Update the class and each of the existing subclasses:</span>
         <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">cls</span><span class="p">]</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">trait_subclasses</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+
+            <span class="c1"># The list of subclasses may include other Category</span>
+            <span class="c1"># subclasses. Those don&#39;t have the full complement of</span>
+            <span class="c1"># special dictionary attributes (ClassTraits and friends),</span>
+            <span class="c1"># so we shouldn&#39;t update them.</span>
+            <span class="k">if</span> <span class="n">BaseTraits</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subclass</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+                <span class="k">continue</span>
 
             <span class="c1"># Merge the &#39;base_traits&#39;:</span>
             <span class="n">subclass_traits</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">subclass</span><span class="p">,</span> <span class="n">BaseTraits</span><span class="p">)</span>
@@ -1476,13 +1484,12 @@
                 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">content</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="n">base_ve_content</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-    <span class="n">_add_trait_category</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">_add_trait_category</span><span class="p">)</span>
-
     <span class="c1"># ---------------------------------------------------------------------------</span>
     <span class="c1">#  Sets a trait notification dispatch handler:</span>
     <span class="c1"># ---------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="HasTraits.set_trait_dispatch_handler"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.set_trait_dispatch_handler">[docs]</a>    <span class="k">def</span> <span class="nf">set_trait_dispatch_handler</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">klass</span><span class="p">,</span> <span class="n">override</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits.set_trait_dispatch_handler"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.set_trait_dispatch_handler">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">set_trait_dispatch_handler</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">klass</span><span class="p">,</span> <span class="n">override</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Sets a trait notification dispatch handler.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1500,13 +1507,12 @@
             <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not a subclass of TraitChangeNotifyWrapper.&quot;</span> <span class="o">%</span> <span class="n">klass</span>
         <span class="p">)</span></div>
 
-    <span class="n">set_trait_dispatch_handler</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">set_trait_dispatch_handler</span><span class="p">)</span>
-
     <span class="c1"># ---------------------------------------------------------------------------</span>
     <span class="c1">#  Returns the immediate (or all) subclasses of this class:</span>
     <span class="c1"># ---------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="HasTraits.trait_subclasses"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.trait_subclasses">[docs]</a>    <span class="k">def</span> <span class="nf">trait_subclasses</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">all</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits.trait_subclasses"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.trait_subclasses">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">trait_subclasses</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">all</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns a list of the immediate (or all) subclasses of this class.</span>
 
 <span class="sd">        Parameters</span>
@@ -1520,16 +1526,13 @@
             <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_trait_subclasses</span><span class="p">([])</span></div>
 
-    <span class="n">trait_subclasses</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">trait_subclasses</span><span class="p">)</span>
-
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_trait_subclasses</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">subclasses</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">subclass</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subclasses</span><span class="p">:</span>
                 <span class="n">subclasses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subclass</span><span class="p">)</span>
                 <span class="n">subclass</span><span class="o">.</span><span class="n">_trait_subclasses</span><span class="p">(</span><span class="n">subclasses</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">subclasses</span>
-
-    <span class="n">_trait_subclasses</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">_trait_subclasses</span><span class="p">)</span>
 
     <span class="c1"># ---------------------------------------------------------------------------</span>
     <span class="c1">#  Returns whether the object implements a specified traits interface:</span>
@@ -2157,6 +2160,7 @@
             <span class="bp">self</span><span class="p">,</span>
         <span class="p">)</span></div>
 
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">class_trait_view</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">view_element</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_trait_view</span><span class="p">(</span>
             <span class="n">name</span><span class="p">,</span>
@@ -2167,12 +2171,11 @@
             <span class="kc">None</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="n">class_trait_view</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">class_trait_view</span><span class="p">)</span>
-
     <span class="c1"># ---------------------------------------------------------------------------</span>
     <span class="c1">#  Gets or sets a ViewElement associated with an object&#39;s class:</span>
     <span class="c1"># ---------------------------------------------------------------------------</span>
 
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_trait_view</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">name</span><span class="p">,</span>
@@ -2245,8 +2248,6 @@
 
         <span class="k">return</span> <span class="n">View</span><span class="p">(</span><span class="n">trait_selector_f</span><span class="p">(),</span> <span class="n">buttons</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="s2">&quot;Cancel&quot;</span><span class="p">])</span>
 
-    <span class="n">_trait_view</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">_trait_view</span><span class="p">)</span>
-
     <span class="c1"># ---------------------------------------------------------------------------</span>
     <span class="c1">#  Return the default traits view/name:</span>
     <span class="c1"># ---------------------------------------------------------------------------</span>
@@ -2260,12 +2261,11 @@
     <span class="c1">#  Return the default traits view/name:</span>
     <span class="c1"># ---------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="HasTraits.class_default_traits_view"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.class_default_traits_view">[docs]</a>    <span class="k">def</span> <span class="nf">class_default_traits_view</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits.class_default_traits_view"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.class_default_traits_view">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">class_default_traits_view</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the name of the default traits view for the class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">DefaultTraitsView</span></div>
-
-    <span class="n">class_default_traits_view</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">class_default_traits_view</span><span class="p">)</span>
 
     <span class="c1"># ---------------------------------------------------------------------------</span>
     <span class="c1">#  Gets the list of names of ViewElements associated with the object&#39;s</span>
@@ -2308,15 +2308,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">class_trait_view_elements</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="HasTraits.class_trait_view_elements"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.class_trait_view_elements">[docs]</a>    <span class="k">def</span> <span class="nf">class_trait_view_elements</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits.class_trait_view_elements"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.class_trait_view_elements">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">class_trait_view_elements</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the ViewElements object associated with the class.</span>
 
 <span class="sd">        The returned object can be used to access all the view elements</span>
 <span class="sd">        associated with the class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">ViewTraits</span><span class="p">]</span></div>
-
-    <span class="n">class_trait_view_elements</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">class_trait_view_elements</span><span class="p">)</span>
 
     <span class="c1"># ---------------------------------------------------------------------------</span>
     <span class="c1">#  Configure the object&#39;s traits:</span>
@@ -2442,7 +2441,8 @@
         <span class="n">names</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">names</span></div>
 
-<div class="viewcode-block" id="HasTraits.class_editable_traits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.class_editable_traits">[docs]</a>    <span class="k">def</span> <span class="nf">class_editable_traits</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits.class_editable_traits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.class_editable_traits">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">class_editable_traits</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns an alphabetically sorted list of the names of non-event</span>
 <span class="sd">        trait attributes associated with the current class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2450,21 +2450,18 @@
         <span class="n">names</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">names</span></div>
 
-    <span class="n">class_editable_traits</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">class_editable_traits</span><span class="p">)</span>
-
 <div class="viewcode-block" id="HasTraits.visible_traits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.visible_traits">[docs]</a>    <span class="k">def</span> <span class="nf">visible_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns an alphabetically sorted list of the names of non-event</span>
 <span class="sd">        trait attributes associated with the current object, that should be GUI visible</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait_names</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">not_event</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="n">not_false</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="HasTraits.class_visible_traits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.class_visible_traits">[docs]</a>    <span class="k">def</span> <span class="nf">class_visible_traits</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits.class_visible_traits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.class_visible_traits">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">class_visible_traits</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns an alphabetically sorted list of the names of non-event</span>
 <span class="sd">        trait attributes associated with the current class, that should be GUI visible</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">class_trait_names</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">not_event</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="n">not_false</span><span class="p">)</span></div>
-
-    <span class="n">class_visible_traits</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">class_visible_traits</span><span class="p">)</span>
 
     <span class="c1"># ---------------------------------------------------------------------------</span>
     <span class="c1">#  Pretty print the traits of an object:</span>
@@ -3310,7 +3307,8 @@
     <span class="c1">#  Return a dictionary of all traits which match a set of metadata:</span>
     <span class="c1"># ---------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="HasTraits.class_traits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.class_traits">[docs]</a>    <span class="k">def</span> <span class="nf">class_traits</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits.class_traits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.class_traits">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">class_traits</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a dictionary containing the definitions of all of the trait</span>
 <span class="sd">        attributes of the class that match the set of *metadata* criteria.</span>
 
@@ -3360,8 +3358,6 @@
 
         <span class="k">return</span> <span class="n">result</span></div>
 
-    <span class="n">class_traits</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">class_traits</span><span class="p">)</span>
-
     <span class="c1"># ---------------------------------------------------------------------------</span>
     <span class="c1">#  Return a list of all trait names which match a set of metadata:</span>
     <span class="c1"># ---------------------------------------------------------------------------</span>
@@ -3382,7 +3378,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traits</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="HasTraits.class_trait_names"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.class_trait_names">[docs]</a>    <span class="k">def</span> <span class="nf">class_trait_names</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
+<div class="viewcode-block" id="HasTraits.class_trait_names"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.class_trait_names">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">class_trait_names</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a list of the names of all trait attributes whose definitions</span>
 <span class="sd">        match the set of *metadata* criteria specified.</span>
 
@@ -3397,8 +3394,6 @@
 <span class="sd">        names of the matching trait attributes, not the trait definitions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">class_traits</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
-
-    <span class="n">class_trait_names</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="n">class_trait_names</span><span class="p">)</span>
 
     <span class="c1"># ---------------------------------------------------------------------------</span>
     <span class="c1">#  Explicitly sets the value of a cached property:</span>
@@ -4106,7 +4101,7 @@
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jun 21, 2019.
+      Last updated on Nov 18, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.

@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '5.1.1',
+        VERSION:     '5.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -103,6 +103,8 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 
+<span class="kn">import</span> <span class="nn">warnings</span>
+
 <span class="kn">import</span> <span class="nn">six</span>
 
 <span class="kn">from</span> <span class="nn">.has_traits</span> <span class="k">import</span> <span class="p">(</span>
@@ -122,12 +124,33 @@
 
 
 <div class="viewcode-block" id="MetaCategory"><a class="viewcode-back" href="../../traits_api_reference/category.html#traits.category.MetaCategory">[docs]</a><span class="k">class</span> <span class="nc">MetaCategory</span><span class="p">(</span><span class="n">MetaHasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Metaclass providing magic for the category extension mechanism.</span>
+
+<span class="sd">    .. deprecated:: 5.2</span>
+<span class="sd">       The category extension mechanism is deprecated, and the Category</span>
+<span class="sd">       and MetaCategory classes will be removed in a future version of Traits.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">):</span>
 
         <span class="c1"># Make sure the correct usage is being applied:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bases</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s2">&quot;Correct usage is: class FooCategory(Category,Foo):&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Categories are deprecated. Only warn if len(bases) == 2 to avoid</span>
+        <span class="c1"># a spurious warning when creating the Category class itself.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bases</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># See enthought/traits#319 for deprecation rationale.</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="s2">&quot;Use of the Category class is deprecated. Category &quot;</span>
+                    <span class="s2">&quot;will be removed in a future version of Traits.&quot;</span>
+                <span class="p">),</span>
+                <span class="ne">DeprecationWarning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="c1"># Process any traits-related information in the class dictionary:</span>
@@ -167,6 +190,10 @@
 <div class="viewcode-block" id="Category"><a class="viewcode-back" href="../../traits_api_reference/category.html#traits.category.Category">[docs]</a><span class="nd">@six</span><span class="o">.</span><span class="n">add_metaclass</span><span class="p">(</span><span class="n">MetaCategory</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Category</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Used for defining &quot;category&quot; extensions to existing classes.</span>
+
+<span class="sd">    .. deprecated:: 5.2</span>
+<span class="sd">       The category extension mechanism is deprecated, and the Category</span>
+<span class="sd">       and MetaCategory classes will be removed in a future version of Traits.</span>
 
 <span class="sd">    To define a class as a category, specify &quot;Category,&quot; followed by the name</span>
 <span class="sd">    of the base class name in the base class list.</span>
@@ -223,7 +250,7 @@
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jun 21, 2019.
+      Last updated on Nov 18, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.

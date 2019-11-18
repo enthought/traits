@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.1.1',
+        VERSION:     '5.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -132,15 +132,19 @@ feature.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>full</strong> (<em>bool</em>) – Indicates whether to return the value of the <em>help</em> attribute of
-the trait itself.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>full</strong> (<em>bool</em>) – Indicates whether to return the value of the <em>help</em> attribute of
+the trait itself.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>full is False</strong><strong> or </strong><strong>the trait does not have a help string</strong><strong>,</strong> (<em>If</em>) – </li>
+<li><strong>returned string is constructed from the desc attribute on the</strong> (<em>the</em>) – </li>
+<li><strong>and the info string on the trait's handler.</strong> (<em>trait</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>If <em>full</em> is False or the trait does not have a <strong>help</strong> string,
-the returned string is constructed from the <strong>desc</strong> attribute on the
-trait and the <strong>info</strong> string on the trait’s handler.</p>
 </dd></dl>
 
 <dl class="method">
@@ -211,155 +215,112 @@ implicitly on the class.</p>
 <dt id="traits.traits.Trait">
 <code class="descclassname">traits.traits.</code><code class="descname">Trait</code><span class="sig-paren">(</span><em>*value_type</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#Trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a trait definition.</p>
-<p>This function accepts a variety of forms of parameter lists:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="27%" />
-<col width="21%" />
-<col width="52%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Format</th>
-<th class="head">Example</th>
-<th class="head">Description</th>
-</tr>
-</thead>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
 <tbody valign="top">
-<tr class="row-even"><td>Trait(<em>default</em>)</td>
-<td>Trait(150.0)</td>
-<td>The type of the trait is inferred
-from the type of the default value,
-which must be in <em>ConstantTypes</em>.</td>
-</tr>
-<tr class="row-odd"><td>Trait(<em>default</em>,
-<em>other1</em>,
-<em>other2</em>, …)</td>
-<td>Trait(None,
-0, 1, 2,
-‘many’)</td>
-<td>The trait accepts any of the
-enumerated values, with the first
-value being the default value. The
-values must be of types in
-<em>ConstantTypes</em>, but they need not
-be of the same type. The <em>default</em>
-value is not valid for assignment
-unless it is repeated later in the
-list.</td>
-</tr>
-<tr class="row-even"><td>Trait([<em>default</em>,
-<em>other1</em>,
-<em>other2</em>, …])</td>
-<td>Trait([None,
-0, 1, 2,
-‘many’])</td>
-<td>Similar to the previous format, but
-takes an explicit list or a list
-variable.</td>
-</tr>
-<tr class="row-odd"><td>Trait(<em>type</em>)</td>
-<td>Trait(Int)</td>
-<td>The <em>type</em> parameter must be a name
-of a Python type (see
-<em>PythonTypes</em>). Assigned values
-must be of exactly the specified
-type; no casting or coercion is
-performed. The default value is the
-appropriate form of zero, False,
-or emtpy string, set or sequence.</td>
-</tr>
-<tr class="row-even"><td>Trait(<em>class</em>)</td>
-<td><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
-   <span class="k">pass</span>
-<span class="n">foo</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span>
-<span class="n">MyClass</span><span class="p">)</span>
-</pre></div>
-</div>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>function accepts a variety of forms of parameter lists</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>+-------------------+---------------+-------------------------------------+</strong> – </li>
+<li><strong>Format            | Example       | Description                         |</strong> (<em>|</em>) – </li>
+<li><strong>+===================+===============+=====================================+</strong> – </li>
+<li><strong>Trait</strong><strong>(</strong><strong>default</strong><strong>)  </strong><strong>| Trait</strong><strong>(</strong><strong>150.0</strong><strong>)  </strong><strong>| The type of the trait is inferred   |</strong> (<em>|</em>) – </li>
+<li><strong>|               | from the type of the default value</strong><strong>, </strong><strong>|</strong> (<em>|</em>) – </li>
+<li><strong>|               | which must be in ConstantTypes.   |</strong> (<em>|</em>) – </li>
+<li><strong>+-------------------+---------------+-------------------------------------+</strong> – </li>
+<li><strong>Trait</strong><strong>(</strong><strong>default</strong><strong>,  </strong><strong>| Trait</strong><strong>(</strong><strong>None</strong><strong>,   </strong><strong>| The trait accepts any of the        |</strong> (<em>|</em>) – </li>
+<li><strong>other1</strong><strong>,         </strong><strong>| 0</strong><strong>, </strong><strong>1</strong><strong>, </strong><strong>2</strong><strong>,      </strong><strong>| enumerated values</strong><strong>, </strong><strong>with the first   |</strong> (<em>|</em>) – </li>
+<li><strong>other2</strong><strong>, </strong><strong>..</strong><strong>)    </strong><strong>| 'many'</strong><strong>)       </strong><strong>| value being the default value. The  |</strong> (<em>|</em>) – </li>
+<li><strong>|               | values must be of types in          |</strong> (<em>|</em>) – </li>
+<li><strong>|               | ConstantTypes</strong><strong>, </strong><strong>but they need not  |</strong> (<em>|</em>) – </li>
+<li><strong>|               | be of the same type. The default  |</strong> (<em>|</em>) – </li>
+<li><strong>|               | value is not valid for assignment   |</strong> (<em>|</em>) – </li>
+<li><strong>|               | unless it is repeated later in the  |</strong> (<em>|</em>) – </li>
+<li><strong>|               | list.                               |</strong> (<em>|</em>) – </li>
+<li><strong>+-------------------+---------------+-------------------------------------+</strong> – </li>
+<li><strong>Trait</strong><strong>(</strong><strong>[</strong><strong>default</strong><strong>, </strong><strong>| Trait</strong><strong>(</strong><strong>[</strong><strong>None</strong><strong>,  </strong><strong>| Similar to the previous format</strong><strong>, </strong><strong>but |</strong> (<em>|</em>) – </li>
+<li><strong>other1</strong><strong>,         </strong><strong>| 0</strong><strong>, </strong><strong>1</strong><strong>, </strong><strong>2</strong><strong>,      </strong><strong>| takes an explicit list</strong><strong> or </strong><strong>a list    |</strong> (<em>|</em>) – </li>
+<li><strong>other2</strong><strong>, </strong><strong>..</strong><strong>]</strong><strong>)   </strong><strong>| 'many'</strong><strong>]</strong><strong>)      </strong><strong>| variable.                           |</strong> (<em>|</em>) – </li>
+<li><strong>+-------------------+---------------+-------------------------------------+</strong> – </li>
+<li><strong>Trait</strong><strong>(</strong><strong>type</strong><strong>)     </strong><strong>| Trait</strong><strong>(</strong><strong>Int</strong><strong>)    </strong><strong>| The type parameter must be a name |</strong> (<em>|</em>) – </li>
+<li><strong>|               | of a Python type</strong><strong> (</strong><strong>see               |</strong> (<em>|</em>) – </li>
+<li><strong>|               | PythonTypes</strong><strong>)</strong><strong> Assigned values     |</strong> (<em>|</em>) – </li>
+<li><strong>|               | must be of exactly the specified    |</strong> (<em>|</em>) – </li>
+<li><strong>|               | type; no casting</strong><strong> or </strong><strong>coercion is     |</strong> (<em>|</em>) – </li>
+<li><strong>|               | performed. The default value is the |</strong> (<em>|</em>) – </li>
+<li><strong>|               | appropriate form of zero</strong><strong>, </strong><strong>False</strong><strong>,    </strong><strong>|</strong> (<em>|</em>) – </li>
+<li><strong>|               |</strong><strong> or </strong><strong>emtpy string</strong><strong>, </strong><strong>set</strong><strong> or </strong><strong>sequence.   |</strong> (<em>|</em>) – </li>
+<li><strong>+-------------------+---------------+-------------------------------------+</strong> – </li>
+</ul>
 </td>
-<td>Values must be instances of <em>class</em>
-or of a subclass of <em>class</em>. The
-default value is None, but None
-cannot be assigned as a value.</td>
-</tr>
-<tr class="row-odd"><td>Trait(None,
-<em>class</em>)</td>
-<td><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
-  <span class="k">pass</span>
-<span class="n">foo</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span>
-<span class="kc">None</span><span class="p">,</span> <span class="n">MyClass</span><span class="p">)</span>
-</pre></div>
-</div>
-</td>
-<td>Similar to the previous format, but
-None <em>can</em> be assigned as a value.</td>
-</tr>
-<tr class="row-even"><td>Trait(<em>instance</em>)</td>
-<td><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
-   <span class="k">pass</span>
-<span class="n">i</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
-<span class="n">foo</span> <span class="o">=</span>
-  <span class="n">Trait</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-</pre></div>
-</div>
-</td>
-<td>Values must be instances of the
-same class as <em>instance</em>, or of a
-subclass of that class. The
-specified instance is the default
-value.</td>
-</tr>
-<tr class="row-odd"><td>Trait(<em>handler</em>)</td>
-<td>Trait(
-TraitEnum )</td>
-<td>Assignment to this trait is
-validated by an object derived from
-<strong>traits.TraitHandler</strong>.</td>
-</tr>
-<tr class="row-even"><td>Trait(<em>default</em>,
-{ <em>type</em> |
-<em>constant</em> |
-<em>dict</em> | <em>class</em> |
-<em>function</em> |
-<em>handler</em> |
-<em>trait</em> }+ )</td>
-<td>Trait(0.0, 0.0
-‘stuff’,
-TupleType)</td>
-<td>This is the most general form of
-the function. The notation:
-<code class="docutils literal notranslate"><span class="pre">{...|...|...}+</span></code> means a list of
-one or more of any of the items
-listed between the braces. Thus, the
-most general form of the function
-consists of a default value,
-followed by one or more of several
-possible items. A trait defined by
-multiple items is called a
-“compound” trait.</td>
 </tr>
 </tbody>
 </table>
-<p>All forms of the Trait function accept both predefined and arbitrary
-keyword arguments. The value of each keyword argument becomes bound to the
-resulting trait object as the value of an attribute having the same name
-as the keyword. This feature lets you associate metadata with a trait.</p>
-<p>The following predefined keywords are accepted:</p>
-<p class="rubric">Keywords</p>
-<dl class="docutils">
-<dt>desc <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>Describes the intended meaning of the trait. It is used in
-exception messages and fly-over help in user interfaces.</dd>
-<dt>label <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>Provides a human-readable name for the trait. It is used to label user
-interface editors for traits.</dd>
-<dt>editor <span class="classifier-delimiter">:</span> <span class="classifier">traits.api.Editor</span></dt>
-<dd>Instance of a subclass Editor object to use when creating a user
+<p>:param | Trait(<em>class</em>)    <a href="#id13"><span class="problematic" id="id14">|::             | Values must be instances of *class* |:
+:param |                   |               | or of a subclass of *class*. The    |:
+:param |                   | class MyClass:
+:type |                   | class MyClass: | default value is None, but None     |
+:param |                   |    pass       | cannot be assigned as a value.      |:
+:param |                   | foo = Trait(  |                                     |:
+:param |                   | MyClass)      |                                     |:
+:param +-------------------+---------------+-------------------------------------+:
+:param | Trait(None,       |::             | Similar to the previous format, but |:
+:param | *class*)          |               | None *can* be assigned as a value.  |:
+:param |                   | class MyClass:
+:type |                   | class MyClass: |                                     |
+:param |                   |   pass        |                                     |:
+:param |                   | foo = Trait(  |                                     |:
+:param |                   | None, MyClass)|</span></a>                                     <a href="#id15"><span class="problematic" id="id16">|:
+:param +-------------------+---------------+-------------------------------------+:
+:param | Trait(*instance*) |::             | Values must be instances of the     |:
+:param |                   |               | same class as *instance*, or of a   |:
+:param |                   | class MyClass:
+:type |                   | class MyClass: | subclass of that class. The         |
+:param |                   |    pass       | specified instance is the default   |:
+:param |                   | i = MyClass() | value.                              |:
+:param |                   | foo =         |                                     |:
+:param |                   |   Trait(i)    |                                     |:
+:param +-------------------+---------------+-------------------------------------+:
+:param | Trait(*handler*)  | Trait(        | Assignment to this trait is         |:
+:param |                   | TraitEnum )   | validated by an object derived from |:
+:param |                   |               | **traits.TraitHandler**.            |:
+:param +-------------------+---------------+-------------------------------------+:
+:param | Trait(*default*,  | Trait(0.0, 0.0|</span></a> This is the most general form of    <a href="#id17"><span class="problematic" id="id18">|:
+:param | { *type* |        | 'stuff',      | the function. The notation:
+:type | { *type* |        | 'stuff',      | the function. The notation: |
+:param | *constant* |      | TupleType)    | ``{...|</span></a>…|…}+`` means a list of  <a href="#id19"><span class="problematic" id="id20">|:
+:param | *dict* | *class* ||</span></a>               | one or more of any of the items     <a href="#id21"><span class="problematic" id="id22">|:
+:param | *function* |      |               | listed between the braces. Thus, the|</span></a>:
+:param | <em>handler</em> |       |               | most general form of the function   <a href="#id1"><span class="problematic" id="id2">|</span></a>:
+:param | <em>trait</em> }+ )      |               | consists of a default value,        <a href="#id3"><span class="problematic" id="id4">|</span></a>:
+:param |                   |               | followed by one or more of several  <a href="#id5"><span class="problematic" id="id6">|</span></a>:
+:param |                   |               | possible items. A trait defined by  <a href="#id7"><span class="problematic" id="id8">|</span></a>:
+:param |                   |               | multiple items is called a          <a href="#id9"><span class="problematic" id="id10">|</span></a>:
+:param |                   |               | “compound” trait.                   <a href="#id11"><span class="problematic" id="id12">|</span></a>:
+:param +——————-+—————+————————————-+:
+:param All forms of the Trait function accept both predefined and arbitrary:
+:param keyword arguments. The value of each keyword argument becomes bound to the:
+:param resulting trait object as the value of an attribute having the same name:
+:param as the keyword. This feature lets you associate metadata with a trait.:
+:param The following predefined keywords are accepted:
+:param Keywords:
+:param ——–:
+:param desc: Describes the intended meaning of the trait. It is used in</p>
+<blockquote>
+<div>exception messages and fly-over help in user interfaces.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>label</strong> (<em>str</em>) – Provides a human-readable name for the trait. It is used to label user
+interface editors for traits.</li>
+<li><strong>editor</strong> (<em>traits.api.Editor</em>) – Instance of a subclass Editor object to use when creating a user
 interface editor for the trait. See the “Traits UI User Guide” for
-more information on trait editors.</dd>
-<dt>comparison_mode <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first">Indicates when trait change notifications should be generated based upon
+more information on trait editors.</li>
+<li><strong>comparison_mode</strong> (<em>int</em>) – <p>Indicates when trait change notifications should be generated based upon
 the result of comparing the old and new values of a trait assignment:</p>
-<ul class="last simple">
+<ul>
 <li>0 (NO_COMPARE): The values are not compared and a trait change
 notification is generated on each assignment.</li>
 <li>1 (OBJECT_IDENTITY_COMPARE): A trait change notification is
@@ -368,21 +329,24 @@ generated if the old and new values are not the same object.</li>
 old and new values are not equal using Python’s
 ‘rich comparison’ operator. This is the default.</li>
 </ul>
-</dd>
-<dt>rich_compare <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
-<dd><p class="first">Indicates whether the basis for considering a trait attribute value to
+</li>
+<li><strong>rich_compare</strong> (<em>bool</em>) – <p>Indicates whether the basis for considering a trait attribute value to
 have changed is a “rich” comparison (True, the default), or simple
 object identity (False). This attribute can be useful in cases
 where a detailed comparison of two objects is very expensive, or where
 you do not care whether the details of an object change, as long as the
 same object is used.</p>
-<blockquote class="last">
+<blockquote>
 <div><div class="deprecated">
 <p><span class="versionmodified">Deprecated since version 3.0.3: </span>Use <code class="docutils literal notranslate"><span class="pre">comparison_mode</span></code> instead</p>
 </div>
 </div></blockquote>
-</dd>
-</dl>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -524,7 +488,7 @@ original value.</p>
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jun 21, 2019.
+      Last updated on Nov 18, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
