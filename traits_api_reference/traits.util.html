@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.1.1',
+        VERSION:     '5.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -166,7 +166,6 @@ a filename in some filesystems.</p>
 <dd><p>Return a timestamp that has been cleansed of characters that might
 cause problems in filenames, namely colons.  If no datetime object
 is provided, then uses the current time.</p>
-<p class="rubric">Description</p>
 <p>The timestamp is in ISO-8601 format with the following exceptions:</p>
 <ul class="simple">
 <li>Colons ‘:’ are replaced by underscores ‘_’.</li>
@@ -183,7 +182,10 @@ False.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A string timestamp.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A string timestamp.</p>
 </td>
 </tr>
 </tbody>
@@ -267,22 +269,25 @@ path to the resource.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>file</strong> (<em>file object or file path</em>) –
-A file object containing the resource. If return_path is True, ‘file’
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>file</strong> (<em>file object or file path</em>) – A file object containing the resource. If return_path is True, ‘file’
 will be the full path to the resource. If the file is not found or
-cannot be opened, None is returned.</p>
+cannot be opened, None is returned.</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This function will find a desired resource file and return an opened file</em></li>
+<li><em>object. The main method of finding the resource uses the pkg_resources</em></li>
+<li><em>resource_stream method, which searches your working set for the installed</em></li>
+<li><em>project specified and appends the resource_path given to the project</em></li>
+<li><em>path, leading it to the file. If setuptools is not installed or it cannot</em></li>
+<li><em>find/open the resource, find_resource will use the sys.path[0] to find the</em></li>
+<li><em>resource if alt_path is defined.</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This function will find a desired resource file and return an opened file
-object. The main method of finding the resource uses the pkg_resources
-resource_stream method, which searches your working set for the installed
-project specified and appends the resource_path given to the project
-path, leading it to the file. If setuptools is not installed or it cannot
-find/open the resource, find_resource will use the sys.path[0] to find the
-resource if alt_path is defined.</p>
 </dd></dl>
 
 <dl class="function">
@@ -401,10 +406,8 @@ advised.</p>
 <dt id="traits.util.trait_documenter.TraitDocumenter.import_object">
 <code class="descname">import_object</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter.import_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.import_object" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the Trait object.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Code adapted from autodoc.Documenter.import_object.</p>
-</div>
+<p class="rubric">Notes</p>
+<p>Code adapted from autodoc.Documenter.import_object.</p>
 </dd></dl>
 
 <dl class="method">
@@ -628,7 +631,6 @@ events for each thread in a separate file.</p>
 <dt id="traits.util.event_tracer.record_events">
 <code class="descclassname">traits.util.event_tracer.</code><code class="descname">record_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#record_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.record_events" title="Permalink to this definition">¶</a></dt>
 <dd><p>Multi-threaded trait change event tracer.</p>
-<p class="rubric">Usage</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">trace_recorder</span> <span class="k">import</span> <span class="n">record_events</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">record_events</span><span class="p">()</span> <span class="k">as</span> <span class="n">change_event_container</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="n">my_model</span><span class="o">.</span><span class="n">some_trait</span> <span class="o">=</span> <span class="kc">True</span>
@@ -711,7 +713,7 @@ traced.</p>
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jun 21, 2019.
+      Last updated on Nov 18, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.

@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.1.1',
+        VERSION:     '5.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -85,35 +85,6 @@
 associated metaclasses.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="traits.has_traits.ViewElement">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">ViewElement</code><a class="reference internal" href="../_modules/traitsui/view_element.html#ViewElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ViewElement" title="Permalink to this definition">¶</a></dt>
-<dd><p>An element of a view.</p>
-<dl class="method">
-<dt id="traits.has_traits.ViewElement.replace_include">
-<code class="descname">replace_include</code><span class="sig-paren">(</span><em>view_elements</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traitsui/view_element.html#ViewElement.replace_include"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ViewElement.replace_include" title="Permalink to this definition">¶</a></dt>
-<dd><p>Searches the current object’s <strong>content</strong> attribute for objects that
-have an <strong>id</strong> attribute, and replaces each one with an Include object
-with the same <strong>id</strong> value, and puts the replaced object into the
-specified ViewElements object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>view_elements</strong> (<em>ViewElements object</em>) – Object containing Group, Item, and Include objects</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.has_traits.ViewElement.is_includable">
-<code class="descname">is_includable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traitsui/view_element.html#ViewElement.is_includable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ViewElement.is_includable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns whether the object is replacable by an Include object.</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="class">
 <dt id="traits.has_traits.MetaHasTraits">
 <em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">MetaHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits" title="Permalink to this definition">¶</a></dt>
@@ -232,15 +203,16 @@ monitors.</p>
 <li><strong>handler</strong> (<em>function</em>) – The function to add or remove as a monitor.</li>
 <li><strong>remove</strong> (<em>bool</em>) – Flag indicating whether to remove (True) or add the specified
 handler as a monitor for this class.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>remove is omitted</strong><strong> or </strong><strong>False</strong><strong>, </strong><strong>the specified handler is added to</strong> (<em>If</em>) – </li>
+<li><strong>list of active monitors; if remove is True</strong><strong>, </strong><strong>the handler is</strong> (<em>the</em>) – </li>
+<li><strong>from the active monitor list.</strong> (<em>removed</em>) – </li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>If <em>remove</em> is omitted or False, the specified handler is added to
-the list of active monitors; if <em>remove</em> is True, the handler is
-removed from the active monitor list.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -267,6 +239,10 @@ a list equivalent to an argument list for the Trait() function.</li>
 <dt id="traits.has_traits.HasTraits.add_trait_category">
 <em class="property">classmethod </em><code class="descname">add_trait_category</code><span class="sig-paren">(</span><em>category</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.add_trait_category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.add_trait_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a trait category to a class.</p>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 5.2: </span>The category extension mechanism is deprecated, and this method
+will be removed in a future version of Traits.</p>
+</div>
 </dd></dl>
 
 <dl class="classmethod">
@@ -298,14 +274,18 @@ False, only immediate subclasses are returned.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*interfaces</strong> – One or more traits Interface (sub)classes.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>*interfaces</strong> – One or more traits Interface (sub)classes.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>whether the object implements one</strong><strong> or </strong><strong>more of the interfaces</strong> (<em>Tests</em>) – </li>
+<li><strong>by interfaces. Return True if it does</strong><strong>, </strong><strong>and False</strong> (<em>specified</em>) – </li>
+<li><strong>otherwise.</strong> – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>Tests whether the object implements one or more of the interfaces
-specified by <em>interfaces</em>. Return <strong>True</strong> if it does, and <strong>False</strong>
-otherwise.</p>
 </dd></dl>
 
 <dl class="method">
@@ -318,19 +298,22 @@ otherwise.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> (<em>list of strings</em>) – A list of trait attribute names whose values are requested.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> (<em>dict</em>) –
-A dictionary whose keys are the names passed as arguments and whose
-values are the corresponding trait values.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>result</strong> (<em>dict</em>) – A dictionary whose keys are the names passed as arguments and whose
+values are the corresponding trait values.</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>Looks up the value of each trait whose name is passed as an argument</em></li>
+<li><em>and returns a dictionary containing the resulting name/value pairs.</em></li>
+<li><em>If any name does not correspond to a defined trait, it is not included</em></li>
+<li><em>in the result.</em></li>
+<li><em>If no names are specified, the result is a dictionary containing</em></li>
+<li><em>name/value pairs for *all</em> traits defined on the object.*</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>Looks up the value of each trait whose name is passed as an argument
-and returns a dictionary containing the resulting name/value pairs.
-If any name does not correspond to a defined trait, it is not included
-in the result.</p>
-<p>If no names are specified, the result is a dictionary containing
-name/value pairs for <em>all</em> traits defined on the object.</p>
 </dd></dl>
 
 <dl class="method">
@@ -343,19 +326,22 @@ name/value pairs for <em>all</em> traits defined on the object.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> (<em>list of strings</em>) – A list of trait attribute names whose values are requested.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> (<em>dict</em>) –
-A dictionary whose keys are the names passed as arguments and whose
-values are the corresponding trait values.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>result</strong> (<em>dict</em>) – A dictionary whose keys are the names passed as arguments and whose
+values are the corresponding trait values.</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>Looks up the value of each trait whose name is passed as an argument</em></li>
+<li><em>and returns a dictionary containing the resulting name/value pairs.</em></li>
+<li><em>If any name does not correspond to a defined trait, it is not included</em></li>
+<li><em>in the result.</em></li>
+<li><em>If no names are specified, the result is a dictionary containing</em></li>
+<li><em>name/value pairs for *all</em> traits defined on the object.*</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>Looks up the value of each trait whose name is passed as an argument
-and returns a dictionary containing the resulting name/value pairs.
-If any name does not correspond to a defined trait, it is not included
-in the result.</p>
-<p>If no names are specified, the result is a dictionary containing
-name/value pairs for <em>all</em> traits defined on the object.</p>
 </dd></dl>
 
 <dl class="method">
@@ -375,26 +361,23 @@ set</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> –
-The method returns this object, after setting attributes.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>self</em> – The method returns this object, after setting attributes.</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>Treats each keyword argument to the method as the name of a trait</em></li>
+<li><em>attribute and sets the corresponding trait attribute to the value</em></li>
+<li><em>specified. This is a useful shorthand when a number of trait attributes</em></li>
+<li><em>need to be set on an object, or a trait attribute value needs to be set</em></li>
+<li><em>in a lambda function. For example, you can write::</em> – person.trait_set(name=’Bill’, age=27)</li>
+<li><em>instead of::</em> – person.name = ‘Bill’
+person.age = 27</li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>Treats each keyword argument to the method as the name of a trait
-attribute and sets the corresponding trait attribute to the value
-specified. This is a useful shorthand when a number of trait attributes
-need to be set on an object, or a trait attribute value needs to be set
-in a lambda function. For example, you can write:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>instead of:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span>
-<span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">27</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="method">
@@ -414,26 +397,23 @@ set</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>self</strong> –
-The method returns this object, after setting attributes.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>self</em> – The method returns this object, after setting attributes.</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>Treats each keyword argument to the method as the name of a trait</em></li>
+<li><em>attribute and sets the corresponding trait attribute to the value</em></li>
+<li><em>specified. This is a useful shorthand when a number of trait attributes</em></li>
+<li><em>need to be set on an object, or a trait attribute value needs to be set</em></li>
+<li><em>in a lambda function. For example, you can write::</em> – person.trait_set(name=’Bill’, age=27)</li>
+<li><em>instead of::</em> – person.name = ‘Bill’
+person.age = 27</li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>Treats each keyword argument to the method as the name of a trait
-attribute and sets the corresponding trait attribute to the value
-specified. This is a useful shorthand when a number of trait attributes
-need to be set on an object, or a trait attribute value needs to be set
-in a lambda function. For example, you can write:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>instead of:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span>
-<span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">27</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="method">
@@ -448,25 +428,22 @@ in a lambda function. For example, you can write:</p>
 No trait change notifications will be generated for any values
 assigned (see also: trait_set).</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>self</strong> –
-The method returns this object, after setting attributes.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><em>self</em> – The method returns this object, after setting attributes.</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>Treats each keyword argument to the method as the name of a trait</em></li>
+<li><em>attribute and sets the corresponding trait attribute to the value</em></li>
+<li><em>specified. This is a useful shorthand when a number of trait attributes</em></li>
+<li><em>need to be set on an object, or a trait attribute value needs to be set</em></li>
+<li><em>in a lambda function. For example, you can write::</em> – person.trait_setq(name=’Bill’, age=27)</li>
+<li><em>instead of::</em> – person.name = ‘Bill’
+person.age = 27</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>Treats each keyword argument to the method as the name of a trait
-attribute and sets the corresponding trait attribute to the value
-specified. This is a useful shorthand when a number of trait attributes
-need to be set on an object, or a trait attribute value needs to be set
-in a lambda function. For example, you can write:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">trait_setq</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>instead of:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span>
-<span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">27</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="method">
@@ -480,19 +457,22 @@ values.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>traits</strong> (<em>list of strings</em>) – Names of trait attributes to reset.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>unresetable</strong> (<em>list of strings</em>) –
-A list of attributes that the method was unable to reset, which is
-empty if all the attributes were successfully reset.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>unresetable</strong> (<em>list of strings</em>) – A list of attributes that the method was unable to reset, which is
+empty if all the attributes were successfully reset.</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>Resets each of the traits whose names are specified in the *traits*</em></li>
+<li><em>list to their default values. If *traits</em> is None or omitted, the*</li>
+<li><em>method resets all explicitly-defined object trait attributes to their</em></li>
+<li><em>default values. Note that this does not affect wildcard trait</em></li>
+<li><em>attributes or trait attributes added via add_trait(), unless they are</em></li>
+<li><em>explicitly named in *traits</em>.*</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>Resets each of the traits whose names are specified in the <em>traits</em>
-list to their default values. If <em>traits</em> is None or omitted, the
-method resets all explicitly-defined object trait attributes to their
-default values. Note that this does not affect wildcard trait
-attributes or trait attributes added via add_trait(), unless they are
-explicitly named in <em>traits</em>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -528,9 +508,11 @@ explicit ‘copy’ metadata. A value of None means ‘copy reference’.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>unassignable</strong> (<em>list of strings</em>) –
-A list of attributes that the method was unable to copy, which is
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>unassignable</strong> – A list of attributes that the method was unable to copy, which is
 empty if all the attributes were successfully copied.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of strings</p>
 </td>
 </tr>
 </tbody>
@@ -555,19 +537,22 @@ that does not have explicit ‘copy’ metadata. A value of None means
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>new</strong> –
-The newly cloned object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>new</em> – The newly cloned object.</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>Creates a new object that is a clone of the current object. If *traits*</em></li>
+<li><em>is None (the default), then all explicit trait attributes defined</em></li>
+<li><em>for this object are cloned. If *traits</em> is ‘all’ or an empty list, the*</li>
+<li><em>list of traits returned by all_trait_names() is used; otherwise,</em></li>
+<li><em>*traits</em> must be a list of the names of the trait attributes to be*</li>
+<li><em>cloned.</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>Creates a new object that is a clone of the current object. If <em>traits</em>
-is None (the default), then all explicit trait attributes defined
-for this object are cloned. If <em>traits</em> is ‘all’ or an empty list, the
-list of traits returned by all_trait_names() is used; otherwise,
-<em>traits</em> must be a list of the names of the trait attributes to be
-cloned.</p>
 </dd></dl>
 
 <dl class="method">
@@ -604,7 +589,10 @@ to display all of the items in the view at one time.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A UI object.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A UI object.</p>
 </td>
 </tr>
 </tbody>
@@ -628,35 +616,37 @@ traits.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> (<em>str</em>) – Name of a view element</li>
-<li><strong>view_element</strong> (<a class="reference internal" href="#traits.has_traits.ViewElement" title="traits.has_traits.ViewElement"><em>ViewElement</em></a>) – View element to associate</li>
+<li><strong>view_element</strong> (<em>ViewElement</em>) – View element to associate</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A view element.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>A view element.</em></li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>If both *name</em> and <em>view_element</em> are specified, the view element is*</li>
+<li><em>associated with *name</em> for the current object’s class. (That is,*</li>
+<li><em>*view_element</em> is added to the ViewElements object associated with*</li>
+<li><em>the current object’s class, indexed by *name</em>.)*</li>
+<li><em>If only *name</em> is specified, the function returns the view element*</li>
+<li><em>object associated with *name</em>, or None if <em>name</em> has no associated*</li>
+<li><em>view element. View elements retrieved by this function are those that</em></li>
+<li><em>are bound to a class attribute in the class definition, or that are</em></li>
+<li><em>associated with a name by a previous call to this method.</em></li>
+<li><em>If neither *name</em> nor <em>view_element</em> is specified, the method returns a*</li>
+<li><em>View object, based on the following order of preference</em></li>
+<li><ol class="first arabic">
+<li>If there is a View object named <code class="docutils literal notranslate"><span class="pre">traits_view</span></code> associated with the – current object, it is returned.</li>
+</ol>
+</li>
+<li><em>2. If there is exactly one View object associated the current</em> – object, it is returned.</li>
+<li><em>3. Otherwise, it returns a View object containing items for all the</em> – non-event trait attributes on the current object.</li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>If both <em>name</em> and <em>view_element</em> are specified, the view element is
-associated with <em>name</em> for the current object’s class. (That is,
-<em>view_element</em> is added to the ViewElements object associated with
-the current object’s class, indexed by <em>name</em>.)</p>
-<p>If only <em>name</em> is specified, the function returns the view element
-object associated with <em>name</em>, or None if <em>name</em> has no associated
-view element. View elements retrieved by this function are those that
-are bound to a class attribute in the class definition, or that are
-associated with a name by a previous call to this method.</p>
-<p>If neither <em>name</em> nor <em>view_element</em> is specified, the method returns a
-View object, based on the following order of preference:</p>
-<ol class="arabic simple">
-<li>If there is a View object named <code class="docutils literal notranslate"><span class="pre">traits_view</span></code> associated with the
-current object, it is returned.</li>
-<li>If there is exactly one View object associated the current
-object, it is returned.</li>
-<li>Otherwise, it returns a View object containing items for all the
-non-event trait attributes on the current object.</li>
-</ol>
 </dd></dl>
 
 <dl class="method">
@@ -680,22 +670,26 @@ current object’s class.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>klass</strong> (<em>class</em>) – <p>A class, such that all returned names must correspond to instances
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>klass</strong> (<em>class</em>) – <p>A class, such that all returned names must correspond to instances
 of this class. Possible values include:</p>
-<ul class="simple">
+<ul>
 <li>Group</li>
 <li>Item</li>
 <li>View</li>
 <li>ViewElement</li>
 <li>ViewSubElement</li>
 </ul>
+</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>klass is specified</strong><strong>, </strong><strong>the list of names is filtered such that only</strong> (<em>If</em>) – </li>
+<li><strong>that are instances of the specified class are returned.</strong> (<em>objects</em>) – </li>
+</ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>If <em>klass</em> is specified, the list of names is filtered such that only
-objects that are instances of the specified class are returned.</p>
 </dd></dl>
 
 <dl class="method">
@@ -760,26 +754,30 @@ to display all of the items in the view at one time.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">True on success.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>True on success.</em></li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This method is intended for use in applications that do not normally</em></li>
+<li><em>have a GUI. Control does not resume in the calling application until</em></li>
+<li><em>the user closes the dialog box.</em></li>
+<li><em>The method attempts to open and unpickle the contents of *filename*</em></li>
+<li><em>before displaying the dialog box. When editing is complete, the method</em></li>
+<li><em>attempts to pickle the updated contents of the object back to *filename</em>.*</li>
+<li><em>If the file referenced by *filename</em> does not exist, the object is not*</li>
+<li><em>modified before displaying the dialog box. If *filename</em> is unspecified*</li>
+<li><em>or None, no pickling or unpickling occurs.</em></li>
+<li><em>If *edit</em> is True (the default), a dialog box for editing the*</li>
+<li><em>current object is displayed. If *edit</em> is False or None, no*</li>
+<li>dialog box is displayed. You can use <code class="docutils literal notranslate"><span class="pre">edit=False</span></code> if you want the</li>
+<li><em>object to be restored from the contents of *filename</em>, without being*</li>
+<li><em>modified by the user.</em></li>
+</ul>
+</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method is intended for use in applications that do not normally
-have a GUI. Control does not resume in the calling application until
-the user closes the dialog box.</p>
-<p>The method attempts to open and unpickle the contents of <em>filename</em>
-before displaying the dialog box. When editing is complete, the method
-attempts to pickle the updated contents of the object back to <em>filename</em>.
-If the file referenced by <em>filename</em> does not exist, the object is not
-modified before displaying the dialog box. If <em>filename</em> is unspecified
-or None, no pickling or unpickling occurs.</p>
-<p>If <em>edit</em> is True (the default), a dialog box for editing the
-current object is displayed. If <em>edit</em> is False or None, no
-dialog box is displayed. You can use <code class="docutils literal notranslate"><span class="pre">edit=False</span></code> if you want the
-object to be restored from the contents of <em>filename</em>, without being
-modified by the user.</p>
 </dd></dl>
 
 <dl class="method">
@@ -874,165 +872,93 @@ event queue.</td>
 </tbody>
 </table>
 </li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>handlers can be defined for the same object</strong><strong>, or </strong><strong>even for the</strong> (<em>Multiple</em>) – </li>
+<li><strong>trait attribute on the same object. If name is not specified or</strong> (<em>same</em>) – </li>
+<li><strong>None</strong><strong>, </strong><strong>handler is invoked when any trait attribute on the</strong> (<em>is</em>) – </li>
+<li><strong>is changed.</strong> (<em>object</em>) – </li>
+<li><strong>name parameter is a single xname</strong><strong> or </strong><strong>a list of xname names</strong><strong>,</strong> (<em>The</em>) – </li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>Multiple handlers can be defined for the same object, or even for the
-same trait attribute on the same object. If <em>name</em> is not specified or
-is None, <em>handler</em> is invoked when any trait attribute on the
-object is changed.</p>
-<p>The <em>name</em> parameter is a single <em>xname</em> or a list of <em>xname</em> names,
-where an <em>xname</em> is an extended name of the form:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xname2</span><span class="p">[(</span><span class="s1">&#39;.&#39;</span><span class="o">|</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="n">xname2</span><span class="p">]</span><span class="o">*</span>
-</pre></div>
-</div>
-<p>An <em>xname2</em> is of the form:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span> <span class="n">xname3</span> <span class="o">|</span> <span class="s1">&#39;[&#39;</span><span class="n">xname3</span><span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="n">xname3</span><span class="p">]</span><span class="o">*</span><span class="s1">&#39;]&#39;</span> <span class="p">)</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>An <em>xname3</em> is of the form:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s1">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
-</pre></div>
-</div>
-<p>A <em>name</em> is any valid Python attribute name. The semantic meaning of
-this notation is as follows:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="46%" />
-<col width="54%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">expression</th>
-<th class="head">meaning</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">item1.item2</span></code></td>
-<td>means <em>item1</em> is a trait containing an
-object (or objects if <em>item1</em> is a
-list or dict) with a trait called
+<p>:param where an <em>xname</em> is an extended name of the form::: xname2[(‘.’|’:’) xname2]*
+:param An <em>xname2</em> is of the form::: ( xname3 | ‘[‘xname3[‘,’xname3]*’]’ ) [‘*’]
+:param An <em>xname3</em> is of the form::: xname | [‘+’|’-‘][name] | name[‘?’ | (‘+’|’-‘)[name]]
+:param A <em>name</em> is any valid Python attribute name. The semantic meaning of:
+:param this notation is as follows:
+:param ================================ ======================================:
+:param expression                       meaning:
+:param ================================ ======================================:
+:param <code class="docutils literal notranslate"><span class="pre">item1.item2</span></code>                  means <em>item1</em> is a trait containing an: object (or objects if <em>item1</em> is a</p>
+<blockquote>
+<div>list or dict) with a trait called
 <em>item2</em>. Changes to either <em>item1</em> or
 <em>item2</em> cause a notification to be
-generated.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">item1:item2</span></code></td>
-<td>means <em>item1</em> is a trait containing an
-object (or objects if <em>item1</em> is a
+generated.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>``item1</strong> – <p>object (or objects if <em>item1</em> is a
 list or dict) with a trait called
 <em>item2</em>. Changes to <em>item2</em> cause a
 notification to be generated, while
 changes to <em>item1</em> do not (i.e., the
 ‘:’ indicates that changes to the
-<em>link</em> object should not be reported).</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">item1,</span> <span class="pre">item2,</span> <span class="pre">...,</span> <span class="pre">itemN</span> <span class="pre">]</span></code></td>
-<td>A list which matches any of the
-specified items. Note that at the
+<em>link</em> object should not be reported).</p>
+</li>
+<li><strong>item1</strong><strong>, </strong><strong>item2</strong><strong>, </strong><strong>..</strong><strong>, </strong><strong>itemN</strong><strong> ] </strong><strong>A list which matches any of the</strong> (<em>[</em>) – specified items. Note that at the
 topmost level, the surrounding square
-brackets are optional.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">name?</span></code></td>
-<td>If the current object does not have an
-attribute called <em>name</em>, the reference
+brackets are optional.</li>
+<li><strong>If the current object does not have an</strong> (<em>name?</em>) – attribute called <em>name</em>, the reference
 can be ignored. If the ‘?’ character
 is omitted, the current object must
 have a trait called <em>name</em>, otherwise
-an exception will be raised.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">prefix+</span></code></td>
-<td>Matches any trait on the object whose
-name begins with <em>prefix</em>.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">+metadata_name</span></code></td>
-<td>Matches any trait on the object having
-<em>metadata_name</em> metadata.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-metadata_name</span></code></td>
-<td>Matches any trait on the object which
-does not have <em>metadata_name</em>
-metadata.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">prefix+metadata_name</span></code></td>
-<td>Matches any trait on the object whose
-name begins with <em>prefix</em> and which
-has <em>metadata_name</em> metadata.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">prefix-metadata_name</span></code></td>
-<td>Matches any trait on the object
-whose name begins with <em>prefix</em> and
+an exception will be raised.</li>
+<li><strong>Matches any trait on the object whose</strong> (<em>prefix+metadata_name</em>) – name begins with <em>prefix</em>.</li>
+<li><strong>Matches any trait on the object having</strong> (<em>+metadata_name</em>) – <em>metadata_name</em> metadata.</li>
+<li><strong>Matches any trait on the object which</strong> (<em>-metadata_name</em>) – does not have <em>metadata_name</em>
+metadata.</li>
+<li><strong>Matches any trait on the object whose</strong> – name begins with <em>prefix</em> and which
+has <em>metadata_name</em> metadata.</li>
+<li><strong>Matches any trait on the object</strong> (<em>prefix-metadata_name</em>) – whose name begins with <em>prefix</em> and
 which does not have <em>metadata_name</em>
-metadata.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">+</span></code></td>
-<td>Matches all traits on the object.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">pattern*</span></code></td>
-<td>Matches object graphs where <em>pattern</em>
-occurs one or more times (useful for
+metadata.</li>
+<li><strong>Matches all traits on the object.</strong> (<em>+</em>) – </li>
+<li><strong>Matches object graphs where pattern</strong> (<em>pattern*</em>) – occurs one or more times (useful for
 setting up listeners on recursive data
 structures like trees or linked
-lists).</td>
-</tr>
-</tbody>
-</table>
-<p>Some examples of valid names and their meaning are as follows:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="33%" />
-<col width="67%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">example</th>
-<th class="head">meaning</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo,bar,baz</span></code></td>
-<td>Listen for trait changes to <em>object.foo</em>,
-<em>object.bar</em>, and <em>object.baz</em>.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">['foo','bar','baz']</span></code></td>
-<td>Equivalent to ‘foo,bar,baz’, but may be more
-useful in cases where the individual items are
-computed.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo.bar.baz</span></code></td>
-<td>Listen for trait changes to
-<em>object.foo.bar.baz</em> and report changes to
+lists).</li>
+<li><strong>======================================</strong> (<em>================================</em>) – </li>
+<li><strong>examples of valid names and their meaning are as follows</strong> (<em>Some</em>) – </li>
+<li><strong>===============================================</strong> (<em>=======================</em>) – </li>
+<li><strong>meaning</strong> (<em>example</em>) – </li>
+<li><strong>===============================================</strong> – </li>
+<li><strong>Listen for trait changes to object.foo</strong><strong>,</strong> (<em>foo</em><em>,</em><em>bar</em><em>,</em><em>baz</em>) – <em>object.bar</em>, and <em>object.baz</em>.</li>
+<li><strong>Equivalent to 'foo</strong><strong>,</strong><strong>bar</strong><strong>,</strong><strong>baz'</strong><strong>, </strong><strong>but may be more</strong> (<em>[</em><em>'foo'</em><em>,</em><em>'bar'</em><em>,</em><em>'baz'</em><em>]</em>) – useful in cases where the individual items are
+computed.</li>
+<li><strong>Listen for trait changes to</strong> (<em>foo.bar.baz</em>) – <em>object.foo.bar.baz</em> and report changes to
 <em>object.foo</em>, <em>object.foo.bar</em> or
-<em>object.foo.bar.baz</em>.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">foo:bar:baz</span></code></td>
-<td>Listen for changes to <em>object.foo.bar.baz</em>, and
-only report changes to <em>object.foo.bar.baz</em>.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo.[bar,baz]</span></code></td>
-<td>Listen for trait changes to <em>object.foo.bar</em>
-and <em>object.foo.baz</em>.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[left,right]*.name</span></code></td>
-<td>Listen for trait changes to the <em>name</em> trait of
-each node of a tree having <em>left</em> and <em>right</em>
+<em>object.foo.bar.baz</em>.</li>
+<li><strong>``foo</strong> – <p>only report changes to <em>object.foo.bar.baz</em>.</p>
+</li>
+<li><strong>Listen for trait changes to object.foo.bar</strong> (<em>foo.</em><em>[</em><em>bar</em><em>,</em><em>baz</em><em>]</em>) – and <em>object.foo.baz</em>.</li>
+<li><strong>Listen for trait changes to the name trait of</strong> (<em>[</em><em>left</em><em>,</em><em>right</em><em>]</em><em>*.name</em>) – each node of a tree having <em>left</em> and <em>right</em>
 links to other tree nodes, and where <em>object</em>
 the method is applied to the root node of the
-tree.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">+dirty</span></code></td>
-<td>Listen for trait changes on any trait in the
-<em>object</em> which has the ‘dirty’ metadata set.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">foo.+dirty</span></code></td>
-<td>Listen for trait changes on any trait in
-<em>object.foo</em> which has the ‘dirty’ metadata
-set.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo.[bar,-dirty]</span></code></td>
-<td>Listen for trait changes on <em>object.foo.bar</em> or
-any trait on <em>object.foo</em> which does not have
-‘dirty’ metadata set.</td>
+tree.</li>
+<li><strong>Listen for trait changes on any trait in the</strong> (<em>+dirty</em>) – <em>object</em> which has the ‘dirty’ metadata set.</li>
+<li><strong>Listen for trait changes on any trait in</strong> (<em>foo.+dirty</em>) – <em>object.foo</em> which has the ‘dirty’ metadata
+set.</li>
+<li><strong>Listen for trait changes on object.foo.bar or</strong> (<em>foo.</em><em>[</em><em>bar</em><em>,</em><em>-dirty</em><em>]</em>) – any trait on <em>object.foo</em> which does not have
+‘dirty’ metadata set.</li>
+<li><strong>===============================================</strong> – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -1153,165 +1079,93 @@ event queue.</td>
 </tbody>
 </table>
 </li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>handlers can be defined for the same object</strong><strong>, or </strong><strong>even for the</strong> (<em>Multiple</em>) – </li>
+<li><strong>trait attribute on the same object. If name is not specified or</strong> (<em>same</em>) – </li>
+<li><strong>None</strong><strong>, </strong><strong>handler is invoked when any trait attribute on the</strong> (<em>is</em>) – </li>
+<li><strong>is changed.</strong> (<em>object</em>) – </li>
+<li><strong>name parameter is a single xname</strong><strong> or </strong><strong>a list of xname names</strong><strong>,</strong> (<em>The</em>) – </li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>Multiple handlers can be defined for the same object, or even for the
-same trait attribute on the same object. If <em>name</em> is not specified or
-is None, <em>handler</em> is invoked when any trait attribute on the
-object is changed.</p>
-<p>The <em>name</em> parameter is a single <em>xname</em> or a list of <em>xname</em> names,
-where an <em>xname</em> is an extended name of the form:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xname2</span><span class="p">[(</span><span class="s1">&#39;.&#39;</span><span class="o">|</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="n">xname2</span><span class="p">]</span><span class="o">*</span>
-</pre></div>
-</div>
-<p>An <em>xname2</em> is of the form:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span> <span class="n">xname3</span> <span class="o">|</span> <span class="s1">&#39;[&#39;</span><span class="n">xname3</span><span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="n">xname3</span><span class="p">]</span><span class="o">*</span><span class="s1">&#39;]&#39;</span> <span class="p">)</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>An <em>xname3</em> is of the form:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s1">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
-</pre></div>
-</div>
-<p>A <em>name</em> is any valid Python attribute name. The semantic meaning of
-this notation is as follows:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="46%" />
-<col width="54%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">expression</th>
-<th class="head">meaning</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">item1.item2</span></code></td>
-<td>means <em>item1</em> is a trait containing an
-object (or objects if <em>item1</em> is a
-list or dict) with a trait called
+<p>:param where an <em>xname</em> is an extended name of the form::: xname2[(‘.’|’:’) xname2]*
+:param An <em>xname2</em> is of the form::: ( xname3 | ‘[‘xname3[‘,’xname3]*’]’ ) [‘*’]
+:param An <em>xname3</em> is of the form::: xname | [‘+’|’-‘][name] | name[‘?’ | (‘+’|’-‘)[name]]
+:param A <em>name</em> is any valid Python attribute name. The semantic meaning of:
+:param this notation is as follows:
+:param ================================ ======================================:
+:param expression                       meaning:
+:param ================================ ======================================:
+:param <code class="docutils literal notranslate"><span class="pre">item1.item2</span></code>                  means <em>item1</em> is a trait containing an: object (or objects if <em>item1</em> is a</p>
+<blockquote>
+<div>list or dict) with a trait called
 <em>item2</em>. Changes to either <em>item1</em> or
 <em>item2</em> cause a notification to be
-generated.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">item1:item2</span></code></td>
-<td>means <em>item1</em> is a trait containing an
-object (or objects if <em>item1</em> is a
+generated.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>``item1</strong> – <p>object (or objects if <em>item1</em> is a
 list or dict) with a trait called
 <em>item2</em>. Changes to <em>item2</em> cause a
 notification to be generated, while
 changes to <em>item1</em> do not (i.e., the
 ‘:’ indicates that changes to the
-<em>link</em> object should not be reported).</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">item1,</span> <span class="pre">item2,</span> <span class="pre">...,</span> <span class="pre">itemN</span> <span class="pre">]</span></code></td>
-<td>A list which matches any of the
-specified items. Note that at the
+<em>link</em> object should not be reported).</p>
+</li>
+<li><strong>item1</strong><strong>, </strong><strong>item2</strong><strong>, </strong><strong>..</strong><strong>, </strong><strong>itemN</strong><strong> ] </strong><strong>A list which matches any of the</strong> (<em>[</em>) – specified items. Note that at the
 topmost level, the surrounding square
-brackets are optional.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">name?</span></code></td>
-<td>If the current object does not have an
-attribute called <em>name</em>, the reference
+brackets are optional.</li>
+<li><strong>If the current object does not have an</strong> (<em>name?</em>) – attribute called <em>name</em>, the reference
 can be ignored. If the ‘?’ character
 is omitted, the current object must
 have a trait called <em>name</em>, otherwise
-an exception will be raised.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">prefix+</span></code></td>
-<td>Matches any trait on the object whose
-name begins with <em>prefix</em>.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">+metadata_name</span></code></td>
-<td>Matches any trait on the object having
-<em>metadata_name</em> metadata.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-metadata_name</span></code></td>
-<td>Matches any trait on the object which
-does not have <em>metadata_name</em>
-metadata.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">prefix+metadata_name</span></code></td>
-<td>Matches any trait on the object whose
-name begins with <em>prefix</em> and which
-has <em>metadata_name</em> metadata.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">prefix-metadata_name</span></code></td>
-<td>Matches any trait on the object
-whose name begins with <em>prefix</em> and
+an exception will be raised.</li>
+<li><strong>Matches any trait on the object whose</strong> (<em>prefix+metadata_name</em>) – name begins with <em>prefix</em>.</li>
+<li><strong>Matches any trait on the object having</strong> (<em>+metadata_name</em>) – <em>metadata_name</em> metadata.</li>
+<li><strong>Matches any trait on the object which</strong> (<em>-metadata_name</em>) – does not have <em>metadata_name</em>
+metadata.</li>
+<li><strong>Matches any trait on the object whose</strong> – name begins with <em>prefix</em> and which
+has <em>metadata_name</em> metadata.</li>
+<li><strong>Matches any trait on the object</strong> (<em>prefix-metadata_name</em>) – whose name begins with <em>prefix</em> and
 which does not have <em>metadata_name</em>
-metadata.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">+</span></code></td>
-<td>Matches all traits on the object.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">pattern*</span></code></td>
-<td>Matches object graphs where <em>pattern</em>
-occurs one or more times (useful for
+metadata.</li>
+<li><strong>Matches all traits on the object.</strong> (<em>+</em>) – </li>
+<li><strong>Matches object graphs where pattern</strong> (<em>pattern*</em>) – occurs one or more times (useful for
 setting up listeners on recursive data
 structures like trees or linked
-lists).</td>
-</tr>
-</tbody>
-</table>
-<p>Some examples of valid names and their meaning are as follows:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="33%" />
-<col width="67%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">example</th>
-<th class="head">meaning</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo,bar,baz</span></code></td>
-<td>Listen for trait changes to <em>object.foo</em>,
-<em>object.bar</em>, and <em>object.baz</em>.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">['foo','bar','baz']</span></code></td>
-<td>Equivalent to ‘foo,bar,baz’, but may be more
-useful in cases where the individual items are
-computed.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo.bar.baz</span></code></td>
-<td>Listen for trait changes to
-<em>object.foo.bar.baz</em> and report changes to
+lists).</li>
+<li><strong>======================================</strong> (<em>================================</em>) – </li>
+<li><strong>examples of valid names and their meaning are as follows</strong> (<em>Some</em>) – </li>
+<li><strong>===============================================</strong> (<em>=======================</em>) – </li>
+<li><strong>meaning</strong> (<em>example</em>) – </li>
+<li><strong>===============================================</strong> – </li>
+<li><strong>Listen for trait changes to object.foo</strong><strong>,</strong> (<em>foo</em><em>,</em><em>bar</em><em>,</em><em>baz</em>) – <em>object.bar</em>, and <em>object.baz</em>.</li>
+<li><strong>Equivalent to 'foo</strong><strong>,</strong><strong>bar</strong><strong>,</strong><strong>baz'</strong><strong>, </strong><strong>but may be more</strong> (<em>[</em><em>'foo'</em><em>,</em><em>'bar'</em><em>,</em><em>'baz'</em><em>]</em>) – useful in cases where the individual items are
+computed.</li>
+<li><strong>Listen for trait changes to</strong> (<em>foo.bar.baz</em>) – <em>object.foo.bar.baz</em> and report changes to
 <em>object.foo</em>, <em>object.foo.bar</em> or
-<em>object.foo.bar.baz</em>.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">foo:bar:baz</span></code></td>
-<td>Listen for changes to <em>object.foo.bar.baz</em>, and
-only report changes to <em>object.foo.bar.baz</em>.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo.[bar,baz]</span></code></td>
-<td>Listen for trait changes to <em>object.foo.bar</em>
-and <em>object.foo.baz</em>.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[left,right]*.name</span></code></td>
-<td>Listen for trait changes to the <em>name</em> trait of
-each node of a tree having <em>left</em> and <em>right</em>
+<em>object.foo.bar.baz</em>.</li>
+<li><strong>``foo</strong> – <p>only report changes to <em>object.foo.bar.baz</em>.</p>
+</li>
+<li><strong>Listen for trait changes to object.foo.bar</strong> (<em>foo.</em><em>[</em><em>bar</em><em>,</em><em>baz</em><em>]</em>) – and <em>object.foo.baz</em>.</li>
+<li><strong>Listen for trait changes to the name trait of</strong> (<em>[</em><em>left</em><em>,</em><em>right</em><em>]</em><em>*.name</em>) – each node of a tree having <em>left</em> and <em>right</em>
 links to other tree nodes, and where <em>object</em>
 the method is applied to the root node of the
-tree.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">+dirty</span></code></td>
-<td>Listen for trait changes on any trait in the
-<em>object</em> which has the ‘dirty’ metadata set.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">foo.+dirty</span></code></td>
-<td>Listen for trait changes on any trait in
-<em>object.foo</em> which has the ‘dirty’ metadata
-set.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">foo.[bar,-dirty]</span></code></td>
-<td>Listen for trait changes on <em>object.foo.bar</em> or
-any trait on <em>object.foo</em> which does not have
-‘dirty’ metadata set.</td>
+tree.</li>
+<li><strong>Listen for trait changes on any trait in the</strong> (<em>+dirty</em>) – <em>object</em> which has the ‘dirty’ metadata set.</li>
+<li><strong>Listen for trait changes on any trait in</strong> (<em>foo.+dirty</em>) – <em>object.foo</em> which has the ‘dirty’ metadata
+set.</li>
+<li><strong>Listen for trait changes on object.foo.bar or</strong> (<em>foo.</em><em>[</em><em>bar</em><em>,</em><em>-dirty</em><em>]</em>) – any trait on <em>object.foo</em> which does not have
+‘dirty’ metadata set.</li>
+<li><strong>===============================================</strong> – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -1401,18 +1255,19 @@ as <em>name</em>.</li>
 or one-way (False or zero)</li>
 <li><strong>remove</strong> (<em>bool</em><em> or </em><em>int</em>) – Indicates whether synchronization is being added (False or zero)
 or removed (True or non-zero)</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>mutual synchronization</strong><strong>, </strong><strong>any change to the value of the specified</strong> (<em>In</em>) – </li>
+<li><strong>attribute of either object results in the same value being</strong> (<em>trait</em>) – </li>
+<li><strong>to the corresponding trait attribute of the other object.</strong> (<em>assigned</em>) – </li>
+<li><strong>one-way synchronization</strong><strong>, </strong><strong>any change to the value of the attribute</strong> (<em>In</em>) – </li>
+<li><strong>this object causes the corresponding trait attribute of object to</strong> (<em>on</em>) – </li>
+<li><strong>updated</strong><strong>, </strong><strong>but not vice versa.</strong> (<em>be</em>) – </li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>In mutual synchronization, any change to the value of the specified
-trait attribute of either object results in the same value being
-assigned to the corresponding trait attribute of the other object.
-In one-way synchronization, any change to the value of the attribute
-on this object causes the corresponding trait attribute of <em>object</em> to
-be updated, but not vice versa.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1445,8 +1300,9 @@ it is equivalent to passing the entire list of values to Trait().</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Name of the attribute to remove.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> (<em>bool</em>) –
-True if the trait was successfully removed.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> – True if the trait was successfully removed.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
 </tbody>
 </table>
@@ -1466,20 +1322,21 @@ True if the trait was successfully removed.</td>
 not explicitly defined.</li>
 <li><strong>copy</strong> (<em>bool</em>) – Indicates whether to return the original trait definition or a
 copy.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>force is False</strong><strong> (</strong><strong>the default</strong><strong>) </strong><strong>and name is the name of an</strong> (<em>If</em>) – </li>
+<li><strong>defined trait attribute that has never been referenced</strong> (<em>implicitly</em>) – </li>
+<li><strong>(</strong><strong>i.e.</strong><strong>, </strong><strong>has not yet been defined</strong><strong>)</strong><strong>, </strong><strong>the result is None. In</strong> (<em>explicitly</em>) – </li>
+<li><strong>other cases</strong><strong>, </strong><strong>the result is the trait definition object associated</strong> (<em>all</em>) – </li>
+<li><strong>name.</strong> (<em>with</em>) – </li>
+<li><strong>copy is True</strong><strong>, </strong><strong>and a valid trait definition is found for name</strong><strong>,</strong> (<em>If</em>) – </li>
+<li><strong>copy of the trait found is returned. In all other cases</strong><strong>, </strong><strong>the trait</strong> (<em>a</em>) – </li>
+<li><strong>found is returned unmodified</strong><strong> (</strong><strong>the default</strong><strong>)</strong><strong></strong> (<em>definition</em>) – </li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>If <em>force</em> is False (the default) and <em>name</em> is the name of an
-implicitly defined trait attribute that has never been referenced
-explicitly (i.e., has not yet been defined), the result is None. In
-all other cases, the result is the trait definition object associated
-with <em>name</em>.</p>
-<p>If <em>copy</em> is True, and a valid trait definition is found for <em>name</em>,
-a copy of the trait found is returned. In all other cases, the trait
-definition found is returned unmodified (the default).</p>
 </dd></dl>
 
 <dl class="method">
@@ -1490,16 +1347,20 @@ definition found is returned unmodified (the default).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Name of the attribute whose trait definition is returned.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of the attribute whose trait definition is returned.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method is similar to the trait</strong><strong>(</strong><strong>) </strong><strong>method</strong><strong>, </strong><strong>and returns a</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>result only in the case where the trait attribute defined by</strong> (<em>different</em>) – </li>
+<li><strong>is a delegate. In this case</strong><strong>, </strong><strong>the base_trait</strong><strong>(</strong><strong>) </strong><strong>method follows the</strong> (<em>*name*</em>) – </li>
+<li><strong>chain until a non-delegated trait attribute is reached</strong><strong>, </strong><strong>and</strong> (<em>delegation</em>) – </li>
+<li><strong>the definition of that attribute's trait as the result.</strong> (<em>returns</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method is similar to the trait() method, and returns a
-different result only in the case where the trait attribute defined by
-<em>name</em> is a delegate. In this case, the base_trait() method follows the
-delegation chain until a non-delegated trait attribute is reached, and
-returns the definition of that attribute’s trait as the result.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1518,28 +1379,32 @@ attributes of this object that match the set of <em>metadata</em> criteria.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**metadata</strong> – Criteria for selecting trait attributes.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>**metadata</strong> – Criteria for selecting trait attributes.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>keys of the returned dictionary are the trait attribute names</strong><strong>, </strong><strong>and</strong> (<em>The</em>) – </li>
+<li><strong>values are their corresponding trait definition objects.</strong> (<em>the</em>) – </li>
+<li><strong>no metadata information is specified</strong><strong>, </strong><strong>then all explicitly defined</strong> (<em>If</em>) – </li>
+<li><strong>attributes defined for the object are returned.</strong> (<em>trait</em>) – </li>
+<li><strong>the metadata keyword dictionary is assumed to define a set</strong> (<em>Otherwise</em><em>,</em>) – </li>
+<li><strong>search criteria for selecting trait attributes of interest. The</strong> (<em>of</em>) – </li>
+<li><strong>dictionary keys correspond to the names of trait metadata</strong> (<em>*metadata*</em>) – </li>
+<li><strong>to examine</strong><strong>, </strong><strong>and the values correspond to the values the</strong> (<em>attributes</em>) – </li>
+<li><strong>attribute must have in order to be included in the search</strong> (<em>metadata</em>) – </li>
+<li><strong>results.</strong> – </li>
+<li><strong>metadata values either may be simple Python values like strings or</strong> (<em>The</em>) – </li>
+<li><strong>or may be lambda expressions</strong><strong> or </strong><strong>functions that return True</strong> (<em>integers</em><em>,</em>) – </li>
+<li><strong>the trait attribute is to be included in the result. A lambda</strong> (<em>if</em>) – </li>
+<li><strong>or function must receive a single argument</strong><strong>, </strong><strong>which is the</strong> (<em>expression</em>) – </li>
+<li><strong>of the trait metadata attribute being tested. If more than one</strong> (<em>value</em>) – </li>
+<li><strong>keyword is specified</strong><strong>, </strong><strong>a trait attribute must match the metadata</strong> (<em>metadata</em>) – </li>
+<li><strong>of all keywords to be included in the result.</strong> (<em>values</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>The keys of the returned dictionary are the trait attribute names, and
-the values are their corresponding trait definition objects.</p>
-<p>If no <em>metadata</em> information is specified, then all explicitly defined
-trait attributes defined for the object are returned.</p>
-<p>Otherwise, the <em>metadata</em> keyword dictionary is assumed to define a set
-of search criteria for selecting trait attributes of interest. The
-<em>metadata</em> dictionary keys correspond to the names of trait metadata
-attributes to examine, and the values correspond to the values the
-metadata attribute must have in order to be included in the search
-results.</p>
-<p>The <em>metadata</em> values either may be simple Python values like strings or
-integers, or may be lambda expressions or functions that return True
-if the trait attribute is to be included in the result. A lambda
-expression or function must receive a single argument, which is the
-value of the trait metadata attribute being tested. If more than one
-metadata keyword is specified, a trait attribute must match the metadata
-values of all keywords to be included in the result.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -1551,28 +1416,32 @@ attributes of the class that match the set of <em>metadata</em> criteria.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**metadata</strong> – Criteria for selecting trait attributes.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>**metadata</strong> – Criteria for selecting trait attributes.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>keys of the returned dictionary are the trait attribute names</strong><strong>, </strong><strong>and</strong> (<em>The</em>) – </li>
+<li><strong>values are their corresponding trait definition objects.</strong> (<em>the</em>) – </li>
+<li><strong>no metadata information is specified</strong><strong>, </strong><strong>then all explicitly defined</strong> (<em>If</em>) – </li>
+<li><strong>attributes defined for the class are returned.</strong> (<em>trait</em>) – </li>
+<li><strong>the metadata keyword dictionary is assumed to define a set</strong> (<em>Otherwise</em><em>,</em>) – </li>
+<li><strong>search criteria for selecting trait attributes of interest. The</strong> (<em>of</em>) – </li>
+<li><strong>dictionary keys correspond to the names of trait metadata</strong> (<em>*metadata*</em>) – </li>
+<li><strong>to examine</strong><strong>, </strong><strong>and the values correspond to the values the</strong> (<em>attributes</em>) – </li>
+<li><strong>attribute must have in order to be included in the search</strong> (<em>metadata</em>) – </li>
+<li><strong>results.</strong> – </li>
+<li><strong>metadata values either may be simple Python values like strings or</strong> (<em>The</em>) – </li>
+<li><strong>or may be lambda expressions</strong><strong> or </strong><strong>functions that return True</strong> (<em>integers</em><em>,</em>) – </li>
+<li><strong>the trait attribute is to be included in the result. A lambda</strong> (<em>if</em>) – </li>
+<li><strong>or function must receive a single argument</strong><strong>, </strong><strong>which is the</strong> (<em>expression</em>) – </li>
+<li><strong>of the trait metadata attribute being tested. If more than one</strong> (<em>value</em>) – </li>
+<li><strong>keyword is specified</strong><strong>, </strong><strong>a trait attribute must match the metadata</strong> (<em>metadata</em>) – </li>
+<li><strong>of all keywords to be included in the result.</strong> (<em>values</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>The keys of the returned dictionary are the trait attribute names, and
-the values are their corresponding trait definition objects.</p>
-<p>If no <em>metadata</em> information is specified, then all explicitly defined
-trait attributes defined for the class are returned.</p>
-<p>Otherwise, the <em>metadata</em> keyword dictionary is assumed to define a set
-of search criteria for selecting trait attributes of interest. The
-<em>metadata</em> dictionary keys correspond to the names of trait metadata
-attributes to examine, and the values correspond to the values the
-metadata attribute must have in order to be included in the search
-results.</p>
-<p>The <em>metadata</em> values either may be simple Python values like strings or
-integers, or may be lambda expressions or functions that return <strong>True</strong>
-if the trait attribute is to be included in the result. A lambda
-expression or function must receive a single argument, which is the
-value of the trait metadata attribute being tested. If more than one
-metadata keyword is specified, a trait attribute must match the metadata
-values of all keywords to be included in the result.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1584,13 +1453,17 @@ match the set of <em>metadata</em> criteria specified.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**metadata</strong> – Criteria for selecting trait attributes.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>**metadata</strong> – Criteria for selecting trait attributes.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method is similar to the traits</strong><strong>(</strong><strong>) </strong><strong>method</strong><strong>, </strong><strong>but returns only the</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>of the matching trait attributes</strong><strong>, </strong><strong>not the trait definitions.</strong> (<em>names</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method is similar to the traits() method, but returns only the
-names of the matching trait attributes, not the trait definitions.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -1602,13 +1475,17 @@ match the set of <em>metadata</em> criteria specified.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**metadata</strong> – Criteria for selecting trait attributes.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>**metadata</strong> – Criteria for selecting trait attributes.</li>
+<li><strong>Description</strong> – </li>
+<li><strong>-----------</strong> – </li>
+<li><strong>method is similar to the traits</strong><strong>(</strong><strong>) </strong><strong>method</strong><strong>, </strong><strong>but returns only the</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
+<li><strong>of the matching trait attributes</strong><strong>, </strong><strong>not the trait definitions.</strong> (<em>names</em>) – </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Description</p>
-<p>This method is similar to the traits() method, but returns only the
-names of the matching trait attributes, not the trait definitions.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1632,29 +1509,52 @@ that any object attribute with <cite>required=True</cite> in its metadata must b
 passed as an argument on object initialization.</p>
 <p>This can be useful in cases where an object has traits which are required
 for it to function correctly.</p>
-<p class="rubric">Raises</p>
-<dl class="docutils">
-<dt>TraitError</dt>
-<dd>If a required trait is not passed as an argument.</dd>
-</dl>
-<p class="rubric">Usage</p>
-<p>A class with required traits:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">RequiredTest</span><span class="p">(</span><span class="n">HasRequiredTraits</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="n">required_trait</span> <span class="o">=</span> <span class="n">Any</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">non_required_trait</span> <span class="o">=</span> <span class="n">Any</span><span class="p">()</span>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last">
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">TraitError</span></code> – If a required trait is not passed as an argument.</p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Usage</span></code></p>
+</li>
+<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">-----</span></code></p>
+</li>
+<li><p class="first">A class with required traits:</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">RequiredTest</span><span class="p">(</span><span class="n">HasRequiredTraits</span><span class="p">):</span>
 </pre></div>
 </div>
-<p>Creating an instance of a HasRequiredTraits subclass:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">required_trait</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">non_required_trait</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance2</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">required_trait</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+</li>
+<li><p class="first">…     required_trait = Any(required=True)</p>
+</li>
+<li><p class="first">…     non_required_trait = Any()</p>
+</li>
+<li><p class="first">Creating an instance of a HasRequiredTraits subclass:</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">required_trait</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">non_required_trait</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Forgetting to specify a required trait:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">non_required_trait</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
-<span class="go">traits.trait_errors.TraitError: The following required traits were not</span>
-<span class="go">provided: required_trait.</span>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance2</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">required_trait</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
 </pre></div>
 </div>
+</li>
+<li><p class="first">Forgetting to specify a required trait:</p>
+</li>
+<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">non_required_trait</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">traits.trait_errors.TraitError: The following required traits were not</p>
+</li>
+<li><p class="first">provided: required_trait.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="class">
@@ -1927,7 +1827,7 @@ deleted then the function is not called.</p>
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jun 21, 2019.
+      Last updated on Nov 18, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.

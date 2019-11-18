@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '5.1.1',
+        VERSION:     '5.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -1280,20 +1280,6 @@
 
     <span class="c1">#: A description of the type of value this trait accepts:</span>
     <span class="n">info_text</span> <span class="o">=</span> <span class="s2">&quot;a method&quot;</span></div>
-
-
-<span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">ClassType</span>
-
-    <span class="k">class</span> <span class="nc">Class</span><span class="p">(</span><span class="n">TraitType</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Defines a trait whose value must be an old-style Python class.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1">#: The C-level fast validator to use:</span>
-        <span class="n">fast_validate</span> <span class="o">=</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="n">ClassType</span><span class="p">)</span>
-
-        <span class="c1">#: A description of the type of value this trait accepts:</span>
-        <span class="n">info_text</span> <span class="o">=</span> <span class="s2">&quot;an old-style class&quot;</span>
 
 
 <div class="viewcode-block" id="Module"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Module">[docs]</a><span class="k">class</span> <span class="nc">Module</span><span class="p">(</span><span class="n">TraitType</span><span class="p">):</span>
@@ -3246,7 +3232,7 @@
 
 <div class="viewcode-block" id="BaseInstance.init_fast_validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseInstance.init_fast_validate">[docs]</a>    <span class="k">def</span> <span class="nf">init_fast_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Does nothing for the BaseInstance&#39; class. Used by the &#39;Instance&#39;,</span>
-<span class="sd">            &#39;AdaptedTo&#39; and &#39;AdaptsTo&#39; classes to set up the C-level fast</span>
+<span class="sd">            &#39;Supports&#39; and &#39;AdaptsTo&#39; classes to set up the C-level fast</span>
 <span class="sd">            validator.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
@@ -3333,7 +3319,7 @@
 <div class="viewcode-block" id="Supports.as_ctrait"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Supports.as_ctrait">[docs]</a>    <span class="k">def</span> <span class="nf">as_ctrait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns a CTrait corresponding to the trait defined by this class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modify_ctrait</span><span class="p">(</span><span class="nb">super</span><span class="p">(</span><span class="n">AdaptedTo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modify_ctrait</span><span class="p">(</span><span class="nb">super</span><span class="p">(</span><span class="n">Supports</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">())</span></div>
 
     <span class="k">def</span> <span class="nf">modify_ctrait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctrait</span><span class="p">):</span>
 
@@ -3929,15 +3915,6 @@
 <span class="c1">#: List of method values; default value is [].</span>
 <span class="n">ListMethod</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">MethodType</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">ClassType</span><span class="p">,</span> <span class="n">InstanceType</span>
-
-    <span class="c1">#: List of class values; default value is [].</span>
-    <span class="n">ListClass</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">ClassType</span><span class="p">)</span>
-
-    <span class="c1">#: List of instance values; default value is [].</span>
-    <span class="n">ListInstance</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">InstanceType</span><span class="p">)</span>
-
 <span class="c1">#: List of container type values; default value is [].</span>
 <span class="n">ListThis</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">ThisClass</span><span class="p">)</span>
 
@@ -4011,7 +3988,7 @@
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jun 21, 2019.
+      Last updated on Nov 18, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.

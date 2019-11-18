@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.1.1',
+        VERSION:     '5.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -134,13 +134,15 @@ standard unittest.main().</p>
 <dl class="function">
 <dt id="traits.testing.nose_tools.skip">
 <code class="descclassname">traits.testing.nose_tools.</code><code class="descname">skip</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/nose_tools.html#skip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.nose_tools.skip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decorator to indicate a test should be skipped.</p>
+<dd><p>Stub replacement for marking a unit test to be skipped in the
+absence of ‘nose’.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.testing.nose_tools.deprecated">
 <code class="descclassname">traits.testing.nose_tools.</code><code class="descname">deprecated</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/testing/nose_tools.html#deprecated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.nose_tools.deprecated" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decorator to indicate a test is deprecated.</p>
+<dd><p>Stub replacement for marking a unit test deprecated in the absence
+of ‘nose’.</p>
 </dd></dl>
 
 <dl class="function">
@@ -215,24 +217,24 @@ under the context manger returned by this method.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>context</strong> (<em>context manager or None</em>) –
-If <code class="docutils literal notranslate"><span class="pre">callableObj</span></code> is None, an assertion context manager is returned,
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>context</strong> – If <code class="docutils literal notranslate"><span class="pre">callableObj</span></code> is None, an assertion context manager is returned,
 inside of which a trait-change trigger can be invoked. Otherwise,
 the context is used internally with <code class="docutils literal notranslate"><span class="pre">callableObj</span></code> as the trigger,
 in which case None is returned.</p>
 </td>
 </tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">context manager or None</p>
+</td>
+</tr>
 </tbody>
 </table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<ul class="last simple">
+<p class="rubric">Notes</p>
+<ul class="simple">
 <li>Checking if the provided <code class="docutils literal notranslate"><span class="pre">trait</span></code> corresponds to valid traits in
 the class is not implemented yet.</li>
 <li>Using the functional version of the assert method requires the
 <code class="docutils literal notranslate"><span class="pre">count</span></code> argument to be given even if it is None.</li>
 </ul>
-</div>
 </dd></dl>
 
 <dl class="method">
@@ -256,11 +258,13 @@ to be called under the context manger returned by this method.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>context</strong> (<em>context manager or None</em>) –
-If <code class="docutils literal notranslate"><span class="pre">callableObj</span></code> is None, an assertion context manager is returned,
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>context</strong> – If <code class="docutils literal notranslate"><span class="pre">callableObj</span></code> is None, an assertion context manager is returned,
 inside of which a trait-change trigger can be invoked. Otherwise,
 the context is used internally with <code class="docutils literal notranslate"><span class="pre">callableObj</span></code> as the trigger,
 in which case None is returned.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">context manager or None</p>
 </td>
 </tr>
 </tbody>
@@ -328,7 +332,7 @@ of changes. None can be used to indicate no timeout.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance who’s traits will change.</li>
+<li><strong>obj</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits class instance whose traits will change.</li>
 <li><strong>trait</strong> (<em>str</em>) – The extended trait name of trait changes to listen to.</li>
 <li><strong>condition</strong> (<em>callable</em>) – A function that will be called when the specified trait
 changes.  This should accept <code class="docutils literal notranslate"><span class="pre">obj</span></code> and should return a
@@ -423,7 +427,7 @@ for testing uses of traits.util.deprecated.deprecated.</p>
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jun 21, 2019.
+      Last updated on Nov 18, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.

@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.1.1',
+        VERSION:     '5.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -351,24 +351,21 @@ the table.</p>
 <td>CArray( [<em>dtype</em> = None, <em>shape</em> = None, <em>value</em> = None,
 <em>typecode</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Class</td>
-<td>Class( [<em>value</em>, **<em>metadata</em>] )</td>
-</tr>
-<tr class="row-odd"><td>Code</td>
+<tr class="row-even"><td>Code</td>
 <td>Code( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
 <em>regex</em> = ‘’, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Color</td>
+<tr class="row-odd"><td>Color</td>
 <td>Color( [*<em>args</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>CSet</td>
+<tr class="row-even"><td>CSet</td>
 <td>CSet( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
 **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Constant</td>
+<tr class="row-odd"><td>Constant</td>
 <td>Constant( <em>value</em>[, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Dict, DictStrAny,
+<tr class="row-even"><td>Dict, DictStrAny,
 DictStrBool,
 DictStrFloat,
 DictStrInt,
@@ -378,149 +375,146 @@ DictStrStr</td>
 <td>Dict( [<em>key_trait</em> = None, <em>value_trait</em> = None,
 <em>value</em> = None, <em>items</em> = True, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Directory</td>
+<tr class="row-odd"><td>Directory</td>
 <td>Directory( [<em>value</em> = ‘’, <em>auto_set</em> = False, <em>entries</em> =
 10, <em>exists</em> = False, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Disallow</td>
+<tr class="row-even"><td>Disallow</td>
 <td>n/a</td>
 </tr>
-<tr class="row-even"><td>Either</td>
+<tr class="row-odd"><td>Either</td>
 <td>Either( <em>val1</em>[, <em>val2</em>, …, <em>valN</em>,
 **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Enum</td>
+<tr class="row-even"><td>Enum</td>
 <td>Enum( <em>values</em>[, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Event</td>
+<tr class="row-odd"><td>Event</td>
 <td>Event( [<em>trait</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Expression</td>
+<tr class="row-even"><td>Expression</td>
 <td>Expression( [<em>value</em> = ‘0’, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>false</td>
+<tr class="row-odd"><td>false</td>
 <td>n/a</td>
 </tr>
-<tr class="row-odd"><td>File</td>
+<tr class="row-even"><td>File</td>
 <td>File( [<em>value</em> = ‘’, <em>filter</em> = None, <em>auto_set</em> = False,
 <em>entries</em> = 10, <em>exists</em> = False,  **<em>metadata</em> ] )</td>
 </tr>
-<tr class="row-even"><td>Font</td>
+<tr class="row-odd"><td>Font</td>
 <td>Font( [*<em>args</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Function</td>
+<tr class="row-even"><td>Function</td>
 <td>Function( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Generic</td>
+<tr class="row-odd"><td>Generic</td>
 <td>Generic( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>generic_trait</td>
+<tr class="row-even"><td>generic_trait</td>
 <td>n/a</td>
 </tr>
-<tr class="row-even"><td>HTML</td>
+<tr class="row-odd"><td>HTML</td>
 <td>HTML( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
 <em>regex</em> = ‘’,  **<em>metadata</em> ] )</td>
 </tr>
-<tr class="row-odd"><td>Instance</td>
+<tr class="row-even"><td>Instance</td>
 <td>Instance( [<em>klass</em> = None, <em>factory</em> = None, <em>args</em> =
 None, <em>kw</em> = None, <em>allow_none</em> = True, <em>adapt</em> = None,
 <em>module</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>List, ListBool,
-ListClass,
+<tr class="row-odd"><td>List, ListBool,
 ListComplex,
 ListFloat,
 ListFunction,
-ListInstance,
 ListInt,
 ListMethod,
 ListStr,
 ListThis,
 ListUnicode</td>
-<td>List([<em>trait</em> = None, <em>value</em> = None, <em>minlen</em> = 0,
-<em>maxlen</em> = sys.maxint, <em>items</em> = True, **<em>metadata</em>])</td>
+<td>List([<em>trait</em> = None, <em>value</em> = None, <em>minlen</em> = 0,</td>
 </tr>
-<tr class="row-odd"><td>Method</td>
+<tr class="row-even"><td>Method</td>
 <td>Method ([**<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Module</td>
+<tr class="row-odd"><td>Module</td>
 <td>Module ( [**<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Password</td>
+<tr class="row-even"><td>Password</td>
 <td>Password( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> =
 sys.maxint, <em>regex</em> = ‘’, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Property</td>
+<tr class="row-odd"><td>Property</td>
 <td><p class="first">Property( [<em>fget</em> = None, <em>fset</em> = None, <em>fvalidate</em> =
 None, <em>force</em> = False, <em>handler</em> = None, <em>trait</em> = None,
 **<em>metadata</em>] )</p>
 <p class="last">See <a class="reference internal" href="advanced.html#property-traits"><span class="std std-ref">Property Traits</span></a>, for details.</p>
 </td>
 </tr>
-<tr class="row-odd"><td>Python</td>
+<tr class="row-even"><td>Python</td>
 <td>Python ( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>PythonValue</td>
+<tr class="row-odd"><td>PythonValue</td>
 <td>PythonValue( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Range</td>
+<tr class="row-even"><td>Range</td>
 <td>Range( [<em>low</em> = None, <em>high</em> = None, <em>value</em> = None,
 <em>exclude_low</em> = False, <em>exclude_high</em> = False,
 *<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>ReadOnly</td>
+<tr class="row-odd"><td>ReadOnly</td>
 <td>ReadOnly( [<em>value</em> = Undefined, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Regex</td>
+<tr class="row-even"><td>Regex</td>
 <td>Regex( [<em>value</em> = ‘’, <em>regex</em> = ‘.*’, **<em>metadata</em>])</td>
 </tr>
-<tr class="row-even"><td>RGBColor</td>
+<tr class="row-odd"><td>RGBColor</td>
 <td>RGBColor( [*<em>args</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>self</td>
+<tr class="row-even"><td>self</td>
 <td>n/a</td>
 </tr>
-<tr class="row-even"><td>Set</td>
+<tr class="row-odd"><td>Set</td>
 <td>Set( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
 **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>String</td>
+<tr class="row-even"><td>String</td>
 <td>String( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> =
 sys.maxint, <em>regex</em> = ‘’, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>This</td>
+<tr class="row-odd"><td>This</td>
 <td>n/a</td>
 </tr>
-<tr class="row-odd"><td>ToolbarButton</td>
+<tr class="row-even"><td>ToolbarButton</td>
 <td>ToolbarButton( [<em>label</em> = ‘’, <em>image</em> = None, <em>style</em> =
 ‘toolbar’, <em>orientation</em> = ‘vertical’, <em>width_padding</em> =
 2, <em>height_padding</em> = 2, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>true</td>
+<tr class="row-odd"><td>true</td>
 <td>n/a</td>
 </tr>
-<tr class="row-odd"><td>Tuple</td>
+<tr class="row-even"><td>Tuple</td>
 <td>Tuple( [*<em>traits</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Type</td>
+<tr class="row-odd"><td>Type</td>
 <td>Type( [<em>value</em> = None, <em>klass</em> = None, <em>allow_none</em> =
 True, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>undefined</td>
+<tr class="row-even"><td>undefined</td>
 <td>n/a</td>
 </tr>
-<tr class="row-even"><td>UStr</td>
+<tr class="row-odd"><td>UStr</td>
 <td>UStr( [<em>owner</em>, <em>list_name</em>, <em>str_name</em>, <em>default_value =
 NoDefaultSpecified, ***metadata</em>])</td>
 </tr>
-<tr class="row-odd"><td>UUID <a class="footnote-reference" href="#id16" id="id8">[3]</a></td>
+<tr class="row-even"><td>UUID <a class="footnote-reference" href="#id16" id="id8">[3]</a></td>
 <td>UUID( [**<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>ValidatedTuple</td>
+<tr class="row-odd"><td>ValidatedTuple</td>
 <td>ValidatedTuple( [*<em>traits</em>, <em>fvalidate</em> = None,
 <em>fvalidate_info</em> = ‘’ , **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>WeakRef</td>
+<tr class="row-even"><td>WeakRef</td>
 <td>WeakRef( [<em>klass</em> = ‘traits.HasTraits’,
 <em>allow_none</em> = False, <em>adapt</em> = ‘yes’, **<em>metadata</em>])</td>
 </tr>
@@ -936,7 +930,7 @@ existing traits.</td></tr>
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jun 21, 2019.
+      Last updated on Nov 18, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.

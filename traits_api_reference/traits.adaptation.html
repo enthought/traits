@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.1.1',
+        VERSION:     '5.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,7 +30,7 @@
     <link rel="top" title="Traits 5 User Manual" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="etsconfig Package" href="traits.etsconfig.html" >
-    <link rel="prev" title="ustr_trait Module" href="ustr_trait.html" > 
+    <link rel="prev" title="version Module" href="version.html" > 
   </head>
   <body>
   <div class="container">
@@ -63,7 +63,7 @@
            accesskey="N">next</a>
       </li>
       <li class="active">
-        <a href="ustr_trait.html" title="ustr_trait Module"
+        <a href="version.html" title="version Module"
            accesskey="P">previous</a>
       </li>
     </ul>
@@ -139,13 +139,15 @@ place).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>type_</strong> – Python ‘type’.</li>
+<li><strong>type</strong> – Python ‘type’.</li>
 <li><strong>protocol</strong> – Either a regular Python class or a traits Interface.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>result</strong> (<em>bool</em>) –
-True if the object provides the protocol, otherwise False.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>result</strong> – True if the object provides the protocol, otherwise False.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
 </td>
 </tr>
 </tbody>
@@ -163,18 +165,18 @@ True if the object provides the protocol, otherwise False.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>adaptee</strong> – The object that we want to adapt.</li>
 <li><strong>to_protocol</strong> – The protocol that the want to adapt the object to.</li>
+<li><strong>adaptee already provides</strong><strong> (</strong><strong>i.e. implements</strong><strong>) </strong><strong>the given protocol</strong> (<em>If</em>) – </li>
+<li><strong>it is simply returned unchanged.</strong> (<em>then</em>) – </li>
+<li><strong>we try to build a chain of adapters that adapt adaptee</strong> (<em>Otherwise</em><em>,</em>) – </li>
+<li><strong>to_protocol.</strong> (<em>to</em>) – </li>
+<li><strong>no such adaptation is possible then either an AdaptationError is</strong> (<em>If</em>) – </li>
+<li><strong>(</strong><strong>if default=Adaptation error</strong><strong>)</strong><strong>, or </strong><strong>default is returned</strong><strong> (</strong><strong>as</strong> (<em>raised</em>) – </li>
+<li><strong>the default value passed to 'getattr' etc</strong><strong>)</strong><strong></strong> (<em>in</em>) – </li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>If <cite>adaptee</cite> already provides (i.e. implements) the given protocol
-then it is simply returned unchanged.</p>
-<p>Otherwise, we try to build a chain of adapters that adapt <cite>adaptee</cite>
-to <cite>to_protocol</cite>.</p>
-<p>If no such adaptation is possible then either an AdaptationError is
-raised (if default=Adaptation error), or <cite>default</cite> is returned (as
-in the default value passed to ‘getattr’ etc).</p>
 </dd></dl>
 
 <dl class="method">
@@ -352,8 +354,8 @@ constructor takes the object to be adapted as the first and only
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="ustr_trait.html"
-                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">ustr_trait</span></code> Module</a></p>
+  <p class="topless"><a href="version.html"
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">version</span></code> Module</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="traits.etsconfig.html"
                         title="next chapter"><code class="docutils literal notranslate"><span class="pre">etsconfig</span></code> Package</a></p>
@@ -393,7 +395,7 @@ constructor takes the object to be adapted as the first and only
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jun 21, 2019.
+      Last updated on Nov 18, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.

@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '5.1.1',
+        VERSION:     '5.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -184,6 +184,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ClassLevelDocumenter</span><span class="o">.</span><span class="n">add_directive_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
         <span class="n">definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_trait_definition</span><span class="p">()</span>
+
+        <span class="c1"># Workaround for enthought/traits#493: if the definition is multiline,</span>
+        <span class="c1"># throw away all lines after the first.</span>
+        <span class="k">if</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">definition</span><span class="p">:</span>
+            <span class="n">definition</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">&quot; …&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;   :annotation: = </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">definition</span><span class="p">),</span> <span class="s2">&quot;&lt;autodoc&gt;&quot;</span><span class="p">)</span></div>
 
     <span class="c1"># Private Interface #####################################################</span>
@@ -297,7 +303,7 @@
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jun 21, 2019.
+      Last updated on Nov 18, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.

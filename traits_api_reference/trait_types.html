@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.1.1',
+        VERSION:     '5.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -91,13 +91,13 @@
 <dl class="attribute">
 <dt id="traits.trait_types.Any.default_value">
 <code class="descname">default_value</code><em class="property"> = None</em><a class="headerlink" href="#traits.trait_types.Any.default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value for the trait:</p>
+<dd><p>type: The default value for the trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.Any.info_text">
 <code class="descname">info_text</code><em class="property"> = 'any value'</em><a class="headerlink" href="#traits.trait_types.Any.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 </dd></dl>
@@ -110,7 +110,7 @@ be redefined via assignment using a TraitValue object.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Generic.metadata">
 <code class="descname">metadata</code><em class="property"> = {'trait_value': True}</em><a class="headerlink" href="#traits.trait_types.Generic.metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>The standard metadata for the trait:</p>
+<dd><p>type: The standard metadata for the trait</p>
 </dd></dl>
 
 </dd></dl>
@@ -128,13 +128,13 @@ be redefined via assignment using a TraitValue object.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.BaseInt.default_value">
 <code class="descname">default_value</code><em class="property"> = 0</em><a class="headerlink" href="#traits.trait_types.BaseInt.default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value for the trait:</p>
+<dd><p>type: The default value for the trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.BaseInt.info_text">
 <code class="descname">info_text</code><em class="property"> = 'an integer (int or long)'</em><a class="headerlink" href="#traits.trait_types.BaseInt.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="method">
@@ -159,7 +159,7 @@ validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Int.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (20,)</em><a class="headerlink" href="#traits.trait_types.Int.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -177,13 +177,13 @@ validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.BaseLong.default_value">
 <code class="descname">default_value</code><em class="property"> = 0</em><a class="headerlink" href="#traits.trait_types.BaseLong.default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value for the trait:</p>
+<dd><p>type: The default value for the trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.BaseLong.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a long'</em><a class="headerlink" href="#traits.trait_types.BaseLong.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="method">
@@ -209,7 +209,7 @@ validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Long.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'int'&gt;, None, &lt;class 'int'&gt;, &lt;class 'numpy.integer'&gt;)</em><a class="headerlink" href="#traits.trait_types.Long.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -227,13 +227,13 @@ validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.BaseFloat.default_value">
 <code class="descname">default_value</code><em class="property"> = 0.0</em><a class="headerlink" href="#traits.trait_types.BaseFloat.default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value for the trait:</p>
+<dd><p>type: The default value for the trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.BaseFloat.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a float'</em><a class="headerlink" href="#traits.trait_types.BaseFloat.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="method">
@@ -259,7 +259,7 @@ validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Float.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (21,)</em><a class="headerlink" href="#traits.trait_types.Float.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -277,13 +277,13 @@ validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.BaseComplex.default_value">
 <code class="descname">default_value</code><em class="property"> = 0j</em><a class="headerlink" href="#traits.trait_types.BaseComplex.default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value for the trait:</p>
+<dd><p>type: The default value for the trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.BaseComplex.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a complex number'</em><a class="headerlink" href="#traits.trait_types.BaseComplex.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="method">
@@ -309,7 +309,7 @@ fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Complex.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'complex'&gt;, &lt;class 'numpy.complexfloating'&gt;, None, &lt;class 'float'&gt;, &lt;class 'numpy.floating'&gt;, &lt;class 'int'&gt;, &lt;class 'numpy.integer'&gt;)</em><a class="headerlink" href="#traits.trait_types.Complex.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -321,13 +321,13 @@ fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.BaseStr.default_value">
 <code class="descname">default_value</code><em class="property"> = ''</em><a class="headerlink" href="#traits.trait_types.BaseStr.default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value for the trait:</p>
+<dd><p>type: The default value for the trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.BaseStr.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a string'</em><a class="headerlink" href="#traits.trait_types.BaseStr.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="method">
@@ -353,7 +353,7 @@ fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Str.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'str'&gt;)</em><a class="headerlink" href="#traits.trait_types.Str.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -378,13 +378,13 @@ when used in a View.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.BaseUnicode.default_value">
 <code class="descname">default_value</code><em class="property"> = ''</em><a class="headerlink" href="#traits.trait_types.BaseUnicode.default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value for the trait:</p>
+<dd><p>type: The default value for the trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.BaseUnicode.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a unicode string'</em><a class="headerlink" href="#traits.trait_types.BaseUnicode.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="method">
@@ -410,7 +410,7 @@ C-level fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Unicode.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'str'&gt;, None, &lt;class 'str'&gt;)</em><a class="headerlink" href="#traits.trait_types.Unicode.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -422,13 +422,13 @@ C-level fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.BaseBytes.default_value">
 <code class="descname">default_value</code><em class="property"> = b''</em><a class="headerlink" href="#traits.trait_types.BaseBytes.default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value for the trait:</p>
+<dd><p>type: The default value for the trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.BaseBytes.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a bytes string'</em><a class="headerlink" href="#traits.trait_types.BaseBytes.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -460,7 +460,7 @@ C-level fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Bytes.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'bytes'&gt;)</em><a class="headerlink" href="#traits.trait_types.Bytes.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -478,13 +478,13 @@ C-level fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.BaseBool.default_value">
 <code class="descname">default_value</code><em class="property"> = False</em><a class="headerlink" href="#traits.trait_types.BaseBool.default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value for the trait:</p>
+<dd><p>type: The default value for the trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.BaseBool.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a boolean'</em><a class="headerlink" href="#traits.trait_types.BaseBool.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="method">
@@ -510,7 +510,7 @@ fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Bool.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'bool'&gt;, None, &lt;class 'numpy.bool_'&gt;)</em><a class="headerlink" href="#traits.trait_types.Bool.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -543,7 +543,7 @@ coercions of non-int values to int using a C-level fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CInt.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'int'&gt;)</em><a class="headerlink" href="#traits.trait_types.CInt.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -576,7 +576,7 @@ coercions of non-long values to long using a C-level fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CLong.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'int'&gt;)</em><a class="headerlink" href="#traits.trait_types.CLong.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -609,7 +609,7 @@ coercions of non-float values to float using a C-level fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CFloat.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'float'&gt;)</em><a class="headerlink" href="#traits.trait_types.CFloat.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -643,7 +643,7 @@ validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CComplex.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'complex'&gt;)</em><a class="headerlink" href="#traits.trait_types.CComplex.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -671,7 +671,7 @@ validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CStr.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (7, ((12, &lt;class 'str'&gt;), (12, &lt;class 'str'&gt;)))</em><a class="headerlink" href="#traits.trait_types.CStr.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -699,7 +699,7 @@ fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CUnicode.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'str'&gt;)</em><a class="headerlink" href="#traits.trait_types.CUnicode.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -727,7 +727,7 @@ fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CBytes.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'bytes'&gt;)</em><a class="headerlink" href="#traits.trait_types.CBytes.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -761,7 +761,7 @@ validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.CBool.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'bool'&gt;)</em><a class="headerlink" href="#traits.trait_types.CBool.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 </dd></dl>
@@ -834,7 +834,7 @@ code in some language.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Code.metadata">
 <code class="descname">metadata</code><em class="property"> = {'editor': &lt;function code_editor&gt;}</em><a class="headerlink" href="#traits.trait_types.Code.metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>The standard metadata for the trait:</p>
+<dd><p>type: The standard metadata for the trait</p>
 </dd></dl>
 
 </dd></dl>
@@ -848,7 +848,7 @@ TraitsUI views. The validation of the value does not enforce HTML syntax.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.HTML.metadata">
 <code class="descname">metadata</code><em class="property"> = {'editor': &lt;function html_editor&gt;}</em><a class="headerlink" href="#traits.trait_types.HTML.metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>The standard metadata for the trait:</p>
+<dd><p>type: The standard metadata for the trait</p>
 </dd></dl>
 
 </dd></dl>
@@ -863,7 +863,7 @@ PasswordEditor in TraitsUI views, which obscures text entered by the user.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Password.metadata">
 <code class="descname">metadata</code><em class="property"> = {'editor': &lt;function password_editor&gt;}</em><a class="headerlink" href="#traits.trait_types.Password.metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>The standard metadata for the trait:</p>
+<dd><p>type: The standard metadata for the trait</p>
 </dd></dl>
 
 </dd></dl>
@@ -875,19 +875,19 @@ PasswordEditor in TraitsUI views, which obscures text entered by the user.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Callable.metadata">
 <code class="descname">metadata</code><em class="property"> = {'copy': 'ref'}</em><a class="headerlink" href="#traits.trait_types.Callable.metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>The standard metadata for the trait:</p>
+<dd><p>type: The standard metadata for the trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.Callable.default_value">
 <code class="descname">default_value</code><em class="property"> = None</em><a class="headerlink" href="#traits.trait_types.Callable.default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value for the trait:</p>
+<dd><p>type: The default value for the trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.Callable.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a callable value'</em><a class="headerlink" href="#traits.trait_types.Callable.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="method">
@@ -917,13 +917,13 @@ PasswordEditor in TraitsUI views, which obscures text entered by the user.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.This.info_text">
 <code class="descname">info_text</code><em class="property"> = 'an instance of the same type as the receiver'</em><a class="headerlink" href="#traits.trait_types.This.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.This.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (2,)</em><a class="headerlink" href="#traits.trait_types.This.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 <dl class="method">
@@ -963,7 +963,7 @@ and whose default value is the object containing the trait.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.self.default_value_type">
 <code class="descname">default_value_type</code><em class="property"> = 2</em><a class="headerlink" href="#traits.trait_types.self.default_value_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value type to use (i.e. ‘self’):</p>
+<dd><p>type: The default value type to use (i.e. ‘self’)</p>
 </dd></dl>
 
 </dd></dl>
@@ -975,13 +975,13 @@ and whose default value is the object containing the trait.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Function.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'function'&gt;)</em><a class="headerlink" href="#traits.trait_types.Function.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.Function.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a function'</em><a class="headerlink" href="#traits.trait_types.Function.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 </dd></dl>
@@ -993,13 +993,13 @@ and whose default value is the object containing the trait.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Method.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'method'&gt;)</em><a class="headerlink" href="#traits.trait_types.Method.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.Method.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a method'</em><a class="headerlink" href="#traits.trait_types.Method.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 </dd></dl>
@@ -1011,13 +1011,13 @@ and whose default value is the object containing the trait.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Module.fast_validate">
 <code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'module'&gt;)</em><a class="headerlink" href="#traits.trait_types.Module.fast_validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>The C-level fast validator to use:</p>
+<dd><p>type: The C-level fast validator to use</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.Module.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a module'</em><a class="headerlink" href="#traits.trait_types.Module.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 </dd></dl>
@@ -1034,13 +1034,13 @@ details on wildcards.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Python.metadata">
 <code class="descname">metadata</code><em class="property"> = {'type': 'python'}</em><a class="headerlink" href="#traits.trait_types.Python.metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>The standard metadata for the trait:</p>
+<dd><p>type: The standard metadata for the trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.Python.default_value">
 <code class="descname">default_value</code><em class="property"> = &lt;undefined&gt;</em><a class="headerlink" href="#traits.trait_types.Python.default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value for the trait:</p>
+<dd><p>type: The default value for the trait</p>
 </dd></dl>
 
 </dd></dl>
@@ -1062,13 +1062,13 @@ details on wildcards.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Constant.ctrait_type">
 <code class="descname">ctrait_type</code><em class="property"> = 7</em><a class="headerlink" href="#traits.trait_types.Constant.ctrait_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the CTrait type to use for this trait:</p>
+<dd><p>type: Defines the CTrait type to use for this trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.Constant.metadata">
 <code class="descname">metadata</code><em class="property"> = {'transient': True, 'type': 'constant'}</em><a class="headerlink" href="#traits.trait_types.Constant.metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>The standard metadata for the trait:</p>
+<dd><p>type: The standard metadata for the trait</p>
 </dd></dl>
 
 </dd></dl>
@@ -1080,13 +1080,13 @@ details on wildcards.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Delegate.ctrait_type">
 <code class="descname">ctrait_type</code><em class="property"> = 3</em><a class="headerlink" href="#traits.trait_types.Delegate.ctrait_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the CTrait type to use for this trait:</p>
+<dd><p>type: Defines the CTrait type to use for this trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.Delegate.metadata">
 <code class="descname">metadata</code><em class="property"> = {'transient': False, 'type': 'delegate'}</em><a class="headerlink" href="#traits.trait_types.Delegate.metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>The standard metadata for the trait:</p>
+<dd><p>type: The standard metadata for the trait</p>
 </dd></dl>
 
 <dl class="method">
@@ -1120,19 +1120,19 @@ the trait.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.Expression.default_value">
 <code class="descname">default_value</code><em class="property"> = '0'</em><a class="headerlink" href="#traits.trait_types.Expression.default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value for the trait:</p>
+<dd><p>type: The default value for the trait</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.Expression.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a valid Python expression'</em><a class="headerlink" href="#traits.trait_types.Expression.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.trait_types.Expression.is_mapped">
 <code class="descname">is_mapped</code><em class="property"> = True</em><a class="headerlink" href="#traits.trait_types.Expression.is_mapped" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicate that this is a mapped trait:</p>
+<dd><p>type: Indicate that this is a mapped trait</p>
 </dd></dl>
 
 <dl class="method">
@@ -1169,7 +1169,7 @@ editor is a Python shell.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.PythonValue.metadata">
 <code class="descname">metadata</code><em class="property"> = {'editor': &lt;function shell_editor&gt;}</em><a class="headerlink" href="#traits.trait_types.PythonValue.metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>The standard metadata for the trait:</p>
+<dd><p>type: The standard metadata for the trait</p>
 </dd></dl>
 
 </dd></dl>
@@ -1181,7 +1181,7 @@ editor is a Python shell.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.BaseFile.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a file name'</em><a class="headerlink" href="#traits.trait_types.BaseFile.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="method">
@@ -1213,7 +1213,7 @@ fast validator.</p>
 <dl class="attribute">
 <dt id="traits.trait_types.BaseDirectory.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a directory name'</em><a class="headerlink" href="#traits.trait_types.BaseDirectory.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="method">
@@ -1357,40 +1357,34 @@ using a C-level fast validator.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>types</strong> (<em>zero</em><em> or </em><em>more arguments</em>) – Definition of the default and allowed tuples. If the first item of
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>types</strong> (<em>zero</em><em> or </em><em>more arguments</em>) – Definition of the default and allowed tuples. If the first item of
 <em>types</em> is a tuple, it is used as the default value.
 The remaining argument list is used to form a tuple that constrains
 the  values assigned to the returned trait. The trait’s value must
 be a tuple of the same length as the remaining argument list, whose
 elements must match the types specified by the corresponding items
-of the remaining argument list.</td>
+of the remaining argument list.</li>
+<li><strong>Value</strong> (<a class="reference internal" href="traits.html#traits.traits.Default" title="traits.traits.Default"><em>Default</em></a>) – </li>
+<li><strong>-------------</strong> – </li>
+<li><strong>If no arguments are specified</strong><strong>, </strong><strong>the default value is</strong><strong> (</strong><strong>)</strong><strong></strong> (<em>1.</em>) – </li>
+<li><strong>If a tuple is specified as the first argument</strong><strong>, </strong><strong>it is the default</strong> (<em>2.</em>) – value.</li>
+<li><strong>If a tuple is not specified as the first argument</strong><strong>, </strong><strong>the default</strong> (<em>3.</em>) – value is a tuple whose length is the length of the argument list,
+and whose values are the default values for the corresponding trait
+types.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Default Value</p>
-<ol class="arabic simple">
-<li>If no arguments are specified, the default value is ().</li>
-<li>If a tuple is specified as the first argument, it is the default
-value.</li>
-<li>If a tuple is not specified as the first argument, the default
-value is a tuple whose length is the length of the argument list,
-and whose values are the default values for the corresponding trait
-types.</li>
-</ol>
-<p>Example for case #2:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mytuple</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">((</span><span class="s1">&#39;Fred&#39;</span><span class="p">,</span> <span class="s1">&#39;Betty&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>The trait’s value must be a 3-element tuple whose first and second
-elements are strings, and whose third element is an integer. The
-default value is <code class="docutils literal notranslate"><span class="pre">('Fred',</span> <span class="pre">'Betty',</span> <span class="pre">5)</span></code>.</p>
-<p>Example for case #3:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mytuple</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="s1">&#39;Fred&#39;</span><span class="p">,</span> <span class="s1">&#39;Betty&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The trait’s value must be a 3-element tuple whose first and second
-elements are strings, and whose third element is an integer. The
-default value is <code class="docutils literal notranslate"><span class="pre">('','',0)</span></code>.</p>
+<p>:param Example for case #2::: mytuple = Tuple((‘Fred’, ‘Betty’, 5))
+:param The trait’s value must be a 3-element tuple whose first and second:
+:param elements are strings, and whose third element is an integer. The:
+:param default value is <code class="docutils literal notranslate"><span class="pre">('Fred',</span> <span class="pre">'Betty',</span> <span class="pre">5)</span></code>.:
+:param Example for case #3::: mytuple = Tuple(‘Fred’, ‘Betty’, 5)
+:param The trait’s value must be a 3-element tuple whose first and second:
+:param elements are strings, and whose third element is an integer. The:
+:param default value is <code class="docutils literal notranslate"><span class="pre">('','',0)</span></code>.:</p>
 </dd></dl>
 
 <dl class="method">
@@ -1457,12 +1451,9 @@ messages.</li>
 </tr>
 </tbody>
 </table>
-<p>For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">value_range</span> <span class="o">=</span> <span class="n">ValidatedTuple</span><span class="p">(</span><span class="n">Int</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">Int</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">fvalidate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-</pre></div>
-</div>
-<p>This definition will accept only tuples <code class="docutils literal notranslate"><span class="pre">(a,</span> <span class="pre">b)</span></code> containing two integers
-that satisfy <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&lt;</span> <span class="pre">b</span></code>.</p>
+<p>:param For example::: value_range = ValidatedTuple(Int(0), Int(1), fvalidate=lambda x: x[0] &lt; x[1])
+:param This definition will accept only tuples <code class="docutils literal notranslate"><span class="pre">(a,</span> <span class="pre">b)</span></code> containing two integers:
+:param that satisfy <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&lt;</span> <span class="pre">b</span></code>.:</p>
 </dd></dl>
 
 <dl class="method">
@@ -1675,7 +1666,7 @@ which describes the default value for this trait.</p>
 <dt id="traits.trait_types.BaseInstance.init_fast_validate">
 <code class="descname">init_fast_validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseInstance.init_fast_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseInstance.init_fast_validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does nothing for the BaseInstance’ class. Used by the ‘Instance’,
-‘AdaptedTo’ and ‘AdaptsTo’ classes to set up the C-level fast
+‘Supports’ and ‘AdaptsTo’ classes to set up the C-level fast
 validator.</p>
 </dd></dl>
 
@@ -1818,7 +1809,7 @@ toolbar.</p>
 <dd><dl class="attribute">
 <dt id="traits.trait_types.Symbol.info_text">
 <code class="descname">info_text</code><em class="property"> = &quot;an object or a string of the form '[package.package...package.]module[:symbol[([arg1,...,argn])]]' specifying where to locate the object&quot;</em><a class="headerlink" href="#traits.trait_types.Symbol.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 </dd></dl>
@@ -1848,7 +1839,7 @@ in the latter case).</p>
 <dl class="attribute">
 <dt id="traits.trait_types.UUID.info_text">
 <code class="descname">info_text</code><em class="property"> = 'a read-only UUID'</em><a class="headerlink" href="#traits.trait_types.UUID.info_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>A description of the type of value this trait accepts:</p>
+<dd><p>type: A description of the type of value this trait accepts</p>
 </dd></dl>
 
 <dl class="method">
@@ -1977,50 +1968,106 @@ or one of its subclasses.</p>
 <dl class="data">
 <dt id="traits.trait_types.DictStrAny">
 <code class="descclassname">traits.trait_types.</code><code class="descname">DictStrAny</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrAny" title="Permalink to this definition">¶</a></dt>
-<dd><p>Only a dictionary of string:Any values can be assigned; only string keys can
+<dd><p>Any values can be assigned; only string keys can
 be inserted. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="data">
 <dt id="traits.trait_types.DictStrStr">
 <code class="descclassname">traits.trait_types.</code><code class="descname">DictStrStr</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrStr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Only a dictionary of string:string values can be assigned; only string keys
+<dd><p>string values can be assigned; only string keys
 with string values can be inserted. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="data">
 <dt id="traits.trait_types.DictStrInt">
 <code class="descclassname">traits.trait_types.</code><code class="descname">DictStrInt</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrInt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Only a dictionary of string:integer values can be assigned; only string keys
+<dd><p>integer values can be assigned; only string keys
 with integer values can be inserted. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="data">
 <dt id="traits.trait_types.DictStrLong">
 <code class="descclassname">traits.trait_types.</code><code class="descname">DictStrLong</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrLong" title="Permalink to this definition">¶</a></dt>
-<dd><p>Only a dictionary of string:long-integer values can be assigned; only string
+<dd><p>long-integer values can be assigned; only string
 keys with long-integer values can be inserted. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="data">
 <dt id="traits.trait_types.DictStrFloat">
 <code class="descclassname">traits.trait_types.</code><code class="descname">DictStrFloat</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrFloat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Only a dictionary of string:float values can be assigned; only string keys
+<dd><p>float values can be assigned; only string keys
 with float values can be inserted. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="data">
 <dt id="traits.trait_types.DictStrBool">
 <code class="descclassname">traits.trait_types.</code><code class="descname">DictStrBool</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrBool" title="Permalink to this definition">¶</a></dt>
-<dd><p>Only a dictionary of string:bool values can be assigned; only string keys
+<dd><p>bool values can be assigned; only string keys
 with boolean values can be inserted. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="data">
 <dt id="traits.trait_types.DictStrList">
 <code class="descclassname">traits.trait_types.</code><code class="descname">DictStrList</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrList" title="Permalink to this definition">¶</a></dt>
-<dd><p>Only a dictionary of string:list values can be assigned; only string keys
+<dd><p>list values can be assigned; only string keys
 with list values can be assigned. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -2103,7 +2150,7 @@ with list values can be assigned. The default value is {}.</p>
         &copy; Copyright 2008-2019, Enthought Inc
       </li>
       <li>
-      Last updated on Jun 21, 2019.
+      Last updated on Nov 18, 2019.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
