@@ -1,6 +1,50 @@
 Traits CHANGELOG
 ================
 
+Release 5.2.0
+-------------
+
+Released: 2019-11-18
+
+Enhancements
+
+* Support installation from source archives. (#528)
+
+Fixes
+
+* Ensure ``TraitListEvent.index`` is always an integer. (#548)
+* Update the deprecated ``collections.MutableMapping`` import. (#530)
+* Fix inadvertent modification of the ``Category`` base class. (#509)
+* Rework version handling in ``setup.py``. (#515)
+* Don't autogenerate documentation for ``ViewElement``. (#559)
+* Ensure that all tests are ``unittest`` compatible. (#551)
+
+Changes
+
+* Replace occurences of deprecated ``AdaptsTo`` with ``Supports``. (#532)
+* Remove ``Class`` trait. (#520)
+* Deprecate ``Category`` trait. (#510)
+* Fix typos in docstrings. (#502)
+* Use decorator form of ``classmethod``. (#500)
+* Remove redefinition of ``NullHandler``. (#518)
+* Add an import check helper. (#521)
+* Clean up Cython tests. (#555)
+* Clean up test output. (#553)
+
+Miscellaneous
+
+* Update EDM version on CI to version 2.0.0. (#560)
+* Don't finish fast on CI. (#556)
+* Use ``unittest`` to run tests in CI. (#552)
+* Low-level fixes and style cleanup in ``etstool.py``. (#550)
+* Add ``--editable`` option for ``install``, ``update`` CI commands. (#546)
+* Make git commit hash available to archives. (#526)
+* Fix use of non-edm envs as bootstrap envs on Windows. (#512)
+* Remove edm installed package before installing from source. (#516)
+* Add help text to click options. (#514)
+* Various cleanups, fixes and enhancements in ``etstool.py``. (#511)
+
+
 Release 5.1.2
 -------------
 
@@ -84,7 +128,7 @@ Enhancements
 
 * CI for documentation (#431)
 * Remove 2to3 fixers (#430)
-* Enthought Sphinx theme for docs (#427)
+* Enthought Sphinx Theme for docs (#427)
 * New ``HasRequiredTraits`` class (#419)
 * Free ``HasTraits`` subclasses from hashing/comparing by identity (#410)
 * Unify and fix default list editors (#396)
