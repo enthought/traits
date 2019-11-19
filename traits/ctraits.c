@@ -900,10 +900,6 @@ has_traits_init ( PyObject * obj, PyObject * args, PyObject * kwds ) {
 
     PyObject * key;
     PyObject * value;
-    PyObject * klass;
-    PyObject * handler;
-    PyObject * handler_args;
-    int n;
     int has_listeners;
     Py_ssize_t i = 0;
 
@@ -5296,8 +5292,6 @@ static PyMethodDef ctraits_methods[] = {
 +----------------------------------------------------------------------------*/
 
 Py2to3_MOD_INIT(ctraits) {
-    PyObject * tmp;
-
     /* Create the 'ctraits' module: */
     PyObject * module;
 
