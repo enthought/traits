@@ -4,12 +4,12 @@ traits: explicitly typed attributes for Python
 
 http://docs.enthought.com/traits
 
-.. image:: https://api.travis-ci.org/enthought/traits.png?branch=master
+.. image:: https://travis-ci.org/enthought/traits.svg?branch=master
    :target: https://travis-ci.org/enthought/traits
    :alt: Build status
 
-.. image:: https://coveralls.io/repos/enthought/traits/badge.png
-   :target: https://coveralls.io/r/enthought/traits
+.. image:: https://coveralls.io/repos/github/enthought/traits/badge.svg?branch=master
+   :target: https://coveralls.io/github/enthought/traits
    :alt: Coverage status
 
 The Traits project is at the center of all Enthought Tool Suite development
