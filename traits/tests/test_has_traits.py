@@ -32,10 +32,9 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         class_name = "MyClass"
         bases = (object,)
         class_dict = {"attr": "something"}
-        is_category = False
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict)
 
         # Then; Check that the original Python-level class attributes are still
         # present in the class dictionary.
@@ -56,10 +55,9 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             "_set_my_property": _dummy_setter,
             "_validate_my_property": _dummy_validator,
         }
-        is_category = False
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict)
 
         # Then
         self.assertEqual(class_dict[ListenerTraits], {})
@@ -84,10 +82,9 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         class_name = "MyClass"
         bases = (object,)
         class_dict = {"attr": "something", "my_int": Int}
-        is_category = False
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict)
 
         # Then
         self.assertEqual(class_dict[ListenerTraits], {})
@@ -111,10 +108,9 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         class_name = "MyClass"
         bases = (object,)
         class_dict = {"attr": "something", "my_int_": Int}  # prefix trait
-        is_category = False
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict)
 
         # Then
         for kind in (BaseTraits, ClassTraits, ListenerTraits, InstanceTraits):
@@ -136,10 +132,9 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         class_name = "MyClass"
         bases = (object,)
         class_dict = {"attr": "something", "my_listener": listener}
-        is_category = False
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict)
 
         # Then
         self.assertEqual(class_dict[BaseTraits], {})
@@ -167,10 +162,9 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             "attr": "something",
             "my_property": property(_dummy_getter),
         }
-        is_category = False
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict)
 
         # Then
         self.assertEqual(class_dict[BaseTraits], {})
@@ -186,10 +180,9 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         class_name = "MyClass"
         bases = (Base,)
         class_dict = {"attr": "something", "my_trait": Float()}
-        is_category = False
 
         # When
-        update_traits_class_dict(class_name, bases, class_dict, is_category)
+        update_traits_class_dict(class_name, bases, class_dict)
 
         # Then
         self.assertEqual(class_dict[InstanceTraits], {})

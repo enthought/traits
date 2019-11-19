@@ -33,8 +33,6 @@ from .trait_notifiers import (
     TraitChangeNotifyWrapper,
 )
 
-from .category import Category
-
 from .traits import (
     CTrait,
     Trait,
