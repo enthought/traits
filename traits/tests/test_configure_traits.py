@@ -40,7 +40,7 @@ class TestConfigureTraits(unittest.TestCase):
         model = Model()
         with mock.patch.object(self.toolkit, "view_application") as mock_view:
             model.configure_traits()
-        mock_view.assert_called_once()
+        self.assertEqual(mock_view.call_count, 1)
 
     def test_filename_but_no_file(self):
         model = Model(count=37)
