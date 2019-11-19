@@ -28,8 +28,9 @@
 from __future__ import absolute_import, division, print_function
 
 import copy as copy_module
-import weakref
+import os
 import re
+import weakref
 
 from types import FunctionType, MethodType
 
@@ -2333,8 +2334,9 @@ class HasTraits(CHasTraits):
         modified by the user.
         """
         if filename is not None:
-            with open(filename, "rb") as fd:
-                self.copy_traits(sm.cPickle.Unpickler(fd).load())
+            if os.path.exists(filename):
+                with open(filename, "rb") as fd:
+                    self.copy_traits(six.moves.cPickle.Unpickler(fd).load())
 
         if edit:
             from traitsui.api import toolkit
@@ -2352,7 +2354,7 @@ class HasTraits(CHasTraits):
             )
             if rc and (filename is not None):
                 with open(filename, "wb") as fd:
-                    sm.cPickle.Pickler(fd, True).dump(self)
+                    six.moves.cPickle.Pickler(fd, True).dump(self)
             return rc
 
         return True
