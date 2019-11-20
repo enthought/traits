@@ -84,7 +84,6 @@ from .traits import (
 from .trait_errors import TraitError
 
 from . import _py2to3
-from ._py2to3 import int
 
 # -------------------------------------------------------------------------------
 #  Constants:

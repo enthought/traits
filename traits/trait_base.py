@@ -34,7 +34,6 @@ from os.path import dirname, exists, join
 import six
 
 from . import _py2to3
-from ._py2to3 import int
 
 from .etsconfig.api import ETSConfig
 

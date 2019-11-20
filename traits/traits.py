@@ -89,7 +89,6 @@ from .trait_handlers import (
 )
 
 
-from ._py2to3 import int
 
 # -------------------------------------------------------------------------------
 #  Constants:
