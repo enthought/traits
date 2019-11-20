@@ -48,10 +48,7 @@ from traits.api import (
 
 #  Base unit test classes:
 
-if six.PY2:
-    LONG_TYPE = long
-else:
-    LONG_TYPE = int
+LONG_TYPE = int
 
 
 class BaseTest(object):

@@ -23,10 +23,7 @@ from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
 from traits.testing.optional_dependencies import (
     numpy, requires_numpy, requires_python2)
 
-if six.PY2:
-    LONG_TYPE = long
-else:
-    LONG_TYPE = int
+LONG_TYPE = int
 
 
 class MyFloat(object):

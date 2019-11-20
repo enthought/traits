@@ -27,10 +27,7 @@ import six
 from traits.api import HasTraits, Int, TraitError
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
-if six.PY2:
-    LONG_TYPE = long
-else:
-    LONG_TYPE = int
+LONG_TYPE = int
 
 
 class A(HasTraits):

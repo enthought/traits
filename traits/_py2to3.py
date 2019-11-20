@@ -7,10 +7,7 @@ import contextlib
 
 import six
 
-if six.PY2:
-    LONG_TYPE = long
-else:
-    LONG_TYPE = int
+LONG_TYPE = int
 
 # FIXME : These two aliases are being used by released versions of traitsui
 # See PR https://github.com/enthought/traitsui/pull/496 which removes their
