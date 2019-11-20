@@ -3808,9 +3808,8 @@ DictStrStr = Dict(str, str)
 #: with integer values can be inserted. The default value is {}.
 DictStrInt = Dict(str, int)
 
-#: Only a dictionary of string:long-integer values can be assigned; only string
-#: keys with long-integer values can be inserted. The default value is {}.
-DictStrLong = Dict(str, int)
+#: DictStrLong is a deprecated alias for DictStrInt.
+DictStrLong = DictStrInt
 
 #: Only a dictionary of string:float values can be assigned; only string keys
 #: with float values can be inserted. The default value is {}.

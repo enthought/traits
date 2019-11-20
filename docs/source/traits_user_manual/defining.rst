@@ -290,7 +290,6 @@ the table.
 | DictStrFloat,    |                                                          |
 | DictStrInt,      |                                                          |
 | DictStrList,     |                                                          |
-| DictStrLong,     |                                                          |
 | DictStrStr       |                                                          |
 +------------------+----------------------------------------------------------+
 | Directory        | Directory( [*value* = '', *auto_set* = False, *entries* =|
