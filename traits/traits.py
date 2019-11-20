@@ -590,7 +590,6 @@ DefaultValues = {
     str: "",
     six.text_type: "",
     int: 0,
-    int: int(0),
     float: 0.0,
     complex: 0j,
     list: [],

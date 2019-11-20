@@ -276,7 +276,7 @@ class BaseLong(TraitType):
     evaluate = int
 
     #: The default value for the trait:
-    default_value = int(0)
+    default_value = 0
 
     #: A description of the type of value this trait accepts:
     info_text = "a long"

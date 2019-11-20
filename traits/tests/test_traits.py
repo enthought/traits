@@ -166,8 +166,6 @@ class CoercibleIntTest(AnyTraitTest):
     _good_values = [
         10,
         -10,
-        int(10),
-        int(-10),
         10.1,
         -10.1,
         "10",
@@ -205,7 +203,7 @@ class IntTest(AnyTraitTest):
     obj = IntTrait()
 
     _default_value = 99
-    _good_values = [10, -10, int(10), int(-10)]
+    _good_values = [10, -10]
     _bad_values = [
         "ten",
         u"ten",
@@ -254,23 +252,21 @@ class IntTest(AnyTraitTest):
 
 
 class CoercibleLongTrait(HasTraits):
-    value = CLong(int(99))
+    value = CLong(99)
 
 
 class LongTrait(HasTraits):
-    value = Long(int(99))
+    value = Long(99)
 
 
 class CoercibleLongTest(AnyTraitTest):
 
     obj = CoercibleLongTrait()
 
-    _default_value = int(99)
+    _default_value = 99
     _good_values = [
         10,
         -10,
-        int(10),
-        int(-10),
         10.1,
         -10.1,
         "10",
@@ -288,10 +284,8 @@ class CoercibleLongTest(AnyTraitTest):
         "ten",
         u"ten",
         [10],
-        [int(10)],
         {"ten": 10},
         (10,),
-        (int(10),),
         None,
         1j,
     ]
@@ -307,16 +301,14 @@ class LongTest(AnyTraitTest):
 
     obj = LongTrait()
 
-    _default_value = int(99)
-    _good_values = [10, -10, int(10), int(-10)]
+    _default_value = 99
+    _good_values = [10, -10]
     _bad_values = [
         "ten",
         u"ten",
         [10],
-        [int(10)],
         {"ten": 10},
         (10,),
-        (int(10),),
         None,
         1j,
         10.1,
@@ -357,8 +349,6 @@ class CoercibleFloatTest(AnyTraitTest):
     _good_values = [
         10,
         -10,
-        int(10),
-        int(-10),
         10.1,
         -10.1,
         "10",
@@ -418,9 +408,6 @@ class FloatTest(AnyTraitTest):
         u"-10.1",
     ]
 
-    if six.PY2:
-        _good_values.extend([int(-10), int(10)])
-
     def coerce(self, value):
         try:
             return float(value)
@@ -443,8 +430,6 @@ class ImaginaryValueTest(AnyTraitTest):
     _good_values = [
         10,
         -10,
-        int(10),
-        int(-10),
         10.1,
         -10.1,
         "10",
@@ -482,8 +467,6 @@ class StringTest(AnyTraitTest):
     _good_values = [
         10,
         -10,
-        int(10),
-        int(-10),
         10.1,
         -10.1,
         "10",
@@ -519,8 +502,6 @@ class UnicodeTest(StringTest):
     _good_values = [
         10,
         -10,
-        int(10),
-        int(-10),
         10.1,
         -10.1,
         "10",
@@ -565,7 +546,6 @@ class BytesTest(StringTest):
     _bad_values = [
         10,
         -10,
-        int(10),
         10.1,
         u"unicode",
         u"",
@@ -619,7 +599,6 @@ class CoercibleBytesTest(StringTest):
         b"10",
         b"-10",
         10,
-        int(10),
         [10],
         (10,),
         set([10]),
@@ -742,9 +721,6 @@ class FloatRangeTest(AnyTraitTest):
         0,
         1,
         6,
-        int(0),
-        int(1),
-        int(6),
         1.999,
         6.01,
         "two",
@@ -799,7 +775,6 @@ class OldInstanceTest(AnyTraitTest):
     ]
     _bad_values = [
         0,
-        int(0),
         0.0,
         0j,
         OTraitTest1,
@@ -850,7 +825,6 @@ class NewInstanceTest(AnyTraitTest):
     ]
     _bad_values = [
         0,
-        int(0),
         0.0,
         0j,
         NTraitTest1,
@@ -938,12 +912,6 @@ class OddIntegerTest(AnyTraitTest):
         7,
         9,
         999999999,
-        int(1),
-        int(3),
-        int(5),
-        int(7),
-        int(9),
-        int(999999999),
         1.0,
         3.0,
         5.0,

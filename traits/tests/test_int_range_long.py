@@ -18,7 +18,7 @@ from traits.api import HasTraits, Int, Range, Long, TraitError
 class A(HasTraits):
     i = Int
     l = Long
-    r = Range(int(2), int(9223372036854775807))
+    r = Range(2, 9223372036854775807)
 
 
 class TraitIntRangeLong(unittest.TestCase):
@@ -26,20 +26,20 @@ class TraitIntRangeLong(unittest.TestCase):
         "Test to make sure it is legal to set an Int trait to a long value"
         a = A()
         a.i = 1
-        a.i = int(10)
+        a.i = 10**20
 
     def test_long(self):
         "Test if it is legal to set a Long trait to an int value"
         a = A()
         a.l = 10
-        a.l = int(100)
+        a.l = 10**20
 
     def test_range(self):
         "Test a range trait with longs being set to an int value"
         a = A()
         a.r = 256
-        a.r = int(20)
-        self.assertRaises(TraitError, a.trait_set, r=int(1))
+        a.r = 20
+        self.assertRaises(TraitError, a.trait_set, r=1)
         self.assertRaises(
-            TraitError, a.trait_set, r=int(9223372036854775808)
+            TraitError, a.trait_set, r=9223372036854775808
         )

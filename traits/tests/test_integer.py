@@ -56,7 +56,7 @@ class TestInt(unittest.TestCase):
 
     def test_accepts_small_long(self):
         a = A()
-        a.integral = int(23)
+        a.integral = 23
         # Check that type is stored as int where possible.
         self.assertEqual(a.integral, 23)
         self.assertIs(type(a.integral), int)
