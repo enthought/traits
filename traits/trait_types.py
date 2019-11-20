@@ -267,46 +267,14 @@ class Int(BaseInt):
 #  'BaseLong' and 'Long' traits:
 # -------------------------------------------------------------------------------
 
+# BaseLong and Long are now aliases for the BaseInt and Int trait types,
+# kept for backwards compatibility. They may be removed in a future release.
 
-class BaseLong(TraitType):
-    """ Defines a trait whose value must be a Python long.
-    """
+#: BaseLong is a deprecated alias for BaseInt.
+BaseLong = BaseInt
 
-    #: The function to use for evaluating strings to this type:
-    evaluate = int
-
-    #: The default value for the trait:
-    default_value = 0
-
-    #: A description of the type of value this trait accepts:
-    info_text = "a long"
-
-    def validate(self, object, name, value):
-        """ Validates that a specified value is valid for this trait.
-
-            Note: The 'fast validator' version performs this check in C.
-        """
-        if isinstance(value, int):
-            return int(value)
-
-        if isinstance(value, int):
-            return value
-
-        self.error(object, name, value)
-
-    def create_editor(self):
-        """ Returns the default traits UI editor for this type of trait.
-        """
-        return default_text_editor(self, int)
-
-
-class Long(BaseLong):
-    """ Defines a trait whose value must be a Python long using a C-level fast
-        validator.
-    """
-
-    #: The C-level fast validator to use:
-    fast_validate = long_fast_validate
+#: Long is a deprecated alias for Int.
+Long = Int
 
 
 # -------------------------------------------------------------------------------
@@ -643,33 +611,14 @@ class CInt(BaseCInt):
 #  'BaseCLong' and 'CLong' traits:
 # -------------------------------------------------------------------------------
 
+# BaseCLong and CLong are now aliases for the BaseCInt and CInt trait types,
+# kept for backwards compatibility. They may be removed in a future release.
 
-class BaseCLong(BaseLong):
-    """ Defines a trait whose value must be a Python long and which supports
-        coercions of non-long values to long.
-    """
+#: BaseCLong is a deprecated alias for BaseCInt.
+BaseCLong = BaseCInt
 
-    #: The function to use for evaluating strings to this type:
-    evaluate = int
-
-    def validate(self, object, name, value):
-        """ Validates that a specified value is valid for this trait.
-
-            Note: The 'fast validator' version performs this check in C.
-        """
-        try:
-            return int(value)
-        except:
-            self.error(object, name, value)
-
-
-class CLong(BaseCLong):
-    """ Defines a trait whose value must be a Python long and which supports
-        coercions of non-long values to long using a C-level fast validator.
-    """
-
-    #: The C-level fast validator to use:
-    fast_validate = (12, int)
+#: CLong is a deprecated alias for CInt.
+CLong = CInt
 
 
 # -------------------------------------------------------------------------------
