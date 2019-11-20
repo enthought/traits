@@ -7,13 +7,6 @@
 Traits
 ------
 
-.. deprecated:: 6.0
-  The ``Long``, ``CLong``, ``BaseLong`` and ``BaseCLong`` trait types are deprecated,
-  and are now direct aliases for the corresponding ``Int`` trait types.
-
-.. deprecated:: 6.0
-  The ``DictStrLong`` trait type is deprecated.
-
 .. autoclass:: Any
 
 .. autoclass:: Generic

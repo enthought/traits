@@ -20,7 +20,7 @@ class A(HasTraits):
     r = Range(2, 9223372036854775807)
 
 
-class TraitIntRangeLong(unittest.TestCase):
+class TraitIntRange(unittest.TestCase):
     def test_int(self):
         "Test it is legal to set an Int trait to any integer value"
         a = A()

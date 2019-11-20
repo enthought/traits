@@ -262,20 +262,6 @@ class Int(BaseInt):
 
 
 # -------------------------------------------------------------------------------
-#  'BaseLong' and 'Long' traits:
-# -------------------------------------------------------------------------------
-
-# BaseLong and Long are now aliases for the BaseInt and Int trait types,
-# kept for backwards compatibility. They may be removed in a future release.
-
-#: BaseLong is a deprecated alias for BaseInt.
-BaseLong = BaseInt
-
-#: Long is a deprecated alias for Int.
-Long = Int
-
-
-# -------------------------------------------------------------------------------
 #  'BaseFloat' and 'Float' traits:
 # -------------------------------------------------------------------------------
 
@@ -603,20 +589,6 @@ class CInt(BaseCInt):
 
     #: The C-level fast validator to use:
     fast_validate = (12, int)
-
-
-# -------------------------------------------------------------------------------
-#  'BaseCLong' and 'CLong' traits:
-# -------------------------------------------------------------------------------
-
-# BaseCLong and CLong are now aliases for the BaseCInt and CInt trait types,
-# kept for backwards compatibility. They may be removed in a future release.
-
-#: BaseCLong is a deprecated alias for BaseCInt.
-BaseCLong = BaseCInt
-
-#: CLong is a deprecated alias for CInt.
-CLong = CInt
 
 
 # -------------------------------------------------------------------------------
@@ -3771,9 +3743,6 @@ DictStrStr = Dict(str, str)
 #: Only a dictionary of string:integer values can be assigned; only string keys
 #: with integer values can be inserted. The default value is {}.
 DictStrInt = Dict(str, int)
-
-#: DictStrLong is a deprecated alias for DictStrInt.
-DictStrLong = DictStrInt
 
 #: Only a dictionary of string:float values can be assigned; only string keys
 #: with float values can be inserted. The default value is {}.
