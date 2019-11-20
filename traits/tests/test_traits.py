@@ -375,10 +375,7 @@ class CoercibleFloatTest(AnyTraitTest):
     ]
 
     def coerce(self, value):
-        try:
-            return float(value)
-        except:
-            return float(int(value))
+        return float(value)
 
 
 class FloatTest(AnyTraitTest):
@@ -409,10 +406,7 @@ class FloatTest(AnyTraitTest):
     ]
 
     def coerce(self, value):
-        try:
-            return float(value)
-        except:
-            return float(int(value))
+        return float(value)
 
 
 #  Trait that can only have 'complex'(i.e. imaginary) values:
@@ -449,10 +443,7 @@ class ImaginaryValueTest(AnyTraitTest):
     _bad_values = [u"10L", u"-10L", "ten", [10], {"ten": 10}, (10,), None]
 
     def coerce(self, value):
-        try:
-            return complex(value)
-        except:
-            return complex(int(value))
+        return complex(value)
 
 
 class StringTrait(HasTraits):
@@ -730,10 +721,7 @@ class FloatRangeTest(AnyTraitTest):
     ]
 
     def coerce(self, value):
-        try:
-            return float(value)
-        except:
-            return float(int(value))
+        return float(value)
 
 
 # Old style class version:
