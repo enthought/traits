@@ -197,10 +197,7 @@ class CoercibleIntTest(AnyTraitTest):
         try:
             return int(value)
         except:
-            try:
-                return int(float(value))
-            except:
-                return int(int(value))
+            return int(float(value))
 
 
 class IntTest(AnyTraitTest):
@@ -253,10 +250,7 @@ class IntTest(AnyTraitTest):
         try:
             return int(value)
         except:
-            try:
-                return int(float(value))
-            except:
-                return int(int(value))
+            return int(float(value))
 
 
 class CoercibleLongTrait(HasTraits):
@@ -731,10 +725,7 @@ class IntRangeTest(AnyTraitTest):
         try:
             return int(value)
         except:
-            try:
-                return int(float(value))
-            except:
-                return int(int(value))
+            return int(float(value))
 
 
 class FloatRangeTrait(HasTraits):
