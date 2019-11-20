@@ -48,7 +48,6 @@ static PyObject * TraitValue;          /* TraitValue class */
 static PyObject * adapt;               /* PyProtocols 'adapt' function */
 static PyObject * validate_implements; /* 'validate implementation' function */
 static PyObject * is_callable;         /* Marker for 'callable' value */
-static PyObject * _HasTraits_monitors; /* Object creation monitors. */
 static PyObject * _trait_notification_handler; /* User supplied trait */
                 /* notification handler (intended for use by debugging tools) */
 static PyTypeObject * ctrait_type;     /* Python-level CTrait type reference */
@@ -901,10 +900,6 @@ has_traits_init ( PyObject * obj, PyObject * args, PyObject * kwds ) {
 
     PyObject * key;
     PyObject * value;
-    PyObject * klass;
-    PyObject * handler;
-    PyObject * handler_args;
-    int n;
     int has_listeners;
     Py_ssize_t i = 0;
 
@@ -940,24 +935,6 @@ has_traits_init ( PyObject * obj, PyObject * args, PyObject * kwds ) {
             return -1;
 
         Py_DECREF( value );
-    }
-
-    /* Notify any interested monitors that a new object has been created: */
-    for ( i = 0, n = PyList_GET_SIZE( _HasTraits_monitors ); i < n; i++ ) {
-        value = PyList_GET_ITEM( _HasTraits_monitors, i );
-        assert( PyTuple_Check( value ) );
-        assert( PyTuple_GET_SIZE( value ) == 2 );
-
-        klass   = PyTuple_GET_ITEM( value, 0 );
-        handler = PyTuple_GET_ITEM( value, 1 );
-
-        if ( PyObject_IsInstance( obj, klass ) > 0 ) {
-            handler_args = PyTuple_New( 1 );
-            PyTuple_SetItem( handler_args, 0, obj );
-            Py_INCREF( obj );
-            PyObject_Call( handler, handler_args, NULL );
-            Py_DECREF( handler_args );
-        }
     }
 
     /* Call the 'traits_init' method to finish up initialization: */
@@ -5315,8 +5292,6 @@ static PyMethodDef ctraits_methods[] = {
 +----------------------------------------------------------------------------*/
 
 Py2to3_MOD_INIT(ctraits) {
-    PyObject * tmp;
-
     /* Create the 'ctraits' module: */
     PyObject * module;
 
@@ -5352,16 +5327,6 @@ Py2to3_MOD_INIT(ctraits) {
     if ( PyModule_AddObject( module, "cTrait",
                          (PyObject *) &trait_type ) < 0 )
        return Py2to3_MOD_ERROR_VAL;
-
-    /* Create the 'HasTraitsMonitor' list: */
-    tmp = PyList_New( 0 );
-    Py_INCREF( tmp );
-    if ( PyModule_AddObject( module, "_HasTraits_monitors",
-                             (PyObject*) tmp) < 0 ) {
-       return Py2to3_MOD_ERROR_VAL;
-    }
-
-    _HasTraits_monitors = tmp;
 
     /* Predefine a Python string == "__class_traits__": */
     class_traits = Py2to3_SimpleString_FromString( "__class_traits__" );

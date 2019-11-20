@@ -39,7 +39,7 @@ from . import __version__ as TraitsVersion
 
 from .adaptation.adaptation_error import AdaptationError
 
-from .ctraits import CHasTraits, _HasTraits_monitors
+from .ctraits import CHasTraits
 
 from .traits import (
     CTrait,
@@ -855,32 +855,6 @@ def migrate_property(name, property, property_info, class_dict):
 
 
 # -------------------------------------------------------------------------------
-#  Manages the list of trait instance monitors:
-# -------------------------------------------------------------------------------
-
-
-def _trait_monitor_index(cls, handler):
-    global _HasTraits_monitors
-
-    type_handler = type(handler)
-    for i, _cls, _handler in enumerate(_HasTraits_monitors):
-        if type_handler is type(_handler):
-            if (
-                (type_handler is MethodType)
-                or "cython_function_or_method" in str(type_handler)
-            ) and (handler.__self__ is not None):
-                if (handler.__name__ == _handler.__name__) and (
-                    handler.__self__ is _handler.__self__
-                ):
-                    return i
-
-            elif handler == _handler:
-                return i
-
-    return -1
-
-
-# -------------------------------------------------------------------------------
 #  'HasTraits' decorators:
 # -------------------------------------------------------------------------------
 
@@ -1142,41 +1116,6 @@ class HasTraits(CHasTraits):
             self._init_trait_delegate_listener(
                 name, "delegate", get_delegate_pattern(name, trait)
             )
-
-    # ---------------------------------------------------------------------------
-    #  Adds/Removes a trait instance creation monitor:
-    # ---------------------------------------------------------------------------
-
-    @classmethod
-    def trait_monitor(cls, handler, remove=False):
-        """Adds or removes the specified *handler* from the list of active
-        monitors.
-
-        Parameters
-        ----------
-        handler : function
-            The function to add or remove as a monitor.
-        remove : bool
-            Flag indicating whether to remove (True) or add the specified
-            handler as a monitor for this class.
-
-        Description
-        -----------
-        If *remove* is omitted or False, the specified handler is added to
-        the list of active monitors; if *remove* is True, the handler is
-        removed from the active monitor list.
-
-        """
-        global _HasTraits_monitors
-
-        index = _trait_monitor_index(cls, handler)
-        if remove:
-            if index >= 0:
-                del _HasTraits_monitors[index]
-            return
-
-        if index < 0:
-            _HasTraits_monitors.append((cls, handler))
 
     # ---------------------------------------------------------------------------
     #  Add a new class trait (i.e. applies to all instances and subclasses):
