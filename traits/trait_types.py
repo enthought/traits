@@ -121,7 +121,7 @@ try:
 
     int_fast_validate = (11, int, integer)
     long_fast_validate = (11, int, None, int, integer)
-    float_fast_validate = (11, float, floating, None, int, int, integer)
+    float_fast_validate = (11, float, floating, None, int, integer)
     complex_fast_validate = (
         11,
         complex,
@@ -139,7 +139,7 @@ except ImportError:
     # The standard python definitions (without numpy):
     int_fast_validate = (11, int)
     long_fast_validate = (11, int, None, int)
-    float_fast_validate = (11, float, None, int, int)
+    float_fast_validate = (11, float, None, int)
     complex_fast_validate = (11, complex, None, float, int)
     bool_fast_validate = (11, bool)
     # Tuple or single type suitable for an isinstance check.

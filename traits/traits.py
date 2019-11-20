@@ -557,12 +557,11 @@ ctraits._ctrait(CTrait)
 #  Constants:
 # -------------------------------------------------------------------------------
 
-ConstantTypes = (NoneType, int, int, float, complex, str, six.text_type)
+ConstantTypes = (NoneType, int, float, complex, str, six.text_type)
 
 PythonTypes = (
     str,
     six.text_type,
-    int,
     int,
     float,
     complex,

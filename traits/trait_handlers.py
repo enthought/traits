@@ -79,7 +79,7 @@ NO_COMPARE = 0
 OBJECT_IDENTITY_COMPARE = 1
 RICH_COMPARE = 2
 
-RangeTypes = (int, int, float)
+RangeTypes = (int, float)
 
 CallableTypes = (FunctionType, MethodType)
 
