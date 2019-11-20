@@ -132,7 +132,7 @@ in the following table.
    pair: type; Unicode
 .. index:: Boolean type, Bool trait, CBool trait, Complex trait, CComplex trait
 .. index:: complex number type, Float trait, CFloat trait, Int trait, CInt trait
-.. index:: floating point number type, Long trait, CLong trait, Str trait
+.. index:: floating point number type, Str trait
 .. index:: CStr trait, Unicode; trait, CUnicode trait, Bytes trait, CBytes trait
 
 .. _predefined-defaults-for-simple-types-table:
@@ -146,7 +146,6 @@ Bool           CBool         Boolean                False
 Complex        CComplex      Complex number         0+0j
 Float          CFloat        Floating point number  0.0
 Int            CInt          Plain integer          0
-Long           CLong         Long integer           0L
 Str            CStr          String                 ''
 Unicode        CUnicode      Unicode                u''
 Bytes          CBytes        Bytes                  b''
@@ -179,7 +178,6 @@ Trait         Coercible Types
 ============= ===========================================
 Complex       Floating point number, plain integer
 Float         Plain integer
-Long          Plain integer
 Unicode       String
 ============= ===========================================
 

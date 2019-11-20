@@ -19,7 +19,6 @@ are:
 - CComplex
 - CInt
 - CFloat
-- CLong
 - Code
 - Complex
 - CStr
@@ -34,7 +33,6 @@ are:
 - Instance
 - Int
 - List
-- Long
 - Password
 - PythonValue
 - Range

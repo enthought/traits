@@ -7,6 +7,10 @@
 Traits
 ------
 
+.. deprecated:: 6.0
+  The ``Long``, ``CLong``, ``BaseLong`` and ``BaseCLong`` trait types are deprecated,
+  and are now direct aliases for the corresponding ``Int`` trait types.
+
 .. autoclass:: Any
 
 .. autoclass:: Generic
@@ -14,10 +18,6 @@ Traits
 .. autoclass:: BaseInt
 
 .. autoclass:: Int
-
-.. autoclass:: BaseLong
-
-.. autoclass:: Long
 
 .. autoclass:: BaseFloat
 
@@ -48,10 +48,6 @@ Traits
 .. autoclass:: BaseCInt
 
 .. autoclass:: CInt
-
-.. autoclass:: BaseCLong
-
-.. autoclass:: CLong
 
 .. autoclass:: BaseCFloat
 
