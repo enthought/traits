@@ -69,6 +69,17 @@ class TestConfigureTraits(unittest.TestCase):
             model.configure_traits(filename=filename)
         self.assertEqual(model.count, 52)
 
+    def test_filename_with_invalid_existing_file(self):
+        # Create file whose contents are not unpickleable.
+        filename = os.path.join(self.tmpdir, "model.pkl")
+        with open(filename, "wb") as pickled_object:
+            pickled_object.write(b"this is not a valid pickle")
+
+        model = Model(count=19)
+        with mock.patch.object(self.toolkit, "view_application"):
+            with self.assertRaises(six.moves.cPickle.PickleError):
+                model.configure_traits(filename=filename)
+
     def test_filename_with_existing_file_stores_updated_model(self):
         stored_model = Model(count=52)
         filename = os.path.join(self.tmpdir, "model.pkl")
