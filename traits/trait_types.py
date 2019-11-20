@@ -289,7 +289,7 @@ class BaseLong(TraitType):
         if isinstance(value, int):
             return int(value)
 
-        if isinstance(value, six.integer_types):
+        if isinstance(value, int):
             return value
 
         self.error(object, name, value)

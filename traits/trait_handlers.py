@@ -918,7 +918,7 @@ class TraitRange(TraitHandler):
     def long_validate(self, object, name, value):
         try:
             if (
-                isinstance(value, six.integer_types)
+                isinstance(value, int)
                 and (
                     (self._low is None)
                     or (self._exclude_low and (self._low < value))

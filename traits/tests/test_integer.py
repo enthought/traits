@@ -110,7 +110,7 @@ class TestInt(unittest.TestCase):
         a = A()
         a.integral = numpy.int32(23)
         self.assertEqual(a.integral, 23)
-        self.assertIn(type(a.integral), six.integer_types)
+        self.assertIs(type(a.integral), int)
 
         a.integral = numpy.uint64(2 ** 63 + 2)
         self.assertEqual(a.integral, 2 ** 63 + 2)
