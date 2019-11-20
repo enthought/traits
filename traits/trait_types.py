@@ -234,8 +234,6 @@ class BaseInt(TraitType):
         """
         if type(value) is int:
             return value
-        elif type(value) is int:
-            return int(value)
 
         try:
             int_value = operator.index(value)
