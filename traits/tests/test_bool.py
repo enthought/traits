@@ -21,7 +21,7 @@ import six
 from traits.api import Bool, Dict, HasTraits, Int, TraitError
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
-LONG_TYPE = int
+int = int
 
 
 class A(HasTraits):
@@ -45,7 +45,7 @@ class TestBool(unittest.TestCase):
     def test_does_not_accept_int_or_float(self):
         a = A()
 
-        bad_values = [-1, LONG_TYPE(1), "a string", 1.0]
+        bad_values = [-1, int(1), "a string", 1.0]
         for bad_value in bad_values:
             with self.assertRaises(TraitError):
                 a.foo = bad_value

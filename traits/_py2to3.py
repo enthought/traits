@@ -7,7 +7,7 @@ import contextlib
 
 import six
 
-LONG_TYPE = int
+int = int
 
 # FIXME : These two aliases are being used by released versions of traitsui
 # See PR https://github.com/enthought/traitsui/pull/496 which removes their

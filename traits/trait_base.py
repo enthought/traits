@@ -34,7 +34,7 @@ from os.path import dirname, exists, join
 import six
 
 from . import _py2to3
-from ._py2to3 import LONG_TYPE
+from ._py2to3 import int
 
 from .etsconfig.api import ETSConfig
 
@@ -55,7 +55,7 @@ TypeTypes = (
     str,
     six.text_type,
     int,
-    LONG_TYPE,
+    int,
     float,
     complex,
     list,
@@ -203,7 +203,7 @@ def strx(arg):
 #  Constants:
 # -------------------------------------------------------------------------------
 
-StringTypes = (str, six.text_type, int, LONG_TYPE, float, complex)
+StringTypes = (str, six.text_type, int, int, float, complex)
 
 # -------------------------------------------------------------------------------
 #  Define a mapping of coercable types:
@@ -211,7 +211,7 @@ StringTypes = (str, six.text_type, int, LONG_TYPE, float, complex)
 
 # Mapping of coercable types.
 CoercableTypes = {
-    LONG_TYPE: (11, LONG_TYPE, int),
+    int: (11, int, int),
     float: (11, float, int),
     complex: (11, complex, float, int),
     six.text_type: (11, six.text_type, str),

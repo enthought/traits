@@ -84,7 +84,7 @@ from .traits import (
 from .trait_errors import TraitError
 
 from . import _py2to3
-from ._py2to3 import LONG_TYPE
+from ._py2to3 import int
 
 # -------------------------------------------------------------------------------
 #  Constants:
@@ -121,8 +121,8 @@ try:
     from numpy import integer, floating, complexfloating, bool_
 
     int_fast_validate = (11, int, integer)
-    long_fast_validate = (11, LONG_TYPE, None, int, integer)
-    float_fast_validate = (11, float, floating, None, int, LONG_TYPE, integer)
+    long_fast_validate = (11, int, None, int, integer)
+    float_fast_validate = (11, float, floating, None, int, int, integer)
     complex_fast_validate = (
         11,
         complex,
@@ -139,8 +139,8 @@ try:
 except ImportError:
     # The standard python definitions (without numpy):
     int_fast_validate = (11, int)
-    long_fast_validate = (11, LONG_TYPE, None, int)
-    float_fast_validate = (11, float, None, int, LONG_TYPE)
+    long_fast_validate = (11, int, None, int)
+    float_fast_validate = (11, float, None, int, int)
     complex_fast_validate = (11, complex, None, float, int)
     bool_fast_validate = (11, bool)
     # Tuple or single type suitable for an isinstance check.
@@ -237,7 +237,7 @@ class BaseInt(TraitType):
         """
         if type(value) is int:
             return value
-        elif type(value) is LONG_TYPE:
+        elif type(value) is int:
             return int(value)
 
         try:
@@ -274,10 +274,10 @@ class BaseLong(TraitType):
     """
 
     #: The function to use for evaluating strings to this type:
-    evaluate = LONG_TYPE
+    evaluate = int
 
     #: The default value for the trait:
-    default_value = LONG_TYPE(0)
+    default_value = int(0)
 
     #: A description of the type of value this trait accepts:
     info_text = "a long"
@@ -288,7 +288,7 @@ class BaseLong(TraitType):
             Note: The 'fast validator' version performs this check in C.
         """
         if isinstance(value, int):
-            return LONG_TYPE(value)
+            return int(value)
 
         if isinstance(value, six.integer_types):
             return value
@@ -298,7 +298,7 @@ class BaseLong(TraitType):
     def create_editor(self):
         """ Returns the default traits UI editor for this type of trait.
         """
-        return default_text_editor(self, LONG_TYPE)
+        return default_text_editor(self, int)
 
 
 class Long(BaseLong):
@@ -651,7 +651,7 @@ class BaseCLong(BaseLong):
     """
 
     #: The function to use for evaluating strings to this type:
-    evaluate = LONG_TYPE
+    evaluate = int
 
     def validate(self, object, name, value):
         """ Validates that a specified value is valid for this trait.
@@ -659,7 +659,7 @@ class BaseCLong(BaseLong):
             Note: The 'fast validator' version performs this check in C.
         """
         try:
-            return LONG_TYPE(value)
+            return int(value)
         except:
             self.error(object, name, value)
 
@@ -670,7 +670,7 @@ class CLong(BaseCLong):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (12, LONG_TYPE)
+    fast_validate = (12, int)
 
 
 # -------------------------------------------------------------------------------
@@ -1856,14 +1856,14 @@ class BaseRange(TraitType):
             if high is not None:
                 high = float(high)
 
-        elif vtype is LONG_TYPE:
+        elif vtype is int:
             self._validate = "long_validate"
             self._type_desc = "a long integer"
             if low is not None:
-                low = LONG_TYPE(low)
+                low = int(low)
 
             if high is not None:
-                high = LONG_TYPE(high)
+                high = int(high)
 
         elif vtype is int:
             self._validate = "int_validate"
@@ -1905,7 +1905,7 @@ class BaseRange(TraitType):
         if exclude_high:
             exclude_mask |= 2
 
-        if is_static and (vtype is not LONG_TYPE):
+        if is_static and (vtype is not int):
             self.init_fast_validator(kind, low, high, exclude_mask)
 
         #: Assign type-corrected arguments to handler attributes:
@@ -3862,7 +3862,7 @@ DictStrInt = Dict(str, int)
 
 #: Only a dictionary of string:long-integer values can be assigned; only string
 #: keys with long-integer values can be inserted. The default value is {}.
-DictStrLong = Dict(str, LONG_TYPE)
+DictStrLong = Dict(str, int)
 
 #: Only a dictionary of string:float values can be assigned; only string keys
 #: with float values can be inserted. The default value is {}.

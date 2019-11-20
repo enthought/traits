@@ -89,7 +89,7 @@ from .trait_handlers import (
 )
 
 
-from ._py2to3 import LONG_TYPE
+from ._py2to3 import int
 
 # -------------------------------------------------------------------------------
 #  Constants:
@@ -558,13 +558,13 @@ ctraits._ctrait(CTrait)
 #  Constants:
 # -------------------------------------------------------------------------------
 
-ConstantTypes = (NoneType, int, LONG_TYPE, float, complex, str, six.text_type)
+ConstantTypes = (NoneType, int, int, float, complex, str, six.text_type)
 
 PythonTypes = (
     str,
     six.text_type,
     int,
-    LONG_TYPE,
+    int,
     float,
     complex,
     list,
@@ -592,7 +592,7 @@ DefaultValues = {
     str: "",
     six.text_type: "",
     int: 0,
-    LONG_TYPE: LONG_TYPE(0),
+    int: int(0),
     float: 0.0,
     complex: 0j,
     list: [],

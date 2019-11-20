@@ -61,7 +61,7 @@ from .trait_errors import TraitError, repr_type
 
 from . import _py2to3
 
-from ._py2to3 import LONG_TYPE
+from ._py2to3 import int
 
 # Patched by 'traits.py' once class is defined!
 Trait = Event = None
@@ -80,7 +80,7 @@ NO_COMPARE = 0
 OBJECT_IDENTITY_COMPARE = 1
 RICH_COMPARE = 2
 
-RangeTypes = (int, LONG_TYPE, float)
+RangeTypes = (int, int, float)
 
 CallableTypes = (FunctionType, MethodType)
 
@@ -847,13 +847,13 @@ class TraitRange(TraitHandler):
                 low = float(low)
             if high is not None:
                 high = float(high)
-        elif vtype is LONG_TYPE:
+        elif vtype is int:
             self.validate = self.long_validate
             self._type_desc = "a long integer"
             if low is not None:
-                low = LONG_TYPE(low)
+                low = int(low)
             if high is not None:
-                high = LONG_TYPE(high)
+                high = int(high)
         else:
             self.validate = self.int_validate
             kind = 3
@@ -867,7 +867,7 @@ class TraitRange(TraitHandler):
             exclude_mask |= 1
         if exclude_high:
             exclude_mask |= 2
-        if vtype is not LONG_TYPE:
+        if vtype is not int:
             self.fast_validate = (kind, low, high, exclude_mask)
 
         # Assign type-corrected arguments to handler attributes

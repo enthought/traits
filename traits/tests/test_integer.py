@@ -27,7 +27,7 @@ import six
 from traits.api import HasTraits, Int, TraitError
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
-LONG_TYPE = int
+int = int
 
 
 class A(HasTraits):
@@ -58,7 +58,7 @@ class TestInt(unittest.TestCase):
 
     def test_accepts_small_long(self):
         a = A()
-        a.integral = LONG_TYPE(23)
+        a.integral = int(23)
         # Check that type is stored as int where possible.
         self.assertEqual(a.integral, 23)
         self.assertIs(type(a.integral), int)
@@ -70,13 +70,13 @@ class TestInt(unittest.TestCase):
         else:
             size_limit = six.MAXSIZE
         a = A()
-        a.integral = LONG_TYPE(size_limit)
+        a.integral = int(size_limit)
         self.assertEqual(a.integral, size_limit)
         self.assertIs(type(a.integral), int)
 
         a.integral = size_limit + 1
         self.assertEqual(a.integral, size_limit + 1)
-        self.assertIs(type(a.integral), LONG_TYPE)
+        self.assertIs(type(a.integral), int)
 
     def test_accepts_bool(self):
         a = A()
@@ -116,7 +116,7 @@ class TestInt(unittest.TestCase):
 
         a.integral = numpy.uint64(2 ** 63 + 2)
         self.assertEqual(a.integral, 2 ** 63 + 2)
-        self.assertIs(type(a.integral), LONG_TYPE)
+        self.assertIs(type(a.integral), int)
 
         with self.assertRaises(TraitError):
             a.integral = numpy.float32(4.0)

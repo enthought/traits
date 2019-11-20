@@ -23,7 +23,7 @@ from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
 from traits.testing.optional_dependencies import (
     numpy, requires_numpy, requires_python2)
 
-LONG_TYPE = int
+int = int
 
 
 class MyFloat(object):
@@ -119,11 +119,11 @@ class CommonFloatTests(object):
     @requires_python2
     def test_accepts_small_long(self):
         a = self.test_class()
-        a.value = LONG_TYPE(2)
+        a.value = int(2)
         self.assertIs(type(a.value), float)
         self.assertEqual(a.value, 2.0)
 
-        a.value_or_none = LONG_TYPE(2)
+        a.value_or_none = int(2)
         self.assertIs(type(a.value_or_none), float)
         self.assertEqual(a.value_or_none, 2.0)
 
