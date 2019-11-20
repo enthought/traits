@@ -14,8 +14,6 @@ import six
 
 from traits.api import HasTraits, Int, Range, Long, TraitError
 
-int = int
-
 
 class A(HasTraits):
     i = Int

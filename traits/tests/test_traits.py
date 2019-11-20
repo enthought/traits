@@ -48,8 +48,6 @@ from traits.api import (
 
 #  Base unit test classes:
 
-int = int
-
 
 class BaseTest(object):
     def assign(self, value):

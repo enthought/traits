@@ -27,8 +27,6 @@ import six
 from traits.api import HasTraits, Int, TraitError
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
-int = int
-
 
 class A(HasTraits):
     integral = Int

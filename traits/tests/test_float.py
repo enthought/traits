@@ -23,8 +23,6 @@ from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
 from traits.testing.optional_dependencies import (
     numpy, requires_numpy, requires_python2)
 
-int = int
-
 
 class MyFloat(object):
     def __init__(self, value):

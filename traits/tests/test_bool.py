@@ -21,8 +21,6 @@ import six
 from traits.api import Bool, Dict, HasTraits, Int, TraitError
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
-int = int
-
 
 class A(HasTraits):
     foo = Bool
