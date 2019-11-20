@@ -12,30 +12,23 @@ import unittest
 
 import six
 
-from traits.api import HasTraits, Int, Range, Long, TraitError
+from traits.api import HasTraits, Int, Range, TraitError
 
 
 class A(HasTraits):
     i = Int
-    l = Long
     r = Range(2, 9223372036854775807)
 
 
 class TraitIntRangeLong(unittest.TestCase):
     def test_int(self):
-        "Test to make sure it is legal to set an Int trait to a long value"
+        "Test it is legal to set an Int trait to any integer value"
         a = A()
         a.i = 1
         a.i = 10**20
 
-    def test_long(self):
-        "Test if it is legal to set a Long trait to an int value"
-        a = A()
-        a.l = 10
-        a.l = 10**20
-
     def test_range(self):
-        "Test a range trait with longs being set to an int value"
+        "Test a range trait with large integers being set to an int value"
         a = A()
         a.r = 256
         a.r = 20

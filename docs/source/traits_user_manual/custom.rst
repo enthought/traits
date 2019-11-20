@@ -295,7 +295,6 @@ belonging to one of the following standard Python types:
 
 * NoneType
 * int
-* long
 * float
 * complex
 * bool

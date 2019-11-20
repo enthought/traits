@@ -120,7 +120,6 @@ try:
     from numpy import integer, floating, complexfloating, bool_
 
     int_fast_validate = (11, int, integer)
-    long_fast_validate = (11, int, None, int, integer)
     float_fast_validate = (11, float, floating, None, int, integer)
     complex_fast_validate = (
         11,
@@ -138,7 +137,6 @@ try:
 except ImportError:
     # The standard python definitions (without numpy):
     int_fast_validate = (11, int)
-    long_fast_validate = (11, int, None, int)
     float_fast_validate = (11, float, None, int)
     complex_fast_validate = (11, complex, None, float, int)
     bool_fast_validate = (11, bool)
@@ -219,7 +217,7 @@ class Generic(Any):
 
 
 class BaseInt(TraitType):
-    """ Defines a trait whose type must be an int or long.
+    """ Defines a trait whose type must be an integer.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -229,7 +227,7 @@ class BaseInt(TraitType):
     default_value = 0
 
     #: A description of the type of value this trait accepts:
-    info_text = "an integer (int or long)"
+    info_text = "an integer"
 
     def validate(self, object, name, value):
         """ Validates that a specified value is valid for this trait.
@@ -255,7 +253,7 @@ class BaseInt(TraitType):
 
 
 class Int(BaseInt):
-    """ Defines a trait whose type must be an int or long using a C-level fast
+    """ Defines a trait whose type must be an integer using a C-level fast
         validator.
     """
 
@@ -1787,7 +1785,7 @@ class BaseRange(TraitType):
         is_static = not issubclass(vtype, six.string_types)
         if is_static and (vtype not in RangeTypes):
             raise TraitError(
-                "Range can only be use for int, long or float "
+                "Range can only be use for int or float "
                 "values, but a value of type %s was specified." % vtype
             )
 
@@ -1803,15 +1801,6 @@ class BaseRange(TraitType):
 
             if high is not None:
                 high = float(high)
-
-        elif vtype is int:
-            self._validate = "long_validate"
-            self._type_desc = "a long integer"
-            if low is not None:
-                low = int(low)
-
-            if high is not None:
-                high = int(high)
 
         elif vtype is int:
             self._validate = "int_validate"
@@ -1902,31 +1891,6 @@ class BaseRange(TraitType):
         try:
             if (
                 isinstance(value, int_fast_validate[1:])
-                and (
-                    (self._low is None)
-                    or (self._exclude_low and (self._low < value))
-                    or ((not self._exclude_low) and (self._low <= value))
-                )
-                and (
-                    (self._high is None)
-                    or (self._exclude_high and (self._high > value))
-                    or ((not self._exclude_high) and (self._high >= value))
-                )
-            ):
-                return value
-        except:
-            pass
-
-        self.error(object, name, value)
-
-    def long_validate(self, object, name, value):
-        """ Validate that the value is a long value in the specified range.
-        """
-        try:
-            valid_types = list(long_fast_validate[1:])
-            valid_types.remove(None)
-            if (
-                isinstance(value, tuple(valid_types))
                 and (
                     (self._low is None)
                     or (self._exclude_low and (self._low < value))

@@ -54,26 +54,19 @@ class TestInt(unittest.TestCase):
         self.assertEqual(a.integral, 23)
         self.assertIs(type(a.integral), int)
 
-    def test_accepts_small_long(self):
+    def test_accepts_large_integer(self):
+        size_limit = sys.maxsize
         a = A()
-        a.integral = 23
-        # Check that type is stored as int where possible.
-        self.assertEqual(a.integral, 23)
-        self.assertIs(type(a.integral), int)
-
-    def test_accepts_large_long(self):
-        # This is only applicable to Python 2
-        if six.PY2:
-            size_limit = sys.maxint
-        else:
-            size_limit = six.MAXSIZE
-        a = A()
-        a.integral = int(size_limit)
+        a.integral = size_limit
         self.assertEqual(a.integral, size_limit)
         self.assertIs(type(a.integral), int)
 
         a.integral = size_limit + 1
         self.assertEqual(a.integral, size_limit + 1)
+        self.assertIs(type(a.integral), int)
+
+        a.integral = 2**2048 + 1
+        self.assertEqual(a.integral, 2**2048 + 1)
         self.assertIs(type(a.integral), int)
 
     def test_accepts_bool(self):

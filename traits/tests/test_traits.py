@@ -25,14 +25,12 @@ from traits.api import (
     CBytes,
     CFloat,
     CInt,
-    CLong,
     Delegate,
     Float,
     HasTraits,
     Instance,
     Int,
     List,
-    Long,
     Str,
     This,
     Trait,
@@ -243,89 +241,6 @@ class IntTest(AnyTraitTest):
                 np.int_(-10),
             ]
         )
-
-    def coerce(self, value):
-        try:
-            return int(value)
-        except:
-            return int(float(value))
-
-
-class CoercibleLongTrait(HasTraits):
-    value = CLong(99)
-
-
-class LongTrait(HasTraits):
-    value = Long(99)
-
-
-class CoercibleLongTest(AnyTraitTest):
-
-    obj = CoercibleLongTrait()
-
-    _default_value = 99
-    _good_values = [
-        10,
-        -10,
-        10.1,
-        -10.1,
-        "10",
-        "-10",
-        u"10",
-        u"-10",
-    ]
-    if six.PY2:
-        _good_values.extend(["10L", "-10L", u"10L", u"-10L"])
-    _bad_values = [
-        "10.1",
-        "-10.1",
-        u"10.1",
-        u"-10.1",
-        "ten",
-        u"ten",
-        [10],
-        {"ten": 10},
-        (10,),
-        None,
-        1j,
-    ]
-
-    def coerce(self, value):
-        try:
-            return int(value)
-        except:
-            return int(float(value))
-
-
-class LongTest(AnyTraitTest):
-
-    obj = LongTrait()
-
-    _default_value = 99
-    _good_values = [10, -10]
-    _bad_values = [
-        "ten",
-        u"ten",
-        [10],
-        {"ten": 10},
-        (10,),
-        None,
-        1j,
-        10.1,
-        -10.1,
-        "10",
-        "-10",
-        "10L",
-        "-10L",
-        "10.1",
-        "-10.1",
-        u"10",
-        u"-10",
-        u"10L",
-        u"-10L",
-        u"10.1",
-        u"-10.1",
-    ]
 
     def coerce(self, value):
         try:

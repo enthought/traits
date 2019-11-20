@@ -114,8 +114,7 @@ class CommonFloatTests(object):
         a.float_or_text = u"not a float"
         self.assertEqual(a.float_or_text, u"not a float")
 
-    @requires_python2
-    def test_accepts_small_long(self):
+    def test_accepts_small_integer(self):
         a = self.test_class()
         a.value = 2
         self.assertIs(type(a.value), float)
@@ -125,11 +124,9 @@ class CommonFloatTests(object):
         self.assertIs(type(a.value_or_none), float)
         self.assertEqual(a.value_or_none, 2.0)
 
-    @requires_python2
-    def test_accepts_large_long(self):
+    def test_accepts_large_integer(self):
         a = self.test_class()
 
-        # Value large enough to be a long on Python 2.
         a.value = 2 ** 64
         self.assertIs(type(a.value), float)
         self.assertEqual(a.value, 2 ** 64)

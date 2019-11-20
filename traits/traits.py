@@ -1358,7 +1358,6 @@ class ForwardProperty(object):
 
 SpecialNames = {
     ###   'int':     trait_factory( Int ),
-    ###   'long':    trait_factory( Long ),
     ###   'float':   trait_factory( Float ),
     ###   'complex': trait_factory( Complex ),
     ###   'str':     trait_factory( Str ),
