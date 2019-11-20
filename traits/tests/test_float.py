@@ -17,11 +17,8 @@ Tests for the Float trait type.
 """
 import unittest
 
-import six
-
 from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
-from traits.testing.optional_dependencies import (
-    numpy, requires_numpy, requires_python2)
+from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
 class MyFloat(object):

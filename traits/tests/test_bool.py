@@ -16,8 +16,6 @@ Tests for the Bool trait type.
 """
 import unittest
 
-import six
-
 from traits.api import Bool, Dict, HasTraits, Int, TraitError
 from traits.testing.optional_dependencies import numpy, requires_numpy
 

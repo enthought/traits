@@ -25,8 +25,6 @@ import re
 
 from string import capwords
 
-import six
-
 from traits.api import (
     HasPrivateTraits,
     HasTraits,
