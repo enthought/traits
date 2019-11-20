@@ -33,6 +33,8 @@ except ImportError:
 import logging
 from types import FunctionType
 
+import six
+
 from .has_traits import HasTraits
 
 # -------------------------------------------------------------------------------
