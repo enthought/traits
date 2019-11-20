@@ -28,8 +28,9 @@
 from __future__ import absolute_import, division, print_function
 
 import copy as copy_module
-import weakref
+import os
 import re
+import weakref
 
 from types import FunctionType, MethodType
 
@@ -39,7 +40,7 @@ from . import __version__ as TraitsVersion
 
 from .adaptation.adaptation_error import AdaptationError
 
-from .ctraits import CHasTraits, _HasTraits_monitors
+from .ctraits import CHasTraits
 
 from .traits import (
     CTrait,
@@ -482,9 +483,7 @@ class MetaHasTraits(type):
     _listeners = {}
 
     def __new__(cls, class_name, bases, class_dict):
-        update_traits_class_dict(
-            class_name, bases, class_dict, is_category=False
-        )
+        update_traits_class_dict(class_name, bases, class_dict)
 
         # Finish building the class using the updated class dictionary:
         klass = type.__new__(cls, class_name, bases, class_dict)
@@ -516,7 +515,7 @@ class MetaHasTraits(type):
         MetaHasTraits._listeners[class_name].remove(listener)
 
 
-def update_traits_class_dict(class_name, bases, class_dict, is_category=False):
+def update_traits_class_dict(class_name, bases, class_dict):
     """ Processes all of the traits related data in the class dictionary.
 
     This is called during the construction of a new HasTraits class. The first
@@ -532,13 +531,6 @@ def update_traits_class_dict(class_name, bases, class_dict, is_category=False):
         The base classes for the HasTraits class.
     class_dict : dict
         A dictionary of class members.
-    is_category : bool, optional
-        Whether this is a Category subclass. The default is False.
-
-    .. deprecated:: 5.2
-       The category extension mechanism is deprecated, and the is_category
-       option will be removed in a future version of Traits.
-
     """
     # Create the various class dictionaries, lists and objects needed to
     # hold trait and view information and definitions:
@@ -704,12 +696,6 @@ def update_traits_class_dict(class_name, bases, class_dict, is_category=False):
                     )
                 base_traits[name] = value
 
-            elif is_category:
-                raise TraitError(
-                    "Cannot override '%s' trait "
-                    "definition in a category" % name
-                )
-
         # Merge class traits:
         for name, value in base_dict.get(ClassTraits).items():
             if name not in class_traits:
@@ -724,23 +710,12 @@ def update_traits_class_dict(class_name, bases, class_dict, is_category=False):
                         )
                 class_traits[name] = value
 
-            elif is_category:
-                raise TraitError(
-                    "Cannot override '%s' trait "
-                    "definition in a category" % name
-                )
-
         # Merge prefix traits:
         base_prefix_traits = base_dict.get(PrefixTraits)
         for name in base_prefix_traits["*"]:
             if name not in prefix_list:
                 prefix_list.append(name)
                 prefix_traits[name] = base_prefix_traits[name]
-            elif is_category:
-                raise TraitError(
-                    "Cannot override '%s_' trait "
-                    "definition in a category" % name
-                )
 
         # If the base class has a 'ViewElements' object defined, add it to
         # the 'parents' list of this class's 'ViewElements':
@@ -749,7 +724,7 @@ def update_traits_class_dict(class_name, bases, class_dict, is_category=False):
             view_elements.parents.append(parent_view_elements)
 
     # Make sure there is a definition for 'undefined' traits:
-    if (prefix_traits.get("") is None) and (not is_category):
+    if prefix_traits.get("") is None:
         prefix_list.append("")
         prefix_traits[""] = Python().as_ctrait()
 
@@ -878,32 +853,6 @@ def migrate_property(name, property, property_info, class_dict):
         )
 
     return property
-
-
-# -------------------------------------------------------------------------------
-#  Manages the list of trait instance monitors:
-# -------------------------------------------------------------------------------
-
-
-def _trait_monitor_index(cls, handler):
-    global _HasTraits_monitors
-
-    type_handler = type(handler)
-    for i, _cls, _handler in enumerate(_HasTraits_monitors):
-        if type_handler is type(_handler):
-            if (
-                (type_handler is MethodType)
-                or "cython_function_or_method" in str(type_handler)
-            ) and (handler.__self__ is not None):
-                if (handler.__name__ == _handler.__name__) and (
-                    handler.__self__ is _handler.__self__
-                ):
-                    return i
-
-            elif handler == _handler:
-                return i
-
-    return -1
 
 
 # -------------------------------------------------------------------------------
@@ -1170,41 +1119,6 @@ class HasTraits(CHasTraits):
             )
 
     # ---------------------------------------------------------------------------
-    #  Adds/Removes a trait instance creation monitor:
-    # ---------------------------------------------------------------------------
-
-    @classmethod
-    def trait_monitor(cls, handler, remove=False):
-        """Adds or removes the specified *handler* from the list of active
-        monitors.
-
-        Parameters
-        ----------
-        handler : function
-            The function to add or remove as a monitor.
-        remove : bool
-            Flag indicating whether to remove (True) or add the specified
-            handler as a monitor for this class.
-
-        Description
-        -----------
-        If *remove* is omitted or False, the specified handler is added to
-        the list of active monitors; if *remove* is True, the handler is
-        removed from the active monitor list.
-
-        """
-        global _HasTraits_monitors
-
-        index = _trait_monitor_index(cls, handler)
-        if remove:
-            if index >= 0:
-                del _HasTraits_monitors[index]
-            return
-
-        if index < 0:
-            _HasTraits_monitors.append((cls, handler))
-
-    # ---------------------------------------------------------------------------
     #  Add a new class trait (i.e. applies to all instances and subclasses):
     # ---------------------------------------------------------------------------
 
@@ -1306,111 +1220,6 @@ class HasTraits(CHasTraits):
 
         # Finally, add the new trait to the class trait dictionary:
         class_traits[name] = trait
-
-    # ---------------------------------------------------------------------------
-    #  Adds a 'category' to the class:
-    # ---------------------------------------------------------------------------
-
-    @classmethod
-    def add_trait_category(cls, category):
-        """ Adds a trait category to a class.
-
-        .. deprecated:: 5.2
-           The category extension mechanism is deprecated, and this method
-           will be removed in a future version of Traits.
-
-        """
-        if issubclass(category, HasTraits):
-            cls._add_trait_category(
-                getattr(category, BaseTraits),
-                getattr(category, ClassTraits),
-                getattr(category, InstanceTraits),
-                getattr(category, PrefixTraits),
-                getattr(category, ListenerTraits),
-                getattr(category, ViewTraits, None),
-            )
-
-        # Copy all methods that are not already in the class from the category:
-        for subcls in category.__mro__:
-            for name, value in subcls.__dict__.items():
-                if not hasattr(cls, name):
-                    setattr(cls, name, value)
-
-    # ---------------------------------------------------------------------------
-    #  Adds a 'category' to the class:
-    # ---------------------------------------------------------------------------
-
-    @classmethod
-    def _add_trait_category(
-        cls,
-        base_traits,
-        class_traits,
-        instance_traits,
-        prefix_traits,
-        listeners,
-        view_elements,
-    ):
-        # Update the class and each of the existing subclasses:
-        for subclass in [cls] + cls.trait_subclasses(True):
-
-            # The list of subclasses may include other Category
-            # subclasses. Those don't have the full complement of
-            # special dictionary attributes (ClassTraits and friends),
-            # so we shouldn't update them.
-            if BaseTraits not in subclass.__dict__:
-                continue
-
-            # Merge the 'base_traits':
-            subclass_traits = getattr(subclass, BaseTraits)
-            for name, value in base_traits.items():
-                subclass_traits.setdefault(name, value)
-
-            # Merge the 'class_traits':
-            subclass_traits = getattr(subclass, ClassTraits)
-            for name, value in class_traits.items():
-                subclass_traits.setdefault(name, value)
-
-            # Merge the 'instance_traits':
-            subclass_traits = getattr(subclass, InstanceTraits)
-            for name, arg_lists in instance_traits.items():
-                subclass_arg_lists = subclass_traits.get(name)
-                if subclass_arg_lists is None:
-                    subclass_traits[name] = arg_lists[:]
-                else:
-                    for arg_list in arg_lists:
-                        if arg_list not in subclass_arg_lists:
-                            subclass_arg_lists.append(arg_list)
-
-            # Merge the 'prefix_traits':
-            subclass_traits = getattr(subclass, PrefixTraits)
-            subclass_list = subclass_traits["*"]
-            changed = False
-            for name, value in prefix_traits.items():
-                if name not in subclass_traits:
-                    subclass_traits[name] = value
-                    subclass_list.append(name)
-                    changed = True
-
-            # Resort the list from longest to shortest (if necessary):
-            if changed:
-                subclass_list.sort(key=lambda x: -len(x))
-
-            # Merge the 'listeners':
-            subclass_traits = getattr(subclass, ListenerTraits)
-            for name, value in listeners.items():
-                subclass_traits.setdefault(name, value)
-
-        # Copy all our new view elements into the base class's ViewElements:
-        if view_elements is not None:
-            content = view_elements.content
-            if len(content) > 0:
-                base_ve = getattr(cls, ViewTraits, None)
-                if base_ve is None:
-                    base_ve = ViewElements()
-                    setattr(cls, ViewTraits, base_ve)
-                base_ve_content = base_ve.content
-                for name, value in content.items():
-                    base_ve_content.setdefault(name, value)
 
     # ---------------------------------------------------------------------------
     #  Sets a trait notification dispatch handler:
@@ -2333,8 +2142,9 @@ class HasTraits(CHasTraits):
         modified by the user.
         """
         if filename is not None:
-            with open(filename, "rb") as fd:
-                self.copy_traits(sm.cPickle.Unpickler(fd).load())
+            if os.path.exists(filename):
+                with open(filename, "rb") as fd:
+                    self.copy_traits(six.moves.cPickle.Unpickler(fd).load())
 
         if edit:
             from traitsui.api import toolkit
@@ -2352,7 +2162,7 @@ class HasTraits(CHasTraits):
             )
             if rc and (filename is not None):
                 with open(filename, "wb") as fd:
-                    sm.cPickle.Pickler(fd, True).dump(self)
+                    six.moves.cPickle.Pickler(fd, True).dump(self)
             return rc
 
         return True
