@@ -3189,6 +3189,14 @@ validate_trait_self_type ( trait_object * trait, has_traits_object * obj,
    values too large for an int), or raise TypeError if the given
    object cannot be converted to an integer.
 
+   "integer-like" means either:
+
+   - is an instance of int (or long in Python 2), or
+   - can be converted to an integer via operator.index.
+
+   The second case captures (for example) instances of NumPy
+   integer types like np.int32, np.uint64, etc.
+
    Roughly equivalent to the Python code ``int(operator.index(value))``.
 */
 
