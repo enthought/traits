@@ -3375,14 +3375,15 @@ validate_trait_float(trait_object * trait, has_traits_object * obj,
 
 
 /*
-   Determine whether the given value lies in the range specified
-   by range_info.
+   Determine whether `value` lies in the range specified by `range_info`.
 
-   value must be of exact type float.
-   range_info is expected to be a tuple (*, low, high, exclude_mask)
+   * `value` must be of exact type float.
+   * `range_info` is expected to be a tuple (*, low, high, exclude_mask)
+     where `low` and `high` are object of exact type float and exclude_mask
+     is a Python integer.
 
-   Return 1 if value is within range, 0 if not, and -1 (with an exception
-   set) on error.
+   Return 1 if `value` is within range, and 0 if not. If an exception occurs,
+   return -1 and set an error.
 */
 
 static int
