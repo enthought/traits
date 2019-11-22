@@ -4040,11 +4040,13 @@ check_implements:
                     goto done;
                 break;
 
-           case 20:  /* Integer check: */
+            case 20:  /* Integer check: */
                 result = as_integer(value);
-                /* A TypeError represents a type validation failure, and should be
-                re-raised as a TraitError. Other exceptions should be propagated. */
-                if (result == NULL && PyErr_ExceptionMatches(PyExc_TypeError)) {
+                /* A TypeError indicates that we don't have a match. Clear
+                   the error and continue with the next item in the complex
+                   sequence. */
+                if (result == NULL
+                        && PyErr_ExceptionMatches(PyExc_TypeError)) {
                     PyErr_Clear();
                     break;
                 }
