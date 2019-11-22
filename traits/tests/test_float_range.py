@@ -36,7 +36,8 @@ class ModelWithRangeCompound(HasTraits):
     """
 
     # Range as part of a compound trait. This (currently)
-    # exercises a different code path in ctraits.c from percentage.
+    # exercises a different code path in ctraits.c from the
+    # corresponding trait in ModelWithRange.
     percentage = Either(None, Range(0.0, 100.0))
 
 
