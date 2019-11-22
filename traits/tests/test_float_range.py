@@ -25,6 +25,7 @@ class ModelWithRange(HasTraits):
     """
     Model containing simple Range trait.
     """
+
     # Simple floating-point range trait.
     percentage = Range(0.0, 100.0)
 
@@ -33,6 +34,7 @@ class ModelWithRangeCompound(HasTraits):
     """
     Model containing compound Range trait.
     """
+
     # Range as part of a compound trait. This (currently)
     # exercises a different code path in ctraits.c from percentage.
     percentage = Either(None, Range(0.0, 100.0))
