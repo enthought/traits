@@ -3184,7 +3184,7 @@ validate_trait_self_type ( trait_object * trait, has_traits_object * obj,
 
 
 /*
-   Convert an arbitrary integer-like Python object to an exact integer.
+   Convert an integer-like Python object to an exact integer.
 
    Returns an object of exact type int (or possibly exact type long
    on Python 2, for values too large to fit in an int), or raises
