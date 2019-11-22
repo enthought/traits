@@ -3291,65 +3291,17 @@ error:
 |  Verifies a Python value is a Python integer (an int or long)
 +----------------------------------------------------------------------------*/
 
-static PyObject *
-validate_trait_integer ( trait_object * trait, has_traits_object * obj,
-                         PyObject * name, PyObject * value ) {
-    PyObject *int_value, *result;
-
-    /* Fast paths for the most common cases. */
-#if PY_MAJOR_VERSION < 3
-    if (PyInt_CheckExact(value)) {
-        Py_INCREF(value);
-        return value;
+static PyObject*
+validate_trait_integer(trait_object* trait, has_traits_object* obj,
+                       PyObject* name, PyObject* value) {
+    PyObject* result = as_integer(value);
+    /* A TypeError represents a type validation failure, and should be
+       re-raised as a TraitError. Other exceptions should be propagated. */
+    if (result == NULL && PyErr_ExceptionMatches(PyExc_TypeError)) {
+        PyErr_Clear();
+        return raise_trait_error(trait, obj, name, value);
     }
-    else if (PyLong_CheckExact(value)) {
-        long x;
-        x = PyLong_AsLong(value);
-        if (x == -1 && PyErr_Occurred()) {
-            if (PyErr_ExceptionMatches(PyExc_OverflowError)) {
-                PyErr_Clear();
-                Py_INCREF(value);
-                return value;
-            }
-            return NULL;
-        }
-        else {
-            return PyInt_FromLong(x);
-        }
-    }
-#else
-    if (PyLong_CheckExact(value)) {
-      Py_INCREF(value);
-      return value;
-    }
-#endif // #if PY_MAJOR_VERSION < 3
-
-    /* General case.  The effect is supposed to be that of
-       int(operator.index(value)).  The extra call to 'int' is necessary
-       because in Python 2, operator.index (somewhat controversially) does
-       *not* always return something of type int or long, but can return
-       instances of subclasses of int or long. */
-    int_value = PyNumber_Index(value);
-    if (int_value == NULL) {
-        /* Translate a TypeError to a TraitError, but pass
-           on other exceptions. */
-        if (PyErr_ExceptionMatches(PyExc_TypeError)) {
-            PyErr_Clear();
-            goto error;
-        }
-        return NULL;
-    }
-
-#if PY_MAJOR_VERSION < 3
-    result = PyNumber_Int(int_value);
-#else
-    result = PyNumber_Long(int_value);
-#endif // #if PY_MAJOR_VERSION < 3
-    Py_DECREF(int_value);
     return result;
-
-error:
-    return raise_trait_error( trait, obj, name, value );
 }
 
 
@@ -4089,51 +4041,13 @@ check_implements:
                 break;
 
            case 20:  /* Integer check: */
-
-                /* Fast paths for the most common cases. */
-#if PY_MAJOR_VERSION < 3
-                if (PyInt_CheckExact(value)) {
-                    Py_INCREF(value);
-                    return value;
+                result = as_integer(value);
+                /* A TypeError represents a type validation failure, and should be
+                re-raised as a TraitError. Other exceptions should be propagated. */
+                if (result == NULL && PyErr_ExceptionMatches(PyExc_TypeError)) {
+                    PyErr_Clear();
+                    break;
                 }
-                else if (PyLong_CheckExact(value)) {
-                    long x;
-                    x = PyLong_AsLong(value);
-                    if (x == -1 && PyErr_Occurred()) {
-                        if (PyErr_ExceptionMatches(PyExc_OverflowError)) {
-                            PyErr_Clear();
-                            Py_INCREF(value);
-                            return value;
-                        }
-                        return NULL;
-                    }
-                    else {
-                        return PyInt_FromLong(x);
-                    }
-                }
-#else
-                if (PyLong_CheckExact(value)) {
-                    Py_INCREF(value);
-                    return value;
-                }
-#endif // #if PY_MAJOR_VERSION < 3
-                /* General case. */
-                int_value = PyNumber_Index(value);
-                if (int_value == NULL) {
-                    /* Translate a TypeError to a TraitError, but pass
-                       on other exceptions. */
-                    if (PyErr_ExceptionMatches(PyExc_TypeError)) {
-                        PyErr_Clear();
-                        break;
-                    }
-                    return NULL;
-                }
-#if PY_MAJOR_VERSION < 3
-                result = PyNumber_Int(int_value);
-#else
-                result = PyNumber_Long(int_value);
-#endif // #if PY_MAJOR_VERSION < 3
-                Py_DECREF(int_value);
                 return result;
 
            case 21:  /* Float check */
