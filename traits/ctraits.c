@@ -3183,6 +3183,61 @@ validate_trait_self_type ( trait_object * trait, has_traits_object * obj,
 }
 
 
+/*
+   Convert an arbitrary Python integer-like object to an integer.
+   Return a new object of exact type int (or long on Python 2, for
+   values too large for an int), or raise TypeError if the given
+   object cannot be converted to an integer.
+
+   Roughly equivalent to the Python code ``int(operator.index(value))``.
+*/
+
+static PyObject *
+as_integer(PyObject *value) {
+    PyObject *index_of_value, *value_as_integer;
+
+    /* Fast path for common case. */
+#if PY_MAJOR_VERSION < 3
+    if (PyInt_CheckExact(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+#else
+    if (PyLong_CheckExact(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+#endif
+    /* Not of exact type int: call __index__ method if available. */
+    index_of_value = PyNumber_Index(value);
+    if (index_of_value == NULL) {
+        return NULL;
+    }
+
+    /*
+       We run the __index__ result through an extra int call to ensure that
+       we get something of exact type int or long, and (for Python 2) to
+       ensure that we only get a long when the target value
+       is outside the range of an int.
+
+       CPython doesn't currently guarantee that the return value from a
+       PyNumber_Index call has strict type int, and currently (for example)
+       PyNumber_Index applied to a bool returns another bool, while
+       PyNumber_Index applied to some NumPy types (for example np.uint64(3))
+       returns a long even when the output would have fit in an int.
+
+       Related: https://bugs.python.org/issue17576
+    */
+
+#if PY_MAJOR_VERSION < 3
+    value_as_integer = PyNumber_Int(index_of_value);
+#else
+    value_as_integer = PyNumber_Long(index_of_value);
+#endif
+    Py_DECREF(index_of_value);
+    return value_as_integer;
+}
+
 
 /*-----------------------------------------------------------------------------
 |  Verifies a Python value is an int within a specified range:
