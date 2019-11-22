@@ -17,20 +17,27 @@ Tests for the Range trait with value type float.
 
 import unittest
 
-from traits.api import HasTraits, Range, TraitError
+from traits.api import Either, HasTraits, Range, TraitError
 
 
 class ModelWithRanges(HasTraits):
     """
     Model containing various Range traits for testing purposes.
     """
+
+    # Simple floating-point range trait.
     percentage = Range(0.0, 100.0)
+
+    # Range as part of a complex trait. This (currently)
+    # exercises a different code path in ctraits.c from percentage.
+    percentage_or_none = Either(None, Range(0.0, 100.0))
 
 
 class InheritsFromFloat(float):
     """
     Object that's float-like by virtue of inheriting from float.
     """
+
     pass
 
 
@@ -38,6 +45,7 @@ class FloatLike(object):
     """
     Object that's float-like by virtue of providing a __float__ method.
     """
+
     def __init__(self, value):
         self._value = value
 
@@ -49,6 +57,7 @@ class BadFloatLike(object):
     """
     Object whose __float__ method raises something other than TypeError.
     """
+
     def __float__(self):
         raise ZeroDivisionError("bogus error")
 
@@ -69,9 +78,6 @@ class TestFloatRange(unittest.TestCase):
         model.percentage = InheritsFromFloat(44.0)
         self.assertIs(type(model.percentage), float)
         self.assertEqual(model.percentage, 44.0)
-
-        # XXX Check error message! Should complain about the range,
-        # not about the type.
         with self.assertRaises(TraitError):
             model.percentage = InheritsFromFloat(-0.5)
         with self.assertRaises(TraitError):
@@ -82,16 +88,44 @@ class TestFloatRange(unittest.TestCase):
         model.percentage = FloatLike(35.0)
         self.assertIs(type(model.percentage), float)
         self.assertEqual(model.percentage, 35.0)
-
-        # XXX Check error message! Should complain about the range,
-        # not about the type.
         with self.assertRaises(TraitError):
             model.percentage = FloatLike(-0.5)
         with self.assertRaises(TraitError):
             model.percentage = FloatLike(100.5)
 
+    def test_range_in_compound_trait_accepts_float(self):
+        model = ModelWithRanges()
+        model.percentage_or_none = 35.0
+        self.assertIs(type(model.percentage_or_none), float)
+        self.assertEqual(model.percentage_or_none, 35.0)
+        with self.assertRaises(TraitError):
+            model.percentage_or_none = -0.5
+        with self.assertRaises(TraitError):
+            model.percentage_or_none = 100.5
+
+    def test_range_in_compound_trait_accepts_float_subclass(self):
+        model = ModelWithRanges()
+        model.percentage_or_none = InheritsFromFloat(67.0)
+        self.assertIs(type(model.percentage_or_none), float)
+        self.assertEqual(model.percentage_or_none, 67.0)
+        with self.assertRaises(TraitError):
+            model.percentage_or_none = InheritsFromFloat(-0.5)
+        with self.assertRaises(TraitError):
+            model.percentage_or_none = InheritsFromFloat(100.5)
+
+    def test_range_in_compound_trait_accepts_float_like(self):
+        model = ModelWithRanges()
+        model.percentage_or_none = FloatLike(67.0)
+        self.assertIs(type(model.percentage_or_none), float)
+        self.assertEqual(model.percentage_or_none, 67.0)
+        with self.assertRaises(TraitError):
+            model.percentage_or_none = FloatLike(-0.5)
+        with self.assertRaises(TraitError):
+            model.percentage_or_none = FloatLike(100.5)
+
     def test_bad_float_like(self):
         model = ModelWithRanges()
-
         with self.assertRaises(ZeroDivisionError):
             model.percentage = BadFloatLike()
+        with self.assertRaises(ZeroDivisionError):
+            model.percentage_or_none = BadFloatLike()
