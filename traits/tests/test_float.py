@@ -29,6 +29,10 @@ class MyFloat(object):
         return self._value
 
 
+class InheritsFromFloat(float):
+    pass
+
+
 class BadFloat(object):
     def __float__(self):
         raise ZeroDivisionError
@@ -69,6 +73,17 @@ class CommonFloatTests(object):
         a.value_or_none = 5.6
         self.assertIs(type(a.value_or_none), float)
         self.assertEqual(a.value_or_none, 5.6)
+
+    def test_accepts_float_subclass(self):
+        a = self.test_class()
+
+        a.value = InheritsFromFloat(37.0)
+        self.assertIs(type(a.value), float)
+        self.assertEqual(a.value, 37.0)
+
+        a.value_or_none = InheritsFromFloat(37.0)
+        self.assertIs(type(a.value), float)
+        self.assertEqual(a.value, 37.0)
 
     def test_accepts_int(self):
         a = self.test_class()
