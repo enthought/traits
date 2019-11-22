@@ -3833,22 +3833,20 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
 #endif
 
             case 4:  /* Floating point range check: */
-                if ( !PyFloat_Check( value ) ) {
-                    float_value = Py2to3_PyNum_AsDouble( value );
-                    if( float_value==-1 && PyErr_Occurred() ){
-                        PyErr_Clear();
-                        break;
-                    }
+                result = as_float(value);
 
-                    value       = PyFloat_FromDouble( float_value );
-                    if ( value == NULL ) {
+                if (result == NULL) {
+                    if (PyErr_ExceptionMatches(PyExc_TypeError)) {
+                        /* A TypeError should ultimately get re-raised
+                           as a TraitError. */
                         PyErr_Clear();
                         break;
                     }
-                } else {
-                    float_value = PyFloat_AS_DOUBLE( value );
-                    Py_INCREF( value );
+                    /* Non-TypeErrors should be propagated. */
+                    return NULL;
                 }
+                float_value = PyFloat_AS_DOUBLE(result);
+
                 low          = PyTuple_GET_ITEM( type_info, 1 );
                 high         = PyTuple_GET_ITEM( type_info, 2 );
 #if PY_MAJOR_VERSION < 3
@@ -3864,23 +3862,31 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
 
                 if ( low != Py_None ) {
                     if ( (exclude_mask & 1) != 0 ) {
-                        if ( float_value <= PyFloat_AS_DOUBLE( low ) )
+                        if ( float_value <= PyFloat_AS_DOUBLE( low ) ) {
+                            Py_DECREF(result);
                             break;
+                        }
                     } else {
-                        if ( float_value < PyFloat_AS_DOUBLE( low ) )
+                        if ( float_value < PyFloat_AS_DOUBLE( low ) ) {
+                            Py_DECREF(result);
                             break;
+                        }
                     }
                 }
                 if ( high != Py_None ) {
                     if ( (exclude_mask & 2) != 0 ) {
-                        if ( float_value >= PyFloat_AS_DOUBLE( high ) )
+                        if ( float_value >= PyFloat_AS_DOUBLE( high ) ) {
+                            Py_DECREF(result);
                             break;
+                        }
                     } else {
-                        if ( float_value > PyFloat_AS_DOUBLE( high ) )
+                        if ( float_value > PyFloat_AS_DOUBLE( high ) ) {
+                            Py_DECREF(result);
                             break;
+                        }
                     }
                 }
-                goto done2;
+                return result;
 
             case 5:  /* Enumerated item check: */
                 if ( PySequence_Contains( PyTuple_GET_ITEM( type_info, 1 ),
@@ -4101,7 +4107,6 @@ error:
     return raise_trait_error( trait, obj, name, value );
 done:
     Py_INCREF( value );
-done2:
     return value;
 }
 
