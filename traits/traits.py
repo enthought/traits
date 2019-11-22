@@ -89,7 +89,6 @@ from .trait_handlers import (
 )
 
 
-from ._py2to3 import LONG_TYPE
 
 # -------------------------------------------------------------------------------
 #  Constants:
@@ -558,13 +557,12 @@ ctraits._ctrait(CTrait)
 #  Constants:
 # -------------------------------------------------------------------------------
 
-ConstantTypes = (NoneType, int, LONG_TYPE, float, complex, str, six.text_type)
+ConstantTypes = (NoneType, int, float, complex, str, six.text_type)
 
 PythonTypes = (
     str,
     six.text_type,
     int,
-    LONG_TYPE,
     float,
     complex,
     list,
@@ -592,7 +590,6 @@ DefaultValues = {
     str: "",
     six.text_type: "",
     int: 0,
-    LONG_TYPE: LONG_TYPE(0),
     float: 0.0,
     complex: 0j,
     list: [],
@@ -1361,7 +1358,6 @@ class ForwardProperty(object):
 
 SpecialNames = {
     ###   'int':     trait_factory( Int ),
-    ###   'long':    trait_factory( Long ),
     ###   'float':   trait_factory( Float ),
     ###   'complex': trait_factory( Complex ),
     ###   'str':     trait_factory( Str ),

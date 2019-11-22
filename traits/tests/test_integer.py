@@ -27,11 +27,6 @@ import six
 from traits.api import HasTraits, Int, TraitError
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
-if six.PY2:
-    LONG_TYPE = long
-else:
-    LONG_TYPE = int
-
 
 class A(HasTraits):
     integral = Int
@@ -51,47 +46,40 @@ class TestInt(unittest.TestCase):
     def test_default(self):
         a = A()
         self.assertEqual(a.integral, 0)
-        self.assertIs(type(a.integral), int)
+        self.assertIn(type(a.integral), six.integer_types)
 
     def test_accepts_int(self):
         a = A()
         a.integral = 23
         self.assertEqual(a.integral, 23)
-        self.assertIs(type(a.integral), int)
+        self.assertIn(type(a.integral), six.integer_types)
 
-    def test_accepts_small_long(self):
+    def test_accepts_large_integer(self):
+        size_limit = sys.maxsize
         a = A()
-        a.integral = LONG_TYPE(23)
-        # Check that type is stored as int where possible.
-        self.assertEqual(a.integral, 23)
-        self.assertIs(type(a.integral), int)
-
-    def test_accepts_large_long(self):
-        # This is only applicable to Python 2
-        if six.PY2:
-            size_limit = sys.maxint
-        else:
-            size_limit = six.MAXSIZE
-        a = A()
-        a.integral = LONG_TYPE(size_limit)
+        a.integral = size_limit
         self.assertEqual(a.integral, size_limit)
-        self.assertIs(type(a.integral), int)
+        self.assertIn(type(a.integral), six.integer_types)
 
         a.integral = size_limit + 1
         self.assertEqual(a.integral, size_limit + 1)
-        self.assertIs(type(a.integral), LONG_TYPE)
+        self.assertIn(type(a.integral), six.integer_types)
+
+        a.integral = 2**2048 + 1
+        self.assertEqual(a.integral, 2**2048 + 1)
+        self.assertIn(type(a.integral), six.integer_types)
 
     def test_accepts_bool(self):
         a = A()
         a.integral = True
         self.assertEqual(a.integral, 1)
-        self.assertIs(type(a.integral), int)
+        self.assertIn(type(a.integral), six.integer_types)
 
     def test_respects_dunder_index(self):
         a = A()
         a.integral = IntegerLike()
         self.assertEqual(a.integral, 42)
-        self.assertIs(type(a.integral), int)
+        self.assertIn(type(a.integral), six.integer_types)
 
     def test_rejects_dunder_int(self):
         a = A()
@@ -119,7 +107,7 @@ class TestInt(unittest.TestCase):
 
         a.integral = numpy.uint64(2 ** 63 + 2)
         self.assertEqual(a.integral, 2 ** 63 + 2)
-        self.assertIs(type(a.integral), LONG_TYPE)
+        self.assertIn(type(a.integral), six.integer_types)
 
         with self.assertRaises(TraitError):
             a.integral = numpy.float32(4.0)

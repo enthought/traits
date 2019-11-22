@@ -126,13 +126,11 @@ in the following table.
 .. index::
    pair: types; casting
    pair: types; coercing
-   pair: plain; integer type
-   pair: long; integer type
    pair: type; string
    pair: type; Unicode
 .. index:: Boolean type, Bool trait, CBool trait, Complex trait, CComplex trait
 .. index:: complex number type, Float trait, CFloat trait, Int trait, CInt trait
-.. index:: floating point number type, Long trait, CLong trait, Str trait
+.. index:: integer type, floating point number type, Str trait
 .. index:: CStr trait, Unicode; trait, CUnicode trait, Bytes trait, CBytes trait
 
 .. _predefined-defaults-for-simple-types-table:
@@ -145,8 +143,7 @@ Coercing Trait Casting Trait Python Type            Built-in Default Value
 Bool           CBool         Boolean                False
 Complex        CComplex      Complex number         0+0j
 Float          CFloat        Floating point number  0.0
-Int            CInt          Plain integer          0
-Long           CLong         Long integer           0L
+Int            CInt          Integer                0
 Str            CStr          String                 ''
 Unicode        CUnicode      Unicode                u''
 Bytes          CBytes        Bytes                  b''
@@ -177,9 +174,8 @@ lists traits that coerce values, and the types that each coerces.
 ============= ===========================================
 Trait         Coercible Types
 ============= ===========================================
-Complex       Floating point number, plain integer
-Float         Plain integer
-Long          Plain integer
+Complex       Floating point number, integer
+Float         Integer
 Unicode       String
 ============= ===========================================
 
@@ -292,7 +288,6 @@ the table.
 | DictStrFloat,    |                                                          |
 | DictStrInt,      |                                                          |
 | DictStrList,     |                                                          |
-| DictStrLong,     |                                                          |
 | DictStrStr       |                                                          |
 +------------------+----------------------------------------------------------+
 | Directory        | Directory( [*value* = '', *auto_set* = False, *entries* =|
