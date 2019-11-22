@@ -3299,9 +3299,18 @@ error:
 
 
 /*
-   Convert an arbitrary Python float-like object to a float.
-   Return a new object of exact type float, or raise TypeError
+   Convert an arbitrary float-like Python object to a float.
+
+   Returns a new object of exact type float, or raises TypeError
    if the given object cannot be converted to a float.
+
+   Here float-like means:
+
+   - is an instance of float, or
+   - can be converted to a float via its type's __float__ method
+
+   Note: as of Python 3.8, objects having an __index__ method but
+   no __float__ method can also be converted to float.
 */
 
 static PyObject *
@@ -3314,6 +3323,7 @@ as_float(PyObject *value) {
         return value;
     }
 
+    /* General case: defer to the machinations of PyFloat_AsDouble. */
     value_as_double = PyFloat_AsDouble(value);
     if (value_as_double == -1.0 && PyErr_Occurred()) {
         return NULL;
