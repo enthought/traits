@@ -3298,6 +3298,30 @@ error:
 }
 
 
+/*
+   Convert an arbitrary Python float-like object to a float.
+   Return a new object of exact type float, or raise TypeError
+   if the given object cannot be converted to a float.
+*/
+
+static PyObject *
+as_float(PyObject *value) {
+    double value_as_double;
+
+    /* Fast path for common case. */
+    if (PyFloat_CheckExact(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+
+    value_as_double = PyFloat_AsDouble(value);
+    if (value_as_double == -1.0 && PyErr_Occurred()) {
+        return NULL;
+    }
+    return PyFloat_FromDouble(value_as_double);
+}
+
+
 /*-----------------------------------------------------------------------------
 |  Verifies that a Python value is convertible to float
 |
@@ -3313,27 +3337,14 @@ error:
 static PyObject *
 validate_trait_float(trait_object * trait, has_traits_object * obj,
                      PyObject * name, PyObject * value) {
-    /* Fast path for the most common case. */
-    if (PyFloat_CheckExact(value)) {
-        Py_INCREF(value);
-        return value;
+    PyObject* result = as_float(value);
+    /* A TypeError represents a type validation failure, and should be
+       re-raised as a TraitError. Other exceptions should be propagated. */
+    if (result == NULL && PyErr_ExceptionMatches(PyExc_TypeError)) {
+        PyErr_Clear();
+        return raise_trait_error(trait, obj, name, value);
     }
-    else {
-        double value_as_double = PyFloat_AsDouble(value);
-        /* Translate a TypeError to a TraitError, but propagate
-           other exceptions. */
-        if (value_as_double == -1.0 && PyErr_Occurred()) {
-            if (PyErr_ExceptionMatches(PyExc_TypeError)) {
-                PyErr_Clear();
-                goto error;
-            }
-            return NULL;
-        }
-        return PyFloat_FromDouble(value_as_double);
-    }
-
-  error:
-    return raise_trait_error(trait, obj, name, value);
+    return result;
 }
 
 /*-----------------------------------------------------------------------------
@@ -4081,28 +4092,16 @@ check_implements:
                 Py_DECREF(int_value);
                 return result;
 
-           case 21:  /* Float check */
-               /* Fast path for most common case. */
-               if (PyFloat_CheckExact(value)) {
-                   Py_INCREF(value);
-                   return value;
-               }
-               else {
-                   double value_as_double = PyFloat_AsDouble(value);
-                   if (value_as_double == -1.0 && PyErr_Occurred()) {
-                       /* TypeError indicates that we don't have a match;
-                          clear the error and continue with the next item
-                          in the complex sequence. */
-                       if (PyErr_ExceptionMatches(PyExc_TypeError)) {
-                           PyErr_Clear();
-                           break;
-                       }
-                       /* Any other exception is unexpected and likely
-                          a code bug; propagate it. */
-                       return NULL;
-                   }
-                   return PyFloat_FromDouble(value_as_double);
-               }
+            case 21:  /* Float check */
+                /* A TypeError indicates that we don't have a match.
+                   Clear the error and continue with the next item
+                   in the complex sequence. */
+                result = as_float(value);
+                if (result == NULL && PyErr_ExceptionMatches(PyExc_TypeError)) {
+                    PyErr_Clear();
+                    break;
+                }
+                return result;
 
             default:  /* Should never happen...indicates an internal error: */
                 goto error;
