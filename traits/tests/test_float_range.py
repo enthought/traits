@@ -18,6 +18,7 @@ Tests for the Range trait with value type float.
 import unittest
 
 from traits.api import Either, HasTraits, Range, TraitError
+from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
 class ModelWithRange(HasTraits):
@@ -75,6 +76,62 @@ class CommonRangeTests(object):
             self.model.percentage = -0.5
         with self.assertRaises(TraitError):
             self.model.percentage = 100.5
+
+    def test_accepts_int(self):
+        self.model.percentage = 35
+        self.assertIs(type(self.model.percentage), float)
+        self.assertEqual(self.model.percentage, 35.0)
+        with self.assertRaises(TraitError):
+            self.model.percentage = -1
+        with self.assertRaises(TraitError):
+            self.model.percentage = 101
+
+    def test_accepts_bool(self):
+        self.model.percentage = False
+        self.assertIs(type(self.model.percentage), float)
+        self.assertEqual(self.model.percentage, 0.0)
+
+        self.model.percentage = True
+        self.assertIs(type(self.model.percentage), float)
+        self.assertEqual(self.model.percentage, 1.0)
+
+    def test_rejects_bad_types(self):
+        # A selection of things that don't count as float-like.
+        non_floats = [
+            u"not a number",
+            u"\N{GREEK CAPITAL LETTER SIGMA}",
+            b"not a number",
+            "3.5",
+            "3",
+            3 + 4j,
+            0j,
+            [1.2],
+            (1.2,),
+        ]
+
+        for non_float in non_floats:
+            with self.assertRaises(TraitError):
+                self.model.percentage = non_float
+
+    @requires_numpy
+    def test_accepts_numpy_types(self):
+        numpy_values = [
+            numpy.uint8(25),
+            numpy.uint16(25),
+            numpy.uint32(25),
+            numpy.uint64(25),
+            numpy.int8(25),
+            numpy.int16(25),
+            numpy.int32(25),
+            numpy.int64(25),
+            numpy.float16(25),
+            numpy.float32(25),
+            numpy.float64(25),
+        ]
+        for numpy_value in numpy_values:
+            self.model.percentage = numpy_value
+            self.assertIs(type(self.model.percentage), float)
+            self.assertEqual(self.model.percentage, 25.0)
 
     def test_accepts_float_subclass(self):
         self.model.percentage = InheritsFromFloat(44.0)
