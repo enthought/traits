@@ -3373,80 +3373,100 @@ validate_trait_float(trait_object * trait, has_traits_object * obj,
     return result;
 }
 
+
+/*
+   Determine whether the given value lies in the range specified
+   by range_info.
+
+   value must be of exact type float.
+   range_info is expected to be a tuple (*, low, high, exclude_mask)
+
+   Return 1 if value is within range, 0 if not, and -1 (with an exception
+   set) on error.
+*/
+
+static int
+in_float_range(PyObject *value, PyObject *range_info) {
+    PyObject *low, *high;
+    long exclude_mask;
+
+    low = PyTuple_GET_ITEM(range_info, 1);
+    high = PyTuple_GET_ITEM(range_info, 2);
+#if PY_MAJOR_VERSION < 3
+    exclude_mask = PyInt_AS_LONG(PyTuple_GET_ITEM(range_info, 3));
+#else
+    exclude_mask = PyLong_AsLong(PyTuple_GET_ITEM(range_info, 3));
+    if (exclude_mask == -1 && PyErr_Occurred()) {
+        return -1;
+    }
+#endif  // #if PY_MAJOR_VERSION < 3
+
+    if (low != Py_None) {
+        if ((exclude_mask & 1) != 0) {
+            if (PyFloat_AS_DOUBLE(value) <= PyFloat_AS_DOUBLE(low)) {
+                return 0;
+            }
+        }
+        else {
+            if (PyFloat_AS_DOUBLE(value) < PyFloat_AS_DOUBLE(low)) {
+                return 0;
+            }
+        }
+    }
+
+    if (high != Py_None) {
+        if ((exclude_mask & 2) != 0) {
+            if (PyFloat_AS_DOUBLE(value) >= PyFloat_AS_DOUBLE(high)) {
+                return 0;
+            }
+        }
+        else {
+            if (PyFloat_AS_DOUBLE(value) > PyFloat_AS_DOUBLE(high)) {
+                return 0;
+            }
+        }
+    }
+
+    return 1;
+}
+
+
 /*-----------------------------------------------------------------------------
 |  Verifies a Python value is a float within a specified range:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-validate_trait_float_range ( trait_object * trait, has_traits_object * obj,
-                             PyObject * name, PyObject * value ) {
-
-    register PyObject * low;
-    register PyObject * high;
+validate_trait_float_range(trait_object *trait, has_traits_object *obj,
+                            PyObject *name, PyObject *value ) {
     PyObject *result;
-    long exclude_mask;
-    double float_value;
-
-    PyObject * type_info = trait->py_validate;
+    int in_range;
 
     result = as_float(value);
-
     if (result == NULL) {
         if (PyErr_ExceptionMatches(PyExc_TypeError)) {
-            /* A TypeError should ultimately get re-raised
-                as a TraitError. */
+            /* Reraise any TypeError as a TraitError. */
             PyErr_Clear();
-            goto error;
+            return raise_trait_error( trait, obj, name, value );
         }
         /* Non-TypeErrors should be propagated. */
         return NULL;
     }
-    float_value = PyFloat_AS_DOUBLE(result);
 
-    low          = PyTuple_GET_ITEM( type_info, 1 );
-    high         = PyTuple_GET_ITEM( type_info, 2 );
-#if PY_MAJOR_VERSION < 3
-    exclude_mask = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
-#else
-    exclude_mask = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 3 ) );
-    if( exclude_mask==-1 && PyErr_Occurred()){
+    in_range = in_float_range(result, trait->py_validate);
+    if (in_range == 1) {
+        return result;
+    }
+    else if (in_range == 0) {
         Py_DECREF(result);
-        goto error;
+        return raise_trait_error( trait, obj, name, value );
     }
-#endif  // #if PY_MAJOR_VERSION < 3
-
-    if ( low != Py_None ) {
-        if ( (exclude_mask & 1) != 0 ) {
-            if ( float_value <= PyFloat_AS_DOUBLE( low ) ) {
-                Py_DECREF(result);
-                goto error;
-            }
-        } else {
-            if ( float_value < PyFloat_AS_DOUBLE( low ) ) {
-                Py_DECREF(result);
-                goto error;
-            }
-        }
+    else {
+        /* in_range must be -1, indicating an error; propagate it */
+        Py_DECREF(result);
+        return NULL;
     }
-
-    if ( high != Py_None ) {
-        if ( (exclude_mask & 2) != 0 ) {
-            if ( float_value >= PyFloat_AS_DOUBLE( high ) ) {
-                Py_DECREF(result);
-                goto error;
-            }
-        } else {
-            if ( float_value > PyFloat_AS_DOUBLE( high ) ) {
-                Py_DECREF(result);
-                goto error;
-            }
-        }
-    }
-    return result;
-
-error:
-    return raise_trait_error( trait, obj, name, value );
 }
+
 
 /*-----------------------------------------------------------------------------
 |  Verifies a Python value is in a specified enumeration:
@@ -3775,10 +3795,14 @@ static PyObject *
 validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                          PyObject * name, PyObject * value ) {
 
-    int    i, j, k, kind;
-    long   exclude_mask, mode, rc;
-    double float_value;
-    PyObject * low, * high, * result, * type_info, * type, * type2, * args;
+    int i, j, k, kind, in_range;
+    long mode, rc;
+    PyObject *result, *type_info, *type, *type2, *args;
+
+#if PY_MAJOR_VERSION < 3
+    PyObject *low, *high;
+    long exclude_mask;
+#endif
 
     PyObject * list_type_info = PyTuple_GET_ITEM( trait->py_validate, 1 );
     int n = PyTuple_GET_SIZE( list_type_info );
@@ -3845,7 +3869,6 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
 
             case 4:  /* Floating point range check: */
                 result = as_float(value);
-
                 if (result == NULL) {
                     if (PyErr_ExceptionMatches(PyExc_TypeError)) {
                         /* A TypeError should ultimately get re-raised
@@ -3856,48 +3879,21 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                     /* Non-TypeErrors should be propagated. */
                     return NULL;
                 }
-                float_value = PyFloat_AS_DOUBLE(result);
 
-                low          = PyTuple_GET_ITEM( type_info, 1 );
-                high         = PyTuple_GET_ITEM( type_info, 2 );
-#if PY_MAJOR_VERSION < 3
-                exclude_mask = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
-#else
-                exclude_mask = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 3 ) );
-                if( exclude_mask==-1 && PyErr_Occurred()){
+                in_range = in_float_range(result, type_info);
+                if (in_range == 1) {
+                    return result;
+                }
+                else if (in_range == 0) {
+                    Py_DECREF(result);
+                    break;
+                }
+                else {
+                    /* in_range must be -1, indicating an error;
+                       propagate it */
                     Py_DECREF(result);
                     return NULL;
                 }
-#endif  // #if PY_MAJOR_VERSION < 3
-
-
-                if ( low != Py_None ) {
-                    if ( (exclude_mask & 1) != 0 ) {
-                        if ( float_value <= PyFloat_AS_DOUBLE( low ) ) {
-                            Py_DECREF(result);
-                            break;
-                        }
-                    } else {
-                        if ( float_value < PyFloat_AS_DOUBLE( low ) ) {
-                            Py_DECREF(result);
-                            break;
-                        }
-                    }
-                }
-                if ( high != Py_None ) {
-                    if ( (exclude_mask & 2) != 0 ) {
-                        if ( float_value >= PyFloat_AS_DOUBLE( high ) ) {
-                            Py_DECREF(result);
-                            break;
-                        }
-                    } else {
-                        if ( float_value > PyFloat_AS_DOUBLE( high ) ) {
-                            Py_DECREF(result);
-                            break;
-                        }
-                    }
-                }
-                return result;
 
             case 5:  /* Enumerated item check: */
                 if ( PySequence_Contains( PyTuple_GET_ITEM( type_info, 1 ),
