@@ -84,7 +84,6 @@ from .traits import (
 from .trait_errors import TraitError
 
 from . import _py2to3
-from ._py2to3 import LONG_TYPE
 
 # -------------------------------------------------------------------------------
 #  Constants:
@@ -121,8 +120,7 @@ try:
     from numpy import integer, floating, complexfloating, bool_
 
     int_fast_validate = (11, int, integer)
-    long_fast_validate = (11, LONG_TYPE, None, int, integer)
-    float_fast_validate = (11, float, floating, None, int, LONG_TYPE, integer)
+    float_fast_validate = (11, float, floating, None, int, integer)
     complex_fast_validate = (
         11,
         complex,
@@ -139,8 +137,7 @@ try:
 except ImportError:
     # The standard python definitions (without numpy):
     int_fast_validate = (11, int)
-    long_fast_validate = (11, LONG_TYPE, None, int)
-    float_fast_validate = (11, float, None, int, LONG_TYPE)
+    float_fast_validate = (11, float, None, int)
     complex_fast_validate = (11, complex, None, float, int)
     bool_fast_validate = (11, bool)
     # Tuple or single type suitable for an isinstance check.
@@ -220,7 +217,7 @@ class Generic(Any):
 
 
 class BaseInt(TraitType):
-    """ Defines a trait whose type must be an int or long.
+    """ Defines a trait whose type must be an integer.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -230,15 +227,13 @@ class BaseInt(TraitType):
     default_value = 0
 
     #: A description of the type of value this trait accepts:
-    info_text = "an integer (int or long)"
+    info_text = "an integer"
 
     def validate(self, object, name, value):
         """ Validates that a specified value is valid for this trait.
         """
         if type(value) is int:
             return value
-        elif type(value) is LONG_TYPE:
-            return int(value)
 
         try:
             int_value = operator.index(value)
@@ -256,58 +251,12 @@ class BaseInt(TraitType):
 
 
 class Int(BaseInt):
-    """ Defines a trait whose type must be an int or long using a C-level fast
+    """ Defines a trait whose type must be an integer using a C-level fast
         validator.
     """
 
     #: The C-level fast validator to use:
     fast_validate = (20,)
-
-
-# -------------------------------------------------------------------------------
-#  'BaseLong' and 'Long' traits:
-# -------------------------------------------------------------------------------
-
-
-class BaseLong(TraitType):
-    """ Defines a trait whose value must be a Python long.
-    """
-
-    #: The function to use for evaluating strings to this type:
-    evaluate = LONG_TYPE
-
-    #: The default value for the trait:
-    default_value = LONG_TYPE(0)
-
-    #: A description of the type of value this trait accepts:
-    info_text = "a long"
-
-    def validate(self, object, name, value):
-        """ Validates that a specified value is valid for this trait.
-
-            Note: The 'fast validator' version performs this check in C.
-        """
-        if isinstance(value, int):
-            return LONG_TYPE(value)
-
-        if isinstance(value, six.integer_types):
-            return value
-
-        self.error(object, name, value)
-
-    def create_editor(self):
-        """ Returns the default traits UI editor for this type of trait.
-        """
-        return default_text_editor(self, LONG_TYPE)
-
-
-class Long(BaseLong):
-    """ Defines a trait whose value must be a Python long using a C-level fast
-        validator.
-    """
-
-    #: The C-level fast validator to use:
-    fast_validate = long_fast_validate
 
 
 # -------------------------------------------------------------------------------
@@ -638,39 +587,6 @@ class CInt(BaseCInt):
 
     #: The C-level fast validator to use:
     fast_validate = (12, int)
-
-
-# -------------------------------------------------------------------------------
-#  'BaseCLong' and 'CLong' traits:
-# -------------------------------------------------------------------------------
-
-
-class BaseCLong(BaseLong):
-    """ Defines a trait whose value must be a Python long and which supports
-        coercions of non-long values to long.
-    """
-
-    #: The function to use for evaluating strings to this type:
-    evaluate = LONG_TYPE
-
-    def validate(self, object, name, value):
-        """ Validates that a specified value is valid for this trait.
-
-            Note: The 'fast validator' version performs this check in C.
-        """
-        try:
-            return LONG_TYPE(value)
-        except:
-            self.error(object, name, value)
-
-
-class CLong(BaseCLong):
-    """ Defines a trait whose value must be a Python long and which supports
-        coercions of non-long values to long using a C-level fast validator.
-    """
-
-    #: The C-level fast validator to use:
-    fast_validate = (12, LONG_TYPE)
 
 
 # -------------------------------------------------------------------------------
@@ -1839,7 +1755,7 @@ class BaseRange(TraitType):
         is_static = not issubclass(vtype, six.string_types)
         if is_static and (vtype not in RangeTypes):
             raise TraitError(
-                "Range can only be use for int, long or float "
+                "Range can only be use for int or float "
                 "values, but a value of type %s was specified." % vtype
             )
 
@@ -1855,15 +1771,6 @@ class BaseRange(TraitType):
 
             if high is not None:
                 high = float(high)
-
-        elif vtype is LONG_TYPE:
-            self._validate = "long_validate"
-            self._type_desc = "a long integer"
-            if low is not None:
-                low = LONG_TYPE(low)
-
-            if high is not None:
-                high = LONG_TYPE(high)
 
         elif vtype is int:
             self._validate = "int_validate"
@@ -1905,7 +1812,7 @@ class BaseRange(TraitType):
         if exclude_high:
             exclude_mask |= 2
 
-        if is_static and (vtype is not LONG_TYPE):
+        if is_static and (vtype is not int):
             self.init_fast_validator(kind, low, high, exclude_mask)
 
         #: Assign type-corrected arguments to handler attributes:
@@ -1954,31 +1861,6 @@ class BaseRange(TraitType):
         try:
             if (
                 isinstance(value, int_fast_validate[1:])
-                and (
-                    (self._low is None)
-                    or (self._exclude_low and (self._low < value))
-                    or ((not self._exclude_low) and (self._low <= value))
-                )
-                and (
-                    (self._high is None)
-                    or (self._exclude_high and (self._high > value))
-                    or ((not self._exclude_high) and (self._high >= value))
-                )
-            ):
-                return value
-        except:
-            pass
-
-        self.error(object, name, value)
-
-    def long_validate(self, object, name, value):
-        """ Validate that the value is a long value in the specified range.
-        """
-        try:
-            valid_types = list(long_fast_validate[1:])
-            valid_types.remove(None)
-            if (
-                isinstance(value, tuple(valid_types))
                 and (
                     (self._low is None)
                     or (self._exclude_low and (self._low < value))
@@ -3859,10 +3741,6 @@ DictStrStr = Dict(str, str)
 #: Only a dictionary of string:integer values can be assigned; only string keys
 #: with integer values can be inserted. The default value is {}.
 DictStrInt = Dict(str, int)
-
-#: Only a dictionary of string:long-integer values can be assigned; only string
-#: keys with long-integer values can be inserted. The default value is {}.
-DictStrLong = Dict(str, LONG_TYPE)
 
 #: Only a dictionary of string:float values can be assigned; only string keys
 #: with float values can be inserted. The default value is {}.

@@ -25,14 +25,12 @@ from traits.api import (
     CBytes,
     CFloat,
     CInt,
-    CLong,
     Delegate,
     Float,
     HasTraits,
     Instance,
     Int,
     List,
-    Long,
     Str,
     This,
     Trait,
@@ -47,11 +45,6 @@ from traits.api import (
 )
 
 #  Base unit test classes:
-
-if six.PY2:
-    LONG_TYPE = long
-else:
-    LONG_TYPE = int
 
 
 class BaseTest(object):
@@ -171,8 +164,6 @@ class CoercibleIntTest(AnyTraitTest):
     _good_values = [
         10,
         -10,
-        LONG_TYPE(10),
-        LONG_TYPE(-10),
         10.1,
         -10.1,
         "10",
@@ -202,10 +193,7 @@ class CoercibleIntTest(AnyTraitTest):
         try:
             return int(value)
         except:
-            try:
-                return int(float(value))
-            except:
-                return int(LONG_TYPE(value))
+            return int(float(value))
 
 
 class IntTest(AnyTraitTest):
@@ -213,7 +201,7 @@ class IntTest(AnyTraitTest):
     obj = IntTrait()
 
     _default_value = 99
-    _good_values = [10, -10, LONG_TYPE(10), LONG_TYPE(-10)]
+    _good_values = [10, -10]
     _bad_values = [
         "ten",
         u"ten",
@@ -258,99 +246,7 @@ class IntTest(AnyTraitTest):
         try:
             return int(value)
         except:
-            try:
-                return int(float(value))
-            except:
-                return int(LONG_TYPE(value))
-
-
-class CoercibleLongTrait(HasTraits):
-    value = CLong(LONG_TYPE(99))
-
-
-class LongTrait(HasTraits):
-    value = Long(LONG_TYPE(99))
-
-
-class CoercibleLongTest(AnyTraitTest):
-
-    obj = CoercibleLongTrait()
-
-    _default_value = LONG_TYPE(99)
-    _good_values = [
-        10,
-        -10,
-        LONG_TYPE(10),
-        LONG_TYPE(-10),
-        10.1,
-        -10.1,
-        "10",
-        "-10",
-        u"10",
-        u"-10",
-    ]
-    if six.PY2:
-        _good_values.extend(["10L", "-10L", u"10L", u"-10L"])
-    _bad_values = [
-        "10.1",
-        "-10.1",
-        u"10.1",
-        u"-10.1",
-        "ten",
-        u"ten",
-        [10],
-        [LONG_TYPE(10)],
-        {"ten": 10},
-        (10,),
-        (LONG_TYPE(10),),
-        None,
-        1j,
-    ]
-
-    def coerce(self, value):
-        try:
-            return LONG_TYPE(value)
-        except:
-            return LONG_TYPE(float(value))
-
-
-class LongTest(AnyTraitTest):
-
-    obj = LongTrait()
-
-    _default_value = LONG_TYPE(99)
-    _good_values = [10, -10, LONG_TYPE(10), LONG_TYPE(-10)]
-    _bad_values = [
-        "ten",
-        u"ten",
-        [10],
-        [LONG_TYPE(10)],
-        {"ten": 10},
-        (10,),
-        (LONG_TYPE(10),),
-        None,
-        1j,
-        10.1,
-        -10.1,
-        "10",
-        "-10",
-        "10L",
-        "-10L",
-        "10.1",
-        "-10.1",
-        u"10",
-        u"-10",
-        u"10L",
-        u"-10L",
-        u"10.1",
-        u"-10.1",
-    ]
-
-    def coerce(self, value):
-        try:
-            return LONG_TYPE(value)
-        except:
-            return LONG_TYPE(float(value))
+            return int(float(value))
 
 
 class CoercibleFloatTrait(HasTraits):
@@ -368,8 +264,6 @@ class CoercibleFloatTest(AnyTraitTest):
     _good_values = [
         10,
         -10,
-        LONG_TYPE(10),
-        LONG_TYPE(-10),
         10.1,
         -10.1,
         "10",
@@ -396,10 +290,7 @@ class CoercibleFloatTest(AnyTraitTest):
     ]
 
     def coerce(self, value):
-        try:
-            return float(value)
-        except:
-            return float(LONG_TYPE(value))
+        return float(value)
 
 
 class FloatTest(AnyTraitTest):
@@ -429,14 +320,8 @@ class FloatTest(AnyTraitTest):
         u"-10.1",
     ]
 
-    if six.PY2:
-        _good_values.extend([LONG_TYPE(-10), LONG_TYPE(10)])
-
     def coerce(self, value):
-        try:
-            return float(value)
-        except:
-            return float(LONG_TYPE(value))
+        return float(value)
 
 
 #  Trait that can only have 'complex'(i.e. imaginary) values:
@@ -454,8 +339,6 @@ class ImaginaryValueTest(AnyTraitTest):
     _good_values = [
         10,
         -10,
-        LONG_TYPE(10),
-        LONG_TYPE(-10),
         10.1,
         -10.1,
         "10",
@@ -475,10 +358,7 @@ class ImaginaryValueTest(AnyTraitTest):
     _bad_values = [u"10L", u"-10L", "ten", [10], {"ten": 10}, (10,), None]
 
     def coerce(self, value):
-        try:
-            return complex(value)
-        except:
-            return complex(LONG_TYPE(value))
+        return complex(value)
 
 
 class StringTrait(HasTraits):
@@ -493,8 +373,6 @@ class StringTest(AnyTraitTest):
     _good_values = [
         10,
         -10,
-        LONG_TYPE(10),
-        LONG_TYPE(-10),
         10.1,
         -10.1,
         "10",
@@ -530,8 +408,6 @@ class UnicodeTest(StringTest):
     _good_values = [
         10,
         -10,
-        LONG_TYPE(10),
-        LONG_TYPE(-10),
         10.1,
         -10.1,
         "10",
@@ -576,7 +452,6 @@ class BytesTest(StringTest):
     _bad_values = [
         10,
         -10,
-        LONG_TYPE(10),
         10.1,
         u"unicode",
         u"",
@@ -630,7 +505,6 @@ class CoercibleBytesTest(StringTest):
         b"10",
         b"-10",
         10,
-        LONG_TYPE(10),
         [10],
         (10,),
         set([10]),
@@ -736,10 +610,7 @@ class IntRangeTest(AnyTraitTest):
         try:
             return int(value)
         except:
-            try:
-                return int(float(value))
-            except:
-                return int(LONG_TYPE(value))
+            return int(float(value))
 
 
 class FloatRangeTrait(HasTraits):
@@ -756,9 +627,6 @@ class FloatRangeTest(AnyTraitTest):
         0,
         1,
         6,
-        LONG_TYPE(0),
-        LONG_TYPE(1),
-        LONG_TYPE(6),
         1.999,
         6.01,
         "two",
@@ -768,10 +636,7 @@ class FloatRangeTest(AnyTraitTest):
     ]
 
     def coerce(self, value):
-        try:
-            return float(value)
-        except:
-            return float(LONG_TYPE(value))
+        return float(value)
 
 
 # Old style class version:
@@ -813,7 +678,6 @@ class OldInstanceTest(AnyTraitTest):
     ]
     _bad_values = [
         0,
-        LONG_TYPE(0),
         0.0,
         0j,
         OTraitTest1,
@@ -864,7 +728,6 @@ class NewInstanceTest(AnyTraitTest):
     ]
     _bad_values = [
         0,
-        LONG_TYPE(0),
         0.0,
         0j,
         NTraitTest1,
@@ -952,12 +815,6 @@ class OddIntegerTest(AnyTraitTest):
         7,
         9,
         999999999,
-        LONG_TYPE(1),
-        LONG_TYPE(3),
-        LONG_TYPE(5),
-        LONG_TYPE(7),
-        LONG_TYPE(9),
-        LONG_TYPE(999999999),
         1.0,
         3.0,
         5.0,
@@ -970,12 +827,6 @@ class OddIntegerTest(AnyTraitTest):
         -7,
         -9,
         -999999999,
-        LONG_TYPE(-1),
-        LONG_TYPE(-3),
-        LONG_TYPE(-5),
-        LONG_TYPE(-7),
-        LONG_TYPE(-9),
-        LONG_TYPE(-999999999),
         -1.0,
         -3.0,
         -5.0,
