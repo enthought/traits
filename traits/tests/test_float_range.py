@@ -29,6 +29,16 @@ class ModelWithRange(HasTraits):
     # Simple floating-point range trait.
     percentage = Range(0.0, 100.0)
 
+    # Traits that exercise the various possiblities for inclusion
+    # or exclusion of the endpoints.
+    open_closed = Range(0.0, 100.0, exclude_low=True)
+
+    closed_open = Range(0.0, 100.0, exclude_high=True)
+
+    open = Range(0.0, 100.0, exclude_low=True, exclude_high=True)
+
+    closed = Range(0.0, 100.0)
+
 
 class ModelWithRangeCompound(HasTraits):
     """
@@ -39,6 +49,16 @@ class ModelWithRangeCompound(HasTraits):
     # exercises a different code path in ctraits.c from the
     # corresponding trait in ModelWithRange.
     percentage = Either(None, Range(0.0, 100.0))
+
+    # Traits that exercise the various possiblities for inclusion
+    # or exclusion of the endpoints.
+    open_closed = Either(None, Range(0.0, 100.0, exclude_low=True))
+
+    closed_open = Either(None, Range(0.0, 100.0, exclude_high=True))
+
+    open = Either(None, Range(0.0, 100.0, exclude_low=True, exclude_high=True))
+
+    closed = Either(None, Range(0.0, 100.0))
 
 
 class InheritsFromFloat(float):
@@ -157,6 +177,33 @@ class CommonRangeTests(object):
     def test_bad_float_like(self):
         with self.assertRaises(ZeroDivisionError):
             self.model.percentage = BadFloatLike()
+
+    def test_endpoints(self):
+        # point within the interior of the range
+        self.model.open = self.model.closed = 50.0
+        self.model.open_closed = self.model.closed_open = 50.0
+        self.assertEqual(self.model.open, 50.0)
+        self.assertEqual(self.model.closed, 50.0)
+        self.assertEqual(self.model.open_closed, 50.0)
+        self.assertEqual(self.model.closed_open, 50.0)
+
+        # low endpoint
+        self.model.closed = self.model.closed_open = 0.0
+        self.assertEqual(self.model.closed, 0.0)
+        self.assertEqual(self.model.closed_open, 0.0)
+        with self.assertRaises(TraitError):
+            self.model.open = 0.0
+        with self.assertRaises(TraitError):
+            self.model.open_closed = 0.0
+
+        # high endpoint
+        self.model.closed = self.model.open_closed = 100.0
+        self.assertEqual(self.model.closed, 100.0)
+        self.assertEqual(self.model.open_closed, 100.0)
+        with self.assertRaises(TraitError):
+            self.model.open = 100.0
+        with self.assertRaises(TraitError):
+            self.model.closed_open = 100.0
 
 
 class TestFloatRange(CommonRangeTests, unittest.TestCase):
