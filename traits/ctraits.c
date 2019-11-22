@@ -3383,22 +3383,25 @@ validate_trait_float_range ( trait_object * trait, has_traits_object * obj,
 
     register PyObject * low;
     register PyObject * high;
+    PyObject *result;
     long exclude_mask;
     double float_value;
 
     PyObject * type_info = trait->py_validate;
 
-    if ( !PyFloat_Check( value ) ) {
-        float_value = Py2to3_PyNum_AsDouble( value );
-        if( float_value==-1 && PyErr_Occurred() )
+    result = as_float(value);
+
+    if (result == NULL) {
+        if (PyErr_ExceptionMatches(PyExc_TypeError)) {
+            /* A TypeError should ultimately get re-raised
+                as a TraitError. */
+            PyErr_Clear();
             goto error;
-        value       = PyFloat_FromDouble( float_value );
-        if ( value == NULL )
-            goto error;
-        Py_INCREF( value );
-    } else {
-        float_value = PyFloat_AS_DOUBLE( value );
+        }
+        /* Non-TypeErrors should be propagated. */
+        return NULL;
     }
+    float_value = PyFloat_AS_DOUBLE(result);
 
     low          = PyTuple_GET_ITEM( type_info, 1 );
     high         = PyTuple_GET_ITEM( type_info, 2 );
@@ -3407,32 +3410,40 @@ validate_trait_float_range ( trait_object * trait, has_traits_object * obj,
 #else
     exclude_mask = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 3 ) );
     if( exclude_mask==-1 && PyErr_Occurred()){
+        Py_DECREF(result);
         goto error;
     }
 #endif  // #if PY_MAJOR_VERSION < 3
 
     if ( low != Py_None ) {
         if ( (exclude_mask & 1) != 0 ) {
-            if ( float_value <= PyFloat_AS_DOUBLE( low ) )
+            if ( float_value <= PyFloat_AS_DOUBLE( low ) ) {
+                Py_DECREF(result);
                 goto error;
+            }
         } else {
-            if ( float_value < PyFloat_AS_DOUBLE( low ) )
+            if ( float_value < PyFloat_AS_DOUBLE( low ) ) {
+                Py_DECREF(result);
                 goto error;
+            }
         }
     }
 
     if ( high != Py_None ) {
         if ( (exclude_mask & 2) != 0 ) {
-            if ( float_value >= PyFloat_AS_DOUBLE( high ) )
+            if ( float_value >= PyFloat_AS_DOUBLE( high ) ) {
+                Py_DECREF(result);
                 goto error;
+            }
         } else {
-            if ( float_value > PyFloat_AS_DOUBLE( high ) )
+            if ( float_value > PyFloat_AS_DOUBLE( high ) ) {
+                Py_DECREF(result);
                 goto error;
+            }
         }
     }
+    return result;
 
-    Py_INCREF( value );
-    return value;
 error:
     return raise_trait_error( trait, obj, name, value );
 }
@@ -3833,22 +3844,20 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
 #endif
 
             case 4:  /* Floating point range check: */
-                if ( !PyFloat_Check( value ) ) {
-                    float_value = Py2to3_PyNum_AsDouble( value );
-                    if( float_value==-1 && PyErr_Occurred() ){
-                        PyErr_Clear();
-                        break;
-                    }
+                result = as_float(value);
 
-                    value       = PyFloat_FromDouble( float_value );
-                    if ( value == NULL ) {
+                if (result == NULL) {
+                    if (PyErr_ExceptionMatches(PyExc_TypeError)) {
+                        /* A TypeError should ultimately get re-raised
+                           as a TraitError. */
                         PyErr_Clear();
                         break;
                     }
-                } else {
-                    float_value = PyFloat_AS_DOUBLE( value );
-                    Py_INCREF( value );
+                    /* Non-TypeErrors should be propagated. */
+                    return NULL;
                 }
+                float_value = PyFloat_AS_DOUBLE(result);
+
                 low          = PyTuple_GET_ITEM( type_info, 1 );
                 high         = PyTuple_GET_ITEM( type_info, 2 );
 #if PY_MAJOR_VERSION < 3
@@ -3856,31 +3865,39 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
 #else
                 exclude_mask = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 3 ) );
                 if( exclude_mask==-1 && PyErr_Occurred()){
-                    PyErr_Clear();
-                    break;
+                    Py_DECREF(result);
+                    return NULL;
                 }
 #endif  // #if PY_MAJOR_VERSION < 3
 
 
                 if ( low != Py_None ) {
                     if ( (exclude_mask & 1) != 0 ) {
-                        if ( float_value <= PyFloat_AS_DOUBLE( low ) )
+                        if ( float_value <= PyFloat_AS_DOUBLE( low ) ) {
+                            Py_DECREF(result);
                             break;
+                        }
                     } else {
-                        if ( float_value < PyFloat_AS_DOUBLE( low ) )
+                        if ( float_value < PyFloat_AS_DOUBLE( low ) ) {
+                            Py_DECREF(result);
                             break;
+                        }
                     }
                 }
                 if ( high != Py_None ) {
                     if ( (exclude_mask & 2) != 0 ) {
-                        if ( float_value >= PyFloat_AS_DOUBLE( high ) )
+                        if ( float_value >= PyFloat_AS_DOUBLE( high ) ) {
+                            Py_DECREF(result);
                             break;
+                        }
                     } else {
-                        if ( float_value > PyFloat_AS_DOUBLE( high ) )
+                        if ( float_value > PyFloat_AS_DOUBLE( high ) ) {
+                            Py_DECREF(result);
                             break;
+                        }
                     }
                 }
-                goto done2;
+                return result;
 
             case 5:  /* Enumerated item check: */
                 if ( PySequence_Contains( PyTuple_GET_ITEM( type_info, 1 ),
@@ -4101,7 +4118,6 @@ error:
     return raise_trait_error( trait, obj, name, value );
 done:
     Py_INCREF( value );
-done2:
     return value;
 }
 
