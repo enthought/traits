@@ -61,7 +61,6 @@ from .trait_errors import TraitError, repr_type
 
 from . import _py2to3
 
-from ._py2to3 import LONG_TYPE
 
 # Patched by 'traits.py' once class is defined!
 Trait = Event = None
@@ -80,7 +79,7 @@ NO_COMPARE = 0
 OBJECT_IDENTITY_COMPARE = 1
 RICH_COMPARE = 2
 
-RangeTypes = (int, LONG_TYPE, float)
+RangeTypes = (int, float)
 
 CallableTypes = (FunctionType, MethodType)
 
@@ -801,7 +800,7 @@ class TraitRange(TraitHandler):
             weight = Trait(0.0, TraitRange(0.0, None))
 
     This example defines a Person class, which has an **age** trait
-    attribute, which must be an integer/long in the range from 0 to 150, and a
+    attribute, which must be an integer in the range from 0 to 150, and a
     **weight** trait attribute, which must be a non-negative float value.
     """
 
@@ -824,7 +823,7 @@ class TraitRange(TraitHandler):
         Description
         -----------
         The *low* and *high* values must be of the same Python numeric type,
-        either ``int``, ``long`` or ``float``. Alternatively, one of the values
+        either ``int`` or ``float``. Alternatively, one of the values
         may be None, to indicate that that portion of the range is
         unbounded. The *exclude_low* and *exclude_high* values can be used to
         specify whether the *low* and *high* values should be exclusive (or
@@ -835,7 +834,7 @@ class TraitRange(TraitHandler):
             vtype = type(low)
         if vtype not in RangeTypes:
             raise TraitError(
-                "TraitRange can only be use for int, long or "
+                "TraitRange can only be use for int or "
                 "float values, but a value of type %s was "
                 "specified." % vtype
             )
@@ -847,13 +846,6 @@ class TraitRange(TraitHandler):
                 low = float(low)
             if high is not None:
                 high = float(high)
-        elif vtype is LONG_TYPE:
-            self.validate = self.long_validate
-            self._type_desc = "a long integer"
-            if low is not None:
-                low = LONG_TYPE(low)
-            if high is not None:
-                high = LONG_TYPE(high)
         else:
             self.validate = self.int_validate
             kind = 3
@@ -867,7 +859,7 @@ class TraitRange(TraitHandler):
             exclude_mask |= 1
         if exclude_high:
             exclude_mask |= 2
-        if vtype is not LONG_TYPE:
+        if vtype is not int:
             self.fast_validate = (kind, low, high, exclude_mask)
 
         # Assign type-corrected arguments to handler attributes
@@ -900,26 +892,6 @@ class TraitRange(TraitHandler):
         try:
             if (
                 isinstance(value, int)
-                and (
-                    (self._low is None)
-                    or (self._exclude_low and (self._low < value))
-                    or ((not self._exclude_low) and (self._low <= value))
-                )
-                and (
-                    (self._high is None)
-                    or (self._exclude_high and (self._high > value))
-                    or ((not self._exclude_high) and (self._high >= value))
-                )
-            ):
-                return value
-        except:
-            pass
-        self.error(object, name, value)
-
-    def long_validate(self, object, name, value):
-        try:
-            if (
-                isinstance(value, six.integer_types)
                 and (
                     (self._low is None)
                     or (self._exclude_low and (self._low < value))
@@ -1144,7 +1116,6 @@ class TraitCoerceType(TraitHandler):
     ============ =================
     complex      float, int
     float        int
-    long         int
     unicode      str
     ============ =================
     """

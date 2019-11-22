@@ -15,10 +15,6 @@ Traits
 
 .. autoclass:: Int
 
-.. autoclass:: BaseLong
-
-.. autoclass:: Long
-
 .. autoclass:: BaseFloat
 
 .. autoclass:: Float
@@ -48,10 +44,6 @@ Traits
 .. autoclass:: BaseCInt
 
 .. autoclass:: CInt
-
-.. autoclass:: BaseCLong
-
-.. autoclass:: CLong
 
 .. autoclass:: BaseCFloat
 
@@ -207,8 +199,6 @@ Traits
 .. autodata:: DictStrStr
 
 .. autodata:: DictStrInt
-
-.. autodata:: DictStrLong
 
 .. autodata:: DictStrFloat
 
