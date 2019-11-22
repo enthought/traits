@@ -4097,7 +4097,8 @@ check_implements:
                    Clear the error and continue with the next item
                    in the complex sequence. */
                 result = as_float(value);
-                if (result == NULL && PyErr_ExceptionMatches(PyExc_TypeError)) {
+                if (result == NULL
+                        && PyErr_ExceptionMatches(PyExc_TypeError)) {
                     PyErr_Clear();
                     break;
                 }
