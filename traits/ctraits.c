@@ -3184,12 +3184,13 @@ validate_trait_self_type ( trait_object * trait, has_traits_object * obj,
 
 
 /*
-   Convert an arbitrary Python integer-like object to an integer.
-   Return a new object of exact type int (or long on Python 2, for
-   values too large for an int), or raise TypeError if the given
-   object cannot be converted to an integer.
+   Convert an arbitrary integer-like Python object to an exact integer.
 
-   "integer-like" means either:
+   Returns an object of exact type int (or possibly exact type long
+   on Python 2, for values too large to fit in an int), or raise
+   TypeError if the given object cannot be converted to an integer.
+
+   Here, "integer-like" means either:
 
    - is an instance of int (or long in Python 2), or
    - can be converted to an integer via operator.index.
@@ -3225,8 +3226,8 @@ as_integer(PyObject *value) {
     /*
        We run the __index__ result through an extra int call to ensure that
        we get something of exact type int or long, and (for Python 2) to
-       ensure that we only get a long when the target value
-       is outside the range of an int.
+       ensure that we only get a long if the target value is outside the
+       range of an int.
 
        Example problematic cases:
 
@@ -3299,10 +3300,10 @@ error:
 |  Verifies a Python value is a Python integer (an int or long)
 +----------------------------------------------------------------------------*/
 
-static PyObject*
-validate_trait_integer(trait_object* trait, has_traits_object* obj,
-                       PyObject* name, PyObject* value) {
-    PyObject* result = as_integer(value);
+static PyObject *
+validate_trait_integer(trait_object *trait, has_traits_object *obj,
+                       PyObject *name, PyObject *value) {
+    PyObject *result = as_integer(value);
     /* A TypeError represents a type validation failure, and should be
        re-raised as a TraitError. Other exceptions should be propagated. */
     if (result == NULL && PyErr_ExceptionMatches(PyExc_TypeError)) {
@@ -4051,7 +4052,7 @@ check_implements:
                 result = as_integer(value);
                 /* A TypeError indicates that we don't have a match. Clear
                    the error and continue with the next item in the complex
-                   sequence. */
+                   sequence. Other errors are propagated. */
                 if (result == NULL
                         && PyErr_ExceptionMatches(PyExc_TypeError)) {
                     PyErr_Clear();
