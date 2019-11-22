@@ -3220,11 +3220,11 @@ as_integer(PyObject *value) {
        ensure that we only get a long when the target value
        is outside the range of an int.
 
-       CPython doesn't currently guarantee that the return value from a
-       PyNumber_Index call has strict type int, and currently (for example)
-       PyNumber_Index applied to a bool returns another bool, while
-       PyNumber_Index applied to some NumPy types (for example np.uint64(3))
-       returns a long even when the output would have fit in an int.
+       Example problematic cases:
+
+       - ``operator.index(True)`` gives ``True``, where we'd like ``1``.
+       - On Python 2, ``operator.index(np.uint64(3))`` gives ``3L``, where
+         we'd like ``3``.
 
        Related: https://bugs.python.org/issue17576
     */
