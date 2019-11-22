@@ -3299,7 +3299,7 @@ error:
 
 
 /*
-   Convert an arbitrary float-like Python object to a float.
+   Convert a float-like Python object to a float.
 
    Returns a new object of exact type float, or raises TypeError
    if the given object cannot be converted to a float.
