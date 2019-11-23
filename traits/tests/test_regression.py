@@ -12,9 +12,11 @@ from traits.has_traits import (
     Property,
     on_trait_change,
 )
-from traits.trait_errors import TraitError
-from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
 from traits.testing.optional_dependencies import numpy, requires_numpy
+from traits.trait_errors import TraitError
+from traits.trait_handlers import TraitType
+from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
+from traits.traits import Trait
 
 if numpy is not None:
     from traits.trait_numeric import Array
@@ -106,6 +108,20 @@ class ExtendedListenerInList(HasTraits):
     @on_trait_change(["dummy:x"])
     def set_changed(self):
         self.changed = True
+
+
+class RaisingValidator(TraitType):
+    """ Trait type whose ``validate`` method raises an inappropriate exception.
+
+    Used for testing propagation of that exception.
+    """
+    info_text = "bogus"
+
+    #: The default value for the trait:
+    default_value = None
+
+    def validate(self, object, name, value):
+        raise ZeroDivisionError("Just testing")
 
 
 class TestRegression(unittest.TestCase):
@@ -258,3 +274,16 @@ class TestRegression(unittest.TestCase):
         a = StrictDummy()
         with self.assertRaises(TraitError):
             setattr(a, u"forbidden", 53)
+
+    def test_validate_exception_propagates(self):
+        class A(HasTraits):
+            foo = RaisingValidator()
+
+            bar = Trait(Int(), RaisingValidator())
+
+        a = A()
+        with self.assertRaises(ZeroDivisionError):
+            a.foo = "foo"
+
+        with self.assertRaises(ZeroDivisionError):
+            a.bar = "foo"
