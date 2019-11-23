@@ -16,7 +16,6 @@ from traits.testing.optional_dependencies import numpy, requires_numpy
 from traits.trait_errors import TraitError
 from traits.trait_handlers import TraitType
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
-from traits.traits import Trait
 
 if numpy is not None:
     from traits.trait_numeric import Array
@@ -279,7 +278,7 @@ class TestRegression(unittest.TestCase):
         class A(HasTraits):
             foo = RaisingValidator()
 
-            bar = Trait(Int(), RaisingValidator())
+            bar = Either(None, RaisingValidator())
 
         a = A()
         with self.assertRaises(ZeroDivisionError):
