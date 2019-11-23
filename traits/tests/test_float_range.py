@@ -29,6 +29,21 @@ class ModelWithRange(HasTraits):
     # Simple floating-point range trait.
     percentage = Range(0.0, 100.0)
 
+    # Traits that exercise the various possiblities for inclusion
+    # or exclusion of the endpoints.
+    open_closed = Range(0.0, 100.0, exclude_low=True)
+
+    closed_open = Range(0.0, 100.0, exclude_high=True)
+
+    open = Range(0.0, 100.0, exclude_low=True, exclude_high=True)
+
+    closed = Range(0.0, 100.0)
+
+    # Traits for one-sided intervals
+    steam_temperature = Range(low=100.0)
+
+    ice_temperature = Range(high=0.0)
+
 
 class ModelWithRangeCompound(HasTraits):
     """
@@ -39,6 +54,21 @@ class ModelWithRangeCompound(HasTraits):
     # exercises a different code path in ctraits.c from the
     # corresponding trait in ModelWithRange.
     percentage = Either(None, Range(0.0, 100.0))
+
+    # Traits that exercise the various possiblities for inclusion
+    # or exclusion of the endpoints.
+    open_closed = Either(None, Range(0.0, 100.0, exclude_low=True))
+
+    closed_open = Either(None, Range(0.0, 100.0, exclude_high=True))
+
+    open = Either(None, Range(0.0, 100.0, exclude_low=True, exclude_high=True))
+
+    closed = Either(None, Range(0.0, 100.0))
+
+    # Traits for one-sided intervals
+    steam_temperature = Either(None, Range(low=100.0))
+
+    ice_temperature = Either(None, Range(high=0.0))
 
 
 class InheritsFromFloat(float):
@@ -157,6 +187,58 @@ class CommonRangeTests(object):
     def test_bad_float_like(self):
         with self.assertRaises(ZeroDivisionError):
             self.model.percentage = BadFloatLike()
+
+    def test_endpoints(self):
+        # point within the interior of the range
+        self.model.open = self.model.closed = 50.0
+        self.model.open_closed = self.model.closed_open = 50.0
+        self.assertEqual(self.model.open, 50.0)
+        self.assertEqual(self.model.closed, 50.0)
+        self.assertEqual(self.model.open_closed, 50.0)
+        self.assertEqual(self.model.closed_open, 50.0)
+
+        # low endpoint
+        self.model.closed = self.model.closed_open = 0.0
+        self.assertEqual(self.model.closed, 0.0)
+        self.assertEqual(self.model.closed_open, 0.0)
+        with self.assertRaises(TraitError):
+            self.model.open = 0.0
+        with self.assertRaises(TraitError):
+            self.model.open_closed = 0.0
+
+        # high endpoint
+        self.model.closed = self.model.open_closed = 100.0
+        self.assertEqual(self.model.closed, 100.0)
+        self.assertEqual(self.model.open_closed, 100.0)
+        with self.assertRaises(TraitError):
+            self.model.open = 100.0
+        with self.assertRaises(TraitError):
+            self.model.closed_open = 100.0
+
+    def test_half_infinite(self):
+        ice_temperatures = [-273.15, -273.0, -100.0, -1.0, -0.1, -0.001]
+        water_temperatures = [0.001, 0.1, 1.0, 50.0, 99.0, 99.9, 99.999]
+        steam_temperatures = [100.001, 100.1, 101.0, 1000.0, 1e100]
+
+        for temperature in steam_temperatures:
+            self.model.steam_temperature = temperature
+            self.assertEqual(self.model.steam_temperature, temperature)
+
+        for temperature in ice_temperatures + water_temperatures:
+            self.model.steam_temperature = 1729.0
+            with self.assertRaises(TraitError):
+                self.model.steam_temperature = temperature
+            self.assertEqual(self.model.steam_temperature, 1729.0)
+
+        for temperature in ice_temperatures:
+            self.model.ice_temperature = temperature
+            self.assertEqual(self.model.ice_temperature, temperature)
+
+        for temperature in water_temperatures + steam_temperatures:
+            self.model.ice_temperature = -1729.0
+            with self.assertRaises(TraitError):
+                self.model.ice_temperature = temperature
+            self.assertEqual(self.model.ice_temperature, -1729.0)
 
 
 class TestFloatRange(CommonRangeTests, unittest.TestCase):
