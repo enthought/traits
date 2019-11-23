@@ -39,6 +39,11 @@ class ModelWithRange(HasTraits):
 
     closed = Range(0.0, 100.0)
 
+    # Traits for one-sided intervals
+    steam_temperature = Range(low=100.0)
+
+    ice_temperature = Range(high=0.0)
+
 
 class ModelWithRangeCompound(HasTraits):
     """
@@ -59,6 +64,11 @@ class ModelWithRangeCompound(HasTraits):
     open = Either(None, Range(0.0, 100.0, exclude_low=True, exclude_high=True))
 
     closed = Either(None, Range(0.0, 100.0))
+
+    # Traits for one-sided intervals
+    steam_temperature = Either(None, Range(low=100.0))
+
+    ice_temperature = Either(None, Range(high=0.0))
 
 
 class InheritsFromFloat(float):
@@ -204,6 +214,31 @@ class CommonRangeTests(object):
             self.model.open = 100.0
         with self.assertRaises(TraitError):
             self.model.closed_open = 100.0
+
+    def test_half_infinite(self):
+        ice_temperatures = [-273.15, -273.0, -100.0, -1.0, -0.1, -0.001]
+        water_temperatures = [0.001, 0.1, 1.0, 50.0, 99.0, 99.9, 99.999]
+        steam_temperatures = [100.001, 100.1, 101.0, 1000.0, 1e100]
+
+        for temperature in steam_temperatures:
+            self.model.steam_temperature = temperature
+            self.assertEqual(self.model.steam_temperature, temperature)
+
+        for temperature in ice_temperatures + water_temperatures:
+            self.model.steam_temperature = 1729.0
+            with self.assertRaises(TraitError):
+                self.model.steam_temperature = temperature
+            self.assertEqual(self.model.steam_temperature, 1729.0)
+
+        for temperature in ice_temperatures:
+            self.model.ice_temperature = temperature
+            self.assertEqual(self.model.ice_temperature, temperature)
+
+        for temperature in water_temperatures + steam_temperatures:
+            self.model.ice_temperature = -1729.0
+            with self.assertRaises(TraitError):
+                self.model.ice_temperature = temperature
+            self.assertEqual(self.model.ice_temperature, -1729.0)
 
 
 class TestFloatRange(CommonRangeTests, unittest.TestCase):
