@@ -179,7 +179,7 @@ def _validate_float(value):
     """
     Convert an arbitrary Python object to a float, or raise TypeError.
     """
-    if type(value) == float:  # fast path for common case
+    if type(value) is float:  # fast path for common case
         return value
     try:
         nb_float = type(value).__float__
