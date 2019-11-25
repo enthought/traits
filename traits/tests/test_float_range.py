@@ -17,7 +17,7 @@ Tests for the Range trait with value type float.
 
 import unittest
 
-from traits.api import Either, HasTraits, Range, TraitError
+from traits.api import BaseRange, Either, HasTraits, Range, TraitError
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
@@ -43,6 +43,30 @@ class ModelWithRange(HasTraits):
     steam_temperature = Range(low=100.0)
 
     ice_temperature = Range(high=0.0)
+
+
+class ModelWithBaseRange(HasTraits):
+    """
+    Model containing simple Range trait.
+    """
+
+    # Simple floating-point range trait.
+    percentage = BaseRange(0.0, 100.0)
+
+    # Traits that exercise the various possiblities for inclusion
+    # or exclusion of the endpoints.
+    open_closed = BaseRange(0.0, 100.0, exclude_low=True)
+
+    closed_open = BaseRange(0.0, 100.0, exclude_high=True)
+
+    open = BaseRange(0.0, 100.0, exclude_low=True, exclude_high=True)
+
+    closed = BaseRange(0.0, 100.0)
+
+    # Traits for one-sided intervals
+    steam_temperature = BaseRange(low=100.0)
+
+    ice_temperature = BaseRange(high=0.0)
 
 
 class ModelWithRangeCompound(HasTraits):
@@ -244,6 +268,11 @@ class CommonRangeTests(object):
 class TestFloatRange(CommonRangeTests, unittest.TestCase):
     def setUp(self):
         self.model = ModelWithRange()
+
+
+class TestFloatBaseRange(CommonRangeTests, unittest.TestCase):
+    def setUp(self):
+        self.model = ModelWithBaseRange()
 
 
 class TestFloatRangeCompound(CommonRangeTests, unittest.TestCase):
