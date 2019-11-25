@@ -17,58 +17,102 @@ Tests for the Range trait with value type int.
 
 import unittest
 
-from traits.api import Either, HasTraits, Range, TraitError
+from traits.api import (
+    BaseRange,
+    Either,
+    HasTraits,
+    Instance,
+    Range,
+    TraitError,
+)
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
-class ModelWithRange(HasTraits):
+def ModelFactory(name, RangeFactory):
     """
-    Model containing simple Range trait.
-    """
+    Helper function to create various similar model classes.
 
-    # Simple integer range trait.
-    percentage = Range(0, 100)
+    Parameters
+    ----------
+    name : str
+        Name to give the created class.
+    RangeFactory : callable(*range_args, **range_kwargs) -> TraitType
+        Callable with the same signature as Range; this will be used
+        to create the model traits.
 
-    # Traits that exercise the various possiblities for inclusion
-    # or exclusion of the endpoints.
-    open_closed = Range(0, 100, exclude_low=True)
+    Returns
+    -------
+    HasTraits subclass
+        Subclass containing various Range-like traits, for testing.
 
-    closed_open = Range(0, 100, exclude_high=True)
-
-    open = Range(0, 100, exclude_low=True, exclude_high=True)
-
-    closed = Range(0, 100)
-
-    # Traits for one-sided intervals
-    steam_temperature = Range(low=100)
-
-    ice_temperature = Range(high=0)
-
-
-class ModelWithRangeCompound(HasTraits):
-    """
-    Model containing compound Range trait.
     """
 
-    # Range as part of a compound trait. This (currently)
-    # exercises a different code path in ctraits.c from the
-    # corresponding trait in ModelWithRange.
-    percentage = Either(None, Range(0, 100))
+    class ModelWithRanges(HasTraits):
+        """
+        Model containing various Range-like traits.
+        """
 
-    # Traits that exercise the various possiblities for inclusion
-    # or exclusion of the endpoints.
-    open_closed = Either(None, Range(0, 100, exclude_low=True))
+        # Simple integer range trait.
+        percentage = RangeFactory(0, 100)
 
-    closed_open = Either(None, Range(0, 100, exclude_high=True))
+        # Traits that exercise the various possiblities for inclusion
+        # or exclusion of the endpoints.
+        open_closed = RangeFactory(0, 100, exclude_low=True)
 
-    open = Either(None, Range(0, 100, exclude_low=True, exclude_high=True))
+        closed_open = RangeFactory(0, 100, exclude_high=True)
 
-    closed = Either(None, Range(0, 100))
+        open = RangeFactory(0, 100, exclude_low=True, exclude_high=True)
 
-    # Traits for one-sided intervals
-    steam_temperature = Either(None, Range(low=100))
+        closed = RangeFactory(0, 100)
 
-    ice_temperature = Either(None, Range(high=0))
+        # Traits for one-sided intervals
+        steam_temperature = RangeFactory(low=100)
+
+        ice_temperature = RangeFactory(high=0)
+
+    ModelWithRanges.__name__ = name
+
+    return ModelWithRanges
+
+
+class Impossible(object):
+    """
+    Type that never gets instantiated.
+    """
+
+    def __init__(self):
+        raise TypeError("Cannot instantiate this class")
+
+
+# A trait type that has a fast validator but doesn't accept any values.
+impossible = Instance(Impossible, allow_none=False)
+
+
+def RangeCompound(*args, **kwargs):
+    """
+    Compound trait including a Range.
+    """
+    return Either(impossible, Range(*args, **kwargs))
+
+
+def BaseRangeCompound(*args, **kwargs):
+    """
+    Compound trait including a BaseRange.
+    """
+    return Either(impossible, BaseRange(*args, **kwargs))
+
+
+ModelWithRange = ModelFactory("ModelWithRange", RangeFactory=Range)
+
+ModelWithBaseRange = ModelFactory("ModelWithBaseRange", RangeFactory=BaseRange)
+
+ModelWithRangeCompound = ModelFactory(
+    "ModelWithRangeCompound", RangeFactory=RangeCompound
+)
+
+ModelWithBaseRangeCompound = ModelFactory(
+    "ModelWithBaseRangeCompound", RangeFactory=BaseRangeCompound,
+)
 
 
 class InheritsFromInt(int):
@@ -134,6 +178,7 @@ class CommonRangeTests(object):
             0.0,
             -27.8,
             35.0,
+            None,
         ]
 
         for non_integer in non_integers:
@@ -225,7 +270,7 @@ class CommonRangeTests(object):
     def test_half_infinite(self):
         ice_temperatures = [-273, -100, -1]
         water_temperatures = [1, 50, 99]
-        steam_temperatures = [101, 1000, 10**100, 10**1000]
+        steam_temperatures = [101, 1000, 10 ** 100, 10 ** 1000]
 
         for temperature in steam_temperatures:
             self.model.steam_temperature = temperature
@@ -253,6 +298,16 @@ class TestIntRange(CommonRangeTests, unittest.TestCase):
         self.model = ModelWithRange()
 
 
+class TestIntBaseRange(CommonRangeTests, unittest.TestCase):
+    def setUp(self):
+        self.model = ModelWithBaseRange()
+
+
 class TestIntRangeCompound(CommonRangeTests, unittest.TestCase):
     def setUp(self):
         self.model = ModelWithRangeCompound()
+
+
+class TestIntBaseRangeCompound(CommonRangeTests, unittest.TestCase):
+    def setUp(self):
+        self.model = ModelWithBaseRangeCompound()
