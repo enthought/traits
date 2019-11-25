@@ -1861,23 +1861,29 @@ class BaseRange(TraitType):
     def int_validate(self, object, name, value):
         """ Validate that the value is an int value in the specified range.
         """
-        try:
-            if (
-                isinstance(value, int_fast_validate[1:])
-                and (
-                    (self._low is None)
-                    or (self._exclude_low and (self._low < value))
-                    or ((not self._exclude_low) and (self._low <= value))
-                )
-                and (
-                    (self._high is None)
-                    or (self._exclude_high and (self._high > value))
-                    or ((not self._exclude_high) and (self._high >= value))
-                )
-            ):
-                return value
-        except:
-            pass
+        # Convert to exact type int, re-raising a TypeError as a TraitError
+        # and letting other errors propagate.
+        if type(value) is int:
+            as_int = value
+        else:
+            try:
+                as_int = int(operator.index(value))
+            except TypeError:
+                self.error(object, name, value)
+
+        if (
+            (
+                (self._low is None)
+                or (self._exclude_low and (self._low < as_int))
+                or ((not self._exclude_low) and (self._low <= as_int))
+            )
+            and (
+                (self._high is None)
+                or (self._exclude_high and (self._high > as_int))
+                or ((not self._exclude_high) and (self._high >= as_int))
+            )
+        ):
+            return as_int
 
         self.error(object, name, value)
 

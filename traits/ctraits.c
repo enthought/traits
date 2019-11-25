@@ -3915,11 +3915,12 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
             case 8:  /* Perform 'slow' validate check: */
                 result = PyObject_CallMethod( PyTuple_GET_ITEM( type_info, 1 ),
                                   "slow_validate", "(OOO)", obj, name, value );
-                if ( result != NULL )
-                    return result;
 
-                PyErr_Clear();
-                break;
+                if (result == NULL && PyErr_ExceptionMatches(TraitError)) {
+                    PyErr_Clear();
+                    break;
+                }
+                return result;
 
             case 9:  /* Tuple item check: */
                 result = validate_trait_tuple_check(
@@ -4123,24 +4124,34 @@ done:
 +----------------------------------------------------------------------------*/
 
 static trait_validate validate_handlers[] = {
-    validate_trait_type,        validate_trait_instance,
+    validate_trait_type,         /* case 0: Type check */
+    validate_trait_instance,     /* case 1: Instance check */
+    validate_trait_self_type,    /* case 2: Self type check */
 #if PY_MAJOR_VERSION < 3
-    validate_trait_self_type,   validate_trait_int,
+    validate_trait_int,          /* case 3: Integer range check */
 #else
-    validate_trait_self_type,   NULL,
+    NULL,                        /* case 3: Integer range check */
 #endif // #if PY_MAJOR_VERSION < 3
-    validate_trait_float_range, validate_trait_enum,
-    validate_trait_map,         validate_trait_complex,
-    NULL,                       validate_trait_tuple,
-    validate_trait_prefix_map,  validate_trait_coerce_type,
-    validate_trait_cast_type,   validate_trait_function,
-    validate_trait_python,
+    validate_trait_float_range,  /* case 4: Floating-point range check */
+    validate_trait_enum,         /* case 5: Enumerated item check */
+    validate_trait_map,          /* case 6: Mapped item check */
+    validate_trait_complex,      /* case 7: TraitComplex item check */
+    NULL,                        /* case 8: 'Slow' validate check */
+    validate_trait_tuple,        /* case 9: TupleOf item check */
+    validate_trait_prefix_map,   /* case 10: Prefix map item check */
+    validate_trait_coerce_type,  /* case 11: Coercable type check */
+    validate_trait_cast_type,    /* case 12: Castable type check */
+    validate_trait_function,     /* case 13: Function validator check */
+    validate_trait_python,       /* case 14: Python-based validator check */
 /*  The following entries are used by the __getstate__ method... */
-    setattr_validate0,           setattr_validate1,
-    setattr_validate2,           setattr_validate3,
+    setattr_validate0,
+    setattr_validate1,
+    setattr_validate2,
+    setattr_validate3,
 /*  ...End of __getstate__ method entries */
-    validate_trait_adapt,        validate_trait_integer,
-    validate_trait_float,
+    validate_trait_adapt,        /* case 19: PyProtocols 'adapt' check */
+    validate_trait_integer,      /* case 20: Integer check */
+    validate_trait_float,        /* case 21: Float check */
 };
 
 static PyObject *
