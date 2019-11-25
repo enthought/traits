@@ -165,12 +165,21 @@ def default_text_editor(trait, type=None):
 
 # Generic validators
 
+def _validate_int(value):
+    """
+    Convert an integer-like Python object to an int, or raise TypeError.
+    """
+    if type(value) is int:
+        return value
+    else:
+        return int(operator.index(value))
+
 
 def _validate_float(value):
     """
     Convert an arbitrary Python object to a float, or raise TypeError.
     """
-    if type(value) == float:  # fast path for common case
+    if type(value) is float:  # fast path for common case
         return value
     try:
         nb_float = type(value).__float__
@@ -232,17 +241,10 @@ class BaseInt(TraitType):
     def validate(self, object, name, value):
         """ Validates that a specified value is valid for this trait.
         """
-        if type(value) is int:
-            return value
-
         try:
-            int_value = operator.index(value)
+            return _validate_int(value)
         except TypeError:
-            pass
-        else:
-            return int(int_value)
-
-        self.error(object, name, value)
+            self.error(object, name, value)
 
     def create_editor(self):
         """ Returns the default traits UI editor for this type of trait.
@@ -576,7 +578,7 @@ class BaseCInt(BaseInt):
         """
         try:
             return int(value)
-        except:
+        except (ValueError, TypeError):
             self.error(object, name, value)
 
 
@@ -609,7 +611,7 @@ class BaseCFloat(BaseFloat):
         """
         try:
             return float(value)
-        except:
+        except (ValueError, TypeError):
             self.error(object, name, value)
 
 
@@ -642,7 +644,7 @@ class BaseCComplex(BaseComplex):
         """
         try:
             return complex(value)
-        except:
+        except (ValueError, TypeError):
             self.error(object, name, value)
 
 
@@ -1835,7 +1837,9 @@ class BaseRange(TraitType):
     def float_validate(self, object, name, value):
         """ Validate that the value is a float value in the specified range.
         """
-        # Keep original value for use in error reporting.
+        # Convert to exact type float, re-raising a TypeError as a TraitError
+        # and letting other errors propagate. Keep original value for
+        # error-reporting purposes.
         original_value = value
         try:
             value = _validate_float(value)
@@ -1861,31 +1865,30 @@ class BaseRange(TraitType):
     def int_validate(self, object, name, value):
         """ Validate that the value is an int value in the specified range.
         """
-        # Convert to exact type int, re-raising a TypeError as a TraitError
-        # and letting other errors propagate.
-        if type(value) is int:
-            as_int = value
-        else:
-            try:
-                as_int = int(operator.index(value))
-            except TypeError:
-                self.error(object, name, value)
+        # Convert to exact type float, re-raising a TypeError as a TraitError
+        # and letting other errors propagate. Keep original value for
+        # error-reporting purposes.
+        original_value = value
+        try:
+            value = _validate_int(value)
+        except TypeError:
+            self.error(object, name, original_value)
 
         if (
             (
                 (self._low is None)
-                or (self._exclude_low and (self._low < as_int))
-                or ((not self._exclude_low) and (self._low <= as_int))
+                or (self._exclude_low and (self._low < value))
+                or ((not self._exclude_low) and (self._low <= value))
             )
             and (
                 (self._high is None)
-                or (self._exclude_high and (self._high > as_int))
-                or ((not self._exclude_high) and (self._high >= as_int))
+                or (self._exclude_high and (self._high > value))
+                or ((not self._exclude_high) and (self._high >= value))
             )
         ):
-            return as_int
+            return value
 
-        self.error(object, name, value)
+        self.error(object, name, original_value)
 
     def _get_default_value(self, object):
         """ Returns the default value of the range.
