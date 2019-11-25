@@ -184,6 +184,7 @@ class CommonRangeTests(object):
             0j,
             [1.2],
             (1.2,),
+            None,
         ]
 
         for non_float in non_floats:
