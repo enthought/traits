@@ -1835,25 +1835,28 @@ class BaseRange(TraitType):
     def float_validate(self, object, name, value):
         """ Validate that the value is a float value in the specified range.
         """
+        # Keep original value for use in error reporting.
+        original_value = value
         try:
-            if (
-                isinstance(value, RangeTypes)
-                and (
-                    (self._low is None)
-                    or (self._exclude_low and (self._low < value))
-                    or ((not self._exclude_low) and (self._low <= value))
-                )
-                and (
-                    (self._high is None)
-                    or (self._exclude_high and (self._high > value))
-                    or ((not self._exclude_high) and (self._high >= value))
-                )
-            ):
-                return float(value)
-        except:
-            pass
+            value = _validate_float(value)
+        except TypeError:
+            self.error(object, name, original_value)
 
-        self.error(object, name, value)
+        if (
+            (
+                (self._low is None)
+                or (self._exclude_low and (self._low < value))
+                or ((not self._exclude_low) and (self._low <= value))
+            )
+            and (
+                (self._high is None)
+                or (self._exclude_high and (self._high > value))
+                or ((not self._exclude_high) and (self._high >= value))
+            )
+        ):
+            return value
+
+        self.error(object, name, original_value)
 
     def int_validate(self, object, name, value):
         """ Validate that the value is an int value in the specified range.
