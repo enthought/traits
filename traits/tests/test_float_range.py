@@ -21,22 +21,20 @@ from traits.api import (
     BaseRange,
     Either,
     HasTraits,
+    Instance,
     Range,
     TraitError,
-    TraitType,
 )
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
-class Impossible(TraitType):
+class Impossible(object):
     """
-    Trait type that accepts nothing at all.
+    Type that never gets instantiated.
     """
 
-    info_text = "an impossible object"
-
-    def validate(self, object, name, value):
-        self.error(object, name, value)
+    def __init__(self):
+        raise TypeError("Cannot instantiate this class")
 
 
 def ModelFactory(name, RangeFactory):
@@ -86,18 +84,22 @@ def ModelFactory(name, RangeFactory):
     return ModelWithRanges
 
 
+# A trait type that has a fast validator but doesn't accept any values.
+impossible = Instance(Impossible, allow_none=False)
+
+
 def RangeCompound(*args, **kwargs):
     """
     Compound trait including a Range.
     """
-    return Either(None, Range(*args, **kwargs))
+    return Either(impossible, Range(*args, **kwargs))
 
 
 def BaseRangeCompound(*args, **kwargs):
     """
     Compound trait including a BaseRange.
     """
-    return Either(None, BaseRange(*args, **kwargs))
+    return Either(impossible, BaseRange(*args, **kwargs))
 
 
 ModelWithRange = ModelFactory("ModelWithRange", RangeFactory=Range)
