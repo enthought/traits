@@ -1702,6 +1702,53 @@ class Directory(BaseDirectory):
 # -------------------------------------------------------------------------------
 
 
+def _infer_range_vtype(low, high):
+    """
+    Returns
+    -------
+    vtype : type or None
+        Value type for the range: one of None, int, float or str.
+    low : None, int, float or str
+        low, converted to the corresponding strict type
+    high : None, int, float or str
+        high, converted to the corresponding strict type
+    """
+    # Case 1: both low and high are None
+    if low is high is None:
+        return None, low, high
+
+    # Case 2: both low and high are integer-like or None
+    try:
+        int_low = None if low is None else _validate_int(low)
+        int_high = None if high is None else _validate_int(high)
+    except TypeError:
+        pass
+    else:
+        return int, int_low, int_high
+
+    # Case 3: both low and high are float-like or None
+    try:
+        float_low = None if low is None else _validate_float(low)
+        float_high = None if high is None else _validate_float(high)
+    except TypeError:
+        pass
+    else:
+        return float, float_low, float_high
+
+    # Case 4: at least one of low and high is a str, so we
+    # have a dynamic Range trait. Return low and high unaltered.
+    # XXX Actually, we should convert low or high if they're numeric.
+    if isinstance(low, six.string_types) or isinstance(high, six.string_types):
+        return str, low, high
+
+    raise TraitError(
+        "For a static Range, 'low' and 'high' must each be an "
+        "integer, a float, or None. Got low={!r} and high={!r}.".format(
+            low, high,
+        )
+    )
+
+
 class BaseRange(TraitType):
     """ Defines a trait whose numeric value must be in a specified range.
     """
@@ -1748,41 +1795,28 @@ class BaseRange(TraitType):
 
         super(BaseRange, self).__init__(value, **metadata)
 
-        vtype = type(high)
-        if (low is not None) and (
-            not issubclass(vtype, (float,) + six.string_types)
-        ):
-            vtype = type(low)
+        # Infer value type from low and high values.
+        vtype, low, high = _infer_range_vtype(low, high)
 
-        is_static = not issubclass(vtype, six.string_types)
-        if is_static and (vtype not in RangeTypes):
+        if vtype is None:
             raise TraitError(
-                "Range can only be use for int or float "
-                "values, but a value of type %s was specified." % vtype
+                "At least one of 'low' or 'high' must be non-None "
+                "for a valid Range trait."
             )
 
         self._low_name = self._high_name = ""
         self._vtype = Undefined
 
-        if vtype is float:
-            self._validate = "float_validate"
-            kind = 4
-            self._type_desc = "a floating point number"
-            if low is not None:
-                low = float(low)
-
-            if high is not None:
-                high = float(high)
-
-        elif vtype is int:
+        if vtype is int:
             self._validate = "int_validate"
             kind = 3
             self._type_desc = "an integer"
-            if low is not None:
-                low = int(low)
 
-            if high is not None:
-                high = int(high)
+        elif vtype is float:
+            self._validate = "float_validate"
+            kind = 4
+            self._type_desc = "a floating point number"
+
         else:
             self.get, self.set, self.validate = self._get, self._set, None
             self._vtype = None
@@ -1814,7 +1848,8 @@ class BaseRange(TraitType):
         if exclude_high:
             exclude_mask |= 2
 
-        if is_static and (vtype is not int):
+        # We don't currently have a fast validator for the int type.
+        if vtype is float:
             self.init_fast_validator(kind, low, high, exclude_mask)
 
         #: Assign type-corrected arguments to handler attributes:

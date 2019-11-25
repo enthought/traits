@@ -304,3 +304,65 @@ class TestFloatRangeCompound(CommonRangeTests, unittest.TestCase):
 class TestFloatBaseRangeCompound(CommonRangeTests, unittest.TestCase):
     def setUp(self):
         self.model = ModelWithBaseRangeCompound()
+
+
+class TestRange(unittest.TestCase):
+    def test_low_high_none(self):
+        with self.assertRaises(TraitError):
+            Range(low=None, high=None)
+        with self.assertRaises(TraitError):
+            Range(low=None, high=None, value=2.5)
+        with self.assertRaises(TraitError):
+            Range(low=None, high=None, value="other_trait")
+
+    def test_low_or_high_invalid(self):
+        with self.assertRaises(TraitError):
+            Range(low=None, high=1j)
+        with self.assertRaises(TraitError):
+            Range(low=[2.3], high=4.5)
+
+    def test_static_integer_like(self):
+        int_like = Range(low=None, high=3)
+        self.assertAccepts(int_like, 2, 2)
+        self.assertRejects(int_like, 2.0)
+
+        int_like = Range(low=0, high=None)
+        self.assertAccepts(int_like, 2, 2)
+        self.assertRejects(int_like, 2.0)
+
+        int_like = Range(low=0, high=3)
+        self.assertAccepts(int_like, 2, 2)
+        self.assertRejects(int_like, 2.0)
+
+    def test_static_float_like(self):
+        float_like = Range(low=None, high=3.0)
+        self.assertAccepts(float_like, 2, 2.0)
+        self.assertAccepts(float_like, 2.0, 2.0)
+
+        float_like = Range(low=0.0, high=None)
+        self.assertAccepts(float_like, 2, 2.0)
+        self.assertAccepts(float_like, 2.0, 2.0)
+
+        float_like = Range(low=0.0, high=3.0)
+        self.assertAccepts(float_like, 2, 2.0)
+        self.assertAccepts(float_like, 2.0, 2.0)
+
+        # Mixed types for low and high
+        float_like = Range(low=0.0, high=3)
+        self.assertAccepts(float_like, 2, 2.0)
+        self.assertAccepts(float_like, 2.0, 2.0)
+
+        float_like = Range(low=0, high=3.0)
+        self.assertAccepts(float_like, 2, 2.0)
+        self.assertAccepts(float_like, 2.0, 2.0)
+
+    def assertAccepts(self, trait, value, expected):
+        obj = HasTraits()
+        new_value = trait.validate(obj, "name", value)
+        self.assertIs(type(new_value), type(expected))
+        self.assertEqual(new_value, expected)
+
+    def assertRejects(self, trait, value):
+        obj = HasTraits()
+        with self.assertRaises(TraitError):
+            trait.validate(obj, "name", value)
