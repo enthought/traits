@@ -260,11 +260,8 @@ class BaseTraitHandler(object):
         function.
 
         Note that the result can include information specific to the particular
-        trait handler instance. For example, TraitRange instances return a
-        string indicating the range of values acceptable to the handler (e.g.,
-        "an integer in the range from 1 to 9"). If the full_info() method is not
-        overridden, the default method returns the value of calling the info()
-        method.
+        trait handler instance. If the full_info() method is not overridden,
+        the default method returns the value of calling the info() method.
         """
         return self.info()
 
@@ -282,11 +279,8 @@ class BaseTraitHandler(object):
         function.
 
         Note that the result can include information specific to the particular
-        trait handler instance. For example, TraitRange instances return a
-        string indicating the range of values acceptable to the handler (e.g.,
-        "an integer in the range from 1 to 9"). If the info() method is not
-        overridden, the default method returns the value of the 'info_text'
-        attribute.
+        trait handler instance. If the info() method is not overridden, the
+        default method returns the value of the 'info_text' attribute.
         """
         return self.info_text
 
@@ -777,175 +771,6 @@ class TraitHandler(BaseTraitHandler):
             "The '%s' trait of %s instance has an unknown type. "
             "Contact the developer to correct the problem."
             % (name, class_of(object))
-        )
-
-
-# -------------------------------------------------------------------------------
-#  'TraitRange' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitRange(TraitHandler):
-    """Ensures that a trait attribute lies within a specified numeric range.
-
-    TraitRange is the underlying handler for the predefined Range() trait
-    factory.
-
-    Any value assigned to a trait containing a TraitRange handler must be of the
-    correct type and in the numeric range defined by the TraitRange instance.
-    No automatic coercion takes place. For example::
-
-        class Person(HasTraits):
-            age = Trait(0, TraitRange(0, 150))
-            weight = Trait(0.0, TraitRange(0.0, None))
-
-    This example defines a Person class, which has an **age** trait
-    attribute, which must be an integer in the range from 0 to 150, and a
-    **weight** trait attribute, which must be a non-negative float value.
-    """
-
-    def __init__(
-        self, low=None, high=None, exclude_low=False, exclude_high=False
-    ):
-        """ Creates a TraitRange handler.
-
-        Parameters
-        ----------
-        low : number
-            The minimum value that the trait can accept.
-        high : number
-            The maximum value that the trait can accept.
-        exclude_low : bool
-            Should the *low* value be exclusive (or inclusive).
-        exclude_high : bool
-            Should the *high* value be exclusive (or inclusive).
-
-        Description
-        -----------
-        The *low* and *high* values must be of the same Python numeric type,
-        either ``int`` or ``float``. Alternatively, one of the values
-        may be None, to indicate that that portion of the range is
-        unbounded. The *exclude_low* and *exclude_high* values can be used to
-        specify whether the *low* and *high* values should be exclusive (or
-        inclusive).
-        """
-        vtype = type(high)
-        if (low is not None) and (vtype is not float):
-            vtype = type(low)
-        if vtype not in RangeTypes:
-            raise TraitError(
-                "TraitRange can only be use for int or "
-                "float values, but a value of type %s was "
-                "specified." % vtype
-            )
-        if vtype is float:
-            self.validate = self.float_validate
-            kind = 4
-            self._type_desc = "a floating point number"
-            if low is not None:
-                low = float(low)
-            if high is not None:
-                high = float(high)
-        else:
-            self.validate = self.int_validate
-            kind = 3
-            self._type_desc = "an integer"
-            if low is not None:
-                low = int(low)
-            if high is not None:
-                high = int(high)
-        exclude_mask = 0
-        if exclude_low:
-            exclude_mask |= 1
-        if exclude_high:
-            exclude_mask |= 2
-        if vtype is not int:
-            self.fast_validate = (kind, low, high, exclude_mask)
-
-        # Assign type-corrected arguments to handler attributes
-        self._low = low
-        self._high = high
-        self._exclude_low = exclude_low
-        self._exclude_high = exclude_high
-
-    def float_validate(self, object, name, value):
-        try:
-            if (
-                isinstance(value, RangeTypes)
-                and (
-                    (self._low is None)
-                    or (self._exclude_low and (self._low < value))
-                    or ((not self._exclude_low) and (self._low <= value))
-                )
-                and (
-                    (self._high is None)
-                    or (self._exclude_high and (self._high > value))
-                    or ((not self._exclude_high) and (self._high >= value))
-                )
-            ):
-                return float(value)
-        except:
-            pass
-        self.error(object, name, value)
-
-    def int_validate(self, object, name, value):
-        try:
-            if (
-                isinstance(value, int)
-                and (
-                    (self._low is None)
-                    or (self._exclude_low and (self._low < value))
-                    or ((not self._exclude_low) and (self._low <= value))
-                )
-                and (
-                    (self._high is None)
-                    or (self._exclude_high and (self._high > value))
-                    or ((not self._exclude_high) and (self._high >= value))
-                )
-            ):
-                return value
-        except:
-            pass
-        self.error(object, name, value)
-
-    def info(self):
-        if self._low is None:
-            if self._high is None:
-                return self._type_desc
-            return "%s <%s %s" % (
-                self._type_desc,
-                "="[self._exclude_high :],
-                self._high,
-            )
-        elif self._high is None:
-            return "%s >%s %s" % (
-                self._type_desc,
-                "="[self._exclude_low :],
-                self._low,
-            )
-        return "%s <%s %s <%s %s" % (
-            self._low,
-            "="[self._exclude_low :],
-            self._type_desc,
-            "="[self._exclude_high :],
-            self._high,
-        )
-
-    def get_editor(self, trait):
-        from traitsui.api import RangeEditor
-
-        auto_set = trait.auto_set
-        if auto_set is None:
-            auto_set = True
-
-        return RangeEditor(
-            self,
-            mode=trait.mode or "auto",
-            cols=trait.cols or 3,
-            auto_set=auto_set,
-            enter_set=trait.enter_set or False,
-            low_label=trait.low or "",
-            high_label=trait.high or "",
         )
 
 

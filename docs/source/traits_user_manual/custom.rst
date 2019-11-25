@@ -537,13 +537,12 @@ An application could use this new trait handler to define traits such as the
 following::
 
     # use_custom_th.py --- Example of using a custom TraitHandler
-    from traits.api import HasTraits, Trait, TraitRange
+    from traits.api import HasTraits, Trait, Range
     from custom_traithandler import TraitOddInteger
 
     class AnOddClass(HasTraits):
         oddball = Trait(1, TraitOddInteger())
-        very_odd = Trait(-1, TraitOddInteger(),
-                             TraitRange(-10, -1))
+        very_odd = Trait(-1, TraitOddInteger(), Range(-10, -1))
 
 The following example demonstrates why the info() method returns a phrase rather
 than a complete sentence::
