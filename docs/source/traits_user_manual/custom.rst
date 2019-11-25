@@ -537,7 +537,7 @@ An application could use this new trait handler to define traits such as the
 following::
 
     # use_custom_th.py --- Example of using a custom TraitHandler
-    from traits.api import HasTraits, Trait, Range
+    from traits.api import HasTraits, Range, Trait
     from custom_traithandler import TraitOddInteger
 
     class AnOddClass(HasTraits):
