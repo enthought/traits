@@ -47,7 +47,7 @@ class ModelWithRange(HasTraits):
 
 class ModelWithBaseRange(HasTraits):
     """
-    Model containing simple Range trait.
+    Model containing simple BaseRange trait.
     """
 
     # Simple floating-point range trait.
@@ -93,6 +93,32 @@ class ModelWithRangeCompound(HasTraits):
     steam_temperature = Either(None, Range(low=100.0))
 
     ice_temperature = Either(None, Range(high=0.0))
+
+
+class ModelWithBaseRangeCompound(HasTraits):
+    """
+    Model containing compound BaseRange trait.
+    """
+
+    # Range as part of a compound trait. This (currently)
+    # exercises a different code path in ctraits.c from the
+    # corresponding trait in ModelWithRange.
+    percentage = Either(None, BaseRange(0.0, 100.0))
+
+    # Traits that exercise the various possiblities for inclusion
+    # or exclusion of the endpoints.
+    open_closed = Either(None, BaseRange(0.0, 100.0, exclude_low=True))
+
+    closed_open = Either(None, BaseRange(0.0, 100.0, exclude_high=True))
+
+    open = Either(None, BaseRange(0.0, 100.0, exclude_low=True, exclude_high=True))
+
+    closed = Either(None, BaseRange(0.0, 100.0))
+
+    # Traits for one-sided intervals
+    steam_temperature = Either(None, BaseRange(low=100.0))
+
+    ice_temperature = Either(None, BaseRange(high=0.0))
 
 
 class InheritsFromFloat(float):
@@ -278,3 +304,8 @@ class TestFloatBaseRange(CommonRangeTests, unittest.TestCase):
 class TestFloatRangeCompound(CommonRangeTests, unittest.TestCase):
     def setUp(self):
         self.model = ModelWithRangeCompound()
+
+
+class TestFloatBaseRangeCompound(CommonRangeTests, unittest.TestCase):
+    def setUp(self):
+        self.model = ModelWithBaseRangeCompound()
