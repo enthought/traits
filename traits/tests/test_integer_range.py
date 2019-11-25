@@ -17,7 +17,14 @@ Tests for the Range trait with value type int.
 
 import unittest
 
-from traits.api import BaseRange, Either, HasTraits, Range, TraitError
+from traits.api import (
+    BaseRange,
+    Either,
+    HasTraits,
+    Instance,
+    Range,
+    TraitError,
+)
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
@@ -46,40 +53,53 @@ def ModelFactory(name, RangeFactory):
         """
 
         # Simple integer range trait.
-        percentage = Range(0, 100)
+        percentage = RangeFactory(0, 100)
 
         # Traits that exercise the various possiblities for inclusion
         # or exclusion of the endpoints.
-        open_closed = Range(0, 100, exclude_low=True)
+        open_closed = RangeFactory(0, 100, exclude_low=True)
 
-        closed_open = Range(0, 100, exclude_high=True)
+        closed_open = RangeFactory(0, 100, exclude_high=True)
 
-        open = Range(0, 100, exclude_low=True, exclude_high=True)
+        open = RangeFactory(0, 100, exclude_low=True, exclude_high=True)
 
-        closed = Range(0, 100)
+        closed = RangeFactory(0, 100)
 
         # Traits for one-sided intervals
-        steam_temperature = Range(low=100)
+        steam_temperature = RangeFactory(low=100)
 
-        ice_temperature = Range(high=0)
+        ice_temperature = RangeFactory(high=0)
 
     ModelWithRanges.__name__ = name
 
     return ModelWithRanges
 
 
+class Impossible(object):
+    """
+    Type that never gets instantiated.
+    """
+
+    def __init__(self):
+        raise TypeError("Cannot instantiate this class")
+
+
+# A trait type that has a fast validator but doesn't accept any values.
+impossible = Instance(Impossible, allow_none=False)
+
+
 def RangeCompound(*args, **kwargs):
     """
     Compound trait including a Range.
     """
-    return Either(None, Range(*args, **kwargs))
+    return Either(impossible, Range(*args, **kwargs))
 
 
 def BaseRangeCompound(*args, **kwargs):
     """
     Compound trait including a BaseRange.
     """
-    return Either(None, BaseRange(*args, **kwargs))
+    return Either(impossible, BaseRange(*args, **kwargs))
 
 
 ModelWithRange = ModelFactory("ModelWithRange", RangeFactory=Range)
@@ -87,7 +107,8 @@ ModelWithRange = ModelFactory("ModelWithRange", RangeFactory=Range)
 ModelWithBaseRange = ModelFactory("ModelWithBaseRange", RangeFactory=BaseRange)
 
 ModelWithRangeCompound = ModelFactory(
-    "ModelWithRangeCompound", RangeFactory=RangeCompound)
+    "ModelWithRangeCompound", RangeFactory=RangeCompound
+)
 
 ModelWithBaseRangeCompound = ModelFactory(
     "ModelWithBaseRangeCompound", RangeFactory=BaseRangeCompound,
@@ -249,7 +270,7 @@ class CommonRangeTests(object):
     def test_half_infinite(self):
         ice_temperatures = [-273, -100, -1]
         water_temperatures = [1, 50, 99]
-        steam_temperatures = [101, 1000, 10**100, 10**1000]
+        steam_temperatures = [101, 1000, 10 ** 100, 10 ** 1000]
 
         for temperature in steam_temperatures:
             self.model.steam_temperature = temperature
