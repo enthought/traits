@@ -578,7 +578,7 @@ class BaseCInt(BaseInt):
         """
         try:
             return int(value)
-        except:
+        except (ValueError, TypeError):
             self.error(object, name, value)
 
 
@@ -611,7 +611,7 @@ class BaseCFloat(BaseFloat):
         """
         try:
             return float(value)
-        except:
+        except (ValueError, TypeError):
             self.error(object, name, value)
 
 
@@ -644,7 +644,7 @@ class BaseCComplex(BaseComplex):
         """
         try:
             return complex(value)
-        except:
+        except (ValueError, TypeError):
             self.error(object, name, value)
 
 
