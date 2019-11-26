@@ -29,8 +29,9 @@ import operator
 import re
 import sys
 from os.path import isfile, isdir
-from types import FunctionType, MethodType, ModuleType
+from types import CodeType, FunctionType, MethodType, ModuleType
 import uuid
+import warnings
 
 import six
 
@@ -1701,52 +1702,111 @@ class Directory(BaseDirectory):
 #  'BaseRange' and 'Range' traits:
 # -------------------------------------------------------------------------------
 
+# Machinery to infer the value type to use for a Range trait.
 
-def _infer_range_vtype(low, high):
+def _is_numeric(value):
     """
+    Determine whether a value is numeric, and return its type if so.
+
+    Here numeric means either int-like or float-like.
+
+    Parameters
+    ----------
+    value : object
+        The value to be tested.
+
     Returns
     -------
-    vtype : type or None
-        Value type for the range: one of None, int, float or str.
-    low : None, int, float or str
-        low, converted to the corresponding strict type
-    high : None, int, float or str
-        high, converted to the corresponding strict type
+    is_numeric : bool
+        True if the value has a numeric type, else False
+    value_type : one of (int, float, None)
+        int if the value is integer-like; float if the value is float-like,
+        None if neither of those is true.
     """
-    # Case 1: both low and high are None
-    if low is high is None:
-        return None, low, high
-
-    # Case 2: both low and high are integer-like or None
     try:
-        int_low = None if low is None else _validate_int(low)
-        int_high = None if high is None else _validate_int(high)
+        _validate_int(value)
     except TypeError:
         pass
     else:
-        return int, int_low, int_high
+        return True, int
 
-    # Case 3: both low and high are float-like or None
     try:
-        float_low = None if low is None else _validate_float(low)
-        float_high = None if high is None else _validate_float(high)
+        _validate_float(value)
     except TypeError:
         pass
     else:
-        return float, float_low, float_high
+        return True, float
 
-    # Case 4: at least one of low and high is a str, so we
-    # have a dynamic Range trait. Return low and high unaltered.
-    # XXX Actually, we should convert low or high if they're numeric.
-    if isinstance(low, six.string_types) or isinstance(high, six.string_types):
-        return str, low, high
+    return False, None
 
-    raise TraitError(
-        "For a static Range, 'low' and 'high' must each be an "
-        "integer, a float, or None. Got low={!r} and high={!r}.".format(
-            low, high,
+
+def _infer_range_value_type(low, high, default):
+    """
+    Infer the value type of a Range trait from its parameters.
+
+    Parameters
+    ----------
+    low, high, default : object
+        The low bound, high bound and default value given at
+        Range trait definition time.
+
+    Returns
+    -------
+    vtype : type
+        Value type for the range: one of int or float.
+
+    Raises
+    ------
+    TraitError
+        If unable to infer the value type.
+
+    """
+    value_types = [
+        value_type
+        for is_numeric, value_type in map(_is_numeric, [low, high, default])
+        if is_numeric
+    ]
+
+    # For backwards compatibility, assume Float if no value_type is given.
+    if not value_types:
+        warnings.warn(
+            message=(
+                "Unable to infer the value type for this Range instance; "
+                "assuming Float. This warning can be silenced by passing "
+                "the 'value_type' keyword at Range creation time. This "
+                "warning may become an error in a future version of Traits. "
+            ),
+            category=DeprecationWarning,
+            # XXX check what stacklevel we need
         )
-    )
+        return float
+    elif any(value_type is float for value_type in value_types):
+        return float
+    else:
+        return int
+
+
+def _convert_value(value, vtype):
+    """
+    Convert the given Range attribute to the appropriate value type.
+
+    Raises
+    ------
+    TraitError
+        If the value can't be converted to the given type.
+    """
+    if value is None or isinstance(value, six.string_types):
+        return value
+    elif vtype is int:
+        try:
+            return _validate_int(value)
+        except TypeError:
+            raise TraitError("XXX insert decent message here")
+    elif vtype is float:
+        try:
+            return _validate_float(value)
+        except TypeError:
+            raise TraitError("XXX insert decent message here")
 
 
 class BaseRange(TraitType):
@@ -1760,6 +1820,7 @@ class BaseRange(TraitType):
         value=None,
         exclude_low=False,
         exclude_high=False,
+        value_type=None,
         **metadata
     ):
         """ Creates a Range trait.
@@ -1772,10 +1833,16 @@ class BaseRange(TraitType):
             The high end of the range.
         value : integer, float or string (i.e. extended trait name)
             The default value of the trait.
-        exclude_low : bool
+        exclude_low : bool, optional
             Indicates whether the low end of the range is exclusive.
-        exclude_high : bool
+            By default, the low end is inclusive.
+        exclude_high : bool, optional
             Indicates whether the high end of the range is exclusive.
+            By default, the high end is inclusive.
+        value_type : Int or Float, optional
+            The value type for the range. If not given, the value
+            type will be inferred from the values of low, high, and value.
+            If none of those has a numeric value, Float will be assumed.
 
         The *low*, *high*, and *value* arguments must be of the same type
         (integer or float), except in the case where either *low* or *high* is
@@ -1787,6 +1854,39 @@ class BaseRange(TraitType):
         unless *low* is None or omitted, in which case the default value is
         *high*.
         """
+        # Infer value type from low, high and default values.
+        # XXX In the future, allow the value type to be specified directly
+        # to bypass the magic inference. Also add new trait type variants
+        # IntRange and FloatRange.
+        if value_type is None:
+            vtype = _infer_range_value_type(low, high, value)
+        elif value_type is Int:
+            vtype = int
+        elif value_type is Float:
+            vtype = float
+        else:
+            raise TraitError("XXX useful message here")
+
+        # XXX For backwards compatibility; remove me and fix the tests.
+        if low is high is None:
+            raise TraitError("XXX nice message here")
+
+        # Convert inputs to concrete types if necessary.
+        low = _convert_value(low, vtype)
+        high = _convert_value(high, vtype)
+        value = _convert_value(value, vtype)
+
+        # Is this a purely static Range?
+        is_static = (
+            not isinstance(low, six.string_types)
+            and not isinstance(high, six.string_types)
+            and not isinstance(value, six.string_types)
+        )
+
+        # Resolve default if not given.
+        # XXX Make sure we test the case where we're delegating the default
+        # to a dynamic trait. What does the "value" get initialised to in
+        # this case (by the super call)?
         if value is None:
             if low is not None:
                 value = low
@@ -1795,64 +1895,45 @@ class BaseRange(TraitType):
 
         super(BaseRange, self).__init__(value, **metadata)
 
-        # Infer value type from low and high values.
-        vtype, low, high = _infer_range_vtype(low, high)
-
-        if vtype is None:
-            raise TraitError(
-                "At least one of 'low' or 'high' must be non-None "
-                "for a valid Range trait."
-            )
-
-        self._low_name = self._high_name = ""
-        self._vtype = Undefined
-
-        if vtype is int:
+        if vtype is int and is_static:
             self._validate = "int_validate"
-            kind = 3
             self._type_desc = "an integer"
 
-        elif vtype is float:
+        elif vtype is float and is_static:
             self._validate = "float_validate"
-            kind = 4
-            self._type_desc = "a floating point number"
+            self._type_desc = "a floating-point number"
+            exclude_mask = bool(exclude_low) | bool(exclude_high) << 1
+            self.init_fast_validator(4, low, high, exclude_mask)
 
         else:
             self.get, self.set, self.validate = self._get, self._set, None
-            self._vtype = None
-            self._type_desc = "a number"
+            if vtype is int:
+                self._type_desc = "an integer"
+            elif vtype is float:
+                self._type_desc = "a floating-point number"
+            else:
+                assert False, "never get here"
 
             if isinstance(high, six.string_types):
                 self._high_name = high = "object." + high
+                high = compile(high, "<string>", "eval")
             else:
-                self._vtype = type(high)
-            high = compile(str(high), "<string>", "eval")
+                self._high_name = ""
 
             if isinstance(low, six.string_types):
                 self._low_name = low = "object." + low
+                low = compile(low, "<string>", "eval")
             else:
-                self._vtype = type(low)
-            low = compile(str(low), "<string>", "eval")
+                self._low_name = ""
 
             if isinstance(value, six.string_types):
-                value = "object." + value
-            self._value = compile(str(value), "<string>", "eval")
+                value = compile(value, "<string>", "eval")
 
             self.default_value_type = CALLABLE_DEFAULT_VALUE
             self.default_value = self._get_default_value
 
-        exclude_mask = 0
-        if exclude_low:
-            exclude_mask |= 1
-
-        if exclude_high:
-            exclude_mask |= 2
-
-        # We don't currently have a fast validator for the int type.
-        if vtype is float:
-            self.init_fast_validator(kind, low, high, exclude_mask)
-
         #: Assign type-corrected arguments to handler attributes:
+        self._vtype = vtype
         self._low = low
         self._high = high
         self._exclude_low = exclude_low
@@ -1928,7 +2009,10 @@ class BaseRange(TraitType):
     def _get_default_value(self, object):
         """ Returns the default value of the range.
         """
-        return eval(self._value)
+        value = self._value
+        if isinstance(value, CodeType):
+            value = eval(value)
+        return value
 
     def _get(self, object, name, trait):
         """ Returns the current value of a dynamic range trait.
@@ -1938,58 +2022,57 @@ class BaseRange(TraitType):
         if value is Undefined:
             object.__dict__[cname] = value = eval(self._value)
 
-        low = eval(self._low)
-        high = eval(self._high)
+        low = self._low
+        if isinstance(low, CodeType):
+            low = eval(low)
+
+        high = self._high
+        if isinstance(high, CodeType):
+            high = eval(high)
+
         if (low is not None) and (value < low):
             value = low
         elif (high is not None) and (value > high):
             value = high
 
-        return self._typed_value(value, low, high)
+        return value
 
     def _set(self, object, name, value):
         """ Sets the current value of a dynamic range trait.
         """
-        if not isinstance(value, six.string_types):
-            try:
-                low = eval(self._low)
-                high = eval(self._high)
-                if (low is None) and (high is None):
-                    if isinstance(value, RangeTypes):
-                        self._set_value(object, name, value)
-                        return
-                else:
-                    new_value = self._typed_value(value, low, high)
-                    if (
-                        (low is None)
-                        or (self._exclude_low and (low < new_value))
-                        or ((not self._exclude_low) and (low <= new_value))
-                    ) and (
-                        (high is None)
-                        or (self._exclude_high and (high > new_value))
-                        or ((not self._exclude_high) and (high >= new_value))
-                    ):
-                        self._set_value(object, name, new_value)
-                        return
-            except:
-                pass
-
-        self.error(object, name, value)
-
-    def _typed_value(self, value, low, high):
-        """ Returns the specified value with the correct type for the current
-            dynamic range.
-        """
-        vtype = self._vtype
-        if vtype is None:
-            if low is not None:
-                vtype = type(low)
-            elif high is not None:
-                vtype = type(high)
+        # Store original pre-converted value for use in error messages.
+        original_value = value
+        try:
+            if self._vtype is int:
+                value = _validate_int(value)
+            elif self._vtype is float:
+                value = _validate_float(value)
             else:
-                vtype = lambda x: x
+                assert False, "shouldn't ever get here"
+        except TypeError:
+            self.error(object, name, original_value)
 
-        return vtype(value)
+        # Check bounds.
+        low = self._low
+        if isinstance(low, CodeType):
+            low = eval(low)
+
+        high = self._high
+        if isinstance(high, CodeType):
+            high = eval(high)
+
+        if (
+            (low is None)
+            or (self._exclude_low and (low < value))
+            or ((not self._exclude_low) and (low <= value))
+        ) and (
+            (high is None)
+            or (self._exclude_high and (high > value))
+            or ((not self._exclude_high) and (high >= value))
+        ):
+            self._set_value(object, name, value)
+        else:
+            self.error(object, name, original_value)
 
     def _set_value(self, object, name, value):
         """ Sets the specified value as the value of the dynamic range.
@@ -1997,7 +2080,9 @@ class BaseRange(TraitType):
         cname = "_traits_cache_" + name
         old = object.__dict__.get(cname, Undefined)
         if old is Undefined:
-            old = eval(self._value)
+            old = self._value
+            if isinstance(old, CodeType):
+                old = eval(old)
         object.__dict__[cname] = value
         if value != old:
             object.trait_property_changed(name, old, value)
@@ -2005,16 +2090,18 @@ class BaseRange(TraitType):
     def full_info(self, object, name, value):
         """ Returns a description of the trait.
         """
-        if self._vtype is not Undefined:
-            low = eval(self._low)
-            high = eval(self._high)
-            low, high = (
-                self._typed_value(low, low, high),
-                self._typed_value(high, low, high),
-            )
-        else:
-            low = self._low
-            high = self._high
+        # XXX test cases of dynamic trait that gives back None
+        # for either low or high
+        low = self._low
+        if isinstance(low, CodeType):
+            # XXX Missing type conversion here!
+            low = eval(low)
+
+        high = self._high
+        if isinstance(high, CodeType):
+            # XXX Missing type conversion here too!
+            high = eval(high)
+
 
         if low is None:
             if high is None:
