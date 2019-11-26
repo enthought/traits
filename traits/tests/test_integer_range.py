@@ -292,6 +292,41 @@ class CommonRangeTests(object):
                 self.model.ice_temperature = temperature
             self.assertEqual(self.model.ice_temperature, -1729)
 
+    def test_integer_like_limits(self):
+        class Model(HasTraits):
+            temperature = Range(
+                low=IntLike(10),
+                high=IntLike(30),
+            )
+
+        model = Model()
+        self.assertIsExactInt(model.temperature, 10)
+        model.temperature = 15
+        self.assertIsExactInt(model.temperature, 15)
+        model.temperature = IntLike(25)
+        self.assertIsExactInt(model.temperature, 25)
+
+        model.temperature = 27
+        with self.assertRaises(TraitError):
+            # Bad type.
+            model.temperature = 13.0
+        self.assertIsExactInt(model.temperature, 27)
+
+        # Out-of-range values
+        model.temperature = 27
+
+        with self.assertRaises(TraitError):
+            model.temperature = 5
+        self.assertIsExactInt(model.temperature, 27)
+
+        with self.assertRaises(TraitError):
+            model.temperature = 33
+        self.assertIsExactInt(model.temperature, 27)
+
+    def assertIsExactInt(self, actual, expected):
+        self.assertIs(type(actual), int)
+        self.assertEqual(actual, expected)
+
 
 class TestIntRange(CommonRangeTests, unittest.TestCase):
     def setUp(self):

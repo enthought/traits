@@ -1786,7 +1786,7 @@ def _infer_range_value_type(low, high, default):
         return int
 
 
-def _convert_value(value, vtype):
+def _convert_value(value, vtype, name):
     """
     Convert the given Range attribute to the appropriate value type.
 
@@ -1801,12 +1801,20 @@ def _convert_value(value, vtype):
         try:
             return _validate_int(value)
         except TypeError:
-            raise TraitError("XXX insert decent message here")
+            raise TraitError(
+                "The {!r} value of this Range trait should be either "
+                "a string or an integer, but "
+                "{!r} was given.".format(name, value)
+            )
     elif vtype is float:
         try:
             return _validate_float(value)
         except TypeError:
-            raise TraitError("XXX insert decent message here")
+            raise TraitError(
+                "The {!r} value of this Range trait should be either "
+                "a string or a floating-point number, but "
+                "{!r} was given.".format(name, value)
+            )
 
 
 class BaseRange(TraitType):
@@ -1872,9 +1880,9 @@ class BaseRange(TraitType):
             raise TraitError("XXX nice message here")
 
         # Convert inputs to concrete types if necessary.
-        low = _convert_value(low, vtype)
-        high = _convert_value(high, vtype)
-        value = _convert_value(value, vtype)
+        low = _convert_value(low, vtype, "low")
+        high = _convert_value(high, vtype, "high")
+        value = _convert_value(value, vtype, "value")
 
         # Is this a purely static Range?
         is_static = (

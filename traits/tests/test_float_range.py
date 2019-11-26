@@ -285,6 +285,37 @@ class CommonRangeTests(object):
                 self.model.ice_temperature = temperature
             self.assertEqual(self.model.ice_temperature, -1729.0)
 
+    def test_float_like_limits(self):
+        class Model(HasTraits):
+            temperature = Range(
+                low=FloatLike(10.0),
+                high=FloatLike(30.0),
+            )
+
+        model = Model()
+        self.assertIsExactFloat(model.temperature, 10.0)
+        model.temperature = 15.5
+        self.assertIsExactFloat(model.temperature, 15.5)
+        model.temperature = FloatLike(25.7)
+        self.assertIsExactFloat(model.temperature, 25.7)
+        model.temperature = 13
+        self.assertIsExactFloat(model.temperature, 13.0)
+
+        # Out-of-range values.
+        model.temperature = 27.0
+
+        with self.assertRaises(TraitError):
+            model.temperature = 5.0
+        self.assertIsExactFloat(model.temperature, 27.0)
+
+        with self.assertRaises(TraitError):
+            model.temperature = 35.0
+        self.assertIsExactFloat(model.temperature, 27.0)
+
+    def assertIsExactFloat(self, actual, expected):
+        self.assertIs(type(actual), float)
+        self.assertEqual(actual, expected)
+
 
 class TestFloatRange(CommonRangeTests, unittest.TestCase):
     def setUp(self):
@@ -305,6 +336,8 @@ class TestFloatBaseRangeCompound(CommonRangeTests, unittest.TestCase):
     def setUp(self):
         self.model = ModelWithBaseRangeCompound()
 
+
+# XXX Move me to a different file?
 
 class TestRange(unittest.TestCase):
     def test_low_high_none(self):
