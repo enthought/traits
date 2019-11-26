@@ -11,7 +11,11 @@
 #  Thanks for using Enthought open source!
 #
 # -----------------------------------------------------------------------------
+from __future__ import unicode_literals
+
 import unittest
+
+import six
 
 from traits.util.clean_strings import clean_filename
 
@@ -59,6 +63,8 @@ class TestCleanStrings(unittest.TestCase):
             self.assertEqual(safe_string, "abcdef")
 
     def test_clean_filename_all_chars(self):
+        if six.PY2:
+            chr = unichr
         test_strings = [
             "".join(chr(n) for n in range(10000)),
             "".join(chr(n) for n in range(10000)) * 2,
@@ -72,6 +78,6 @@ class TestCleanStrings(unittest.TestCase):
         """
         Check that a supposedly safe string is actually safe.
         """
-        self.assertIsInstance(safe_string, str)
+        self.assertIsInstance(safe_string, six.text_type)
         chars_in_string = set(safe_string)
         self.assertLessEqual(chars_in_string, LEGAL_CHARS)
