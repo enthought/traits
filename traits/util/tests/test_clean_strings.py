@@ -63,12 +63,11 @@ class TestCleanStrings(unittest.TestCase):
             self.assertEqual(safe_string, "abcdef")
 
     def test_clean_filename_all_chars(self):
-        if six.PY2:
-            chr = unichr
+        chr_ = unichr if six.PY2 else chr
         test_strings = [
-            "".join(chr(n) for n in range(10000)),
-            "".join(chr(n) for n in range(10000)) * 2,
-            "".join(chr(n) for n in reversed(range(10000))),
+            "".join(chr_(n) for n in range(10000)),
+            "".join(chr_(n) for n in range(10000)) * 2,
+            "".join(chr_(n) for n in reversed(range(10000))),
         ]
         for test_string in test_strings:
             safe_string = clean_filename(test_string)
