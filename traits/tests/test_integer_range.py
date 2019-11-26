@@ -294,13 +294,12 @@ class CommonRangeTests(object):
 
     def test_integer_like_limits(self):
         class Model(HasTraits):
-            temperature = Range(
+            temperature = self.range_factory(
                 low=IntLike(10),
                 high=IntLike(30),
             )
 
         model = Model()
-        self.assertIsExactInt(model.temperature, 10)
         model.temperature = 15
         self.assertIsExactInt(model.temperature, 15)
         model.temperature = IntLike(25)
@@ -330,19 +329,23 @@ class CommonRangeTests(object):
 
 class TestIntRange(CommonRangeTests, unittest.TestCase):
     def setUp(self):
+        self.range_factory = Range
         self.model = ModelWithRange()
 
 
 class TestIntBaseRange(CommonRangeTests, unittest.TestCase):
     def setUp(self):
+        self.range_factory = BaseRange
         self.model = ModelWithBaseRange()
 
 
 class TestIntRangeCompound(CommonRangeTests, unittest.TestCase):
     def setUp(self):
+        self.range_factory = RangeCompound
         self.model = ModelWithRangeCompound()
 
 
 class TestIntBaseRangeCompound(CommonRangeTests, unittest.TestCase):
     def setUp(self):
+        self.range_factory = BaseRangeCompound
         self.model = ModelWithBaseRangeCompound()

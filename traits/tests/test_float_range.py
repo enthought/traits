@@ -287,13 +287,12 @@ class CommonRangeTests(object):
 
     def test_float_like_limits(self):
         class Model(HasTraits):
-            temperature = Range(
+            temperature = self.range_factory(
                 low=FloatLike(10.0),
                 high=FloatLike(30.0),
             )
 
         model = Model()
-        self.assertIsExactFloat(model.temperature, 10.0)
         model.temperature = 15.5
         self.assertIsExactFloat(model.temperature, 15.5)
         model.temperature = FloatLike(25.7)
@@ -319,21 +318,25 @@ class CommonRangeTests(object):
 
 class TestFloatRange(CommonRangeTests, unittest.TestCase):
     def setUp(self):
+        self.range_factory = Range
         self.model = ModelWithRange()
 
 
 class TestFloatBaseRange(CommonRangeTests, unittest.TestCase):
     def setUp(self):
+        self.range_factory = BaseRange
         self.model = ModelWithBaseRange()
 
 
 class TestFloatRangeCompound(CommonRangeTests, unittest.TestCase):
     def setUp(self):
+        self.range_factory = RangeCompound
         self.model = ModelWithRangeCompound()
 
 
 class TestFloatBaseRangeCompound(CommonRangeTests, unittest.TestCase):
     def setUp(self):
+        self.range_factory = BaseRangeCompound
         self.model = ModelWithBaseRangeCompound()
 
 
