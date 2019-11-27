@@ -74,6 +74,10 @@ def ModelFactory(name, RangeFactory):
 
         closed = RangeFactory(0.0, 100.0)
 
+        unbounded = RangeFactory()
+
+        unbounded_with_default = RangeFactory(value=50.0)
+
         # Traits for one-sided intervals
         steam_temperature = RangeFactory(low=100.0)
 
@@ -175,13 +179,15 @@ class CommonRangeTests(object):
     def test_rejects_bad_types(self):
         # A selection of things that don't count as float-like.
         non_floats = [
-            u"not a number",
-            u"\N{GREEK CAPITAL LETTER SIGMA}",
+            "not a number",
+            "\N{GREEK CAPITAL LETTER SIGMA}",
             b"not a number",
             "3.5",
             "3",
             3 + 4j,
             0j,
+            [1],
+            (1,),
             [1.2],
             (1.2,),
             None,
@@ -288,8 +294,7 @@ class CommonRangeTests(object):
     def test_float_like_limits(self):
         class Model(HasTraits):
             temperature = self.range_factory(
-                low=FloatLike(10.0),
-                high=FloatLike(30.0),
+                low=FloatLike(10.0), high=FloatLike(30.0),
             )
 
         model = Model()
@@ -311,6 +316,22 @@ class CommonRangeTests(object):
             model.temperature = 35.0
         self.assertIsExactFloat(model.temperature, 27.0)
 
+    def test_unbounded_range_with_default(self):
+        # For compound traits, default is None.
+        if self.compound:
+            self.assertIsNone(self.model.unbounded_with_default)
+            return
+
+        self.assertIsExactFloat(self.model.unbounded_with_default, 50.0)
+
+    def test_unbounded_range_no_default(self):
+        # For compound traits, default is None.
+        if self.compound:
+            self.assertIsNone(self.model.unbounded)
+            return
+
+        self.assertIsExactFloat(self.model.unbounded, 0.0)
+
     def assertIsExactFloat(self, actual, expected):
         self.assertIs(type(actual), float)
         self.assertEqual(actual, expected)
@@ -320,37 +341,34 @@ class TestFloatRange(CommonRangeTests, unittest.TestCase):
     def setUp(self):
         self.range_factory = Range
         self.model = ModelWithRange()
+        self.compound = False
 
 
 class TestFloatBaseRange(CommonRangeTests, unittest.TestCase):
     def setUp(self):
         self.range_factory = BaseRange
         self.model = ModelWithBaseRange()
+        self.compound = False
 
 
 class TestFloatRangeCompound(CommonRangeTests, unittest.TestCase):
     def setUp(self):
         self.range_factory = RangeCompound
         self.model = ModelWithRangeCompound()
+        self.compound = True
 
 
 class TestFloatBaseRangeCompound(CommonRangeTests, unittest.TestCase):
     def setUp(self):
         self.range_factory = BaseRangeCompound
         self.model = ModelWithBaseRangeCompound()
+        self.compound = True
 
 
 # XXX Move me to a different file?
 
-class TestRange(unittest.TestCase):
-    def test_low_high_none(self):
-        with self.assertRaises(TraitError):
-            Range(low=None, high=None)
-        with self.assertRaises(TraitError):
-            Range(low=None, high=None, value=2.5)
-        with self.assertRaises(TraitError):
-            Range(low=None, high=None, value="other_trait")
 
+class TestRange(unittest.TestCase):
     def test_low_or_high_invalid(self):
         with self.assertRaises(TraitError):
             Range(low=None, high=1j)
