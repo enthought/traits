@@ -1899,6 +1899,12 @@ class BaseRange(TraitType):
 
         # XXX We may be able to remove this check, and just depend on
         # duck typing.
+
+        # XXX Allow value_type to be an *instance* of a TraitType, not
+        # just a subclass of TraitType.
+
+        # XXX Define inner traits?
+
         if value_type is not Int and value_type is not Float:
             raise TraitError(
                 "The value_type of a Range trait, if given, must be "
@@ -1914,6 +1920,11 @@ class BaseRange(TraitType):
             self._low_name = "object." + low
         else:
             self._low_name = ""
+
+        if isinstance(value, six.string_types):
+            self._value_name = "object." + value
+        else:
+            self._value_name = ""
 
         # Convert inputs to concrete types if necessary. Note that this
         # amounts to validation of the default.
@@ -2075,6 +2086,8 @@ class BaseRange(TraitType):
             If the bound is not None, and cannot be converted to the
             appropriate numeric type.
         """
+        assert isinstance(name, six.string_types)
+
         if bound is None:
             return None
 

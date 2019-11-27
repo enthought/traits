@@ -623,6 +623,14 @@ class TestDynamicRange(unittest.TestCase):
         self.assertIs(type(self.model.full_dynamic_float), float)
         self.assertEqual(self.model.full_dynamic_float, 0.0)
 
+    def test_full_dynamic_default(self):
+        self.model.low_bound = None
+        self.model.high_bound = None
+        self.model.default = 23
+
+        self.assertIs(type(self.model.full_dynamic_int), int)
+        self.assertEqual(self.model.full_dynamic_int, 23)
+
     def check_trait_set(self, **kwargs):
         # Check the result of setting an integer range trait.
         for name, value in kwargs.items():
