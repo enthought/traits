@@ -1960,6 +1960,7 @@ class BaseRange(TraitType):
         self._exclude_low = exclude_low
         self._exclude_high = exclude_high
         self._value_type = value_type
+        self._value_trait = value_type()
 
     def init_fast_validator(self, *args):
         """ Does nothing for the BaseRange class. Used in the Range class to
@@ -1986,8 +1987,7 @@ class BaseRange(TraitType):
         # Keep original value for error-reporting purposes.
         original_value = value
 
-        # XXX instantiate the value type trait in __init__, not here.
-        value = self._value_type().validate(object, name, value)
+        value = self._value_trait.validate(object, name, value)
 
         if (
             (
@@ -2044,7 +2044,7 @@ class BaseRange(TraitType):
                 elif high is not None:
                     value = high
                 else:
-                    value = self._value_type.default_value
+                    value = self._value_trait.default_value
 
             object.__dict__[cname] = value
 
@@ -2081,6 +2081,7 @@ class BaseRange(TraitType):
         # XXX instantiate the value type trait in __init__, not here.
         # But we may want separate traits for the low and high. How to
         # manage this?
+        # XXX Consider *not* validating the bounds!
 
         return self._value_type().validate(object, name, bound)
 
@@ -2089,8 +2090,7 @@ class BaseRange(TraitType):
         """
         # Store original pre-converted value for use in error messages.
         original_value = value
-        # XXX Don't instantiate _value_type here!
-        value = self._value_type().validate(object, name, value)
+        value = self._value_trait.validate(object, name, value)
 
         # Check bounds.
         low = self._low
