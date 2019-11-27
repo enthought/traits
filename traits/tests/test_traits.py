@@ -31,6 +31,7 @@ from traits.api import (
     Instance,
     Int,
     List,
+    Range,
     Str,
     This,
     Trait,
@@ -38,7 +39,6 @@ from traits.api import (
     TraitList,
     TraitPrefixList,
     TraitPrefixMap,
-    TraitRange,
     Tuple,
     pop_exception_handler,
     push_exception_handler,
@@ -595,7 +595,7 @@ class PrefixMapTest(AnyTraitTest):
 
 
 class IntRangeTrait(HasTraits):
-    value = Trait(3, TraitRange(2, 5))
+    value = Trait(3, Range(2, 5))
 
 
 class IntRangeTest(AnyTraitTest):
@@ -614,7 +614,7 @@ class IntRangeTest(AnyTraitTest):
 
 
 class FloatRangeTrait(HasTraits):
-    value = Trait(3.0, TraitRange(2.0, 5.0))
+    value = Trait(3.0, Range(2.0, 5.0))
 
 
 class FloatRangeTest(AnyTraitTest):
@@ -1029,7 +1029,7 @@ class DelegateTests(unittest.TestCase):
 
 # Make a TraitCompound handler that does not have a fast_validate so we can
 # check for a particular regression.
-slow = Trait(1, TraitRange(1, 3), TraitRange(-3, -1))
+slow = Trait(1, Range(1, 3), Range(-3, -1))
 try:
     del slow.handler.fast_validate
 except AttributeError:
@@ -1037,15 +1037,15 @@ except AttributeError:
 
 
 class complex_value(HasTraits):
-    num1 = Trait(1, TraitRange(1, 5), TraitRange(-5, -1))
+    num1 = Trait(1, Range(1, 5), Range(-5, -1))
     num2 = Trait(
         1,
-        TraitRange(1, 5),
+        Range(1, 5),
         TraitPrefixList("one", "two", "three", "four", "five"),
     )
     num3 = Trait(
         1,
-        TraitRange(1, 5),
+        Range(1, 5),
         TraitPrefixMap({"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}),
     )
     num4 = Trait(1, Trait(1, Tuple, slow), 10)
