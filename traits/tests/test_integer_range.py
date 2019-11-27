@@ -31,6 +31,7 @@ from traits.api import (
     TraitError,
 )
 from traits.testing.optional_dependencies import numpy, requires_numpy
+from traits.trait_handlers import CALLABLE_DEFAULT_VALUE
 
 
 class InheritsFromInt(int):
@@ -144,6 +145,10 @@ class DynamicRangesModel(HasTraits):
 
     dynamic_float = Range(
         low="low_bound", high="high_bound", value_trait=Float()
+    )
+
+    dynamic_with_static_default = Range(
+        low="low_bound", high="high_bound", value=73, value_trait=Int(),
     )
 
     # Dynamic high value
@@ -656,6 +661,14 @@ class TestDynamicRange(unittest.TestCase):
         self.assertIs(type(self.model.dynamic_float), float)
         self.assertEqual(self.model.dynamic_float, 0.0)
 
+    def test_dynamic_with_static_default(self):
+        self.assertIdentical(self.model.dynamic_with_static_default, 73)
+        self.model.high_bound = 50
+        self.assertIdentical(self.model.dynamic_with_static_default, 50)
+        # dynamic low and high values aren't validated.
+        self.model.high_bound = 45.0
+        self.assertIdentical(self.model.dynamic_with_static_default, 45.0)
+
     def test_dynamic_default_all_none(self):
         self.model.low_bound = None
         self.model.high_bound = None
@@ -665,10 +678,33 @@ class TestDynamicRange(unittest.TestCase):
         self.assertIsNone(self.model.full_dynamic_int)
         self.assertIsNone(self.model.full_dynamic_float)
 
+    def test_get_default_value_constant_default(self):
+        range_trait = Range("low", "high", 3, value_trait=Int())
+        dvt, dv = range_trait.get_default_value()
+        self.assertEqual(dvt, CALLABLE_DEFAULT_VALUE)
+        value = dv(None)
+        self.assertIdentical(value, 3)
+
+    def test_get_default_value_no_default(self):
+        range_trait = Range("low", "high", value_trait=Int(47))
+        dvt, dv = range_trait.get_default_value()
+        self.assertEqual(dvt, CALLABLE_DEFAULT_VALUE)
+        value = dv(None)
+        self.assertIdentical(value, 47)
+
+    def test_get_default_value_dynamic_default(self):
+        class Model(HasTraits):
+            start = Any(32)
+
+        range_trait = Range("low", "high", "start", value_trait=Int())
+        dvt, dv = range_trait.get_default_value()
+        self.assertEqual(dvt, CALLABLE_DEFAULT_VALUE)
+        value = dv(Model())
+        self.assertIdentical(value, 32)
+
     def test_default_from_inner_trait(self):
         # XXX To do: check that for a dynamic range with no default
         # specified, we get the value trait's default.
-
 
         pass
 
@@ -695,3 +731,7 @@ class TestDynamicRange(unittest.TestCase):
                 setattr(self.model, name, value)
             # Check that the value is unchanged.
             self.assertEqual(getattr(self.model, name), original_value)
+
+    def assertIdentical(self, actual, expected):
+        self.assertIs(type(actual), type(expected))
+        self.assertEqual(actual, expected)

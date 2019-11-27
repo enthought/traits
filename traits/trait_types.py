@@ -1761,17 +1761,20 @@ def _infer_range_value_trait(low, high, default):
     value_trait : TraitType
         Value type for the range: one of int or float.
 
-    Raises
-    ------
-    TraitError
-        If unable to infer the value type.
-
     """
     value_types = [
         value_type
         for is_numeric, value_type in map(_is_numeric, [low, high, default])
         if is_numeric
     ]
+
+    # Determine the default to use. In legacy mode, if the value is None,
+    # we use low if low is not None, else high if high is not None.
+    if default is None:
+        if low is not None:
+            default = low
+        elif high is not None:
+            default = high
 
     # For backwards compatibility, assume Float if no value_type is given.
     if not value_types:
@@ -1785,15 +1788,22 @@ def _infer_range_value_trait(low, high, default):
             category=DeprecationWarning,
             # XXX check what stacklevel we need
         )
-        return Float()
+        trait_type = Float
     elif any(value_type is float for value_type in value_types):
-        return Float()
+        trait_type = Float
     else:
-        return Int()
+        trait_type = Int
+
+    if default is not None and not isinstance(default, six.string_types):
+        value_trait = trait_type(default)
+    else:
+        value_trait = trait_type()
+
+    return value_trait
 
 
 class BaseRange(TraitType):
-    """ Defines a trait whose numeric value must be in a specified range.
+    """ A trait whose value must be within a specified range.
     """
 
     def __init__(
@@ -1813,14 +1823,19 @@ class BaseRange(TraitType):
         low : integer, float or string; optional
             The low end of the range. A string is interpreted as
             an extended trait name providing a dynamic low value.
-            If not given, the range is not bounded below.
+            If *low* is not given, the range is not bounded below.
         high : integer, float or string; optional
             The high end of the range. A string is interpreted as
             an extended trait name providing a dynamic high value.
-            If not given, the range is not bounded above.
+            If *high* is not given, the range is not bounded above.
         value : integer, float or string; optional.
             The default value of the trait. A string is interpreted
             as an extended trait name providing a dynamic default.
+            If not given, and *value_trait* is given, then the default
+            of *value_trait* is used. Otherwise, if *low* is given,
+            *low* is used as the default. Otherwise, if *high* is provided,
+            *high* is used for the default. Finally, if none of *low*,
+            *high* or *value_trait* is given, the default is 0.0.
         exclude_low : bool, optional
             Indicates whether the low end of the range is exclusive.
             By default, the low end is inclusive.
@@ -1828,27 +1843,14 @@ class BaseRange(TraitType):
             Indicates whether the high end of the range is exclusive.
             By default, the high end is inclusive.
         value_trait : TraitType, optional
-            Trait (or object convertible to Trait) representing the
-            value type for the range. For example, Int() or Float()
-            could be used.
-
-            If not given, the value type will be inferred from the values of
-            low, high, and value. If none of those has a numeric value,
-            a value type of Float will be assumed and a DeprecationWarning
-            will be issued.
-
-        Default Value
-        -------------
-        *value*; if *value* is None or omitted, the default value is *low*,
-        unless *low* is None or omitted, in which case the default value is
-        *high*.
+            Trait, or object convertible to Trait, representing the value type
+            for the range. For a numeric range, Int() or Float() would be
+            typical. In new code, it's recommended that *value_trait* always be
+            provided. If *value_trait* is not provided, the type is inferred
+            from *low*, *high* and *value*, provided at least one of those has
+            numeric type. If none of *low*, *high* and *value* has numeric
+            type, Float is assumed and a DeprecationWarning is issued.
         """
-        # TODO: treat everything as dynamic. The tests should
-        # still pass in this case; since the logic should match exactly -
-        # the static case is pure optimization.
-
-        # TODO: check coverage of this code.
-
         # TODO: make sure we have regression tests for Range-related
         # GitHub issues.
 
@@ -1857,15 +1859,10 @@ class BaseRange(TraitType):
         # TODO: Check all error messages look sane.
 
         if value_trait is None:
-            # Infer value type from low, high and default values, if not given.
-            # This is necessary right now for backwards compatibility, but at
-            # some point in the future, we may want to make the value_trait
-            # keyword required to avoid this inference.
-            # Related: enthought/traits#590.
-            legacy_mode = True
+            # This branch is provided for backwards compatibility.
+            # For new code, it's recommended to supply value_trait
+            # or use IntRange or FloatRange. Related: enthought/traits#590.
             value_trait = _infer_range_value_trait(low, high, value)
-        else:
-            legacy_mode = False
 
         value_trait = trait_from(value_trait)
 
@@ -1898,19 +1895,8 @@ class BaseRange(TraitType):
         )
 
         if is_static:
-            if legacy_mode:
-                # XXX Refactor so that value *is* the default of
-                # the value trait!
-                if value is None:
-                    if low is not None:
-                        value = low
-                    elif high is not None:
-                        value = high
-                    else:
-                        value = value_trait.default_value()[1]
-            else:
-                if value is None:
-                    value = value_trait.default_value()[1]
+            if value is None:
+                value = value_trait.default_value()[1]
 
             super(BaseRange, self).__init__(default_value=value, **metadata)
 
@@ -1983,12 +1969,12 @@ class BaseRange(TraitType):
         """ Returns the default value of the range.
         """
         value = self._value
-        if isinstance(value, CodeType):
-            value = eval(value)
-            # XXX Missing type conversion, and tests for the
-            # type conversion. Nope; we don't validate the default.
-            # Same as Int in this respect.
-        return value
+        if value is None:
+            return self._value_trait.default_value()[1]
+        elif isinstance(value, CodeType):
+            return eval(value)
+        else:
+            return value
 
     def _get(self, object, name, trait):
         """ Returns the current value of a dynamic range trait.
@@ -2000,14 +1986,6 @@ class BaseRange(TraitType):
         high = self._high
         if isinstance(high, CodeType):
             high = eval(high)
-
-        # Handling of defaults.
-        #
-        # The original value was one of:
-        #
-        #   None - no default provided; use the value_trait default
-        #   "some_value" - dynamic default; use it
-        #   some_value - int or float; use it
 
         cname = "_traits_cache_" + name
         value = object.__dict__.get(cname, Undefined)
