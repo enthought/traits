@@ -15,6 +15,7 @@
 Tests for the Range trait with value type int.
 """
 
+import operator
 import unittest
 import warnings
 
@@ -43,6 +44,8 @@ class InheritsFromInt(int):
 class IntLike(object):
     """
     Object that's integer-like by virtue of providing an __index__ method.
+
+    Also usable in comparisons with integers.
     """
 
     def __init__(self, value):
@@ -50,6 +53,24 @@ class IntLike(object):
 
     def __index__(self):
         return self._value
+
+    def __le__(self, other):
+        return operator.index(self) <= other
+
+    def __lt__(self, other):
+        return operator.index(self) < other
+
+    def __ge__(self, other):
+        return operator.index(self) >= other
+
+    def __gt__(self, other):
+        return operator.index(self) > other
+
+    def __eq__(self, other):
+        return operator.index(self) == other
+
+    def __ne__(self, other):
+        return operator.index(self) != other
 
 
 class BadIntLike(object):
@@ -98,7 +119,7 @@ def ModelFactory(name, RangeFactory):
 
         closed = RangeFactory(0, 100)
 
-        unbounded = RangeFactory(value_type=Int)
+        unbounded = RangeFactory(value_trait=Int())
 
         unbounded_with_default = RangeFactory(value=50)
 
@@ -107,8 +128,9 @@ def ModelFactory(name, RangeFactory):
 
         ice_temperature = RangeFactory(high=0)
 
-        # Trait with non-integer low and high values
-        room_temperature = RangeFactory(low=IntLike(10), high=IntLike(30))
+        # Trait with non-integer low and high values (but values that are
+        # comparable with integers).
+        room_temperature = RangeFactory(low=IntLike(10), high=IntLike(30),)
 
     ModelWithRanges.__name__ = name
 
@@ -118,9 +140,11 @@ def ModelFactory(name, RangeFactory):
 class DynamicRangesModel(HasTraits):
 
     # Dynamic low and high
-    dynamic_int = Range(low="low_bound", high="high_bound", value_type=Int)
+    dynamic_int = Range(low="low_bound", high="high_bound", value_trait=Int())
 
-    dynamic_float = Range(low="low_bound", high="high_bound", value_type=Float)
+    dynamic_float = Range(
+        low="low_bound", high="high_bound", value_trait=Float()
+    )
 
     # Dynamic high value
     dynamic_high = Range(low=0, high="high_bound")
@@ -136,12 +160,15 @@ class DynamicRangesModel(HasTraits):
 
     # Dynamic everything (value type Int)
     full_dynamic_int = Range(
-        low="low_bound", high="high_bound", value="default", value_type=Int,
+        low="low_bound", high="high_bound", value="default", value_trait=Int(),
     )
 
     # Dynamic everything (value type Float)
     full_dynamic_float = Range(
-        low="low_bound", high="high_bound", value="default", value_type=Float,
+        low="low_bound",
+        high="high_bound",
+        value="default",
+        value_trait=Float(),
     )
 
     # Trait providing the upper bound of a dynamic range.
@@ -474,6 +501,7 @@ class TestRangeTypeInference(unittest.TestCase):
         ]
 
         for range_trait in float_range_traits:
+
             class Model(HasTraits):
                 foo = range_trait
 
@@ -483,6 +511,7 @@ class TestRangeTypeInference(unittest.TestCase):
             self.assertEqual(model.foo, 7.0)
 
         for range_trait in int_range_traits:
+
             class Model(HasTraits):
                 foo = range_trait
 
@@ -490,12 +519,6 @@ class TestRangeTypeInference(unittest.TestCase):
             model.foo = 7
             self.assertIs(type(model.foo), int)
             self.assertEqual(model.foo, 7.0)
-
-    def test_bad_value_type(self):
-        with self.assertRaises(TraitError):
-            Range(value_type=int)
-        with self.assertRaises(TraitError):
-            Range(value_type=str)
 
     def test_deprecated_case(self):
         # Case where no type can be inferred, and we drop
@@ -510,6 +533,7 @@ class TestRangeTypeInference(unittest.TestCase):
             ]
 
         for range_trait in range_traits:
+
             class Model(HasTraits):
                 low = Any(0)
 
@@ -528,6 +552,23 @@ class TestRangeTypeInference(unittest.TestCase):
         for warn_msg in warn_msgs:
             message = str(warn_msg.message)
             self.assertIn("Unable to infer the value type", message)
+
+    def test_conflicting_defaults(self):
+        # An explicitly-specified default wins over the value_type default.
+        class Model(HasTraits):
+            foo = Range(value=5, value_trait=Int(3))
+
+            bar = Range(3, 5, 4, value_trait=Float(3.5))
+
+            baz = Range(3, 5, value_trait=Float(3.5))
+
+        model = Model()
+        self.assertEqual(model.foo, 5)
+        self.assertEqual(model.bar, 4)
+        self.assertEqual(model.baz, 3.5)
+
+    # XXX Add tests for other possible value_types: Int(), Int, int,
+    # Float(), Float, float should all work.
 
 
 class TestDynamicRange(unittest.TestCase):
@@ -566,8 +607,8 @@ class TestDynamicRange(unittest.TestCase):
         # Retrieving the value involves comparing with the low
         # and high, which can raise if those have the wrong type.
         self.model.high_bound = 100.0
-        with self.assertRaises(TraitError):
-            self.model.dynamic_high
+        self.assertIs(type(self.model.dynamic_high), int)
+        self.assertEqual(self.model.dynamic_high, 0)
 
     def test_dynamic_high_int_like(self):
         self.model.high_bound = IntLike(60)
@@ -589,9 +630,11 @@ class TestDynamicRange(unittest.TestCase):
         self.check_trait_error(dynamic_low=19)
 
     def test_dynamic_low_float(self):
-        self.model.low_bound = 20.0
-        with self.assertRaises(TraitError):
-            self.model.dynamic_low
+        self.model.low_bound = 21.0
+        # value type is int, but the low_bound is not validated, so
+        # we get a float returned.
+        self.assertIs(type(self.model.dynamic_low), float)
+        self.assertEqual(self.model.dynamic_low, 21.0)
 
     def test_dynamic_default(self):
         self.model.default = 27
@@ -600,8 +643,9 @@ class TestDynamicRange(unittest.TestCase):
 
     def test_bad_dynamic_default(self):
         self.model.default = 27.0
-        with self.assertRaises(TraitError):
-            self.model.dynamic_default
+        # Default does not get validated.
+        self.assertIs(type(self.model.dynamic_default), float)
+        self.assertEqual(self.model.dynamic_default, 27.0)
 
     def test_dynamic_no_default(self):
         self.model.low_bound = None
@@ -617,11 +661,16 @@ class TestDynamicRange(unittest.TestCase):
         self.model.high_bound = None
         self.model.default = None
 
-        self.assertIs(type(self.model.full_dynamic_int), int)
-        self.assertEqual(self.model.full_dynamic_int, 0)
+        # default is not validated
+        self.assertIsNone(self.model.full_dynamic_int)
+        self.assertIsNone(self.model.full_dynamic_float)
 
-        self.assertIs(type(self.model.full_dynamic_float), float)
-        self.assertEqual(self.model.full_dynamic_float, 0.0)
+    def test_default_from_inner_trait(self):
+        # XXX To do: check that for a dynamic range with no default
+        # specified, we get the value trait's default.
+
+
+        pass
 
     def test_full_dynamic_default(self):
         self.model.low_bound = None

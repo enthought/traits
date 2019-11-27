@@ -130,6 +130,8 @@ class InheritsFromFloat(float):
 class FloatLike(object):
     """
     Object that's float-like by virtue of providing a __float__ method.
+
+    Also participates in comparisons with floats.
     """
 
     def __init__(self, value):
@@ -137,6 +139,24 @@ class FloatLike(object):
 
     def __float__(self):
         return self._value
+
+    def __le__(self, other):
+        return float(self) <= other
+
+    def __lt__(self, other):
+        return float(self) < other
+
+    def __ge__(self, other):
+        return float(self) >= other
+
+    def __gt__(self, other):
+        return float(self) > other
+
+    def __eq__(self, other):
+        return float(self) == other
+
+    def __ne__(self, other):
+        return float(self) != other
 
 
 class BadFloatLike(object):
