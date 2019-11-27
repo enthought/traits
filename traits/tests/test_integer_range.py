@@ -473,13 +473,23 @@ class TestRangeTypeInference(unittest.TestCase):
             Range(low=None, high=None, value=5),
         ]
 
-        # XXX Not ideal, since it's testing implementation rather
-        # than behaviour. Better way? Embed the trait in a model class?
         for range_trait in float_range_traits:
-            self.assertIs(range_trait._vtype, float)
+            class Model(HasTraits):
+                foo = range_trait
+
+            model = Model()
+            model.foo = 7
+            self.assertIs(type(model.foo), float)
+            self.assertEqual(model.foo, 7.0)
 
         for range_trait in int_range_traits:
-            self.assertIs(range_trait._vtype, int)
+            class Model(HasTraits):
+                foo = range_trait
+
+            model = Model()
+            model.foo = 7
+            self.assertIs(type(model.foo), int)
+            self.assertEqual(model.foo, 7.0)
 
     def test_bad_value_type(self):
         with self.assertRaises(TraitError):
@@ -500,7 +510,17 @@ class TestRangeTypeInference(unittest.TestCase):
             ]
 
         for range_trait in range_traits:
-            self.assertIs(range_trait._vtype, float)
+            class Model(HasTraits):
+                low = Any(0)
+
+                high = Any(100)
+
+                foo = range_trait
+
+            model = Model()
+            model.foo = 7
+            self.assertIs(type(model.foo), float)
+            self.assertEqual(model.foo, 7.0)
 
         # Expect one warning for each of our range traits.
         self.assertEqual(len(warn_msgs), len(range_traits))
