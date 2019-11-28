@@ -1883,16 +1883,27 @@ class BaseRange(TraitType):
         high_name = high if isinstance(high, six.string_types) else ""
         value_name = value if isinstance(value, six.string_types) else ""
 
-        super(BaseRange, self).__init__(**metadata)
-
         if low_name or high_name or value_name:
             # Dynamic case
+            super(BaseRange, self).__init__(**metadata)
+
             self.get = self._get
             self.set = self._set
             self.validate = None
 
+            self.default_value_type = CALLABLE_DEFAULT_VALUE
+            self.default_value = self._get_default_value
+
         else:
             # Static case
+
+            # XXX Wrong! default should be evaluated lazily at time of need!
+            # Even though low, high and value are static, the value_trait
+            # may still produce a context-dependent default.
+            if value is None:
+                value = value_trait.default_value()[1]
+
+            super(BaseRange, self).__init__(default_value=value, **metadata)
 
             # Fast validation currently only possible for the Float value type.
             if isinstance(value_trait.trait_type, Float):
@@ -1901,9 +1912,6 @@ class BaseRange(TraitType):
                 if low_ok and high_ok:
                     exclude_mask = bool(exclude_low) | bool(exclude_high) << 1
                     self.init_fast_validator(4, low, high, exclude_mask)
-
-        self.default_value_type = CALLABLE_DEFAULT_VALUE
-        self.default_value = self._get_default_value
 
         #: Assign type-corrected arguments to handler attributes:
         self._low = low
