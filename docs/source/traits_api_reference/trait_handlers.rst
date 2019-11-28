@@ -15,8 +15,6 @@ Classes
 
 .. autoclass:: TraitHandler
 
-.. autoclass:: TraitRange
-
 .. autoclass:: TraitString
 
 .. autoclass:: TraitCoerceType
@@ -79,5 +77,3 @@ Private Functions
 .. autofunction:: traits.trait_handlers._undefined_get
 
 .. autofunction:: traits.trait_handlers._undefined_set
-
-

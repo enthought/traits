@@ -181,7 +181,6 @@ from .trait_handlers import (
     BaseTraitHandler,
     TraitType,
     TraitHandler,
-    TraitRange,
     TraitString,
     TraitCoerceType,
     TraitCastType,
