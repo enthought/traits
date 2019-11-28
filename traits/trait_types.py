@@ -1722,6 +1722,12 @@ def _is_numeric(value):
     value_type : one of (int, float, None)
         int if the value is integer-like; float if the value is float-like,
         None if neither of those is true.
+
+    Raises
+    ------
+    TraitError
+        If *value* is not None, not a string, not an integer and
+        not a floating-point number.
     """
     if value is None or isinstance(value, six.string_types):
         return False, None
@@ -1760,6 +1766,12 @@ def _infer_range_value_trait(low, high, default):
     -------
     value_trait : TraitType
         Value type for the range: one of int or float.
+
+    Raises
+    ------
+    TraitError
+        If any of *low*, *high* and *default* is not None, is not a string,
+        not an integer and not a floating-point number.
 
     """
     value_types = [
