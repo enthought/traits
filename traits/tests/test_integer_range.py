@@ -22,6 +22,7 @@ import warnings
 from traits.api import (
     Any,
     BaseRange,
+    CTrait,
     Either,
     Float,
     HasTraits,
@@ -740,6 +741,16 @@ class TestDynamicRange(unittest.TestCase):
 
         self.assertIs(type(self.model.full_dynamic_int), int)
         self.assertEqual(self.model.full_dynamic_int, 23)
+
+    def test_inner_traits(self):
+        range_trait = Range(-1, 1, value_trait=Float())
+        inner_traits = range_trait.inner_traits()
+
+        self.assertIsInstance(inner_traits, tuple)
+        self.assertEqual(len(inner_traits), 1)
+        inner_trait = inner_traits[0]
+        self.assertIsInstance(inner_trait, CTrait)
+        self.assertIsInstance(inner_trait.trait_type, Float)
 
     def check_trait_set(self, **kwargs):
         # Check the result of setting an integer range trait.

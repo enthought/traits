@@ -1876,8 +1876,6 @@ class BaseRange(TraitType):
 
         value_trait = trait_from(value_trait)
 
-        # XXX Define inner_traits?
-
         # Trait values needed by the RangeEditor.
         if isinstance(high, six.string_types):
             self._high_name = "object." + high
@@ -2101,6 +2099,11 @@ class BaseRange(TraitType):
             "="[self._exclude_high :],
             high,
         )
+
+    def inner_traits(self):
+        """ Returns the *inner trait* (or traits) for this trait.
+        """
+        return (self._value_trait,)
 
     def create_editor(self):
         """ Returns the default UI editor for the trait.
