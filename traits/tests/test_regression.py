@@ -15,7 +15,8 @@ from traits.has_traits import (
 from traits.testing.optional_dependencies import numpy, requires_numpy
 from traits.trait_errors import TraitError
 from traits.trait_handlers import TraitType
-from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
+from traits.trait_types import (
+    Bool, DelegatesTo, Either, Instance, Int, List, Range)
 
 if numpy is not None:
     from traits.trait_numeric import Array
@@ -286,3 +287,37 @@ class TestRegression(unittest.TestCase):
 
         with self.assertRaises(ZeroDivisionError):
             a.bar = "foo"
+
+    def test_partially_dynamic_range(self):
+        # Regression test for enthought/traits#395
+        class A(HasTraits):
+            low = Int(0)
+            value = Int(3)
+            r = Range(value="value", low="low", high=10.0)
+
+        a = A()
+        self.assertEqual(a.r, 3)
+
+    def test_clone_range_with_long_high(self):
+        # Regression test for enthought/traits#421
+        Range(low=0, high=2**64-1)()
+
+    @requires_numpy
+    def test_range_trait_with_numpy_floats(self):
+        # Regression test for enthought/traits#391
+        class A(HasTraits):
+            x = Range(-10.0, 10.0)
+
+        a = A()
+        a.x = numpy.int64(1)
+
+    @requires_numpy
+    def test_range_trait_with_integer_like(self):
+        # Regression test for enthought/traits#292
+        class A(HasStrictTraits):
+            foo = Range(0.0, 1.0)
+            bar = Range(-128, 127)
+
+        a = A()
+        a.bar = numpy.int16(53)
+        a.foo = numpy.float32(0.43)
