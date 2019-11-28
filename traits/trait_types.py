@@ -1780,14 +1780,6 @@ def _infer_range_value_trait(low, high, default):
         if is_numeric
     ]
 
-    # Determine the default to use. In legacy mode, if the value is None,
-    # we use low if low is not None, else high if high is not None.
-    if default is None:
-        if low is not None:
-            default = low
-        elif high is not None:
-            default = high
-
     # For backwards compatibility, assume Float if no value_type is given.
     if not value_types:
         warnings.warn(
@@ -1806,12 +1798,18 @@ def _infer_range_value_trait(low, high, default):
     else:
         trait_type = Int
 
-    if default is not None and not isinstance(default, six.string_types):
-        value_trait = trait_type(default)
-    else:
-        value_trait = trait_type()
+    # Determine the default to use. In legacy mode, if the value is None,
+    # we use low if low is not None, else high if high is not None.
+    if default is None:
+        if low is not None:
+            default = low
+        elif high is not None:
+            default = high
 
-    return value_trait
+    if default is not None and not isinstance(default, six.string_types):
+        return default, trait_type(default)
+    else:
+        return default, trait_type()
 
 
 class BaseRange(TraitType):
@@ -1874,7 +1872,7 @@ class BaseRange(TraitType):
             # This branch is provided for backwards compatibility.
             # For new code, it's recommended to supply value_trait
             # or use IntRange or FloatRange. Related: enthought/traits#590.
-            value_trait = _infer_range_value_trait(low, high, value)
+            value, value_trait = _infer_range_value_trait(low, high, value)
 
         value_trait = trait_from(value_trait)
 

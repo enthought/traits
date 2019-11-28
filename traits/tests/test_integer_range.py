@@ -157,6 +157,15 @@ class DynamicRangesModel(HasTraits):
     # Dynamic low value
     dynamic_low = Range(low="low_bound", high=100)
 
+    # Dynamic low, no high; legacy mode (no value_trait)
+    dynamic_low_no_high = Range(low="low_bound")
+
+    # Dynamic high, no low; legacy mode (no value_trait)
+    dynamic_high_no_low = Range(high="high_bound")
+
+    # Dynamic high and low; legacy mode (no value_trait)
+    dynamic_low_and_high = Range(low="low_bound", high="high_bound")
+
     # Dynamic high, referring to a trait that doesn't exist.
     dynamic_high_nonexistent = Range(low=0, high="nonexistent")
 
@@ -702,6 +711,21 @@ class TestDynamicRange(unittest.TestCase):
         self.assertEqual(dvt, CALLABLE_DEFAULT_VALUE)
         value = dv(Model())
         self.assertIdentical(value, 32)
+
+    def test_dynamic_low_no_high_default(self):
+        # In legacy mode, if no default given, should use low.
+        self.model.low_bound = -10
+        self.assertIdentical(self.model.dynamic_low_no_high, -10)
+
+    def test_dynamic_high_no_low_default(self):
+        # In legacy mode, if no default given, should use low.
+        self.model.high_bound = 10
+        self.assertIdentical(self.model.dynamic_high_no_low, 10)
+
+    def test_dynamic_low_and_high_default(self):
+        self.model.low_bound = -10
+        self.model.high_bound = 10
+        self.assertIdentical(self.model.dynamic_low_and_high, -10)
 
     def test_default_from_inner_trait(self):
         # XXX To do: check that for a dynamic range with no default
