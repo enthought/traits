@@ -1784,8 +1784,8 @@ def _infer_range_value_trait(low, high, default):
     if not value_types:
         warnings.warn(
             message=(
-                "Unable to infer the value type for this Range instance; "
-                "assuming Float. This warning can be silenced by passing "
+                "Unable to infer a value type for this Range instance. "
+                "Using Float(). This warning can be silenced by passing "
                 "the 'value_trait' keyword at Range creation time. This "
                 "warning may become an error in a future version of Traits. "
             ),
@@ -1830,22 +1830,28 @@ class BaseRange(TraitType):
 
         Parameters
         ----------
-        low : integer, float or string; optional
-            The low end of the range. A string is interpreted as
-            an extended trait name providing a dynamic low value.
+        low : number or string; optional
+            The lower bound for the range. A string is interpreted as
+            an extended trait name providing a dynamic lower bound.
             If *low* is not given, the range is not bounded below.
-        high : integer, float or string; optional
-            The high end of the range. A string is interpreted as
-            an extended trait name providing a dynamic high value.
+        high : number or string; optional
+            The upper bound of the range. A string is interpreted as
+            an extended trait name providing a dynamic upper bound.
             If *high* is not given, the range is not bounded above.
         value : integer, float or string; optional.
-            The default value of the trait. A string is interpreted
+            The default value for the range. A string is interpreted
             as an extended trait name providing a dynamic default.
-            If not given, and *value_trait* is given, then the default
-            of *value_trait* is used. Otherwise, if *low* is given,
-            *low* is used as the default. Otherwise, if *high* is provided,
-            *high* is used for the default. Finally, if none of *low*,
-            *high* or *value_trait* is given, the default is 0.0.
+            If *value* is not given, the rules for determining the default
+            differ depending on whether *value_trait* was specified or not:
+
+            - If *value_trait* is given, then the default of *value_trait*
+              is used.
+            - If *value_trait* is not given, then if *low* is provided,
+              it's used as the default (even if dynamic). If *low* is not
+              provided but *high* is provided, then *high* provides the
+              default. If neither *low* nor *high* is provided, the default
+              is ``0.0``.
+
         exclude_low : bool, optional
             Indicates whether the low end of the range is exclusive.
             By default, the low end is inclusive.
@@ -1853,20 +1859,22 @@ class BaseRange(TraitType):
             Indicates whether the high end of the range is exclusive.
             By default, the high end is inclusive.
         value_trait : TraitType, optional
-            Trait, or object convertible to Trait, representing the value type
-            for the range. For a numeric range, Int() or Float() would be
-            typical. In new code, it's recommended that *value_trait* always be
-            provided. If *value_trait* is not provided, the type is inferred
-            from *low*, *high* and *value*, provided at least one of those has
-            numeric type. If none of *low*, *high* and *value* has numeric
-            type, Float is assumed and a DeprecationWarning is issued.
+            A trait type, or object convertible to a trait type, representing
+            the value type for the range. For a numeric range, Int() or Float()
+            would be typical. In new code, it's recommended that *value_trait*
+            always be provided.
+
+            If *value_trait* is not provided, the type is
+            inferred from *low*, *high* and *value*, provided at least one of
+            those has numeric type. If none of *low*, *high* and *value* has
+            numeric type, a value type of ``Float`` is assumed and a
+            ``DeprecationWarning`` is issued. This may become an error in a
+            future Traits release.
         """
         # TODO: make sure we have regression tests for Range-related
-        # GitHub issues.
+        # GitHub issues. Check that those issues are fixed.
 
         # TODO: test default editor for regressions
-
-        # TODO: Check all error messages look sane.
 
         if value_trait is None:
             # This branch is provided for backwards compatibility.
