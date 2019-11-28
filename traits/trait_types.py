@@ -46,11 +46,11 @@ from .trait_base import (
     ClassTypes,
     Undefined,
     TraitsCache,
+    xgetattr,
 )
 
 from .trait_handlers import (
     TraitType,
-    TraitInstance,
     TraitListObject,
     TraitSetObject,
     TraitSetEvent,
@@ -58,7 +58,6 @@ from .trait_handlers import (
     TraitDictEvent,
     ThisClass,
     items_event,
-    RangeTypes,
     HandleWeakRef,
     OBJECT_DEFAULT_VALUE,
     TRAIT_LIST_OBJECT_DEFAULT_VALUE,
@@ -1765,7 +1764,7 @@ def _infer_range_value_trait(low, high, default):
     Returns
     -------
     value_trait : TraitType
-        Value type for the range: one of int or float.
+        Value type for the range: an instance of either Int or Float.
 
     Raises
     ------
@@ -1834,10 +1833,12 @@ class BaseRange(TraitType):
             The lower bound for the range. A string is interpreted as
             an extended trait name providing a dynamic lower bound.
             If *low* is not given, the range is not bounded below.
+            A dynamic lower bound is permitted to return *None*.
         high : number or string; optional
             The upper bound of the range. A string is interpreted as
             an extended trait name providing a dynamic upper bound.
             If *high* is not given, the range is not bounded above.
+            A dynamic upper bound is permitted to return *None*.
         value : integer, float or string; optional.
             The default value for the range. A string is interpreted
             as an extended trait name providing a dynamic default.
@@ -1851,7 +1852,6 @@ class BaseRange(TraitType):
               provided but *high* is provided, then *high* provides the
               default. If neither *low* nor *high* is provided, the default
               is ``0.0``.
-
         exclude_low : bool, optional
             Indicates whether the low end of the range is exclusive.
             By default, the low end is inclusive.
@@ -1871,11 +1871,6 @@ class BaseRange(TraitType):
             ``DeprecationWarning`` is issued. This may become an error in a
             future Traits release.
         """
-        # TODO: make sure we have regression tests for Range-related
-        # GitHub issues. Check that those issues are fixed.
-
-        # TODO: test default editor for regressions
-
         if value_trait is None:
             # This branch is provided for backwards compatibility.
             # For new code, it's recommended to supply value_trait
@@ -1884,37 +1879,20 @@ class BaseRange(TraitType):
 
         value_trait = trait_from(value_trait)
 
-        # Trait values needed by the RangeEditor.
-        if isinstance(high, six.string_types):
-            self._high_name = "object." + high
-            high = compile("object." + high, "<string>", "eval")
+        low_name = low if isinstance(low, six.string_types) else ""
+        high_name = high if isinstance(high, six.string_types) else ""
+        value_name = value if isinstance(value, six.string_types) else ""
+
+        super(BaseRange, self).__init__(**metadata)
+
+        if low_name or high_name or value_name:
+            # Dynamic case
+            self.get = self._get
+            self.set = self._set
+            self.validate = None
+
         else:
-            self._high_name = ""
-
-        if isinstance(low, six.string_types):
-            self._low_name = "object." + low
-            low = compile("object." + low, "<string>", "eval")
-        else:
-            self._low_name = ""
-
-        if isinstance(value, six.string_types):
-            self._value_name = "object." + value
-            value = compile("object." + value, "<string>", "eval")
-        else:
-            self._value_name = ""
-
-        # Is this a purely static Range?
-        is_static = (
-            not isinstance(low, CodeType)
-            and not isinstance(high, CodeType)
-            and not isinstance(value, CodeType)
-        )
-
-        if is_static:
-            if value is None:
-                value = value_trait.default_value()[1]
-
-            super(BaseRange, self).__init__(default_value=value, **metadata)
+            # Static case
 
             # Fast validation currently only possible for the Float value type.
             if isinstance(value_trait.trait_type, Float):
@@ -1924,19 +1902,19 @@ class BaseRange(TraitType):
                     exclude_mask = bool(exclude_low) | bool(exclude_high) << 1
                     self.init_fast_validator(4, low, high, exclude_mask)
 
-        else:
-            super(BaseRange, self).__init__(**metadata)
-            self.get, self.set, self.validate = self._get, self._set, None
-            self._value = value
-            self.default_value_type = CALLABLE_DEFAULT_VALUE
-            self.default_value = self._get_default_value
+        self.default_value_type = CALLABLE_DEFAULT_VALUE
+        self.default_value = self._get_default_value
 
         #: Assign type-corrected arguments to handler attributes:
         self._low = low
         self._high = high
+        self._value = value
         self._exclude_low = exclude_low
         self._exclude_high = exclude_high
         self._value_trait = value_trait
+        self._low_name = low_name
+        self._high_name = high_name
+        self._value_name = value_name
 
     def init_fast_validator(self, *args):
         """ Does nothing for the BaseRange class. Used in the Range class to
@@ -1960,108 +1938,99 @@ class BaseRange(TraitType):
         TraitError
             If the value does not pass validation.
         """
+        return self._validate(object, name, value)
+
+    def _validate(self, object, name, value):
+        """ Validate the value.
+
+        Performs relevant type checks and type conversions, checks
+        that the value is in range, and returns the converted value.
+
+        Returns
+        -------
+        value : object
+            The validated value.
+
+        Raises
+        ------
+        TraitError
+            If the value does not pass validation.
+        """
         # Keep original value for error-reporting purposes.
         original_value = value
-
         value = self._value_trait.validate(object, name, value)
+
+        # Check bounds.
+        low, high = self._get_bounds(object)
 
         if (
             (
-                (self._low is None)
-                or (self._exclude_low and (self._low < value))
-                or ((not self._exclude_low) and (self._low <= value))
+                (low is None)
+                or (self._exclude_low and (low < value))
+                or ((not self._exclude_low) and (low <= value))
             )
             and (
-                (self._high is None)
-                or (self._exclude_high and (self._high > value))
-                or ((not self._exclude_high) and (self._high >= value))
+                (high is None)
+                or (self._exclude_high and (high > value))
+                or ((not self._exclude_high) and (high >= value))
             )
         ):
             return value
 
         self.error(object, name, original_value)
 
+    def _get_bounds(self, object):
+        if self._low_name:
+            low = xgetattr(object, self._low_name)
+        else:
+            low = self._low
+
+        if self._high_name:
+            high = xgetattr(object, self._high_name)
+        else:
+            high = self._high
+
+        return low, high
+
     def _get_default_value(self, object):
         """ Returns the default value of the range.
         """
-        value = self._value
-        if value is None:
-            return self._value_trait.default_value()[1]
-        elif isinstance(value, CodeType):
-            return eval(value)
+        if self._value_name:
+            value = xgetattr(object, self._value_name)
         else:
-            return value
+            value = self._value
+            if value is None:
+                value = self._value_trait.default_value()[1]
+        return value
 
     def _get(self, object, name, trait):
         """ Returns the current value of a dynamic range trait.
         """
-        low = self._low
-        if isinstance(low, CodeType):
-            low = eval(low)
-
-        high = self._high
-        if isinstance(high, CodeType):
-            high = eval(high)
+        low, high = self._get_bounds(object)
 
         cname = "_traits_cache_" + name
         value = object.__dict__.get(cname, Undefined)
         if value is Undefined:
-            value = self._value
-            if isinstance(value, CodeType):
-                value = eval(value)
-            elif value is None:
-                # No default value was given; use the value_trait default
-                value = self._value_trait.default_value()[1]
-
-            # Otherwise, we assume that value is a number, and we use
-            # it unchanged and unvalidated.
+            value = self._get_default_value(object)
             object.__dict__[cname] = value
 
+        # *change* the value if necessary so that it's within
+        # the low-high range.
         if (low is not None) and (value < low):
             value = low
         elif (high is not None) and (value > high):
             value = high
-
         return value
 
     def _set(self, object, name, value):
         """ Sets the current value of a dynamic range trait.
         """
-        # Store original pre-converted value for use in error messages.
-        original_value = value
-        value = self._value_trait.validate(object, name, value)
+        value = self._validate(object, name, value)
 
-        # Check bounds.
-        low = self._low
-        if isinstance(low, CodeType):
-            low = eval(low)
-
-        high = self._high
-        if isinstance(high, CodeType):
-            high = eval(high)
-
-        if (
-            (low is None)
-            or (self._exclude_low and (low < value))
-            or ((not self._exclude_low) and (low <= value))
-        ) and (
-            (high is None)
-            or (self._exclude_high and (high > value))
-            or ((not self._exclude_high) and (high >= value))
-        ):
-            self._set_value(object, name, value)
-        else:
-            self.error(object, name, original_value)
-
-    def _set_value(self, object, name, value):
-        """ Sets the specified value as the value of the dynamic range.
-        """
         cname = "_traits_cache_" + name
         old = object.__dict__.get(cname, Undefined)
         if old is Undefined:
-            old = self._value
-            if isinstance(old, CodeType):
-                old = eval(old)
+            old = self._get_default_value(object)
         object.__dict__[cname] = value
         if value != old:
             object.trait_property_changed(name, old, value)
@@ -2069,17 +2038,7 @@ class BaseRange(TraitType):
     def full_info(self, object, name, value):
         """ Returns a description of the trait.
         """
-        # XXX test cases of dynamic trait that gives back None
-        # for either low or high
-        low = self._low
-        if isinstance(low, CodeType):
-            low = eval(low)
-
-        # XXX refactor for retrieval of dynamic high value; used here,
-        # and in get and set.
-        high = self._high
-        if isinstance(high, CodeType):
-            high = eval(high)
+        low, high = self._get_bounds(object)
 
         value_info = self._value_trait.full_info(object, name, value)
 
@@ -2089,22 +2048,22 @@ class BaseRange(TraitType):
 
             return "%s <%s %s" % (
                 value_info,
-                "="[self._exclude_high :],
+                "="[self._exclude_high:],
                 high,
             )
 
         elif high is None:
             return "%s >%s %s" % (
                 value_info,
-                "="[self._exclude_low :],
+                "="[self._exclude_low:],
                 low,
             )
 
         return "%s <%s %s <%s %s" % (
             low,
-            "="[self._exclude_low :],
+            "="[self._exclude_low:],
             value_info,
-            "="[self._exclude_high :],
+            "="[self._exclude_high:],
             high,
         )
 
@@ -2116,13 +2075,23 @@ class BaseRange(TraitType):
     def create_editor(self):
         """ Returns the default UI editor for the trait.
         """
+        from traitsui.api import RangeEditor
+
         # fixme: Needs to support a dynamic range editor.
 
         auto_set = self.auto_set
         if auto_set is None:
             auto_set = True
 
-        from traitsui.api import RangeEditor
+        if self._low_name:
+            low_name = "object." + self._low_name
+        else:
+            low_name = ""
+
+        if self._high_name:
+            high_name = "object." + self._high_name
+        else:
+            high_name = ""
 
         return RangeEditor(
             self,
@@ -2132,8 +2101,8 @@ class BaseRange(TraitType):
             enter_set=self.enter_set or False,
             low_label=self.low or "",
             high_label=self.high or "",
-            low_name=self._low_name,
-            high_name=self._high_name,
+            low_name=low_name,
+            high_name=high_name,
         )
 
 
