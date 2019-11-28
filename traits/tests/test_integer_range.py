@@ -729,10 +729,20 @@ class TestDynamicRange(unittest.TestCase):
         self.assertIdentical(self.model.dynamic_low_and_high, -10)
 
     def test_default_from_inner_trait(self):
-        # XXX To do: check that for a dynamic range with no default
-        # specified, we get the value trait's default.
+        # Check that for a dynamic range with no default specified, we get the
+        # value trait's default.
 
-        pass
+        class Model(HasTraits):
+            dynamic = Range(
+                low="low_bound", high="high_bound",
+                value_trait=Int(35))
+
+            low_bound = Any(0)
+
+            high_bound = Any(100)
+
+        model = Model()
+        self.assertIdentical(model.dynamic, 35)
 
     def test_full_dynamic_default(self):
         self.model.low_bound = None
