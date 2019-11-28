@@ -1798,7 +1798,7 @@ def _infer_range_value_trait(low, high, default):
                 "warning may become an error in a future version of Traits. "
             ),
             category=DeprecationWarning,
-            # XXX check what stacklevel we need
+            stacklevel=3,
         )
         trait_type = Float
     elif any(value_type is float for value_type in value_types):
