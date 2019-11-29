@@ -338,6 +338,14 @@ class CommonRangeTests(object):
         with self.assertRaises(ZeroDivisionError):
             self.model.percentage = BadIntLike()
 
+    def test_bad_default(self):
+        class Model(HasTraits):
+            foo = Range(1, 2, 1.5, value_trait=Int())
+
+        model = Model()
+        with self.assertRaises(TraitError):
+            model.foo
+
     def test_endpoints(self):
         # point within the interior of the range
         self.model.open = self.model.closed = 50

@@ -20,6 +20,7 @@ import unittest
 from traits.api import (
     BaseRange,
     Either,
+    Float,
     HasTraits,
     Instance,
     Range,
@@ -258,6 +259,14 @@ class CommonRangeTests(object):
     def test_bad_float_like(self):
         with self.assertRaises(ZeroDivisionError):
             self.model.percentage = BadFloatLike()
+
+    def test_bad_default(self):
+        class Model(HasTraits):
+            foo = Range(1.0, 2.0, 1.5j, value_trait=Float())
+
+        model = Model()
+        with self.assertRaises(TraitError):
+            model.foo
 
     def test_endpoints(self):
         # point within the interior of the range
