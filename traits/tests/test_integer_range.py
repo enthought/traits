@@ -853,10 +853,7 @@ class ClipOnGetModel(HasTraits):
     high = Int(100)
 
     not_clipped_dynamic = Range(
-        low_name="low",
-        high_name="high",
-        value=200,
-        value_trait=Int(),
+        low_name="low", high_name="high", value=200, value_trait=Int(),
     )
 
     # Legacy mode: clipping occurs for all three traits below.
@@ -873,7 +870,6 @@ class ClipOnGetModel(HasTraits):
 
 
 class TestRangeClipOnGet(unittest.TestCase):
-
     def setUp(self):
         self.model = ClipOnGetModel()
 
