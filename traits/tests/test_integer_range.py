@@ -15,6 +15,15 @@
 Tests for the Range trait with value type int.
 """
 
+# XXX Add tests for pass by position for legacy Ranges; the init
+# keywords should be in the same order as before.
+
+# XXX Add tests for other possible value_types: Int(), Int, int,
+# Float(), Float, float should all work.
+
+# XXX Add tests for non-numeric trait types: e.g., Str, Tuple, Date
+
+
 import operator
 import unittest
 import warnings
@@ -141,14 +150,19 @@ def ModelFactory(name, RangeFactory):
 class DynamicRangesModel(HasTraits):
 
     # Dynamic low and high
-    dynamic_int = Range(low="low_bound", high="high_bound", value_trait=Int())
+    dynamic_int = Range(
+        low_name="low_bound", high_name="high_bound", value_trait=Int()
+    )
 
     dynamic_float = Range(
-        low="low_bound", high="high_bound", value_trait=Float()
+        low_name="low_bound", high_name="high_bound", value_trait=Float()
     )
 
     dynamic_with_static_default = Range(
-        low="low_bound", high="high_bound", value=73, value_trait=Int(),
+        low_name="low_bound",
+        high_name="high_bound",
+        value=73,
+        value_trait=Int(),
     )
 
     dynamic_with_static_default_legacy = Range(
@@ -183,13 +197,16 @@ class DynamicRangesModel(HasTraits):
 
     # Dynamic everything (value type Int)
     full_dynamic_int = Range(
-        low="low_bound", high="high_bound", value="default", value_trait=Int(),
+        low_name="low_bound",
+        high_name="high_bound",
+        value="default",
+        value_trait=Int(),
     )
 
     # Dynamic everything (value type Float)
     full_dynamic_float = Range(
-        low="low_bound",
-        high="high_bound",
+        low_name="low_bound",
+        high_name="high_bound",
         value="default",
         value_trait=Float(),
     )
@@ -621,9 +638,6 @@ class TestRangeTypeInference(unittest.TestCase):
         self.assertEqual(model.bar, 4)
         self.assertEqual(model.baz, 3.5)
 
-    # XXX Add tests for other possible value_types: Int(), Int, int,
-    # Float(), Float, float should all work.
-
 
 class TestDynamicRange(unittest.TestCase):
     def setUp(self):
@@ -759,7 +773,9 @@ class TestDynamicRange(unittest.TestCase):
 
         class Model(HasTraits):
             dynamic = Range(
-                low="low_bound", high="high_bound", value_trait=Int(35)
+                low_name="low_bound",
+                high_name="high_bound",
+                value_trait=Int(35),
             )
 
             low_bound = Any(0)
@@ -785,6 +801,16 @@ class TestDynamicRange(unittest.TestCase):
         # In legacy mode, the default is not subject to validation,
         # so we retrieve an int rather than a float.
         self.assertIdentical(self.model.full_dynamic_legacy, 23)
+
+    def test_static_and_dynamic_conflict(self):
+        with self.assertRaises(TraitError):
+            Range(low=0, low_name="low", value_trait=Float())
+        with self.assertRaises(TraitError):
+            Range(low=0, low_name="low")
+        with self.assertRaises(TraitError):
+            Range(high=0, high_name="high", value_trait=Float())
+        with self.assertRaises(TraitError):
+            Range(high=0, high_name="high")
 
     def test_inner_traits(self):
         range_trait = Range(-1, 1, value_trait=Float())
@@ -824,11 +850,19 @@ class ClipOnGetModel(HasTraits):
     high = Int(100)
 
     clipped_dynamic = Range(
-        "low", "high", 200, clip_on_get=True, value_trait=Int()
+        low_name="low",
+        high_name="high",
+        value=200,
+        clip_on_get=True,
+        value_trait=Int(),
     )
 
     not_clipped_dynamic = Range(
-        "low", "high", 200, clip_on_get=False, value_trait=Int()
+        low_name="low",
+        high_name="high",
+        value=200,
+        clip_on_get=False,
+        value_trait=Int(),
     )
 
     # Legacy mode: clipping occurs for all three traits below.
@@ -839,7 +873,9 @@ class ClipOnGetModel(HasTraits):
     clipped_legacy_low = Range("low", 100, 200)
 
     # Non-legacy mode, value_trait specified. No clipping.
-    clipped_new = Range("low", "high", 200, value_trait=Int())
+    clipped_new = Range(
+        low_name="low", high_name="high", value=200, value_trait=Int()
+    )
 
 
 class TestRangeClipOnGet(unittest.TestCase):

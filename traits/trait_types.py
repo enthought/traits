@@ -1835,6 +1835,8 @@ class BaseRange(TraitType):
         low=None,
         high=None,
         value=None,
+        low_name=None,
+        high_name=None,
         exclude_low=False,
         exclude_high=False,
         clip_on_get=None,
@@ -1846,15 +1848,23 @@ class BaseRange(TraitType):
         Parameters
         ----------
         low : number or string; optional
-            The lower bound for the range. A string is interpreted as
-            an extended trait name providing a dynamic lower bound.
-            If *low* is not given, the range is not bounded below.
-            A dynamic lower bound is permitted to return *None*.
+            The lower bound for the range. If *low* is not given, the
+            range is not bounded below.
+
+            If *low* is a string, then in legacy mode, *low* is interpreted
+            as the name of an extended trait providing a dynamic lower bound.
+            In normal mode, a string is used directly as a lower bound, and
+            the *low_name* parameter should be used to supply a dynamic
+            lower bound.
         high : number or string; optional
-            The upper bound of the range. A string is interpreted as
-            an extended trait name providing a dynamic upper bound.
-            If *high* is not given, the range is not bounded above.
-            A dynamic upper bound is permitted to return *None*.
+            The upper bound of the range. If *high* is not given, the
+            range is not bounded above.
+
+            If *high* is a string, then in legacy mode, *high* is interpreted
+            as the name of an extended trait providing a dynamic upper bound.
+            In normal mode, a string is used directly as an upper bound, and
+            the *high_name* parameter should be used to supply a dynamic
+            upper bound.
         value : integer, float or string; optional.
             The default value for the range. A string is interpreted
             as an extended trait name providing a dynamic default.
@@ -1874,6 +1884,14 @@ class BaseRange(TraitType):
         exclude_high : bool, optional
             If true, the upper bound of the range is excluded. Otherwise
             it's included. The default is to include the upper bound.
+        low_name : string, optional
+            If given, a string giving an extended trait name providing
+            a dynamic lower bound. When evaluated, that trait is permitted
+            to return *None*, indicating that the range is not bounded below.
+        high_name : string, optional
+            If given, a string giving an extended trait name providing
+            a dynamic upper bound. When evaluated, that trait is permitted
+            to return *None*, indicating that therange is not bounded above.
         clip_on_get : bool, optional
             If true, the ``get`` operation for this trait clips the stored
             value to lie in [low, high]. Otherwise, the stored value is
@@ -1909,11 +1927,25 @@ class BaseRange(TraitType):
 
         value_trait = trait_from(value_trait)
 
-        low_name = low if isinstance(low, six.string_types) else None
-        high_name = high if isinstance(high, six.string_types) else None
+        if (legacy_mode and low_name is None
+                and isinstance(low, six.string_types)):
+            low_name = low
+            low = None
+        if (legacy_mode and high_name is None
+                and isinstance(high, six.string_types)):
+            high_name = high
+            high = None
 
         if clip_on_get is None:
             clip_on_get = legacy_mode and not (low_name is high_name is None)
+
+        if low_name is not None and low is not None:
+            raise TraitError(
+                "At most one of *low* and *low_name* should be provided.")
+
+        if high_name is not None and high is not None:
+            raise TraitError(
+                "At most one of *high* and *high_name* should be provided.")
 
         super(BaseRange, self).__init__(**metadata)
 
