@@ -1893,7 +1893,11 @@ class BaseRange(TraitType):
 
         low_name = low if isinstance(low, six.string_types) else None
         high_name = high if isinstance(high, six.string_types) else None
-        value_name = value if isinstance(value, six.string_types) else None
+
+        if isinstance(value, six.string_types) and legacy_mode:
+            value_name = value
+        else:
+            value_name = None
 
         if clip_on_get is None:
             clip_on_get = legacy_mode and not (low_name is high_name is None)
@@ -2026,16 +2030,19 @@ class BaseRange(TraitType):
     def _get(self, object, name, trait):
         """ Returns the current value of a dynamic range trait.
         """
-        low, high = self._get_bounds(object)
-
         cname = "_traits_cache_" + name
         value = object.__dict__.get(cname, Undefined)
         if value is Undefined:
             value = self._get_default_value(object)
+            # Really we should be validating here, to match what happens in the
+            # unclipped case, but such validation is likely to be disruptive to
+            # existing code. In the long term, we'll deprecate the clip_on_get
+            # functionality altogether and this function will disappear.
             object.__dict__[cname] = value
 
         # Change the value if necessary so that it's within the low-high
         # range. These are the clip_on_get=True semantics.
+        low, high = self._get_bounds(object)
         if (low is not None) and (value < low):
             value = low
         elif (high is not None) and (value > high):
@@ -2050,6 +2057,8 @@ class BaseRange(TraitType):
         cname = "_traits_cache_" + name
         old = object.__dict__.get(cname, Undefined)
         if old is Undefined:
+            # Again, for consistency with the non-clipped case we should really
+            # be validating here. See the comment in _get.
             old = self._get_default_value(object)
         object.__dict__[cname] = value
         if value != old:

@@ -32,7 +32,6 @@ from traits.api import (
     TraitError,
 )
 from traits.testing.optional_dependencies import numpy, requires_numpy
-from traits.trait_handlers import CALLABLE_DEFAULT_VALUE
 
 
 class InheritsFromInt(int):
@@ -176,6 +175,11 @@ class DynamicRangesModel(HasTraits):
 
     # Dynamic default
     dynamic_default = Range(low=0, high=100, value="default")
+
+    # Dynamic everything, legacy mode
+    full_dynamic_legacy = Range(
+        low="low_bound", high="high_bound", value="default",
+    )
 
     # Dynamic everything (value type Int)
     full_dynamic_int = Range(
@@ -659,10 +663,10 @@ class TestDynamicRange(unittest.TestCase):
 
     def test_dynamic_low_float(self):
         self.model.low_bound = 21.0
-        # value type is int, but the low_bound is not validated, so
-        # we get a float returned.
-        self.assertIs(type(self.model.dynamic_low), float)
-        self.assertEqual(self.model.dynamic_low, 21.0)
+        # In legacy mode we have clip_on_get turned on by default,
+        # and the default value is not validated. So even though
+        # the value type is int, we retrieve a float here.
+        self.assertIdentical(self.model.dynamic_low, 21.0)
 
     def test_dynamic_default(self):
         self.model.default = 27
@@ -690,12 +694,16 @@ class TestDynamicRange(unittest.TestCase):
         self.assertIdentical(self.model.dynamic_with_static_default, 73)
 
     def test_dynamic_with_static_default_legacy(self):
-        self.assertIdentical(self.model.dynamic_with_static_default_legacy, 73.0)
+        self.assertIdentical(
+            self.model.dynamic_with_static_default_legacy, 73.0
+        )
         self.model.high_bound = 50
         self.assertIdentical(self.model.dynamic_with_static_default_legacy, 50)
         # dynamic low and high values aren't validated.
         self.model.high_bound = 45.0
-        self.assertIdentical(self.model.dynamic_with_static_default_legacy, 45.0)
+        self.assertIdentical(
+            self.model.dynamic_with_static_default_legacy, 45.0
+        )
 
     def test_dynamic_default_all_none(self):
         self.model.low_bound = None
@@ -707,30 +715,6 @@ class TestDynamicRange(unittest.TestCase):
             self.model.full_dynamic_int
         with self.assertRaises(TraitError):
             self.assertIsNone(self.model.full_dynamic_float)
-
-    def test_get_default_value_constant_default(self):
-        range_trait = Range("low", "high", 3, value_trait=Int())
-        dvt, dv = range_trait.get_default_value()
-        self.assertEqual(dvt, CALLABLE_DEFAULT_VALUE)
-        value = dv(None)
-        self.assertIdentical(value, 3)
-
-    def test_get_default_value_no_default(self):
-        range_trait = Range("low", "high", value_trait=Int(47))
-        dvt, dv = range_trait.get_default_value()
-        self.assertEqual(dvt, CALLABLE_DEFAULT_VALUE)
-        value = dv(None)
-        self.assertIdentical(value, 47)
-
-    def test_get_default_value_dynamic_default(self):
-        class Model(HasTraits):
-            start = Any(32)
-
-        range_trait = Range("low", "high", "start", value_trait=Int())
-        dvt, dv = range_trait.get_default_value()
-        self.assertEqual(dvt, CALLABLE_DEFAULT_VALUE)
-        value = dv(Model())
-        self.assertIdentical(value, 32)
 
     def test_dynamic_low_no_high_default(self):
         # In legacy mode, if no default given, should use low.
@@ -753,8 +737,8 @@ class TestDynamicRange(unittest.TestCase):
 
         class Model(HasTraits):
             dynamic = Range(
-                low="low_bound", high="high_bound",
-                value_trait=Int(35))
+                low="low_bound", high="high_bound", value_trait=Int(35)
+            )
 
             low_bound = Any(0)
 
@@ -768,8 +752,17 @@ class TestDynamicRange(unittest.TestCase):
         self.model.high_bound = None
         self.model.default = 23
 
-        self.assertIs(type(self.model.full_dynamic_int), int)
-        self.assertEqual(self.model.full_dynamic_int, 23)
+        with self.assertRaises(TraitError):
+            self.model.full_dynamic_int
+
+    def test_full_dynamic_default_legacy(self):
+        self.model.low_bound = None
+        self.model.high_bound = None
+        self.model.default = 23
+
+        # In legacy mode, the default is not subject to validation,
+        # so we retrieve an int rather than a float.
+        self.assertIdentical(self.model.full_dynamic_legacy, 23)
 
     def test_inner_traits(self):
         range_trait = Range(-1, 1, value_trait=Float())
@@ -809,10 +802,12 @@ class ClipOnGetModel(HasTraits):
     high = Int(100)
 
     clipped_dynamic = Range(
-        "low", "high", 200, clip_on_get=True, value_trait=Int())
+        "low", "high", 200, clip_on_get=True, value_trait=Int()
+    )
 
     not_clipped_dynamic = Range(
-        "low", "high", 200, clip_on_get=False, value_trait=Int())
+        "low", "high", 200, clip_on_get=False, value_trait=Int()
+    )
 
     # Legacy mode: clipping occurs for all three traits below.
     clipped_legacy = Range("low", "high", -100)
