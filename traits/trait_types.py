@@ -1812,7 +1812,6 @@ class BaseRange(TraitType):
         high_name=None,
         exclude_low=False,
         exclude_high=False,
-        clip_on_get=None,
         value_trait=None,
         **metadata
     ):
@@ -1865,15 +1864,6 @@ class BaseRange(TraitType):
             If given, a string giving an extended trait name providing
             a dynamic upper bound. When evaluated, that trait is permitted
             to return *None*, indicating that therange is not bounded above.
-        clip_on_get : bool, optional
-            If true, the ``get`` operation for this trait clips the stored
-            value to lie in [low, high]. Otherwise, the stored value is
-            returned as-is, and may be out of range if either low or high
-            has changed since the value was validated.
-
-            In legacy mode, the default is to clip if either the low or
-            high is dynamic. In normal mode, the default is not to clip.
-            Use of this option is not recommended in new code.
         value_trait : TraitType, optional
             A trait type, or object convertible to a trait type, representing
             the value type for the range. For a numeric range, Int() or Float()
@@ -1888,6 +1878,7 @@ class BaseRange(TraitType):
             future Traits release.
         """
         value_name = None
+        clip_on_get = False
 
         if value_trait is None:
             # Legacy mode. Re-interpret inputs for backwards compatibility.
@@ -1911,8 +1902,7 @@ class BaseRange(TraitType):
             if isinstance(value, six.string_types):
                 value_name, value = value, None
             value_trait = _infer_range_value_trait(low, high, value)
-            if clip_on_get is None and not (low_name is high_name is None):
-                clip_on_get = True
+            clip_on_get = low_name is not None or high_name is not None
 
         if low_name is not None and low is not None:
             raise TraitError(

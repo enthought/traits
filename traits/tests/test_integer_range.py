@@ -851,19 +851,10 @@ class ClipOnGetModel(HasTraits):
 
     high = Int(100)
 
-    clipped_dynamic = Range(
-        low_name="low",
-        high_name="high",
-        value=200,
-        clip_on_get=True,
-        value_trait=Int(),
-    )
-
     not_clipped_dynamic = Range(
         low_name="low",
         high_name="high",
         value=200,
-        clip_on_get=False,
         value_trait=Int(),
     )
 
@@ -881,29 +872,9 @@ class ClipOnGetModel(HasTraits):
 
 
 class TestRangeClipOnGet(unittest.TestCase):
-    """ Tests for the behaviour of the clip_on_get flag. """
 
     def setUp(self):
         self.model = ClipOnGetModel()
-
-    def test_clipped_dynamic(self):
-        # Default value is already clipped.
-        self.assertIdentical(self.model.clipped_dynamic, 100)
-        # But the stored value is still 200.
-        self.model.high = 300
-        self.assertIdentical(self.model.clipped_dynamic, 200)
-
-        self.model.low = 250
-        self.assertIdentical(self.model.clipped_dynamic, 250)
-        self.model.low = 0
-        self.assertIdentical(self.model.clipped_dynamic, 200)
-
-        self.model.clipped_dynamic = 150
-        self.assertIdentical(self.model.clipped_dynamic, 150)
-        self.model.high = 100
-        self.assertIdentical(self.model.clipped_dynamic, 100)
-        self.model.high = 200
-        self.assertIdentical(self.model.clipped_dynamic, 150)
 
     def test_not_clipped_dynamic(self):
         with self.assertRaises(TraitError):
