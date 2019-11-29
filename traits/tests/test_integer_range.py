@@ -786,8 +786,9 @@ class TestDynamicRange(unittest.TestCase):
         for name, value in kwargs.items():
             setattr(self.model, name, value)
             retrieved_value = getattr(self.model, name)
-            self.assertIs(type(retrieved_value), int)
-            self.assertEqual(retrieved_value, as_integer(value))
+            expected_value = as_integer(value)
+            self.assertIs(type(retrieved_value), type(expected_value))
+            self.assertEqual(retrieved_value, expected_value)
 
     def check_trait_error(self, **kwargs):
         for name, value in kwargs.items():
@@ -796,6 +797,107 @@ class TestDynamicRange(unittest.TestCase):
                 setattr(self.model, name, value)
             # Check that the value is unchanged.
             self.assertEqual(getattr(self.model, name), original_value)
+
+    def assertIdentical(self, actual, expected):
+        self.assertIs(type(actual), type(expected))
+        self.assertEqual(actual, expected)
+
+
+class ClipOnGetModel(HasTraits):
+    low = Int(0)
+
+    high = Int(100)
+
+    clipped_dynamic = Range(
+        "low", "high", 200, clip_on_get=True, value_trait=Int())
+
+    not_clipped_dynamic = Range(
+        "low", "high", 200, clip_on_get=False, value_trait=Int())
+
+    # Legacy mode: clipping occurs for all three traits below.
+    clipped_legacy = Range("low", "high", -100)
+
+    clipped_legacy_high = Range(0, "high", 200)
+
+    clipped_legacy_low = Range("low", 100, 200)
+
+    # Non-legacy mode, value_trait specified. No clipping.
+    clipped_new = Range("low", "high", 200, value_trait=Int())
+
+
+class TestRangeClipOnGet(unittest.TestCase):
+    """ Tests for the behaviour of the clip_on_get flag. """
+
+    def setUp(self):
+        self.model = ClipOnGetModel()
+
+    def test_clipped_dynamic(self):
+        # Default value is already clipped.
+        self.assertIdentical(self.model.clipped_dynamic, 100)
+        # But the stored value is still 200.
+        self.model.high = 300
+        self.assertIdentical(self.model.clipped_dynamic, 200)
+
+        self.model.low = 250
+        self.assertIdentical(self.model.clipped_dynamic, 250)
+        self.model.low = 0
+        self.assertIdentical(self.model.clipped_dynamic, 200)
+
+        self.model.clipped_dynamic = 150
+        self.assertIdentical(self.model.clipped_dynamic, 150)
+        self.model.high = 100
+        self.assertIdentical(self.model.clipped_dynamic, 100)
+        self.model.high = 200
+        self.assertIdentical(self.model.clipped_dynamic, 150)
+
+    def test_not_clipped_dynamic(self):
+        with self.assertRaises(TraitError):
+            self.model.not_clipped_dynamic
+        with self.assertRaises(TraitError):
+            self.model.not_clipped_dynamic = 150
+        self.model.not_clipped_dynamic = 90
+        self.assertIdentical(self.model.not_clipped_dynamic, 90)
+
+        self.model.high = 50
+        self.assertIdentical(self.model.not_clipped_dynamic, 90)
+
+    def test_legacy_mode_clipping(self):
+        self.assertIdentical(self.model.clipped_legacy, 0)
+        self.model.low = -200
+        self.assertIdentical(self.model.clipped_legacy, -100)
+        self.model.high = -150
+        self.assertIdentical(self.model.clipped_legacy, -150)
+        self.model.high = 100
+        self.model.low = 0
+        self.assertIdentical(self.model.clipped_legacy, 0)
+
+        self.assertIdentical(self.model.clipped_legacy_high, 100)
+        self.model.high = 300
+        self.assertIdentical(self.model.clipped_legacy_high, 200)
+        self.model.high = 100
+        self.assertIdentical(self.model.clipped_legacy_high, 100)
+
+        self.assertIdentical(self.model.clipped_legacy_low, 100)
+        self.model.clipped_legacy_low = 50
+        self.assertIdentical(self.model.clipped_legacy_low, 50)
+        with self.assertRaises(TraitError):
+            self.model.clipped_legacy_low = -50
+        self.model.low = -100
+        self.model.clipped_legacy_low = -50
+        self.assertIdentical(self.model.clipped_legacy_low, -50)
+        self.model.low = 0
+        self.assertIdentical(self.model.clipped_legacy_low, 0)
+
+    def test_new_mode_clipping(self):
+        with self.assertRaises(TraitError):
+            self.model.clipped_new
+        with self.assertRaises(TraitError):
+            self.model.clipped_new = -100
+        self.model.low = -200
+        self.model.clipped_new = -100
+        self.assertIdentical(self.model.clipped_new, -100)
+        self.model.low = 0
+        self.assertIdentical(self.model.clipped_new, -100)
 
     def assertIdentical(self, actual, expected):
         self.assertIs(type(actual), type(expected))
