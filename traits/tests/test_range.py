@@ -46,9 +46,7 @@ class WithDynamicRange(HasTraits):
     high = Int(10)
     value = Int(3)
 
-    r = Range(
-        value="value", low="low", high="high",
-        exclude_high=True, value_type=Int)
+    r = Range(value="value", low="low", high="high", exclude_high=True)
 
     def _r_changed(self, old, new):
         self._changed_handler_calls += 1
