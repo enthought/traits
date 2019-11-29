@@ -594,51 +594,6 @@ class PrefixMapTest(AnyTraitTest):
         return {"o": "one", "on": "one", "tw": "two", "th": "three"}[value[:2]]
 
 
-class IntRangeTrait(HasTraits):
-    value = Trait(3, Range(2, 5))
-
-
-class IntRangeTest(AnyTraitTest):
-
-    obj = IntRangeTrait()
-
-    _default_value = 3
-    _good_values = [2, 3, 4, 5]
-    _bad_values = [0, 1, 6, 0.999, 6.01, "two", "0.999", "6.01", None]
-
-    def coerce(self, value):
-        try:
-            return int(value)
-        except:
-            return int(float(value))
-
-
-class FloatRangeTrait(HasTraits):
-    value = Trait(3.0, Range(2.0, 5.0))
-
-
-class FloatRangeTest(AnyTraitTest):
-
-    obj = FloatRangeTrait()
-
-    _default_value = 3.0
-    _good_values = [2.0, 3.0, 4.0, 5.0, 2.001, 4.999]
-    _bad_values = [
-        0,
-        1,
-        6,
-        1.999,
-        6.01,
-        "two",
-        "0.999",
-        "6.01",
-        None,
-    ]
-
-    def coerce(self, value):
-        return float(value)
-
-
 # Old style class version:
 
 
