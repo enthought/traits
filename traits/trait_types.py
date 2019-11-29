@@ -49,7 +49,6 @@ from .trait_base import (
 
 from .trait_handlers import (
     TraitType,
-    TraitInstance,
     TraitListObject,
     TraitSetObject,
     TraitSetEvent,
