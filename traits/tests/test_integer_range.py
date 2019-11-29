@@ -447,7 +447,8 @@ class CommonRangeTests(object):
             self.assertIsNone(self.model.unbounded_with_default)
             return
 
-        self.assertIsExactInt(self.model.unbounded_with_default, 50)
+        # Type will be inferred as Float.
+        self.assertIsIdentical(self.model.unbounded_with_default, 50.0)
 
     def test_unbounded_range_no_default(self):
         # For compound traits, default is None.
@@ -456,6 +457,10 @@ class CommonRangeTests(object):
             return
 
         self.assertIsExactInt(self.model.unbounded, 0)
+
+    def assertIsIdentical(self, actual, expected):
+        self.assertIs(type(actual), type(expected))
+        self.assertEqual(actual, expected)
 
     def assertIsExactInt(self, actual, expected):
         self.assertIs(type(actual), int)
@@ -512,13 +517,9 @@ class TestRangeTypeInference(unittest.TestCase):
             Range(low=0, high=10.0, value=5.0),
             Range(low=0, high=10.0, value=5),
             Range(low=0, high=10.0, value=None),
-            Range(low=0, high=10, value=5.0),
-            Range(low=0, high=None, value=5.0),
             Range(low=None, high=10.0, value=5.0),
             Range(low=None, high=10.0, value=5),
             Range(low=None, high=10.0, value=None),
-            Range(low=None, high=10, value=5.0),
-            Range(low=None, high=None, value=5.0),
         ]
 
         int_range_traits = [
@@ -528,7 +529,9 @@ class TestRangeTypeInference(unittest.TestCase):
             Range(low=0, high=None, value=None),
             Range(low=None, high=10, value=5),
             Range(low=None, high=10, value=None),
-            Range(low=None, high=None, value=5),
+            Range(low=0, high=10, value=5.0),
+            Range(low=0, high=None, value=5.0),
+            Range(low=None, high=10, value=5.0),
         ]
 
         for range_trait in float_range_traits:
@@ -551,7 +554,24 @@ class TestRangeTypeInference(unittest.TestCase):
             self.assertIs(type(model.foo), int)
             self.assertEqual(model.foo, 7.0)
 
-    def test_deprecated_case(self):
+    def test_deprecated_dynamic_default(self):
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", DeprecationWarning)
+            range_traits = [
+                Range(low=3, high=5, value="value"),
+                Range(low="low", high=5, value="value"),
+                Range(low=3, high="high", value="value"),
+            ]
+
+        # Expect one warning for each of our range traits.
+        self.assertEqual(len(warn_msgs), len(range_traits))
+
+        for warn_msg in warn_msgs:
+            message = str(warn_msg.message)
+            self.assertIn("Use of a dynamic default", message)
+            self.assertIn("test_integer_range", warn_msg.filename)
+
+    def test_deprecated_type_inference(self):
         # Case where no type can be inferred, and we drop
         # back to Float.
         with warnings.catch_warnings(record=True) as warn_msgs:
@@ -561,6 +581,8 @@ class TestRangeTypeInference(unittest.TestCase):
                 Range(low="low", high=None, value=None),
                 Range(low="low", high="high", value=None),
                 Range(low=None, high="high", value=None),
+                Range(low=None, high=None, value=5.0),
+                Range(low=None, high=None, value=5),
             ]
 
         for range_trait in range_traits:

@@ -1775,7 +1775,7 @@ def _infer_range_value_trait(low, high, default):
     """
     value_types = [
         value_type
-        for is_numeric, value_type in map(_is_numeric, [low, high, default])
+        for is_numeric, value_type in map(_is_numeric, [low, high])
         if is_numeric
     ]
 
@@ -1785,8 +1785,9 @@ def _infer_range_value_trait(low, high, default):
             message=(
                 "Unable to infer a value type for this Range instance. "
                 "Using Float(). This warning can be silenced by passing "
-                "the 'value_trait' keyword at Range creation time. This "
-                "warning may become an error in a future version of Traits. "
+                "value_trait=Int() or value_trait=Float() as appropriate "
+                "at Range creation time. This warning may become an error "
+                "in a future version of Traits. "
             ),
             category=DeprecationWarning,
             stacklevel=3,
@@ -1797,6 +1798,18 @@ def _infer_range_value_trait(low, high, default):
     else:
         trait_type = Int
 
+    # In legacy mode, use of a string for a default is deprecated. In
+    # new mode, dynamic defaults are disallowed altogether.
+    if isinstance(default, six.string_types):
+        warnings.warn(
+            message=(
+                "Use of a dynamic default in a Range trait is deprecated. "
+                "Supply a default via a _mytrait_default method instead."
+            ),
+            category=DeprecationWarning,
+            stacklevel=3,
+        )
+
     # Determine the default to use. In legacy mode, if the value is None,
     # we use low if low is not None, else high if high is not None.
     if default is None:
@@ -1805,10 +1818,12 @@ def _infer_range_value_trait(low, high, default):
         elif high is not None:
             default = high
 
-    if default is not None and not isinstance(default, six.string_types):
-        return default, trait_type(default)
+    if default is None:
+        return default, None, trait_type()
+    elif isinstance(default, six.string_types):
+        return default, default, trait_type()
     else:
-        return default, trait_type()
+        return default, None, trait_type(default)
 
 
 class BaseRange(TraitType):
@@ -1887,17 +1902,15 @@ class BaseRange(TraitType):
         legacy_mode = value_trait is None
 
         if legacy_mode:
-            value, value_trait = _infer_range_value_trait(low, high, value)
+            value, value_name, value_trait = _infer_range_value_trait(
+                low, high, value)
+        else:
+            value_name = None
 
         value_trait = trait_from(value_trait)
 
         low_name = low if isinstance(low, six.string_types) else None
         high_name = high if isinstance(high, six.string_types) else None
-
-        if isinstance(value, six.string_types) and legacy_mode:
-            value_name = value
-        else:
-            value_name = None
 
         if clip_on_get is None:
             clip_on_get = legacy_mode and not (low_name is high_name is None)
