@@ -1913,14 +1913,17 @@ class BaseRange(TraitType):
             not clip_on_get
             and low_name is high_name is None
             and isinstance(value_trait.trait_type, Float)
-            and low is None or isinstance(low, float)
-            and high is None or isinstance(high, float)
+            and (low is None or isinstance(low, float))
+            and (high is None or isinstance(high, float))
         )
-        # XXX Get rid of the debugging "and False"
-        if can_use_fast_validation and False:
-            exclude_mask = bool(exclude_low) | bool(exclude_high) << 1
+
+        if can_use_fast_validation:
             self.init_fast_validator(
-                4, float(low), float(high), exclude_mask)
+                4,
+                None if low is None else float(low),
+                None if high is None else float(high),
+                bool(exclude_low) | bool(exclude_high) << 1
+            )
 
         #: Assign type-corrected arguments to handler attributes:
         self._low = low
@@ -2031,8 +2034,8 @@ class BaseRange(TraitType):
             value = self._get_default_value(object)
             object.__dict__[cname] = value
 
-        # *change* the value if necessary so that it's within
-        # the low-high range.
+        # Change the value if necessary so that it's within the low-high
+        # range. These are the clip_on_get=True semantics.
         if (low is not None) and (value < low):
             value = low
         elif (high is not None) and (value > high):
