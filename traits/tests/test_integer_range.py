@@ -23,6 +23,8 @@ Tests for the Range trait with value type int.
 
 # XXX Add tests for non-numeric trait types: e.g., Str, Tuple, Date
 
+# XXX Add tests for cloning / pickling?
+
 
 import operator
 import unittest
@@ -758,7 +760,7 @@ class TestDynamicRange(unittest.TestCase):
         self.assertIdentical(self.model.dynamic_low_no_high, -10)
 
     def test_dynamic_high_no_low_default(self):
-        # In legacy mode, if no default given, should use low.
+        # In legacy mode, if no default and no low given, should use high.
         self.model.high_bound = 10
         self.assertIdentical(self.model.dynamic_high_no_low, 10)
 

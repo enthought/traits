@@ -1728,7 +1728,7 @@ def _is_numeric(value):
         If *value* is not None, not a string, not an integer and
         not a floating-point number.
     """
-    if value is None or isinstance(value, six.string_types):
+    if value is None:
         return False, None
 
     try:
@@ -1793,37 +1793,10 @@ def _infer_range_value_trait(low, high, default):
             stacklevel=3,
         )
         trait_type = Float
-    elif any(value_type is float for value_type in value_types):
-        trait_type = Float
     else:
-        trait_type = Int
+        trait_type = Float if float in value_types else Int
 
-    # In legacy mode, use of a string for a default is deprecated. In
-    # new mode, dynamic defaults are disallowed altogether.
-    if isinstance(default, six.string_types):
-        warnings.warn(
-            message=(
-                "Use of a dynamic default in a Range trait is deprecated. "
-                "Supply a default via a _mytrait_default method instead."
-            ),
-            category=DeprecationWarning,
-            stacklevel=3,
-        )
-
-    # Determine the default to use. In legacy mode, if the value is None,
-    # we use low if low is not None, else high if high is not None.
-    if default is None:
-        if low is not None:
-            default = low
-        elif high is not None:
-            default = high
-
-    if default is None:
-        return default, None, trait_type()
-    elif isinstance(default, six.string_types):
-        return default, default, trait_type()
-    else:
-        return default, None, trait_type(default)
+    return trait_type() if default is None else trait_type(default)
 
 
 class BaseRange(TraitType):
@@ -1914,30 +1887,32 @@ class BaseRange(TraitType):
             ``DeprecationWarning`` is issued. This may become an error in a
             future Traits release.
         """
-        # The legacy mode is provided for backwards compatibility.
-        # For new code, it's recommended to supply value_trait
-        # or use IntRange or FloatRange. Related: enthought/traits#590.
-        legacy_mode = value_trait is None
+        value_name = None
 
-        if legacy_mode:
-            value, value_name, value_trait = _infer_range_value_trait(
-                low, high, value)
-        else:
-            value_name = None
+        if value_trait is None:
+            # Legacy mode. Re-interpret inputs for backwards compatibility.
+            if isinstance(value, six.string_types):
+                warnings.warn(
+                    message=(
+                        "Use of a dynamic default in a Range trait is "
+                        "deprecated. Supply a default via a _mytrait_default "
+                        "method instead."
+                    ),
+                    category=DeprecationWarning,
+                    stacklevel=2,
+                )
+            if value is None:
+                value = low if low is not None else high
 
-        value_trait = trait_from(value_trait)
-
-        if (legacy_mode and low_name is None
-                and isinstance(low, six.string_types)):
-            low_name = low
-            low = None
-        if (legacy_mode and high_name is None
-                and isinstance(high, six.string_types)):
-            high_name = high
-            high = None
-
-        if clip_on_get is None:
-            clip_on_get = legacy_mode and not (low_name is high_name is None)
+            if isinstance(low, six.string_types) and low_name is None:
+                low_name, low = low, None
+            if isinstance(high, six.string_types) and high_name is None:
+                high_name, high = high, None
+            if isinstance(value, six.string_types):
+                value_name, value = value, None
+            value_trait = _infer_range_value_trait(low, high, value)
+            if clip_on_get is None and not (low_name is high_name is None):
+                clip_on_get = True
 
         if low_name is not None and low is not None:
             raise TraitError(
@@ -1946,6 +1921,8 @@ class BaseRange(TraitType):
         if high_name is not None and high is not None:
             raise TraitError(
                 "At most one of *high* and *high_name* should be provided.")
+
+        value_trait = trait_from(value_trait)
 
         super(BaseRange, self).__init__(**metadata)
 
