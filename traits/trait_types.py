@@ -29,7 +29,7 @@ import operator
 import re
 import sys
 from os.path import isfile, isdir
-from types import CodeType, FunctionType, MethodType, ModuleType
+from types import FunctionType, MethodType, ModuleType
 import uuid
 import warnings
 
@@ -51,6 +51,7 @@ from .trait_base import (
 
 from .trait_handlers import (
     TraitType,
+    TraitInstance,
     TraitListObject,
     TraitSetObject,
     TraitSetEvent,
