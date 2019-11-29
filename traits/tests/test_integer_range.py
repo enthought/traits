@@ -152,6 +152,10 @@ class DynamicRangesModel(HasTraits):
         low="low_bound", high="high_bound", value=73, value_trait=Int(),
     )
 
+    dynamic_with_static_default_legacy = Range(
+        low="low_bound", high="high_bound", value=73.0,
+    )
+
     # Dynamic high value
     dynamic_high = Range(low=0, high="high_bound")
 
@@ -659,9 +663,8 @@ class TestDynamicRange(unittest.TestCase):
 
     def test_bad_dynamic_default(self):
         self.model.default = 27.0
-        # Default does not get validated.
-        self.assertIs(type(self.model.dynamic_default), float)
-        self.assertEqual(self.model.dynamic_default, 27.0)
+        with self.assertRaises(TraitError):
+            self.model.dynamic_default
 
     def test_dynamic_no_default(self):
         self.model.low_bound = None
@@ -675,19 +678,27 @@ class TestDynamicRange(unittest.TestCase):
     def test_dynamic_with_static_default(self):
         self.assertIdentical(self.model.dynamic_with_static_default, 73)
         self.model.high_bound = 50
-        self.assertIdentical(self.model.dynamic_with_static_default, 50)
+        # No clip-on-get if not in legacy mode.
+        self.assertIdentical(self.model.dynamic_with_static_default, 73)
+
+    def test_dynamic_with_static_default_legacy(self):
+        self.assertIdentical(self.model.dynamic_with_static_default_legacy, 73.0)
+        self.model.high_bound = 50
+        self.assertIdentical(self.model.dynamic_with_static_default_legacy, 50)
         # dynamic low and high values aren't validated.
         self.model.high_bound = 45.0
-        self.assertIdentical(self.model.dynamic_with_static_default, 45.0)
+        self.assertIdentical(self.model.dynamic_with_static_default_legacy, 45.0)
 
     def test_dynamic_default_all_none(self):
         self.model.low_bound = None
         self.model.high_bound = None
         self.model.default = None
 
-        # default is not validated
-        self.assertIsNone(self.model.full_dynamic_int)
-        self.assertIsNone(self.model.full_dynamic_float)
+        # default *is* validated for CALLABLE_DEFAULT_VALUE
+        with self.assertRaises(TraitError):
+            self.model.full_dynamic_int
+        with self.assertRaises(TraitError):
+            self.assertIsNone(self.model.full_dynamic_float)
 
     def test_get_default_value_constant_default(self):
         range_trait = Range("low", "high", 3, value_trait=Int())

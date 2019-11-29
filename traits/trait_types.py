@@ -1822,6 +1822,7 @@ class BaseRange(TraitType):
         value=None,
         exclude_low=False,
         exclude_high=False,
+        clip_on_get=None,
         value_trait=None,
         **metadata
     ):
@@ -1853,11 +1854,20 @@ class BaseRange(TraitType):
               default. If neither *low* nor *high* is provided, the default
               is ``0.0``.
         exclude_low : bool, optional
-            Indicates whether the low end of the range is exclusive.
-            By default, the low end is inclusive.
+            If true, the lower bound of the range is excluded. Otherwise
+            it's included. The default is to include the lower bound.
         exclude_high : bool, optional
-            Indicates whether the high end of the range is exclusive.
-            By default, the high end is inclusive.
+            If true, the upper bound of the range is excluded. Otherwise
+            it's included. The default is to include the upper bound.
+        clip_on_get : bool, optional
+            If true, the ``get`` operation for this trait clips the stored
+            value to lie in [low, high]. Otherwise, the stored value is
+            returned as-is, and may be out of range if either low or high
+            has changed since the value was validated.
+
+            In legacy mode, the default is to clip if either the low or
+            high is dynamic. In normal mode, the default is not to clip.
+            Use of this option is not recommended in new code.
         value_trait : TraitType, optional
             A trait type, or object convertible to a trait type, representing
             the value type for the range. For a numeric range, Int() or Float()
@@ -1871,47 +1881,46 @@ class BaseRange(TraitType):
             ``DeprecationWarning`` is issued. This may become an error in a
             future Traits release.
         """
-        if value_trait is None:
-            # This branch is provided for backwards compatibility.
-            # For new code, it's recommended to supply value_trait
-            # or use IntRange or FloatRange. Related: enthought/traits#590.
+        # The legacy mode is provided for backwards compatibility.
+        # For new code, it's recommended to supply value_trait
+        # or use IntRange or FloatRange. Related: enthought/traits#590.
+        legacy_mode = value_trait is None
+
+        if legacy_mode:
             value, value_trait = _infer_range_value_trait(low, high, value)
 
         value_trait = trait_from(value_trait)
 
-        low_name = low if isinstance(low, six.string_types) else ""
-        high_name = high if isinstance(high, six.string_types) else ""
-        value_name = value if isinstance(value, six.string_types) else ""
+        low_name = low if isinstance(low, six.string_types) else None
+        high_name = high if isinstance(high, six.string_types) else None
+        value_name = value if isinstance(value, six.string_types) else None
 
-        if low_name or high_name or value_name:
-            # Dynamic case
-            super(BaseRange, self).__init__(**metadata)
+        if clip_on_get is None:
+            clip_on_get = legacy_mode and not (low_name is high_name is None)
 
+        super(BaseRange, self).__init__(**metadata)
+
+        self.default_value_type = CALLABLE_DEFAULT_VALUE
+        self.default_value = self._get_default_value
+
+        # For clip_on_get, need to override get and set.
+        if clip_on_get:
             self.get = self._get
             self.set = self._set
             self.validate = None
 
-            self.default_value_type = CALLABLE_DEFAULT_VALUE
-            self.default_value = self._get_default_value
-
-        else:
-            # Static case
-
-            # XXX Wrong! default should be evaluated lazily at time of need!
-            # Even though low, high and value are static, the value_trait
-            # may still produce a context-dependent default.
-            if value is None:
-                value = value_trait.default_value()[1]
-
-            super(BaseRange, self).__init__(default_value=value, **metadata)
-
-            # Fast validation currently only possible for the Float value type.
-            if isinstance(value_trait.trait_type, Float):
-                low_ok = low is None or type(low) is float
-                high_ok = high is None or type(high) is float
-                if low_ok and high_ok:
-                    exclude_mask = bool(exclude_low) | bool(exclude_high) << 1
-                    self.init_fast_validator(4, low, high, exclude_mask)
+        can_use_fast_validation = (
+            not clip_on_get
+            and low_name is high_name is None
+            and isinstance(value_trait.trait_type, Float)
+            and low is None or isinstance(low, float)
+            and high is None or isinstance(high, float)
+        )
+        # XXX Get rid of the debugging "and False"
+        if can_use_fast_validation and False:
+            exclude_mask = bool(exclude_low) | bool(exclude_high) << 1
+            self.init_fast_validator(
+                4, float(low), float(high), exclude_mask)
 
         #: Assign type-corrected arguments to handler attributes:
         self._low = low
@@ -1988,27 +1997,27 @@ class BaseRange(TraitType):
         self.error(object, name, original_value)
 
     def _get_bounds(self, object):
-        if self._low_name:
-            low = xgetattr(object, self._low_name)
-        else:
+        if self._low_name is None:
             low = self._low
-
-        if self._high_name:
-            high = xgetattr(object, self._high_name)
         else:
+            low = xgetattr(object, self._low_name)
+
+        if self._high_name is None:
             high = self._high
+        else:
+            high = xgetattr(object, self._high_name)
 
         return low, high
 
     def _get_default_value(self, object):
         """ Returns the default value of the range.
         """
-        if self._value_name:
-            value = xgetattr(object, self._value_name)
-        else:
+        if self._value_name is None:
             value = self._value
             if value is None:
                 value = self._value_trait.default_value()[1]
+        else:
+            value = xgetattr(object, self._value_name)
         return value
 
     def _get(self, object, name, trait):
@@ -2091,15 +2100,15 @@ class BaseRange(TraitType):
         if auto_set is None:
             auto_set = True
 
-        if self._low_name:
-            low_name = "object." + self._low_name
-        else:
+        if self._low_name is None:
             low_name = ""
-
-        if self._high_name:
-            high_name = "object." + self._high_name
         else:
+            low_name = "object." + self._low_name
+
+        if self._high_name is None:
             high_name = ""
+        else:
+            high_name = "object." + self._high_name
 
         return RangeEditor(
             self,
