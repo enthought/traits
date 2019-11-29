@@ -21,11 +21,10 @@ Tests for the Range trait with value type int.
 # XXX Add tests for other possible value_types: Int(), Int, int,
 # Float(), Float, float should all work.
 
-# XXX Add tests for non-numeric trait types: e.g., Str, Tuple, Date
-
 # XXX Add tests for cloning / pickling?
 
 
+import datetime
 import operator
 import unittest
 import warnings
@@ -34,12 +33,14 @@ from traits.api import (
     Any,
     BaseRange,
     CTrait,
+    Date,
     Either,
     Float,
     HasTraits,
     Instance,
     Int,
     Range,
+    Str,
     TraitError,
 )
 from traits.testing.optional_dependencies import numpy, requires_numpy
@@ -928,6 +929,61 @@ class TestRangeClipOnGet(unittest.TestCase):
     def assertIdentical(self, actual, expected):
         self.assertIs(type(actual), type(expected))
         self.assertEqual(actual, expected)
+
+
+class HasNonNumericRanges(HasTraits):
+    foo = Range("i", "o", "kanga", exclude_high=True, value_trait=Str())
+
+    bar = Range(
+        datetime.date(1931, 1, 1),
+        datetime.date(1940, 12, 31),
+        datetime.date(1932, 5, 5),
+        value_trait=Date(),
+    )
+
+
+class TestNonNumericRanges(unittest.TestCase):
+    def test_str_range(self):
+        model = HasNonNumericRanges()
+        self.assertEqual(model.foo, "kanga")
+
+        valid_values = ["i", "ii", "jkl", "nzz"]
+        invalid_values = ["hzzz", "o", "oa", "zzz"]
+
+        for value in valid_values:
+            model.foo = value
+            self.assertEqual(model.foo, value)
+
+        for value in invalid_values:
+            old_value = model.foo
+            with self.assertRaises(TraitError):
+                model.foo = value
+            self.assertEqual(model.foo, old_value)
+
+    def test_date_range(self):
+        model = HasNonNumericRanges()
+        self.assertEqual(model.bar, datetime.date(1932, 5, 5))
+
+        valid_values = [
+            datetime.date(1931, 1, 1),
+            datetime.date(1936, 9, 17),
+            datetime.date(1940, 12, 31),
+        ]
+
+        invalid_values = [
+            datetime.date(1930, 12, 31),
+            datetime.date(1941, 1, 1),
+        ]
+
+        for value in valid_values:
+            model.bar = value
+            self.assertEqual(model.bar, value)
+
+        for value in invalid_values:
+            old_value = model.bar
+            with self.assertRaises(TraitError):
+                model.bar = value
+            self.assertEqual(model.bar, old_value)
 
 
 class TestFullInfo(unittest.TestCase):
