@@ -919,3 +919,52 @@ class TestRangeClipOnGet(unittest.TestCase):
     def assertIdentical(self, actual, expected):
         self.assertIs(type(actual), type(expected))
         self.assertEqual(actual, expected)
+
+
+class TestFullInfo(unittest.TestCase):
+    def test_full_info(self):
+        # Test pairs (range_trait, expected_info_text)
+        infos = [
+            (
+                Range(low=-6, high=7, value_trait=Int()),
+                "-6 <= an integer <= 7",
+            ),
+            (
+                Range(low=-6, high=7, exclude_low=True, value_trait=Int()),
+                "-6 < an integer <= 7",
+            ),
+            (
+                Range(low=-6, high=7, exclude_high=True, value_trait=Int()),
+                "-6 <= an integer < 7",
+            ),
+            (
+                Range(
+                    low=-6,
+                    high=7,
+                    exclude_low=True,
+                    exclude_high=True,
+                    value_trait=Int(),
+                ),
+                "-6 < an integer < 7",
+            ),
+            (Range(low=-6, high=None, value_trait=Int()), "an integer >= -6"),
+            (
+                Range(low=-6, high=None, exclude_low=True, value_trait=Int()),
+                "an integer > -6",
+            ),
+            (Range(low=None, high=7, value_trait=Int()), "an integer <= 7"),
+            (
+                Range(low=None, high=7, exclude_high=True, value_trait=Int()),
+                "an integer < 7",
+            ),
+            (Range(low=None, high=None, value_trait=Int()), "an integer"),
+            (
+                Range(low=-3.5, high=4.2, value_trait=Float()),
+                "-3.5 <= a float <= 4.2",
+            ),
+            (Range(low=None, high=None, value_trait=Float()), "a float"),
+        ]
+
+        for range_trait, expected_info in infos:
+            actual_info = range_trait.full_info(None, "dummy", None)
+            self.assertEqual(actual_info, expected_info)

@@ -2082,31 +2082,22 @@ class BaseRange(TraitType):
         """
         low, high = self._get_bounds(object)
 
-        value_info = self._value_trait.full_info(object, name, value)
+        if low is None and high is None:
+            template = "{value_info}"
+        elif low is None and high is not None:
+            template = "{value_info} {cmp_high} {high}"
+        elif low is not None and high is None:
+            template = "{value_info} {rcmp_low} {low}"
+        else:
+            template = "{low} {cmp_low} {value_info} {cmp_high} {high}"
 
-        if low is None:
-            if high is None:
-                return value_info
-
-            return "%s <%s %s" % (
-                value_info,
-                "="[self._exclude_high:],
-                high,
-            )
-
-        elif high is None:
-            return "%s >%s %s" % (
-                value_info,
-                "="[self._exclude_low:],
-                low,
-            )
-
-        return "%s <%s %s <%s %s" % (
-            low,
-            "="[self._exclude_low:],
-            value_info,
-            "="[self._exclude_high:],
-            high,
+        return template.format(
+            low=low,
+            high=high,
+            value_info=self._value_trait.full_info(object, name, value),
+            cmp_high=("<" if self._exclude_high else "<="),
+            cmp_low=("<" if self._exclude_low else "<="),
+            rcmp_low=(">" if self._exclude_low else ">="),
         )
 
     def inner_traits(self):
