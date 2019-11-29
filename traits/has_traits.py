@@ -46,7 +46,6 @@ from .traits import (
     CTrait,
     ForwardProperty,
     Property,
-    SpecialNames,
     Trait,
     TraitFactory,
     __newobj__,
@@ -54,7 +53,7 @@ from .traits import (
     trait_factory,
 )
 
-from .trait_types import Any, Bool, Disallow, Enum, Event, Python, This
+from .trait_types import Any, Bool, Disallow, Event, Python
 
 from .trait_notifiers import (
     ExtendedTraitChangeNotifyWrapper,
@@ -77,7 +76,6 @@ from .trait_base import (
     SequenceTypes,
     TraitsCache,
     Undefined,
-    add_article,
     is_none,
     not_event,
     not_false,
@@ -539,7 +537,6 @@ def update_traits_class_dict(class_name, bases, class_dict):
     prefix_traits = {}
     listeners = {}
     prefix_list = []
-    override_bases = bases
     view_elements = ViewElements()
 
     # Create a list of just those base classes that derive from HasTraits:
@@ -668,7 +665,6 @@ def update_traits_class_dict(class_name, bases, class_dict):
                     # has the correct initializer.
                     value.default_value(MISSING_DEFAULT_VALUE, value.default)
                     del class_dict[name]
-                    override_bases = []
                     handler = value.handler
                     if (handler is not None) and handler.is_mapped:
                         class_traits[name + "_"] = _mapped_trait_for(value)
@@ -676,7 +672,6 @@ def update_traits_class_dict(class_name, bases, class_dict):
 
     # Process all HasTraits base classes:
     migrated_properties = {}
-    implements = []
     for base in hastraits_bases:
         base_dict = base.__dict__
 
@@ -3633,7 +3628,7 @@ class SingletonHasTraits(HasTraits):
     """
 
     def __new__(cls, *args, **traits):
-        if not "_the_instance" in cls.__dict__:
+        if "_the_instance" not in cls.__dict__:
             cls._the_instance = HasTraits.__new__(cls, *args, **traits)
         return cls._the_instance
 
