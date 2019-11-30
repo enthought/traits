@@ -1703,6 +1703,7 @@ class Directory(BaseDirectory):
 
 # Machinery to infer the value type to use for a Range trait.
 
+
 def _is_numeric(value):
     """
     Determine whether a value is numeric, and return its type if so.
@@ -1910,11 +1911,13 @@ class BaseRange(TraitType):
 
         if low_name is not None and low is not None:
             raise TraitError(
-                "At most one of *low* and *low_name* should be provided.")
+                "At most one of *low* and *low_name* should be provided."
+            )
 
         if high_name is not None and high is not None:
             raise TraitError(
-                "At most one of *high* and *high_name* should be provided.")
+                "At most one of *high* and *high_name* should be provided."
+            )
 
         value_trait = trait_from(value_trait)
 
@@ -1942,7 +1945,7 @@ class BaseRange(TraitType):
                 4,
                 None if low is None else float(low),
                 None if high is None else float(high),
-                bool(exclude_low) | bool(exclude_high) << 1
+                bool(exclude_low) | bool(exclude_high) << 1,
             )
 
         #: Assign type-corrected arguments to handler attributes:
@@ -2004,16 +2007,13 @@ class BaseRange(TraitType):
         low, high = self._get_bounds(object)
 
         if (
-            (
-                (low is None)
-                or (self._exclude_low and (low < value))
-                or ((not self._exclude_low) and (low <= value))
-            )
-            and (
-                (high is None)
-                or (self._exclude_high and (high > value))
-                or ((not self._exclude_high) and (high >= value))
-            )
+            (low is None)
+            or (self._exclude_low and (low < value))
+            or ((not self._exclude_low) and (low <= value))
+        ) and (
+            (high is None)
+            or (self._exclude_high and (high > value))
+            or ((not self._exclude_high) and (high >= value))
         ):
             return value
 
