@@ -1704,51 +1704,48 @@ class Directory(BaseDirectory):
 # Machinery to infer the value type to use for a Range trait.
 
 
-def _is_numeric(value):
+def _bound_type(bound_name, bound_value):
     """
-    Determine whether a value is numeric, and return its type if so.
+    Determine the type of a numeric bound.
 
-    Here numeric means either int-like or float-like.
+    Returns ``Int`` if the bound can be interpreted as an integer, using
+    the same rules as for the ``Int`` trait type validation. Returns
+    ``Float`` if the bound cannot be interpreted as an integer, but can be
+    interpreted as a float, using the same validation rules as the ``Float``
+    trait type.
 
     Parameters
     ----------
-    value : object
-        The value to be tested.
+    bound_name : str
+        Name of the bound, for use in error reporting.
+    bound_value : number
+        Value of the bound.
 
     Returns
     -------
-    is_numeric : bool
-        True if the value has a numeric type, else False
-    value_type : one of (int, float, None)
-        int if the value is integer-like; float if the value is float-like,
-        None if neither of those is true.
+    bound_type : subclass of TraitType
+        Either Int or Float
 
     Raises
     ------
     TraitError
-        If *value* is not None, not a string, not an integer and
-        not a floating-point number.
+        If the bound cannot be interpreted as either Int or Float.
     """
-    if value is None:
-        return False, None
-
-    try:
-        _validate_int(value)
-    except TypeError:
-        pass
-    else:
-        return True, int
-
-    try:
-        _validate_float(value)
-    except TypeError:
-        pass
-    else:
-        return True, float
+    for trait_type in [Int, Float]:
+        try:
+            trait_type().validate(None, bound_name, bound_value)
+        except TraitError:
+            pass
+        else:
+            return trait_type
 
     raise TraitError(
-        "value should be an integer, a floating-point number, or a string. "
-        "Got {!r}".format(value)
+        "The {!r} range parameter should be {}, {} or None. Got {!r}".format(
+            bound_name,
+            Int.info_text,
+            Float.info_text,
+            bound_value,
+        )
     )
 
 
@@ -1770,18 +1767,19 @@ def _infer_range_value_trait(low, high, default):
     Raises
     ------
     TraitError
-        If any of *low*, *high* and *default* is not None, is not a string,
+        If either *low* or *high* is not None, is not a string,
         not an integer and not a floating-point number.
 
     """
-    value_types = [
-        value_type
-        for is_numeric, value_type in map(_is_numeric, [low, high])
-        if is_numeric
+    bound_types = [
+        _bound_type(bound_name, bound_value)
+        for bound_name, bound_value in [("low", low), ("high", high)]
+        if bound_value is not None
     ]
 
-    # For backwards compatibility, assume Float if no value_type is given.
-    if not value_types:
+    if bound_types:
+        trait_type = Float if Float in bound_types else Int
+    else:
         warnings.warn(
             message=(
                 "Unable to infer a value type for this Range instance. "
@@ -1794,8 +1792,6 @@ def _infer_range_value_trait(low, high, default):
             stacklevel=3,
         )
         trait_type = Float
-    else:
-        trait_type = Float if float in value_types else Int
 
     return trait_type() if default is None else trait_type(default)
 
