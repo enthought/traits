@@ -56,29 +56,6 @@ static PyTypeObject * ctrait_type;     /* Python-level CTrait type reference */
 |  Macro definitions:
 +----------------------------------------------------------------------------*/
 
-/* The following macro is automatically defined in Python 2.4 and later: */
-#ifndef Py_VISIT
-#define Py_VISIT(op) \
-do { \
-    if (op) { \
-        int vret = visit((PyObject *)(op), arg);        \
-        if (vret) return vret; \
-    } \
-} while (0)
-#endif
-
-/* The following macro is automatically defined in Python 2.4 and later: */
-#ifndef Py_CLEAR
-#define Py_CLEAR(op) \
-do { \
-    if (op) { \
-        PyObject *tmp = (PyObject *)(op); \
-        (op) = NULL;     \
-        Py_DECREF(tmp); \
-    } \
-} while (0)
-#endif
-
 #define DEFERRED_ADDRESS(ADDR) NULL
 #define PyTrait_CheckExact(op) ((op)->ob_type == ctrait_type)
 
