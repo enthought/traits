@@ -1029,3 +1029,64 @@ class TestFullInfo(unittest.TestCase):
         for range_trait, expected_info in infos:
             actual_info = range_trait.full_info(None, "dummy", None)
             self.assertEqual(actual_info, expected_info)
+
+
+class DefaultDeferralModel(HasTraits):
+    low = Float(-10.0)
+    high = Float(10.0)
+
+    range1 = Range(low=-2.3, high=4.5)
+    range2 = Range(low=-2.3, high="high")
+    range2a = Range(low=-2.3, high_name="high")
+    range3 = Range(low=-2.3)
+
+    range4 = Range(low="low", high=4.5)
+    range5 = Range(low="low", high="high")
+    range5b = Range(low="low", high_name="high")
+    range6 = Range(low="low")
+
+    range4a = Range(low_name="low", high=4.5)
+    range5a = Range(low_name="low", high="high")
+    range5c = Range(low_name="low", high_name="high")
+    range6a = Range(low_name="low")
+
+    range7 = Range(high=4.5)
+    range8 = Range(high="high")
+    range8a = Range(high_name="high")
+    range9 = Range()
+
+
+class TestLegacyRangeDefaultDeferral(unittest.TestCase):
+    def test_default_deferral(self):
+
+        model = DefaultDeferralModel()
+
+        # Defer to low if given.
+        self.assertIdentical(model.range1, -2.3)
+        self.assertIdentical(model.range2, -2.3)
+        self.assertIdentical(model.range2a, -2.3)
+        self.assertIdentical(model.range3, -2.3)
+
+        # ... even if low is a string
+        self.assertIdentical(model.range4, -10.0)
+        self.assertIdentical(model.range5, -10.0)
+        self.assertIdentical(model.range5b, -10.0)
+        self.assertIdentical(model.range6, -10.0)
+
+        self.assertIdentical(model.range4a, -10.0)
+        self.assertIdentical(model.range5a, -10.0)
+        self.assertIdentical(model.range5c, -10.0)
+        self.assertIdentical(model.range6a, -10.0)
+
+        # if no low, defer to high
+        self.assertIdentical(model.range7, 4.5)
+        self.assertIdentical(model.range8, 10.0)
+        self.assertIdentical(model.range8a, 10.0)
+
+        # and if neither low nor high given, use the (inferred) value_trait
+        # default of 0.0
+        self.assertIdentical(model.range9, 0.0)
+
+    def assertIdentical(self, actual, expected):
+        self.assertIs(type(actual), type(expected))
+        self.assertEqual(actual, expected)

@@ -1893,7 +1893,11 @@ class BaseRange(TraitType):
                     stacklevel=2,
                 )
             if value is None:
-                value = low if low is not None else high
+                # Defer to low, low_name, high and high_name, in that order.
+                for bound in low, low_name, high, high_name:
+                    if bound is not None:
+                        value = bound
+                        break
 
             if isinstance(low, six.string_types) and low_name is None:
                 low_name, low = low, None
