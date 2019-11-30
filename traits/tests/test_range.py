@@ -251,18 +251,18 @@ def BaseRangeCompound(*args, **kwargs):
     return Either(impossible, BaseRange(*args, **kwargs))
 
 
-ModelWithRange = IntModelFactory("ModelWithRange", RangeFactory=Range)
+IntModelWithRange = IntModelFactory("IntModelWithRange", RangeFactory=Range)
 
-ModelWithBaseRange = IntModelFactory(
-    "ModelWithBaseRange", RangeFactory=BaseRange
+IntModelWithBaseRange = IntModelFactory(
+    "IntModelWithBaseRange", RangeFactory=BaseRange
 )
 
-ModelWithRangeCompound = IntModelFactory(
-    "ModelWithRangeCompound", RangeFactory=RangeCompound
+IntModelWithRangeCompound = IntModelFactory(
+    "IntModelWithRangeCompound", RangeFactory=RangeCompound
 )
 
-ModelWithBaseRangeCompound = IntModelFactory(
-    "ModelWithBaseRangeCompound", RangeFactory=BaseRangeCompound,
+IntModelWithBaseRangeCompound = IntModelFactory(
+    "IntModelWithBaseRangeCompound", RangeFactory=BaseRangeCompound,
 )
 
 
@@ -492,28 +492,28 @@ class CommonIntRangeTests(object):
 class TestIntRange(CommonIntRangeTests, unittest.TestCase):
     def setUp(self):
         self.range_factory = Range
-        self.model = ModelWithRange()
+        self.model = IntModelWithRange()
         self.compound = False
 
 
 class TestIntBaseRange(CommonIntRangeTests, unittest.TestCase):
     def setUp(self):
         self.range_factory = BaseRange
-        self.model = ModelWithBaseRange()
+        self.model = IntModelWithBaseRange()
         self.compound = False
 
 
 class TestIntRangeCompound(CommonIntRangeTests, unittest.TestCase):
     def setUp(self):
         self.range_factory = RangeCompound
-        self.model = ModelWithRangeCompound()
+        self.model = IntModelWithRangeCompound()
         self.compound = True
 
 
 class TestIntBaseRangeCompound(CommonIntRangeTests, unittest.TestCase):
     def setUp(self):
         self.range_factory = BaseRangeCompound
-        self.model = ModelWithBaseRangeCompound()
+        self.model = IntModelWithBaseRangeCompound()
         self.compound = True
 
 
@@ -1172,18 +1172,18 @@ def BaseRangeCompound(*args, **kwargs):
     return Either(impossible, BaseRange(*args, **kwargs))
 
 
-ModelWithRange = FloatModelFactory("ModelWithRange", RangeFactory=Range)
+FloatModelWithRange = FloatModelFactory("FloatModelWithRange", RangeFactory=Range)
 
-ModelWithBaseRange = FloatModelFactory(
-    "ModelWithBaseRange", RangeFactory=BaseRange
+FloatModelWithBaseRange = FloatModelFactory(
+    "FloatModelWithBaseRange", RangeFactory=BaseRange
 )
 
-ModelWithRangeCompound = FloatModelFactory(
-    "ModelWithRangeCompound", RangeFactory=RangeCompound,
+FloatModelWithRangeCompound = FloatModelFactory(
+    "FloatModelWithRangeCompound", RangeFactory=RangeCompound,
 )
 
-ModelWithBaseRangeCompound = FloatModelFactory(
-    "ModelWithBaseRangeCompound", RangeFactory=BaseRangeCompound,
+FloatModelWithBaseRangeCompound = FloatModelFactory(
+    "FloatModelWithBaseRangeCompound", RangeFactory=BaseRangeCompound,
 )
 
 
@@ -1436,28 +1436,28 @@ class CommonFloatRangeTests(object):
 class TestFloatRange(CommonFloatRangeTests, unittest.TestCase):
     def setUp(self):
         self.range_factory = Range
-        self.model = ModelWithRange()
+        self.model = FloatModelWithRange()
         self.compound = False
 
 
 class TestFloatBaseRange(CommonFloatRangeTests, unittest.TestCase):
     def setUp(self):
         self.range_factory = BaseRange
-        self.model = ModelWithBaseRange()
+        self.model = FloatModelWithBaseRange()
         self.compound = False
 
 
 class TestFloatRangeCompound(CommonFloatRangeTests, unittest.TestCase):
     def setUp(self):
         self.range_factory = RangeCompound
-        self.model = ModelWithRangeCompound()
+        self.model = FloatModelWithRangeCompound()
         self.compound = True
 
 
 class TestFloatBaseRangeCompound(CommonFloatRangeTests, unittest.TestCase):
     def setUp(self):
         self.range_factory = BaseRangeCompound
-        self.model = ModelWithBaseRangeCompound()
+        self.model = FloatModelWithBaseRangeCompound()
         self.compound = True
 
 
