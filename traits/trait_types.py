@@ -1816,67 +1816,90 @@ class BaseRange(TraitType):
         value_trait=None,
         **metadata
     ):
-        """ Creates a Range trait.
+        """
+        Initialize a Range trait.
+
+        There are two modes for Range trait creation: "typed mode", in which
+        the *value_trait* argument is explicitly given, and "legacy mode", in
+        which *value_trait* is not given and the value type for the trait is
+        inferred from other arguments. The legacy mode maintains backwards
+        compatibility with existing code, and its behaviour differs from typed
+        mode in a number of ways, described below. New code should use typed
+        mode.
 
         Parameters
         ----------
-        low : number or string; optional
-            The lower bound for the range. If *low* is not given, the
-            range is not bounded below.
+        low : value or None, optional
+            The lower bound of the range. If *low* is not given or is *None*,
+            the range is not bounded below.
 
-            If *low* is a string, then in legacy mode, *low* is interpreted
-            as the name of an extended trait providing a dynamic lower bound.
-            In normal mode, a string is used directly as a lower bound, and
-            the *low_name* parameter should be used to supply a dynamic
-            lower bound.
-        high : number or string; optional
-            The upper bound of the range. If *high* is not given, the
-            range is not bounded above.
+            In legacy mode, if *low* is a string and *low_name* is not given,
+            *low* is interpreted as the name of an extended trait providing
+            a dynamic lower bound. Further, in legacy mode, if *low* is not
+            *None* and not a string, it must be a number, compatible
+            with either ``Int()`` or ``Float()``.
+        high : value or None, optional
+            The upper bound of the range. If *high* is not given or is *None*,
+            the range is not bounded above.
 
-            If *high* is a string, then in legacy mode, *high* is interpreted
-            as the name of an extended trait providing a dynamic upper bound.
-            In normal mode, a string is used directly as an upper bound, and
-            the *high_name* parameter should be used to supply a dynamic
-            upper bound.
-        value : integer, float or string; optional.
-            The default value for the range. A string is interpreted
-            as an extended trait name providing a dynamic default.
-            If *value* is not given, the rules for determining the default
-            differ depending on whether *value_trait* was specified or not:
+            In legacy mode, if *high* is a string and *high_name* is not given,
+            *high* is interpreted as the name of an extended trait providing
+            a dynamic upper bound. Further, in legacy mode, if *high* is not
+            *None* and not a string, it must be a number, compatible
+            with either ``Int()`` or ``Float()``.
+        value : value or None, optional
+            The default value for this trait. If *value* is not given or is
+            *None*, then in typed mode the default value for this trait
+            is the default of the value_trait.
 
-            - If *value_trait* is given, then the default of *value_trait*
-              is used.
-            - If *value_trait* is not given, then if *low* is provided,
-              it's used as the default (even if dynamic). If *low* is not
-              provided but *high* is provided, then *high* provides the
-              default. If neither *low* nor *high* is provided, the default
-              is ``0.0``.
+            In legacy mode, if *value* is a string then *value* is interpreted
+            as the name of an extended trait providing a dynamic default. If
+            *value* is not given or is *None* then the default value is taken
+            from the first of *low*, *low_name*, *high* or *high_name* that is
+            not *None*. If all of these are *None*, the default value is
+            ``0.0``.
+
+            Use of a dynamic default is not permitted in typed mode, and is
+            deprecated in legacy mode.
         exclude_low : bool, optional
-            If true, the lower bound of the range is excluded. Otherwise
-            it's included. The default is to include the lower bound.
+            If true, the lower bound of the range is excluded. Otherwise the
+            lower bound is included. The default is to include the lower bound.
         exclude_high : bool, optional
-            If true, the upper bound of the range is excluded. Otherwise
-            it's included. The default is to include the upper bound.
+            If true, the upper bound of the range is excluded. Otherwise the
+            upper bound is included. The default is to include the upper bound.
         low_name : string, optional
-            If given, a string giving an extended trait name providing
-            a dynamic lower bound. When evaluated, that trait is permitted
-            to return *None*, indicating that the range is not bounded below.
+            If given, a string giving an extended trait name. The extended
+            trait name is used to provide a dynamic lower bound. The trait used
+            for the lower bound is permitted to return *None* on evaluation,
+            indicating the the range is not bounded below. This parameter
+            is mutually exclusive with the *low* parameter.
         high_name : string, optional
-            If given, a string giving an extended trait name providing
-            a dynamic upper bound. When evaluated, that trait is permitted
-            to return *None*, indicating that therange is not bounded above.
+            If given, a string giving an extended trait name. The extended
+            trait name is used to provide a dynamic upper bound. The trait used
+            for the upper bound is permitted to return *None* on evaluation,
+            indicating the the range is not bounded above. This parameter
+            is mutually exclusive with the *high* parameter.
         value_trait : TraitType, optional
             A trait type, or object convertible to a trait type, representing
             the value type for the range. For a numeric range, Int() or Float()
-            would be typical. In new code, it's recommended that *value_trait*
-            always be provided.
+            would be typical. New code should always provide this argument.
 
-            If *value_trait* is not provided, the type is
-            inferred from *low*, *high* and *value*, provided at least one of
-            those has numeric type. If none of *low*, *high* and *value* has
-            numeric type, a value type of ``Float`` is assumed and a
-            ``DeprecationWarning`` is issued. This may become an error in a
-            future Traits release.
+            If *value_trait* is not provided, this ``Range`` trait is created
+            in legacy mode. The value trait is either ``Int()`` or ``Float()``,
+            and is inferred from *low* and *high*, provided that at least one
+            of those values is numeric. If neither *low* nor *high* is numeric
+            (both are absent, *None*, or a string), a value type of
+            ``Float()`` is used, and a ``DeprecationWarning`` is issued.
+
+        Additional notes: in legacy mode, if either the lower bound or the
+        upper bound is dynamic (that is, either *low* or *high* is a string,
+        or at least one of *low_name* and *high_name* is provided), the value
+        of the range trait is clipped at trait "get" time to lie in the
+        closed range [low_bound, high_bound]. This clipping is problematic:
+        the observed value of the trait can change without any notification
+        being issued, and if either of the bounds is exclusive then the
+        clipped value may still not be valid for the given range. In typed
+        mode, no clipping is performed.
         """
         value_name = None
         clip_on_get = False
