@@ -892,18 +892,6 @@ def Trait(*value_type, **metadata):
           old and new values are not equal using Python's
           'rich comparison' operator. This is the default.
 
-    rich_compare : bool
-        Indicates whether the basis for considering a trait attribute value to
-        have changed is a "rich" comparison (True, the default), or simple
-        object identity (False). This attribute can be useful in cases
-        where a detailed comparison of two objects is very expensive, or where
-        you do not care whether the details of an object change, as long as the
-        same object is used.
-
-            .. deprecated:: 3.0.3
-                Use ``comparison_mode`` instead
-
-
     """
     return _TraitMaker(*value_type, **metadata).as_ctrait()
 
@@ -1161,12 +1149,6 @@ class _TraitMaker(object):
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
                 trait.is_mapped(handler.is_mapped)
-
-        # Note: The use of 'rich_compare' metadata is deprecated; use
-        # 'comparison_mode' metadata instead:
-        rich_compare = metadata.get("rich_compare")
-        if rich_compare is not None:
-            trait.rich_comparison(rich_compare is True)
 
         comparison_mode = metadata.get("comparison_mode")
         if comparison_mode is not None:

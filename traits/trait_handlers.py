@@ -284,28 +284,6 @@ class BaseTraitHandler(object):
         """
         return self.info_text
 
-    def repr(self, value):
-        """ Returns a printable representation of a value along with its type.
-
-        .. deprecated :: 3.0.3
-            This functionality was only used to provide readable error
-            messages. This functionality has been incorporated into
-            TraitError itself.
-
-        Parameters
-        ----------
-        value : object
-            The value to be printed.
-        """
-        import warnings
-
-        warnings.warn(
-            "this functionality has been merged into TraitError; "
-            "just pass the raw value",
-            DeprecationWarning,
-        )
-        return repr_type(value)
-
     def get_editor(self, trait=None):
         """ Returns a trait editor that allows the user to modify the *trait*
         trait.
@@ -680,12 +658,6 @@ class TraitType(BaseTraitHandler):
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
                 trait.is_mapped(self.is_mapped)
-
-            # Note: The use of 'rich_compare' metadata is deprecated; use
-            # 'comparison_mode' metadata instead:
-            rich_compare = metadata.get("rich_compare")
-            if rich_compare is not None:
-                trait.rich_comparison(rich_compare is True)
 
             comparison_mode = metadata.get("comparison_mode")
             if comparison_mode is not None:

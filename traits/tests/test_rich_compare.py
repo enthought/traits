@@ -16,15 +16,17 @@ from __future__ import absolute_import
 
 import unittest
 
-from traits.api import HasTraits, Any, Str
+from traits.api import (
+    HasTraits, Any, Str, OBJECT_IDENTITY_COMPARE, RICH_COMPARE,
+)
 
 
 class IdentityCompare(HasTraits):
-    bar = Any(rich_compare=False)
+    bar = Any(comparison_mode=OBJECT_IDENTITY_COMPARE)
 
 
 class RichCompare(HasTraits):
-    bar = Any(rich_compare=True)
+    bar = Any(comparison_mode=RICH_COMPARE)
 
 
 class RichCompareTests:
