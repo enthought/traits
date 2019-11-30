@@ -591,7 +591,7 @@ class TestRangeTypeInference(unittest.TestCase):
         for warn_msg in warn_msgs:
             message = str(warn_msg.message)
             self.assertIn("Use of a dynamic default", message)
-            self.assertIn("test_integer_range", warn_msg.filename)
+            self.assertIn("test_range", warn_msg.filename)
 
     def test_deprecated_type_inference(self):
         # Case where no type can be inferred, and we drop
@@ -627,7 +627,7 @@ class TestRangeTypeInference(unittest.TestCase):
         for warn_msg in warn_msgs:
             message = str(warn_msg.message)
             self.assertIn("Unable to infer a value type", message)
-            self.assertIn("test_integer_range", warn_msg.filename)
+            self.assertIn("test_range", warn_msg.filename)
 
     def test_conflicting_defaults(self):
         # An explicitly-specified default wins over the value_type default.

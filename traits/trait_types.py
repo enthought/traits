@@ -1891,15 +1891,14 @@ class BaseRange(TraitType):
             (both are absent, *None*, or a string), a value type of
             ``Float()`` is used, and a ``DeprecationWarning`` is issued.
 
-        Additional notes: in legacy mode, if either the lower bound or the
-        upper bound is dynamic (that is, either *low* or *high* is a string,
-        or at least one of *low_name* and *high_name* is provided), the value
-        of the range trait is clipped at trait "get" time to lie in the
-        closed range [low_bound, high_bound]. This clipping is problematic:
-        the observed value of the trait can change without any notification
-        being issued, and if either of the bounds is exclusive then the
-        clipped value may still not be valid for the given range. In typed
-        mode, no clipping is performed.
+        In legacy mode, if either the lower bound or the upper bound is dynamic
+        (that is, either *low* or *high* is a string, or at least one of
+        *low_name* and *high_name* is provided), the value of the range trait
+        is clipped at trait "get" time to lie in the closed range [low_bound,
+        high_bound]. This clipping is problematic: the observed value of the
+        trait can change without any notification being issued, and if either
+        of the bounds is exclusive then the clipped value may still not be
+        valid for the given range. In typed mode, no clipping is performed.
         """
         value_name = None
         clip_on_get = False
