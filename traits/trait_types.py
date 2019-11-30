@@ -2122,6 +2122,9 @@ class BaseRange(TraitType):
         if self._low_name is None:
             low_name = ""
         else:
+            # This is not right, but it's not the Range trait's fault - it's
+            # not being given the context that it needs from TraitsUI. See
+            # enthought/traits#596.
             low_name = "object." + self._low_name
 
         if self._high_name is None:
