@@ -1767,9 +1767,8 @@ def _infer_range_value_trait(low, high, default):
     Raises
     ------
     TraitError
-        If either *low* or *high* is not None, is not a string,
-        not an integer and not a floating-point number.
-
+        If one or more of the bounds is not None, and cannot
+        be interpreted as an integer or float.
     """
     bound_types = [
         _bound_type(bound_name, bound_value)
