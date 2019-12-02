@@ -150,22 +150,6 @@ from . import ctraits
 
 ctraits._undefined(Undefined, Uninitialized)
 
-# -------------------------------------------------------------------------------
-#  Singleton 'Missing' object (used as missing method argument marker):
-# -------------------------------------------------------------------------------
-
-
-class Missing(object):
-    """ Singleton 'Missing' object (used as missing method argument marker).
-    """
-
-    def __repr__(self):
-        return "<missing>"
-
-
-#: Singleton object that indicates that a method argument is missing from a
-#: type-checked method signature.
-Missing = Missing()
 
 # -------------------------------------------------------------------------------
 #  Singleton 'Self' object (used as object reference to current 'object'):

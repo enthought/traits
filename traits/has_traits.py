@@ -72,7 +72,6 @@ from .trait_handlers import (
 )
 
 from .trait_base import (
-    Missing,
     SequenceTypes,
     TraitsCache,
     Undefined,
@@ -1410,8 +1409,11 @@ class HasTraits(CHasTraits):
             names = self.trait_names(**metadata)
 
         for name in names:
-            value = getattr(self, name, Missing)
-            if value is not Missing:
+            try:
+                value = getattr(self, name)
+            except AttributeError:
+                pass
+            else:
                 result[name] = value
 
         return result

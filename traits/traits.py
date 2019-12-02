@@ -62,7 +62,6 @@ from .trait_base import (
     SequenceTypes,
     Self,
     Undefined,
-    Missing,
     TypeTypes,
     add_article,
 )
@@ -598,7 +597,7 @@ DefaultValues = {
     bool: False,
 }
 
-DefaultValueSpecial = [Missing, Self]
+DefaultValueSpecial = [Self]
 DefaultValueTypes = [list, dict]
 
 # -------------------------------------------------------------------------------

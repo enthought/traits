@@ -11,8 +11,6 @@ Classes
 
 .. autodata:: Undefined
 
-.. autodata:: Missing
-
 .. autodata:: Self
 
 Functions
