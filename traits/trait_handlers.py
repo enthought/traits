@@ -57,7 +57,7 @@ from .trait_base import (
     class_of,
     Missing,
 )
-from .trait_errors import TraitError, repr_type
+from .trait_errors import TraitError
 
 from . import _py2to3
 
@@ -283,28 +283,6 @@ class BaseTraitHandler(object):
         default method returns the value of the 'info_text' attribute.
         """
         return self.info_text
-
-    def repr(self, value):
-        """ Returns a printable representation of a value along with its type.
-
-        .. deprecated :: 3.0.3
-            This functionality was only used to provide readable error
-            messages. This functionality has been incorporated into
-            TraitError itself.
-
-        Parameters
-        ----------
-        value : object
-            The value to be printed.
-        """
-        import warnings
-
-        warnings.warn(
-            "this functionality has been merged into TraitError; "
-            "just pass the raw value",
-            DeprecationWarning,
-        )
-        return repr_type(value)
 
     def get_editor(self, trait=None):
         """ Returns a trait editor that allows the user to modify the *trait*
