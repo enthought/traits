@@ -1151,6 +1151,7 @@ class _TraitMaker(object):
                 trait.post_setattr = post_setattr
                 trait.is_mapped(handler.is_mapped)
 
+        # Ref : https://github.com/enthought/traits/issues/602
         if "rich_compare" in metadata:
             warnings.warn(
                 "The 'rich_compare' kwarg has been removed. Please "
