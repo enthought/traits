@@ -22,7 +22,6 @@
 +----------------------------------------------------------------------------*/
 
 #include "Python.h"
-#include "structmember.h"
 
 #include "py2to3.h"
 
@@ -56,29 +55,6 @@ static PyTypeObject * ctrait_type;     /* Python-level CTrait type reference */
 |  Macro definitions:
 +----------------------------------------------------------------------------*/
 
-/* The following macro is automatically defined in Python 2.4 and later: */
-#ifndef Py_VISIT
-#define Py_VISIT(op) \
-do { \
-    if (op) { \
-        int vret = visit((PyObject *)(op), arg);        \
-        if (vret) return vret; \
-    } \
-} while (0)
-#endif
-
-/* The following macro is automatically defined in Python 2.4 and later: */
-#ifndef Py_CLEAR
-#define Py_CLEAR(op) \
-do { \
-    if (op) { \
-        PyObject *tmp = (PyObject *)(op); \
-        (op) = NULL;     \
-        Py_DECREF(tmp); \
-    } \
-} while (0)
-#endif
-
 #define DEFERRED_ADDRESS(ADDR) NULL
 #define PyTrait_CheckExact(op) ((op)->ob_type == ctrait_type)
 
@@ -99,21 +75,6 @@ do { \
 #define has_notifiers(tnotifiers,onotifiers) \
     ((((tnotifiers) != NULL) && (PyList_GET_SIZE((tnotifiers))>0)) || \
      (((onotifiers) != NULL) && (PyList_GET_SIZE((onotifiers))>0)))
-
-/* Python version dependent macros: */
-#if ( (PY_MAJOR_VERSION == 2) && (PY_MINOR_VERSION < 3) )
-#define PyMODINIT_FUNC void
-#define PyDoc_VAR(name) static char name[]
-#define PyDoc_STRVAR(name,str) PyDoc_VAR(name) = PyDoc_STR(str)
-#ifdef WITH_DOC_STRINGS
-#define PyDoc_STR(str) str
-#else
-#define PyDoc_STR(str) ""
-#endif
-#endif
-#if (PY_VERSION_HEX < 0x02050000)
-typedef int Py_ssize_t;
-#endif
 
 /*-----------------------------------------------------------------------------
 |  Forward declarations:
