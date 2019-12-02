@@ -47,6 +47,3 @@ Functions
 .. autofunction:: not_event
 
 .. autofunction:: is_str
-
-
-
