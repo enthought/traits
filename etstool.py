@@ -237,16 +237,11 @@ def test(edm, runtime, verbose, environment):
     environ = {}
     environ["PYTHONUNBUFFERED"] = "1"
 
-    if verbose:
-        commands = [
-            "{edm} run -e {environment} -- "
-            "coverage run -p -m unittest discover --verbose traits"
-        ]
-    else:
-        commands = [
-            "{edm} run -e {environment} -- "
-            "coverage run -p -m unittest discover traits"
-        ]
+    options = "--verbose " if verbose else ""
+    commands = [
+        "{edm} run -e {environment} -- coverage run -p -m "
+        "unittest discover " + options + "traits"
+    ]
 
     # We run in a tempdir to avoid accidentally picking up wrong traits
     # code from a local dir.  We need to ensure a good .coveragerc is in
