@@ -130,6 +130,11 @@ editable_option = click.option(
     default=False,
     help="Install main package in 'editable' mode?  [default: --not-editable]",
 )
+verbose_option = click.option(
+    "--verbose/--quiet",
+    default=True,
+    help="Run tests in verbose mode? [default: --verbose]",
+)
 
 
 @click.group()
@@ -219,10 +224,11 @@ def install(edm, runtime, environment, editable, docs, source):
 @cli.command()
 @edm_option
 @runtime_option
+@verbose_option
 @click.option(
     "--environment", default=None, help="Name of EDM environment to test."
 )
-def test(edm, runtime, environment):
+def test(edm, runtime, verbose, environment):
     """ Run the test suite in a given environment.
 
     """
@@ -231,10 +237,16 @@ def test(edm, runtime, environment):
     environ = {}
     environ["PYTHONUNBUFFERED"] = "1"
 
-    commands = [
-        "{edm} run -e {environment} -- "
-        "coverage run -p -m unittest discover -v traits"
-    ]
+    if verbose:
+        commands = [
+            "{edm} run -e {environment} -- "
+            "coverage run -p -m unittest discover --verbose traits"
+        ]
+    else:
+        commands = [
+            "{edm} run -e {environment} -- "
+            "coverage run -p -m unittest discover traits"
+        ]
 
     # We run in a tempdir to avoid accidentally picking up wrong traits
     # code from a local dir.  We need to ensure a good .coveragerc is in
