@@ -171,9 +171,6 @@ static int call_notifiers ( PyListObject *, PyListObject *,
 /* The default_value of the trait is the default value */
 #define CONSTANT_DEFAULT_VALUE 0
 
-/* The default_value of the trait is Missing */
-#define MISSING_DEFAULT_VALUE 1
-
 /* The object containing the trait is the default value */
 #define OBJECT_DEFAULT_VALUE 2
 
@@ -1592,7 +1589,6 @@ default_value_for ( trait_object      * trait,
 
     switch ( trait->default_value_type ) {
         case CONSTANT_DEFAULT_VALUE:
-        case MISSING_DEFAULT_VALUE:
             result = trait->default_value;
             if (result == NULL) {
                 result = Py_None;

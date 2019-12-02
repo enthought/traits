@@ -66,9 +66,9 @@ from .trait_notifiers import (
 
 from .trait_handlers import (
     TraitType,
-    MISSING_DEFAULT_VALUE,
     TRAIT_LIST_OBJECT_DEFAULT_VALUE,
     CALLABLE_DEFAULT_VALUE,
+    CONSTANT_DEFAULT_VALUE,
 )
 
 from .trait_base import (
@@ -663,7 +663,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                     class_traits[name] = value = ictrait(default_value)
                     # Make sure that the trait now has the default value
                     # has the correct initializer.
-                    value.default_value(MISSING_DEFAULT_VALUE, value.default)
+                    value.default_value(CONSTANT_DEFAULT_VALUE, value.default)
                     del class_dict[name]
                     handler = value.handler
                     if (handler is not None) and handler.is_mapped:

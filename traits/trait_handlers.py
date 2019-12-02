@@ -89,8 +89,6 @@ CallableTypes = (FunctionType, MethodType)
 UNSPECIFIED_DEFAULT_VALUE = -1
 #: The default_value of the trait is the default value.
 CONSTANT_DEFAULT_VALUE = 0
-#: The default_value of the trait is Missing.
-MISSING_DEFAULT_VALUE = 1
 #: The object containing the trait is the default value.
 OBJECT_DEFAULT_VALUE = 2
 #: A new copy of the list specified by default_value is the default value.
