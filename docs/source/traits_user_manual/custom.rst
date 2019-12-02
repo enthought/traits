@@ -277,7 +277,7 @@ Python types:
 * MethodType
 * ClassType
 * InstanceType
-* TypeType
+* type
 * NoneType
 
 Specifying one of these types means that the trait value must be of the

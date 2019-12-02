@@ -42,8 +42,6 @@ import six.moves as sm
 
 from types import FunctionType, MethodType
 
-TypeType = type
-
 from weakref import ref
 
 from .trait_base import (
@@ -938,7 +936,7 @@ class TraitCoerceType(TraitHandler):
         example, the string 'cat' is automatically mapped to ``str`` (i.e.,
         types.StringType).
         """
-        if not isinstance(aType, TypeType):
+        if not isinstance(aType, type):
             aType = type(aType)
         self.aType = aType
         try:
@@ -1051,7 +1049,7 @@ class TraitCastType(TraitCoerceType):
         automatically mapped to ``str`` (i.e., types.StringType).
 
         """
-        if not isinstance(aType, TypeType):
+        if not isinstance(aType, type):
             aType = type(aType)
         self.aType = aType
         self.fast_validate = (12, aType)
