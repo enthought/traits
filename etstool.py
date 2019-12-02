@@ -175,7 +175,7 @@ def install(edm, runtime, environment, editable, docs, source):
     # to explicitly uninstall it before re-installing from source.
     commands = [
         "{edm} environments create {environment} --force --version={runtime}",
-        "{edm} install -y -e {environment} " + packages,
+        "{edm} --config edm.yaml install -y -e {environment} " + packages,
         "{edm} plumbing remove-package -e {environment} traits",
     ]
     if editable:
