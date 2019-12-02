@@ -651,7 +651,7 @@ The following metadata attributes are not predefined, but are recognized by
 HasTraits objects:
 
 .. index:: desc metadata attribute, editor metadata attribute, TraitValue class
-.. index:: label; metadata attribute, rich_compare metadata attribute
+.. index:: label; metadata attribute, comparison_mode metadata attribute
 .. index:: trait_value metadata attribute, transient metadata attribute
 
 * **desc**: A string describing the intended meaning of the trait. It is used
@@ -663,12 +663,18 @@ HasTraits objects:
   for more information on trait editors.
 * **label**: A string providing a human-readable name for the trait. It is
   used to label trait attribute values in user interface trait editors.
-* **rich_compare**: A Boolean indicating whether the basis for considering a
-  trait attribute value to have changed is a "rich" comparison (True, the
-  default), or simple object identity (False). This attribute can be useful
-  in cases where a detailed comparison of two objects is very expensive, or
-  where you do not care if the details of an object change, as long as the
-  same object is used.
+* **comparison_mode**: Indicates when trait change notifications should be
+  generated based upon the result of comparing the old and new values of a
+  trait assignment:
+
+  * 0 (NO_COMPARE): The values are not compared and a trait change
+    notification is generated on each assignment.
+  * 1 (OBJECT_IDENTITY_COMPARE): A trait change notification is
+    generated if the old and new values are not the same object.
+  * 2 (RICH_COMPARE): A trait change notification is generated if the
+    old and new values are not equal using Python's
+    'rich comparison' operator. This is the default.
+
 * **trait_value**: A Boolean indicating whether the trait attribute accepts
   values that are instances of TraitValue. The default is False. The TraitValue
   class provides a mechanism for dynamically modifying trait definitions. See

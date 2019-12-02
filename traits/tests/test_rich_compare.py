@@ -15,6 +15,7 @@
 from __future__ import absolute_import
 
 import unittest
+import warnings
 
 from traits.api import (
     HasTraits, Any, Str, OBJECT_IDENTITY_COMPARE, RICH_COMPARE,
@@ -188,3 +189,20 @@ class RichCompareHasTraitsTestCase(unittest.TestCase, RichCompareTests):
         self.assertEqual(self.a.name, self.same_as_a.name)
         self.assertNotEqual(self.a.name, self.different_from_a.name)
         return
+
+
+class OldRichCompareTestCase(unittest.TestCase):
+    def test_raises_runtime_warning(self):
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", RuntimeWarning)
+
+            class OldRichCompare(HasTraits):
+                bar = Any(rich_compare=False)
+
+        self.assertEqual(len(warn_msgs), 1)
+        warn_msg = warn_msgs[0]
+        self.assertIn(
+            "'rich_compare' kwarg has been removed",
+            str(warn_msg.message)
+        )
+        self.assertIn("trait_handlers", warn_msg.filename)

@@ -36,6 +36,7 @@ from __future__ import absolute_import
 import sys
 import re
 import copy
+import warnings
 
 import six
 import six.moves as sm
@@ -658,6 +659,13 @@ class TraitType(BaseTraitHandler):
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
                 trait.is_mapped(self.is_mapped)
+
+            if "rich_compare" in metadata:
+                warnings.warn(
+                    "The 'rich_compare' kwarg has been removed. Please "
+                    "use the 'comparison_mode' kwarg instead.",
+                    RuntimeWarning,
+                )
 
             comparison_mode = metadata.get("comparison_mode")
             if comparison_mode is not None:
