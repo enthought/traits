@@ -57,7 +57,7 @@ from .trait_base import (
     class_of,
     Missing,
 )
-from .trait_errors import TraitError, repr_type
+from .trait_errors import TraitError
 
 from . import _py2to3
 
