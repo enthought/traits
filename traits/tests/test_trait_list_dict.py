@@ -136,3 +136,18 @@ class TestTraitListDictSetPersistence(unittest.TestCase):
         self.assertEqual(a.aset, set([3, 4]))
         a.aset ^= set([10, 4])
         self.assertEqual(a.aset, set([3, 10]))
+
+    def test_trait_list_default_kind(self):
+        a = A()
+        list_trait = a.traits()["alist"]
+        self.assertEqual(list_trait.default_kind, "list")
+
+    def test_trait_dict_default_kind(self):
+        a = A()
+        dict_trait = a.traits()["adict"]
+        self.assertEqual(dict_trait.default_kind, "dict")
+
+    def test_trait_set_default_kind(self):
+        a = A()
+        set_trait = a.traits()["aset"]
+        self.assertEqual(set_trait.default_kind, "set")
