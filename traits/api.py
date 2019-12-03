@@ -230,7 +230,7 @@ try:
 
     # -------------------------------------------------------------------------------
     #  Patch the main traits module with the correct definition for the
-    #  ViewElement and ViewSubElement class:
+    #  ViewElement class:
     # -------------------------------------------------------------------------------
 
     from traitsui import view_element
