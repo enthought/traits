@@ -85,7 +85,19 @@ from .trait_handlers import (
     _undefined_get,
     _undefined_set,
     UNSPECIFIED_DEFAULT_VALUE,
+    CONSTANT_DEFAULT_VALUE,
+    MISSING_DEFAULT_VALUE,
+    OBJECT_DEFAULT_VALUE,
+    LIST_COPY_DEFAULT_VALUE,
+    DICT_COPY_DEFAULT_VALUE,
+    TRAIT_LIST_OBJECT_DEFAULT_VALUE,
+    TRAIT_DICT_OBJECT_DEFAULT_VALUE,
     CALLABLE_AND_ARGS_DEFAULT_VALUE,
+    CALLABLE_DEFAULT_VALUE,
+    TRAIT_SET_OBJECT_DEFAULT_VALUE,
+    TraitListObject,
+    TraitDictObject,
+    TraitSetObject,
 )
 
 
@@ -96,15 +108,16 @@ from .trait_handlers import (
 
 # Mapping from 'ctrait' default value types to a string representation:
 KindMap = {
-    0: "value",
-    1: "value",
-    2: "self",
-    3: "list",
-    4: "dict",
-    5: "list",
-    6: "dict",
-    7: "factory",
-    8: "method",
+    CONSTANT_DEFAULT_VALUE: "value",
+    MISSING_DEFAULT_VALUE: "value",
+    OBJECT_DEFAULT_VALUE: "self",
+    LIST_COPY_DEFAULT_VALUE: "list",
+    DICT_COPY_DEFAULT_VALUE: "dict",
+    TRAIT_LIST_OBJECT_DEFAULT_VALUE: "list",
+    TRAIT_DICT_OBJECT_DEFAULT_VALUE: "dict",
+    CALLABLE_AND_ARGS_DEFAULT_VALUE: "factory",
+    CALLABLE_DEFAULT_VALUE: "method",
+    TRAIT_SET_OBJECT_DEFAULT_VALUE: "set",
 }
 
 # -------------------------------------------------------------------------------
@@ -598,9 +611,6 @@ DefaultValues = {
     bool: False,
 }
 
-DefaultValueSpecial = [Missing, Self]
-DefaultValueTypes = [list, dict]
-
 # -------------------------------------------------------------------------------
 #  Function used to unpickle new-style objects:
 # -------------------------------------------------------------------------------
@@ -618,13 +628,25 @@ def __newobj__(cls, *args):
 
 
 def _default_value_type(default_value):
-    try:
-        return DefaultValueSpecial.index(default_value) + 1
-    except:
-        try:
-            return DefaultValueTypes.index(type(default_value)) + 3
-        except:
-            return 0
+    """
+    Figure out the appropriate default value type given a default value.
+    """
+    if default_value is Missing:
+        return MISSING_DEFAULT_VALUE
+    elif default_value is Self:
+        return OBJECT_DEFAULT_VALUE
+    elif isinstance(default_value, TraitListObject):
+        return TRAIT_LIST_OBJECT_DEFAULT_VALUE
+    elif isinstance(default_value, TraitDictObject):
+        return TRAIT_DICT_OBJECT_DEFAULT_VALUE
+    elif isinstance(default_value, TraitSetObject):
+        return TRAIT_SET_OBJECT_DEFAULT_VALUE
+    elif isinstance(default_value, list):
+        return LIST_COPY_DEFAULT_VALUE
+    elif isinstance(default_value, dict):
+        return DICT_COPY_DEFAULT_VALUE
+    else:
+        return CONSTANT_DEFAULT_VALUE
 
 
 # -------------------------------------------------------------------------------
