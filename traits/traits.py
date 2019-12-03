@@ -101,7 +101,6 @@ from .trait_handlers import (
 )
 
 
-
 # -------------------------------------------------------------------------------
 #  Constants:
 # -------------------------------------------------------------------------------
@@ -358,16 +357,30 @@ class CTrait(cTrait):
     @property
     def default(self):
         kind, value = self.default_value()
-        if kind in (2, 7, 8):
+        if kind in (
+            OBJECT_DEFAULT_VALUE,
+            CALLABLE_AND_ARGS_DEFAULT_VALUE,
+            CALLABLE_DEFAULT_VALUE,
+        ):
             return Undefined
-
-        if kind in (4, 6):
+        elif kind in (
+            DICT_COPY_DEFAULT_VALUE,
+            TRAIT_DICT_OBJECT_DEFAULT_VALUE,
+            TRAIT_SET_OBJECT_DEFAULT_VALUE,
+        ):
             return value.copy()
-
-        if kind in (3, 5):
+        elif kind in (
+            LIST_COPY_DEFAULT_VALUE,
+            TRAIT_LIST_OBJECT_DEFAULT_VALUE,
+        ):
             return value[:]
-
-        return value
+        elif kind in (CONSTANT_DEFAULT_VALUE, MISSING_DEFAULT_VALUE):
+            return value
+        else:
+            # This shouldn't ever happen.
+            raise RuntimeError(
+                "Unexpected default value kind: {!r}".format(kind)
+            )
 
     @property
     def default_kind(self):
