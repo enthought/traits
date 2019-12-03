@@ -2025,7 +2025,10 @@ class HasTraits(CHasTraits):
         If *klass* is specified, the list of names is filtered such that only
         objects that are instances of the specified class are returned.
         """
-        return self.__class__.__dict__[ViewTraits].filter_by(klass)
+        view_elements = self.__class__.__dict__[ViewTraits]
+        if isinstance(view_elements, dict):
+            view_elements = self._init_trait_view_elements()
+        return view_elements.filter_by(klass)
 
     # ---------------------------------------------------------------------------
     #  Returns the ViewElements object associated with the object's class:
@@ -2047,7 +2050,40 @@ class HasTraits(CHasTraits):
         The returned object can be used to access all the view elements
         associated with the class.
         """
-        return cls.__dict__[ViewTraits]
+        view_elements = cls.__dict__[ViewTraits]
+        if isinstance(view_elements, dict):
+            view_elements = cls._init_trait_view_elements()
+        return view_elements
+
+    @classmethod
+    def _init_trait_view_elements(cls):
+        """ Lazily Initialize the ViewElements object from a dictionary. """
+        from traitsui.view_elements import ViewElements
+
+        hastraits_bases = [
+            base for base in cls.__bases__
+            if base.__dict__.get(ClassTraits) is not None
+        ]
+        view_elements = ViewElements()
+        elements_dict = cls.__dict__[ViewTraits]
+
+        for name, element in elements_dict:
+            view_elements.content[name] = element
+
+            # Replace all substitutable view sub elements with 'Include'
+            # objects, and add the substituted items to the
+            # 'ViewElements':
+            element.replace_include(view_elements)
+
+        for base in hastraits_bases:
+            # If the base class has a 'ViewElements' object defined, add it to
+            # the 'parents' list of this class's 'ViewElements':
+            parent_view_elements = base.class_trait_view_elements()
+            if parent_view_elements is not None:
+                view_elements.parents.append(parent_view_elements)
+
+        cls.__dict__[ViewTraits] = view_elements
+        return view_elements
 
     # ---------------------------------------------------------------------------
     #  Configure the object's traits:
