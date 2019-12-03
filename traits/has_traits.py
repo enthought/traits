@@ -111,10 +111,6 @@ class ViewElement(object):
     pass
 
 
-def ViewElements():
-    return None
-
-
 # -------------------------------------------------------------------------------
 #  Constants:
 # -------------------------------------------------------------------------------
@@ -537,7 +533,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
     prefix_traits = {}
     listeners = {}
     prefix_list = []
-    view_elements = ViewElements()
+    view_elements = {}
 
     # Create a list of just those base classes that derive from HasTraits:
     hastraits_bases = [
@@ -630,17 +626,12 @@ def update_traits_class_dict(class_name, bases, class_dict):
 
             # Add the view element to the class's 'ViewElements' if it is
             # not already defined (duplicate definitions are errors):
-            if name in view_elements.content:
+            if name in view_elements:
                 raise TraitError(
                     "Duplicate definition for view element '%s'" % name
                 )
 
-            view_elements.content[name] = value
-
-            # Replace all substitutable view sub elements with 'Include'
-            # objects, and add the substituted items to the
-            # 'ViewElements':
-            value.replace_include(view_elements)
+            view_elements[name] = value
 
             # Remove the view element from the class definition:
             del class_dict[name]
@@ -711,12 +702,6 @@ def update_traits_class_dict(class_name, bases, class_dict):
             if name not in prefix_list:
                 prefix_list.append(name)
                 prefix_traits[name] = base_prefix_traits[name]
-
-        # If the base class has a 'ViewElements' object defined, add it to
-        # the 'parents' list of this class's 'ViewElements':
-        parent_view_elements = base_dict.get(ViewTraits)
-        if parent_view_elements is not None:
-            view_elements.parents.append(parent_view_elements)
 
     # Make sure there is a definition for 'undefined' traits:
     if prefix_traits.get("") is None:
@@ -2082,7 +2067,7 @@ class HasTraits(CHasTraits):
             if parent_view_elements is not None:
                 view_elements.parents.append(parent_view_elements)
 
-        cls.__dict__[ViewTraits] = view_elements
+        setattr(cls, ViewTraits, view_elements)
         return view_elements
 
     # ---------------------------------------------------------------------------
