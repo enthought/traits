@@ -20,7 +20,7 @@ from traits.trait_types import Dict, List, Set, Str, Int, Instance
 class A(HasTraits):
     alist = List(Int, list(sm.range(5)))
     adict = Dict(Str, Int, dict(a=1, b=2))
-    aset = Set(Int, list(sm.range(5)))
+    aset = Set(Int, set(sm.range(5)))
 
     events = List()
 
@@ -151,3 +151,33 @@ class TestTraitListDictSetPersistence(unittest.TestCase):
         a = A()
         set_trait = a.traits()["aset"]
         self.assertEqual(set_trait.default_kind, "set")
+
+    def test_trait_list_default(self):
+        a = A()
+        list_trait = a.traits()["alist"]
+        self.assertEqual(list_trait.default, [0, 1, 2, 3, 4])
+
+        # The default property should have returned a copy, so
+        # modifying it doesn't change the actual default.
+        list_trait.default.append(5)
+        self.assertEqual(a.alist, [0, 1, 2, 3, 4])
+
+    def test_trait_dict_default(self):
+        a = A()
+        dict_trait = a.traits()["adict"]
+        self.assertEqual(dict_trait.default, {"a": 1, "b": 2})
+
+        # The default property should have returned a copy, so
+        # modifying it doesn't change the actual default.
+        dict_trait.default.pop("a")
+        self.assertEqual(a.adict, {"a": 1, "b": 2})
+
+    def test_trait_set_default(self):
+        a = A()
+        set_trait = a.traits()["aset"]
+        self.assertEqual(set_trait.default, {0, 1, 2, 3, 4})
+
+        # The default property should have returned a copy, so
+        # modifying it doesn't change the actual default.
+        set_trait.default.remove(2)
+        self.assertEqual(a.aset, {0, 1, 2, 3, 4})
