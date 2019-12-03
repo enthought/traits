@@ -84,10 +84,22 @@ from .trait_handlers import (
     _write_only,
     _undefined_get,
     _undefined_set,
+    _infer_default_value_type,
     UNSPECIFIED_DEFAULT_VALUE,
+    CONSTANT_DEFAULT_VALUE,
+    MISSING_DEFAULT_VALUE,
+    OBJECT_DEFAULT_VALUE,
+    LIST_COPY_DEFAULT_VALUE,
+    DICT_COPY_DEFAULT_VALUE,
+    TRAIT_LIST_OBJECT_DEFAULT_VALUE,
+    TRAIT_DICT_OBJECT_DEFAULT_VALUE,
     CALLABLE_AND_ARGS_DEFAULT_VALUE,
+    CALLABLE_DEFAULT_VALUE,
+    TRAIT_SET_OBJECT_DEFAULT_VALUE,
+    TraitListObject,
+    TraitDictObject,
+    TraitSetObject,
 )
-
 
 
 # -------------------------------------------------------------------------------
@@ -96,15 +108,16 @@ from .trait_handlers import (
 
 # Mapping from 'ctrait' default value types to a string representation:
 KindMap = {
-    0: "value",
-    1: "value",
-    2: "self",
-    3: "list",
-    4: "dict",
-    5: "list",
-    6: "dict",
-    7: "factory",
-    8: "method",
+    CONSTANT_DEFAULT_VALUE: "value",
+    MISSING_DEFAULT_VALUE: "value",
+    OBJECT_DEFAULT_VALUE: "self",
+    LIST_COPY_DEFAULT_VALUE: "list",
+    DICT_COPY_DEFAULT_VALUE: "dict",
+    TRAIT_LIST_OBJECT_DEFAULT_VALUE: "list",
+    TRAIT_DICT_OBJECT_DEFAULT_VALUE: "dict",
+    CALLABLE_AND_ARGS_DEFAULT_VALUE: "factory",
+    CALLABLE_DEFAULT_VALUE: "method",
+    TRAIT_SET_OBJECT_DEFAULT_VALUE: "set",
 }
 
 # -------------------------------------------------------------------------------
@@ -345,16 +358,30 @@ class CTrait(cTrait):
     @property
     def default(self):
         kind, value = self.default_value()
-        if kind in (2, 7, 8):
+        if kind in (
+            OBJECT_DEFAULT_VALUE,
+            CALLABLE_AND_ARGS_DEFAULT_VALUE,
+            CALLABLE_DEFAULT_VALUE,
+        ):
             return Undefined
-
-        if kind in (4, 6):
+        elif kind in (
+            DICT_COPY_DEFAULT_VALUE,
+            TRAIT_DICT_OBJECT_DEFAULT_VALUE,
+            TRAIT_SET_OBJECT_DEFAULT_VALUE,
+        ):
             return value.copy()
-
-        if kind in (3, 5):
+        elif kind in (
+            LIST_COPY_DEFAULT_VALUE,
+            TRAIT_LIST_OBJECT_DEFAULT_VALUE,
+        ):
             return value[:]
-
-        return value
+        elif kind in (CONSTANT_DEFAULT_VALUE, MISSING_DEFAULT_VALUE):
+            return value
+        else:
+            # This shouldn't ever happen.
+            raise RuntimeError(
+                "Unexpected default value kind: {!r}".format(kind)
+            )
 
     @property
     def default_kind(self):
@@ -594,9 +621,6 @@ DefaultValues = {
     bool: False,
 }
 
-DefaultValueSpecial = [Missing, Self]
-DefaultValueTypes = [list, dict]
-
 # -------------------------------------------------------------------------------
 #  Function used to unpickle new-style objects:
 # -------------------------------------------------------------------------------
@@ -606,21 +630,6 @@ def __newobj__(cls, *args):
     """ Unpickles new-style objects.
     """
     return cls.__new__(cls, *args)
-
-
-# -------------------------------------------------------------------------------
-#  Returns the type of default value specified:
-# -------------------------------------------------------------------------------
-
-
-def _default_value_type(default_value):
-    try:
-        return DefaultValueSpecial.index(default_value) + 1
-    except:
-        try:
-            return DefaultValueTypes.index(type(default_value)) + 3
-        except:
-            return 0
 
 
 # -------------------------------------------------------------------------------
@@ -1091,7 +1100,9 @@ class _TraitMaker(object):
                             pass
 
                 if default_value_type < 0:
-                    default_value_type = _default_value_type(default_value)
+                    default_value_type = _infer_default_value_type(
+                        default_value
+                    )
 
         self.default_value_type = default_value_type
         self.default_value = default_value

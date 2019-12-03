@@ -54,6 +54,7 @@ from .trait_base import (
     TraitsCache,
     class_of,
     Missing,
+    Self,
 )
 from .trait_errors import TraitError
 
@@ -169,6 +170,28 @@ def _undefined_get(object, name):
 
 def _undefined_set(object, name, value):
     _undefined_get(object, name)
+
+
+def _infer_default_value_type(default_value):
+    """
+    Figure out the appropriate default value type given a default value.
+    """
+    if default_value is Missing:
+        return MISSING_DEFAULT_VALUE
+    elif default_value is Self:
+        return OBJECT_DEFAULT_VALUE
+    elif isinstance(default_value, TraitListObject):
+        return TRAIT_LIST_OBJECT_DEFAULT_VALUE
+    elif isinstance(default_value, TraitDictObject):
+        return TRAIT_DICT_OBJECT_DEFAULT_VALUE
+    elif isinstance(default_value, TraitSetObject):
+        return TRAIT_SET_OBJECT_DEFAULT_VALUE
+    elif isinstance(default_value, list):
+        return LIST_COPY_DEFAULT_VALUE
+    elif isinstance(default_value, dict):
+        return DICT_COPY_DEFAULT_VALUE
+    else:
+        return CONSTANT_DEFAULT_VALUE
 
 
 # -------------------------------------------------------------------------------
@@ -498,18 +521,7 @@ class TraitType(BaseTraitHandler):
         dv = self.default_value
         dvt = self.default_value_type
         if dvt < 0:
-            dvt = CONSTANT_DEFAULT_VALUE
-            if isinstance(dv, TraitListObject):
-                dvt = TRAIT_LIST_OBJECT_DEFAULT_VALUE
-            elif isinstance(dv, list):
-                dvt = LIST_COPY_DEFAULT_VALUE
-            elif isinstance(dv, TraitDictObject):
-                dvt = TRAIT_DICT_OBJECT_DEFAULT_VALUE
-            elif isinstance(dv, dict):
-                dvt = DICT_COPY_DEFAULT_VALUE
-            elif isinstance(dv, TraitSetObject):
-                dvt = TRAIT_SET_OBJECT_DEFAULT_VALUE
-
+            dvt = _infer_default_value_type(dv)
             self.default_value_type = dvt
 
         return (dvt, dv)
