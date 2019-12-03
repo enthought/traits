@@ -15,7 +15,7 @@ import unittest
 import six
 
 from traits.api import HasTraits, Int
-from traits.testing.optional_dependencies import requires_traitsui
+from traits.testing.optional_dependencies import requires_traitsui, traitsui
 
 
 class Model(HasTraits):
@@ -25,8 +25,6 @@ class Model(HasTraits):
 @requires_traitsui
 class TestConfigureTraits(unittest.TestCase):
     def setUp(self):
-        import traitsui.api
-
         self.toolkit = traitsui.api.toolkit()
         self.tmpdir = tempfile.mkdtemp()
 
