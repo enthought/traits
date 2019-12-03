@@ -226,24 +226,13 @@ from .trait_numeric import Array, ArrayOrNone, CArray
 try:
     from . import has_traits as has_traits
 
-    # ---------------------------------------------------------------------------
-    #  Patch the main traits module with the correct definition for the
-    #  ViewElements class:
-    #  NOTE: We do this in a try..except block because traits.ui depends on
-    #  the pyface module (part of the TraitsGUI package) which may not
-    #  necessarily be installed. Not having TraitsGUI means that the 'ui'
-    #  features of traits will not work.
-    # ---------------------------------------------------------------------------
-
-    from traitsui import view_elements
-
-    has_traits.ViewElements = view_elements.ViewElements
-
     # -------------------------------------------------------------------------------
     #  Patch the main traits module with the correct definition for the
-    #  ViewElement and ViewSubElement class:
+    #  ViewElement class:
     # -------------------------------------------------------------------------------
 
-    has_traits.ViewElement = view_elements.ViewElement
+    from traitsui import view_element
+
+    has_traits.ViewElement = view_element.ViewElement
 except ImportError:
     pass
