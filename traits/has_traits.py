@@ -624,13 +624,6 @@ def update_traits_class_dict(class_name, bases, class_dict):
         # Handle any view elements found in the class:
         elif isinstance(value, ViewElement):
 
-            # Add the view element to the class's 'ViewElements' if it is
-            # not already defined (duplicate definitions are errors):
-            if name in view_elements:
-                raise TraitError(
-                    "Duplicate definition for view element '%s'" % name
-                )
-
             view_elements[name] = value
 
             # Remove the view element from the class definition:
@@ -2052,7 +2045,14 @@ class HasTraits(CHasTraits):
         view_elements = ViewElements()
         elements_dict = cls.__dict__[ViewTraits]
 
-        for name, element in elements_dict:
+        for name, element in elements_dict.items():
+            # Add the view element to the class's 'ViewElements' if it is
+            # not already defined (duplicate definitions are errors):
+            if name in view_elements.content:
+                raise TraitError(
+                    "Duplicate definition for view element '%s'" % name
+                )
+
             view_elements.content[name] = element
 
             # Replace all substitutable view sub elements with 'Include'
