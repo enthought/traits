@@ -119,6 +119,9 @@ TRAIT_SET_OBJECT_DEFAULT_VALUE = 9
 # Mapping from trait metadata 'type' to CTrait 'type':
 trait_types = {"python": 1, "event": 2}
 
+#
+
+
 # -------------------------------------------------------------------------------
 #  Forward references:
 # -------------------------------------------------------------------------------
@@ -542,6 +545,10 @@ class TraitType(BaseTraitHandler):
 
         if default_value is not Missing:
             new.default_value = default_value
+            # Use UNSPECIFIED_DEFAULT_VALUE to trigger the usual processing
+            # of the default value when this handler is converted to a CTrait.
+            new.default_value_type = UNSPECIFIED_DEFAULT_VALUE
+
             if self.validate is not None:
                 try:
                     new.default_value = self.validate(

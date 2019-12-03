@@ -1,3 +1,4 @@
+import datetime
 import unittest
 
 from traits.has_traits import (
@@ -10,8 +11,9 @@ from traits.has_traits import (
     InstanceTraits,
     HasTraits,
 )
+from traits.trait_errors import TraitError
+from traits.trait_types import Any, Float, Instance, Int
 from traits.traits import ForwardProperty, generic_trait
-from traits.trait_types import Float, Int
 
 
 def _dummy_getter(self):
@@ -194,3 +196,53 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             class_dict[BaseTraits]["my_trait"],
             class_dict[ClassTraits]["my_trait"],
         )
+
+    def test_trait_inheritance_simple(self):
+        # Given
+        class Base(HasTraits):
+            x = Int(378)
+
+        class Child(Base):
+            x = 23
+
+        # When
+        child = Child()
+
+        # Then
+        self.assertEqual(child.x, 23)
+        with self.assertRaises(TraitError):
+            child.x = 25.0
+
+    def test_trait_inheritance_complex(self):
+        # Given
+        SPECIAL_DATE = datetime.datetime(1975, 9, 22, 11, 42)
+
+        class Base(HasTraits):
+            x = Instance(datetime.datetime, factory=datetime.datetime.utcnow)
+
+        class Child(Base):
+            x = SPECIAL_DATE
+
+        # When
+        child = Child()
+
+        # Then
+        self.assertEqual(child.x, SPECIAL_DATE)
+        with self.assertRaises(TraitError):
+            child.x = 34
+
+    def test_trait_inheritance_list_gets_copied(self):
+        list1 = [3, 4, 5]
+        list2 = [6, 7, 8]
+
+        class Base(HasTraits):
+            x = Any(list1)
+
+        class Child(Base):
+            x = list2
+
+        child = Child()
+
+        # The traits machinery *should* have made a copy of the new list.
+        list2.append(9)
+        self.assertEqual(child.x, [6, 7, 8])
