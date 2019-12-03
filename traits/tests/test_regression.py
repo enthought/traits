@@ -16,6 +16,7 @@ from traits.testing.optional_dependencies import numpy, requires_numpy
 from traits.trait_errors import TraitError
 from traits.trait_handlers import TraitType
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
+from traits.traits import Trait
 
 if numpy is not None:
     from traits.trait_numeric import Array
@@ -286,3 +287,15 @@ class TestRegression(unittest.TestCase):
 
         with self.assertRaises(ZeroDivisionError):
             a.bar = "foo"
+
+    def test_trait_maker_default_values(self):
+        # Regression test for enthought/traits#592
+
+        trait_type = Trait(3.2, Instance(float, ()))
+        default_value_type, default_value = trait_type.default_value()
+
+        self.assertEqual(default_value_type, 0)
+        self.assertEqual(default_value, 3.2)
+
+        default = trait_type.default_value_for(HasTraits(), "foo")
+        self.assertEqual(default, 3.2)
