@@ -102,6 +102,11 @@ python2_dependencies = {
     "mock",
 }
 
+# Unix-specific dependencies.
+unix_dependencies = {
+    "gnureadline",
+}
+
 supported_runtimes = ["2.7", "3.5", "3.6"]
 default_runtime = "3.6"
 
@@ -129,6 +134,11 @@ editable_option = click.option(
     "--editable/--not-editable",
     default=False,
     help="Install main package in 'editable' mode?  [default: --not-editable]",
+)
+verbose_option = click.option(
+    "--verbose/--quiet",
+    default=True,
+    help="Run tests in verbose mode? [default: --verbose]",
 )
 
 
@@ -161,6 +171,8 @@ def install(edm, runtime, environment, editable, docs, source):
     dependencies = common_dependencies.copy()
     if runtime.startswith("2."):
         dependencies.update(python2_dependencies)
+    if sys.platform != "win32":
+        dependencies.update(unix_dependencies)
     packages = " ".join(dependencies)
 
     # EDM commands to set up the development environment. The installation
@@ -168,7 +180,7 @@ def install(edm, runtime, environment, editable, docs, source):
     # to explicitly uninstall it before re-installing from source.
     commands = [
         "{edm} environments create {environment} --force --version={runtime}",
-        "{edm} install -y -e {environment} " + packages,
+        "{edm} --config edm.yaml install -y -e {environment} " + packages,
         "{edm} plumbing remove-package -e {environment} traits",
     ]
     if editable:
@@ -219,10 +231,11 @@ def install(edm, runtime, environment, editable, docs, source):
 @cli.command()
 @edm_option
 @runtime_option
+@verbose_option
 @click.option(
     "--environment", default=None, help="Name of EDM environment to test."
 )
-def test(edm, runtime, environment):
+def test(edm, runtime, verbose, environment):
     """ Run the test suite in a given environment.
 
     """
@@ -231,9 +244,10 @@ def test(edm, runtime, environment):
     environ = {}
     environ["PYTHONUNBUFFERED"] = "1"
 
+    options = "--verbose " if verbose else ""
     commands = [
-        "{edm} run -e {environment} -- "
-        "coverage run -p -m unittest discover -v traits"
+        "{edm} run -e {environment} -- coverage run -p -m "
+        "unittest discover " + options + "traits"
     ]
 
     # We run in a tempdir to avoid accidentally picking up wrong traits
