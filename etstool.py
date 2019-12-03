@@ -102,6 +102,11 @@ python2_dependencies = {
     "mock",
 }
 
+# Unix-specific dependencies.
+unix_dependencies = {
+    "gnureadline",
+}
+
 supported_runtimes = ["2.7", "3.5", "3.6"]
 default_runtime = "3.6"
 
@@ -166,6 +171,8 @@ def install(edm, runtime, environment, editable, docs, source):
     dependencies = common_dependencies.copy()
     if runtime.startswith("2."):
         dependencies.update(python2_dependencies)
+    if sys.platform != "win32":
+        dependencies.update(unix_dependencies)
     packages = " ".join(dependencies)
 
     # EDM commands to set up the development environment. The installation
@@ -173,7 +180,7 @@ def install(edm, runtime, environment, editable, docs, source):
     # to explicitly uninstall it before re-installing from source.
     commands = [
         "{edm} environments create {environment} --force --version={runtime}",
-        "{edm} install -y -e {environment} " + packages,
+        "{edm} --config edm.yaml install -y -e {environment} " + packages,
         "{edm} plumbing remove-package -e {environment} traits",
     ]
     if editable:
