@@ -153,6 +153,9 @@ from .trait_types import (
 from .trait_types import UUID, ValidatedTuple
 
 from .has_traits import (
+    ABCHasStrictTraits,
+    ABCHasTraits,
+    ABCMetaHasTraits,
     HasTraits,
     HasStrictTraits,
     HasPrivateTraits,
@@ -171,11 +174,6 @@ from .has_traits import (
     provides,
     isinterface,
 )
-
-try:
-    from .has_traits import ABCHasTraits, ABCHasStrictTraits, ABCMetaHasTraits
-except ImportError:
-    pass
 
 from .trait_handlers import (
     BaseTraitHandler,

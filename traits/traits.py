@@ -1097,9 +1097,10 @@ class _TraitMaker(object):
                     except:
                         pass
 
-                default_value_type = _infer_default_value_type(
-                    default_value
-                )
+                if default_value_type < 0:
+                    default_value_type = _infer_default_value_type(
+                        default_value
+                    )
 
         self.default_value_type = default_value_type
         self.default_value = default_value
