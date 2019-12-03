@@ -342,7 +342,8 @@ class CTrait(cTrait):
     #  (Python) property definitions:
     # ---------------------------------------------------------------------------
 
-    def __get_default(self):
+    @property
+    def default(self):
         kind, value = self.default_value()
         if kind in (2, 7, 8):
             return Undefined
@@ -355,14 +356,12 @@ class CTrait(cTrait):
 
         return value
 
-    default = property(__get_default)
-
-    def __get_default_kind(self):
+    @property
+    def default_kind(self):
         return KindMap[self.default_value()[0]]
 
-    default_kind = property(__get_default_kind)
-
-    def __get_trait_type(self):
+    @property
+    def trait_type(self):
         handler = self.handler
         if handler is not None:
             return handler
@@ -371,16 +370,13 @@ class CTrait(cTrait):
 
             return Any
 
-    trait_type = property(__get_trait_type)
-
-    def __get_inner_traits(self):
+    @property
+    def inner_traits(self):
         handler = self.handler
         if handler is not None:
             return handler.inner_traits()
 
         return ()
-
-    inner_traits = property(__get_inner_traits)
 
     # ---------------------------------------------------------------------------
     #  Returns whether or not this trait is of a specified trait type:
