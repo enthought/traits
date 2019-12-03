@@ -27,6 +27,7 @@
 
 from __future__ import absolute_import, division, print_function
 
+import abc
 import copy as copy_module
 import os
 import re
@@ -3577,42 +3578,36 @@ class HasPrivateTraits(HasTraits):
 
 
 # ------------------------------------------------------------------------------
-# ABC classes with traits: (where available)
+# ABC classes with traits:
 # ------------------------------------------------------------------------------
-try:
-
-    import abc
-
-    class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
-        """ A MetaHasTraits subclass which also inherits from
-        abc.ABCMeta.
-
-        .. note:: The ABCMeta class is cooperative and behaves nicely
-            with MetaHasTraits, provided it is inherited first.
-        """
-
-        pass
-
-    @six.add_metaclass(ABCMetaHasTraits)
-    class ABCHasTraits(HasTraits):
-        """ A HasTraits subclass which enables the features of Abstract
-        Base Classes (ABC). See the 'abc' module in the standard library
-        for more information.
-
-        """
-
-    class ABCHasStrictTraits(ABCHasTraits):
-        """ A HasTraits subclass which behaves like HasStrictTraits but
-        also enables the features of Abstract Base Classes (ABC). See the
-        'abc' module in the standard library for more information.
-
-        """
-
-        _ = Disallow
 
 
-except ImportError:
+class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
+    """ A MetaHasTraits subclass which also inherits from
+    abc.ABCMeta.
+
+    .. note:: The ABCMeta class is cooperative and behaves nicely
+        with MetaHasTraits, provided it is inherited first.
+    """
+
     pass
+
+@six.add_metaclass(ABCMetaHasTraits)
+class ABCHasTraits(HasTraits):
+    """ A HasTraits subclass which enables the features of Abstract
+    Base Classes (ABC). See the 'abc' module in the standard library
+    for more information.
+
+    """
+
+class ABCHasStrictTraits(ABCHasTraits):
+    """ A HasTraits subclass which behaves like HasStrictTraits but
+    also enables the features of Abstract Base Classes (ABC). See the
+    'abc' module in the standard library for more information.
+
+    """
+
+    _ = Disallow
 
 # -------------------------------------------------------------------------------
 #  Singleton classes with traits:
