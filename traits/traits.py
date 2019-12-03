@@ -84,6 +84,7 @@ from .trait_handlers import (
     _write_only,
     _undefined_get,
     _undefined_set,
+    _infer_default_value_type,
     UNSPECIFIED_DEFAULT_VALUE,
     CONSTANT_DEFAULT_VALUE,
     MISSING_DEFAULT_VALUE,
@@ -632,33 +633,6 @@ def __newobj__(cls, *args):
 
 
 # -------------------------------------------------------------------------------
-#  Returns the type of default value specified:
-# -------------------------------------------------------------------------------
-
-
-def _default_value_type(default_value):
-    """
-    Figure out the appropriate default value type given a default value.
-    """
-    if default_value is Missing:
-        return MISSING_DEFAULT_VALUE
-    elif default_value is Self:
-        return OBJECT_DEFAULT_VALUE
-    elif isinstance(default_value, TraitListObject):
-        return TRAIT_LIST_OBJECT_DEFAULT_VALUE
-    elif isinstance(default_value, TraitDictObject):
-        return TRAIT_DICT_OBJECT_DEFAULT_VALUE
-    elif isinstance(default_value, TraitSetObject):
-        return TRAIT_SET_OBJECT_DEFAULT_VALUE
-    elif isinstance(default_value, list):
-        return LIST_COPY_DEFAULT_VALUE
-    elif isinstance(default_value, dict):
-        return DICT_COPY_DEFAULT_VALUE
-    else:
-        return CONSTANT_DEFAULT_VALUE
-
-
-# -------------------------------------------------------------------------------
 #  'TraitFactory' class:
 # -------------------------------------------------------------------------------
 
@@ -1126,7 +1100,8 @@ class _TraitMaker(object):
                             pass
 
                 if default_value_type < 0:
-                    default_value_type = _default_value_type(default_value)
+                    default_value_type = _infer_default_value_type(
+                        default_value)
 
         self.default_value_type = default_value_type
         self.default_value = default_value
