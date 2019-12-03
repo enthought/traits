@@ -9,7 +9,6 @@ Traits core
 
     traits
     has_traits
-    has_dynamic_views
     interface_checker
     trait_base
     trait_errors
