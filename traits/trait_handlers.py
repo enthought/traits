@@ -521,7 +521,8 @@ class TraitType(BaseTraitHandler):
         dv = self.default_value
         dvt = self.default_value_type
         if dvt < 0:
-            self.default_value_type = _infer_default_value_type(dv)
+            dvt = _infer_default_value_type(dv)
+            self.default_value_type = dvt
 
         return (dvt, dv)
 
