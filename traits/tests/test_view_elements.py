@@ -1,12 +1,7 @@
 # Copyright (c) 2019 by Enthought, Inc.
 # All rights reserved.
 
-import os
-import shutil
-import tempfile
 import unittest
-
-import six
 
 from traits.api import HasTraits, Int, TraitError
 from traits.testing.optional_dependencies import requires_traitsui
@@ -35,6 +30,49 @@ class TestViewElements(unittest.TestCase):
 
         self.assertEqual(view_elements.content, {'my_view': view})
 
+    def test_view_definition_twice(self):
+        from traitsui.api import View
+
+        view = View('count')
+
+        class Model(HasTraits):
+            count = Int
+            my_view = view
+
+        view_elements = Model.class_trait_view_elements()
+        view_elements2 = Model.class_trait_view_elements()
+
+        self.assertEqual(view_elements.content, {'my_view': view})
+        self.assertIs(view_elements, view_elements2)
+
+    def test_instance_view_definition(self):
+        from traitsui.api import View
+
+        view = View('count')
+
+        class Model(HasTraits):
+            count = Int
+            my_view = view
+
+        m = Model()
+        view_elements = m.trait_view_elements()
+
+        self.assertEqual(view_elements.content, {'my_view': view})
+
+    def test_trait_views(self):
+        from traitsui.api import View
+
+        view = View('count')
+
+        class Model(HasTraits):
+            count = Int
+            my_view = view
+
+        m = Model()
+        views = m.trait_views()
+
+        self.assertEqual(views, ['my_view'])
+
     def test_included_names(self):
         from traitsui.api import Group, Item, View
 
@@ -44,14 +82,14 @@ class TestViewElements(unittest.TestCase):
 
         class Model(HasTraits):
             count = Int
-            my_group = Group(item)
+            my_group = group
             my_view = view
 
         view_elements = Model.class_trait_view_elements()
 
         self.assertEqual(
-            set(view_elements.content),
-            {'my_view', 'my_group', 'item_with_id'}
+            view_elements.content,
+            {'my_view': view, 'my_group': group, 'item_with_id': item}
         )
 
     def test_duplicate_names(self):
