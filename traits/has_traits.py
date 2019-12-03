@@ -2040,7 +2040,7 @@ class HasTraits(CHasTraits):
 
         hastraits_bases = [
             base for base in cls.__bases__
-            if base.__dict__.get(ClassTraits) is not None
+            if ClassTraits in base.__dict__
         ]
         view_elements = ViewElements()
         elements_dict = cls.__dict__[ViewTraits]
