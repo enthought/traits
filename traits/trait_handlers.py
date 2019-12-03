@@ -119,9 +119,6 @@ TRAIT_SET_OBJECT_DEFAULT_VALUE = 9
 # Mapping from trait metadata 'type' to CTrait 'type':
 trait_types = {"python": 1, "event": 2}
 
-#
-
-
 # -------------------------------------------------------------------------------
 #  Forward references:
 # -------------------------------------------------------------------------------
