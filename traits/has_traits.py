@@ -99,16 +99,15 @@ from .util.deprecated import deprecated
 CHECK_INTERFACES = 0
 
 # -------------------------------------------------------------------------------
-#  Deferred definitions:
-#
-#  The following classes have a 'chicken and the egg' definition problem. They
-#  require Traits to work, because they subclass Traits, but the Traits
-#  meta-class programming support uses them, so Traits can't be subclassed
-#  until they are defined.
+#  This ABC is a placeholder for the TraitsUI ViewElement class, which should
+#  inherit from or register as implementing the API.  This has to be done here
+#  so that the metaclass machinery has something to check against when filtering
+#  out TraitsUI elements that are declared as part of a HasTraits class.
 # -------------------------------------------------------------------------------
 
 
-class ViewElement(object):
+@six.add_metaclass(abc.ABCMeta)
+class AbstractViewElement(object):
     pass
 
 
@@ -623,7 +622,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
             class_traits[name] = generic_trait
 
         # Handle any view elements found in the class:
-        elif isinstance(value, ViewElement):
+        elif isinstance(value, AbstractViewElement):
 
             view_elements[name] = value
 
@@ -1899,7 +1898,7 @@ class HasTraits(CHasTraits):
         """ Gets or sets a ViewElement associated with an object's class.
         """
         # If a view element was passed instead of a name or None, return it:
-        if isinstance(name, ViewElement):
+        if isinstance(name, AbstractViewElement):
             return name
 
         # Get the ViewElements object associated with the class:
@@ -1932,7 +1931,7 @@ class HasTraits(CHasTraits):
         name = default_name()
 
         # If the default is a View, return it:
-        if isinstance(name, ViewElement):
+        if isinstance(name, AbstractViewElement):
             return name
 
         # Otherwise, get all View objects associated with the object's class:
@@ -1946,7 +1945,7 @@ class HasTraits(CHasTraits):
             method = getattr(handler, name, None)
             if callable(method):
                 result = method()
-                if isinstance(result, ViewElement):
+                if isinstance(result, AbstractViewElement):
                     return result
 
         # If there is only one View, return it:

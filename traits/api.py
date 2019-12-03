@@ -156,6 +156,7 @@ from .has_traits import (
     ABCHasStrictTraits,
     ABCHasTraits,
     ABCMetaHasTraits,
+    AbstractViewElement,
     HasTraits,
     HasStrictTraits,
     HasPrivateTraits,
@@ -224,15 +225,14 @@ from .adaptation.adaptation_manager import (
 from .trait_numeric import Array, ArrayOrNone, CArray
 
 try:
-    from . import has_traits as has_traits
-
     # -------------------------------------------------------------------------------
     #  Patch the main traits module with the correct definition for the
     #  ViewElement class:
     # -------------------------------------------------------------------------------
 
-    from traitsui import view_element
+    from traitsui.view_element import ViewElement
 
-    has_traits.ViewElement = view_element.ViewElement
+    if not isinstance(ViewElement, AbstractViewElement):
+        AbstractViewElement.register(ViewElement)
 except ImportError:
     pass
