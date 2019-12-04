@@ -647,7 +647,8 @@ def update_traits_class_dict(class_name, bases, class_dict):
                     class_traits[name] = value = ictrait(default_value)
                     # Make sure that the trait now has the default value
                     # has the correct initializer.
-                    value.default_value(MISSING_DEFAULT_VALUE, value.default)
+                    value.set_default_value(
+                        MISSING_DEFAULT_VALUE, value.default)
                     del class_dict[name]
                     handler = value.handler
                     if (handler is not None) and handler.is_mapped:
@@ -778,7 +779,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                 _add_notifiers(trait._notifiers(1), handlers)
 
             if default is not None:
-                trait.default_value(CALLABLE_DEFAULT_VALUE, default)
+                trait.set_default_value(CALLABLE_DEFAULT_VALUE, default)
 
         # Handle the case of properties whose value depends upon the value
         # of other traits:

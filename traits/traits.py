@@ -1154,7 +1154,7 @@ class _TraitMaker(object):
             if clone.__dict__ is not None:
                 trait.__dict__ = clone.__dict__.copy()
 
-        trait.default_value(self.default_value_type, self.default_value)
+        trait.set_default_value(self.default_value_type, self.default_value)
 
         handler = self.handler
         if handler is not None:

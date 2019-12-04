@@ -681,7 +681,7 @@ class TraitType(BaseTraitHandler):
 
             metadata.setdefault("type", "trait")
 
-        trait.default_value(*self.get_default_value())
+        trait.set_default_value(*self.get_default_value())
 
         trait.value_allowed(metadata.get("trait_value", False) is True)
 
