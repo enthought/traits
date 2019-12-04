@@ -2966,23 +2966,21 @@ _trait_set_default_value ( trait_object * trait, PyObject * args ) {
     if ( !PyArg_ParseTuple( args, "iO", &value_type, &value ) )
         return NULL;
 
-    PyErr_Clear();
     if ( (value_type < 0) || (value_type > MAXIMUM_DEFAULT_VALUE_TYPE) ) {
         PyErr_Format(
             PyExc_ValueError,
             "The default value type must be 0..%d, but %d was specified.",
             MAXIMUM_DEFAULT_VALUE_TYPE,
             value_type );
-
         return NULL;
     }
 
     trait->default_value_type = value_type;
-    Py_INCREF( value );
 
     /* The DECREF on the old value can call arbitrary code, so take care not to
        DECREF until the trait is in a consistent state. (Newer CPython versions
        have a Py_XSETREF macro to do this safely.) */
+    Py_INCREF( value );
     old_value = trait->default_value;
     trait->default_value = value;
     Py_XDECREF( old_value );
