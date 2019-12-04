@@ -606,6 +606,16 @@ class ListenerItem(ListenerBase):
     # -- Event Handlers ---------------------------------------------------------
 
     # ---------------------------------------------------------------------------
+    #  Handles the 'type' trait being changed:
+    # ---------------------------------------------------------------------------
+
+    def _type_changed(self, type):
+        """ Handles the **type** trait being changed.
+        """
+        if self.next is not None:
+            self.next.type = type
+
+    # ---------------------------------------------------------------------------
     #  Handles the 'handler' trait being changed:
     # ---------------------------------------------------------------------------
 
@@ -807,7 +817,7 @@ class ListenerItem(ListenerBase):
                             priority=self.priority,
                             target=self._get_target(),
                         )
-                    elif self.type == ANY_LISTENER:
+                    elif self.type in {ANY_LISTENER, SRC_LISTENER}:
                         object._on_trait_change(
                             handler,
                             name + "_items",
@@ -906,7 +916,7 @@ class ListenerItem(ListenerBase):
                         target=self._get_target(),
                     )
 
-                    if self.type == ANY_LISTENER:
+                    if self.type in {ANY_LISTENER, SRC_LISTENER}:
                         object._on_trait_change(
                             handler,
                             name + "_items",
