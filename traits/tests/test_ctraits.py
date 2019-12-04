@@ -13,7 +13,6 @@
 import unittest
 import warnings
 
-
 from traits.traits import CTrait
 from traits.trait_handlers import (
     CONSTANT_DEFAULT_VALUE,

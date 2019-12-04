@@ -2991,7 +2991,7 @@ _trait_set_default_value ( trait_object * trait, PyObject * args ) {
 /*-----------------------------------------------------------------------------
 |  Get or set the 'default_value_type' and 'default_value' fields
 |  of a CTrait instance. Use of this function for setting the default
-|  value information is deprecated; use set_default_value for that instead.
+|  value information is deprecated; use set_default_value instead.
 +----------------------------------------------------------------------------*/
 
 static PyObject *
@@ -3007,14 +3007,10 @@ _trait_default_value ( trait_object * trait, PyObject * args ) {
         }
     }
 
-    /* The default_value method used to support setting the default value
-       information, as well as getting it. We continue to support this for
-       backwards compatibility, but issue a deprecation warning. */
-
     PyErr_Clear();
     if (PyErr_WarnEx(PyExc_DeprecationWarning,
             "Use of the default_value method with arguments is deprecated. "
-            "To set defaults, use the set_default_value method instead.", 1) != 0) {
+            "To set defaults, use set_default_value instead.", 1) != 0) {
         return NULL;
     }
     return _trait_set_default_value(trait, args);
@@ -5017,15 +5013,42 @@ set_trait_post_setattr ( trait_object * trait, PyObject * value,
 |  'CTrait' instance methods:
 +----------------------------------------------------------------------------*/
 
+PyDoc_STRVAR(default_value_doc,
+"default_value()\n"
+"\n"
+"Return tuple giving default value information for this trait.\n"
+"\n"
+"Returns\n"
+"-------\n"
+"default_value_type : int\n"
+"    An integer representing the kind of the default value\n"
+"default_value : value\n"
+"    A value or callable providing the default\n"
+);
+
+PyDoc_STRVAR(set_default_value_doc,
+"set_default_value(default_value_type, default_value)\n"
+"\n"
+"Set the default value information for this trait.\n"
+"\n"
+"Parameters\n"
+"----------\n"
+"default_value_type : int\n"
+"    An integer representing the kind of the default value\n"
+"default_value : value\n"
+"    A value or callable providing the default\n"
+);
+
+
 static PyMethodDef trait_methods[] = {
         { "__getstate__", (PyCFunction) _trait_getstate,       METH_VARARGS,
                 PyDoc_STR( "__getstate__()" ) },
         { "__setstate__", (PyCFunction) _trait_setstate,       METH_VARARGS,
                 PyDoc_STR( "__setstate__(state)" ) },
         { "default_value", (PyCFunction) _trait_default_value, METH_VARARGS,
-                PyDoc_STR( "default_value()" ) },
+                default_value_doc },
         { "set_default_value", (PyCFunction) _trait_set_default_value, METH_VARARGS,
-                PyDoc_STR( "set_default_value(default_value_type, default_value)")},
+                set_default_value_doc },
         { "default_value_for", (PyCFunction) _trait_default_value_for, METH_VARARGS,
                 PyDoc_STR( "default_value_for(object,name)" ) },
         { "set_validate",  (PyCFunction) _trait_set_validate,  METH_VARARGS,
