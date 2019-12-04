@@ -3731,10 +3731,10 @@ ListComplex = List(Complex)
 ListBool = List(Bool)
 
 #: List of function values; default value is [].
-ListFunction = List(FunctionType)
+ListFunction = List(Instance(FunctionType, allow_none=False))
 
 #: List of method values; default value is [].
-ListMethod = List(MethodType)
+ListMethod = List(Instance(MethodType, allow_none=False))
 
 #: List of container type values; default value is [].
 ListThis = List(ThisClass)
