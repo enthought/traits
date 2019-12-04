@@ -1090,14 +1090,20 @@ class _TraitMaker(object):
                     handler = clone.handler
 
                 if handler is not None:
-                    try:
-                        default_value = handler.validate(
-                            None, "", default_value
-                        )
-                    except:
-                        pass
+                    handler_dvt = handler.default_value_type
+                    if handler_dvt in {
+                        TRAIT_LIST_OBJECT_DEFAULT_VALUE,
+                        TRAIT_DICT_OBJECT_DEFAULT_VALUE,
+                        TRAIT_SET_OBJECT_DEFAULT_VALUE,
+                    }:
+                        default_value_type = handler_dvt
 
-                default_value_type = _infer_default_value_type(default_value)
+                # If default_value_type is *still* unspecified, make a best
+                # effort to guess.
+                if default_value_type < 0:
+                    default_value_type = _infer_default_value_type(
+                        default_value
+                    )
 
         self.default_value_type = default_value_type
         self.default_value = default_value
