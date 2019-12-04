@@ -40,7 +40,7 @@ class TestCTrait(unittest.TestCase):
             trait.default_value(), (LIST_COPY_DEFAULT_VALUE, [1, 2, 3])
         )
 
-    def test_default_value_for_set(self):
+    def test_default_value_for_set_is_deprecated(self):
         trait = CTrait(0)
         with warnings.catch_warnings(record=True) as warn_msgs:
             warnings.simplefilter("always", DeprecationWarning)
