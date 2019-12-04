@@ -207,6 +207,10 @@ static int call_notifiers ( PyListObject *, PyListObject *,
    is the default value */
 #define TRAIT_SET_OBJECT_DEFAULT_VALUE 9
 
+/* Maximum legal value for default_value_type, for use in testing and
+   validation. */
+#define MAXIMUM_DEFAULT_VALUE_TYPE 9
+
 
 /*-----------------------------------------------------------------------------
 |  'CTrait' instance definition:
@@ -2963,10 +2967,12 @@ _trait_set_default_value ( trait_object * trait, PyObject * args ) {
         return NULL;
 
     PyErr_Clear();
-    if ( (value_type < 0) || (value_type > 9) ) {
-        PyErr_Format( PyExc_ValueError,
-                "The default value type must be 0..9, but %d was specified.",
-                value_type );
+    if ( (value_type < 0) || (value_type > MAXIMUM_DEFAULT_VALUE_TYPE) ) {
+        PyErr_Format(
+            PyExc_ValueError,
+            "The default value type must be 0..%d, but %d was specified.",
+            MAXIMUM_DEFAULT_VALUE_TYPE,
+            value_type );
 
         return NULL;
     }

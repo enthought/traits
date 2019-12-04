@@ -18,6 +18,7 @@ from traits.traits import CTrait
 from traits.trait_handlers import (
     CONSTANT_DEFAULT_VALUE,
     LIST_COPY_DEFAULT_VALUE,
+    MAXIMUM_DEFAULT_VALUE_TYPE,
 )
 
 
@@ -54,3 +55,12 @@ class TestCTrait(unittest.TestCase):
         )
         _, _, this_module = __name__.rpartition(".")
         self.assertIn(this_module, warn_msg.filename)
+
+    def test_bad_default_value_type(self):
+        trait = CTrait(0)
+
+        with self.assertRaises(ValueError):
+            trait.set_default_value(-1, None)
+
+        with self.assertRaises(ValueError):
+            trait.set_default_value(MAXIMUM_DEFAULT_VALUE_TYPE + 1, None)
