@@ -3713,22 +3713,22 @@ undefined = Any(Undefined)
 # -- List Traits ----------------------------------------------------------------
 
 #: List of integer values; default value is [].
-ListInt = List(int)
+ListInt = List(Int)
 
 #: List of float values; default value is [].
-ListFloat = List(float)
+ListFloat = List(Float)
 
 #: List of string values; default value is [].
-ListStr = List(str)
+ListStr = List(Str)
 
 #: List of Unicode string values; default value is [].
-ListUnicode = List(six.text_type)
+ListUnicode = List(Unicode)
 
 #: List of complex values; default value is [].
-ListComplex = List(complex)
+ListComplex = List(Complex)
 
 #: List of Boolean values; default value is [].
-ListBool = List(bool)
+ListBool = List(Bool)
 
 #: List of function values; default value is [].
 ListFunction = List(FunctionType)
@@ -3743,24 +3743,24 @@ ListThis = List(ThisClass)
 
 #: Only a dictionary of string:Any values can be assigned; only string keys can
 #: be inserted. The default value is {}.
-DictStrAny = Dict(str, Any)
+DictStrAny = Dict(Str, Any)
 
 #: Only a dictionary of string:string values can be assigned; only string keys
 #: with string values can be inserted. The default value is {}.
-DictStrStr = Dict(str, str)
+DictStrStr = Dict(Str, Str)
 
 #: Only a dictionary of string:integer values can be assigned; only string keys
 #: with integer values can be inserted. The default value is {}.
-DictStrInt = Dict(str, int)
+DictStrInt = Dict(Str, Int)
 
 #: Only a dictionary of string:float values can be assigned; only string keys
 #: with float values can be inserted. The default value is {}.
-DictStrFloat = Dict(str, float)
+DictStrFloat = Dict(Str, Float)
 
 #: Only a dictionary of string:bool values can be assigned; only string keys
 #: with boolean values can be inserted. The default value is {}.
-DictStrBool = Dict(str, bool)
+DictStrBool = Dict(Str, Bool)
 
 #: Only a dictionary of string:list values can be assigned; only string keys
 #: with list values can be assigned. The default value is {}.
-DictStrList = Dict(str, list)
+DictStrList = Dict(Str, List)
