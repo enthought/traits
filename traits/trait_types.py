@@ -54,7 +54,6 @@ from .trait_handlers import (
     TraitSetEvent,
     TraitDictObject,
     TraitDictEvent,
-    ThisClass,
     items_event,
     RangeTypes,
     HandleWeakRef,
@@ -3737,7 +3736,7 @@ ListFunction = List(Instance(FunctionType, allow_none=False))
 ListMethod = List(Instance(MethodType, allow_none=False))
 
 #: List of container type values; default value is [].
-ListThis = List(ThisClass)
+ListThis = List(This(allow_none=False))
 
 # -- Dictionary Traits ----------------------------------------------------------
 
