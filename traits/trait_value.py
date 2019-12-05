@@ -30,7 +30,13 @@ from .traits import CTrait
 from .has_traits import HasTraits, HasPrivateTraits
 from .trait_errors import TraitError
 from .trait_types import Tuple, Dict, Any, Str, Instance, Event, Callable
-from .trait_handlers import TraitType, _read_only, _write_only, _arg_count
+from .trait_handlers import (
+    _arg_count,
+    _read_only,
+    _write_only,
+    CALLABLE_AND_ARGS_DEFAULT_VALUE,
+    TraitType,
+)
 
 # -------------------------------------------------------------------------------
 #  'BaseTraitValue' class:
@@ -165,7 +171,10 @@ class TraitValue(BaseTraitValue):
             if original_trait.__dict__ is not None:
                 trait.__dict__ = original_trait.__dict__.copy()
 
-            trait.default_value(7, (self.default, self.args, self.kw))
+            trait.set_default_value(
+                CALLABLE_AND_ARGS_DEFAULT_VALUE,
+                (self.default, self.args, self.kw),
+            )
 
         elif self.type is not None:
             type = self.type

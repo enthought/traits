@@ -116,6 +116,10 @@ CALLABLE_DEFAULT_VALUE = 8
 #: is the default value.
 TRAIT_SET_OBJECT_DEFAULT_VALUE = 9
 
+#: Maximum legal value for default_value_type, for use in testing
+#: and validation.
+MAXIMUM_DEFAULT_VALUE_TYPE = 9
+
 
 # Mapping from trait metadata 'type' to CTrait 'type':
 trait_types = {"python": 1, "event": 2}
@@ -681,7 +685,7 @@ class TraitType(BaseTraitHandler):
 
             metadata.setdefault("type", "trait")
 
-        trait.default_value(*self.get_default_value())
+        trait.set_default_value(*self.get_default_value())
 
         trait.value_allowed(metadata.get("trait_value", False) is True)
 

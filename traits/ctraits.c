@@ -205,6 +205,10 @@ static int call_notifiers ( PyListObject *, PyListObject *,
    is the default value */
 #define TRAIT_SET_OBJECT_DEFAULT_VALUE 9
 
+/* Maximum legal value for default_value_type, for use in testing and
+   validation. */
+#define MAXIMUM_DEFAULT_VALUE_TYPE 9
+
 
 /*-----------------------------------------------------------------------------
 |  'CTrait' instance definition:
@@ -2914,42 +2918,67 @@ trait_getattro ( trait_object * obj, PyObject * name ) {
 }
 
 /*-----------------------------------------------------------------------------
-|  Sets the value of the 'default_value' field of a CTrait instance:
+|  Set the 'default_value_type' and 'default_value' fields
+|  of a CTrait instance:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_trait_set_default_value ( trait_object * trait, PyObject * args ) {
+
+    int value_type;
+    PyObject *value, *old_value;
+
+    if ( !PyArg_ParseTuple( args, "iO", &value_type, &value ) )
+        return NULL;
+
+    if ( (value_type < 0) || (value_type > MAXIMUM_DEFAULT_VALUE_TYPE) ) {
+        PyErr_Format(
+            PyExc_ValueError,
+            "The default value type must be 0..%d, but %d was specified.",
+            MAXIMUM_DEFAULT_VALUE_TYPE,
+            value_type );
+        return NULL;
+    }
+
+    trait->default_value_type = value_type;
+
+    /* The DECREF on the old value can call arbitrary code, so take care not to
+       DECREF until the trait is in a consistent state. (Newer CPython versions
+       have a Py_XSETREF macro to do this safely.) */
+    Py_INCREF( value );
+    old_value = trait->default_value;
+    trait->default_value = value;
+    Py_XDECREF( old_value );
+
+    Py_RETURN_NONE;
+}
+
+/*-----------------------------------------------------------------------------
+|  Get or set the 'default_value_type' and 'default_value' fields
+|  of a CTrait instance. Use of this function for setting the default
+|  value information is deprecated; use set_default_value instead.
 +----------------------------------------------------------------------------*/
 
 static PyObject *
 _trait_default_value ( trait_object * trait, PyObject * args ) {
 
-    int        value_type;
-    PyObject * value;
-
     if ( PyArg_ParseTuple( args, "" ) ) {
-        if ( trait->default_value == NULL )
+        if ( trait->default_value == NULL ) {
             return Py_BuildValue( "iO", 0, Py_None );
-
-        return Py_BuildValue( "iO", trait->default_value_type,
-                                    trait->default_value );
+        }
+        else {
+            return Py_BuildValue( "iO", trait->default_value_type,
+                                        trait->default_value );
+        }
     }
-
-    if ( !PyArg_ParseTuple( args, "iO", &value_type, &value ) )
-        return NULL;
 
     PyErr_Clear();
-    if ( (value_type < 0) || (value_type > 9) ) {
-        PyErr_Format( PyExc_ValueError,
-                "The default value type must be 0..9, but %d was specified.",
-                value_type );
-
+    if (PyErr_WarnEx(PyExc_DeprecationWarning,
+            "Use of the default_value method with arguments is deprecated. "
+            "To set defaults, use set_default_value instead.", 1) != 0) {
         return NULL;
     }
-
-    Py_INCREF( value );
-    Py_XDECREF( trait->default_value );
-    trait->default_value_type = value_type;
-    trait->default_value = value;
-
-    Py_INCREF( Py_None );
-    return Py_None;
+    return _trait_set_default_value(trait, args);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4949,13 +4978,42 @@ set_trait_post_setattr ( trait_object * trait, PyObject * value,
 |  'CTrait' instance methods:
 +----------------------------------------------------------------------------*/
 
+PyDoc_STRVAR(default_value_doc,
+"default_value()\n"
+"\n"
+"Return tuple giving default value information for this trait.\n"
+"\n"
+"Returns\n"
+"-------\n"
+"default_value_type : int\n"
+"    An integer representing the kind of the default value\n"
+"default_value : value\n"
+"    A value or callable providing the default\n"
+);
+
+PyDoc_STRVAR(set_default_value_doc,
+"set_default_value(default_value_type, default_value)\n"
+"\n"
+"Set the default value information for this trait.\n"
+"\n"
+"Parameters\n"
+"----------\n"
+"default_value_type : int\n"
+"    An integer representing the kind of the default value\n"
+"default_value : value\n"
+"    A value or callable providing the default\n"
+);
+
+
 static PyMethodDef trait_methods[] = {
         { "__getstate__", (PyCFunction) _trait_getstate,       METH_VARARGS,
                 PyDoc_STR( "__getstate__()" ) },
         { "__setstate__", (PyCFunction) _trait_setstate,       METH_VARARGS,
                 PyDoc_STR( "__setstate__(state)" ) },
         { "default_value", (PyCFunction) _trait_default_value, METH_VARARGS,
-                PyDoc_STR( "default_value(default_value)" ) },
+                default_value_doc },
+        { "set_default_value", (PyCFunction) _trait_set_default_value, METH_VARARGS,
+                set_default_value_doc },
         { "default_value_for", (PyCFunction) _trait_default_value_for, METH_VARARGS,
                 PyDoc_STR( "default_value_for(object,name)" ) },
         { "set_validate",  (PyCFunction) _trait_set_validate,  METH_VARARGS,
