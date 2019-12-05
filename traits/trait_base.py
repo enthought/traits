@@ -44,8 +44,6 @@ enumerate = enumerate
 #  Constants:
 # -------------------------------------------------------------------------------
 
-ClassTypes = _py2to3.ClassTypes
-
 SequenceTypes = (list, tuple)
 
 ComplexTypes = (float, int)

@@ -49,7 +49,6 @@ from .trait_base import (
     SequenceTypes,
     Undefined,
     TypeTypes,
-    ClassTypes,
     CoercableTypes,
     TraitsCache,
     class_of,
@@ -1083,7 +1082,7 @@ class TraitInstance(ThisClass):
         if isinstance(aClass, six.string_types):
             self.aClass = aClass
         else:
-            if not isinstance(aClass, ClassTypes):
+            if not isinstance(aClass, type):
                 aClass = aClass.__class__
             self.aClass = aClass
             self.set_fast_validate()

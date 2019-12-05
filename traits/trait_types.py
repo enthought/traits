@@ -42,7 +42,6 @@ from .trait_base import (
     class_of,
     SequenceTypes,
     TypeTypes,
-    ClassTypes,
     Undefined,
     TraitsCache,
 )
@@ -2908,7 +2907,7 @@ class BaseInstance(BaseClass):
         if isinstance(klass, six.string_types):
             self.klass = klass
         else:
-            if not isinstance(klass, ClassTypes):
+            if not isinstance(klass, type):
                 klass = klass.__class__
 
             self.klass = klass
@@ -3208,7 +3207,7 @@ class Type(BaseClass):
         if isinstance(klass, six.string_types):
             self.validate = self.resolve
 
-        elif not isinstance(klass, ClassTypes):
+        elif not isinstance(klass, type):
             raise TraitError("A Type trait must specify a class.")
 
         self.klass = klass
