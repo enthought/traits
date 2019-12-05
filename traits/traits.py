@@ -1178,18 +1178,6 @@ class _TraitMaker(object):
 
         return trait
 
-    # ---------------------------------------------------------------------------
-    #  Extract a set of keywords from a dictionary:
-    # ---------------------------------------------------------------------------
-
-    def extract(self, from_dict, *keys):
-        to_dict = {}
-        for key in keys:
-            if key in from_dict:
-                to_dict[key] = from_dict[key]
-                del from_dict[key]
-        return to_dict
-
 
 # -------------------------------------------------------------------------------
 #  Factory function for creating C-based trait properties:
