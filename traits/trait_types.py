@@ -3696,9 +3696,9 @@ Date = BaseInstance(datetime.date, editor=date_editor)
 Time = BaseInstance(datetime.time, editor=time_editor)
 
 
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  Create predefined, reusable trait instances:
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 #: Synonym for Bool; default value is ``False``. This trait type is
 #: deprecated. Use ``Bool(False)`` or ``Bool()`` instead.
@@ -3713,45 +3713,47 @@ true = Bool(True)
 #: ``Any(Undefined)`` instead.
 undefined = Any(Undefined)
 
-# -- List Traits ----------------------------------------------------------------
+# -- List Traits --------------------------------------------------------------
 
 #: List of integer values; default value is ``[]``. This trait type is
 #: deprecated. Use ``List(Int)`` instead.
 ListInt = List(int)
 
-#: List of float values; default value is []. This trait type is deprecated.
-#: Use ``List(Float)`` instead.
+#: List of float values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Float)`` instead.
 ListFloat = List(float)
 
-#: List of string values; default value is []. This trait type is deprecated.
-#: Use ``List(Str)`` instead.
+#: List of string values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Str)`` instead.
 ListStr = List(str)
 
-#: List of Unicode string values; default value is []. This trait type is
+#: List of Unicode string values; default value is ``[]``. This trait type is
 #: deprecated. Use ``List(Unicode)`` instead.
 ListUnicode = List(six.text_type)
 
-#: List of complex values; default value is []. This trait type is deprecated.
-#: Use ``List(Complex)`` instead.
+#: List of complex values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Complex)`` instead.
 ListComplex = List(complex)
 
-#: List of Boolean values; default value is []. This trait type is deprecated.
-#: Use ``List(Bool)`` instead.
+#: List of Boolean values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Bool)`` instead.
 ListBool = List(bool)
 
-#: List of function values; default value is []. This trait type is deprecated.
-#: Use ``List(Instance(types.FunctionType, allow_none=False))`` instead.
+#: List of function values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Instance(types.FunctionType, allow_none=False))``
+#: instead.
 ListFunction = List(FunctionType)
 
-#: List of method values; default value is []. This trait type is deprecated.
-#: Use ``List(Instance(types.MethodType, allow_none=False))`` instead.
+#: List of method values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Instance(types.MethodType, allow_none=False))``
+#: instead.
 ListMethod = List(MethodType)
 
-#: List of container type values; default value is []. This trait type is
+#: List of container type values; default value is ``[]``. This trait type is
 #: deprecated. Use ``List(This(allow_none=False))`` instead.
 ListThis = List(ThisClass)
 
-# -- Dictionary Traits ----------------------------------------------------------
+# -- Dictionary Traits --------------------------------------------------------
 
 #: Only a dictionary of string:Any values can be assigned; only string keys can
 #: be inserted. The default value is {}. This trait type is deprecated. Use
