@@ -2810,11 +2810,7 @@ def validate_implements(value, klass, unused=None):
     """ Checks to see if a specified value implements the instance class
         interface (if it is an interface).
     """
-
-    from .has_traits import isinterface
-    from .interface_checker import check_implements
-
-    return isinterface(klass) and check_implements(value.__class__, klass)
+    return isinstance(value, klass)
 
 
 #: Tell the C-base code about the 'validate_implements' function (used by the
