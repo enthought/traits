@@ -1088,10 +1088,7 @@ class This(BaseType):
 
     def validate_failed(self, object, name, value):
         kind = type(value)
-        if _py2to3.is_InstanceType(kind):
-            msg = "class %s" % value.__class__.__name__
-        else:
-            msg = "%s (i.e. %s)" % (str(kind)[1:-1], repr(value))
+        msg = "%s (i.e. %s)" % (str(kind)[1:-1], repr(value))
 
         self.error(object, name, msg)
 

@@ -25,32 +25,7 @@ else:
 if six.PY2:
     from types import InstanceType, ClassType
 
-    def is_old_style_instance(obj):
-        return type(obj) is InstanceType
-
-    def is_old_style_class(obj):
-        return type(obj) is ClassType
-
-    def is_InstanceType(obj):
-        return obj is InstanceType
-
-    def is_ClassType(obj):
-        return obj is ClassType
-
-
 else:
-
-    def is_old_style_instance(obj):
-        return False
-
-    def is_old_style_instance(obj):
-        return False
-
-    def is_InstanceType(obj):
-        return False
-
-    def is_ClassType(obj):
-        return False
 
 
 if six.PY2:
@@ -66,8 +41,6 @@ else:
     type_w_old_style = type
 
 if six.PY2:
-    from types import ClassType
-
     ClassTypes = (ClassType, type)
 else:
     ClassTypes = (type,)

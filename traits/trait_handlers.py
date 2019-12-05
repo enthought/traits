@@ -1286,8 +1286,6 @@ class TraitClass(TraitHandler):
         If *aClass* is an instance, it is mapped to the class it is an instance
         of.
         """
-        if _py2to3.is_old_style_instance(aClass):
-            aClass = aClass.__class__
         self.aClass = aClass
 
     def validate(self, object, name, value):
