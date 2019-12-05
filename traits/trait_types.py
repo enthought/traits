@@ -3700,16 +3700,16 @@ Time = BaseInstance(datetime.time, editor=time_editor)
 #  Create predefined, reusable trait instances:
 # -------------------------------------------------------------------------------
 
-#: Synonym for Bool; default value is ``False```. This trait type is
+#: Synonym for Bool; default value is ``False``. This trait type is
 #: deprecated. Use ``Bool(False)`` or ``Bool()`` instead.
 false = Bool
 
-#:  Boolean values only; default value is ``True```. This trait type is
+#:  Boolean values only; default value is ``True``. This trait type is
 #: deprecated. Use ``Bool(True)`` instead.
 true = Bool(True)
 
 #: Allows any value to be assigned; no type-checking is performed.
-#: Default value is ``Undefined```. This trait type is deprecated. Use
+#: Default value is ``Undefined``. This trait type is deprecated. Use
 #: ``Any(Undefined)`` instead.
 undefined = Any(Undefined)
 
