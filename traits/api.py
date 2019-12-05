@@ -180,7 +180,6 @@ from .trait_handlers import (
     BaseTraitHandler,
     TraitType,
     TraitHandler,
-    TraitString,
     TraitCoerceType,
     TraitCastType,
     TraitInstance,

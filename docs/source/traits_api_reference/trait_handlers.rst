@@ -15,8 +15,6 @@ Classes
 
 .. autoclass:: TraitHandler
 
-.. autoclass:: TraitString
-
 .. autoclass:: TraitCoerceType
 
 .. autoclass:: TraitCastType

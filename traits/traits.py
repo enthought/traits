@@ -76,7 +76,6 @@ from .trait_handlers import (
     TraitEnum,
     TraitCompound,
     TraitMap,
-    TraitString,
     ThisClass,
     TraitType,
     _arg_count,
@@ -973,17 +972,7 @@ class _TraitMaker(object):
 
                 else:
                     typeValue = type(default_value)
-
-                    if isinstance(default_value, six.string_types):
-                        string_options = self.extract(
-                            metadata, "min_len", "max_len", "regex"
-                        )
-                        if len(string_options) == 0:
-                            handler = TraitCastType(typeValue)
-                        else:
-                            handler = TraitString(**string_options)
-
-                    elif typeValue in TypeTypes:
+                    if typeValue in TypeTypes:
                         handler = TraitCastType(typeValue)
 
                     else:
@@ -1188,18 +1177,6 @@ class _TraitMaker(object):
                 trait.__dict__.update(metadata)
 
         return trait
-
-    # ---------------------------------------------------------------------------
-    #  Extract a set of keywords from a dictionary:
-    # ---------------------------------------------------------------------------
-
-    def extract(self, from_dict, *keys):
-        to_dict = {}
-        for key in keys:
-            if key in from_dict:
-                to_dict[key] = from_dict[key]
-                del from_dict[key]
-        return to_dict
 
 
 # -------------------------------------------------------------------------------
