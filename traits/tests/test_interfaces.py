@@ -95,7 +95,7 @@ class SampleAverage(HasTraits):
 
 class UndeclaredAverageProvider(HasTraits):
     """
-    Class that conforms to the IList interface, but doesn't declare
+    Class that conforms to the IAverage interface, but doesn't declare
     that it does so.
     """
     def get_average(self):
