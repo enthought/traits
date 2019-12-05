@@ -57,8 +57,6 @@ from .trait_base import (
 )
 from .trait_errors import TraitError
 
-from . import _py2to3
-
 
 # Patched by 'traits.py' once class is defined!
 Trait = Event = None
