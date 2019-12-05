@@ -93,6 +93,15 @@ class SampleAverage(HasTraits):
         return average / len(value)
 
 
+class UndeclaredAverageProvider(HasTraits):
+    """
+    Class that conforms to the IList interface, but doesn't declare
+    that it does so.
+    """
+    def get_average(self):
+        return 5.6
+
+
 class SampleBad(HasTraits):
     pass
 
@@ -307,3 +316,9 @@ class InterfacesTest(unittest.TestCase):
     def test_decorated_class_name_and_docstring(self):
         self.assertEqual(SampleList.__name__, "SampleList")
         self.assertEqual(SampleList.__doc__, "SampleList docstring.")
+
+    def test_instance_requires_provides(self):
+        ta = TraitsHolder()
+        provider = UndeclaredAverageProvider()
+        with self.assertRaises(TraitError):
+            ta.a_no = provider
