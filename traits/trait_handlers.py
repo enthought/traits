@@ -530,7 +530,7 @@ class TraitType(BaseTraitHandler):
 
         return (dvt, dv)
 
-    def clone(self, default_value=Missing, **metadata):
+    def clone(self, default_value=NoDefaultSpecified, **metadata):
         """ Clones the contents of this object into a new instance of the same
             class, and then modifies the cloned copy using the specified
             *default_value* and *metadata*. Returns the cloned object as the
@@ -556,7 +556,7 @@ class TraitType(BaseTraitHandler):
 
         new._metadata.update(metadata)
 
-        if default_value is not Missing:
+        if default_value is not NoDefaultSpecified:
             new.default_value = default_value
             if self.validate is not None:
                 try:
