@@ -122,8 +122,6 @@ class AdaptationManager(HasTraits):
 
         # If the object already provides the given protocol then it is
         # simply returned.
-        # We use adaptee.__class__ instead of type(adaptee) as a courtesy to
-        # old-style classes.
         if self.provides_protocol(adaptee.__class__, to_protocol):
             result = adaptee
 
