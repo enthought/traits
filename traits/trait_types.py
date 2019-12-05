@@ -3755,32 +3755,32 @@ ListThis = List(ThisClass)
 
 # -- Dictionary Traits --------------------------------------------------------
 
-#: Only a dictionary of string:Any values can be assigned; only string keys can
-#: be inserted. The default value is {}. This trait type is deprecated. Use
+#: Only a dictionary with strings as keys can be assigned; only string keys
+#: can be inserted. The default value is {}. This trait type is deprecated. Use
 #: ``Dict(Str, Any)`` instead.
 DictStrAny = Dict(str, Any)
 
-#: Only a dictionary of string:string values can be assigned; only string keys
-#: with string values can be inserted. The default value is {}. This trait
+#: Only a dictionary mapping strings to strings can be assigned; only string
+#: keys with string values can be inserted. The default value is {}. This trait
 #: type is deprecated. Use ``Dict(Str, Str)`` instead.
 DictStrStr = Dict(str, str)
 
-#: Only a dictionary of string:integer values can be assigned; only string keys
-#: with integer values can be inserted. The default value is {}. This trait
-#: type is deprecated. Use ``Dict(Str, Int)`` instead.
+#: Only a dictionary mapping strings to integers can be assigned; only string
+#: keys with integer values can be inserted. The default value is {}. This
+#: trait type is deprecated. Use ``Dict(Str, Int)`` instead.
 DictStrInt = Dict(str, int)
 
-#: Only a dictionary of string:float values can be assigned; only string keys
-#: with float values can be inserted. The default value is {}. This trait
+#: Only a dictionary mapping strings to floats can be assigned; only string
+#: keys with float values can be inserted. The default value is {}. This trait
 #: type is deprecated. Use ``Dict(Str, Float)`` instead.
 DictStrFloat = Dict(str, float)
 
-#: Only a dictionary of string:bool values can be assigned; only string keys
-#: with boolean values can be inserted. The default value is {}. This trait
-#: type is deprecated. Use ``Dict(Str, Bool)`` instead.
+#: Only a dictionary mapping strings to booleans can be assigned; only string
+#: keys with boolean values can be inserted. The default value is {}. This
+#: trait type is deprecated. Use ``Dict(Str, Bool)`` instead.
 DictStrBool = Dict(str, bool)
 
-#: Only a dictionary of string:list values can be assigned; only string keys
-#: with list values can be assigned. The default value is {}. This trait type
+#: Only a dictionary mapping strings to lists can be assigned; only string keys
+#: with list values can be inserted. The default value is {}. This trait type
 #: is deprecated. Use ``Dict(Str, List)`` instead.
 DictStrList = Dict(str, list)
