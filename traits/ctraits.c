@@ -3668,6 +3668,9 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
     } else {
         args = PyTuple_Pack(2, value, type);
     }
+    if (args == NULL) {
+        return NULL;
+    }
 
     result = PyObject_Call( adapt, args, NULL );
     Py_DECREF( args );
