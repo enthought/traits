@@ -176,6 +176,22 @@ Traits
 
 .. autodata:: Time
 
+Deprecated Traits
+-----------------
+
+The following :class:`~.TraitType` instances are deprecated, and may
+be removed in a future version of Traits. In user code, these should be
+replaced with the corresponding compound types (e.g., replace ``ListStr``
+with ``List(Str)`` and ``DictStrAny`` with ``Dict(Str, Any)``).
+
+.. deprecated:: 6.0.0
+
+.. autodata:: false
+
+.. autodata:: true
+
+.. autodata:: undefined
+
 .. autodata:: ListInt
 
 .. autodata:: ListFloat
@@ -205,6 +221,7 @@ Traits
 .. autodata:: DictStrBool
 
 .. autodata:: DictStrList
+
 
 Private Classes
 ---------------
