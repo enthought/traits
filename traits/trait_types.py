@@ -42,7 +42,6 @@ from .trait_base import (
     class_of,
     SequenceTypes,
     TypeTypes,
-    ClassTypes,
     Undefined,
     TraitsCache,
 )
@@ -81,8 +80,6 @@ from .traits import (
 )
 
 from .trait_errors import TraitError
-
-from . import _py2to3
 
 # -------------------------------------------------------------------------------
 #  Constants:
@@ -1088,10 +1085,7 @@ class This(BaseType):
 
     def validate_failed(self, object, name, value):
         kind = type(value)
-        if _py2to3.is_InstanceType(kind):
-            msg = "class %s" % value.__class__.__name__
-        else:
-            msg = "%s (i.e. %s)" % (str(kind)[1:-1], repr(value))
+        msg = "%s (i.e. %s)" % (str(kind)[1:-1], repr(value))
 
         self.error(object, name, msg)
 
@@ -2907,7 +2901,7 @@ class BaseInstance(BaseClass):
         if isinstance(klass, six.string_types):
             self.klass = klass
         else:
-            if not isinstance(klass, ClassTypes):
+            if not isinstance(klass, type):
                 klass = klass.__class__
 
             self.klass = klass
@@ -3207,7 +3201,7 @@ class Type(BaseClass):
         if isinstance(klass, six.string_types):
             self.validate = self.resolve
 
-        elif not isinstance(klass, ClassTypes):
+        elif not isinstance(klass, type):
             raise TraitError("A Type trait must specify a class.")
 
         self.klass = klass

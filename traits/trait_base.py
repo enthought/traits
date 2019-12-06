@@ -33,8 +33,6 @@ from os.path import dirname, exists, join
 
 import six
 
-from . import _py2to3
-
 from .etsconfig.api import ETSConfig
 
 # backwards compatibility: trait_base used to provide a patched enumerate
@@ -43,8 +41,6 @@ enumerate = enumerate
 # -------------------------------------------------------------------------------
 #  Constants:
 # -------------------------------------------------------------------------------
-
-ClassTypes = _py2to3.ClassTypes
 
 SequenceTypes = (list, tuple)
 

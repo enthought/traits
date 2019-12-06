@@ -49,7 +49,6 @@ from .trait_base import (
     SequenceTypes,
     Undefined,
     TypeTypes,
-    ClassTypes,
     CoercableTypes,
     TraitsCache,
     class_of,
@@ -57,8 +56,6 @@ from .trait_base import (
     Self,
 )
 from .trait_errors import TraitError
-
-from . import _py2to3
 
 
 # Patched by 'traits.py' once class is defined!
@@ -1083,7 +1080,7 @@ class TraitInstance(ThisClass):
         if isinstance(aClass, six.string_types):
             self.aClass = aClass
         else:
-            if not isinstance(aClass, ClassTypes):
+            if not isinstance(aClass, type):
                 aClass = aClass.__class__
             self.aClass = aClass
             self.set_fast_validate()
@@ -1286,8 +1283,6 @@ class TraitClass(TraitHandler):
         If *aClass* is an instance, it is mapped to the class it is an instance
         of.
         """
-        if _py2to3.is_old_style_instance(aClass):
-            aClass = aClass.__class__
         self.aClass = aClass
 
     def validate(self, object, name, value):

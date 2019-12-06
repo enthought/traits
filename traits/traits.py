@@ -596,14 +596,6 @@ PythonTypes = (
     NoneType,
 )
 
-if six.PY2:
-    from types import InstanceType, ClassType
-
-    PythonTypes = (
-        PythonTypes[:-2] + (InstanceType, ClassType) + PythonTypes[2:]
-    )
-
-
 CallableTypes = (FunctionType, MethodType)
 
 TraitTypes = (TraitHandler, CTrait)

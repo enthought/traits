@@ -1042,13 +1042,7 @@ This is a list of replacements for the old API:
 Gotchas
 ```````
 
-1) The adaptation mechanism does not explicitly support old-style classes.
-   Adaptation might work in particular cases but is not guaranteed to work
-   correctly in situations involving old-style classes. When used with Traits,
-   the classes involved in adaptation are typically subclasses of
-   :class:`~.HasTraits`, in which case this is not an issue.
-
-2) The methods :func:`~traits.adaptation.adaptation_manager.register_factory`,
+1) The methods :func:`~traits.adaptation.adaptation_manager.register_factory`,
    :func:`~traits.adaptation.adaptation_manager.adapt`,
    etc. use a global adaptation manager, which is accessible through the
    function

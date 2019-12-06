@@ -275,8 +275,6 @@ Python types:
 * dict or DictType
 * FunctionType
 * MethodType
-* ClassType
-* InstanceType
 * type
 * NoneType
 
