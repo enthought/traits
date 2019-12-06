@@ -7,21 +7,6 @@ import contextlib
 
 import six
 
-# FIXME : These two aliases are being used by released versions of traitsui
-# See PR https://github.com/enthought/traitsui/pull/496 which removes their
-# use from traitsui.
-# Once that PR is merged and a new release of traitsui is available, we can
-# remove these aliases for good.
-if six.PY2:
-    import string
-
-    str_find = string.find
-    str_rfind = string.rfind
-else:
-    str_find = str.find
-    str_rfind = str.rfind
-
-
 if six.PY2:
     def nested_context_mgrs(*args):
         return contextlib.nested(*args)
