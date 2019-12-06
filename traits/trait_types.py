@@ -3076,12 +3076,12 @@ class Instance(BaseInstance):
     def init_fast_validate(self):
         """ Sets up the C-level fast validator. """
 
-        from .has_traits import isinterface
-
-        if (self.adapt == 0) and (not isinterface(self.klass)):
+        if self.adapt == 0:
             fast_validate = [1, self.klass]
             if self._allow_none:
                 fast_validate = [1, None, self.klass]
+            else:
+                fast_validate = [1, self.klass]
 
             if self.klass in TypeTypes:
                 fast_validate[0] = 0
