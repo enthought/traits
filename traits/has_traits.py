@@ -73,7 +73,6 @@ from .trait_handlers import (
 )
 
 from .trait_base import (
-    Missing,
     SequenceTypes,
     TraitsCache,
     Undefined,
@@ -1388,9 +1387,11 @@ class HasTraits(CHasTraits):
         elif n == 0:
             names = self.trait_names(**metadata)
 
+        # Sentinel for missing attributes.
+        missing = object()
         for name in names:
-            value = getattr(self, name, Missing)
-            if value is not Missing:
+            value = getattr(self, name, missing)
+            if value is not missing:
                 result[name] = value
 
         return result
