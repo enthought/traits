@@ -176,8 +176,8 @@ Traits
 
 .. autodata:: Time
 
-Deprecated trait types
-----------------------
+Deprecated Traits
+-----------------
 
 The following :class:`~.TraitType` instances are deprecated, and may
 be removed in a future version of Traits. In user code, these should be
