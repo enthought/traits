@@ -45,7 +45,6 @@ static PyObject * TraitSetObject;      /* TraitSetObject class */
 static PyObject * TraitDictObject;     /* TraitDictObject class */
 static PyObject * TraitValue;          /* TraitValue class */
 static PyObject * adapt;               /* PyProtocols 'adapt' function */
-static PyObject * validate_implements; /* 'validate implementation' function */
 static PyObject * is_callable;         /* Marker for 'callable' value */
 static PyTypeObject * ctrait_type;     /* Python-level CTrait type reference */
 
@@ -5150,23 +5149,6 @@ _ctraits_adapt ( PyObject * self, PyObject * args ) {
 }
 
 /*-----------------------------------------------------------------------------
-|  Sets the global 'validate_implements' reference to the Python level
-|  function:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_ctraits_validate_implements ( PyObject * self, PyObject * args ) {
-
-    if ( !PyArg_ParseTuple( args, "O", &validate_implements ) )
-        return NULL;
-
-    Py_INCREF( validate_implements );
-
-    Py_INCREF( Py_None );
-    return Py_None;
-}
-
-/*-----------------------------------------------------------------------------
 |  Sets the global 'ctrait_type' class reference:
 +----------------------------------------------------------------------------*/
 
@@ -5197,8 +5179,6 @@ static PyMethodDef ctraits_methods[] = {
                 PyDoc_STR( "_value_class(TraitValue)" ) },
         { "_adapt", (PyCFunction) _ctraits_adapt, METH_VARARGS,
                 PyDoc_STR( "_adapt(PyProtocols._speedups.adapt)" ) },
-        { "_validate_implements", (PyCFunction) _ctraits_validate_implements,
-        METH_VARARGS, PyDoc_STR( "_validate_implements(validate_implements)" )},
         { "_ctrait",       (PyCFunction) _ctraits_ctrait,       METH_VARARGS,
                 PyDoc_STR( "_ctrait(CTrait_class)" ) },
         { NULL, NULL },

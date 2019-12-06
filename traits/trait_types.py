@@ -2807,13 +2807,6 @@ def validate_implements(value, klass, unused=None):
     return isinstance(value, klass)
 
 
-#: Tell the C-base code about the 'validate_implements' function (used by the
-#: 'fast_validate' code for Instance types):
-from . import ctraits
-
-ctraits._validate_implements(validate_implements)
-
-
 class BaseInstance(BaseClass):
     """ Defines a trait whose value must be an instance of a specified class,
         or one of its subclasses.
