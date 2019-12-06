@@ -53,6 +53,7 @@ requires_sphinx = unittest.skipIf(sphinx is None, "Sphinx not available")
 
 # Traits master has removed support for old-style classes; this causes issues
 # when importing Pyface. So we only attempt to import TraitsUI on Python 3.
+# Related: enthought/pyface#461.
 if six.PY2:
     traitsui = None
 else:
