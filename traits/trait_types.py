@@ -3692,71 +3692,91 @@ Date = BaseInstance(datetime.date, editor=date_editor)
 Time = BaseInstance(datetime.time, editor=time_editor)
 
 
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  Create predefined, reusable trait instances:
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
-# Synonym for Bool; default value is False.
+#: Synonym for Bool; default value is ``False``. This trait type is
+#: deprecated. Use ``Bool(False)`` or ``Bool()`` instead.
 false = Bool
 
-# Boolean values only; default value is True.
+#:  Boolean values only; default value is ``True``. This trait type is
+#: deprecated. Use ``Bool(True)`` instead.
 true = Bool(True)
 
-# Allows any value to be assigned; no type-checking is performed.
-# Default value is Undefined.
+#: Allows any value to be assigned; no type-checking is performed.
+#: Default value is ``Undefined``. This trait type is deprecated. Use
+#: ``Any(Undefined)`` instead.
 undefined = Any(Undefined)
 
-# -- List Traits ----------------------------------------------------------------
+# -- List Traits --------------------------------------------------------------
 
-#: List of integer values; default value is [].
+#: List of integer values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Int)`` instead.
 ListInt = List(int)
 
-#: List of float values; default value is [].
+#: List of float values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Float)`` instead.
 ListFloat = List(float)
 
-#: List of string values; default value is [].
+#: List of string values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Str)`` instead.
 ListStr = List(str)
 
-#: List of Unicode string values; default value is [].
+#: List of Unicode string values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Unicode)`` instead.
 ListUnicode = List(six.text_type)
 
-#: List of complex values; default value is [].
+#: List of complex values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Complex)`` instead.
 ListComplex = List(complex)
 
-#: List of Boolean values; default value is [].
+#: List of Boolean values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Bool)`` instead.
 ListBool = List(bool)
 
-#: List of function values; default value is [].
+#: List of function values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Instance(types.FunctionType, allow_none=False))``
+#: instead.
 ListFunction = List(FunctionType)
 
-#: List of method values; default value is [].
+#: List of method values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Instance(types.MethodType, allow_none=False))``
+#: instead.
 ListMethod = List(MethodType)
 
-#: List of container type values; default value is [].
+#: List of container type values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(This(allow_none=False))`` instead.
 ListThis = List(ThisClass)
 
-# -- Dictionary Traits ----------------------------------------------------------
+# -- Dictionary Traits --------------------------------------------------------
 
-#: Only a dictionary of string:Any values can be assigned; only string keys can
-#: be inserted. The default value is {}.
+#: Only a dictionary with strings as keys can be assigned; only string keys
+#: can be inserted. The default value is {}. This trait type is deprecated. Use
+#: ``Dict(Str, Any)`` instead.
 DictStrAny = Dict(str, Any)
 
-#: Only a dictionary of string:string values can be assigned; only string keys
-#: with string values can be inserted. The default value is {}.
+#: Only a dictionary mapping strings to strings can be assigned; only string
+#: keys with string values can be inserted. The default value is {}. This trait
+#: type is deprecated. Use ``Dict(Str, Str)`` instead.
 DictStrStr = Dict(str, str)
 
-#: Only a dictionary of string:integer values can be assigned; only string keys
-#: with integer values can be inserted. The default value is {}.
+#: Only a dictionary mapping strings to integers can be assigned; only string
+#: keys with integer values can be inserted. The default value is {}. This
+#: trait type is deprecated. Use ``Dict(Str, Int)`` instead.
 DictStrInt = Dict(str, int)
 
-#: Only a dictionary of string:float values can be assigned; only string keys
-#: with float values can be inserted. The default value is {}.
+#: Only a dictionary mapping strings to floats can be assigned; only string
+#: keys with float values can be inserted. The default value is {}. This trait
+#: type is deprecated. Use ``Dict(Str, Float)`` instead.
 DictStrFloat = Dict(str, float)
 
-#: Only a dictionary of string:bool values can be assigned; only string keys
-#: with boolean values can be inserted. The default value is {}.
+#: Only a dictionary mapping strings to booleans can be assigned; only string
+#: keys with boolean values can be inserted. The default value is {}. This
+#: trait type is deprecated. Use ``Dict(Str, Bool)`` instead.
 DictStrBool = Dict(str, bool)
 
-#: Only a dictionary of string:list values can be assigned; only string keys
-#: with list values can be assigned. The default value is {}.
+#: Only a dictionary mapping strings to lists can be assigned; only string keys
+#: with list values can be inserted. The default value is {}. This trait type
+#: is deprecated. Use ``Dict(Str, List)`` instead.
 DictStrList = Dict(str, list)
