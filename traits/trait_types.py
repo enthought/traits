@@ -2800,13 +2800,6 @@ class BaseClass(TraitType):
         self.error(object, name, value)
 
 
-def validate_implements(value, klass, unused=None):
-    """ Checks to see if a specified value implements the instance class
-        interface (if it is an interface).
-    """
-    return isinstance(value, klass)
-
-
 class BaseInstance(BaseClass):
     """ Defines a trait whose value must be an instance of a specified class,
         or one of its subclasses.
@@ -2945,20 +2938,20 @@ class BaseInstance(BaseClass):
                 if value is adapt(value, self.klass):
                     return value
             except:
-                if validate_implements(value, self.klass):
+                if isinstance(value, self.klass):
                     return value
 
         elif self.adapt == 1:
             try:
                 return adapt(value, self.klass)
             except:
-                if validate_implements(value, self.klass):
+                if isinstance(value, self.klass):
                     return value
 
         else:
             result = adapt(value, self.klass, None)
             if result is None:
-                if validate_implements(value, self.klass):
+                if isinstance(value, self.klass):
                     return value
 
                 result = self.default_value
