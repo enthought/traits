@@ -44,7 +44,7 @@ static PyObject * TraitListObject;     /* TraitListObject class */
 static PyObject * TraitSetObject;      /* TraitSetObject class */
 static PyObject * TraitDictObject;     /* TraitDictObject class */
 static PyObject * TraitValue;          /* TraitValue class */
-static PyObject * adapt;               /* PyProtocols 'adapt' function */
+static PyObject * adapt;               /* 'adapt' function */
 static PyObject * is_callable;         /* Marker for 'callable' value */
 static PyTypeObject * ctrait_type;     /* Python-level CTrait type reference */
 
@@ -3917,7 +3917,7 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
 
             /* case 15..18: Property 'setattr' validate checks: */
 
-            case 19:  /* PyProtocols 'adapt' check: */
+            case 19:  /* Adaptable object check: */
                 if ( value == Py_None ) {
                     long allow_none;
 #if PY_MAJOR_VERSION < 3
@@ -4054,7 +4054,7 @@ static trait_validate validate_handlers[] = {
     setattr_validate2,
     setattr_validate3,
 /*  ...End of __getstate__ method entries */
-    validate_trait_adapt,        /* case 19: PyProtocols 'adapt' check */
+    validate_trait_adapt,        /* case 19: Adaptable object check */
     validate_trait_integer,      /* case 20: Integer check */
     validate_trait_float,        /* case 21: Float check */
 };
@@ -4190,7 +4190,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
 
                 /* case 14: Python-based validator check: */
                 /* case 15..18: Property 'setattr' validate checks: */
-                case 19:  /* PyProtocols 'adapt' check: */
+                case 19:  /* Adaptable object check: */
                     /* Note: We don't check the 'class' argument (item[1])
                        because some old-style code creates classes that are not
                        strictly classes or types (e.g. VTK), and yet they work
@@ -5133,7 +5133,7 @@ _ctraits_value_class ( PyObject * self, PyObject * args ) {
 }
 
 /*-----------------------------------------------------------------------------
-|  Sets the global 'adapt' reference to the PyProtocols 'adapt' function:
+|  Sets the global 'adapt' reference to the 'adapt' function:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
@@ -5178,7 +5178,7 @@ static PyMethodDef ctraits_methods[] = {
         { "_value_class", (PyCFunction) _ctraits_value_class,   METH_VARARGS,
                 PyDoc_STR( "_value_class(TraitValue)" ) },
         { "_adapt", (PyCFunction) _ctraits_adapt, METH_VARARGS,
-                PyDoc_STR( "_adapt(PyProtocols._speedups.adapt)" ) },
+                PyDoc_STR( "_adapt(adaptation_function)" ) },
         { "_ctrait",       (PyCFunction) _ctraits_ctrait,       METH_VARARGS,
                 PyDoc_STR( "_ctrait(CTrait_class)" ) },
         { NULL, NULL },
