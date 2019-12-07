@@ -44,8 +44,7 @@ static PyObject * TraitListObject;     /* TraitListObject class */
 static PyObject * TraitSetObject;      /* TraitSetObject class */
 static PyObject * TraitDictObject;     /* TraitDictObject class */
 static PyObject * TraitValue;          /* TraitValue class */
-static PyObject * adapt;               /* PyProtocols 'adapt' function */
-static PyObject * validate_implements; /* 'validate implementation' function */
+static PyObject * adapt;               /* 'adapt' function */
 static PyObject * is_callable;         /* Marker for 'callable' value */
 static PyTypeObject * ctrait_type;     /* Python-level CTrait type reference */
 
@@ -3639,14 +3638,15 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
     long mode, rc;
 
     if ( value == Py_None ) {
+        long allow_none;
 #if PY_MAJOR_VERSION < 3
-        if ( PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) ) ) {
+        allow_none = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
 #else
-        mode = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 3 ) );
-        if( mode==-1 && PyErr_Occurred())
+        allow_none = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 3 ) );
+        if( allow_none==-1 && PyErr_Occurred())
             return NULL;
-        if ( mode ) {
 #endif // #if PY_MAJOR_VERSION < 3
+        if ( allow_none ) {
             Py_INCREF( value );
             return value;
         }
@@ -3663,27 +3663,19 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
 #endif // #if PY_MAJOR_VERSION < 3
 
     if ( mode == 2 ) {
-        args = PyTuple_New( 3 );
-        if ( args == NULL )
-            return NULL;
-
-        PyTuple_SET_ITEM( args, 2, Py_None );
-        Py_INCREF( Py_None );
+        args = PyTuple_Pack(3, value, type, Py_None);
     } else {
-        args = PyTuple_New( 2 );
-        if ( args == NULL )
-            return NULL;
+        args = PyTuple_Pack(2, value, type);
+    }
+    if (args == NULL) {
+        return NULL;
     }
 
-    PyTuple_SET_ITEM( args, 0, value );
-    PyTuple_SET_ITEM( args, 1, type );
-    Py_INCREF( value );
-    Py_INCREF( type );
     result = PyObject_Call( adapt, args, NULL );
+    Py_DECREF( args );
     if ( result != NULL ) {
         if ( result != Py_None ) {
             if ( (mode > 0) || (result == value) ) {
-                Py_DECREF( args );
                 return result;
             }
             Py_DECREF( result );
@@ -3691,19 +3683,11 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
         }
 
         Py_DECREF( result );
-        result = PyObject_Call( validate_implements, args, NULL );
-#if PY_MAJOR_VERSION < 3
-        rc     = PyInt_AS_LONG( result );
-#else
-        rc     = PyLong_AsLong( result );
-#endif
-        Py_DECREF( args );
-        Py_DECREF( result );
-#if PY_MAJOR_VERSION >= 3
+
+        rc = PyObject_IsInstance(value, type);
         if( rc==-1 && PyErr_Occurred()){
             return NULL;
         }
-#endif
         if ( rc ) {
             Py_INCREF( value );
             return value;
@@ -3718,19 +3702,10 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
     }
     PyErr_Clear();
 check_implements:
-    result = PyObject_Call( validate_implements, args, NULL );
-#if PY_MAJOR_VERSION < 3
-    rc     = PyInt_AS_LONG( result );
-#else
-    rc     = PyLong_AsLong( result );
-#endif
-    Py_DECREF( args );
-    Py_DECREF( result );
-#if PY_MAJOR_VERSION >= 3
+    rc = PyObject_IsInstance(value, type);
     if( rc==-1 && PyErr_Occurred()){
         return NULL;
     }
-#endif
     if ( rc ) {
         Py_INCREF( value );
         return value;
@@ -3942,19 +3917,22 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
 
             /* case 15..18: Property 'setattr' validate checks: */
 
-            case 19:  /* PyProtocols 'adapt' check: */
+            case 19:  /* Adaptable object check: */
                 if ( value == Py_None ) {
+                    long allow_none;
 #if PY_MAJOR_VERSION < 3
-                    if ( PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) ) )
+                    allow_none = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
 #else
-                    mode = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 2 ) );
-                    if( mode==-1 && PyErr_Occurred())
+                    allow_none = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 2 ) );
+                    if( allow_none==-1 && PyErr_Occurred())
                         return NULL;
-                    if( mode )
 #endif // #if PY_MAJOR_VERSION < 3
+                    if( allow_none ) {
                         goto done;
+                    }
                     break;
                 }
+
                 type = PyTuple_GET_ITEM( type_info, 1 );
 #if PY_MAJOR_VERSION < 3
                 mode = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 2 ) );
@@ -3963,51 +3941,37 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                 if( mode==-1 && PyErr_Occurred())
                     return NULL;
 #endif // #if PY_MAJOR_VERSION < 3
-                if ( mode == 2 ) {
-                    args = PyTuple_New( 3 );
-                    if ( args == NULL )
-                        return NULL;
 
-                    PyTuple_SET_ITEM( args, 2, Py_None );
-                    Py_INCREF( Py_None );
+                if ( mode == 2 ) {
+                    args = PyTuple_Pack(3, value, type, Py_None);
                 } else {
-                    args = PyTuple_New( 2 );
-                    if ( args == NULL )
-                        return NULL;
+                    args = PyTuple_Pack(2, value, type);
+                }
+                if (args == NULL) {
+                    return NULL;
                 }
 
-                PyTuple_SET_ITEM( args, 0, value );
-                PyTuple_SET_ITEM( args, 1, type );
-                Py_INCREF( value );
-                Py_INCREF( type );
                 result = PyObject_Call( adapt, args, NULL );
+                Py_DECREF( args );
                 if ( result != NULL ) {
                     if ( result != Py_None ) {
-                        if ( (mode == 0) && (result != value) ) {
-                            Py_DECREF( result );
-                            goto check_implements;
+                        if ( (mode > 0) || (result == value) ) {
+                            return result;
                         }
-                        Py_DECREF( args );
-                        return result;
+                        Py_DECREF( result );
+                        goto check_implements;
                     }
 
                     Py_DECREF( result );
-                    result = PyObject_Call( validate_implements, args, NULL );
-#if PY_MAJOR_VERSION < 3
-                    rc = PyInt_AS_LONG( result );
-#else
-                    rc = PyLong_AsLong( result );
+
+                    rc = PyObject_IsInstance(value, type);
                     if( rc==-1 && PyErr_Occurred()){
-                        PyErr_Clear();
-                        Py_DECREF( args );
-                        Py_DECREF( result );
-                        break;
+                        return NULL;
                     }
-#endif // #if PY_MAJOR_VERSION < 3
-                    Py_DECREF( args );
-                    Py_DECREF( result );
-                    if ( rc )
+                    if ( rc ) {
                         goto done;
+                    }
+
                     result = default_value_for( trait, obj, name );
                     if ( result != NULL )
                         return result;
@@ -4017,20 +3981,10 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                 }
                 PyErr_Clear();
 check_implements:
-                result = PyObject_Call( validate_implements, args, NULL );
-#if PY_MAJOR_VERSION < 3
-                rc = PyInt_AS_LONG( result );
-#else
-                rc = PyLong_AsLong( result );
+                rc = PyObject_IsInstance(value, type);
                 if( rc==-1 && PyErr_Occurred()){
-                    PyErr_Clear();
-                    Py_DECREF( args );
-                    Py_DECREF( result );
-                    break;
+                    return NULL;
                 }
-#endif // #if PY_MAJOR_VERSION < 3
-                Py_DECREF( args );
-                Py_DECREF( result );
                 if ( rc )
                     goto done;
                 break;
@@ -4100,7 +4054,7 @@ static trait_validate validate_handlers[] = {
     setattr_validate2,
     setattr_validate3,
 /*  ...End of __getstate__ method entries */
-    validate_trait_adapt,        /* case 19: PyProtocols 'adapt' check */
+    validate_trait_adapt,        /* case 19: Adaptable object check */
     validate_trait_integer,      /* case 20: Integer check */
     validate_trait_float,        /* case 21: Float check */
 };
@@ -4236,7 +4190,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
 
                 /* case 14: Python-based validator check: */
                 /* case 15..18: Property 'setattr' validate checks: */
-                case 19:  /* PyProtocols 'adapt' check: */
+                case 19:  /* Adaptable object check: */
                     /* Note: We don't check the 'class' argument (item[1])
                        because some old-style code creates classes that are not
                        strictly classes or types (e.g. VTK), and yet they work
@@ -5179,7 +5133,7 @@ _ctraits_value_class ( PyObject * self, PyObject * args ) {
 }
 
 /*-----------------------------------------------------------------------------
-|  Sets the global 'adapt' reference to the PyProtocols 'adapt' function:
+|  Sets the global 'adapt' reference to the 'adapt' function:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
@@ -5189,23 +5143,6 @@ _ctraits_adapt ( PyObject * self, PyObject * args ) {
         return NULL;
 
     Py_INCREF( adapt );
-
-    Py_INCREF( Py_None );
-    return Py_None;
-}
-
-/*-----------------------------------------------------------------------------
-|  Sets the global 'validate_implements' reference to the Python level
-|  function:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_ctraits_validate_implements ( PyObject * self, PyObject * args ) {
-
-    if ( !PyArg_ParseTuple( args, "O", &validate_implements ) )
-        return NULL;
-
-    Py_INCREF( validate_implements );
 
     Py_INCREF( Py_None );
     return Py_None;
@@ -5241,9 +5178,7 @@ static PyMethodDef ctraits_methods[] = {
         { "_value_class", (PyCFunction) _ctraits_value_class,   METH_VARARGS,
                 PyDoc_STR( "_value_class(TraitValue)" ) },
         { "_adapt", (PyCFunction) _ctraits_adapt, METH_VARARGS,
-                PyDoc_STR( "_adapt(PyProtocols._speedups.adapt)" ) },
-        { "_validate_implements", (PyCFunction) _ctraits_validate_implements,
-        METH_VARARGS, PyDoc_STR( "_validate_implements(validate_implements)" )},
+                PyDoc_STR( "_adapt(adaptation_function)" ) },
         { "_ctrait",       (PyCFunction) _ctraits_ctrait,       METH_VARARGS,
                 PyDoc_STR( "_ctrait(CTrait_class)" ) },
         { NULL, NULL },

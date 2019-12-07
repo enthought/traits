@@ -2800,20 +2800,6 @@ class BaseClass(TraitType):
         self.error(object, name, value)
 
 
-def validate_implements(value, klass, unused=None):
-    """ Checks to see if a specified value implements the instance class
-        interface (if it is an interface).
-    """
-    return isinstance(value, klass)
-
-
-#: Tell the C-base code about the 'validate_implements' function (used by the
-#: 'fast_validate' code for Instance types):
-from . import ctraits
-
-ctraits._validate_implements(validate_implements)
-
-
 class BaseInstance(BaseClass):
     """ Defines a trait whose value must be an instance of a specified class,
         or one of its subclasses.
@@ -2952,20 +2938,20 @@ class BaseInstance(BaseClass):
                 if value is adapt(value, self.klass):
                     return value
             except:
-                if validate_implements(value, self.klass):
+                if isinstance(value, self.klass):
                     return value
 
         elif self.adapt == 1:
             try:
                 return adapt(value, self.klass)
             except:
-                if validate_implements(value, self.klass):
+                if isinstance(value, self.klass):
                     return value
 
         else:
             result = adapt(value, self.klass, None)
             if result is None:
-                if validate_implements(value, self.klass):
+                if isinstance(value, self.klass):
                     return value
 
                 result = self.default_value
@@ -3090,12 +3076,12 @@ class Instance(BaseInstance):
     def init_fast_validate(self):
         """ Sets up the C-level fast validator. """
 
-        from .has_traits import isinterface
-
-        if (self.adapt == 0) and (not isinterface(self.klass)):
+        if self.adapt == 0:
             fast_validate = [1, self.klass]
             if self._allow_none:
                 fast_validate = [1, None, self.klass]
+            else:
+                fast_validate = [1, self.klass]
 
             if self.klass in TypeTypes:
                 fast_validate[0] = 0
