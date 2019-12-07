@@ -3640,7 +3640,7 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
     if ( value == Py_None ) {
         long allow_none;
 #if PY_MAJOR_VERSION < 3
-        allow_none = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) ) );
+        allow_none = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
 #else
         allow_none = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 3 ) );
         if( allow_none==-1 && PyErr_Occurred())
@@ -3921,7 +3921,7 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                 if ( value == Py_None ) {
                     long allow_none;
 #if PY_MAJOR_VERSION < 3
-                    allow_none = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) ) );
+                    allow_none = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
 #else
                     allow_none = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 2 ) );
                     if( allow_none==-1 && PyErr_Occurred())
