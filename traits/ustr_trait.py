@@ -80,7 +80,7 @@ class UStr(TraitType):
     def validate(self, object, name, value):
         """ Ensures that a value being assigned to a trait is a unique string.
         """
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             names = self.names
             old_name = getattr(object, name)
             if names.get(old_name) is object:

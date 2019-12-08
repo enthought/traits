@@ -1077,7 +1077,7 @@ class TraitInstance(ThisClass):
         self._allow_none = allow_none
         self.adapt = AdaptMap[adapt]
         self.module = module
-        if isinstance(aClass, six.string_types):
+        if isinstance(aClass, str):
             self.aClass = aClass
         else:
             if not isinstance(aClass, type):
@@ -1116,7 +1116,7 @@ class TraitInstance(ThisClass):
             else:
                 self.validate_failed(object, name, value)
 
-        if isinstance(self.aClass, six.string_types):
+        if isinstance(self.aClass, str):
             self.resolve_class(object, name, value)
 
         if self.adapt < 0:
@@ -1199,7 +1199,7 @@ class TraitInstance(ThisClass):
 
     def create_default_value(self, *args, **kw):
         aClass = args[0]
-        if isinstance(aClass, six.string_types):
+        if isinstance(aClass, str):
             aClass = self.validate_class(self.find_class(aClass))
             if aClass is None:
                 raise TraitError("Unable to locate class: " + args[0])
@@ -1287,7 +1287,7 @@ class TraitClass(TraitHandler):
 
     def validate(self, object, name, value):
         try:
-            if isinstance(value, six.string_types):
+            if isinstance(value, str):
                 value = value.strip()
                 col = value.rfind(".")
                 if col >= 0:

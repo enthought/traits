@@ -366,7 +366,7 @@ class BaseStr(TraitType):
 
             Note: The 'fast validator' version performs this check in C.
         """
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return value
 
         self.error(object, name, value)
@@ -390,7 +390,7 @@ class Str(BaseStr):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (11,) + six.string_types
+    fast_validate = (11, str)
 
 
 class Title(Str):
@@ -1583,7 +1583,7 @@ class File(BaseFile):
         """
         if not exists:
             # Define the C-level fast validator to use:
-            self.fast_validate = (11,) + six.string_types
+            self.fast_validate = (11, str)
 
         super(File, self).__init__(
             value, filter, auto_set, entries, exists, **metadata
@@ -1678,7 +1678,7 @@ class Directory(BaseDirectory):
         # Define the C-level fast validator to use if the directory existence
         #: test is not required:
         if not exists:
-            self.fast_validate = (11,) + six.string_types
+            self.fast_validate = (11, str)
         super(Directory, self).__init__(
             value, auto_set, entries, exists, **metadata
         )
@@ -1737,11 +1737,11 @@ class BaseRange(TraitType):
 
         vtype = type(high)
         if (low is not None) and (
-            not issubclass(vtype, (float,) + six.string_types)
+            not issubclass(vtype, (float, str))
         ):
             vtype = type(low)
 
-        is_static = not issubclass(vtype, six.string_types)
+        is_static = not issubclass(vtype, str)
         if is_static and (vtype not in RangeTypes):
             raise TraitError(
                 "Range can only be use for int or float "
@@ -1775,19 +1775,19 @@ class BaseRange(TraitType):
             self._vtype = None
             self._type_desc = "a number"
 
-            if isinstance(high, six.string_types):
+            if isinstance(high, str):
                 self._high_name = high = "object." + high
             else:
                 self._vtype = type(high)
             high = compile(str(high), "<string>", "eval")
 
-            if isinstance(low, six.string_types):
+            if isinstance(low, str):
                 self._low_name = low = "object." + low
             else:
                 self._vtype = type(low)
             low = compile(str(low), "<string>", "eval")
 
-            if isinstance(value, six.string_types):
+            if isinstance(value, str):
                 value = "object." + value
             self._value = compile(str(value), "<string>", "eval")
 
@@ -1902,7 +1902,7 @@ class BaseRange(TraitType):
     def _set(self, object, name, value):
         """ Sets the current value of a dynamic range trait.
         """
-        if not isinstance(value, six.string_types):
+        if not isinstance(value, str):
             try:
                 low = eval(self._low)
                 high = eval(self._high)
@@ -2050,7 +2050,7 @@ class BaseEnum(TraitType):
         values[0]
         """
         values = metadata.pop("values", None)
-        if isinstance(values, six.string_types):
+        if isinstance(values, str):
             n = len(args)
             if n == 0:
                 default_value = None
@@ -2878,7 +2878,7 @@ class BaseInstance(BaseClass):
         self.adapt = AdaptMap[adapt]
         self.module = module or get_module_name()
 
-        if isinstance(klass, six.string_types):
+        if isinstance(klass, str):
             self.klass = klass
         else:
             if not isinstance(klass, type):
@@ -2902,7 +2902,7 @@ class BaseInstance(BaseClass):
                 raise TraitError("The 'kw' argument must be a dictionary.")
 
             if (not callable(factory)) and (
-                not isinstance(factory, six.string_types)
+                not isinstance(factory, str)
             ):
                 if (len(args) > 0) or (len(kw) > 0):
                     raise TraitError("'factory' must be callable")
@@ -2924,7 +2924,7 @@ class BaseInstance(BaseClass):
 
             self.validate_failed(object, name, value)
 
-        if isinstance(self.klass, six.string_types):
+        if isinstance(self.klass, str):
             self.resolve_class(object, name, value)
 
         if self.adapt == 0:
@@ -2960,7 +2960,7 @@ class BaseInstance(BaseClass):
         """ Returns a description of the trait.
         """
         klass = self.klass
-        if not isinstance(klass, six.string_types):
+        if not isinstance(klass, str):
             klass = klass.__name__
 
         if self.adapt == 0:
@@ -3009,7 +3009,7 @@ class BaseInstance(BaseClass):
 
     def create_default_value(self, *args, **kw):
         klass = args[0]
-        if isinstance(klass, six.string_types):
+        if isinstance(klass, str):
             klass = self.validate_class(self.find_class(klass))
             if klass is None:
                 raise TraitError("Unable to locate class: " + args[0])
@@ -3178,7 +3178,7 @@ class Type(BaseClass):
         elif klass is None:
             klass = value
 
-        if isinstance(klass, six.string_types):
+        if isinstance(klass, str):
             self.validate = self.resolve
 
         elif not isinstance(klass, type):
@@ -3207,7 +3207,7 @@ class Type(BaseClass):
             class, then resets the trait so that future calls will be handled by
             the normal validate method.
         """
-        if isinstance(self.klass, six.string_types):
+        if isinstance(self.klass, str):
             self.resolve_class(object, name, value)
             del self.validate
 
@@ -3217,7 +3217,7 @@ class Type(BaseClass):
         """ Returns a description of the trait.
         """
         klass = self.klass
-        if not isinstance(klass, six.string_types):
+        if not isinstance(klass, str):
             klass = klass.__name__
 
         result = "a subclass of " + klass
@@ -3231,7 +3231,7 @@ class Type(BaseClass):
         """ Returns a tuple of the form: ( default_value_type, default_value )
             which describes the default value for this trait.
         """
-        if not isinstance(self.default_value, six.string_types):
+        if not isinstance(self.default_value, str):
             return super(Type, self).get_default_value()
 
         return (
@@ -3243,7 +3243,7 @@ class Type(BaseClass):
         """ Resolves a class name into a class so that it can be used to
             return the class as the default value of the trait.
         """
-        if isinstance(self.klass, six.string_types):
+        if isinstance(self.klass, str):
             try:
                 self.resolve_class(None, None, None)
                 del self.validate
@@ -3463,7 +3463,7 @@ class Symbol(TraitType):
                     name
                 ).default_value_for(object, name)
 
-            if isinstance(ref, six.string_types):
+            if isinstance(ref, str):
                 object.__dict__[name] = value = self._resolve(ref)
 
         return value
@@ -3471,7 +3471,7 @@ class Symbol(TraitType):
     def set(self, object, name, value):
         dict = object.__dict__
         old = dict.get(name, Undefined)
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             dict.pop(name, None)
             dict[TraitsCache + name] = value
             object.trait_property_changed(name, old)

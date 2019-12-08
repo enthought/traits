@@ -86,7 +86,7 @@ class AdaptationOffer(HasTraits):
         """ Trait property getter. """
 
         if not self._factory_loaded:
-            if isinstance(self._factory, six.string_types):
+            if isinstance(self._factory, str):
                 self._factory = import_symbol(self._factory)
 
             self._factory_loaded = True
@@ -108,7 +108,7 @@ class AdaptationOffer(HasTraits):
         """ Trait property getter. """
 
         if not self._from_protocol_loaded:
-            if isinstance(self._from_protocol, six.string_types):
+            if isinstance(self._from_protocol, str):
                 self._from_protocol = import_symbol(self._from_protocol)
 
             self._from_protocol_loaded = True
@@ -130,7 +130,7 @@ class AdaptationOffer(HasTraits):
         """ Trait property getter. """
 
         if not self._to_protocol_loaded:
-            if isinstance(self._to_protocol, six.string_types):
+            if isinstance(self._to_protocol, str):
                 self._to_protocol = import_symbol(self._to_protocol)
 
             self._to_protocol_loaded = True
@@ -156,7 +156,7 @@ class AdaptationOffer(HasTraits):
 
         """
 
-        if isinstance(type_or_type_name, six.string_types):
+        if isinstance(type_or_type_name, str):
             type_name = type_or_type_name
 
         else:

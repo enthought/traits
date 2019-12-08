@@ -425,7 +425,7 @@ def _add_event_handlers(trait, cls, handlers):
     """
     events = trait.event
     if events is not None:
-        if isinstance(events, six.string_types):
+        if isinstance(events, str):
             events = [events]
 
         for event in events:
@@ -597,7 +597,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                         )
                 elif value_type == "event":
                     on_trait_change = value.on_trait_change
-                    if isinstance(on_trait_change, six.string_types):
+                    if isinstance(on_trait_change, str):
                         listeners[name] = ("event", on_trait_change)
             else:
                 name = name[:-1]
@@ -745,7 +745,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
         events = trait.event
         if events is not None:
 
-            if isinstance(events, six.string_types):
+            if isinstance(events, str):
                 events = [events]
 
             for event in events:
@@ -1062,7 +1062,7 @@ class HasTraits(CHasTraits):
     # -- Trait Definitions ------------------------------------------------------
 
     #: An event fired when a new trait is dynamically added to the object
-    trait_added = Event(six.string_types[0])
+    trait_added = Event(str)
 
     #: An event that can be fired to indicate that the state of the object has
     #: been modified
@@ -2573,7 +2573,7 @@ class HasTraits(CHasTraits):
         # Check to see if we can do a quick exit to the basic trait change
         # handler:
         if (
-            isinstance(name, six.string_types)
+            isinstance(name, str)
             and (extended_trait_pat.match(name) is None)
         ) or (name is None):
             self._on_trait_change(

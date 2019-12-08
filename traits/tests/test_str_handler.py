@@ -24,7 +24,7 @@ from traits.trait_base import strx
 
 # Validation via function
 def validator(object, name, value):
-    if isinstance(value, six.string_types):
+    if isinstance(value, str):
         # arbitrary rule for testing
         if value.find("fail") < 0:
             return value

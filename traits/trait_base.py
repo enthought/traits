@@ -219,7 +219,7 @@ def class_of(object):
     correct indefinite article ('a' or 'an') preceding it (e.g., 'an Image',
     'a PlotValue').
     """
-    if isinstance(object, six.string_types):
+    if isinstance(object, str):
         return add_article(object)
 
     return add_article(object.__class__.__name__)
@@ -426,4 +426,4 @@ def not_event(value):
 
 
 def is_str(value):
-    return isinstance(value, six.string_types)
+    return isinstance(value, str)
