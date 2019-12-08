@@ -92,7 +92,7 @@ class ListTestCase(unittest.TestCase):
 
     def test_slice_assignment(self):
         # Exhaustive testing.
-        starts = stops = [None] + list(sm.range(-10, 11))
+        starts = stops = [None] + list(range(-10, 11))
         steps = list(starts)
         steps.remove(0)
         test_slices = [
@@ -106,7 +106,7 @@ class ListTestCase(unittest.TestCase):
             f = Foo(l=["zero", "one", "two", "three", "four"])
             plain_l = list(f.l)
             length = len(plain_l[test_slice])
-            replacements = list(sm.map(str, sm.range(length)))
+            replacements = list(map(str, range(length)))
 
             # Plain Python list and Traits list behaviour should match.
             plain_l[test_slice] = replacements

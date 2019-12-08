@@ -21,7 +21,7 @@ class TrafficLights(HasStrictTraits):
     }
 
     def make_random_changes(self, change_count):
-        for _ in sm.range(change_count):
+        for _ in range(change_count):
             time.sleep(random.uniform(0.1, 0.3))
             self.colour = self._next_colour[self.colour]
 

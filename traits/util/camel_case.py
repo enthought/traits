@@ -2,6 +2,7 @@
 """
 
 # Standard library imports.
+import functools
 import re
 
 import six.moves as sm
@@ -68,4 +69,4 @@ def camel_case_to_words(s):
 
         return s + c
 
-    return sm.reduce(add_space_between_words, s, "")
+    return functools.reduce(add_space_between_words, s, "")

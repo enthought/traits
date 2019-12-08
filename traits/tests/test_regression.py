@@ -210,7 +210,7 @@ class TestRegression(unittest.TestCase):
             obj.on_trait_change(handler)
 
         # Warmup.
-        for _ in sm.range(cycles):
+        for _ in range(cycles):
             f()
             gc.collect()
             counts.append(len(gc.get_objects()))
@@ -223,7 +223,7 @@ class TestRegression(unittest.TestCase):
         cycles = 10
         counts = []
 
-        for _ in sm.range(cycles):
+        for _ in range(cycles):
             DelegateLeak()
             gc.collect()
             counts.append(len(gc.get_objects()))

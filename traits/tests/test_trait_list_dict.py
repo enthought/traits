@@ -9,6 +9,7 @@ TraitSetObjects.
 from __future__ import absolute_import
 
 import copy
+import pickle
 import unittest
 
 import six.moves as sm
@@ -18,9 +19,9 @@ from traits.trait_types import Dict, List, Set, Str, Int, Instance
 
 
 class A(HasTraits):
-    alist = List(Int, list(sm.range(5)))
+    alist = List(Int, list(range(5)))
     adict = Dict(Str, Int, dict(a=1, b=2))
-    aset = Set(Int, set(sm.range(5)))
+    aset = Set(Int, set(range(5)))
 
     events = List()
 
@@ -36,35 +37,35 @@ class B(HasTraits):
 class TestTraitListDictSetPersistence(unittest.TestCase):
     def test_trait_list_object_persists(self):
         a = A()
-        list = sm.cPickle.loads(sm.cPickle.dumps(a.alist))
+        list = pickle.loads(pickle.dumps(a.alist))
         self.assertIsNone(list.object())
         list.append(10)
         self.assertEqual(len(a.events), 0)
         a.alist.append(20)
         self.assertEqual(len(a.events), 1)
-        list2 = sm.cPickle.loads(sm.cPickle.dumps(list))
+        list2 = pickle.loads(pickle.dumps(list))
         self.assertIsNone(list2.object())
 
     def test_trait_dict_object_persists(self):
         a = A()
-        dict = sm.cPickle.loads(sm.cPickle.dumps(a.adict))
+        dict = pickle.loads(pickle.dumps(a.adict))
         self.assertIsNone(dict.object())
         dict["key"] = 10
         self.assertEqual(len(a.events), 0)
         a.adict["key"] = 10
         self.assertEqual(len(a.events), 1)
-        dict2 = sm.cPickle.loads(sm.cPickle.dumps(dict))
+        dict2 = pickle.loads(pickle.dumps(dict))
         self.assertIsNone(dict2.object())
 
     def test_trait_set_object_persists(self):
         a = A()
-        set = sm.cPickle.loads(sm.cPickle.dumps(a.aset))
+        set = pickle.loads(pickle.dumps(a.aset))
         self.assertIsNone(set.object())
         set.add(10)
         self.assertEqual(len(a.events), 0)
         a.aset.add(20)
         self.assertEqual(len(a.events), 1)
-        set2 = sm.cPickle.loads(sm.cPickle.dumps(set))
+        set2 = pickle.loads(pickle.dumps(set))
         self.assertIsNone(set2.object())
 
     def test_trait_list_object_copies(self):
@@ -109,9 +110,9 @@ class TestTraitListDictSetPersistence(unittest.TestCase):
 
     def test_pickle_whole(self):
         a = A()
-        sm.cPickle.loads(sm.cPickle.dumps(a))
+        pickle.loads(pickle.dumps(a))
         b = B(dict=dict(a=a))
-        sm.cPickle.loads(sm.cPickle.dumps(b))
+        pickle.loads(pickle.dumps(b))
 
     def test_trait_set_object_operations(self):
         # Regression test for update methods not coercing in the same way as

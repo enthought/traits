@@ -128,13 +128,9 @@ class LeagueModelView(ModelView):
     def _get_total_hits(self):
         """ Returns the total number of hits across all teams and players.
         """
-        return sm.reduce(
-            add,
-            [
-                sm.reduce(add, [p.hits for p in t.players], 0)
-                for t in self.model.teams
-            ],
-            0,
+        return sum(
+            sum(p.hits for p in t.players)
+            for t in self.model.teams
         )
 
     view = View(
