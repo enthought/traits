@@ -203,10 +203,7 @@ def _get_def(class_name, class_dict, bases, method):
         if (
             (result is not None)
             and is_unbound_method_type(result)
-            and (
-                getattr(six.get_unbound_function, "on_trait_change", None)
-                is None
-            )
+            and (getattr(result, "on_trait_change", None) is None)
         ):
             return result
 
