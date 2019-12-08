@@ -20,6 +20,7 @@
 from __future__ import absolute_import
 
 import contextlib
+import io
 import sys
 import threading
 import time
@@ -37,7 +38,7 @@ def captured_stderr():
     Return a context manager that directs all stderr output to a string.
 
     """
-    new_stderr = six.StringIO()
+    new_stderr = io.StringIO()
     original_stderr = sys.stderr
     sys.stderr = new_stderr
     try:

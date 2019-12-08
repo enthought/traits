@@ -7,6 +7,7 @@
 
 """
 import inspect
+import io
 import sys
 import token
 import tokenize
@@ -128,7 +129,7 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         # Get the class source and tokenize it.
         source = inspect.getsource(self.parent)
-        string_io = six.StringIO(source)
+        string_io = io.StringIO(source)
         tokens = tokenize.generate_tokens(string_io.readline)
 
         # find the trait definition start

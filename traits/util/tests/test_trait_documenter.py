@@ -59,7 +59,7 @@ class TestTraitDocumenter(unittest.TestCase):
     depth_interval = Property(Tuple(Float, Float),
                               depends_on="_depth_interval")
 """
-        string_io = six.StringIO(self.source)
+        string_io = io.StringIO(self.source)
         tokens = tokenize.generate_tokens(string_io.readline)
         self.tokens = tokens
 
@@ -70,7 +70,7 @@ class TestTraitDocumenter(unittest.TestCase):
                                   depends_on="_depth_interval")
         """
         )
-        string_io = six.StringIO(src)
+        string_io = io.StringIO(src)
         tokens = tokenize.generate_tokens(string_io.readline)
 
         definition_tokens = _get_definition_tokens(tokens)
