@@ -62,8 +62,7 @@ class FooLike(HasTraits):
 AbstractFoo.register(FooLike)
 
 
-@six.add_metaclass(abc.ABCMeta)
-class AbstractBar(object):
+class AbstractBar(abc.ABC):
     pass
 
     @abc.abstractmethod

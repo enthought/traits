@@ -105,8 +105,7 @@ CHECK_INTERFACES = 0
 # -------------------------------------------------------------------------------
 
 
-@six.add_metaclass(abc.ABCMeta)
-class AbstractViewElement(object):
+class AbstractViewElement(abc.ABC):
     pass
 
 
@@ -1016,8 +1015,7 @@ def weak_arg(arg):
 # -------------------------------------------------------------------------------
 
 
-@six.add_metaclass(MetaHasTraits)
-class HasTraits(CHasTraits):
+class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     """ Enables any Python class derived from it to have trait attributes.
 
     Most of the methods of HasTraits operated by default only on the trait
@@ -3608,8 +3606,7 @@ class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
 
     pass
 
-@six.add_metaclass(ABCMetaHasTraits)
-class ABCHasTraits(HasTraits):
+class ABCHasTraits(HasTraits, metaclass=ABCMetaHasTraits):
     """ A HasTraits subclass which enables the features of Abstract
     Base Classes (ABC). See the 'abc' module in the standard library
     for more information.
@@ -3715,8 +3712,7 @@ class MetaInterface(ABCMetaHasTraits):
 # -------------------------------------------------------------------------------
 
 
-@six.add_metaclass(MetaInterface)
-class Interface(HasTraits):
+class Interface(HasTraits, metaclass=MetaInterface):
     """ The base class for all interfaces.
     """
 

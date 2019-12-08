@@ -85,8 +85,7 @@ print("apptools using Interfaces: %.3f msec per iteration" % time_per_iter)
 for i in range(N_SOURCES):
     exec(
         """
-@six.add_metaclass(abc.ABCMeta)
-class FooABC{i}(object):
+class FooABC{i}(abc.ABC):
     pass
 """.format(
             i=i
@@ -102,8 +101,7 @@ foo = Foo0()
 for i in range(N_PROTOCOLS):
     exec(
         """
-@six.add_metaclass(abc.ABCMeta)
-class ABC{i}(object):
+class ABC{i}(abc.ABC):
     pass
 """.format(
             i=i

@@ -1,7 +1,7 @@
 """ Test data for testing the protocol manager with ABCs. """
 
 
-from abc import ABCMeta
+from abc import ABC
 
 import six
 
@@ -13,23 +13,19 @@ from traits.adaptation.api import PurePythonAdapter as Adapter
 #### Protocols ################################################################
 
 
-@six.add_metaclass(ABCMeta)
-class UKStandard(object):
+class UKStandard(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class EUStandard(object):
+class EUStandard(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class JapanStandard(object):
+class JapanStandard(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IraqStandard(object):
+class IraqStandard(ABC):
     pass
 
 
@@ -128,18 +124,15 @@ class FileType(object):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IEditor(object):
+class IEditor(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IScriptable(object):
+class IScriptable(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IUndoable(object):
+class IUndoable(ABC):
     pass
 
 
@@ -161,8 +154,7 @@ IUndoable.register(IScriptableToIUndoable)
 #### Hierarchy example ########################################################
 
 
-@six.add_metaclass(ABCMeta)
-class IPrintable(object):
+class IPrintable(ABC):
     pass
 
 
@@ -191,8 +183,7 @@ IPrintable.register(TextEditorToIPrintable)
 #### Interface hierarchy example ##############################################
 
 
-@six.add_metaclass(ABCMeta)
-class IPrimate(object):
+class IPrimate(ABC):
     pass
 
 
@@ -204,13 +195,11 @@ class IChild(IHuman):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IIntermediate(object):
+class IIntermediate(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class ITarget(object):
+class ITarget(ABC):
     pass
 
 
@@ -252,13 +241,11 @@ ITarget.register(IIntermediateToITarget)
 #### Non-trivial chaining example #############################################
 
 
-@six.add_metaclass(ABCMeta)
-class IStart(object):
+class IStart(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IGeneric(object):
+class IGeneric(ABC):
     pass
 
 
@@ -266,8 +253,7 @@ class ISpecific(IGeneric):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IEnd(object):
+class IEnd(ABC):
     pass
 
 
