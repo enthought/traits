@@ -201,7 +201,7 @@ class MultiThreadRecordContainer(object):
         """
         with self._creation_lock:
             containers = self._record_containers
-            for thread_name, container in six.iteritems(containers):
+            for thread_name, container in containers.items():
                 filename = os.path.join(
                     directory_name, "{0}.trace".format(thread_name)
                 )

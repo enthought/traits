@@ -2934,7 +2934,7 @@ class TraitDictObject(dict):
             self.trait,
             lambda: None,
             self.name,
-            dict([copy.deepcopy(x, memo) for x in six.iteritems(self)]),
+            dict([copy.deepcopy(x, memo) for x in self.items()]),
         )
 
         return result
@@ -3024,7 +3024,7 @@ class TraitDictObject(dict):
             if self.name_items is not None:
                 added = {}
                 changed = {}
-                for key, value in six.iteritems(new_dic):
+                for key, value in new_dic.items():
                     if key in self:
                         changed[key] = self[key]
                     else:
@@ -3118,7 +3118,7 @@ class TraitDictObject(dict):
             value_validate = lambda object, name, value: value
 
         object = self.object()
-        for key, value in six.iteritems(dic):
+        for key, value in dic.items():
             try:
                 key = key_validate(object, name, key)
             except TraitError as excp:
