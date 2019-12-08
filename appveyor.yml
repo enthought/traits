@@ -6,8 +6,6 @@ environment:
     INSTALL_EDM_VERSION: "2.0.0"
 
   matrix:
-
-    - RUNTIME: '2.7'
     - RUNTIME: '3.5'
     - RUNTIME: '3.6'
 

@@ -52,7 +52,7 @@ you can run tests in all supported runtimes::
 
     python etstool.py test-all
 
-Currently supported runtime values are ``2.7``, ``3.5`` and ``3.6``.  Not all
+Currently supported runtime values are ``3.5`` and ``3.6``.  Not all
 combinations of runtimes will work, but the tasks will fail with
 a clear error if that is the case.
 
@@ -102,7 +102,7 @@ unix_dependencies = {
     "gnureadline",
 }
 
-supported_runtimes = ["2.7", "3.5", "3.6"]
+supported_runtimes = ["3.5", "3.6"]
 default_runtime = "3.6"
 
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"

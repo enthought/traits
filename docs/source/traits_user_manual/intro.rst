@@ -169,7 +169,7 @@ where the Traits package has been used, it has proven valuable for enhancing
 programmers' ability to understand code, during both concurrent
 development and maintenance.
 
-The Traits |version| package works with versions 2.7 and 3.4 and later of
+The Traits |version| package works with versions 3.5 and later of
 Python.  It is similar in some ways to the Python property language feature.
 Standard Python properties provide the similar capabilities to the Traits
 package, but with more work on the part of the programmer.
