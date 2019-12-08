@@ -2933,34 +2933,32 @@ class BaseInstance(BaseClass):
         if isinstance(self.klass, six.string_types):
             self.resolve_class(object, name, value)
 
+        # Adaptation mode 0: do a simple isinstance check.
         if self.adapt == 0:
-            try:
-                if value is adapt(value, self.klass):
-                    return value
-            except:
-                if isinstance(value, self.klass):
-                    return value
+            if isinstance(value, self.klass):
+                return value
+            else:
+                self.validate_failed(object, name, value)
 
-        elif self.adapt == 1:
-            try:
-                return adapt(value, self.klass)
-            except:
-                if isinstance(value, self.klass):
-                    return value
-
-        else:
-            result = adapt(value, self.klass, None)
-            if result is None:
-                if isinstance(value, self.klass):
-                    return value
-
-                result = self.default_value
-                if isinstance(result, _InstanceArgs):
-                    result = result[0](*result[1], **result[2])
-
+        # Try adaptation; return adapted value on success.
+        result = adapt(value, self.klass, None)
+        if result is not None:
             return result
 
-        self.validate_failed(object, name, value)
+        # Adaptation failed. Move on to an isinstance check.
+        if isinstance(value, self.klass):
+            return value
+
+        # Adaptation and isinstance both failed. In mode 1, fail.
+        # Otherwise, return the default.
+        if self.adapt == 1:
+            self.validate_failed(object, name, value)
+        else:
+            result = self.default_value
+            if isinstance(result, _InstanceArgs):
+                return result[0](*result[1], **result[2])
+            else:
+                return result
 
     def info(self):
         """ Returns a description of the trait.
