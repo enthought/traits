@@ -97,11 +97,6 @@ common_dependencies = {
 # Dependencies we install from source for testing
 source_dependencies = {"traitsui"}
 
-# Python 2-specific dependencies.
-python2_dependencies = {
-    "mock",
-}
-
 # Unix-specific dependencies.
 unix_dependencies = {
     "gnureadline",
@@ -169,8 +164,6 @@ def install(edm, runtime, environment, editable, docs, source):
     """
     parameters = get_parameters(edm, runtime, environment)
     dependencies = common_dependencies.copy()
-    if runtime.startswith("2."):
-        dependencies.update(python2_dependencies)
     if sys.platform != "win32":
         dependencies.update(unix_dependencies)
     packages = " ".join(dependencies)
