@@ -37,7 +37,6 @@ EXITMSG = (
 SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE = 9
 
 
-@six.python_2_unicode_compatible
 class SentinelRecord(object):
     """ Sentinel record to separate groups of chained change event dispatches.
 
@@ -49,7 +48,6 @@ class SentinelRecord(object):
         return u"\n"
 
 
-@six.python_2_unicode_compatible
 class ChangeMessageRecord(object):
     """ Message record for a change event dispatch.
 
@@ -84,7 +82,6 @@ class ChangeMessageRecord(object):
         )
 
 
-@six.python_2_unicode_compatible
 class CallingMessageRecord(object):
     """ Message record for a change handler call.
 
@@ -113,7 +110,6 @@ class CallingMessageRecord(object):
         )
 
 
-@six.python_2_unicode_compatible
 class ExitMessageRecord(object):
     """ Message record for returning from a change event dispatch.
 
