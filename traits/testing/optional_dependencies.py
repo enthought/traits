@@ -57,6 +57,3 @@ requires_traitsui = unittest.skipIf(traitsui is None, "TraitsUI not available")
 # an extra import.
 if traitsui is not None:
     import traitsui.api
-
-requires_python2 = unittest.skipUnless(False, "Applicable only to Python 2")
-conflicts_with_python2 = unittest.skipIf(False, "Does not apply to Python 2")
