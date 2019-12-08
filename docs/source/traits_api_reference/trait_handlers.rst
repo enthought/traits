@@ -23,8 +23,6 @@ Classes
 
 .. autoclass:: TraitInstance
 
-.. autoclass:: TraitWeakRef
-
 .. autoclass:: HandleWeakRef
 
 .. autoclass:: TraitClass
