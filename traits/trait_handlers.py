@@ -2026,7 +2026,7 @@ class TraitList(TraitHandler):
     _items_event = None
 
     def __init__(
-        self, trait=None, minlen=0, maxlen=six.MAXSIZE, has_items=True
+        self, trait=None, minlen=0, maxlen=sys.maxsize, has_items=True
     ):
         """ Creates a TraitList handler.
 
@@ -2068,12 +2068,12 @@ class TraitList(TraitHandler):
 
     def full_info(self, object, name, value):
         if self.minlen == 0:
-            if self.maxlen == six.MAXSIZE:
+            if self.maxlen == sys.maxsize:
                 size = "items"
             else:
                 size = "at most %d items" % self.maxlen
         else:
-            if self.maxlen == six.MAXSIZE:
+            if self.maxlen == sys.maxsize:
                 size = "at least %d items" % self.minlen
             else:
                 size = "from %s to %s items" % (self.minlen, self.maxlen)

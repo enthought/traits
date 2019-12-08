@@ -790,7 +790,7 @@ class String(TraitType):
     """
 
     def __init__(
-        self, value="", minlen=0, maxlen=six.MAXSIZE, regex="", **metadata
+        self, value="", minlen=0, maxlen=sys.maxsize, regex="", **metadata
     ):
         """ Creates a String trait.
 
@@ -819,9 +819,9 @@ class String(TraitType):
         self._validate = "validate_all"
         if self.regex != "":
             self.match = re.compile(self.regex).match
-            if (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
+            if (self.minlen == 0) and (self.maxlen == sys.maxsize):
                 self._validate = "validate_regex"
-        elif (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
+        elif (self.minlen == 0) and (self.maxlen == sys.maxsize):
             self._validate = "validate_str"
         else:
             self._validate = "validate_len"
@@ -886,12 +886,12 @@ class String(TraitType):
         """ Returns a description of the trait.
         """
         msg = ""
-        if (self.minlen != 0) and (self.maxlen != six.MAXSIZE):
+        if (self.minlen != 0) and (self.maxlen != sys.maxsize):
             msg = " between %d and %d characters long" % (
                 self.minlen,
                 self.maxlen,
             )
-        elif self.maxlen != six.MAXSIZE:
+        elif self.maxlen != sys.maxsize:
             msg = " <= %d characters long" % self.maxlen
         elif self.minlen != 0:
             msg = " >= %d characters long" % self.minlen
@@ -2378,7 +2378,7 @@ class List(TraitType):
         trait=None,
         value=None,
         minlen=0,
-        maxlen=six.MAXSIZE,
+        maxlen=sys.maxsize,
         items=True,
         **metadata
     ):
@@ -2445,12 +2445,12 @@ class List(TraitType):
         """ Returns a description of the trait.
         """
         if self.minlen == 0:
-            if self.maxlen == six.MAXSIZE:
+            if self.maxlen == sys.maxsize:
                 size = "items"
             else:
                 size = "at most %d items" % self.maxlen
         else:
-            if self.maxlen == six.MAXSIZE:
+            if self.maxlen == sys.maxsize:
                 size = "at least %d items" % self.minlen
             else:
                 size = "from %s to %s items" % (self.minlen, self.maxlen)
