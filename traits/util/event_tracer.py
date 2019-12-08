@@ -161,7 +161,7 @@ class RecordContainer(object):
         """
         with open(filename, "w") as fh:
             for record in self._records:
-                fh.write(six.text_type(record))
+                fh.write(str(record))
 
 
 class MultiThreadRecordContainer(object):

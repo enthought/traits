@@ -429,11 +429,8 @@ class BaseUnicode(TraitType):
 
             Note: The 'fast validator' version performs this check in C.
         """
-        if isinstance(value, six.text_type):
-            return value
-
         if isinstance(value, str):
-            return six.text_type(value)
+            return value
 
         self.error(object, name, value)
 
@@ -456,7 +453,7 @@ class Unicode(BaseUnicode):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (11, six.text_type, None, str)
+    fast_validate = (11, str)
 
 
 # -------------------------------------------------------------------------------
@@ -672,10 +669,7 @@ class BaseCStr(BaseStr):
         try:
             return str(value)
         except:
-            try:
-                return six.text_type(value)
-            except:
-                self.error(object, name, value)
+            self.error(object, name, value)
 
 
 class CStr(BaseCStr):
@@ -685,7 +679,7 @@ class CStr(BaseCStr):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (7, ((12, str), (12, six.text_type)))
+    fast_validate = (12, str)
 
 
 # -------------------------------------------------------------------------------
@@ -704,7 +698,7 @@ class BaseCUnicode(BaseUnicode):
             Note: The 'fast validator' version performs this check in C.
         """
         try:
-            return six.text_type(value)
+            return str(value)
         except:
             self.error(object, name, value)
 
@@ -716,7 +710,7 @@ class CUnicode(BaseCUnicode):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (12, six.text_type)
+    fast_validate = (12, str)
 
 
 # -------------------------------------------------------------------------------
@@ -3705,7 +3699,7 @@ ListStr = List(str)
 
 #: List of Unicode string values; default value is ``[]``. This trait type is
 #: deprecated. Use ``List(Unicode)`` instead.
-ListUnicode = List(six.text_type)
+ListUnicode = List(str)
 
 #: List of complex values; default value is ``[]``. This trait type is
 #: deprecated. Use ``List(Complex)`` instead.

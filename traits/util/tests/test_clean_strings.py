@@ -76,6 +76,6 @@ class TestCleanStrings(unittest.TestCase):
         """
         Check that a supposedly safe string is actually safe.
         """
-        self.assertIsInstance(safe_string, six.text_type)
+        self.assertIsInstance(safe_string, str)
         chars_in_string = set(safe_string)
         self.assertLessEqual(chars_in_string, LEGAL_CHARS)

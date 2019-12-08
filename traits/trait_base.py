@@ -48,7 +48,6 @@ ComplexTypes = (float, int)
 
 TypeTypes = (
     str,
-    six.text_type,
     int,
     float,
     complex,
@@ -197,7 +196,7 @@ def strx(arg):
 #  Constants:
 # -------------------------------------------------------------------------------
 
-StringTypes = (str, six.text_type, int, float, complex)
+StringTypes = (str, int, float, complex)
 
 # -------------------------------------------------------------------------------
 #  Define a mapping of coercable types:
@@ -207,7 +206,6 @@ StringTypes = (str, six.text_type, int, float, complex)
 CoercableTypes = {
     float: (11, float, int),
     complex: (11, complex, float, int),
-    six.text_type: (11, six.text_type, str),
 }
 
 # -------------------------------------------------------------------------------

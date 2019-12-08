@@ -579,11 +579,10 @@ ctraits._ctrait(CTrait)
 #  Constants:
 # -------------------------------------------------------------------------------
 
-ConstantTypes = (NoneType, int, float, complex, str, six.text_type)
+ConstantTypes = (NoneType, int, float, complex, str)
 
 PythonTypes = (
     str,
-    six.text_type,
     int,
     float,
     complex,
@@ -602,7 +601,6 @@ TraitTypes = (TraitHandler, CTrait)
 
 DefaultValues = {
     str: "",
-    six.text_type: "",
     int: 0,
     float: 0.0,
     complex: 0j,

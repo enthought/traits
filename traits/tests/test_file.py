@@ -19,7 +19,6 @@ class FileTestCase(unittest.TestCase):
     def test_valid_file(self):
         example_model = ExampleModel(file_name=__file__)
         example_model.file_name = os.path.__file__
-        example_model.file_name = six.text_type(os.path.__file__)
 
     def test_invalid_file(self):
         example_model = ExampleModel(file_name=__file__)
