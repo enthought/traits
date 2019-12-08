@@ -306,13 +306,8 @@ class ListTestCase(unittest.TestCase):
         except ImportError:
             pass
         else:
-            if six.PY2:
-                f.ints = array([1, 2, 3])
-                self.assertEqual(f.ints, [1, 2, 3])
-            else:
-                # These would fail due to np.int_ being an invalid vallue
-                # for the Int-trait.
-                pass
+            f.ints = array([1, 2, 3])
+            self.assertEqual(f.ints, [1, 2, 3])
 
             f.strs = array(("abc", "def", "ghi"))
             self.assertEqual(f.strs, ["abc", "def", "ghi"])

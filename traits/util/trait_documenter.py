@@ -145,9 +145,6 @@ class TraitDocumenter(ClassLevelDocumenter):
         # Retrieve the trait definition.
         definition_tokens = _get_definition_tokens(tokens)
         definition = tokenize.untokenize(definition_tokens).strip()
-        if six.PY2:
-            definition = six.text_type(definition, "utf-8")
-
         return definition
 
 

@@ -438,17 +438,12 @@ class BytesTrait(HasTraits):
     value = Bytes(b"bytes")
 
 
-version_dependent = ["", "string"]
-
-
 class BytesTest(StringTest):
 
     obj = BytesTrait()
 
     _default_value = b"bytes"
-    _good_values = [b"", b"10", b"-10"] + (
-        version_dependent if six.PY2 else []
-    )
+    _good_values = [b"", b"10", b"-10"]
     _bad_values = [
         10,
         -10,
@@ -462,7 +457,9 @@ class BytesTest(StringTest):
         (b"",),
         None,
         True,
-    ] + ([] if six.PY2 else version_dependent)
+        "",
+        "string",
+    ]
 
     def coerce(self, value):
         return bytes(value)
@@ -470,29 +467,6 @@ class BytesTest(StringTest):
 
 class CoercibleBytesTrait(HasTraits):
     value = CBytes(b"bytes")
-
-
-version_dependent = [
-    "",
-    "string",
-    u"unicode",
-    u"",
-    -10,
-    10.1,
-    [b""],
-    [b"bytes"],
-    [-10],
-    (-10,),
-    {-10: "foo"},
-    set([-10]),
-    [256],
-    (256,),
-    {256: "foo"},
-    set([256]),
-    {b"ten": b"10"},
-    (b"",),
-    None,
-]
 
 
 class CoercibleBytesTest(StringTest):
@@ -510,8 +484,28 @@ class CoercibleBytesTest(StringTest):
         set([10]),
         {10: "foo"},
         True,
-    ] + (version_dependent if six.PY2 else [])
-    _bad_values = [] if six.PY2 else version_dependent
+    ]
+    _bad_values = [
+        "",
+        "string",
+        u"unicode",
+        u"",
+        -10,
+        10.1,
+        [b""],
+        [b"bytes"],
+        [-10],
+        (-10,),
+        {-10: "foo"},
+        set([-10]),
+        [256],
+        (256,),
+        {256: "foo"},
+        set([256]),
+        {b"ten": b"10"},
+        (b"",),
+        None,
+    ]
 
     def coerce(self, value):
         return bytes(value)

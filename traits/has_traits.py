@@ -119,15 +119,9 @@ WrapperTypes = (
     StaticTraitChangeNotifyWrapper,
 )
 
-if six.PY2:
-    BoundMethodTypes = (MethodType,)
-    UnboundMethodTypes = (MethodType,)
-else:
-    # in python 3, unbound methods do not exist anymore, they're just functions
-    BoundMethodTypes = (MethodType,)
-    UnboundMethodTypes = (FunctionType,)
-
-
+# In Python 3, unbound methods do not exist anymore, they're just functions
+BoundMethodTypes = (MethodType,)
+UnboundMethodTypes = (FunctionType,)
 FunctionTypes = (FunctionType,)
 
 # Class dictionary entries used to save trait, listener and view information and

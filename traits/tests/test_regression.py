@@ -262,10 +262,6 @@ class TestRegression(unittest.TestCase):
         with self.assertRaises(TraitError):
             StrictDummy(forbidden=53)
 
-        if six.PY2:
-            with self.assertRaises(TraitError):
-                StrictDummy(**{b"forbidden": 53})
-
         # This is the case that used to fail on Python 2.
         with self.assertRaises(TraitError):
             StrictDummy(**{u"forbidden": 53})

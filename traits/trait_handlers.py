@@ -2232,11 +2232,6 @@ class TraitListObject(list):
             excp.set_prefix("Each element of the")
             raise excp
 
-    if six.PY2:
-
-        def __setslice__(self, i, j, values):
-            self.__setitem__(slice(i, j), values)
-
     def __delitem__(self, key):
         trait = getattr(self, "trait", None)
         if trait is None:
@@ -2273,11 +2268,6 @@ class TraitListObject(list):
             self._send_trait_items_event(
                 self.name_items, TraitListEvent(index, removed)
             )
-
-    if six.PY2:
-
-        def __delslice__(self, i, j):
-            self.__delitem__(slice(i, j))
 
     def __iadd__(self, other):
         self.extend(other)
@@ -2436,21 +2426,9 @@ class TraitListObject(list):
         else:
             self.len_error(len(self) - 1)
 
-    if six.PY2:
-
-        def sort(self, cmp=None, key=None, reverse=False):
-            removed = self[:]
-            list.sort(self, cmp=cmp, key=key, reverse=reverse)
-            self._sort_common(removed)
-
-    else:
-
-        def sort(self, key=None, reverse=False):
-            removed = self[:]
-            list.sort(self, key=key, reverse=reverse)
-            self._sort_common(removed)
-
-    def _sort_common(self, removed):
+    def sort(self, key=None, reverse=False):
+        removed = self[:]
+        list.sort(self, key=key, reverse=reverse)
         if (
             getattr(self, "name_items", None) is not None
             and getattr(self, "trait", None) is not None
