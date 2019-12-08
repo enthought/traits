@@ -13,6 +13,7 @@
 # ------------------------------------------------------------------------------
 
 #  Imports
+
 import unittest
 
 from traits.api import (
@@ -139,7 +140,7 @@ class AnyTraitTest(BaseTest, unittest.TestCase):
     obj = AnyTrait()
 
     _default_value = None
-    _good_values = [10.0, "ten", u"ten", [10], {"ten": 10}, (10,), None, 1j]
+    _good_values = [10.0, b"ten", "ten", [10], {"ten": 10}, (10,), None, 1j]
     _mapped_values = []
     _bad_values = []
 
@@ -164,20 +165,20 @@ class CoercibleIntTest(AnyTraitTest):
         -10.1,
         "10",
         "-10",
-        u"10",
-        u"-10",
+        b"10",
+        b"-10",
     ]
     _bad_values = [
         "10L",
         "-10L",
         "10.1",
         "-10.1",
-        u"10L",
-        u"-10L",
-        u"10.1",
-        u"-10.1",
+        b"10L",
+        b"-10L",
+        b"10.1",
+        b"-10.1",
         "ten",
-        u"ten",
+        b"ten",
         [10],
         {"ten": 10},
         (10,),
@@ -200,7 +201,7 @@ class IntTest(AnyTraitTest):
     _good_values = [10, -10]
     _bad_values = [
         "ten",
-        u"ten",
+        b"ten",
         [10],
         {"ten": 10},
         (10,),
@@ -212,14 +213,14 @@ class IntTest(AnyTraitTest):
         "-10L",
         "10.1",
         "-10.1",
-        u"10L",
-        u"-10L",
-        u"10.1",
-        u"-10.1",
+        b"10L",
+        b"-10L",
+        b"10.1",
+        b"-10.1",
         "10",
         "-10",
-        u"10",
-        u"-10",
+        b"10",
+        b"-10",
     ]
 
     try:
@@ -266,18 +267,18 @@ class CoercibleFloatTest(AnyTraitTest):
         "-10",
         "10.1",
         "-10.1",
-        u"10",
-        u"-10",
-        u"10.1",
-        u"-10.1",
+        b"10",
+        b"-10",
+        b"10.1",
+        b"-10.1",
     ]
     _bad_values = [
         "10L",
         "-10L",
-        u"10L",
-        u"-10L",
+        b"10L",
+        b"-10L",
         "ten",
-        u"ten",
+        b"ten",
         [10],
         {"ten": 10},
         (10,),
@@ -296,7 +297,7 @@ class FloatTest(AnyTraitTest):
     _good_values = [10, -10, 10.1, -10.1]
     _bad_values = [
         "ten",
-        u"ten",
+        b"ten",
         [10],
         {"ten": 10},
         (10,),
@@ -308,12 +309,12 @@ class FloatTest(AnyTraitTest):
         "-10L",
         "10.1",
         "-10.1",
-        u"10",
-        u"-10",
-        u"10L",
-        u"-10L",
-        u"10.1",
-        u"-10.1",
+        b"10",
+        b"-10",
+        b"10L",
+        b"-10L",
+        b"10.1",
+        b"-10.1",
     ]
 
     def coerce(self, value):
@@ -351,7 +352,7 @@ class ImaginaryValueTest(AnyTraitTest):
         "10+10j",
         "10-10j",
     ]
-    _bad_values = [u"10L", u"-10L", "ten", [10], {"ten": 10}, (10,), None]
+    _bad_values = [b"10L", "-10L", "ten", [10], {"ten": 10}, (10,), None]
 
     def coerce(self, value):
         return complex(value)
@@ -378,7 +379,6 @@ class StringTest(AnyTraitTest):
         "10.1",
         "-10.1",
         "string",
-        u"string",
         1j,
         [10],
         ["ten"],
@@ -393,14 +393,14 @@ class StringTest(AnyTraitTest):
 
 
 class UnicodeTrait(HasTraits):
-    value = Trait(u"unicode")
+    value = Trait("unicode")
 
 
 class UnicodeTest(StringTest):
 
     obj = UnicodeTrait()
 
-    _default_value = u"unicode"
+    _default_value = "unicode"
     _good_values = [
         10,
         -10,
@@ -413,13 +413,10 @@ class UnicodeTest(StringTest):
         "10.1",
         "-10.1",
         "",
-        u"",
         "string",
-        u"string",
         1j,
         [10],
         ["ten"],
-        [u"ten"],
         {"ten": 10},
         (10,),
         None,
@@ -444,8 +441,6 @@ class BytesTest(StringTest):
         10,
         -10,
         10.1,
-        u"unicode",
-        u"",
         [b""],
         [b"bytes"],
         [0],
@@ -484,8 +479,6 @@ class CoercibleBytesTest(StringTest):
     _bad_values = [
         "",
         "string",
-        u"unicode",
-        u"",
         -10,
         10.1,
         [b""],
@@ -508,7 +501,7 @@ class CoercibleBytesTest(StringTest):
 
 
 class EnumTrait(HasTraits):
-    value = Trait([1, "one", 2, "two", 3, "three", 4.4, u"four.four"])
+    value = Trait([1, "one", 2, "two", 3, "three", 4.4, "four.four"])
 
 
 class EnumTest(AnyTraitTest):
@@ -516,7 +509,7 @@ class EnumTest(AnyTraitTest):
     obj = EnumTrait()
 
     _default_value = 1
-    _good_values = [1, "one", 2, "two", 3, "three", 4.4, u"four.four"]
+    _good_values = [1, "one", 2, "two", 3, "three", 4.4, "four.four"]
     _bad_values = [0, "zero", 4, None]
 
 
@@ -628,8 +621,8 @@ class OldInstanceTest(AnyTraitTest):
         OTraitTest1,
         OTraitTest2,
         OBadTraitTest(),
+        b"bytes",
         "string",
-        u"string",
         [otrait_test1],
         (otrait_test1,),
         {"data": otrait_test1},
@@ -678,8 +671,8 @@ class NewInstanceTest(AnyTraitTest):
         NTraitTest1,
         NTraitTest2,
         NBadTraitTest(),
+        b"bytes",
         "string",
-        u"string",
         [ntrait_test1],
         (ntrait_test1,),
         {"data": ntrait_test1},

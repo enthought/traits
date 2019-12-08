@@ -261,11 +261,11 @@ class TestRegression(unittest.TestCase):
 
         # This is the case that used to fail on Python 2.
         with self.assertRaises(TraitError):
-            StrictDummy(**{u"forbidden": 53})
+            StrictDummy(**{"forbidden": 53})
 
         a = StrictDummy()
         with self.assertRaises(TraitError):
-            setattr(a, u"forbidden", 53)
+            setattr(a, "forbidden", 53)
 
     def test_validate_exception_propagates(self):
         class A(HasTraits):

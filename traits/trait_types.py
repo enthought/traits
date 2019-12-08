@@ -415,7 +415,7 @@ class BaseUnicode(TraitType):
     """
 
     #: The default value for the trait:
-    default_value = u""
+    default_value = ""
 
     #: A description of the type of value this trait accepts:
     info_text = "a unicode string"

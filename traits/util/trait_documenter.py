@@ -114,9 +114,9 @@ class TraitDocumenter(ClassLevelDocumenter):
         # Workaround for enthought/traits#493: if the definition is multiline,
         # throw away all lines after the first.
         if "\n" in definition:
-            definition = definition.partition("\n")[0] + u" …"
+            definition = definition.partition("\n")[0] + " …"
 
-        self.add_line(u"   :annotation: = {0}".format(definition), "<autodoc>")
+        self.add_line("   :annotation: = {0}".format(definition), "<autodoc>")
 
     # Private Interface #####################################################
 

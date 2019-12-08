@@ -80,7 +80,7 @@ class TestTraitDocumenter(unittest.TestCase):
         class Fake(HasTraits):
 
             #: Test attribute
-            test = Property(Bool, label=u"ミスあり")
+            test = Property(Bool, label="ミスあり")
         """
         )
         mocked_directive = mock.MagicMock()

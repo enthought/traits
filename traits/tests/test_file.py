@@ -45,7 +45,6 @@ class FileTestCase(unittest.TestCase):
     def test_fast(self):
         example_model = FastExampleModel(file_name=__file__)
         example_model.path = "."
-        example_model.path = u"."
 
 
 class TestCreateEditor(unittest.TestCase):

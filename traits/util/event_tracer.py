@@ -24,12 +24,12 @@ from traits import trait_notifiers
 
 
 CHANGEMSG = (
-    u"{time} {direction:-{direction}{length}} {name!r} changed from "
+    "{time} {direction:-{direction}{length}} {name!r} changed from "
     "{old!r} to {new!r} in {class_name!r}\n"
 )
-CALLINGMSG = u"{time} {action:>{gap}}: {handler!r} in {source}\n"
+CALLINGMSG = "{time} {action:>{gap}}: {handler!r} in {source}\n"
 EXITMSG = (
-    u"{time} {direction:-{direction}{length}} "
+    "{time} {direction:-{direction}{length}} "
     "EXIT: {handler!r}{exception}\n"
 )
 SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE = 9
@@ -43,7 +43,7 @@ class SentinelRecord(object):
     __slots__ = ()
 
     def __str__(self):
-        return u"\n"
+        return "\n"
 
 
 class ChangeMessageRecord(object):
