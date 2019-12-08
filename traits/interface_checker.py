@@ -22,8 +22,6 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 # inspect.getargspec is deprecated in Python 3; inspect.getfullargspec is
 # unavailable in Python 2.
 try:

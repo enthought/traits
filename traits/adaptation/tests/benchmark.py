@@ -4,8 +4,6 @@ This is not 'enforced' by any tests (i.e. we currently aren't bound to satisfy
 any performance criteria - but in the future we might be ;^).
 
 """
-from __future__ import print_function
-
 import abc
 from pprint import pprint
 import time

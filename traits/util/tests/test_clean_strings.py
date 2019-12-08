@@ -11,8 +11,6 @@
 #  Thanks for using Enthought open source!
 #
 # -----------------------------------------------------------------------------
-from __future__ import unicode_literals
-
 import unittest
 
 from traits.util.clean_strings import clean_filename

@@ -12,7 +12,6 @@
 #
 # All configuration values have a default value; values that are commented out
 # serve to show the default value.
-from __future__ import print_function
 import datetime
 import io
 import os

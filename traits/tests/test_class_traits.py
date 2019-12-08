@@ -3,8 +3,6 @@ Unit tests for the `HasTraits.class_traits` class function.
 
 """
 
-from __future__ import absolute_import
-
 import unittest
 
 from traits.api import HasTraits, Int, List, Str

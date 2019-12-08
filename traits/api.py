@@ -21,8 +21,6 @@ Use this module for importing Traits names into your namespace. For example::
     from traits.api import HasTraits
 """
 
-from __future__ import absolute_import
-
 from .trait_base import Uninitialized, Undefined, Missing, Self
 
 from .trait_errors import TraitError, TraitNotificationError, DelegationError

@@ -16,8 +16,6 @@ Tests for the Int trait type.
 
 """
 
-from __future__ import absolute_import
-
 import decimal
 import sys
 import unittest

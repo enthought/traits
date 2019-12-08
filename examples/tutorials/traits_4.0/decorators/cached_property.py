@@ -66,8 +66,6 @@ Use of the *cached_property* decorator also eliminates the need to add *cached
 using *depends_on* metadata with a cached property definition.
 """
 
-from __future__ import print_function
-
 from traits.api import *
 from traitsui.api import *
 

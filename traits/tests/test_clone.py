@@ -10,8 +10,6 @@
 # Author: David C. Morrill
 # Description: <Traits component>
 
-from __future__ import absolute_import
-
 import unittest
 
 from traits.api import HasTraits, Instance, Str, Any, Property

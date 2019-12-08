@@ -23,8 +23,6 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 from .trait_base import Undefined
 from .traits import CTrait
 from .has_traits import HasTraits, HasPrivateTraits
