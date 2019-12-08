@@ -1,17 +1,12 @@
 # Copyright (c) 2019 by Enthought, Inc.
 # All rights reserved.
 
-try:
-    # Python 3: mock in the standard library.
-    import unittest.mock as mock
-except ImportError:
-    # Python 2: need to use 3rd-party mock.
-    import mock
 import os
 import pickle
 import shutil
 import tempfile
 import unittest
+import unittest.mock as mock
 
 from traits.api import HasTraits, Int
 from traits.testing.optional_dependencies import requires_traitsui, traitsui

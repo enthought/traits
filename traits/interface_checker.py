@@ -22,12 +22,7 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-# inspect.getargspec is deprecated in Python 3; inspect.getfullargspec is
-# unavailable in Python 2.
-try:
-    from inspect import getfullargspec, getmro
-except ImportError:
-    from inspect import getargspec as getfullargspec, getmro
+from inspect import getfullargspec, getmro
 import logging
 from types import FunctionType
 

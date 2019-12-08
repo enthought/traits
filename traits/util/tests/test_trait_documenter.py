@@ -9,12 +9,7 @@ import tempfile
 import textwrap
 import tokenize
 import unittest
-try:
-    # Python 3: mock in the standard library.
-    import unittest.mock as mock
-except ImportError:
-    # Python 2: need to use 3rd-party mock.
-    import mock
+import unittest.mock as mock
 
 from traits.api import HasTraits, Int
 from traits.testing.optional_dependencies import sphinx, requires_sphinx
