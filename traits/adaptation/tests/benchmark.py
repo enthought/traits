@@ -10,8 +10,6 @@ import abc
 from pprint import pprint
 import time
 
-import six
-
 from traits.adaptation.adaptation_manager import AdaptationManager
 from traits.api import Adapter, HasTraits, Interface, provides
 

@@ -31,8 +31,6 @@ import sys
 from os import getcwd
 from os.path import dirname, exists, join
 
-import six
-
 from .etsconfig.api import ETSConfig
 
 # backwards compatibility: trait_base used to provide a patched enumerate

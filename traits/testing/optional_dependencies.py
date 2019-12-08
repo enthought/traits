@@ -15,8 +15,6 @@
 import importlib
 import unittest
 
-import six
-
 
 def optional_import(name):
     """

@@ -16,8 +16,6 @@ import tempfile
 import threading
 import unittest
 
-import six
-
 from traits.util.event_tracer import (
     SentinelRecord,
     RecordContainer,

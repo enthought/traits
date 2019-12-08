@@ -18,8 +18,6 @@ import io
 import os
 import sys
 
-import six
-
 
 # The docset build will use slightly different formatting rules
 BUILD_DOCSET = bool(os.environ.get("BUILD_DOCSET"))

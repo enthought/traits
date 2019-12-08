@@ -7,8 +7,6 @@ from __future__ import absolute_import
 
 import unittest
 
-import six
-
 from traits.api import HasTraits, Int, List, Str
 
 

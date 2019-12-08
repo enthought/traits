@@ -13,9 +13,6 @@ import token
 import tokenize
 import traceback
 
-import six
-
-
 from sphinx.ext.autodoc import ClassLevelDocumenter
 
 from ..trait_handlers import TraitType

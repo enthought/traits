@@ -1,8 +1,6 @@
 import os
 import unittest
 
-import six
-
 from traits.api import File, HasTraits, TraitError
 from traits.testing.optional_dependencies import requires_traitsui
 

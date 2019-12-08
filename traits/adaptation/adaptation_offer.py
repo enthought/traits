@@ -12,8 +12,6 @@
 # ------------------------------------------------------------------------------
 """ An offer to provide adapters from one protocol to another. """
 
-import six
-
 from traits.api import Any, Bool, HasTraits, Property
 
 from traits.util.api import import_symbol

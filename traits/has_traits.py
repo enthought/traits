@@ -36,8 +36,6 @@ import weakref
 
 from types import FunctionType, MethodType
 
-import six
-
 from . import __version__ as TraitsVersion
 
 from .adaptation.adaptation_error import AdaptationError

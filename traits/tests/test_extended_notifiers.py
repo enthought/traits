@@ -8,8 +8,6 @@ listeners to `a:b` when `a` changes.
 """
 import unittest
 
-import six
-
 from traits import trait_notifiers
 from traits.api import Float, HasTraits, List
 

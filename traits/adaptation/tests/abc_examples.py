@@ -3,8 +3,6 @@
 
 from abc import ABC
 
-import six
-
 from traits.adaptation.api import PurePythonAdapter as Adapter
 
 

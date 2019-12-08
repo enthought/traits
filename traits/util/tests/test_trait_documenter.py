@@ -16,8 +16,6 @@ except ImportError:
     # Python 2: need to use 3rd-party mock.
     import mock
 
-import six
-
 from traits.api import HasTraits, Int
 from traits.testing.optional_dependencies import sphinx, requires_sphinx
 

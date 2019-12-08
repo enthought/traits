@@ -6,8 +6,6 @@ property trait (regression tests for Github issue #67).
 
 import unittest
 
-import six
-
 from traits.api import Any, HasTraits, Int, Property, TraitError
 
 

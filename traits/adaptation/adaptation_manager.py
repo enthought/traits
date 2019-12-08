@@ -18,8 +18,6 @@ import inspect
 import itertools
 import functools
 
-import six
-
 from traits.adaptation.adaptation_error import AdaptationError
 from traits.has_traits import HasTraits
 from traits.trait_types import Dict, List, Str

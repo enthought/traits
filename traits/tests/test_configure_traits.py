@@ -13,8 +13,6 @@ import shutil
 import tempfile
 import unittest
 
-import six
-
 from traits.api import HasTraits, Int
 from traits.testing.optional_dependencies import requires_traitsui, traitsui
 

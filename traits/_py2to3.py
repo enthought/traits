@@ -5,8 +5,6 @@ from __future__ import division, absolute_import
 
 import contextlib
 
-import six
-
 ExitStack = contextlib.ExitStack
 
 

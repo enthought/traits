@@ -15,8 +15,6 @@ from __future__ import unicode_literals
 
 import unittest
 
-import six
-
 from traits.util.clean_strings import clean_filename
 
 # Safe strings should only contain the following characters.

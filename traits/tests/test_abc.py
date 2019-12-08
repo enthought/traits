@@ -4,8 +4,6 @@ import abc
 import unittest
 import warnings
 
-import six
-
 from traits.api import ABCHasTraits, ABCMetaHasTraits, HasTraits, Int, Float
 
 

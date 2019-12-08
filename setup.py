@@ -273,7 +273,7 @@ setuptools.setup(
     long_description=get_long_description(),
     long_description_content_type="text/x-rst",
     download_url="https://github.com/enthought/traits",
-    install_requires=["six"],
+    install_requires=[],
     ext_modules=[setuptools.Extension("traits.ctraits", ["traits/ctraits.c"])],
     license="BSD",
     maintainer="ETS Developers",

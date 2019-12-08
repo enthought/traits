@@ -12,8 +12,6 @@ import threading
 import time
 import warnings
 
-import six
-
 from traits.api import (
     Bool,
     Event,

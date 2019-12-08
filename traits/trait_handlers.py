@@ -37,11 +37,7 @@ import copy
 import copyreg
 import re
 import sys
-
-import six
-
 from types import FunctionType, MethodType
-
 from weakref import ref
 
 from .trait_base import (

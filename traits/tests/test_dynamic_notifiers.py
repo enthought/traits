@@ -2,8 +2,6 @@
 import gc
 import unittest
 
-import six
-
 from traits import trait_notifiers
 from traits.api import Event, Float, HasTraits, List, on_trait_change
 

@@ -1,8 +1,6 @@
 import gc
 import unittest
 
-import six
-
 from ..weakiddict import WeakIDDict, WeakIDKeyDict
 
 

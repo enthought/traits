@@ -12,8 +12,6 @@
 # ----------------------------------------------------------------------------
 import unittest
 
-import six
-
 from traits.util.event_tracer import (
     SentinelRecord,
     ChangeMessageRecord,

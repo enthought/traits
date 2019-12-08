@@ -3,8 +3,6 @@ import gc
 import sys
 import unittest
 
-import six
-
 from traits.has_traits import (
     HasStrictTraits,
     HasTraits,

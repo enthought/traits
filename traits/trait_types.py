@@ -32,8 +32,6 @@ from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 import uuid
 
-import six
-
 from . import trait_handlers
 
 from .trait_base import (

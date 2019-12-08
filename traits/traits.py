@@ -51,8 +51,6 @@ from __future__ import absolute_import
 import sys
 from types import FunctionType, MethodType
 
-import six
-
 NoneType = type(None)  # Python 3's types does not include NoneType
 
 from . import trait_handlers

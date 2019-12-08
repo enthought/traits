@@ -20,8 +20,6 @@ import threading
 from contextlib import contextmanager
 from datetime import datetime
 
-import six
-
 from traits import trait_notifiers
 
 

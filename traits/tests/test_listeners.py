@@ -26,8 +26,6 @@ import threading
 import time
 import unittest
 
-import six
-
 from traits.api import HasTraits, Str, Int, Float, Any, Event
 from traits.api import push_exception_handler, pop_exception_handler
 

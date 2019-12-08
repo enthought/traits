@@ -13,8 +13,6 @@ The tests need a Cython version > 0.19 and a compiler.
 import sys
 import unittest
 
-import six
-
 from traits.testing.unittest_tools import UnittestTools
 from traits.testing.optional_dependencies import cython, requires_cython
 

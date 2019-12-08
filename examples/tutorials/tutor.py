@@ -22,10 +22,7 @@ from __future__ import print_function
 import sys
 import os
 import re
-
 from string import capwords
-
-import six
 
 from traits.api import (
     HasPrivateTraits,
