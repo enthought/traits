@@ -33,12 +33,12 @@ consistent.
 
 from __future__ import absolute_import
 
-import sys
-import re
 import copy
+import copyreg
+import re
+import sys
 
 import six
-import six.moves as sm
 
 from types import FunctionType, MethodType
 
@@ -2717,7 +2717,7 @@ class TraitSetObject(set):
         """ Overridden to make sure we call our custom __getstate__.
         """
         return (
-            sm.copyreg._reconstructor,
+            copyreg._reconstructor,
             (type(self), set, list(self)),
             self.__getstate__(),
         )

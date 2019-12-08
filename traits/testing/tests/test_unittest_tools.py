@@ -13,7 +13,6 @@ import time
 import warnings
 
 import six
-import six.moves as sm
 
 from traits.api import (
     Bool,

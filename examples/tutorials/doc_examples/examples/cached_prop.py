@@ -8,8 +8,6 @@
 
 # cached_prop.py - Example of @cached_property decorator
 # --[Imports]-------------------------------------------------------------------
-import six.moves as sm
-
 from traits.api import HasPrivateTraits, List, Int, Property, cached_property
 
 

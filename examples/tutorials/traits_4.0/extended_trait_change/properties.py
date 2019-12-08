@@ -57,8 +57,6 @@ from __future__ import print_function
 
 # FIXME redo example without traitsui
 
-import six.moves as sm
-
 from traits.api import *
 
 from traitsui.api import *

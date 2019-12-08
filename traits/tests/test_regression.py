@@ -4,7 +4,6 @@ import sys
 import unittest
 
 import six
-import six.moves as sm
 
 from traits.has_traits import (
     HasStrictTraits,

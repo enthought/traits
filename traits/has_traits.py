@@ -30,6 +30,7 @@ from __future__ import absolute_import, division, print_function
 import abc
 import copy as copy_module
 import os
+import pickle
 import re
 import weakref
 
@@ -2154,7 +2155,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         if filename is not None:
             if os.path.exists(filename):
                 with open(filename, "rb") as fd:
-                    self.copy_traits(six.moves.cPickle.Unpickler(fd).load())
+                    self.copy_traits(pickle.Unpickler(fd).load())
 
         if edit:
             from traitsui.api import toolkit
@@ -2172,7 +2173,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             )
             if rc and (filename is not None):
                 with open(filename, "wb") as fd:
-                    six.moves.cPickle.Pickler(fd, True).dump(self)
+                    pickle.Pickler(fd, True).dump(self)
             return rc
 
         return True

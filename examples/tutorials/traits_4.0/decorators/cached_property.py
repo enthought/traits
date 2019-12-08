@@ -67,7 +67,6 @@ using *depends_on* metadata with a cached property definition.
 """
 
 from __future__ import print_function
-import six.moves as sm
 
 from traits.api import *
 from traitsui.api import *

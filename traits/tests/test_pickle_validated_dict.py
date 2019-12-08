@@ -11,8 +11,6 @@ from __future__ import absolute_import
 import pickle
 import unittest
 
-import six.moves as sm
-
 from traits.api import Dict, HasTraits, Int, List
 
 

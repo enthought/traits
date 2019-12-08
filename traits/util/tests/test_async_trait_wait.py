@@ -3,8 +3,6 @@ import threading
 import time
 import unittest
 
-import six.moves as sm
-
 from traits.api import Enum, HasStrictTraits
 
 from traits.util.async_trait_wait import wait_for_condition

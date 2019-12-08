@@ -11,7 +11,6 @@ from __future__ import absolute_import
 import unittest
 
 import six
-import six.moves as sm
 
 from traits.api import CList, HasTraits, Instance, Int, List, Str, TraitError
 
