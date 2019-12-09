@@ -27,22 +27,6 @@ void Py2to3_FinishAttrNameCStr(PyObject *nname){
     Py_DECREF(nname);
 };
 
-
-/*
-    Simple strings for PyErr formatting:
-    * Python 3:
-      - Attributes are Unicode
-      - PyErr_Format uses PyUnicode_FromFormat
-
-    Thus SimpleString == PyString if Python < 3 else PyUnicode
-*/
-#define Py2to3_SimpleString_Check(name) PyUnicode_Check(name)
-#define Py2to3_SimpleString_GET_SIZE(name) PyUnicode_GET_SIZE(name)
-#define Py2to3_SimpleString_Type PyUnicode_Type
-#define Py2to3_PYERR_SIMPLE_STRING_FMTCHR "U"
-#define Py2to3_PYERR_PREPARE_SIMPLE_STRING(name) name
-#define Py2to3_SimpleString_FromString(string) PyUnicode_FromString(string)
-
 /* In Python 3, all ints are longs */
 #define Py2to3_PyNum_Check PyLong_Check
 #define Py2to3_PyNum_FromLong PyLong_FromLong

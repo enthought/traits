@@ -364,15 +364,14 @@ bad_trait_value_error ( void ) {
 static int
 bad_delegate_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleString_Check( name ) ) {
+    if ( !PyUnicode_Check( name ) ) {
         return invalid_attribute_error( name );
     }
     PyErr_Format(
         DelegationError,
-        "The '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
-            " attribute of a '%.50s' object"
+            "The '%.400U' attribute of a '%.50s' object"
             " delegates to an attribute which is not a defined trait.",
-        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        name,
         Py_TYPE(obj)->tp_name
     );
     return -1;
@@ -385,16 +384,15 @@ bad_delegate_error ( has_traits_object * obj, PyObject * name ) {
 static int
 bad_delegate_error2 ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleString_Check( name ) ) {
+    if ( !PyUnicode_Check( name ) ) {
         return invalid_attribute_error( name );
     }
 
     PyErr_Format(
         DelegationError,
-        "The '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
-            " attribute of a '%.50s' object"
+            "The '%.400U' attribute of a '%.50s' object"
             " has a delegate which does not have traits.",
-        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        name,
         Py_TYPE(obj)->tp_name
     );
     return -1;
@@ -407,16 +405,15 @@ bad_delegate_error2 ( has_traits_object * obj, PyObject * name ) {
 static int
 delegation_recursion_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleString_Check( name ) ) {
+    if ( !PyUnicode_Check( name ) ) {
         return invalid_attribute_error( name );
     }
 
     PyErr_Format(
         DelegationError,
-        "Delegation recursion limit exceeded while setting"
-            " the '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
-            " attribute of a '%.50s' object.",
-        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+            "Delegation recursion limit exceeded while setting"
+            " the '%.400U' attribute of a '%.50s' object.",
+        name,
         Py_TYPE(obj)->tp_name
     );
     return -1;
@@ -425,17 +422,15 @@ delegation_recursion_error ( has_traits_object * obj, PyObject * name ) {
 static int
 delegation_recursion_error2 ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleString_Check( name ) ) {
+    if ( !PyUnicode_Check( name ) ) {
         return invalid_attribute_error( name );
     }
 
     PyErr_Format(
         DelegationError,
-        "Delegation recursion limit exceeded while getting"
-            " the definition of"
-            " the '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
-            " attribute of a '%.50s' object.",
-        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+            "Delegation recursion limit exceeded while getting"
+            " the definition of the '%.400U' attribute of a '%.50s' object.",
+        name,
         Py_TYPE(obj)->tp_name
     );
     return -1;
@@ -448,15 +443,14 @@ delegation_recursion_error2 ( has_traits_object * obj, PyObject * name ) {
 static int
 delete_readonly_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleString_Check( name ) ) {
+    if ( !PyUnicode_Check( name ) ) {
         return invalid_attribute_error( name );
     }
 
     PyErr_Format(
         TraitError,
-        "Cannot delete the read only '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
-            " attribute of a '%.50s' object.",
-        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        "Cannot delete the read only '%.400U' attribute of a '%.50s' object.",
+        name,
         Py_TYPE(obj)->tp_name
     );
     return -1;
@@ -469,15 +463,14 @@ delete_readonly_error ( has_traits_object * obj, PyObject * name ) {
 static int
 set_readonly_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleString_Check( name ) ) {
+    if ( !PyUnicode_Check( name ) ) {
         return invalid_attribute_error( name );
     }
 
     PyErr_Format(
         TraitError,
-        "Cannot modify the read only '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
-            " attribute of a '%.50s' object.",
-        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        "Cannot modify the read only '%.400U' attribute of a '%.50s' object.",
+        name,
         Py_TYPE(obj)->tp_name
     );
     return -1;
@@ -497,9 +490,8 @@ set_disallow_error ( has_traits_object * obj, PyObject * name ) {
 
     PyErr_Format(
         TraitError,
-        "Cannot set the undefined '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
-            " attribute of a '%.50s' object.",
-        Py2to3_PYERR_PREPARE_SIMPLE_STRING( nname ),
+        "Cannot set the undefined '%.400U' attribute of a '%.50s' object.",
+        nname,
         Py_TYPE(obj)->tp_name
     );
     Py2to3_FinishNormaliseAttrName(name, nname);
@@ -513,15 +505,14 @@ set_disallow_error ( has_traits_object * obj, PyObject * name ) {
 static int
 set_delete_property_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleString_Check( name ) ) {
+    if ( !PyUnicode_Check( name ) ) {
         return invalid_attribute_error( name );
     }
 
     PyErr_Format(
         TraitError,
-        "Cannot delete the '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
-            " property of a '%.50s' object.",
-        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        "Cannot delete the '%.400U' property of a '%.50s' object.",
+        name,
         Py_TYPE(obj)->tp_name
     );
     return -1;
@@ -536,9 +527,9 @@ unknown_attribute_error ( has_traits_object * obj, PyObject * name ) {
 
     PyErr_Format(
         PyExc_AttributeError,
-        "'%.50s' object has no attribute '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'",
+        "'%.50s' object has no attribute '%.400U'",
         Py_TYPE(obj)->tp_name,
-        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name )
+        name
     );
 }
 
@@ -1638,9 +1629,9 @@ getattr_event ( trait_object      * trait,
                 PyObject          * name ) {
 
     PyErr_Format( PyExc_AttributeError,
-        "The %.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR
+        "The %.400U"
             " trait of a %.50s instance is an 'event', which is write only.",
-        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ), Py_TYPE(obj)->tp_name );
+        name, Py_TYPE(obj)->tp_name );
 
     return NULL;
 }
@@ -1669,7 +1660,7 @@ getattr_trait ( trait_object      * trait,
         obj->obj_dict = dict;
         }
 
-        if ( Py2to3_SimpleString_Check( name ) ) {
+        if ( PyUnicode_Check( name ) ) {
         if ( (result = default_value_for( trait, obj, name )) != NULL ) {
             if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
 
@@ -1788,14 +1779,12 @@ getattr_delegate ( trait_object      * trait,
     }
 
     PyErr_Format( DelegationError,
-        "The '%.50s' object has no attribute '%.400"
-            Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
-            " because its %.50s delegate has no attribute '%.400"
-            Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'.",
+        "The '%.50s' object has no attribute '%.400U' "
+        "because its %.50s delegate has no attribute '%.400U'.",
         Py_TYPE(obj)->tp_name,
-        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        name,
         tp->tp_name,
-        Py2to3_PYERR_PREPARE_SIMPLE_STRING( delegate_attr_name )
+        delegate_attr_name
     );
     result = NULL;
 
@@ -1815,7 +1804,7 @@ getattr_disallow ( trait_object      * trait,
                    has_traits_object * obj,
                    PyObject          * name ) {
 
-    if ( Py2to3_SimpleString_Check( name ) )
+    if ( PyUnicode_Check( name ) )
         unknown_attribute_error( obj, name );
     else
         invalid_attribute_error( name );
@@ -1969,7 +1958,7 @@ setattr_python ( trait_object      * traito,
         return -1;
     }
 
-    if ( Py2to3_SimpleString_Check( name ) ) {
+    if ( PyUnicode_Check( name ) ) {
         unknown_attribute_error( obj, name );
 
         return -1;
@@ -2698,12 +2687,11 @@ setattr_constant ( trait_object      * traito,
                    PyObject          * name,
                    PyObject          * value ) {
 
-    if ( Py2to3_SimpleString_Check( name ) ) {
+    if ( PyUnicode_Check( name ) ) {
         PyErr_Format( TraitError,
-            "Cannot modify the constant '%.400"
-                Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
-                " attribute of a '%.50s' object.",
-            Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+            "Cannot modify the constant '%.400U'"
+            " attribute of a '%.50s' object.",
+            name,
             Py_TYPE(obj)->tp_name
         );
         return -1;
@@ -2849,11 +2837,10 @@ _trait_cast ( trait_object * trait, PyObject * args ) {
     if ( result == NULL ) {
         PyErr_Clear();
         info = PyObject_CallMethod( trait->handler, "info", NULL );
-        if ( (info != NULL) && Py2to3_SimpleString_Check( info ) )
+        if ( (info != NULL) && PyUnicode_Check( info ) )
             PyErr_Format( PyExc_ValueError,
-                "Invalid value for trait, the value should be %"
-                Py2to3_PYERR_SIMPLE_STRING_FMTCHR ".",
-                Py2to3_PYERR_PREPARE_SIMPLE_STRING( info ) );
+                "Invalid value for trait, the value should be %U.",
+                info );
         else
             PyErr_Format( PyExc_ValueError, "Invalid value for trait." );
         Py_XDECREF( info );
@@ -5026,19 +5013,19 @@ Py2to3_MOD_INIT(ctraits) {
        return Py2to3_MOD_ERROR_VAL;
 
     /* Predefine a Python string == "__class_traits__": */
-    class_traits = Py2to3_SimpleString_FromString( "__class_traits__" );
+    class_traits = PyUnicode_FromString( "__class_traits__" );
 
     /* Predefine a Python string == "__listener_traits__": */
-    listener_traits = Py2to3_SimpleString_FromString( "__listener_traits__" );
+    listener_traits = PyUnicode_FromString( "__listener_traits__" );
 
     /* Predefine a Python string == "editor": */
-    editor_property = Py2to3_SimpleString_FromString( "editor" );
+    editor_property = PyUnicode_FromString( "editor" );
 
     /* Predefine a Python string == "__prefix__": */
-    class_prefix = Py2to3_SimpleString_FromString( "__prefix__" );
+    class_prefix = PyUnicode_FromString( "__prefix__" );
 
     /* Predefine a Python string == "trait_added": */
-    trait_added = Py2to3_SimpleString_FromString( "trait_added" );
+    trait_added = PyUnicode_FromString( "trait_added" );
 
     /* Create an empty tuple: */
     empty_tuple = PyTuple_New( 0 );
