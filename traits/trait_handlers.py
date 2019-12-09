@@ -1017,9 +1017,6 @@ class ThisClass(TraitHandler):
 #  'TraitInstance' class:
 # -------------------------------------------------------------------------------
 
-# Mapping from 'adapt' parameter values to 'fast validate' values
-AdaptMap = {"no": -1, "yes": 0, "default": 1}
-
 
 class TraitInstance(ThisClass):
     """Ensures that trait attribute values belong to a specified Python class
@@ -1042,7 +1039,7 @@ class TraitInstance(ThisClass):
     (i.e., no coercion is performed).
     """
 
-    def __init__(self, aClass, allow_none=True, adapt="no", module=""):
+    def __init__(self, aClass, allow_none=True, module=""):
         """Creates a TraitInstance handler.
 
         Parameters
@@ -1052,14 +1049,6 @@ class TraitInstance(ThisClass):
         allow_none : bool
             Flag indicating whether None is accepted as a valid value.
             (True or non-zero) or not (False or 0)
-        adapt : str
-            Value indicating how adaptation should be handled:
-
-            - 'no' (-1): Adaptation is not allowed.
-            - 'yes' (0): Adaptation is allowed and should raise an exception if
-              adaptation fails.
-            - 'default' (1): Adaption is allowed and should return the default
-              value if adaptation fails.
         module : module
             The module that the class belongs to.
 
@@ -1069,7 +1058,6 @@ class TraitInstance(ThisClass):
         of.
         """
         self._allow_none = allow_none
-        self.adapt = AdaptMap[adapt]
         self.module = module
         if isinstance(aClass, str):
             self.aClass = aClass
@@ -1085,24 +1073,14 @@ class TraitInstance(ThisClass):
             self.set_fast_validate()
 
     def set_fast_validate(self):
-        if self.adapt < 0:
-            fast_validate = [1, self.aClass]
-            if self._allow_none:
-                fast_validate = [1, None, self.aClass]
-            if self.aClass in TypeTypes:
-                fast_validate[0] = 0
-            self.fast_validate = tuple(fast_validate)
-        else:
-            self.fast_validate = (
-                19,
-                self.aClass,
-                self.adapt,
-                self._allow_none,
-            )
+        fast_validate = [1, self.aClass]
+        if self._allow_none:
+            fast_validate = [1, None, self.aClass]
+        if self.aClass in TypeTypes:
+            fast_validate[0] = 0
+        self.fast_validate = tuple(fast_validate)
 
     def validate(self, object, name, value):
-
-        from traits.adaptation.api import adapt
 
         if value is None:
             if self._allow_none:
@@ -1113,20 +1091,8 @@ class TraitInstance(ThisClass):
         if isinstance(self.aClass, str):
             self.resolve_class(object, name, value)
 
-        if self.adapt < 0:
-            if isinstance(value, self.aClass):
-                return value
-        elif self.adapt == 0:
-            try:
-                return adapt(value, self.aClass)
-            except:
-                pass
-        else:
-            # fixme: The 'None' value is not really correct. It should return
-            # the default value for the trait, but the handler does not have
-            # any way to know this currently. Since the 'fast validate' code
-            # does the correct thing, this should not normally be a problem.
-            return adapt(value, self.aClass, None)
+        if isinstance(value, self.aClass):
+            return value
 
         self.validate_failed(object, name, value)
 
@@ -1135,13 +1101,7 @@ class TraitInstance(ThisClass):
         if type(aClass) is not str:
             aClass = aClass.__name__
 
-        if self.adapt < 0:
-            result = class_of(aClass)
-        else:
-            result = (
-                "an implementor of, or can be adapted to implement, %s"
-                % aClass
-            )
+        result = class_of(aClass)
 
         if self._allow_none:
             return result + " or None"
