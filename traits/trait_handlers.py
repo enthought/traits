@@ -1201,34 +1201,6 @@ class TraitInstance(ThisClass):
         return aClass(*args[1:], **kw)
 
 
-# -------------------------------------------------------------------------------
-#  'TraitWeakRef' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitWeakRef(TraitInstance):
-    def _get(self, object, name):
-        value = getattr(object, name + "_", None)
-        if value is not None:
-            return value.value()
-        return None
-
-    def _set(self, object, name, value):
-        if value is not None:
-            value = HandleWeakRef(object, name, value)
-        object.__dict__[name + "_"] = value
-
-    def resolve_class(self, object, name, value):
-        # fixme: We have to override this method to prevent the 'fast validate'
-        # from being set up, since the trait using this is a 'property' style
-        # trait which is not currently compatible with the 'fast_validate'
-        # style (causes internal Python SystemError messages).
-        aClass = self.find_class(self.aClass)
-        if aClass is None:
-            self.validate_failed(object, name, value)
-        self.aClass = aClass
-
-
 # -- Private Class --------------------------------------------------------------
 
 
