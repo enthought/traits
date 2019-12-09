@@ -6,18 +6,9 @@
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 
-from __future__ import absolute_import
-
 import unittest
 
-import six
-import six.moves as sm
-
 from traits.api import CList, HasTraits, Instance, Int, List, Str, TraitError
-from traits.testing.optional_dependencies import (
-    conflicts_with_python2,
-    requires_python2,
-)
 
 
 class Foo(HasTraits):
@@ -96,7 +87,7 @@ class ListTestCase(unittest.TestCase):
 
     def test_slice_assignment(self):
         # Exhaustive testing.
-        starts = stops = [None] + list(sm.range(-10, 11))
+        starts = stops = [None] + list(range(-10, 11))
         steps = list(starts)
         steps.remove(0)
         test_slices = [
@@ -110,7 +101,7 @@ class ListTestCase(unittest.TestCase):
             f = Foo(l=["zero", "one", "two", "three", "four"])
             plain_l = list(f.l)
             length = len(plain_l[test_slice])
-            replacements = list(sm.map(str, sm.range(length)))
+            replacements = list(map(str, range(length)))
 
             # Plain Python list and Traits list behaviour should match.
             plain_l[test_slice] = replacements
@@ -306,13 +297,8 @@ class ListTestCase(unittest.TestCase):
         except ImportError:
             pass
         else:
-            if six.PY2:
-                f.ints = array([1, 2, 3])
-                self.assertEqual(f.ints, [1, 2, 3])
-            else:
-                # These would fail due to np.int_ being an invalid vallue
-                # for the Int-trait.
-                pass
+            f.ints = array([1, 2, 3])
+            self.assertEqual(f.ints, [1, 2, 3])
 
             f.strs = array(("abc", "def", "ghi"))
             self.assertEqual(f.strs, ["abc", "def", "ghi"])
@@ -359,14 +345,6 @@ class ListTestCase(unittest.TestCase):
         f.l.sort(key=lambda x: -ord(x), reverse=True)
         self.assertEqual(f.l, ["a", "b", "c", "d"])
 
-    @requires_python2
-    def test_sort_cmp(self):
-        f = Foo()
-        f.l = ["a", "c", "b", "d"]
-        f.l.sort(cmp=lambda x, y: ord(x) - ord(y))
-        self.assertEqual(f.l, ["a", "b", "c", "d"])
-
-    @conflicts_with_python2
     def test_sort_cmp_error(self):
         f = Foo()
         f.l = ["a", "c", "b", "d"]

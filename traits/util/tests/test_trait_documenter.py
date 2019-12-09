@@ -9,14 +9,7 @@ import tempfile
 import textwrap
 import tokenize
 import unittest
-try:
-    # Python 3: mock in the standard library.
-    import unittest.mock as mock
-except ImportError:
-    # Python 2: need to use 3rd-party mock.
-    import mock
-
-import six
+import unittest.mock as mock
 
 from traits.api import HasTraits, Int
 from traits.testing.optional_dependencies import sphinx, requires_sphinx
@@ -59,7 +52,7 @@ class TestTraitDocumenter(unittest.TestCase):
     depth_interval = Property(Tuple(Float, Float),
                               depends_on="_depth_interval")
 """
-        string_io = six.StringIO(self.source)
+        string_io = io.StringIO(self.source)
         tokens = tokenize.generate_tokens(string_io.readline)
         self.tokens = tokens
 
@@ -70,7 +63,7 @@ class TestTraitDocumenter(unittest.TestCase):
                                   depends_on="_depth_interval")
         """
         )
-        string_io = six.StringIO(src)
+        string_io = io.StringIO(src)
         tokens = tokenize.generate_tokens(string_io.readline)
 
         definition_tokens = _get_definition_tokens(tokens)
@@ -87,7 +80,7 @@ class TestTraitDocumenter(unittest.TestCase):
         class Fake(HasTraits):
 
             #: Test attribute
-            test = Property(Bool, label=u"ミスあり")
+            test = Property(Bool, label="ミスあり")
         """
         )
         mocked_directive = mock.MagicMock()

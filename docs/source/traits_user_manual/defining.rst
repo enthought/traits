@@ -145,7 +145,7 @@ Complex        CComplex      Complex number         0+0j
 Float          CFloat        Floating point number  0.0
 Int            CInt          Integer                0
 Str            CStr          String                 ''
-Unicode        CUnicode      Unicode                u''
+Unicode        CUnicode      Unicode                ''
 Bytes          CBytes        Bytes                  b''
 ============== ============= ====================== ======================
 

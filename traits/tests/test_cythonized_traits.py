@@ -13,25 +13,11 @@ The tests need a Cython version > 0.19 and a compiler.
 import sys
 import unittest
 
-import six
-
 from traits.testing.unittest_tools import UnittestTools
-from traits.testing.optional_dependencies import cython
-
-if cython is None:
-    skip_reason = "Cython is not installed"
-elif sys.platform == "win32" and six.PY2:
-    # Tests are failing for undiagnosed reasons on Windows / Python 2.7.
-    # Ref: enthought/traits#557.
-    skip_reason = (
-        "Compilation issues with Windows / Python 2.7. "
-        "See enthought/traits#557"
-    )
-else:
-    skip_reason = None
+from traits.testing.optional_dependencies import cython, requires_cython
 
 
-@unittest.skipIf(skip_reason, skip_reason)
+@requires_cython
 class CythonizedTraitsTestCase(unittest.TestCase, UnittestTools):
     def test_simple_default_methods(self):
 

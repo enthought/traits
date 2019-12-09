@@ -6,8 +6,6 @@
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 
-from __future__ import absolute_import
-
 import unittest
 
 from traits.api import HasTraits, Instance, Int

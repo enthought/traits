@@ -8,8 +8,6 @@
 
 """ Tests to help find out if we can do type-safe casting. """
 
-from __future__ import absolute_import
-
 # Standard library imports.
 import unittest
 import warnings

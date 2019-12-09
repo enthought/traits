@@ -175,8 +175,8 @@ class CommonRangeTests(object):
     def test_rejects_bad_types(self):
         # A selection of things that don't count as float-like.
         non_floats = [
-            u"not a number",
-            u"\N{GREEK CAPITAL LETTER SIGMA}",
+            "not a number",
+            "\N{GREEK CAPITAL LETTER SIGMA}",
             b"not a number",
             "3.5",
             "3",

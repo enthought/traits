@@ -4,13 +4,9 @@ This is not 'enforced' by any tests (i.e. we currently aren't bound to satisfy
 any performance criteria - but in the future we might be ;^).
 
 """
-from __future__ import print_function
-
 import abc
 from pprint import pprint
 import time
-
-import six
 
 from traits.adaptation.adaptation_manager import AdaptationManager
 from traits.api import Adapter, HasTraits, Interface, provides
@@ -85,8 +81,7 @@ print("apptools using Interfaces: %.3f msec per iteration" % time_per_iter)
 for i in range(N_SOURCES):
     exec(
         """
-@six.add_metaclass(abc.ABCMeta)
-class FooABC{i}(object):
+class FooABC{i}(abc.ABC):
     pass
 """.format(
             i=i
@@ -102,8 +97,7 @@ foo = Foo0()
 for i in range(N_PROTOCOLS):
     exec(
         """
-@six.add_metaclass(abc.ABCMeta)
-class ABC{i}(object):
+class ABC{i}(abc.ABC):
     pass
 """.format(
             i=i

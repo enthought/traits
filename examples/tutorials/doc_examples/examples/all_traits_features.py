@@ -6,7 +6,6 @@
 #                            package
 
 # --[Imports]-------------------------------------------------------------------
-from __future__ import print_function
 from traits.api import Delegate, HasTraits, Instance, Int, Str
 
 

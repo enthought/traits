@@ -52,7 +52,7 @@ you can run tests in all supported runtimes::
 
     python etstool.py test-all
 
-Currently supported runtime values are ``2.7``, ``3.5`` and ``3.6``.  Not all
+Currently supported runtime values are ``3.5`` and ``3.6``.  Not all
 combinations of runtimes will work, but the tasks will fail with
 a clear error if that is the case.
 
@@ -97,17 +97,12 @@ common_dependencies = {
 # Dependencies we install from source for testing
 source_dependencies = {"traitsui"}
 
-# Python 2-specific dependencies.
-python2_dependencies = {
-    "mock",
-}
-
 # Unix-specific dependencies.
 unix_dependencies = {
     "gnureadline",
 }
 
-supported_runtimes = ["2.7", "3.5", "3.6"]
+supported_runtimes = ["3.5", "3.6"]
 default_runtime = "3.6"
 
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
@@ -169,8 +164,6 @@ def install(edm, runtime, environment, editable, docs, source):
     """
     parameters = get_parameters(edm, runtime, environment)
     dependencies = common_dependencies.copy()
-    if runtime.startswith("2."):
-        dependencies.update(python2_dependencies)
     if sys.platform != "win32":
         dependencies.update(unix_dependencies)
     packages = " ".join(dependencies)

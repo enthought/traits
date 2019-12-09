@@ -4,7 +4,6 @@
 # static_notification.py --- Example of static attribute notification
 
 # --[Imports]-------------------------------------------------------------------
-from __future__ import print_function
 from traits.api import HasTraits, Float
 
 

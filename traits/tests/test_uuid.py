@@ -7,8 +7,6 @@
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 """ Test cases for UUID traits. """
 
-from __future__ import absolute_import
-
 import unittest
 
 import uuid

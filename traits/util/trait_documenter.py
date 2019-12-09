@@ -7,13 +7,11 @@
 
 """
 import inspect
+import io
 import sys
 import token
 import tokenize
 import traceback
-
-import six
-
 
 from sphinx.ext.autodoc import ClassLevelDocumenter
 
@@ -116,9 +114,9 @@ class TraitDocumenter(ClassLevelDocumenter):
         # Workaround for enthought/traits#493: if the definition is multiline,
         # throw away all lines after the first.
         if "\n" in definition:
-            definition = definition.partition("\n")[0] + u" …"
+            definition = definition.partition("\n")[0] + " …"
 
-        self.add_line(u"   :annotation: = {0}".format(definition), "<autodoc>")
+        self.add_line("   :annotation: = {0}".format(definition), "<autodoc>")
 
     # Private Interface #####################################################
 
@@ -128,7 +126,7 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         # Get the class source and tokenize it.
         source = inspect.getsource(self.parent)
-        string_io = six.StringIO(source)
+        string_io = io.StringIO(source)
         tokens = tokenize.generate_tokens(string_io.readline)
 
         # find the trait definition start
@@ -145,9 +143,6 @@ class TraitDocumenter(ClassLevelDocumenter):
         # Retrieve the trait definition.
         definition_tokens = _get_definition_tokens(tokens)
         definition = tokenize.untokenize(definition_tokens).strip()
-        if six.PY2:
-            definition = six.text_type(definition, "utf-8")
-
         return definition
 
 

@@ -3,9 +3,6 @@ import gc
 import sys
 import unittest
 
-import six
-import six.moves as sm
-
 from traits.has_traits import (
     HasStrictTraits,
     HasTraits,
@@ -210,7 +207,7 @@ class TestRegression(unittest.TestCase):
             obj.on_trait_change(handler)
 
         # Warmup.
-        for _ in sm.range(cycles):
+        for _ in range(cycles):
             f()
             gc.collect()
             counts.append(len(gc.get_objects()))
@@ -223,7 +220,7 @@ class TestRegression(unittest.TestCase):
         cycles = 10
         counts = []
 
-        for _ in sm.range(cycles):
+        for _ in range(cycles):
             DelegateLeak()
             gc.collect()
             counts.append(len(gc.get_objects()))
@@ -262,17 +259,13 @@ class TestRegression(unittest.TestCase):
         with self.assertRaises(TraitError):
             StrictDummy(forbidden=53)
 
-        if six.PY2:
-            with self.assertRaises(TraitError):
-                StrictDummy(**{b"forbidden": 53})
-
         # This is the case that used to fail on Python 2.
         with self.assertRaises(TraitError):
-            StrictDummy(**{u"forbidden": 53})
+            StrictDummy(**{"forbidden": 53})
 
         a = StrictDummy()
         with self.assertRaises(TraitError):
-            setattr(a, u"forbidden", 53)
+            setattr(a, "forbidden", 53)
 
     def test_validate_exception_propagates(self):
         class A(HasTraits):

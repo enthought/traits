@@ -116,7 +116,6 @@ Refer to the code tabs of this lesson for a complete example using the
 """
 
 # --<Imports>-------------------------------------------------------------------
-from __future__ import print_function
 from traits.api import *
 
 

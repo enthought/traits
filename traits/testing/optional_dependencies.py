@@ -15,8 +15,6 @@
 import importlib
 import unittest
 
-import six
-
 
 def optional_import(name):
     """
@@ -51,18 +49,9 @@ requires_numpy = unittest.skipIf(numpy is None, "NumPy not available")
 sphinx = optional_import("sphinx")
 requires_sphinx = unittest.skipIf(sphinx is None, "Sphinx not available")
 
-# Traits master has removed support for old-style classes; this causes issues
-# when importing Pyface. So we only attempt to import TraitsUI on Python 3.
-# Related: enthought/pyface#461.
-if six.PY2:
-    traitsui = None
-else:
-    traitsui = optional_import("traitsui")
+traitsui = optional_import("traitsui")
 requires_traitsui = unittest.skipIf(traitsui is None, "TraitsUI not available")
 # Import traitsui.api so that client code can use traits.api directly without
 # an extra import.
 if traitsui is not None:
     import traitsui.api
-
-requires_python2 = unittest.skipUnless(six.PY2, "Applicable only to Python 2")
-conflicts_with_python2 = unittest.skipIf(six.PY2, "Does not apply to Python 2")
