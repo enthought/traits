@@ -3625,93 +3625,115 @@ validate_trait_function ( trait_object * trait, has_traits_object * obj,
 
 /*-----------------------------------------------------------------------------
 |  Attempts to 'adapt' an object to a specified interface:
+|
+|  If mode == 1, first tries to adapt the value to the given class, and
+|  if that fails, but the value is already an instance of the class, returns
+|  that value.
+|
+|  If mode == 2, first tries to adapt the value to the given class. If that
+|  fails, and if the value is an instance of the class, the value is returned
+|  unchanged. If neither of those holds, the default value is used.
+|
+|  Parameters
+|  ----------
+|  trait : cTrait
+|      The trait being assigned to.
+|  obj : HasTraits
+|      The CHasTraits object that the trait belongs to.
+|  name : str
+|      The name of the trait in obj, for use in error messages.
+|  value : object
+|      The value to adapt
+|
+|  Raises
+|  ------
+|  TraitError
+|      If the value cannot be adapted.
+|
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
-                       PyObject * name, PyObject * value ) {
+validate_trait_adapt(trait_object *trait, has_traits_object *obj,
+                    PyObject *name, PyObject *value) {
 
-    PyObject * result;
-    PyObject * args;
-    PyObject * type;
-    PyObject * type_info = trait->py_validate;
+    PyObject *result, *args, *type, *type_info;
     long mode, rc;
 
-    if ( value == Py_None ) {
-        long allow_none;
-#if PY_MAJOR_VERSION < 3
-        allow_none = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
-#else
-        allow_none = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 3 ) );
-        if( allow_none==-1 && PyErr_Occurred())
+    type_info = trait->py_validate;
+
+    /* If value is None and allow_none, return value; else fail validation */
+    if (value == Py_None) {
+        int allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(type_info, 3));
+        if (allow_none == -1) {
             return NULL;
-#endif // #if PY_MAJOR_VERSION < 3
-        if ( allow_none ) {
-            Py_INCREF( value );
+        }
+        if (allow_none) {
+            Py_INCREF(value);
             return value;
         }
-        return raise_trait_error( trait, obj, name, value );
+        else {
+            return raise_trait_error(trait, obj, name, value);
+        }
     }
 
-    type = PyTuple_GET_ITEM( type_info, 1 );
+    type = PyTuple_GET_ITEM(type_info, 1);
 #if PY_MAJOR_VERSION < 3
-    mode = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 2 ) );
+    mode = PyInt_AS_LONG(PyTuple_GET_ITEM(type_info, 2));
 #else
-    mode = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 2 ) );
-    if( mode==-1 && PyErr_Occurred())
+    mode = PyLong_AsLong(PyTuple_GET_ITEM(type_info, 2));
+    if (mode == -1 && PyErr_Occurred()) {
         return NULL;
+    }
 #endif // #if PY_MAJOR_VERSION < 3
 
-    if ( mode == 2 ) {
-        args = PyTuple_Pack(3, value, type, Py_None);
-    } else {
-        args = PyTuple_Pack(2, value, type);
+    /* Adaptation mode 0: do a simple isinstance check. */
+    if (mode == 0) {
+        rc = PyObject_IsInstance(value, type);
+        if (rc == -1 && PyErr_Occurred()) {
+            return NULL;
+        }
+        if (rc) {
+            Py_INCREF(value);
+            return value;
+        }
+        else {
+            return raise_trait_error( trait, obj, name, value );
+        }
     }
+
+    /* Try adaptation; return adapted value on success. */
+    args = PyTuple_Pack(3, value, type, Py_None);
     if (args == NULL) {
         return NULL;
     }
-
-    result = PyObject_Call( adapt, args, NULL );
-    Py_DECREF( args );
-    if ( result != NULL ) {
-        if ( result != Py_None ) {
-            if ( (mode > 0) || (result == value) ) {
-                return result;
-            }
-            Py_DECREF( result );
-            goto check_implements;
-        }
-
-        Py_DECREF( result );
-
-        rc = PyObject_IsInstance(value, type);
-        if( rc==-1 && PyErr_Occurred()){
-            return NULL;
-        }
-        if ( rc ) {
-            Py_INCREF( value );
-            return value;
-        }
-
-        result = default_value_for( trait, obj, name );
-        if ( result != NULL )
-            return result;
-
-        PyErr_Clear();
-        return raise_trait_error( trait, obj, name, value );
-    }
-    PyErr_Clear();
-check_implements:
-    rc = PyObject_IsInstance(value, type);
-    if( rc==-1 && PyErr_Occurred()){
+    result = PyObject_Call(adapt, args, NULL);
+    Py_DECREF(args);
+    if (result == NULL) {
         return NULL;
     }
-    if ( rc ) {
+    if (result != Py_None) {
+        return result;
+    }
+    Py_DECREF(result);
+
+    /* Adaptation failed. Move on to an isinstance check. */
+    rc = PyObject_IsInstance(value, type);
+    if (rc == -1 && PyErr_Occurred()) {
+        return NULL;
+    }
+    if (rc) {
         Py_INCREF( value );
         return value;
     }
 
-    return raise_trait_error( trait, obj, name, value );
+    /* Adaptation and isinstance both failed. In mode 1, fail.
+       Otherwise, return the default. */
+    if (mode == 1) {
+        return raise_trait_error(trait, obj, name, value);
+    }
+    else {
+        return default_value_for(trait, obj, name);
+    }
 }
 
 /*-----------------------------------------------------------------------------
@@ -3918,76 +3940,76 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
             /* case 15..18: Property 'setattr' validate checks: */
 
             case 19:  /* Adaptable object check: */
-                if ( value == Py_None ) {
-                    long allow_none;
-#if PY_MAJOR_VERSION < 3
-                    allow_none = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
-#else
-                    allow_none = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 2 ) );
-                    if( allow_none==-1 && PyErr_Occurred())
+                /* If value is None and allow_none, return value; else fail validation */
+                if (value == Py_None) {
+                    int allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(type_info, 3));
+                    if (allow_none == -1) {
                         return NULL;
-#endif // #if PY_MAJOR_VERSION < 3
-                    if( allow_none ) {
+                    }
+                    if (allow_none) {
                         goto done;
                     }
-                    break;
+                    else {
+                        break;
+                    }
                 }
 
-                type = PyTuple_GET_ITEM( type_info, 1 );
+                type = PyTuple_GET_ITEM(type_info, 1);
 #if PY_MAJOR_VERSION < 3
-                mode = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 2 ) );
+                mode = PyInt_AS_LONG(PyTuple_GET_ITEM(type_info, 2));
 #else
-                mode = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 2 ) );
-                if( mode==-1 && PyErr_Occurred())
+                mode = PyLong_AsLong(PyTuple_GET_ITEM(type_info, 2));
+                if (mode == -1 && PyErr_Occurred()) {
                     return NULL;
+                }
 #endif // #if PY_MAJOR_VERSION < 3
 
-                if ( mode == 2 ) {
-                    args = PyTuple_Pack(3, value, type, Py_None);
-                } else {
-                    args = PyTuple_Pack(2, value, type);
+                /* Adaptation mode 0: do a simple isinstance check. */
+                if (mode == 0) {
+                    rc = PyObject_IsInstance(value, type);
+                    if (rc == -1 && PyErr_Occurred()) {
+                        return NULL;
+                    }
+                    if (rc) {
+                        goto done;
+                    }
+                    else {
+                        break;
+                    }
                 }
+
+                /* Try adaptation; return adapted value on success. */
+                args = PyTuple_Pack(3, value, type, Py_None);
                 if (args == NULL) {
                     return NULL;
                 }
-
-                result = PyObject_Call( adapt, args, NULL );
-                Py_DECREF( args );
-                if ( result != NULL ) {
-                    if ( result != Py_None ) {
-                        if ( (mode > 0) || (result == value) ) {
-                            return result;
-                        }
-                        Py_DECREF( result );
-                        goto check_implements;
-                    }
-
-                    Py_DECREF( result );
-
-                    rc = PyObject_IsInstance(value, type);
-                    if( rc==-1 && PyErr_Occurred()){
-                        return NULL;
-                    }
-                    if ( rc ) {
-                        goto done;
-                    }
-
-                    result = default_value_for( trait, obj, name );
-                    if ( result != NULL )
-                        return result;
-
-                    PyErr_Clear();
-                    break;
-                }
-                PyErr_Clear();
-check_implements:
-                rc = PyObject_IsInstance(value, type);
-                if( rc==-1 && PyErr_Occurred()){
+                result = PyObject_Call(adapt, args, NULL);
+                Py_DECREF(args);
+                if (result == NULL) {
                     return NULL;
                 }
-                if ( rc )
+                if (result != Py_None) {
+                    return result;
+                }
+                Py_DECREF(result);
+
+                /* Adaptation failed. Move on to an isinstance check. */
+                rc = PyObject_IsInstance(value, type);
+                if (rc == -1 && PyErr_Occurred()) {
+                    return NULL;
+                }
+                if (rc) {
                     goto done;
-                break;
+                }
+
+                /* Adaptation and isinstance both failed. In mode 1, fail.
+                   Otherwise, return the default. */
+                if (mode == 1) {
+                    break;
+                }
+                else {
+                    return default_value_for(trait, obj, name);
+                }
 
             case 20:  /* Integer check: */
                 result = as_integer(value);
