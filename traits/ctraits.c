@@ -60,13 +60,7 @@ static PyTypeObject * ctrait_type;     /* Python-level CTrait type reference */
 
 /* Trait method related: */
 
-#if PY_MAJOR_VERSION < 3
-#define TP_DESCR_GET(t) \
-    (PyType_HasFeature(t, Py_TPFLAGS_HAVE_CLASS) ? (t)->tp_descr_get : NULL)
-#else
-#define TP_DESCR_GET(t) \
-    ((t)->tp_descr_get)
-#endif
+#define TP_DESCR_GET(t) ((t)->tp_descr_get)
 
 /* Notification related: */
 #define has_notifiers(tnotifiers,onotifiers) \
@@ -317,26 +311,10 @@ fatal_trait_error ( void ) {
 
 static int
 invalid_attribute_error ( PyObject * name ) {
-
-#if PY_MAJOR_VERSION >= 3
     const char* fmt = "attribute name must be an instance of <type 'str'>. "
                       "Got %R (%.200s).";
-    PyErr_Format(PyExc_TypeError, fmt, name, name->ob_type->tp_name);
-#else
-    // Python 2.6 doesn't support %R in PyErr_Format, so we compute and
-    // insert the repr explicitly.
-    const char* fmt = "attribute name must be an instance of <type 'str'>. "
-                      "Got %.200s (%.200s).";
-    PyObject *obj_repr;
 
-    obj_repr = PyObject_Repr(name);
-    if ( obj_repr == NULL ) {
-        return -1;
-    }
-    PyErr_Format(PyExc_TypeError, fmt, PyString_AsString(obj_repr),
-                 name->ob_type->tp_name);
-    Py_DECREF( obj_repr );
-#endif
+    PyErr_Format(PyExc_TypeError, fmt, name, name->ob_type->tp_name);
 
     return -1;
 }
@@ -660,23 +638,8 @@ call_class ( PyObject * class, trait_object * trait, has_traits_object * obj,
 
 static PyObject *
 dict_getitem ( PyDictObject * dict, PyObject *key ) {
-#if !defined(Py_LIMITED_API) && (PY_MAJOR_VERSION < 3 || PY_MINOR_VERSION < 3)
-    Py_hash_t hash;
-#endif
-
     assert( PyDict_Check( dict ) );
-
-#if !defined(Py_LIMITED_API) && (PY_MAJOR_VERSION < 3 || PY_MINOR_VERSION < 3)
-    hash = Py2to3_GetHash_wCache( key );
-    if ( hash == -1 ) {
-        PyErr_Clear();
-        return NULL;
-    }
-
-    return (dict->ma_lookup)( dict, key, hash )->me_value;
-#else
     return PyDict_GetItem((PyObject *)dict,key);
-#endif
 }
 
 /*-----------------------------------------------------------------------------
@@ -3156,17 +3119,11 @@ as_integer(PyObject *value) {
     PyObject *index_of_value, *value_as_integer;
 
     /* Fast path for common case. */
-#if PY_MAJOR_VERSION < 3
-    if (PyInt_CheckExact(value)) {
-        Py_INCREF(value);
-        return value;
-    }
-#else
     if (PyLong_CheckExact(value)) {
         Py_INCREF(value);
         return value;
     }
-#endif
+
     /* Not of exact type int: call __index__ method if available. */
     index_of_value = PyNumber_Index(value);
     if (index_of_value == NULL) {
@@ -3175,79 +3132,23 @@ as_integer(PyObject *value) {
 
     /*
        We run the __index__ result through an extra int call to ensure that
-       we get something of exact type int or long, and (for Python 2) to
-       ensure that we only get a long if the target value is outside the
-       range of an int.
+       we get something of exact type int.
 
        Example problematic cases:
 
        - ``operator.index(True)`` gives ``True``, where we'd like ``1``.
-       - On Python 2, ``operator.index(np.uint64(3))`` gives ``3L``, where
-         we'd like ``3``.
 
        Related: https://bugs.python.org/issue17576
     */
 
-#if PY_MAJOR_VERSION < 3
-    value_as_integer = PyNumber_Int(index_of_value);
-#else
     value_as_integer = PyNumber_Long(index_of_value);
-#endif
     Py_DECREF(index_of_value);
     return value_as_integer;
 }
 
 
 /*-----------------------------------------------------------------------------
-|  Verifies a Python value is an int within a specified range:
-+----------------------------------------------------------------------------*/
-#if PY_MAJOR_VERSION < 3
-static PyObject *
-validate_trait_int ( trait_object * trait, has_traits_object * obj,
-                     PyObject * name, PyObject * value ) {
-
-    register PyObject * low;
-    register PyObject * high;
-    long exclude_mask;
-    long int_value;
-
-    PyObject * type_info = trait->py_validate;
-
-    if ( PyInt_Check( value ) ) {
-        int_value    = PyInt_AS_LONG( value );
-        low          = PyTuple_GET_ITEM( type_info, 1 );
-        high         = PyTuple_GET_ITEM( type_info, 2 );
-        exclude_mask = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
-        if ( low != Py_None ) {
-            if ( (exclude_mask & 1) != 0 ) {
-                if ( int_value <= PyInt_AS_LONG( low ) )
-                    goto error;
-            } else {
-                if ( int_value < PyInt_AS_LONG( low ) )
-                    goto error;
-            }
-        }
-
-        if ( high != Py_None ) {
-            if ( (exclude_mask & 2) != 0 ) {
-                if ( int_value >= PyInt_AS_LONG( high ) )
-                    goto error;
-            } else {
-                if ( int_value > PyInt_AS_LONG( high ) )
-                    goto error;
-            }
-        }
-
-        Py_INCREF( value );
-        return value;
-    }
-error:
-    return raise_trait_error( trait, obj, name, value );
-}
-#endif  // #if PY_MAJOR_VERSION < 3
-
-/*-----------------------------------------------------------------------------
-|  Verifies a Python value is a Python integer (an int or long)
+|  Verifies a Python value is a Python int
 +----------------------------------------------------------------------------*/
 
 static PyObject *
@@ -3343,14 +3244,10 @@ in_float_range(PyObject *value, PyObject *range_info) {
 
     low = PyTuple_GET_ITEM(range_info, 1);
     high = PyTuple_GET_ITEM(range_info, 2);
-#if PY_MAJOR_VERSION < 3
-    exclude_mask = PyInt_AS_LONG(PyTuple_GET_ITEM(range_info, 3));
-#else
     exclude_mask = PyLong_AsLong(PyTuple_GET_ITEM(range_info, 3));
     if (exclude_mask == -1 && PyErr_Occurred()) {
         return -1;
     }
-#endif  // #if PY_MAJOR_VERSION < 3
 
     if (low != Py_None) {
         if ((exclude_mask & 1) != 0) {
@@ -3677,14 +3574,10 @@ validate_trait_adapt(trait_object *trait, has_traits_object *obj,
     }
 
     type = PyTuple_GET_ITEM(type_info, 1);
-#if PY_MAJOR_VERSION < 3
-    mode = PyInt_AS_LONG(PyTuple_GET_ITEM(type_info, 2));
-#else
     mode = PyLong_AsLong(PyTuple_GET_ITEM(type_info, 2));
     if (mode == -1 && PyErr_Occurred()) {
         return NULL;
     }
-#endif // #if PY_MAJOR_VERSION < 3
 
     /* Adaptation mode 0: do a simple isinstance check. */
     if (mode == 0) {
@@ -3748,11 +3641,6 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
     long mode, rc;
     PyObject *result, *type_info, *type, *type2, *args;
 
-#if PY_MAJOR_VERSION < 3
-    PyObject *low, *high;
-    long exclude_mask;
-#endif
-
     PyObject * list_type_info = PyTuple_GET_ITEM( trait->py_validate, 1 );
     int n = PyTuple_GET_SIZE( list_type_info );
     for ( i = 0; i < n; i++ ) {
@@ -3783,38 +3671,6 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                       PyObject_TypeCheck( value, Py_TYPE(obj) ) )
                     goto done;
                 break;
-
-#if PY_MAJOR_VERSION < 3
-            case 3:  /* Integer range check: */
-                if ( PyInt_Check( value ) ) {
-                    long int_value;
-                    int_value    = PyInt_AS_LONG( value );
-                    low          = PyTuple_GET_ITEM( type_info, 1 );
-                    high         = PyTuple_GET_ITEM( type_info, 2 );
-                    exclude_mask = PyInt_AS_LONG(
-                                       PyTuple_GET_ITEM( type_info, 3 ) );
-                    if ( low != Py_None ) {
-                        if ( (exclude_mask & 1) != 0 ) {
-                            if ( int_value <= PyInt_AS_LONG( low  ) )
-                                break;
-                        } else {
-                            if ( int_value < PyInt_AS_LONG( low  ) )
-                                break;
-                        }
-                    }
-                    if ( high != Py_None ) {
-                        if ( (exclude_mask & 2) != 0 ) {
-                            if ( int_value >= PyInt_AS_LONG( high ) )
-                                break;
-                        } else {
-                            if ( int_value > PyInt_AS_LONG( high ) )
-                                break;
-                        }
-                    }
-                    goto done;
-                }
-                break;
-#endif
 
             case 4:  /* Floating point range check: */
                 result = as_float(value);
@@ -3955,14 +3811,10 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                 }
 
                 type = PyTuple_GET_ITEM(type_info, 1);
-#if PY_MAJOR_VERSION < 3
-                mode = PyInt_AS_LONG(PyTuple_GET_ITEM(type_info, 2));
-#else
                 mode = PyLong_AsLong(PyTuple_GET_ITEM(type_info, 2));
                 if (mode == -1 && PyErr_Occurred()) {
                     return NULL;
                 }
-#endif // #if PY_MAJOR_VERSION < 3
 
                 /* Adaptation mode 0: do a simple isinstance check. */
                 if (mode == 0) {
@@ -4054,11 +3906,7 @@ static trait_validate validate_handlers[] = {
     validate_trait_type,         /* case 0: Type check */
     validate_trait_instance,     /* case 1: Instance check */
     validate_trait_self_type,    /* case 2: Self type check */
-#if PY_MAJOR_VERSION < 3
-    validate_trait_int,          /* case 3: Integer range check */
-#else
-    NULL,                        /* case 3: Integer range check */
-#endif // #if PY_MAJOR_VERSION < 3
+    NULL,                        /* case 3: Integer range check (unused) */
     validate_trait_float_range,  /* case 4: Floating-point range check */
     validate_trait_enum,         /* case 5: Enumerated item check */
     validate_trait_map,          /* case 6: Mapped item check */
@@ -4124,20 +3972,6 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                           (PyTuple_GET_ITEM( validate, 1 ) == Py_None)) )
                         goto done;
                     break;
-
-#if PY_MAJOR_VERSION < 3
-                case 3:  /* Integer range check: */
-                    if ( n == 4 ) {
-                        v1 = PyTuple_GET_ITEM( validate, 1 );
-                        v2 = PyTuple_GET_ITEM( validate, 2 );
-                        v3 = PyTuple_GET_ITEM( validate, 3 );
-                        if ( ((v1 == Py_None) || PyInt_Check( v1 )) &&
-                             ((v2 == Py_None) || PyInt_Check( v2 )) &&
-                             PyInt_Check( v3 ) )
-                            goto done;
-                    }
-                    break;
-#endif // #if PY_MAJOR_VERSION < 3
 
                 case 4:  /* Floating point range check: */
                     if ( n == 4 ) {
@@ -4346,26 +4180,7 @@ delegate_attr_name_prefix_name ( trait_object      * trait,
                                  has_traits_object * obj,
                                  PyObject          * name ) {
 
-
-#if PY_MAJOR_VERSION < 3
-    char * p;
-    int prefix_len    = PyString_GET_SIZE( trait->delegate_prefix );
-    int name_len      = PyString_GET_SIZE( name );
-    int total_len     = prefix_len + name_len;
-    PyObject * result = PyString_FromStringAndSize( NULL, total_len );
-
-    if ( result == NULL ) {
-        Py_INCREF( Py_None );
-        return Py_None;
-    }
-
-    p = PyString_AS_STRING( result );
-    memcpy( p, PyString_AS_STRING( trait->delegate_prefix ), prefix_len );
-    memcpy( p + prefix_len, PyString_AS_STRING( name ), name_len );
-#else
     PyObject *result = PyUnicode_Concat( trait->delegate_prefix, name );
-#endif
-
     return result;
 }
 
@@ -4375,10 +4190,6 @@ delegate_attr_name_class_name ( trait_object      * trait,
                                 PyObject          * name ) {
 
     PyObject * prefix, * result;
-#if PY_MAJOR_VERSION < 3
-    char * p;
-    int prefix_len, name_len, total_len;
-#endif
 
     prefix = PyObject_GetAttr( (PyObject *) Py_TYPE(obj), class_prefix );
 // fixme: Should verify that prefix is a string...
@@ -4389,22 +4200,7 @@ delegate_attr_name_class_name ( trait_object      * trait,
             return name;
     }
 
-#if PY_MAJOR_VERSION < 3
-    prefix_len = PyString_GET_SIZE( prefix );
-    name_len   = PyString_GET_SIZE( name );
-    total_len  = prefix_len + name_len;
-    result     = PyString_FromStringAndSize( NULL, total_len );
-    if ( result == NULL ) {
-        Py_INCREF( Py_None );
-        return Py_None;
-    }
-
-    p = PyString_AS_STRING( result );
-    memcpy( p, PyString_AS_STRING( prefix ), prefix_len );
-    memcpy( p + prefix_len, PyString_AS_STRING( name ), name_len );
-#else
     result = PyUnicode_Concat( prefix, name );
-#endif
     Py_DECREF( prefix );
     return result;
 }
@@ -4427,30 +4223,12 @@ _trait_delegate ( trait_object * trait, PyObject * args ) {
     int prefix_type;
     int modify_delegate;
 
-#if PY_MAJOR_VERSION < 3
-    {
-        const char *delegate_name_str;
-        const char *delegate_prefix_str;
-        if ( !PyArg_ParseTuple( args, "ssii",
-                                &delegate_name_str, &delegate_prefix_str,
-                                &prefix_type,   &modify_delegate ) )
-            return NULL;
-        delegate_name = PyString_FromString(delegate_name_str);
-        delegate_prefix = PyString_FromString(delegate_prefix_str);
-        if(!delegate_name || !delegate_prefix){
-            Py_XDECREF(delegate_name);
-            Py_XDECREF(delegate_prefix);
-            return NULL;
-        }
-    }
-#else
     if ( !PyArg_ParseTuple( args, "UUii",
                             &delegate_name, &delegate_prefix,
                             &prefix_type,   &modify_delegate ) )
         return NULL;
     Py_INCREF( delegate_name );
     Py_INCREF( delegate_prefix );
-#endif
 
     if ( modify_delegate ) {
         trait->flags |= TRAIT_MODIFY_DELEGATE;
