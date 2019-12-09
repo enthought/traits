@@ -14,8 +14,6 @@
 """ Unit test case for testing interfaces and adaptation.
 """
 
-from __future__ import absolute_import
-
 import unittest
 
 from traits.api import (

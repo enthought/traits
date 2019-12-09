@@ -1,8 +1,6 @@
 import gc
 import unittest
 
-import six
-
 from ..weakiddict import WeakIDDict, WeakIDKeyDict
 
 
@@ -35,8 +33,6 @@ class WeakreffableInt(object):
 
 
 class TestWeakIDDict(unittest.TestCase):
-    if six.PY2:
-        assertCountEqual = unittest.TestCase.assertItemsEqual
 
     def test_weak_keys(self):
         wd = WeakIDKeyDict()

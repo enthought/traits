@@ -25,17 +25,14 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import, division, print_function
-
 import abc
 import copy as copy_module
 import os
+import pickle
 import re
 import weakref
 
 from types import FunctionType, MethodType
-
-import six
 
 from . import __version__ as TraitsVersion
 
@@ -105,8 +102,7 @@ CHECK_INTERFACES = 0
 # -------------------------------------------------------------------------------
 
 
-@six.add_metaclass(abc.ABCMeta)
-class AbstractViewElement(object):
+class AbstractViewElement(abc.ABC):
     pass
 
 
@@ -119,15 +115,9 @@ WrapperTypes = (
     StaticTraitChangeNotifyWrapper,
 )
 
-if six.PY2:
-    BoundMethodTypes = (MethodType,)
-    UnboundMethodTypes = (MethodType,)
-else:
-    # in python 3, unbound methods do not exist anymore, they're just functions
-    BoundMethodTypes = (MethodType,)
-    UnboundMethodTypes = (FunctionType,)
-
-
+# In Python 3, unbound methods do not exist anymore, they're just functions
+BoundMethodTypes = (MethodType,)
+UnboundMethodTypes = (FunctionType,)
 FunctionTypes = (FunctionType,)
 
 # Class dictionary entries used to save trait, listener and view information and
@@ -209,10 +199,7 @@ def _get_def(class_name, class_dict, bases, method):
         if (
             (result is not None)
             and is_unbound_method_type(result)
-            and (
-                getattr(six.get_unbound_function, "on_trait_change", None)
-                is None
-            )
+            and (getattr(result, "on_trait_change", None) is None)
         ):
             return result
 
@@ -431,7 +418,7 @@ def _add_event_handlers(trait, cls, handlers):
     """
     events = trait.event
     if events is not None:
-        if isinstance(events, six.string_types):
+        if isinstance(events, str):
             events = [events]
 
         for event in events:
@@ -603,7 +590,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                         )
                 elif value_type == "event":
                     on_trait_change = value.on_trait_change
-                    if isinstance(on_trait_change, six.string_types):
+                    if isinstance(on_trait_change, str):
                         listeners[name] = ("event", on_trait_change)
             else:
                 name = name[:-1]
@@ -751,7 +738,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
         events = trait.event
         if events is not None:
 
-            if isinstance(events, six.string_types):
+            if isinstance(events, str):
                 events = [events]
 
             for event in events:
@@ -1022,8 +1009,7 @@ def weak_arg(arg):
 # -------------------------------------------------------------------------------
 
 
-@six.add_metaclass(MetaHasTraits)
-class HasTraits(CHasTraits):
+class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     """ Enables any Python class derived from it to have trait attributes.
 
     Most of the methods of HasTraits operated by default only on the trait
@@ -1068,7 +1054,7 @@ class HasTraits(CHasTraits):
     # -- Trait Definitions ------------------------------------------------------
 
     #: An event fired when a new trait is dynamically added to the object
-    trait_added = Event(six.string_types[0])
+    trait_added = Event(str)
 
     #: An event that can be fired to indicate that the state of the object has
     #: been modified
@@ -2162,7 +2148,7 @@ class HasTraits(CHasTraits):
         if filename is not None:
             if os.path.exists(filename):
                 with open(filename, "rb") as fd:
-                    self.copy_traits(six.moves.cPickle.Unpickler(fd).load())
+                    self.copy_traits(pickle.Unpickler(fd).load())
 
         if edit:
             from traitsui.api import toolkit
@@ -2180,7 +2166,7 @@ class HasTraits(CHasTraits):
             )
             if rc and (filename is not None):
                 with open(filename, "wb") as fd:
-                    six.moves.cPickle.Pickler(fd, True).dump(self)
+                    pickle.Pickler(fd, True).dump(self)
             return rc
 
         return True
@@ -2579,7 +2565,7 @@ class HasTraits(CHasTraits):
         # Check to see if we can do a quick exit to the basic trait change
         # handler:
         if (
-            isinstance(name, six.string_types)
+            isinstance(name, str)
             and (extended_trait_pat.match(name) is None)
         ) or (name is None):
             self._on_trait_change(
@@ -3614,8 +3600,7 @@ class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
 
     pass
 
-@six.add_metaclass(ABCMetaHasTraits)
-class ABCHasTraits(HasTraits):
+class ABCHasTraits(HasTraits, metaclass=ABCMetaHasTraits):
     """ A HasTraits subclass which enables the features of Abstract
     Base Classes (ABC). See the 'abc' module in the standard library
     for more information.
@@ -3721,8 +3706,7 @@ class MetaInterface(ABCMetaHasTraits):
 # -------------------------------------------------------------------------------
 
 
-@six.add_metaclass(MetaInterface)
-class Interface(HasTraits):
+class Interface(HasTraits, metaclass=MetaInterface):
     """ The base class for all interfaces.
     """
 

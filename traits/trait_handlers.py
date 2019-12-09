@@ -31,17 +31,11 @@ consistent.
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
-import sys
-import re
 import copy
-
-import six
-import six.moves as sm
-
+import copyreg
+import re
+import sys
 from types import FunctionType, MethodType
-
 from weakref import ref
 
 from .trait_base import (
@@ -1077,7 +1071,7 @@ class TraitInstance(ThisClass):
         self._allow_none = allow_none
         self.adapt = AdaptMap[adapt]
         self.module = module
-        if isinstance(aClass, six.string_types):
+        if isinstance(aClass, str):
             self.aClass = aClass
         else:
             if not isinstance(aClass, type):
@@ -1116,7 +1110,7 @@ class TraitInstance(ThisClass):
             else:
                 self.validate_failed(object, name, value)
 
-        if isinstance(self.aClass, six.string_types):
+        if isinstance(self.aClass, str):
             self.resolve_class(object, name, value)
 
         if self.adapt < 0:
@@ -1199,7 +1193,7 @@ class TraitInstance(ThisClass):
 
     def create_default_value(self, *args, **kw):
         aClass = args[0]
-        if isinstance(aClass, six.string_types):
+        if isinstance(aClass, str):
             aClass = self.validate_class(self.find_class(aClass))
             if aClass is None:
                 raise TraitError("Unable to locate class: " + args[0])
@@ -1287,7 +1281,7 @@ class TraitClass(TraitHandler):
 
     def validate(self, object, name, value):
         try:
-            if isinstance(value, six.string_types):
+            if isinstance(value, str):
                 value = value.strip()
                 col = value.rfind(".")
                 if col >= 0:
@@ -2026,7 +2020,7 @@ class TraitList(TraitHandler):
     _items_event = None
 
     def __init__(
-        self, trait=None, minlen=0, maxlen=six.MAXSIZE, has_items=True
+        self, trait=None, minlen=0, maxlen=sys.maxsize, has_items=True
     ):
         """ Creates a TraitList handler.
 
@@ -2068,12 +2062,12 @@ class TraitList(TraitHandler):
 
     def full_info(self, object, name, value):
         if self.minlen == 0:
-            if self.maxlen == six.MAXSIZE:
+            if self.maxlen == sys.maxsize:
                 size = "items"
             else:
                 size = "at most %d items" % self.maxlen
         else:
-            if self.maxlen == six.MAXSIZE:
+            if self.maxlen == sys.maxsize:
                 size = "at least %d items" % self.minlen
             else:
                 size = "from %s to %s items" % (self.minlen, self.maxlen)
@@ -2232,11 +2226,6 @@ class TraitListObject(list):
             excp.set_prefix("Each element of the")
             raise excp
 
-    if six.PY2:
-
-        def __setslice__(self, i, j, values):
-            self.__setitem__(slice(i, j), values)
-
     def __delitem__(self, key):
         trait = getattr(self, "trait", None)
         if trait is None:
@@ -2273,11 +2262,6 @@ class TraitListObject(list):
             self._send_trait_items_event(
                 self.name_items, TraitListEvent(index, removed)
             )
-
-    if six.PY2:
-
-        def __delslice__(self, i, j):
-            self.__delitem__(slice(i, j))
 
     def __iadd__(self, other):
         self.extend(other)
@@ -2436,21 +2420,9 @@ class TraitListObject(list):
         else:
             self.len_error(len(self) - 1)
 
-    if six.PY2:
-
-        def sort(self, cmp=None, key=None, reverse=False):
-            removed = self[:]
-            list.sort(self, cmp=cmp, key=key, reverse=reverse)
-            self._sort_common(removed)
-
-    else:
-
-        def sort(self, key=None, reverse=False):
-            removed = self[:]
-            list.sort(self, key=key, reverse=reverse)
-            self._sort_common(removed)
-
-    def _sort_common(self, removed):
+    def sort(self, key=None, reverse=False):
+        removed = self[:]
+        list.sort(self, key=key, reverse=reverse)
         if (
             getattr(self, "name_items", None) is not None
             and getattr(self, "trait", None) is not None
@@ -2739,7 +2711,7 @@ class TraitSetObject(set):
         """ Overridden to make sure we call our custom __getstate__.
         """
         return (
-            sm.copyreg._reconstructor,
+            copyreg._reconstructor,
             (type(self), set, list(self)),
             self.__getstate__(),
         )
@@ -2956,7 +2928,7 @@ class TraitDictObject(dict):
             self.trait,
             lambda: None,
             self.name,
-            dict([copy.deepcopy(x, memo) for x in six.iteritems(self)]),
+            dict(copy.deepcopy(x, memo) for x in self.items()),
         )
 
         return result
@@ -3046,7 +3018,7 @@ class TraitDictObject(dict):
             if self.name_items is not None:
                 added = {}
                 changed = {}
-                for key, value in six.iteritems(new_dic):
+                for key, value in new_dic.items():
                     if key in self:
                         changed[key] = self[key]
                     else:
@@ -3140,7 +3112,7 @@ class TraitDictObject(dict):
             value_validate = lambda object, name, value: value
 
         object = self.object()
-        for key, value in six.iteritems(dic):
+        for key, value in dic.items():
             try:
                 key = key_validate(object, name, key)
             except TraitError as excp:

@@ -123,8 +123,8 @@ class CommonFloatTests(object):
         # Check that a failure to convert to float doesn't terminate
         # an assignment to a compound trait.
         a = self.test_class()
-        a.float_or_text = u"not a float"
-        self.assertEqual(a.float_or_text, u"not a float")
+        a.float_or_text = "not a float"
+        self.assertEqual(a.float_or_text, "not a float")
 
     def test_accepts_small_integer(self):
         a = self.test_class()

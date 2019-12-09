@@ -46,12 +46,8 @@ Visualization:
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 import sys
 from types import FunctionType, MethodType
-
-import six
 
 NoneType = type(None)  # Python 3's types does not include NoneType
 
@@ -579,11 +575,10 @@ ctraits._ctrait(CTrait)
 #  Constants:
 # -------------------------------------------------------------------------------
 
-ConstantTypes = (NoneType, int, float, complex, str, six.text_type)
+ConstantTypes = (NoneType, int, float, complex, str)
 
 PythonTypes = (
     str,
-    six.text_type,
     int,
     float,
     complex,
@@ -602,7 +597,6 @@ TraitTypes = (TraitHandler, CTrait)
 
 DefaultValues = {
     str: "",
-    six.text_type: "",
     int: 0,
     float: 0.0,
     complex: 0j,

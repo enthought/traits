@@ -4,7 +4,6 @@
 # delegate.py --- Example of trait delegation
 
 # --[Imports]-------------------------------------------------------------------
-from __future__ import print_function
 from traits.api import DelegatesTo, HasTraits, Instance, Str, TraitError
 
 
