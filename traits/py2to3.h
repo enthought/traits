@@ -15,8 +15,10 @@ PyObject *Py2to3_NormaliseAttrName(PyObject *name) {
     }
     return NULL;
 }
+
 void Py2to3_FinishNormaliseAttrName(PyObject *name,PyObject *nname){
 }
+
 PyObject *Py2to3_AttrNameCStr(PyObject *name) {
     return PyUnicode_AsUTF8String(name);
 }
@@ -41,24 +43,12 @@ void Py2to3_FinishAttrNameCStr(PyObject *nname){
 #define Py2to3_PYERR_PREPARE_SIMPLE_STRING(name) name
 #define Py2to3_SimpleString_FromString(string) PyUnicode_FromString(string)
 
-
-/* The following macro is defined from Python 2.6 and differently in Python 3 */
-#ifndef Py_TYPE
-    #define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
-#endif
-
-
 /* In Python 3, all ints are longs */
 #define Py2to3_PyNum_Check PyLong_Check
 #define Py2to3_PyNum_FromLong PyLong_FromLong
 #define Py2to3_PyNum_AsLong PyLong_AsLong
 
-/* Get hash of an object, using cached value for attribute names
-
- */
-#ifndef Py_hash_t
-    #define Py_hash_t long
-#endif
+/* Get hash of an object, using cached value for attribute names. */
 
 Py_hash_t Py2to3_GetHash_wCache(PyObject *obj){
 #ifndef Py_LIMITED_API
@@ -89,25 +79,12 @@ Py_hash_t Py2to3_GetHash_wCache(PyObject *obj){
 #define Py2to3_AttrNameCheck(name) (PyUnicode_Check(name))
 
 PyObject *Py2to3_GetAttrDictValue(PyDictObject * dict, PyObject *name, PyObject *bad_attr) {
-#if !defined(Py_LIMITED_API) && (PY_MAJOR_VERSION < 3 || PY_MINOR_VERSION < 3) && 0 // this does not work as intended! don't use it!
-    Py_hash_t hash;
-    if( PyUnicode_CheckExact( name ) ) {
-        // currently not usable, as dict->ma_lookup does not exist either
-        hash = ((PyUnicodeObject *) dict)->_base._base.hash;
-        if( hash == -1)
-           hash = PyObject_Hash( name );
-        return (dict->ma_lookup)( dict, name, hash )->me_value;
-    }
-#endif // #ifndef Py_LIMITED_API
     if( !PyUnicode_Check(name) )
         return bad_attr;
 
     return PyDict_GetItem((PyObject *)dict, name);
 }
 
-
-/*
-*/
 
 double Py2to3_PyNum_AsDouble(PyObject *value) {
     if ( !PyLong_Check( value ) ) {
@@ -116,13 +93,6 @@ double Py2to3_PyNum_AsDouble(PyObject *value) {
     }
     return PyLong_AsDouble( value );
 }
-
-
-#ifndef PyVarObject_HEAD_INIT
-    #define PyVarObject_HEAD_INIT(type, size) \
-        PyObject_HEAD_INIT(type) size,
-#endif
-
 
 
 #define Py2to3_MOD_ERROR_VAL NULL
