@@ -2928,7 +2928,7 @@ class TraitDictObject(dict):
             self.trait,
             lambda: None,
             self.name,
-            dict([copy.deepcopy(x, memo) for x in self.items()]),
+            dict(copy.deepcopy(x, memo) for x in self.items()),
         )
 
         return result
