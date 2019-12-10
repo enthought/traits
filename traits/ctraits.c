@@ -3593,8 +3593,8 @@ validate_trait_cast_type ( trait_object * trait, has_traits_object * obj,
     PyObject * result;
 
     PyObject * type_info = trait->py_validate;
-    PyObject * type      = PyTuple_GET_ITEM( type_info, 1 );
-    if ( PyObject_TypeCheck( value, (PyTypeObject *) type ) ) {
+    PyObject * type = PyTuple_GET_ITEM( type_info, 1 );
+    if (Py_TYPE(value) == (PyTypeObject *)type) {
         Py_INCREF( value );
         return value;
     }
@@ -3917,8 +3917,9 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
 
             case 12:  /* Castable type check */
                 type = PyTuple_GET_ITEM( type_info, 1 );
-                if ( PyObject_TypeCheck( value, (PyTypeObject *) type ) )
+                if (Py_TYPE(value) == (PyTypeObject *)type) {
                     goto done;
+                }
 
                 if ( (result = type_converter( type, value )) != NULL )
                     return result;
