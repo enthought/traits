@@ -168,7 +168,6 @@ Traits
 
 .. autodata:: Time
 
-
 Deprecated Traits
 -----------------
 
