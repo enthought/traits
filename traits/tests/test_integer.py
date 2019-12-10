@@ -20,12 +20,14 @@ import decimal
 import sys
 import unittest
 
-from traits.api import HasTraits, Int, TraitError
+from traits.api import HasTraits, Int, CInt, TraitError
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
 class A(HasTraits):
     integral = Int
+
+    convertible = CInt
 
 
 class IntegerLike(object):
@@ -109,3 +111,10 @@ class TestInt(unittest.TestCase):
             a.integral = numpy.float32(4.0)
         with self.assertRaises(TraitError):
             a.integral = numpy.float64(4.0)
+
+    def test_cint_conversion_of_subclasses(self):
+        # Regression test for enthought/traits#646
+        a = A()
+        a.convertible = True
+        self.assertIs(type(a.convertible), int)
+        self.assertEqual(a.convertible, 1)
