@@ -169,11 +169,13 @@ Traits
 .. autodata:: Time
 
 
-Aliases for existing Traits
----------------------------
+Deprecated Traits
+-----------------
 
-The traits in this section are aliases for existing traits.
-They're provided for backwards compatibility with older code.
+The following :class:`~.TraitType` classes and instances are deprecated,
+and may be removed in a future version of Traits.
+
+.. deprecated:: 6.0.0
 
 .. autodata:: BaseUnicode
 
@@ -182,17 +184,6 @@ They're provided for backwards compatibility with older code.
 .. autodata:: BaseCUnicode
 
 .. autodata:: CUnicode
-
-
-Deprecated Traits
------------------
-
-The following :class:`~.TraitType` instances are deprecated, and may
-be removed in a future version of Traits. In user code, these should be
-replaced with the corresponding compound types (e.g., replace ``ListStr``
-with ``List(Str)`` and ``DictStrAny`` with ``Dict(Str, Any)``).
-
-.. deprecated:: 6.0.0
 
 .. autodata:: false
 
