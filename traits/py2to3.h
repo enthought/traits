@@ -72,12 +72,3 @@ double Py2to3_PyNum_AsDouble(PyObject *value) {
     }
     return PyLong_AsDouble( value );
 }
-
-
-#define Py2to3_MOD_ERROR_VAL NULL
-#define Py2to3_MOD_SUCCESS_VAL(val) val
-#define Py2to3_MOD_INIT(name) PyMODINIT_FUNC PyInit_##name(void)
-#define Py2to3_MOD_DEF(ob, name, doc, methods) \
-        static struct PyModuleDef moduledef = { \
-        PyModuleDef_HEAD_INIT, name, doc, -1, methods, }; \
-        ob = PyModule_Create(&moduledef);

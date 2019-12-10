@@ -4975,42 +4975,45 @@ static PyMethodDef ctraits_methods[] = {
 |  Performs module and type initialization:
 +----------------------------------------------------------------------------*/
 
-Py2to3_MOD_INIT(ctraits) {
+static struct PyModuleDef ctraitsmodule = {
+    PyModuleDef_HEAD_INIT,
+    "ctraits",
+    ctraits__doc__,
+    -1,
+    ctraits_methods
+};
+
+
+PyMODINIT_FUNC PyInit_ctraits(void) {
     /* Create the 'ctraits' module: */
     PyObject * module;
 
-    Py2to3_MOD_DEF(
-        module,
-        "ctraits",
-        ctraits__doc__,
-        ctraits_methods
-    );
-
+    module = PyModule_Create(&ctraitsmodule);
     if ( module == NULL )
-       return Py2to3_MOD_ERROR_VAL;
+       return NULL;
 
     /* Create the 'CHasTraits' type: */
     has_traits_type.tp_base  = &PyBaseObject_Type;
     has_traits_type.tp_alloc = PyType_GenericAlloc;
     if ( PyType_Ready( &has_traits_type ) < 0 )
-       return Py2to3_MOD_ERROR_VAL;
+       return NULL;
 
     Py_INCREF( &has_traits_type );
     if ( PyModule_AddObject( module, "CHasTraits",
                          (PyObject *) &has_traits_type ) < 0 )
-       return Py2to3_MOD_ERROR_VAL;
+       return NULL;
 
     /* Create the 'CTrait' type: */
     trait_type.tp_base  = &PyBaseObject_Type;
     trait_type.tp_alloc = PyType_GenericAlloc;
     trait_type.tp_new   = PyType_GenericNew;
     if ( PyType_Ready( &trait_type ) < 0 )
-       return Py2to3_MOD_ERROR_VAL;
+       return NULL;
 
     Py_INCREF( &trait_type );
     if ( PyModule_AddObject( module, "cTrait",
                          (PyObject *) &trait_type ) < 0 )
-       return Py2to3_MOD_ERROR_VAL;
+       return NULL;
 
     /* Predefine a Python string == "__class_traits__": */
     class_traits = PyUnicode_FromString( "__class_traits__" );
@@ -5036,5 +5039,5 @@ Py2to3_MOD_INIT(ctraits) {
     /* Create the 'is_callable' marker: */
     is_callable = PyLong_FromLong( -1 );
 
-    return Py2to3_MOD_SUCCESS_VAL(module);
+    return module;
 }
