@@ -23,8 +23,6 @@
 
 #include "Python.h"
 
-#include "py2to3.h"
-
 /*-----------------------------------------------------------------------------
 |  Constants:
 +----------------------------------------------------------------------------*/
@@ -917,7 +915,6 @@ has_traits_getattro ( has_traits_object * obj, PyObject * name ) {
 
     trait_object * trait;
     PyObject *value;
-    PyObject *bad_attr_marker;
     /* The following is a performance hack to short-circuit the normal
        look-up when the value is in the object's dictionary.
 */
@@ -926,16 +923,12 @@ has_traits_getattro ( has_traits_object * obj, PyObject * name ) {
     if ( dict != NULL ) {
         assert( PyDict_Check( dict ) );
 
-        bad_attr_marker = name;
-        value = Py2to3_GetAttrDictValue(dict, name, bad_attr_marker);
-        // there is a slight performance-hit here:
-        // Py2to3_GetAttrDictValue cannot signal invalid attributes
-        // unambiguously, so we have to reckeck in case the marker value is
-        // returned. Make sure to pick an unlikely marker value.
-        if((value==bad_attr_marker) && !Py2to3_AttrNameCheck(name)) {
+        if (!PyUnicode_Check(name)) {
             invalid_attribute_error( name );
             return NULL;
         }
+
+        value = PyDict_GetItem((PyObject *)dict, name);
         if( value != NULL ){
             Py_INCREF( value );
             return value;
@@ -1246,7 +1239,7 @@ _has_traits_items_event ( has_traits_object * obj, PyObject * args ) {
         return NULL;
     }
 
-    if ( !Py2to3_AttrNameCheck( name ) ) {
+    if ( !PyUnicode_Check( name ) ) {
         invalid_attribute_error( name );
         return NULL;
     }
@@ -1754,18 +1747,6 @@ getattr_delegate ( trait_object      * trait,
     if ( tp->tp_getattro != NULL ) {
         result = (*tp->tp_getattro)( delegate, delegate_attr_name );
         goto done;
-    }
-
-    if ( tp->tp_getattr != NULL ) {
-        PyObject *delegate_attr_name_c_str = Py2to3_AttrNameCStr( delegate_attr_name );
-        if(delegate_attr_name_c_str == NULL){
-            result = NULL;
-        } else {
-            result = (*tp->tp_getattr)( delegate,
-                             Py2to3_AttrName_AS_STRING( delegate_attr_name_c_str ) );
-            Py2to3_FinishAttrNameCStr(delegate_attr_name_c_str);
-            goto done;
-        }
     }
 
     PyErr_Format( DelegationError,
