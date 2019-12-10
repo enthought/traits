@@ -50,7 +50,7 @@ static PyTypeObject * ctrait_type;     /* Python-level CTrait type reference */
 |  Macro definitions:
 +----------------------------------------------------------------------------*/
 
-#define PyTrait_CheckExact(op) ((op)->ob_type == ctrait_type)
+#define PyTrait_CheckExact(op) ((Py_TYPE(op)) == ctrait_type)
 
 #define PyHasTraits_Check(op) PyObject_TypeCheck(op, &has_traits_type)
 
@@ -306,7 +306,7 @@ invalid_attribute_error ( PyObject * name ) {
     const char* fmt = "attribute name must be an instance of <type 'str'>. "
                       "Got %R (%.200s).";
 
-    PyErr_Format(PyExc_TypeError, fmt, name, name->ob_type->tp_name);
+    PyErr_Format(PyExc_TypeError, fmt, name, Py_TYPE(name)->tp_name);
 
     return -1;
 }
@@ -814,7 +814,7 @@ has_traits_init ( PyObject * obj, PyObject * args, PyObject * kwds ) {
         return -1;
 
     /* Make sure all of the object's listeners have been set up: */
-    has_listeners = (PyMapping_Size( PyDict_GetItem( obj->ob_type->tp_dict,
+    has_listeners = (PyMapping_Size( PyDict_GetItem( Py_TYPE(obj)->tp_dict,
                                      listener_traits ) ) > 0);
     if ( has_listeners ) {
         value = PyObject_CallMethod( obj, "_init_trait_listeners", "()" );
