@@ -3589,26 +3589,22 @@ Time = BaseInstance(datetime.time, editor=time_editor)
 # Everything from this point onwards is deprecated, and has a simple
 # drop-in replacement.
 
-#: A trait whose value must be a (Unicode) string. Since Traits
-#: 6.0.0, this is an alias for :class:`BaseStr`.  Use ``BaseStr`` in
-#: preference to ``BaseUnicode`` in new code.
+#: A trait whose value must be a (Unicode) string. This is an alias for
+#: :class:`BaseStr`. Use ``BaseStr`` instead.
 BaseUnicode = BaseStr
 
 #: A trait whose value must be a (Unicode) string, using a C-level
-#: fast validator. Since Traits 6.0.0, this is an alias for :class:`Str`.
-#: Use ``Str`` in preference to ``Unicode`` in new code.
+#: fast validator. This is an alias for :class:`Str`. Use ``Str`` instead.
 Unicode = Str
 
 #: A trait whose value must be a (Unicode) string and which supports
-#: coercions of non-string values to string. Since Traits 6.0.0, this is
-#: an alias for :class:`BaseCStr`. Use ``BaseCStr`` in preference to
-#: ``BaseCUnicode`` in new code.
+#: coercions of non-string values to string. This is
+#: an alias for :class:`BaseCStr`. Use ``BaseCStr`` instead.
 BaseCUnicode = BaseCStr
 
 #: A trait whose value must be a (Unicode) string and which supports
 #: coercions of non-string values to string, using a C-level fast validator.
-#: Since Traits 6.0.0, this is an alias for :class:`CStr`.
-#: Use ``CStr`` in preference to ``CUnicode`` in new code.
+#: This is an alias for :class:`CStr`. Use ``CStr`` instead.
 CUnicode = CStr
 
 #: Synonym for Bool; default value is ``False``. This trait type is
