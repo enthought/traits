@@ -56,7 +56,7 @@ GIT = "git"
 
 def _git_output(args):
     """
-    Call Git with the given arguments and return the output as (Unicode) text.
+    Call Git with the given arguments and return the output as text.
     """
     return subprocess.check_output([GIT] + args).decode("utf-8")
 
@@ -74,7 +74,7 @@ def _git_info(commit="HEAD"):
     -------
     git_count : int
         Number of revisions from this commit to the initial commit.
-    git_revision : unicode
+    git_revision : str
         Commit hash for HEAD.
 
     Raises
@@ -102,9 +102,9 @@ def write_version_file(version, git_revision):
 
     Parameters
     ----------
-    version : unicode
+    version : str
         Package version.
-    git_revision : unicode
+    git_revision : str
         The full commit hash for the current Git revision.
     """
     with io.open(VERSION_FILE, "w", encoding="ascii") as version_file:
@@ -121,9 +121,9 @@ def read_version_file():
 
     Returns
     -------
-    version : unicode
+    version : str
         The full version, including any development suffix.
-    git_revision : unicode
+    git_revision : str
         The full commit hash for the current Git revision.
 
     Raises
@@ -141,9 +141,9 @@ def git_version():
 
     Returns
     -------
-    version : unicode
+    version : str
         Package version.
-    git_revision : unicode
+    git_revision : str
         The full commit hash for the current Git revision.
 
     Raises
@@ -167,9 +167,9 @@ def archive_version():
 
     Returns
     -------
-    version : unicode
+    version : str
         Package version.
-    git_revision : unicode
+    git_revision : str
         The full commit hash for the current Git revision.
 
     Raises
@@ -195,9 +195,9 @@ def resolve_version():
 
     Returns
     -------
-    version : unicode
+    version : str
         Package version.
-    git_revision : unicode
+    git_revision : str
         The full commit hash for the current Git revision.
     """
     if os.path.isdir(GIT_DIRECTORY):

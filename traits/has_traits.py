@@ -505,7 +505,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
 
     Parameters
     ----------
-    class_name : str or unicode
+    class_name : str
         The name of the HasTraits class.
     bases : tuple
         The base classes for the HasTraits class.

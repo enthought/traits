@@ -3644,8 +3644,8 @@ ListFloat = List(float)
 #: deprecated. Use ``List(Str)`` instead.
 ListStr = List(str)
 
-#: List of Unicode string values; default value is ``[]``. This trait type is
-#: deprecated. Use ``List(Unicode)`` instead.
+#: List of string values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Str)`` instead.
 ListUnicode = List(str)
 
 #: List of complex values; default value is ``[]``. This trait type is

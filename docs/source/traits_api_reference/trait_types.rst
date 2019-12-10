@@ -172,6 +172,9 @@ Traits
 Aliases for existing Traits
 ---------------------------
 
+The traits in this section are aliases for existing traits.
+They're provided for backwards compatibility with older code.
+
 .. autodata:: BaseUnicode
 
 .. autodata:: Unicode
