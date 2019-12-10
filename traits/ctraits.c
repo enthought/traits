@@ -50,15 +50,9 @@ static PyTypeObject * ctrait_type;     /* Python-level CTrait type reference */
 |  Macro definitions:
 +----------------------------------------------------------------------------*/
 
-#define DEFERRED_ADDRESS(ADDR) NULL
 #define PyTrait_CheckExact(op) ((op)->ob_type == ctrait_type)
 
 #define PyHasTraits_Check(op) PyObject_TypeCheck(op, &has_traits_type)
-#define PyHasTraits_CheckExact(op) ((op)->ob_type == &has_traits_type)
-
-/* Trait method related: */
-
-#define TP_DESCR_GET(t) ((t)->tp_descr_get)
 
 /* Notification related: */
 #define has_notifiers(tnotifiers,onotifiers) \
@@ -1485,7 +1479,7 @@ static PyGetSetDef has_traits_properties[] = {
 +----------------------------------------------------------------------------*/
 
 static PyTypeObject has_traits_type = {
-        PyVarObject_HEAD_INIT( DEFERRED_ADDRESS( &PyType_Type ), 0)
+        PyVarObject_HEAD_INIT(NULL, 0)
         "traits.ctraits.CHasTraits",
         sizeof( has_traits_object ),
         0,
@@ -1515,13 +1509,13 @@ static PyTypeObject has_traits_type = {
         has_traits_methods,                                 /* tp_methods */
         0,                                                  /* tp_members */
         has_traits_properties,                              /* tp_getset */
-        DEFERRED_ADDRESS( &PyBaseObject_Type ),             /* tp_base */
-        0,                                                                      /* tp_dict */
-        0,                                                                      /* tp_descr_get */
-        0,                                                                      /* tp_descr_set */
+        0,                                                  /* tp_base */
+        0,                                                  /* tp_dict */
+        0,                                                  /* tp_descr_get */
+        0,                                                  /* tp_descr_set */
         sizeof( has_traits_object ) - sizeof( PyObject * ), /* tp_dictoffset */
         has_traits_init,                                    /* tp_init */
-        DEFERRED_ADDRESS( PyType_GenericAlloc ),            /* tp_alloc */
+        0,                                                  /* tp_alloc */
         has_traits_new                                      /* tp_new */
 };
 
@@ -4757,7 +4751,7 @@ static PyGetSetDef trait_properties[] = {
 +----------------------------------------------------------------------------*/
 
 static PyTypeObject trait_type = {
-    PyVarObject_HEAD_INIT( DEFERRED_ADDRESS( &PyType_Type ), 0 )
+    PyVarObject_HEAD_INIT(NULL, 0)
     "traits.ctraits.cTrait",
     sizeof( trait_object ),
     0,
@@ -4787,14 +4781,14 @@ static PyTypeObject trait_type = {
     trait_methods,                                 /* tp_methods */
     0,                                             /* tp_members */
     trait_properties,                              /* tp_getset */
-    DEFERRED_ADDRESS( &PyBaseObject_Type ),        /* tp_base */
+    0,                                             /* tp_base */
     0,                                             /* tp_dict */
     0,                                             /* tp_descr_get */
     0,                                             /* tp_descr_set */
     sizeof( trait_object ) - sizeof( PyObject * ), /* tp_dictoffset */
     (initproc) trait_init,                         /* tp_init */
-    DEFERRED_ADDRESS( PyType_GenericAlloc ),       /* tp_alloc */
-    DEFERRED_ADDRESS( PyType_GenericNew )          /* tp_new */
+    0,                                             /* tp_alloc */
+    0                                              /* tp_new */
 };
 
 /*-----------------------------------------------------------------------------
