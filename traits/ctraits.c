@@ -483,18 +483,16 @@ set_readonly_error ( has_traits_object * obj, PyObject * name ) {
 static int
 set_disallow_error ( has_traits_object * obj, PyObject * name ) {
 
-    PyObject *nname = Py2to3_NormaliseAttrName(name);
-    if (nname == NULL) {
+    if (!PyUnicode_Check(name)) {
         return invalid_attribute_error( name );
     }
 
     PyErr_Format(
         TraitError,
         "Cannot set the undefined '%.400U' attribute of a '%.50s' object.",
-        nname,
+        name,
         Py_TYPE(obj)->tp_name
     );
-    Py2to3_FinishNormaliseAttrName(name, nname);
     return -1;
 }
 
@@ -1649,7 +1647,6 @@ getattr_trait ( trait_object      * trait,
     PyListObject * tnotifiers;
     PyListObject * onotifiers;
     PyObject * result;
-    PyObject * nname;
     PyObject * dict = obj->obj_dict;
 
     if ( dict == NULL ) {
@@ -1685,30 +1682,27 @@ getattr_trait ( trait_object      * trait,
         return NULL;
     }
 
-    nname = Py2to3_NormaliseAttrName(name);
-
-    if( nname == NULL ){
+    if (!PyUnicode_Check(name)) {
         invalid_attribute_error( name );
         return NULL;
     }
 
-    if ( (result = default_value_for( trait, obj, nname )) != NULL ) {
-        if ( PyDict_SetItem( dict, nname, result ) >= 0 ) {
+    if ( (result = default_value_for( trait, obj, name )) != NULL ) {
+        if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
 
             rc = 0;
             if ( (trait->post_setattr != NULL) &&
                  ((trait->flags & TRAIT_IS_MAPPED) == 0) )
-                rc = trait->post_setattr( trait, obj, nname, result );
+                rc = trait->post_setattr( trait, obj, name, result );
 
             if (rc == 0) {
                 tnotifiers = trait->notifiers;
                 onotifiers = obj->notifiers;
                 if ( has_notifiers( tnotifiers, onotifiers ) )
-                    rc = call_notifiers( tnotifiers, onotifiers, obj, nname,
+                    rc = call_notifiers( tnotifiers, onotifiers, obj, name,
                                          Uninitialized, result );
             }
             if ( rc == 0 ){
-                Py2to3_FinishNormaliseAttrName(name,nname);
                 return result;
             }
         }
@@ -1716,9 +1710,8 @@ getattr_trait ( trait_object      * trait,
     }
 
     if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-        PyErr_SetObject( PyExc_AttributeError, nname );
+        PyErr_SetObject( PyExc_AttributeError, name );
 
-    Py2to3_FinishNormaliseAttrName(name,nname);
     Py_DECREF( name );
     return NULL;
 }
@@ -1736,7 +1729,6 @@ getattr_delegate ( trait_object      * trait,
     PyObject     * delegate_attr_name;
     PyObject     * delegate;
     PyObject     * result;
-    PyObject     * nname;
     PyObject     * dict = obj->obj_dict;
 
     if ( (dict == NULL) ||
@@ -1750,15 +1742,13 @@ getattr_delegate ( trait_object      * trait,
         Py_INCREF( delegate );
     }
 
-    nname = Py2to3_NormaliseAttrName(name);
-
-    if( nname == NULL ){
+    if (!PyUnicode_Check(name)) {
         invalid_attribute_error( name );
         Py_DECREF( delegate );
         return NULL;
     }
 
-    delegate_attr_name = trait->delegate_attr_name( trait, obj, nname );
+    delegate_attr_name = trait->delegate_attr_name( trait, obj, name );
     tp = Py_TYPE(delegate);
 
     if ( tp->tp_getattro != NULL ) {
@@ -1790,7 +1780,6 @@ getattr_delegate ( trait_object      * trait,
 
 done:
     Py_DECREF( delegate_attr_name );
-    Py2to3_FinishNormaliseAttrName(name,nname);
     Py_DECREF( delegate );
     return result;
 }
@@ -1915,7 +1904,6 @@ setattr_python ( trait_object      * traito,
                  PyObject          * name,
                  PyObject          * value ) {
 
-    PyObject *nname;
     PyObject * dict = obj->obj_dict;
 
     if ( value != NULL ) {
@@ -1926,35 +1914,29 @@ setattr_python ( trait_object      * traito,
                 obj->obj_dict = dict;
         }
 
-        nname = Py2to3_NormaliseAttrName( name );
-        if( nname == NULL )
+        if (!PyUnicode_Check(name))
             return invalid_attribute_error( name );
 
-        if ( PyDict_SetItem( dict, nname, value ) >= 0 ){
-            Py2to3_FinishNormaliseAttrName(name,nname);
+        if ( PyDict_SetItem( dict, name, value ) >= 0 ){
             return 0;
         }
         if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-            PyErr_SetObject( PyExc_AttributeError, nname );
+            PyErr_SetObject( PyExc_AttributeError, name );
 
-        Py2to3_FinishNormaliseAttrName(name,nname);
         return -1;
     }
 
     if ( dict != NULL ) {
-        PyObject *nname = Py2to3_NormaliseAttrName( name );
-        if( nname == NULL )
+        if (!PyUnicode_Check(name))
             return invalid_attribute_error( name );
 
-        if ( PyDict_DelItem( dict, nname ) >= 0 ){
-            Py2to3_FinishNormaliseAttrName(name,nname);
+        if ( PyDict_DelItem( dict, name ) >= 0 ){
             return 0;
         }
 
         if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-            unknown_attribute_error( obj, nname );
+            unknown_attribute_error( obj, name );
 
-        Py2to3_FinishNormaliseAttrName(name,nname);
         return -1;
     }
 
@@ -2147,8 +2129,6 @@ setattr_trait ( trait_object      * traito,
     PyObject     * original_value;
     PyObject     * new_value;
 
-    PyObject *nname;
-
     PyObject * dict = obj->obj_dict;
 
 
@@ -2158,20 +2138,17 @@ setattr_trait ( trait_object      * traito,
         if ( dict == NULL )
             return 0;
 
-        nname = Py2to3_NormaliseAttrName(name);
-        if( nname == NULL )
+        if (!PyUnicode_Check(name))
             return invalid_attribute_error( name );
 
-        old_value = PyDict_GetItem( dict, nname );
+        old_value = PyDict_GetItem( dict, name );
         if ( old_value == NULL ) {
-            Py2to3_FinishNormaliseAttrName( name, nname );
             return 0;
         }
 
         Py_INCREF( old_value );
-        if ( PyDict_DelItem( dict, nname ) < 0 ) {
+        if ( PyDict_DelItem( dict, name ) < 0 ) {
             Py_DECREF( old_value );
-            Py2to3_FinishNormaliseAttrName( name, nname );
             return -1;
         }
 
@@ -2180,10 +2157,9 @@ setattr_trait ( trait_object      * traito,
             tnotifiers = traito->notifiers;
             onotifiers = obj->notifiers;
             if ( (tnotifiers != NULL) || (onotifiers != NULL) ) {
-                value = traito->getattr( traito, obj, nname );
+                value = traito->getattr( traito, obj, name );
                 if ( value == NULL ) {
                     Py_DECREF( old_value );
-                    Py2to3_FinishNormaliseAttrName( name, nname );
                     return -1;
                 }
 
@@ -2201,19 +2177,18 @@ setattr_trait ( trait_object      * traito,
 
                 if ( changed ) {
                     if ( traitd->post_setattr != NULL )
-                        rc = traitd->post_setattr( traitd, obj, nname,
+                        rc = traitd->post_setattr( traitd, obj, name,
                                                    value );
                     if ( (rc == 0) &&
                          has_notifiers( tnotifiers, onotifiers ) )
                         rc = call_notifiers( tnotifiers, onotifiers,
-                                             obj, nname, old_value, value );
+                                             obj, name, old_value, value );
                 }
 
                 Py_DECREF( value );
             }
         }
         Py_DECREF( old_value );
-        Py2to3_FinishNormaliseAttrName( name, nname );
         return rc;
     }
 
@@ -2239,9 +2214,7 @@ setattr_trait ( trait_object      * traito,
     }
 
 
-
-    nname = Py2to3_NormaliseAttrName(name);
-    if( nname == NULL ){
+    if (!PyUnicode_Check(name)) {
         Py_DECREF( value );
         return invalid_attribute_error( name );
     }
@@ -2256,15 +2229,14 @@ setattr_trait ( trait_object      * traito,
 
     post_setattr = traitd->post_setattr;
     if ( (post_setattr != NULL) || do_notifiers ) {
-        old_value = PyDict_GetItem( dict, nname );
+        old_value = PyDict_GetItem( dict, name );
         if ( old_value == NULL ) {
             if ( traitd != traito ) {
-                old_value = traito->getattr( traito, obj, nname );
+                old_value = traito->getattr( traito, obj, name );
             } else {
-                old_value = default_value_for( traitd, obj, nname );
+                old_value = default_value_for( traitd, obj, name );
             }
             if ( old_value == NULL ) {
-                Py2to3_FinishNormaliseAttrName( name, nname );
                 Py_DECREF( value );
 
                 return -1;
@@ -2285,12 +2257,11 @@ setattr_trait ( trait_object      * traito,
         }
     }
 
-    if ( PyDict_SetItem( dict, nname, new_value ) < 0 ) {
+    if ( PyDict_SetItem( dict, name, new_value ) < 0 ) {
         if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-            PyErr_SetObject( PyExc_AttributeError, nname );
+            PyErr_SetObject( PyExc_AttributeError, name );
         Py_XDECREF( old_value );
         Py_DECREF( name );
-        Py2to3_FinishNormaliseAttrName( name, nname );
         Py_DECREF( value );
 
         return -1;
@@ -2300,17 +2271,16 @@ setattr_trait ( trait_object      * traito,
 
     if ( changed ) {
         if ( post_setattr != NULL )
-            rc = post_setattr( traitd, obj, nname,
+            rc = post_setattr( traitd, obj, name,
                     (traitd->flags & TRAIT_POST_SETATTR_ORIGINAL_VALUE)?
                     original_value: value );
 
         if ( (rc == 0) && do_notifiers )
-            rc = call_notifiers( tnotifiers, onotifiers, obj, nname,
+            rc = call_notifiers( tnotifiers, onotifiers, obj, name,
                                  old_value, new_value );
     }
 
     Py_XDECREF( old_value );
-    Py2to3_FinishNormaliseAttrName( name, nname );
     Py_DECREF( value );
 
     return rc;
@@ -2648,7 +2618,6 @@ setattr_readonly ( trait_object      * traito,
 
     PyObject * dict;
     PyObject * result;
-    PyObject * nname;
     int rc;
 
     if ( value == NULL )
@@ -2661,18 +2630,16 @@ setattr_readonly ( trait_object      * traito,
     if ( dict == NULL )
         return setattr_python( traito, traitd, obj, name, value );
 
-    nname = Py2to3_NormaliseAttrName(name);
-    if( nname == NULL ){
+    if (!PyUnicode_Check(name)) {
         return invalid_attribute_error( name );
     }
 
-    result = PyDict_GetItem( dict, nname );
+    result = PyDict_GetItem( dict, name );
     if ( (result == NULL) || (result == Undefined) )
-        rc = setattr_python( traito, traitd, obj, nname, value );
+        rc = setattr_python( traito, traitd, obj, name, value );
     else
-        rc = set_readonly_error( obj, nname );
+        rc = set_readonly_error( obj, name );
 
-    Py2to3_FinishNormaliseAttrName(name,nname);
     return rc;
 }
 

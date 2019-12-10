@@ -8,17 +8,6 @@
 /* Attribute names
 */
 
-PyObject *Py2to3_NormaliseAttrName(PyObject *name) {
-
-    if( PyUnicode_Check(name) ){
-        return name;
-    }
-    return NULL;
-}
-
-void Py2to3_FinishNormaliseAttrName(PyObject *name,PyObject *nname){
-}
-
 PyObject *Py2to3_AttrNameCStr(PyObject *name) {
     return PyUnicode_AsUTF8String(name);
 }
