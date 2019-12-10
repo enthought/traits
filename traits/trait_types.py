@@ -409,12 +409,14 @@ class Title(Str):
 #  'BaseUnicode' and 'Unicode' traits:
 # -------------------------------------------------------------------------------
 
-# These are now simply aliases for BaseStr and Str. BaseUnicode and Unicode
-# are not yet deprecated, but it's recommended to use BaseStr and Str in
-# user code.
-
+#: A trait whose value must be a (Unicode) string. Since Traits
+#: 6.0.0, this is an alias for :class:`BaseStr`.  Use ``BaseStr`` in
+#: preference to ``BaseUnicode`` in new code.
 BaseUnicode = BaseStr
 
+#: A trait whose value must be a (Unicode) string, using a C-level
+#: fast validator. Since Traits 6.0.0, this is an alias for :class:`Str`.
+#: Use ``Str`` in preference to ``Unicode`` in new code.
 Unicode = Str
 
 
@@ -648,12 +650,16 @@ class CStr(BaseCStr):
 #  'BaseCUnicode' and 'CUnicode' traits:
 # -------------------------------------------------------------------------------
 
-# These are now simply aliases for the BaseCStr and CStr trait types.
-# Note that these are not (yet) deprecated, but it's recommended to
-# use CStr rather than CUnicode in user code.
-
+#: A trait whose value must be a (Unicode) string and which supports
+#: coercions of non-string values to string. Since Traits 6.0.0, this is
+#: an alias for :class:`BaseCStr`. Use ``BaseCStr`` in preference to
+#: ``BaseCUnicode`` in new code.
 BaseCUnicode = BaseCStr
 
+#: A trait whose value must be a (Unicode) string and which supports
+#: coercions of non-string values to string, using a C-level fast validator.
+#: Since Traits 6.0.0, this is an alias for :class:`CStr`.
+#: Use ``CStr`` in preference to ``CUnicode`` in new code.
 CUnicode = CStr
 
 # -------------------------------------------------------------------------------

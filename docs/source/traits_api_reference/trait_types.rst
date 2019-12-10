@@ -29,10 +29,6 @@ Traits
 
 .. autoclass:: Title
 
-.. autoclass:: BaseUnicode
-
-.. autoclass:: Unicode
-
 .. autoclass:: BaseBytes
 
 .. autoclass:: Bytes
@@ -56,10 +52,6 @@ Traits
 .. autoclass:: BaseCStr
 
 .. autoclass:: CStr
-
-.. autoclass:: BaseCUnicode
-
-.. autoclass:: CUnicode
 
 .. autoclass:: BaseCBytes
 
@@ -175,6 +167,19 @@ Traits
 .. autodata:: Date
 
 .. autodata:: Time
+
+
+Aliases for existing Traits
+---------------------------
+
+.. autodata:: BaseUnicode
+
+.. autodata:: Unicode
+
+.. autodata:: BaseCUnicode
+
+.. autodata:: CUnicode
+
 
 Deprecated Traits
 -----------------
