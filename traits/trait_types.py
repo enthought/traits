@@ -409,47 +409,13 @@ class Title(Str):
 #  'BaseUnicode' and 'Unicode' traits:
 # -------------------------------------------------------------------------------
 
+# These are now simply aliases for BaseStr and Str. BaseUnicode and Unicode
+# are not yet deprecated, but it's recommended to use BaseStr and Str in
+# user code.
 
-class BaseUnicode(TraitType):
-    """ Defines a trait whose value must be a Python unicode string.
-    """
+BaseUnicode = BaseStr
 
-    #: The default value for the trait:
-    default_value = ""
-
-    #: A description of the type of value this trait accepts:
-    info_text = "a unicode string"
-
-    def validate(self, object, name, value):
-        """ Validates that a specified value is valid for this trait.
-
-            Note: The 'fast validator' version performs this check in C.
-        """
-        if isinstance(value, str):
-            return value
-
-        self.error(object, name, value)
-
-    def create_editor(self):
-        """ Returns the default traits UI editor for this type of trait.
-        """
-        from .traits import multi_line_text_editor
-
-        auto_set = self.auto_set
-        if auto_set is None:
-            auto_set = True
-        enter_set = self.enter_set or False
-
-        return multi_line_text_editor(auto_set, enter_set)
-
-
-class Unicode(BaseUnicode):
-    """ Defines a trait whose value must be a Python unicode string using a
-        C-level fast validator.
-    """
-
-    #: The C-level fast validator to use:
-    fast_validate = (11, str)
+Unicode = Str
 
 
 # -------------------------------------------------------------------------------
@@ -682,32 +648,13 @@ class CStr(BaseCStr):
 #  'BaseCUnicode' and 'CUnicode' traits:
 # -------------------------------------------------------------------------------
 
+# These are now simply aliases for the BaseCStr and CStr trait types.
+# Note that these are not (yet) deprecated, but it's recommended to
+# use CStr rather than CUnicode in user code.
 
-class BaseCUnicode(BaseUnicode):
-    """ Defines a trait whose value must be a Python unicode string and which
-        supports coercions of non-unicode values to unicode.
-    """
+BaseCUnicode = BaseCStr
 
-    def validate(self, object, name, value):
-        """ Validates that a specified value is valid for this trait.
-
-            Note: The 'fast validator' version performs this check in C.
-        """
-        try:
-            return str(value)
-        except:
-            self.error(object, name, value)
-
-
-class CUnicode(BaseCUnicode):
-    """ Defines a trait whose value must be a Python unicode string and which
-        supports coercions of non-unicode values to unicode using a C-level
-        fast validator.
-    """
-
-    #: The C-level fast validator to use:
-    fast_validate = (12, str)
-
+CUnicode = CStr
 
 # -------------------------------------------------------------------------------
 #  'BaseCBytes' and 'CBytes' traits:
