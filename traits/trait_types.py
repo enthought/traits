@@ -3748,3 +3748,11 @@ DictStrBool = Dict(str, bool)
 #: with list values can be inserted. The default value is {}. This trait type
 #: is deprecated. Use ``Dict(Str, List)`` instead.
 DictStrList = Dict(str, list)
+
+#: Alias for Int, provided for backwards compatibility with older code that
+#: uses ``Long``. This trait typeis deprecated. Use ``Int`` instead.
+Long = Int
+
+#: Alias for CInt, provided for backwards compatibility with older code that
+#: uses ``CLong``. This trait typeis deprecated. Use ``CInt`` instead.
+CLong = CInt

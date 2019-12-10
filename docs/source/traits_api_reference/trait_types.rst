@@ -222,6 +222,10 @@ with ``List(Str)`` and ``DictStrAny`` with ``Dict(Str, Any)``).
 
 .. autodata:: DictStrList
 
+.. autodata:: Long
+
+.. autodata:: CLong
+
 
 Private Classes
 ---------------

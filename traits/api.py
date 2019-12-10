@@ -124,6 +124,8 @@ from .trait_types import (
     DictStrFloat,
     DictStrBool,
     DictStrList,
+    Long,
+    CLong,
 )
 
 from .trait_types import (
