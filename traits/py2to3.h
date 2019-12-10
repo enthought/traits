@@ -27,11 +27,6 @@ void Py2to3_FinishAttrNameCStr(PyObject *nname){
     Py_DECREF(nname);
 };
 
-/* In Python 3, all ints are longs */
-#define Py2to3_PyNum_Check PyLong_Check
-#define Py2to3_PyNum_FromLong PyLong_FromLong
-#define Py2to3_PyNum_AsLong PyLong_AsLong
-
 /* Get hash of an object, using cached value for attribute names. */
 
 Py_hash_t Py2to3_GetHash_wCache(PyObject *obj){

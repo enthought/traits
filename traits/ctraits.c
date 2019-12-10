@@ -561,7 +561,7 @@ get_callable_value ( PyObject * value ) {
         Py_INCREF( value );
     } else if ( PyTuple_Check( value ) &&
               ( PyTuple_GET_SIZE( value ) >= 3 ) &&
-              ( Py2to3_PyNum_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
+              ( PyLong_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
         tuple = PyTuple_New( 3 );
         if ( tuple != NULL ) {
             PyTuple_SET_ITEM( tuple, 0, temp = PyTuple_GET_ITEM( value, 0 ) );
@@ -3634,7 +3634,7 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
 
         type_info = PyTuple_GET_ITEM( list_type_info, i );
 
-        switch ( Py2to3_PyNum_AsLong( PyTuple_GET_ITEM( type_info, 0 ) ) ) {
+        switch ( PyLong_AsLong( PyTuple_GET_ITEM( type_info, 0 ) ) ) {
 
             case 0:  /* Type check: */
                 kind = PyTuple_GET_SIZE( type_info );
@@ -3935,7 +3935,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
         n = PyTuple_GET_SIZE( validate );
         if ( n > 0 ) {
 
-            kind = Py2to3_PyNum_AsLong( PyTuple_GET_ITEM( validate, 0 ) );
+            kind = PyLong_AsLong( PyTuple_GET_ITEM( validate, 0 ) );
 
             switch ( kind ) {
                 case 0:  /* Type check: */
@@ -3967,7 +3967,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                         v3 = PyTuple_GET_ITEM( validate, 3 );
                         if ( ((v1 == Py_None) || PyFloat_Check( v1 )) &&
                              ((v2 == Py_None) || PyFloat_Check( v2 )) &&
-                             Py2to3_PyNum_Check( v3 ) )
+                             PyLong_Check( v3 ) )
                             goto done;
                     }
                     break;
@@ -4039,7 +4039,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                        strictly classes or types (e.g. VTK), and yet they work
                        correctly with the rest of the Instance code */
                     if ( (n == 4) &&
-                         Py2to3_PyNum_Check(  PyTuple_GET_ITEM( validate, 2 ) )  &&
+                         PyLong_Check(  PyTuple_GET_ITEM( validate, 2 ) )  &&
                          PyBool_Check( PyTuple_GET_ITEM( validate, 3 ) ) ) {
                         goto done;
                     }
@@ -4553,23 +4553,23 @@ _trait_getstate ( trait_object * trait, PyObject * args ) {
     if ( result == NULL )
         return NULL;
 
-    PyTuple_SET_ITEM( result,  0, Py2to3_PyNum_FromLong( func_index(
+    PyTuple_SET_ITEM( result,  0, PyLong_FromLong( func_index(
                   (void *) trait->getattr, (void **) getattr_handlers ) ) );
-    PyTuple_SET_ITEM( result,  1, Py2to3_PyNum_FromLong( func_index(
+    PyTuple_SET_ITEM( result,  1, PyLong_FromLong( func_index(
                   (void *) trait->setattr, (void **) setattr_handlers ) ) );
-    PyTuple_SET_ITEM( result,  2, Py2to3_PyNum_FromLong( func_index(
+    PyTuple_SET_ITEM( result,  2, PyLong_FromLong( func_index(
                   (void *) trait->post_setattr,
                   (void **) setattr_property_handlers ) ) );
     PyTuple_SET_ITEM( result,  3, get_callable_value( trait->py_post_setattr ));
-    PyTuple_SET_ITEM( result,  4, Py2to3_PyNum_FromLong( func_index(
+    PyTuple_SET_ITEM( result,  4, PyLong_FromLong( func_index(
                   (void *) trait->validate, (void **) validate_handlers ) ) );
     PyTuple_SET_ITEM( result,  5, get_callable_value( trait->py_validate ) );
-    PyTuple_SET_ITEM( result,  6, Py2to3_PyNum_FromLong( trait->default_value_type ) );
+    PyTuple_SET_ITEM( result,  6, PyLong_FromLong( trait->default_value_type ) );
     PyTuple_SET_ITEM( result,  7, get_value( trait->default_value ) );
-    PyTuple_SET_ITEM( result,  8, Py2to3_PyNum_FromLong( trait->flags ) );
+    PyTuple_SET_ITEM( result,  8, PyLong_FromLong( trait->flags ) );
     PyTuple_SET_ITEM( result,  9, get_value( trait->delegate_name ) );
     PyTuple_SET_ITEM( result, 10, get_value( trait->delegate_prefix ) );
-    PyTuple_SET_ITEM( result, 11, Py2to3_PyNum_FromLong( func_index(
+    PyTuple_SET_ITEM( result, 11, PyLong_FromLong( func_index(
                   (void *) trait->delegate_attr_name,
                   (void **) delegate_attr_name_handlers ) ) );
     PyTuple_SET_ITEM( result, 12, get_value( NULL ) ); /* trait->notifiers */
@@ -4612,18 +4612,18 @@ _trait_setstate ( trait_object * trait, PyObject * args ) {
     /* Convert any references to callable methods on the handler back into
        bound methods: */
     temp = trait->py_validate;
-    if ( Py2to3_PyNum_Check( temp ) )
+    if ( PyLong_Check( temp ) )
         trait->py_validate = PyObject_GetAttrString( trait->handler,
                                                      "validate" );
     else if ( PyTuple_Check( temp ) &&
-              (Py2to3_PyNum_AsLong( PyTuple_GET_ITEM( temp, 0 ) ) == 10) ) {
+              (PyLong_AsLong( PyTuple_GET_ITEM( temp, 0 ) ) == 10) ) {
         temp2 = PyObject_GetAttrString( trait->handler, "validate" );
         Py_INCREF( temp2 );
         Py_DECREF( PyTuple_GET_ITEM( temp, 2 ) );
         PyTuple_SET_ITEM( temp, 2, temp2 );
     }
 
-    if ( Py2to3_PyNum_Check( trait->py_post_setattr ) )
+    if ( PyLong_Check( trait->py_post_setattr ) )
         trait->py_post_setattr = PyObject_GetAttrString( trait->handler,
                                                          "post_setattr" );
 
@@ -5034,7 +5034,7 @@ Py2to3_MOD_INIT(ctraits) {
     empty_dict = PyDict_New();
 
     /* Create the 'is_callable' marker: */
-    is_callable = Py2to3_PyNum_FromLong( -1 );
+    is_callable = PyLong_FromLong( -1 );
 
     return Py2to3_MOD_SUCCESS_VAL(module);
 }
