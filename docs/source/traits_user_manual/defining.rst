@@ -623,9 +623,9 @@ Recognized Metadata Attributes
 The following metadata attributes are not predefined, but are recognized by
 HasTraits objects:
 
-.. index:: desc metadata attribute, editor metadata attribute, TraitValue class
+.. index:: desc metadata attribute, editor metadata attribute
 .. index:: label; metadata attribute, rich_compare metadata attribute
-.. index:: trait_value metadata attribute, transient metadata attribute
+.. index:: transient metadata attribute
 
 * **desc**: A string describing the intended meaning of the trait. It is used
   in exception messages and fly-over help in user interface trait editors.
@@ -642,12 +642,6 @@ HasTraits objects:
   in cases where a detailed comparison of two objects is very expensive, or
   where you do not care if the details of an object change, as long as the
   same object is used.
-* **trait_value**: A Boolean indicating whether the trait attribute accepts
-  values that are instances of TraitValue. The default is False. The TraitValue
-  class provides a mechanism for dynamically modifying trait definitions. See
-  the *Traits API Reference* for details on TraitValue. If **trait_value** is
-  True, then setting the trait attribute to TraitValue(), with no arguments,
-  resets the attribute to it original default value.
 * **transient**: A Boolean indicating that the trait value is not persisted
   when the object containing it is persisted. The default value for most
   predefined traits is False (the value will be persisted if its container is).

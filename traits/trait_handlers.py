@@ -678,8 +678,6 @@ class TraitType(BaseTraitHandler):
 
         trait.set_default_value(*self.get_default_value())
 
-        trait.value_allowed(metadata.get("trait_value", False) is True)
-
         trait.handler = self
 
         trait.__dict__ = metadata.copy()

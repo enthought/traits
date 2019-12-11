@@ -526,44 +526,6 @@ class CTrait(cTrait):
     def __reduce_ex__(self, protocol):
         return (__newobj__, (self.__class__, 0), self.__getstate__())
 
-    # ---------------------------------------------------------------------------
-    #  Registers listeners on an assigned 'TraitValue' object's 'value'
-    #  property:
-    # ---------------------------------------------------------------------------
-
-    def _register(self, object, name):
-        """ Registers listeners on an assigned 'TraitValue' object's 'value'
-            property.
-        """
-
-        def handler():
-            object.trait_property_changed(name, None)
-
-        tv = self._trait_value
-        handlers = tv._handlers
-        if handlers is None:
-            tv._handlers = handlers = {}
-        handlers[(id(object), name)] = handler
-
-        tv.on_trait_change(handler, "value")
-
-    # ---------------------------------------------------------------------------
-    #  Unregisters listeners on an assigned 'TraitValue' object's 'value'
-    #  property:
-    # ---------------------------------------------------------------------------
-
-    def _unregister(self, object, name):
-        """ Unregisters listeners on an assigned 'TraitValue' object's 'value'
-            property.
-        """
-        tv = self._trait_value
-        handlers = tv._handlers
-        key = (id(object), name)
-        handler = handlers.get(key)
-        if handler is not None:
-            del handlers[key]
-            tv.on_trait_change(handler, "value", remove=True)
-
 
 # Make sure the Python-level version of the trait class is known to all
 # interested parties:
@@ -1153,8 +1115,6 @@ class _TraitMaker(object):
         comparison_mode = metadata.get("comparison_mode")
         if comparison_mode is not None:
             trait.comparison_mode(comparison_mode)
-
-        trait.value_allowed(metadata.get("trait_value", False) is True)
 
         if len(metadata) > 0:
             if trait.__dict__ is None:
