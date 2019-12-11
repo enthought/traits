@@ -279,12 +279,8 @@ the table.
 +------------------+----------------------------------------------------------+
 | Constant         | Constant( *value*\ [, \*\*\ *metadata*] )                |
 +------------------+----------------------------------------------------------+
-| Dict, DictStrAny,| Dict( [*key_trait* = None, *value_trait* = None,         |
-| DictStrBool,     | *value* = None, *items* = True, \*\*\ *metadata*] )      |
-| DictStrFloat,    |                                                          |
-| DictStrInt,      |                                                          |
-| DictStrList,     |                                                          |
-| DictStrStr       |                                                          |
+| Dict             | Dict( [*key_trait* = None, *value_trait* = None,         |
+|                  | *value* = None, *items* = True, \*\*\ *metadata*] )      |
 +------------------+----------------------------------------------------------+
 | Directory        | Directory( [*value* = '', *auto_set* = False, *entries* =|
 |                  | 10, *exists* = False, \*\*\ *metadata*] )                |
@@ -299,8 +295,6 @@ the table.
 | Event            | Event( [*trait* = None, \*\*\ *metadata*] )              |
 +------------------+----------------------------------------------------------+
 | Expression       | Expression( [*value* = '0', \*\*\ *metadata*] )          |
-+------------------+----------------------------------------------------------+
-| false            | n/a                                                      |
 +------------------+----------------------------------------------------------+
 | File             | File( [*value* = '', *filter* = None, *auto_set* = False,|
 |                  | *entries* = 10, *exists* = False,  \*\*\ *metadata* ] )  |
@@ -320,14 +314,7 @@ the table.
 |                  | None, *kw* = None, *allow_none* = True, *adapt* = None,  |
 |                  | *module* = None, \*\*\ *metadata*] )                     |
 +------------------+----------------------------------------------------------+
-| List, ListBool,  | List([*trait* = None, *value* = None, *minlen* = 0,      |
-| ListComplex,     |                                                          |
-| ListFloat,       |                                                          |
-| ListFunction,    |                                                          |
-| ListInt,         |                                                          |
-| ListMethod,      |                                                          |
-| ListStr,         |                                                          |
-| ListThis,        |                                                          |
+| List             | List([*trait* = None, *value* = None, *minlen* = 0,      |
 +------------------+----------------------------------------------------------+
 | Method           | Method ([\*\*\ *metadata*] )                             |
 +------------------+----------------------------------------------------------+
@@ -370,14 +357,10 @@ the table.
 |                  | 'toolbar', *orientation* = 'vertical', *width_padding* = |
 |                  | 2, *height_padding* = 2, \*\*\ *metadata*] )             |
 +------------------+----------------------------------------------------------+
-| true             | n/a                                                      |
-+------------------+----------------------------------------------------------+
 | Tuple            | Tuple( [\*\ *traits*, \*\*\ *metadata*] )                |
 +------------------+----------------------------------------------------------+
 | Type             | Type( [*value* = None, *klass* = None, *allow_none* =    |
 |                  | True, \*\*\ *metadata*] )                                |
-+------------------+----------------------------------------------------------+
-| undefined        | n/a                                                      |
 +------------------+----------------------------------------------------------+
 | UUID [3]_        | UUID( [\*\*\ *metadata*] )                               |
 +------------------+----------------------------------------------------------+
