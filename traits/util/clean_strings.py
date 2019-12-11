@@ -19,7 +19,7 @@ import unicodedata
 
 def clean_filename(name, replace_empty=""):
     """
-    Make a user-supplied Unicode string safe for filename use.
+    Make a user-supplied string safe for filename use.
 
     Returns an ASCII-encodable string based on the input string that's safe for
     use as a component of a filename or URL. The returned value is a string
@@ -32,7 +32,7 @@ def clean_filename(name, replace_empty=""):
     Parameters
     ----------
     name : str
-        The (Unicode) string to be made safe.
+        The string to be made safe.
     replace_empty : str, optional
         The return value to be used in the event that the sanitised
         string ends up being empty. No validation is done on this

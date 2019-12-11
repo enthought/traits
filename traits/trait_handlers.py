@@ -801,7 +801,6 @@ class TraitCoerceType(TraitHandler):
     ============ =================
     complex      float, int
     float        int
-    unicode      str
     ============ =================
     """
 

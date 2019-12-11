@@ -127,11 +127,10 @@ in the following table.
    pair: types; casting
    pair: types; coercing
    pair: type; string
-   pair: type; Unicode
 .. index:: Boolean type, Bool trait, CBool trait, Complex trait, CComplex trait
-.. index:: complex number type, Float trait, CFloat trait, Int trait, CInt trait
-.. index:: integer type, floating point number type, Str trait
-.. index:: CStr trait, Unicode; trait, CUnicode trait, Bytes trait, CBytes trait
+.. index:: Float trait, CFloat trait, Int trait, CInt trait
+.. index:: integer type, floating point number type, complex number type
+.. index:: Str trait, CStr trait, Bytes trait, CBytes trait
 
 .. _predefined-defaults-for-simple-types-table:
 
@@ -145,7 +144,6 @@ Complex        CComplex      Complex number         0+0j
 Float          CFloat        Floating point number  0.0
 Int            CInt          Integer                0
 Str            CStr          String                 ''
-Unicode        CUnicode      Unicode                ''
 Bytes          CBytes        Bytes                  b''
 ============== ============= ====================== ======================
 
@@ -176,7 +174,6 @@ Trait         Coercible Types
 ============= ===========================================
 Complex       Floating point number, integer
 Float         Integer
-Unicode       String
 ============= ===========================================
 
 .. index::
@@ -198,7 +195,6 @@ Python built-in functions for type conversion:
 * float()
 * int()
 * str()
-* unicode()
 * bytes()
 
 .. index::
@@ -332,7 +328,6 @@ the table.
 | ListMethod,      |                                                          |
 | ListStr,         |                                                          |
 | ListThis,        |                                                          |
-| ListUnicode      |                                                          |
 +------------------+----------------------------------------------------------+
 | Method           | Method ([\*\*\ *metadata*] )                             |
 +------------------+----------------------------------------------------------+

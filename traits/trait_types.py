@@ -406,53 +406,6 @@ class Title(Str):
 
 
 # -------------------------------------------------------------------------------
-#  'BaseUnicode' and 'Unicode' traits:
-# -------------------------------------------------------------------------------
-
-
-class BaseUnicode(TraitType):
-    """ Defines a trait whose value must be a Python unicode string.
-    """
-
-    #: The default value for the trait:
-    default_value = ""
-
-    #: A description of the type of value this trait accepts:
-    info_text = "a unicode string"
-
-    def validate(self, object, name, value):
-        """ Validates that a specified value is valid for this trait.
-
-            Note: The 'fast validator' version performs this check in C.
-        """
-        if isinstance(value, str):
-            return value
-
-        self.error(object, name, value)
-
-    def create_editor(self):
-        """ Returns the default traits UI editor for this type of trait.
-        """
-        from .traits import multi_line_text_editor
-
-        auto_set = self.auto_set
-        if auto_set is None:
-            auto_set = True
-        enter_set = self.enter_set or False
-
-        return multi_line_text_editor(auto_set, enter_set)
-
-
-class Unicode(BaseUnicode):
-    """ Defines a trait whose value must be a Python unicode string using a
-        C-level fast validator.
-    """
-
-    #: The C-level fast validator to use:
-    fast_validate = (11, str)
-
-
-# -------------------------------------------------------------------------------
 #  'BaseBytes' and 'Bytes' traits:
 # -------------------------------------------------------------------------------
 
@@ -672,37 +625,6 @@ class CStr(BaseCStr):
     """ Defines a trait whose value must be a Python string and which supports
         coercions of non-string values to string using a C-level fast
         validator.
-    """
-
-    #: The C-level fast validator to use:
-    fast_validate = (12, str)
-
-
-# -------------------------------------------------------------------------------
-#  'BaseCUnicode' and 'CUnicode' traits:
-# -------------------------------------------------------------------------------
-
-
-class BaseCUnicode(BaseUnicode):
-    """ Defines a trait whose value must be a Python unicode string and which
-        supports coercions of non-unicode values to unicode.
-    """
-
-    def validate(self, object, name, value):
-        """ Validates that a specified value is valid for this trait.
-
-            Note: The 'fast validator' version performs this check in C.
-        """
-        try:
-            return str(value)
-        except:
-            self.error(object, name, value)
-
-
-class CUnicode(BaseCUnicode):
-    """ Defines a trait whose value must be a Python unicode string and which
-        supports coercions of non-unicode values to unicode using a C-level
-        fast validator.
     """
 
     #: The C-level fast validator to use:
@@ -3664,6 +3586,27 @@ Time = BaseInstance(datetime.time, editor=time_editor)
 #  Create predefined, reusable trait instances:
 # -----------------------------------------------------------------------------
 
+# Everything from this point onwards is deprecated, and has a simple
+# drop-in replacement.
+
+#: A trait whose value must be a (Unicode) string. This is an alias for
+#: :class:`BaseStr`. Use ``BaseStr`` instead.
+BaseUnicode = BaseStr
+
+#: A trait whose value must be a (Unicode) string, using a C-level
+#: fast validator. This is an alias for :class:`Str`. Use ``Str`` instead.
+Unicode = Str
+
+#: A trait whose value must be a (Unicode) string and which supports
+#: coercions of non-string values to string. This is
+#: an alias for :class:`BaseCStr`. Use ``BaseCStr`` instead.
+BaseCUnicode = BaseCStr
+
+#: A trait whose value must be a (Unicode) string and which supports
+#: coercions of non-string values to string, using a C-level fast validator.
+#: This is an alias for :class:`CStr`. Use ``CStr`` instead.
+CUnicode = CStr
+
 #: Synonym for Bool; default value is ``False``. This trait type is
 #: deprecated. Use ``Bool(False)`` or ``Bool()`` instead.
 false = Bool
@@ -3691,8 +3634,8 @@ ListFloat = List(float)
 #: deprecated. Use ``List(Str)`` instead.
 ListStr = List(str)
 
-#: List of Unicode string values; default value is ``[]``. This trait type is
-#: deprecated. Use ``List(Unicode)`` instead.
+#: List of string values; default value is ``[]``. This trait type is
+#: deprecated. Use ``List(Str)`` instead.
 ListUnicode = List(str)
 
 #: List of complex values; default value is ``[]``. This trait type is

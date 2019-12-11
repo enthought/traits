@@ -17,7 +17,7 @@ Tests for the Float trait type.
 """
 import unittest
 
-from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
+from traits.api import BaseFloat, Either, Float, HasTraits, Str, TraitError
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
@@ -45,7 +45,7 @@ class FloatModel(HasTraits):
     # validate_trait_complex in ctraits.c).
     value_or_none = Either(None, Float)
 
-    float_or_text = Either(Float, Unicode)
+    float_or_text = Either(Float, Str)
 
 
 class BaseFloatModel(HasTraits):
@@ -53,7 +53,7 @@ class BaseFloatModel(HasTraits):
 
     value_or_none = Either(None, BaseFloat)
 
-    float_or_text = Either(Float, Unicode)
+    float_or_text = Either(Float, Str)
 
 
 class CommonFloatTests(object):

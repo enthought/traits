@@ -392,41 +392,6 @@ class StringTest(AnyTraitTest):
         return str(value)
 
 
-class UnicodeTrait(HasTraits):
-    value = Trait("unicode")
-
-
-class UnicodeTest(StringTest):
-
-    obj = UnicodeTrait()
-
-    _default_value = "unicode"
-    _good_values = [
-        10,
-        -10,
-        10.1,
-        -10.1,
-        "10",
-        "-10",
-        "10L",
-        "-10L",
-        "10.1",
-        "-10.1",
-        "",
-        "string",
-        1j,
-        [10],
-        ["ten"],
-        {"ten": 10},
-        (10,),
-        None,
-    ]
-    _bad_values = []
-
-    def coerce(self, value):
-        return str(value)
-
-
 class BytesTrait(HasTraits):
     value = Bytes(b"bytes")
 
