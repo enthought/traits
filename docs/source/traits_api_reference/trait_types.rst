@@ -9,8 +9,6 @@ Traits
 
 .. autoclass:: Any
 
-.. autoclass:: Generic
-
 .. autoclass:: BaseInt
 
 .. autoclass:: Int

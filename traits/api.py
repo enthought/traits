@@ -44,7 +44,6 @@ from .traits import (
 
 from .trait_types import (
     Any,
-    Generic,
     Int,
     Float,
     Complex,
