@@ -184,6 +184,14 @@ and may be removed in a future version of Traits.
 
 .. autodata:: CUnicode
 
+.. autodata:: BaseLong
+
+.. autodata:: Long
+
+.. autodata:: BaseCLong
+
+.. autodata:: CLong
+
 .. autodata:: false
 
 .. autodata:: true
@@ -219,10 +227,6 @@ and may be removed in a future version of Traits.
 .. autodata:: DictStrBool
 
 .. autodata:: DictStrList
-
-.. autodata:: Long
-
-.. autodata:: CLong
 
 
 Private Classes
