@@ -184,6 +184,14 @@ and may be removed in a future version of Traits.
 
 .. autodata:: CUnicode
 
+.. autodata:: BaseLong
+
+.. autodata:: Long
+
+.. autodata:: BaseCLong
+
+.. autodata:: CLong
+
 .. autodata:: false
 
 .. autodata:: true

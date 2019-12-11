@@ -3607,6 +3607,24 @@ BaseCUnicode = BaseCStr
 #: This is an alias for :class:`CStr`. Use ``CStr`` instead.
 CUnicode = CStr
 
+#: A trait whose value must be an integer. This is an alias for
+#: :class:`BaseInt`. Use ``BaseInt`` instead.
+BaseLong = BaseInt
+
+#: A trait whose value must be an integer, using a C-level fast validator.
+#: This is an alias for :class:`Int`. Use ``Int`` instead.
+Long = Int
+
+#: A trait whose value must be an integer and which supports coercions
+#: of non-integer values to integer. This is an alias for
+#: :class:`BaseCInt`. Use ``BaseCInt`` instead.
+BaseCLong = BaseCInt
+
+#: A trait whose value must be an integer and which supports coercions
+#: of non-integer values to integer, using a C-level fast validator.
+#: This is an alias for :class:`CInt`. Use ``CInt`` instead.
+CLong = CInt
+
 #: Synonym for Bool; default value is ``False``. This trait type is
 #: deprecated. Use ``Bool(False)`` or ``Bool()`` instead.
 false = Bool
