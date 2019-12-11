@@ -362,9 +362,6 @@ the table.
 | Type             | Type( [*value* = None, *klass* = None, *allow_none* =    |
 |                  | True, \*\*\ *metadata*] )                                |
 +------------------+----------------------------------------------------------+
-| UStr             | UStr( [*owner*, *list_name*, *str_name*, *default_value =|
-|                  | NoDefaultSpecified, \*\*\ *metadata*])                   |
-+------------------+----------------------------------------------------------+
 | UUID [3]_        | UUID( [\*\*\ *metadata*] )                               |
 +------------------+----------------------------------------------------------+
 | ValidatedTuple   | ValidatedTuple( [\*\ *traits*, *fvalidate* = None,       |
