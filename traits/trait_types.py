@@ -3607,6 +3607,24 @@ BaseCUnicode = BaseCStr
 #: This is an alias for :class:`CStr`. Use ``CStr`` instead.
 CUnicode = CStr
 
+#: A trait whose value must be an integer. This is an alias for
+#: :class:`BaseInt`. Use ``BaseInt`` instead.
+BaseLong = BaseInt
+
+#: A trait whose value must be an integer, using a C-level fast validator.
+#: This is an alias for :class:`Int`. Use ``Int`` instead.
+Long = Int
+
+#: A trait whose value must be an integer and which supports coercions
+#: of non-integer values to integer. This is an alias for
+#: :class:`BaseCInt`. Use ``BaseCInt`` instead.
+BaseCLong = BaseCInt
+
+#: A trait whose value must be an integer and which supports coercions
+#: of non-integer values to integer, using a C-level fast validator.
+#: This is an alias for :class:`CInt`. Use ``CInt`` instead.
+CLong = CInt
+
 #: Synonym for Bool; default value is ``False``. This trait type is
 #: deprecated. Use ``Bool(False)`` or ``Bool()`` instead.
 false = Bool
@@ -3691,11 +3709,3 @@ DictStrBool = Dict(str, bool)
 #: with list values can be inserted. The default value is {}. This trait type
 #: is deprecated. Use ``Dict(Str, List)`` instead.
 DictStrList = Dict(str, list)
-
-#: Alias for Int, provided for backwards compatibility with older code that
-#: uses ``Long``. This trait typeis deprecated. Use ``Int`` instead.
-Long = Int
-
-#: Alias for CInt, provided for backwards compatibility with older code that
-#: uses ``CLong``. This trait typeis deprecated. Use ``CInt`` instead.
-CLong = CInt
