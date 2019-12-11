@@ -4453,8 +4453,9 @@ _trait_notifiers ( trait_object * trait, PyObject * args ) {
     PyObject * list;
     int force_create;
 
-        if ( !PyArg_ParseTuple( args, "i", &force_create ) )
+    if ( !PyArg_ParseTuple( args, "p", &force_create ) ) {
         return NULL;
+    }
 
     result = (PyObject *) trait->notifiers;
     if ( result == NULL ) {
@@ -4688,6 +4689,26 @@ PyDoc_STRVAR(set_default_value_doc,
 "    A value or callable providing the default\n"
 );
 
+PyDoc_STRVAR(_notifiers_doc,
+"_notifiers(force_create)\n"
+"\n"
+"Return (and optionally create) the list of notifiers for this trait.\n"
+"\n"
+"Parameters\n"
+"----------\n"
+"force_create : bool\n"
+"    Whether to automatically create the list of notifiers, if it\n"
+"    doesn't exist yet.\n"
+"\n"
+"Returns\n"
+"-------\n"
+"notifiers : list of callables, or None\n"
+"    If the trait has no notifiers, and *force_create* is false, return None.\n"
+"    Otherwise, return the list of notifiers for this trait, creating it \n"
+"    first if necessary. Each notifier is a\n"
+"    callable accepting four arguments (object, trait_name, old, new).\n"
+);
+
 
 static PyMethodDef trait_methods[] = {
         { "__getstate__", (PyCFunction) _trait_getstate,       METH_VARARGS,
@@ -4731,7 +4752,7 @@ static PyMethodDef trait_methods[] = {
         { "cast",          (PyCFunction) _trait_cast,          METH_VARARGS,
                 PyDoc_STR( "cast(value)" ) },
         { "_notifiers",    (PyCFunction) _trait_notifiers,     METH_VARARGS,
-                PyDoc_STR( "_notifiers(force_create)" ) },
+                _notifiers_doc },
         { NULL, NULL },
 };
 
