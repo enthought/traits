@@ -265,7 +265,6 @@ A *type* parameter to the Trait() function can be any of the following standard
 Python types:
 
 * str or StringType
-* unicode or UnicodeType
 * int or IntType
 * float or FloatType
 * complex or ComplexType
@@ -297,7 +296,6 @@ belonging to one of the following standard Python types:
 * complex
 * bool
 * str
-* unicode
 
 Specifying a constant means that the trait can have the constant as a valid
 value. Passing a list of constants to the Trait() function is equivalent to

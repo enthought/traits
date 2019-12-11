@@ -29,10 +29,6 @@ Traits
 
 .. autoclass:: Title
 
-.. autoclass:: BaseUnicode
-
-.. autoclass:: Unicode
-
 .. autoclass:: BaseBytes
 
 .. autoclass:: Bytes
@@ -56,10 +52,6 @@ Traits
 .. autoclass:: BaseCStr
 
 .. autoclass:: CStr
-
-.. autoclass:: BaseCUnicode
-
-.. autoclass:: CUnicode
 
 .. autoclass:: BaseCBytes
 
@@ -179,12 +171,18 @@ Traits
 Deprecated Traits
 -----------------
 
-The following :class:`~.TraitType` instances are deprecated, and may
-be removed in a future version of Traits. In user code, these should be
-replaced with the corresponding compound types (e.g., replace ``ListStr``
-with ``List(Str)`` and ``DictStrAny`` with ``Dict(Str, Any)``).
+The following :class:`~.TraitType` classes and instances are deprecated,
+and may be removed in a future version of Traits.
 
 .. deprecated:: 6.0.0
+
+.. autodata:: BaseUnicode
+
+.. autodata:: Unicode
+
+.. autodata:: BaseCUnicode
+
+.. autodata:: CUnicode
 
 .. autodata:: false
 

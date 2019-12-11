@@ -170,7 +170,7 @@ def bytes_editor(auto_set=True, enter_set=False, encoding=None):
         from traitsui.api import TextEditor
 
         if encoding is None:
-            # py3-compatible bytes <-> hex unicode string
+            # py3-compatible bytes <-> hex string
             format = lambda b: b.encode("hex").decode("ascii")
             evaluate = lambda s: s.encode("ascii").decode("hex")
         else:
@@ -1331,7 +1331,6 @@ SpecialNames = {
     ###   'float':   trait_factory( Float ),
     ###   'complex': trait_factory( Complex ),
     ###   'str':     trait_factory( Str ),
-    ###   'unicode': trait_factory( Unicode ),
     ###   'bool':    trait_factory( Bool ),
     ###   'list':    trait_factory( List ),
     ###   'tuple':   trait_factory( Tuple ),
