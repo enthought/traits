@@ -199,20 +199,6 @@ class Any(TraitType):
 
 
 # -------------------------------------------------------------------------------
-#  'Generic' trait:
-# -------------------------------------------------------------------------------
-
-
-class Generic(Any):
-    """ Defines a trait whose value can be anything and whose definition can
-        be redefined via assignment using a TraitValue object.
-    """
-
-    #: The standard metadata for the trait:
-    metadata = {"trait_value": True}
-
-
-# -------------------------------------------------------------------------------
 #  'BaseInt' and 'Int' traits:
 # -------------------------------------------------------------------------------
 
