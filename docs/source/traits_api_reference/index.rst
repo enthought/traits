@@ -18,7 +18,6 @@ Traits core
     trait_value
     traits_listener
     trait_notifiers
-    ustr_trait
     version
 
 Subpackages
