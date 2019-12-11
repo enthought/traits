@@ -174,11 +174,11 @@ class TestRegression(unittest.TestCase):
         """
         dummy = Dummy()
         ctrait = dummy._trait("x", 2)
-        self.assertEqual(len(ctrait._notifiers(1)), 0)
+        self.assertEqual(len(ctrait._notifiers(True)), 0)
         presenter = Presenter(obj=dummy)
-        self.assertEqual(len(ctrait._notifiers(1)), 1)
+        self.assertEqual(len(ctrait._notifiers(True)), 1)
         del presenter
-        self.assertEqual(len(ctrait._notifiers(1)), 0)
+        self.assertEqual(len(ctrait._notifiers(True)), 0)
 
     def test_init_list_depends(self):
         """ Using two lists with bracket notation in extended name notation
