@@ -762,7 +762,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                 class_traits[name] = trait = _clone_trait(trait)
 
             if len(handlers) > 0:
-                _add_notifiers(trait._notifiers(1), handlers)
+                _add_notifiers(trait._notifiers(True), handlers)
 
             if default is not None:
                 trait.set_default_value(CALLABLE_DEFAULT_VALUE, default)
@@ -1175,7 +1175,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         # If there are and handlers, add them to the trait's notifier's list:
         if len(handlers) > 0:
             trait = _clone_trait(trait)
-            _add_notifiers(trait._notifiers(1), handlers)
+            _add_notifiers(trait._notifiers(True), handlers)
 
         # Finally, add the new trait to the class trait dictionary:
         class_traits[name] = trait
@@ -2305,12 +2305,12 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         if remove:
             if name == "anytrait":
-                notifiers = self._notifiers(0)
+                notifiers = self._notifiers(False)
             else:
                 trait = self._trait(name, 1)
                 if trait is None:
                     return
-                notifiers = trait._notifiers(0)
+                notifiers = trait._notifiers(False)
 
             if notifiers is not None:
                 for i, notifier in enumerate(notifiers):
@@ -2322,9 +2322,9 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             return
 
         if name == "anytrait":
-            notifiers = self._notifiers(1)
+            notifiers = self._notifiers(True)
         else:
-            notifiers = self._trait(name, 2)._notifiers(1)
+            notifiers = self._trait(name, 2)._notifiers(True)
 
         for notifier in notifiers:
             if notifier.equals(handler):
@@ -2834,9 +2834,9 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         # If there already was a trait with the same name:
         if old_trait is not None:
             # Copy the old traits notifiers into the new trait:
-            old_notifiers = old_trait._notifiers(0)
+            old_notifiers = old_trait._notifiers(False)
             if old_notifiers is not None:
-                trait._notifiers(1).extend(old_notifiers)
+                trait._notifiers(True).extend(old_notifiers)
         else:
             # Otherwise, see if there are any static notifiers that should be
             # applied to the trait:
@@ -2857,7 +2857,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
             # If there are any static notifiers, attach them to the trait:
             if len(handlers) > 0:
-                _add_notifiers(trait._notifiers(1), handlers)
+                _add_notifiers(trait._notifiers(True), handlers)
 
         # If this was a new trait, fire the 'trait_added' event:
         if old_trait is None:
@@ -3217,7 +3217,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 # list:
                 if len(handlers) > 0:
                     trait = _clone_trait(trait)
-                    _add_notifiers(trait._notifiers(1), handlers)
+                    _add_notifiers(trait._notifiers(True), handlers)
 
                 return trait
 

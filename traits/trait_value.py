@@ -51,7 +51,7 @@ class BaseTraitValue(HasPrivateTraits):
     def as_ctrait(self, original_trait):
         """ Returns the low-level C-based trait for this TraitValue.
         """
-        notifiers = original_trait._notifiers(0)
+        notifiers = original_trait._notifiers(False)
 
         if self._ctrait is not None:
             if (notifiers is None) or (len(notifiers) == 0):
@@ -67,7 +67,7 @@ class BaseTraitValue(HasPrivateTraits):
             and (notifiers is not None)
             and (len(notifiers) > 0)
         ):
-            trait._notifiers(1).extend(notifiers)
+            trait._notifiers(True).extend(notifiers)
 
         return trait
 
