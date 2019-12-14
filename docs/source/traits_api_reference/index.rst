@@ -18,6 +18,7 @@ Traits core
     trait_value
     traits_listener
     trait_notifiers
+    editor_factories
     version
 
 Subpackages
