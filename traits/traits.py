@@ -120,7 +120,7 @@ KindMap = {
 #  Editor factory functions:
 # -------------------------------------------------------------------------------
 
-PasswordEditor = None
+PasswordEditors = {}
 MultilineTextEditors = {}
 BytesEditors = {}
 SourceCodeEditor = None
@@ -133,16 +133,14 @@ TimeEditor = None
 def password_editor(auto_set=True, enter_set=False):
     """ Factory function that returns an editor for passwords.
     """
-    global PasswordEditor
-
-    if PasswordEditor is None:
+    if (auto_set, enter_set) not in PasswordEditors:
         from traitsui.api import TextEditor
 
-        PasswordEditor = TextEditor(
+        PasswordEditors[auto_set, enter_set] = TextEditor(
             password=True, auto_set=auto_set, enter_set=enter_set
         )
 
-    return PasswordEditor
+    return PasswordEditors[auto_set, enter_set]
 
 
 def multi_line_text_editor(auto_set=True, enter_set=False):
