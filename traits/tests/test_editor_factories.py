@@ -94,7 +94,7 @@ class TestTimeEditor(SimpleEditorTestMixin, unittest.TestCase):
 
 
 @requires_traitsui
-class TestDefaultEditors(unittest.TestCase):
+class TestBytesEditor(unittest.TestCase):
 
     def tearDown(self):
         BytesEditors.clear()
