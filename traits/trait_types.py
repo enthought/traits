@@ -61,11 +61,7 @@ from .trait_handlers import (
     TRAIT_SET_OBJECT_DEFAULT_VALUE,
 )
 
-from .traits import (
-    Trait,
-    trait_from,
-    _TraitMaker,
-    _InstanceArgs,
+from .editor_factories import (
     code_editor,
     html_editor,
     password_editor,
@@ -73,6 +69,12 @@ from .traits import (
     date_editor,
     time_editor,
     list_editor,
+)
+from .traits import (
+    Trait,
+    trait_from,
+    _TraitMaker,
+    _InstanceArgs,
 )
 
 from .trait_errors import TraitError
@@ -356,7 +358,7 @@ class BaseStr(TraitType):
     def create_editor(self):
         """ Returns the default traits UI editor for this type of trait.
         """
-        from .traits import multi_line_text_editor
+        from .editor_factories import multi_line_text_editor
 
         auto_set = self.auto_set
         if auto_set is None:
