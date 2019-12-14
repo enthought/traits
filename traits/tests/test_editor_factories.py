@@ -18,16 +18,79 @@ Tests for Editor factories.
 
 import unittest
 
+from traits.has_traits import HasTraits
+from traits.trait_types import Instance, List, Str
 from traits.traits import (
     BytesEditors,
     MultilineTextEditors,
     PasswordEditors,
     bytes_editor,
-    code_editor,
     multi_line_text_editor,
+    list_editor,
     password_editor,
 )
 from traits.testing.optional_dependencies import requires_traitsui, traitsui
+
+
+class SimpleEditorTestMixin:
+
+    def setUp(self):
+        import traits.traits
+        self.factory = getattr(traits.traits, self.factory_name)
+        self.traitsui_factory = getattr(traitsui.api, self.traitsui_name)
+
+    def tearDown(self):
+        import traits.traits
+        setattr(traits.traits, self.cache_name, None)
+
+    def test_editor(self):
+        editor = self.factory()
+
+        if isinstance(self.traitsui_factory, traitsui.api.BasicEditorFactory):
+            self.assertIsInstance(editor, traitsui.api.BasicEditorFactory)
+        else:
+            self.assertIsInstance(editor, self.traitsui_factory)
+
+    def test_editor_caching(self):
+        editor_1 = self.factory()
+        editor_2 = self.factory()
+
+        self.assertIs(editor_1, editor_2)
+
+
+@requires_traitsui
+class TestDateEditor(SimpleEditorTestMixin, unittest.TestCase):
+    cache_name = "DateEditor"
+    traitsui_name = "DateEditor"
+    factory_name = "date_editor"
+
+
+@requires_traitsui
+class TestCodeEditor(SimpleEditorTestMixin, unittest.TestCase):
+    cache_name = "SourceCodeEditor"
+    traitsui_name = "CodeEditor"
+    factory_name = "code_editor"
+
+
+@requires_traitsui
+class TestHTMLEditor(SimpleEditorTestMixin, unittest.TestCase):
+    cache_name = "HTMLTextEditor"
+    traitsui_name = "HTMLEditor"
+    factory_name = "html_editor"
+
+
+@requires_traitsui
+class TestShellEditor(SimpleEditorTestMixin, unittest.TestCase):
+    cache_name = "PythonShellEditor"
+    traitsui_name = "ShellEditor"
+    factory_name = "shell_editor"
+
+
+@requires_traitsui
+class TestTimeEditor(SimpleEditorTestMixin, unittest.TestCase):
+    cache_name = "TimeEditor"
+    traitsui_name = "TimeEditor"
+    factory_name = "time_editor"
 
 
 @requires_traitsui
@@ -80,25 +143,6 @@ class TestDefaultEditors(unittest.TestCase):
         )
 
         self.assertIs(editor_3, editor_4)
-
-
-@requires_traitsui
-class TestCodeEditor(unittest.TestCase):
-
-    def tearDown(self):
-        import traits.traits
-        traits.traits.SourceCodeEditor = None
-
-    def test_code_editor_default(self):
-        editor = code_editor()
-
-        self.assertIsInstance(editor, traitsui.api.CodeEditor)
-
-    def test_multi_line_text_editor_caching(self):
-        editor_1 = code_editor()
-        editor_2 = code_editor()
-
-        self.assertIs(editor_1, editor_2)
 
 
 @requires_traitsui
@@ -167,3 +211,32 @@ class TestPasswordEditor(unittest.TestCase):
         editor_4 = password_editor(auto_set=False, enter_set=True)
 
         self.assertIs(editor_3, editor_4)
+
+
+@requires_traitsui
+class TestListEditor(unittest.TestCase):
+
+    def test_list_editor_default(self):
+        trait = List(Str)
+        editor = list_editor(trait, trait)
+
+        self.assertIsInstance(editor, traitsui.api.ListEditor)
+        self.assertEqual(editor.trait_handler, trait)
+        self.assertEqual(editor.rows, 5)
+        self.assertFalse(editor.use_notebook)
+        self.assertEqual(editor.page_name, '')
+
+    def test_list_editor_options(self):
+        trait = List(Str, rows=10, use_notebook=True, page_name='page')
+        editor = list_editor(trait, trait)
+
+        self.assertIsInstance(editor, traitsui.api.ListEditor)
+        self.assertEqual(editor.trait_handler, trait)
+        self.assertEqual(editor.rows, 10)
+        self.assertTrue(editor.use_notebook)
+        self.assertEqual(editor.page_name, 'page')
+
+    def test_list_editor_list_instance(self):
+        trait = List(Instance(HasTraits))
+        editor = list_editor(trait, trait)
+        self.assertIsInstance(editor, traitsui.api.TableEditor)
