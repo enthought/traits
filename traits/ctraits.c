@@ -1182,7 +1182,7 @@ _has_traits_change_notify ( has_traits_object * obj, PyObject * args ) {
 
     /* Parse arguments, which specify the new trait notification
        enabled/disabled state: */
-        if ( !PyArg_ParseTuple( args, "p", &enabled ) )
+    if ( !PyArg_ParseTuple( args, "p", &enabled ) )
         return NULL;
 
     if ( enabled ) {
@@ -1207,7 +1207,7 @@ _has_traits_veto_notify ( has_traits_object * obj, PyObject * args ) {
 
     /* Parse arguments, which specify the new trait notification veto
        enabled/disabled state: */
-        if ( !PyArg_ParseTuple( args, "p", &enabled ) )
+    if ( !PyArg_ParseTuple( args, "p", &enabled ) )
         return NULL;
 
     if ( enabled ) {
@@ -1262,7 +1262,7 @@ _has_traits_inited ( has_traits_object * obj, PyObject * args ) {
 static PyObject *
 _has_traits_instance_traits ( has_traits_object * obj, PyObject * args ) {
 
-        if ( !PyArg_ParseTuple( args, "" ) )
+    if ( !PyArg_ParseTuple( args, "" ) )
         return NULL;
 
     if ( obj->itrait_dict == NULL )
