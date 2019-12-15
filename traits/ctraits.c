@@ -2639,62 +2639,6 @@ trait_traverse ( trait_object * trait, visitproc visit, void * arg ) {
 }
 
 /*-----------------------------------------------------------------------------
-|  Casts a 'CTrait' which attempts to validate the argument passed as being a
-|  valid value for the trait:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_trait_cast ( trait_object * trait, PyObject * args ) {
-
-    PyObject * obj;
-    PyObject * name;
-    PyObject * value;
-    PyObject * result;
-    PyObject * info;
-
-    switch ( PyTuple_GET_SIZE( args ) ) {
-        case 1:
-            obj   = name = Py_None;
-            value = PyTuple_GET_ITEM( args, 0 );
-            break;
-        case 2:
-            name  = Py_None;
-            obj   = PyTuple_GET_ITEM( args, 0 );
-            value = PyTuple_GET_ITEM( args, 1 );
-            break;
-        case 3:
-            obj   = PyTuple_GET_ITEM( args, 0 );
-            name  = PyTuple_GET_ITEM( args, 1 );
-            value = PyTuple_GET_ITEM( args, 2 );
-            break;
-        default:
-            PyErr_Format( PyExc_TypeError,
-                "Trait cast takes 1, 2 or 3 arguments (%zd given).",
-                PyTuple_GET_SIZE( args ) );
-            return NULL;
-    }
-    if ( trait->validate == NULL ) {
-        Py_INCREF( value );
-        return value;
-    }
-
-        result = trait->validate( trait, (has_traits_object *) obj, name, value );
-    if ( result == NULL ) {
-        PyErr_Clear();
-        info = PyObject_CallMethod( trait->handler, "info", NULL );
-        if ( (info != NULL) && PyUnicode_Check( info ) )
-            PyErr_Format( PyExc_ValueError,
-                "Invalid value for trait, the value should be %U.",
-                info );
-        else
-            PyErr_Format( PyExc_ValueError, "Invalid value for trait." );
-        Py_XDECREF( info );
-    }
-
-    return result;
-}
-
-/*-----------------------------------------------------------------------------
 |  Handles the 'getattr' operation on a 'CHasTraits' instance:
 +----------------------------------------------------------------------------*/
 
@@ -4605,8 +4549,6 @@ static PyMethodDef trait_methods[] = {
                 PyDoc_STR( "property([get,set,validate])" ) },
         { "clone",         (PyCFunction) _trait_clone,         METH_VARARGS,
                 PyDoc_STR( "clone(trait)" ) },
-        { "cast",          (PyCFunction) _trait_cast,          METH_VARARGS,
-                PyDoc_STR( "cast(value)" ) },
         { "_notifiers",    (PyCFunction) _trait_notifiers,     METH_VARARGS,
                 _notifiers_doc },
         { NULL, NULL },
