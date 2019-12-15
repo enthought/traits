@@ -1182,7 +1182,7 @@ _has_traits_change_notify ( has_traits_object * obj, PyObject * args ) {
 
     /* Parse arguments, which specify the new trait notification
        enabled/disabled state: */
-        if ( !PyArg_ParseTuple( args, "i", &enabled ) )
+        if ( !PyArg_ParseTuple( args, "p", &enabled ) )
         return NULL;
 
     if ( enabled ) {
@@ -1207,7 +1207,7 @@ _has_traits_veto_notify ( has_traits_object * obj, PyObject * args ) {
 
     /* Parse arguments, which specify the new trait notification veto
        enabled/disabled state: */
-        if ( !PyArg_ParseTuple( args, "i", &enabled ) )
+        if ( !PyArg_ParseTuple( args, "p", &enabled ) )
         return NULL;
 
     if ( enabled ) {
@@ -1241,7 +1241,7 @@ _has_traits_inited ( has_traits_object * obj, PyObject * args ) {
 
     int traits_inited = -1;
 
-        if ( !PyArg_ParseTuple( args, "|i", &traits_inited ) )
+    if ( !PyArg_ParseTuple( args, "|p", &traits_inited ) )
         return NULL;
 
     if ( traits_inited > 0 )
@@ -1284,7 +1284,7 @@ _has_traits_notifiers ( has_traits_object * obj, PyObject * args ) {
     PyObject * list;
     int force_create;
 
-    if ( !PyArg_ParseTuple( args, "i", &force_create ) )
+    if ( !PyArg_ParseTuple( args, "p", &force_create ) )
         return NULL;
 
     result = (PyObject *) obj->notifiers;
@@ -4056,7 +4056,7 @@ _trait_delegate ( trait_object * trait, PyObject * args ) {
     int prefix_type;
     int modify_delegate;
 
-    if ( !PyArg_ParseTuple( args, "UUii",
+    if ( !PyArg_ParseTuple( args, "UUip",
                             &delegate_name, &delegate_prefix,
                             &prefix_type,   &modify_delegate ) )
         return NULL;
@@ -4089,7 +4089,7 @@ _trait_rich_comparison ( trait_object * trait, PyObject * args ) {
 
     int compare_type;
 
-    if ( !PyArg_ParseTuple( args, "i", &compare_type ) )
+    if ( !PyArg_ParseTuple( args, "p", &compare_type ) )
         return NULL;
 
     trait->flags &= (~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_IDENTITY));
@@ -4134,7 +4134,7 @@ _trait_setattr_original_value ( trait_object * trait, PyObject * args ) {
 
     int original_value;
 
-    if ( !PyArg_ParseTuple( args, "i", &original_value ) )
+    if ( !PyArg_ParseTuple( args, "p", &original_value ) )
         return NULL;
 
     if ( original_value != 0 ) {
@@ -4157,7 +4157,7 @@ _trait_post_setattr_original_value ( trait_object * trait, PyObject * args ) {
 
     int original_value;
 
-    if ( !PyArg_ParseTuple( args, "i", &original_value ) )
+    if ( !PyArg_ParseTuple( args, "p", &original_value ) )
         return NULL;
 
     if ( original_value != 0 ) {
@@ -4180,7 +4180,7 @@ _trait_is_mapped ( trait_object * trait, PyObject * args ) {
 
     int is_mapped;
 
-    if ( !PyArg_ParseTuple( args, "i", &is_mapped ) )
+    if ( !PyArg_ParseTuple( args, "p", &is_mapped ) )
         return NULL;
 
     if ( is_mapped != 0 ) {
