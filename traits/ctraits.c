@@ -580,29 +580,35 @@ set_value ( PyObject ** field, PyObject * value ) {
     return 0;
 }
 
-static PyObject *
-get_trait_flag ( trait_object * trait, int mask ) {
-    PyObject * result;
+/*-----------------------------------------------------------------------------
+|  Gets the value of a flag on a cTrait object specified by a mask.
++----------------------------------------------------------------------------*/
 
-    if ( (trait->flags & mask) == 0 ) {
-        result = Py_False;
+static PyObject *
+get_trait_flag(trait_object * trait, int mask)
+{
+    if ((trait->flags & mask) == 0) {
+        Py_RETURN_FALSE;
     }
     else {
-        result = Py_True;
+        Py_RETURN_TRUE;
     }
-
-    Py_INCREF( result );
-    return result;
 }
 
+/*-----------------------------------------------------------------------------
+|  Sets the value of a flag on a cTrait object specified by a mask.
++----------------------------------------------------------------------------*/
+
 static int
-set_trait_flag ( trait_object * trait, int mask, PyObject * value ) {
+set_trait_flag(trait_object * trait, int mask, PyObject * value)
+{
     int flag = PyObject_IsTrue(value);
-    if ( flag == -1 ) {
+
+    if (flag == -1) {
         return -1;
     }
 
-    if ( flag ) {
+    if (flag) {
         trait->flags |= mask;
     }
     else {
@@ -611,7 +617,6 @@ set_trait_flag ( trait_object * trait, int mask, PyObject * value ) {
 
     return 0;
 }
-
 
 /*-----------------------------------------------------------------------------
 |  Returns the result of calling a specified 'class' object with 1 argument:
@@ -4557,8 +4562,9 @@ set_trait_post_setattr ( trait_object * trait, PyObject * value,
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-get_trait_property_flag ( trait_object * trait, void * closure ) {
-    return get_trait_flag( trait, TRAIT_PROPERTY );
+get_trait_property_flag(trait_object * trait, void * closure)
+{
+    return get_trait_flag(trait, TRAIT_PROPERTY);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4566,8 +4572,9 @@ get_trait_property_flag ( trait_object * trait, void * closure ) {
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-get_trait_modify_delegate_flag ( trait_object * trait, void * closure ) {
-    return get_trait_flag( trait, TRAIT_MODIFY_DELEGATE );
+get_trait_modify_delegate_flag(trait_object * trait, void * closure )
+{
+    return get_trait_flag(trait, TRAIT_MODIFY_DELEGATE);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4575,8 +4582,10 @@ get_trait_modify_delegate_flag ( trait_object * trait, void * closure ) {
 +----------------------------------------------------------------------------*/
 
 static int
-set_trait_modify_delegate_flag ( trait_object * trait, PyObject * value, void * closure ) {
-    return set_trait_flag( trait, TRAIT_MODIFY_DELEGATE, value );
+set_trait_modify_delegate_flag(trait_object * trait, PyObject * value,
+                               void * closure)
+{
+    return set_trait_flag(trait, TRAIT_MODIFY_DELEGATE, value);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4584,8 +4593,9 @@ set_trait_modify_delegate_flag ( trait_object * trait, PyObject * value, void * 
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-get_trait_object_identity_flag ( trait_object * trait, void * closure ) {
-    return get_trait_flag( trait, TRAIT_OBJECT_IDENTITY );
+get_trait_object_identity_flag(trait_object * trait, void * closure)
+{
+    return get_trait_flag(trait, TRAIT_OBJECT_IDENTITY);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4593,8 +4603,9 @@ get_trait_object_identity_flag ( trait_object * trait, void * closure ) {
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-get_trait_setattr_original_value_flag ( trait_object * trait, void * closure ) {
-    return get_trait_flag( trait, TRAIT_SETATTR_ORIGINAL_VALUE );
+get_trait_setattr_original_value_flag(trait_object * trait, void * closure)
+{
+    return get_trait_flag(trait, TRAIT_SETATTR_ORIGINAL_VALUE);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4602,8 +4613,10 @@ get_trait_setattr_original_value_flag ( trait_object * trait, void * closure ) {
 +----------------------------------------------------------------------------*/
 
 static int
-set_trait_setattr_original_value_flag ( trait_object * trait, PyObject * value, void * closure ) {
-    return set_trait_flag( trait, TRAIT_SETATTR_ORIGINAL_VALUE, value );
+set_trait_setattr_original_value_flag(trait_object * trait, PyObject * value,
+                                      void * closure)
+{
+    return set_trait_flag(trait, TRAIT_SETATTR_ORIGINAL_VALUE, value);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4611,8 +4624,10 @@ set_trait_setattr_original_value_flag ( trait_object * trait, PyObject * value, 
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-get_trait_post_setattr_original_value_flag ( trait_object * trait, void * closure ) {
-    return get_trait_flag( trait, TRAIT_POST_SETATTR_ORIGINAL_VALUE );
+get_trait_post_setattr_original_value_flag(trait_object * trait,
+                                           void * closure)
+{
+    return get_trait_flag(trait, TRAIT_POST_SETATTR_ORIGINAL_VALUE);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4620,8 +4635,11 @@ get_trait_post_setattr_original_value_flag ( trait_object * trait, void * closur
 +----------------------------------------------------------------------------*/
 
 static int
-set_trait_post_setattr_original_value_flag ( trait_object * trait, PyObject * value, void * closure ) {
-    return set_trait_flag( trait, TRAIT_POST_SETATTR_ORIGINAL_VALUE, value );
+set_trait_post_setattr_original_value_flag(trait_object * trait,
+                                           PyObject * value,
+                                           void * closure)
+{
+    return set_trait_flag(trait, TRAIT_POST_SETATTR_ORIGINAL_VALUE, value);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4629,8 +4647,9 @@ set_trait_post_setattr_original_value_flag ( trait_object * trait, PyObject * va
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-get_trait_is_mapped_flag ( trait_object * trait, void * closure ) {
-    return get_trait_flag( trait, TRAIT_IS_MAPPED );
+get_trait_is_mapped_flag(trait_object * trait, void * closure)
+{
+    return get_trait_flag(trait, TRAIT_IS_MAPPED);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4638,8 +4657,10 @@ get_trait_is_mapped_flag ( trait_object * trait, void * closure ) {
 +----------------------------------------------------------------------------*/
 
 static int
-set_trait_is_mapped_flag ( trait_object * trait, PyObject * value, void * closure ) {
-    return set_trait_flag( trait, TRAIT_IS_MAPPED, value );
+set_trait_is_mapped_flag(trait_object * trait, PyObject * value,
+                         void * closure)
+{
+    return set_trait_flag(trait, TRAIT_IS_MAPPED, value);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4647,8 +4668,9 @@ set_trait_is_mapped_flag ( trait_object * trait, PyObject * value, void * closur
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-get_trait_no_value_test_flag ( trait_object * trait, void * closure ) {
-    return get_trait_flag( trait, TRAIT_NO_VALUE_TEST );
+get_trait_no_value_test_flag(trait_object * trait, void * closure)
+{
+    return get_trait_flag(trait, TRAIT_NO_VALUE_TEST);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4753,21 +4775,29 @@ static PyGetSetDef trait_properties[] = {
         { "handler",        (getter) get_trait_handler, (setter) set_trait_handler },
         { "post_setattr",   (getter) get_trait_post_setattr,
                             (setter) set_trait_post_setattr },
-        { "property_flag",  (getter) get_trait_property_flag, NULL },
-        { "modify_delegate_flag", (getter) get_trait_modify_delegate_flag,
-                            (setter) set_trait_modify_delegate_flag },
-        { "object_identity_flag",
-                            (getter) get_trait_object_identity_flag, NULL },
-        { "setattr_original_value_flag",
-                            (getter) get_trait_setattr_original_value_flag,
-                            (setter) set_trait_setattr_original_value_flag },
-        { "post_setattr_original_value_flag",
-                            (getter) get_trait_post_setattr_original_value_flag,
-                            (setter) set_trait_post_setattr_original_value_flag },
-        { "is_mapped_flag", (getter) get_trait_is_mapped_flag,
-                            (setter) set_trait_is_mapped_flag },
-        { "no_value_test_flag",
-                            (getter) get_trait_no_value_test_flag, NULL },
+        {"property_flag", (getter) get_trait_property_flag, NULL,
+         "Whether the trait is a property trait.", NULL},
+        {"modify_delegate_flag", (getter) get_trait_modify_delegate_flag,
+         (setter) set_trait_modify_delegate_flag,
+         "Whether changes to the trait modify the delegate as well", NULL},
+        {"object_identity_flag", (getter) get_trait_object_identity_flag,
+         NULL, "Whether change comparisons are by object identity.", NULL},
+        {"setattr_original_value_flag",
+         (getter) get_trait_setattr_original_value_flag,
+         (setter) set_trait_setattr_original_value_flag,
+         "Whether setattr gets the original value set on the trait or the "
+         "stored value,", NULL},
+        {"post_setattr_original_value_flag",
+         (getter) get_trait_post_setattr_original_value_flag,
+         (setter) set_trait_post_setattr_original_value_flag,
+         "Whether post_setattr gets the original value set on the trait or "
+         "the stored value,", NULL},
+        {"is_mapped_flag", (getter) get_trait_is_mapped_flag,
+         (setter) set_trait_is_mapped_flag,
+         "Whether the trait is a mapped trait.", NULL},
+        {"no_value_test_flag", (getter) get_trait_no_value_test_flag, NULL,
+         "Whether trait changes are fired on every assignment, or only when "
+         "the value tests as different.", NULL},
         { 0 }
 };
 
