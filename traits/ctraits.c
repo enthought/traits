@@ -4549,6 +4549,90 @@ PyDoc_STRVAR(set_default_value_doc,
 "    A value or callable providing the default\n"
 );
 
+PyDoc_STRVAR(default_value_for_doc,
+"default_value_for(object, name)\n"
+"\n"
+"Return the default value of this CTrait instance for a specified object\n"
+"and trait name.\n"
+"\n"
+"Parameters\n"
+"----------\n"
+"object : HasTraits\n"
+"    The object the trait is attached to.\n"
+"name : str\n"
+"    The name of the trait.\n"
+"\n"
+"Returns\n"
+"-------\n"
+"default_value : value\n"
+"    The default value for the given object and name.\n"
+);
+
+PyDoc_STRVAR(set_validate_doc,
+"set_validate(validator)\n"
+"\n"
+"Set the validator of a CTrait instance\n"
+"\n"
+"Parameters\n"
+"----------\n"
+"validator : callable or tuple\n"
+"    Either a callable used for validation, or a tuple representing\n"
+"    validation information.\n"
+"\n"
+"    A callable used for validation should have signature\n"
+"    validator(obj, name, value) -> value, and should return the\n"
+"    validated (and possibly transformed) value. It should raise\n"
+"    TraitError on failure to validate.\n"
+"\n"
+"    If the validator is a tuple, its first entry will be an integer\n"
+"    specifying the type of validation, and the remaining entries\n"
+"    in the tuple (if any) provide additional information specific\n"
+"    to the validation type\n"
+"\n"
+"Raises\n"
+"------\n"
+"ValueError\n"
+"    If the given tuple does not have any of the expected forms.\n"
+);
+
+PyDoc_STRVAR(get_validate_doc,
+"get_validate()\n"
+"\n"
+"Return the validator of a CTrait instance.\n"
+"\n"
+"Returns the current validator for a CTrait instance, or None\n"
+"if the trait has no validator. See also the set_validate\n"
+"method.\n"
+"\n"
+"Returns\n"
+"-------\n"
+"validator : tuple, callable, or None\n"
+);
+
+PyDoc_STRVAR(validate_doc,
+"validate(object, name, value)\n"
+"\n"
+"Perform validation and appropriate conversions on a value for this trait.\n"
+"\n"
+"Parameters\n"
+"----------\n"
+"object : HasTraits\n"
+"    The HasTraits object that validation is being performed for.\n"
+"name : str\n"
+"    The name of the trait.\n"
+"value : object\n"
+"    The value to be validated.\n"
+"\n"
+"Returns\n"
+"-------\n"
+"The validated, converted value.\n"
+"\n"
+"Raises\n"
+"------\n"
+"TraitError\n"
+"    If the given value is invalid for this trait.\n"
+);
+
 PyDoc_STRVAR(_notifiers_doc,
 "_notifiers(force_create)\n"
 "\n"
@@ -4580,13 +4664,13 @@ static PyMethodDef trait_methods[] = {
         { "set_default_value", (PyCFunction) _trait_set_default_value, METH_VARARGS,
                 set_default_value_doc },
         { "default_value_for", (PyCFunction) _trait_default_value_for, METH_VARARGS,
-                PyDoc_STR( "default_value_for(object,name)" ) },
+                default_value_for_doc },
         { "set_validate",  (PyCFunction) _trait_set_validate,  METH_VARARGS,
-                PyDoc_STR( "set_validate(validate_function)" ) },
+                set_validate_doc },
         { "get_validate",  (PyCFunction) _trait_get_validate,  METH_NOARGS,
-                PyDoc_STR( "get_validate()" ) },
+                get_validate_doc },
         { "validate",      (PyCFunction) _trait_validate,      METH_VARARGS,
-                PyDoc_STR( "validate(object,name,value)" ) },
+                validate_doc },
         { "delegate",      (PyCFunction) _trait_delegate,      METH_VARARGS,
                 PyDoc_STR( "delegate(delegate_name,prefix,prefix_type,modify_delegate)" ) },
         { "rich_comparison",  (PyCFunction) _trait_rich_comparison,  METH_VARARGS,
