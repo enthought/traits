@@ -124,7 +124,7 @@ static int call_notifiers ( PyListObject *, PyListObject *,
 #define TRAIT_MODIFY_DELEGATE 0x00000002
 
 /* Should a simple object identity test be performed (or a rich compare)? */
-#define TRAIT_OBJECT_IDENTITY 0x00000004
+#define TRAIT_OBJECT_ID_TEST 0x00000004
 
 /* Make 'setattr' store the original unvalidated value */
 #define TRAIT_SETATTR_ORIGINAL_VALUE 0x00000008
@@ -2082,7 +2082,7 @@ setattr_trait ( trait_object      * traito,
                 if ( !changed ) {
                     changed = (old_value != value );
                     if ( changed &&
-                         ((traitd->flags & TRAIT_OBJECT_IDENTITY) == 0) ) {
+                         ((traitd->flags & TRAIT_OBJECT_ID_TEST) == 0) ) {
                         changed = PyObject_RichCompareBool( old_value,
                                                             value, Py_NE );
                         if ( changed == -1 ) {
@@ -2164,7 +2164,7 @@ setattr_trait ( trait_object      * traito,
         if ( !changed ) {
             changed = (old_value != value);
             if ( changed &&
-                 ((traitd->flags & TRAIT_OBJECT_IDENTITY) == 0) ) {
+                 ((traitd->flags & TRAIT_OBJECT_ID_TEST) == 0) ) {
                 changed = PyObject_RichCompareBool( old_value, value, Py_NE );
                 if ( changed == -1 ) {
                     PyErr_Clear();
@@ -4130,9 +4130,9 @@ _trait_rich_comparison ( trait_object * trait, PyObject * args ) {
     if ( !PyArg_ParseTuple( args, "i", &compare_type ) )
         return NULL;
 
-    trait->flags &= (~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_IDENTITY));
+    trait->flags &= (~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_ID_TEST));
     if ( compare_type == 0 )
-        trait->flags |= TRAIT_OBJECT_IDENTITY;
+        trait->flags |= TRAIT_OBJECT_ID_TEST;
 
     Py_INCREF( Py_None );
     return Py_None;
@@ -4150,85 +4150,16 @@ _trait_comparison_mode ( trait_object * trait, PyObject * args ) {
     if ( !PyArg_ParseTuple( args, "i", &comparison_mode ) )
         return NULL;
 
-    trait->flags &= (~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_IDENTITY));
+    trait->flags &= (~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_ID_TEST));
     switch ( comparison_mode ) {
         case 0:  trait->flags |= TRAIT_NO_VALUE_TEST;
                  break;
-        case 1:  trait->flags |= TRAIT_OBJECT_IDENTITY;
+        case 1:  trait->flags |= TRAIT_OBJECT_ID_TEST;
         default: break;
     }
 
     Py_INCREF( Py_None );
     return Py_None;
-}
-
-
-/*-----------------------------------------------------------------------------
-|  Sets the value of the 'setattr_original_value' flag of a CTrait instance:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_trait_setattr_original_value ( trait_object * trait, PyObject * args ) {
-
-    int original_value;
-
-    if ( !PyArg_ParseTuple( args, "i", &original_value ) )
-        return NULL;
-
-    if ( original_value != 0 ) {
-        trait->flags |= TRAIT_SETATTR_ORIGINAL_VALUE;
-    } else {
-        trait->flags &= (~TRAIT_SETATTR_ORIGINAL_VALUE);
-    }
-
-    Py_INCREF( trait );
-    return (PyObject *) trait;
-}
-
-/*-----------------------------------------------------------------------------
-|  Sets the value of the 'post_setattr_original_value' flag of a CTrait
-|  instance (used in the processing of 'post_settattr' calls):
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_trait_post_setattr_original_value ( trait_object * trait, PyObject * args ) {
-
-    int original_value;
-
-    if ( !PyArg_ParseTuple( args, "i", &original_value ) )
-        return NULL;
-
-    if ( original_value != 0 ) {
-        trait->flags |= TRAIT_POST_SETATTR_ORIGINAL_VALUE;
-    } else {
-        trait->flags &= (~TRAIT_POST_SETATTR_ORIGINAL_VALUE);
-    }
-
-    Py_INCREF( trait );
-    return (PyObject *) trait;
-}
-
-/*-----------------------------------------------------------------------------
-|  Sets the value of the 'is_mapped' flag of a CTrait instance (used in the
-|  processing of the default value of a trait with a 'post_settattr' handler):
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_trait_is_mapped ( trait_object * trait, PyObject * args ) {
-
-    int is_mapped;
-
-    if ( !PyArg_ParseTuple( args, "i", &is_mapped ) )
-        return NULL;
-
-    if ( is_mapped != 0 ) {
-        trait->flags |= TRAIT_IS_MAPPED;
-    } else {
-        trait->flags &= (~TRAIT_IS_MAPPED);
-    }
-
-    Py_INCREF( trait );
-    return (PyObject *) trait;
 }
 
 /*-----------------------------------------------------------------------------
@@ -4589,13 +4520,13 @@ set_trait_modify_delegate_flag(trait_object * trait, PyObject * value,
 }
 
 /*-----------------------------------------------------------------------------
-|  Returns the current object_identity flag value:
+|  Returns the current object_id_test flag value:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-get_trait_object_identity_flag(trait_object * trait, void * closure)
+get_trait_object_id_test_flag(trait_object * trait, void * closure)
 {
-    return get_trait_flag(trait, TRAIT_OBJECT_IDENTITY);
+    return get_trait_flag(trait, TRAIT_OBJECT_ID_TEST);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4747,14 +4678,6 @@ static PyMethodDef trait_methods[] = {
                 PyDoc_STR( "rich_comparison(rich_comparison_boolean)" ) },
         { "comparison_mode",  (PyCFunction) _trait_comparison_mode,  METH_VARARGS,
                 PyDoc_STR( "comparison_mode(comparison_mode_enum)" ) },
-        { "setattr_original_value",
-        (PyCFunction) _trait_setattr_original_value,       METH_VARARGS,
-                PyDoc_STR( "setattr_original_value(original_value_boolean)" ) },
-        { "post_setattr_original_value",
-        (PyCFunction) _trait_post_setattr_original_value,  METH_VARARGS,
-                PyDoc_STR( "post_setattr_original_value(original_value_boolean)" ) },
-        { "is_mapped", (PyCFunction) _trait_is_mapped,  METH_VARARGS,
-                PyDoc_STR( "is_mapped(is_mapped_boolean)" ) },
         { "property",      (PyCFunction) _trait_property,      METH_VARARGS,
                 PyDoc_STR( "property([get,set,validate])" ) },
         { "clone",         (PyCFunction) _trait_clone,         METH_VARARGS,
@@ -4775,27 +4698,27 @@ static PyGetSetDef trait_properties[] = {
         { "handler",        (getter) get_trait_handler, (setter) set_trait_handler },
         { "post_setattr",   (getter) get_trait_post_setattr,
                             (setter) set_trait_post_setattr },
-        {"property_flag", (getter) get_trait_property_flag, NULL,
+        {"is_property", (getter) get_trait_property_flag, NULL,
          "Whether the trait is a property trait.", NULL},
-        {"modify_delegate_flag", (getter) get_trait_modify_delegate_flag,
+        {"modify_delegate", (getter) get_trait_modify_delegate_flag,
          (setter) set_trait_modify_delegate_flag,
          "Whether changes to the trait modify the delegate as well", NULL},
-        {"object_identity_flag", (getter) get_trait_object_identity_flag,
+        {"object_id_test", (getter) get_trait_object_id_test_flag,
          NULL, "Whether change comparisons are by object identity.", NULL},
-        {"setattr_original_value_flag",
+        {"setattr_original_value",
          (getter) get_trait_setattr_original_value_flag,
          (setter) set_trait_setattr_original_value_flag,
          "Whether setattr gets the original value set on the trait or the "
          "stored value,", NULL},
-        {"post_setattr_original_value_flag",
+        {"post_setattr_original_value",
          (getter) get_trait_post_setattr_original_value_flag,
          (setter) set_trait_post_setattr_original_value_flag,
          "Whether post_setattr gets the original value set on the trait or "
          "the stored value,", NULL},
-        {"is_mapped_flag", (getter) get_trait_is_mapped_flag,
+        {"is_mapped", (getter) get_trait_is_mapped_flag,
          (setter) set_trait_is_mapped_flag,
          "Whether the trait is a mapped trait.", NULL},
-        {"no_value_test_flag", (getter) get_trait_no_value_test_flag, NULL,
+        {"no_value_test", (getter) get_trait_no_value_test_flag, NULL,
          "Whether trait changes are fired on every assignment, or only when "
          "the value tests as different.", NULL},
         { 0 }

@@ -1104,7 +1104,7 @@ class _TraitMaker(object):
             post_setattr = getattr(handler, "post_setattr", None)
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
-                trait.is_mapped_flag = handler.is_mapped
+                trait.is_mapped = handler.is_mapped
 
         # Note: The use of 'rich_compare' metadata is deprecated; use
         # 'comparison_mode' metadata instead:

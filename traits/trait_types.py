@@ -1362,7 +1362,7 @@ class Expression(TraitType):
         # Tell the C code that 'setattr' should store the original, unadapted
         # value passed to it:
         ctrait = super(Expression, self).as_ctrait()
-        ctrait.setattr_original_value_flag = True
+        ctrait.setattr_original_value = True
         return ctrait
 
 
@@ -3020,7 +3020,7 @@ class Supports(Instance):
 
         # Tell the C code that the 'post_setattr' method wants the original,
         # unadapted value passed to 'setattr':
-        ctrait.post_setattr_original_value_flag = True
+        ctrait.post_setattr_original_value = True
         return ctrait
 
 
@@ -3043,7 +3043,7 @@ class AdaptsTo(Supports):
     def modify_ctrait(self, ctrait):
         # Tell the C code that 'setattr' should store the original, unadapted
         # value passed to it:
-        ctrait.setattr_original_value_flag = True
+        ctrait.setattr_original_value = True
         return ctrait
 
 
