@@ -1220,7 +1220,7 @@ _has_traits_change_notify ( has_traits_object * obj, PyObject * args ) {
 
     /* Parse arguments, which specify the new trait notification
        enabled/disabled state: */
-        if ( !PyArg_ParseTuple( args, "i", &enabled ) )
+    if ( !PyArg_ParseTuple( args, "p", &enabled ) )
         return NULL;
 
     if ( enabled ) {
@@ -1245,7 +1245,7 @@ _has_traits_veto_notify ( has_traits_object * obj, PyObject * args ) {
 
     /* Parse arguments, which specify the new trait notification veto
        enabled/disabled state: */
-        if ( !PyArg_ParseTuple( args, "i", &enabled ) )
+    if ( !PyArg_ParseTuple( args, "p", &enabled ) )
         return NULL;
 
     if ( enabled ) {
@@ -1279,7 +1279,7 @@ _has_traits_inited ( has_traits_object * obj, PyObject * args ) {
 
     int traits_inited = -1;
 
-        if ( !PyArg_ParseTuple( args, "|i", &traits_inited ) )
+    if ( !PyArg_ParseTuple( args, "|p", &traits_inited ) )
         return NULL;
 
     if ( traits_inited > 0 )
@@ -1300,7 +1300,7 @@ _has_traits_inited ( has_traits_object * obj, PyObject * args ) {
 static PyObject *
 _has_traits_instance_traits ( has_traits_object * obj, PyObject * args ) {
 
-        if ( !PyArg_ParseTuple( args, "" ) )
+    if ( !PyArg_ParseTuple( args, "" ) )
         return NULL;
 
     if ( obj->itrait_dict == NULL )
@@ -1322,7 +1322,7 @@ _has_traits_notifiers ( has_traits_object * obj, PyObject * args ) {
     PyObject * list;
     int force_create;
 
-    if ( !PyArg_ParseTuple( args, "i", &force_create ) )
+    if ( !PyArg_ParseTuple( args, "p", &force_create ) )
         return NULL;
 
     result = (PyObject *) obj->notifiers;
@@ -2674,62 +2674,6 @@ trait_traverse ( trait_object * trait, visitproc visit, void * arg ) {
     Py_VISIT( trait->obj_dict );
 
         return 0;
-}
-
-/*-----------------------------------------------------------------------------
-|  Casts a 'CTrait' which attempts to validate the argument passed as being a
-|  valid value for the trait:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_trait_cast ( trait_object * trait, PyObject * args ) {
-
-    PyObject * obj;
-    PyObject * name;
-    PyObject * value;
-    PyObject * result;
-    PyObject * info;
-
-    switch ( PyTuple_GET_SIZE( args ) ) {
-        case 1:
-            obj   = name = Py_None;
-            value = PyTuple_GET_ITEM( args, 0 );
-            break;
-        case 2:
-            name  = Py_None;
-            obj   = PyTuple_GET_ITEM( args, 0 );
-            value = PyTuple_GET_ITEM( args, 1 );
-            break;
-        case 3:
-            obj   = PyTuple_GET_ITEM( args, 0 );
-            name  = PyTuple_GET_ITEM( args, 1 );
-            value = PyTuple_GET_ITEM( args, 2 );
-            break;
-        default:
-            PyErr_Format( PyExc_TypeError,
-                "Trait cast takes 1, 2 or 3 arguments (%zd given).",
-                PyTuple_GET_SIZE( args ) );
-            return NULL;
-    }
-    if ( trait->validate == NULL ) {
-        Py_INCREF( value );
-        return value;
-    }
-
-        result = trait->validate( trait, (has_traits_object *) obj, name, value );
-    if ( result == NULL ) {
-        PyErr_Clear();
-        info = PyObject_CallMethod( trait->handler, "info", NULL );
-        if ( (info != NULL) && PyUnicode_Check( info ) )
-            PyErr_Format( PyExc_ValueError,
-                "Invalid value for trait, the value should be %U.",
-                info );
-        else
-            PyErr_Format( PyExc_ValueError, "Invalid value for trait." );
-        Py_XDECREF( info );
-    }
-
-    return result;
 }
 
 /*-----------------------------------------------------------------------------
@@ -4094,7 +4038,7 @@ _trait_delegate ( trait_object * trait, PyObject * args ) {
     int prefix_type;
     int modify_delegate;
 
-    if ( !PyArg_ParseTuple( args, "UUii",
+    if ( !PyArg_ParseTuple( args, "UUip",
                             &delegate_name, &delegate_prefix,
                             &prefix_type,   &modify_delegate ) )
         return NULL;
@@ -4127,7 +4071,7 @@ _trait_rich_comparison ( trait_object * trait, PyObject * args ) {
 
     int compare_type;
 
-    if ( !PyArg_ParseTuple( args, "i", &compare_type ) )
+    if ( !PyArg_ParseTuple( args, "p", &compare_type ) )
         return NULL;
 
     trait->flags &= (~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_ID_TEST));
@@ -4160,6 +4104,74 @@ _trait_comparison_mode ( trait_object * trait, PyObject * args ) {
 
     Py_INCREF( Py_None );
     return Py_None;
+}
+
+/*-----------------------------------------------------------------------------
+|  Sets the value of the 'setattr_original_value' flag of a CTrait instance:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_trait_setattr_original_value ( trait_object * trait, PyObject * args ) {
+
+    int original_value;
+
+    if ( !PyArg_ParseTuple( args, "p", &original_value ) )
+        return NULL;
+
+    if ( original_value != 0 ) {
+        trait->flags |= TRAIT_SETATTR_ORIGINAL_VALUE;
+    } else {
+        trait->flags &= (~TRAIT_SETATTR_ORIGINAL_VALUE);
+    }
+
+    Py_INCREF( trait );
+    return (PyObject *) trait;
+}
+
+/*-----------------------------------------------------------------------------
+|  Sets the value of the 'post_setattr_original_value' flag of a CTrait
+|  instance (used in the processing of 'post_settattr' calls):
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_trait_post_setattr_original_value ( trait_object * trait, PyObject * args ) {
+
+    int original_value;
+
+    if ( !PyArg_ParseTuple( args, "p", &original_value ) )
+        return NULL;
+
+    if ( original_value != 0 ) {
+        trait->flags |= TRAIT_POST_SETATTR_ORIGINAL_VALUE;
+    } else {
+        trait->flags &= (~TRAIT_POST_SETATTR_ORIGINAL_VALUE);
+    }
+
+    Py_INCREF( trait );
+    return (PyObject *) trait;
+}
+
+/*-----------------------------------------------------------------------------
+|  Sets the value of the 'is_mapped' flag of a CTrait instance (used in the
+|  processing of the default value of a trait with a 'post_settattr' handler):
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_trait_is_mapped ( trait_object * trait, PyObject * args ) {
+
+    int is_mapped;
+
+    if ( !PyArg_ParseTuple( args, "p", &is_mapped ) )
+        return NULL;
+
+    if ( is_mapped != 0 ) {
+        trait->flags |= TRAIT_IS_MAPPED;
+    } else {
+        trait->flags &= (~TRAIT_IS_MAPPED);
+    }
+
+    Py_INCREF( trait );
+    return (PyObject *) trait;
 }
 
 /*-----------------------------------------------------------------------------
@@ -4634,6 +4646,90 @@ PyDoc_STRVAR(set_default_value_doc,
 "    A value or callable providing the default\n"
 );
 
+PyDoc_STRVAR(default_value_for_doc,
+"default_value_for(object, name)\n"
+"\n"
+"Return the default value of this CTrait instance for a specified object\n"
+"and trait name.\n"
+"\n"
+"Parameters\n"
+"----------\n"
+"object : HasTraits\n"
+"    The object the trait is attached to.\n"
+"name : str\n"
+"    The name of the trait.\n"
+"\n"
+"Returns\n"
+"-------\n"
+"default_value : value\n"
+"    The default value for the given object and name.\n"
+);
+
+PyDoc_STRVAR(set_validate_doc,
+"set_validate(validator)\n"
+"\n"
+"Set the validator of a CTrait instance\n"
+"\n"
+"Parameters\n"
+"----------\n"
+"validator : callable or tuple\n"
+"    Either a callable used for validation, or a tuple representing\n"
+"    validation information.\n"
+"\n"
+"    A callable used for validation should have signature\n"
+"    validator(obj, name, value) -> value, and should return the\n"
+"    validated (and possibly transformed) value. It should raise\n"
+"    TraitError on failure to validate.\n"
+"\n"
+"    If the validator is a tuple, its first entry will be an integer\n"
+"    specifying the type of validation, and the remaining entries\n"
+"    in the tuple (if any) provide additional information specific\n"
+"    to the validation type\n"
+"\n"
+"Raises\n"
+"------\n"
+"ValueError\n"
+"    If the given tuple does not have any of the expected forms.\n"
+);
+
+PyDoc_STRVAR(get_validate_doc,
+"get_validate()\n"
+"\n"
+"Return the validator of a CTrait instance.\n"
+"\n"
+"Returns the current validator for a CTrait instance, or None\n"
+"if the trait has no validator. See also the set_validate\n"
+"method.\n"
+"\n"
+"Returns\n"
+"-------\n"
+"validator : tuple, callable, or None\n"
+);
+
+PyDoc_STRVAR(validate_doc,
+"validate(object, name, value)\n"
+"\n"
+"Perform validation and appropriate conversions on a value for this trait.\n"
+"\n"
+"Parameters\n"
+"----------\n"
+"object : HasTraits\n"
+"    The HasTraits object that validation is being performed for.\n"
+"name : str\n"
+"    The name of the trait.\n"
+"value : object\n"
+"    The value to be validated.\n"
+"\n"
+"Returns\n"
+"-------\n"
+"The validated, converted value.\n"
+"\n"
+"Raises\n"
+"------\n"
+"TraitError\n"
+"    If the given value is invalid for this trait.\n"
+);
+
 PyDoc_STRVAR(_notifiers_doc,
 "_notifiers(force_create)\n"
 "\n"
@@ -4665,13 +4761,13 @@ static PyMethodDef trait_methods[] = {
         { "set_default_value", (PyCFunction) _trait_set_default_value, METH_VARARGS,
                 set_default_value_doc },
         { "default_value_for", (PyCFunction) _trait_default_value_for, METH_VARARGS,
-                PyDoc_STR( "default_value_for(object,name)" ) },
+                default_value_for_doc },
         { "set_validate",  (PyCFunction) _trait_set_validate,  METH_VARARGS,
-                PyDoc_STR( "set_validate(validate_function)" ) },
+                set_validate_doc },
         { "get_validate",  (PyCFunction) _trait_get_validate,  METH_NOARGS,
-                PyDoc_STR( "get_validate()" ) },
+                get_validate_doc },
         { "validate",      (PyCFunction) _trait_validate,      METH_VARARGS,
-                PyDoc_STR( "validate(object,name,value)" ) },
+                validate_doc },
         { "delegate",      (PyCFunction) _trait_delegate,      METH_VARARGS,
                 PyDoc_STR( "delegate(delegate_name,prefix,prefix_type,modify_delegate)" ) },
         { "rich_comparison",  (PyCFunction) _trait_rich_comparison,  METH_VARARGS,
@@ -4682,8 +4778,6 @@ static PyMethodDef trait_methods[] = {
                 PyDoc_STR( "property([get,set,validate])" ) },
         { "clone",         (PyCFunction) _trait_clone,         METH_VARARGS,
                 PyDoc_STR( "clone(trait)" ) },
-        { "cast",          (PyCFunction) _trait_cast,          METH_VARARGS,
-                PyDoc_STR( "cast(value)" ) },
         { "_notifiers",    (PyCFunction) _trait_notifiers,     METH_VARARGS,
                 _notifiers_doc },
         { NULL, NULL },
