@@ -581,6 +581,44 @@ set_value ( PyObject ** field, PyObject * value ) {
 }
 
 /*-----------------------------------------------------------------------------
+|  Gets the value of a flag on a cTrait object specified by a mask.
++----------------------------------------------------------------------------*/
+
+static PyObject *
+get_trait_flag(trait_object * trait, int mask)
+{
+    if ((trait->flags & mask) == 0) {
+        Py_RETURN_FALSE;
+    }
+    else {
+        Py_RETURN_TRUE;
+    }
+}
+
+/*-----------------------------------------------------------------------------
+|  Sets the value of a flag on a cTrait object specified by a mask.
++----------------------------------------------------------------------------*/
+
+static int
+set_trait_flag(trait_object * trait, int mask, PyObject * value)
+{
+    int flag = PyObject_IsTrue(value);
+
+    if (flag == -1) {
+        return -1;
+    }
+
+    if (flag) {
+        trait->flags |= mask;
+    }
+    else {
+        trait->flags &= (~mask);
+    }
+
+    return 0;
+}
+
+/*-----------------------------------------------------------------------------
 |  Returns the result of calling a specified 'class' object with 1 argument:
 +----------------------------------------------------------------------------*/
 
@@ -4464,6 +4502,122 @@ set_trait_post_setattr ( trait_object * trait, PyObject * value,
 }
 
 /*-----------------------------------------------------------------------------
+|  Returns the current property flag value:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+get_trait_property_flag(trait_object * trait, void * closure)
+{
+    return get_trait_flag(trait, TRAIT_PROPERTY);
+}
+
+/*-----------------------------------------------------------------------------
+|  Returns the current modify_delegate flag value:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+get_trait_modify_delegate_flag(trait_object * trait, void * closure )
+{
+    return get_trait_flag(trait, TRAIT_MODIFY_DELEGATE);
+}
+
+/*-----------------------------------------------------------------------------
+|  Sets the current modify_delegate flag value:
++----------------------------------------------------------------------------*/
+
+static int
+set_trait_modify_delegate_flag(trait_object * trait, PyObject * value,
+                               void * closure)
+{
+    return set_trait_flag(trait, TRAIT_MODIFY_DELEGATE, value);
+}
+
+/*-----------------------------------------------------------------------------
+|  Returns the current object_identity flag value:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+get_trait_object_identity_flag(trait_object * trait, void * closure)
+{
+    return get_trait_flag(trait, TRAIT_OBJECT_IDENTITY);
+}
+
+/*-----------------------------------------------------------------------------
+|  Returns the current setattr_original_value flag value:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+get_trait_setattr_original_value_flag(trait_object * trait, void * closure)
+{
+    return get_trait_flag(trait, TRAIT_SETATTR_ORIGINAL_VALUE);
+}
+
+/*-----------------------------------------------------------------------------
+|  Sets the current setattr_original_value flag value:
++----------------------------------------------------------------------------*/
+
+static int
+set_trait_setattr_original_value_flag(trait_object * trait, PyObject * value,
+                                      void * closure)
+{
+    return set_trait_flag(trait, TRAIT_SETATTR_ORIGINAL_VALUE, value);
+}
+
+/*-----------------------------------------------------------------------------
+|  Returns the current post_setattr_original_value flag value:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+get_trait_post_setattr_original_value_flag(trait_object * trait,
+                                           void * closure)
+{
+    return get_trait_flag(trait, TRAIT_POST_SETATTR_ORIGINAL_VALUE);
+}
+
+/*-----------------------------------------------------------------------------
+|  Sets the current post_setattr_original_value flag value:
++----------------------------------------------------------------------------*/
+
+static int
+set_trait_post_setattr_original_value_flag(trait_object * trait,
+                                           PyObject * value,
+                                           void * closure)
+{
+    return set_trait_flag(trait, TRAIT_POST_SETATTR_ORIGINAL_VALUE, value);
+}
+
+/*-----------------------------------------------------------------------------
+|  Returns the current is_mapped flag value:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+get_trait_is_mapped_flag(trait_object * trait, void * closure)
+{
+    return get_trait_flag(trait, TRAIT_IS_MAPPED);
+}
+
+/*-----------------------------------------------------------------------------
+|  Sets the current is_mapped flag value:
++----------------------------------------------------------------------------*/
+
+static int
+set_trait_is_mapped_flag(trait_object * trait, PyObject * value,
+                         void * closure)
+{
+    return set_trait_flag(trait, TRAIT_IS_MAPPED, value);
+}
+
+/*-----------------------------------------------------------------------------
+|  Returns the current no_value_test flag value:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+get_trait_no_value_test_flag(trait_object * trait, void * closure)
+{
+    return get_trait_flag(trait, TRAIT_NO_VALUE_TEST);
+}
+
+/*-----------------------------------------------------------------------------
 |  'CTrait' instance methods:
 +----------------------------------------------------------------------------*/
 
@@ -4643,10 +4797,33 @@ static PyMethodDef trait_methods[] = {
 +----------------------------------------------------------------------------*/
 
 static PyGetSetDef trait_properties[] = {
-        { "__dict__",     (getter) get_trait_dict,    (setter) set_trait_dict },
-        { "handler",      (getter) get_trait_handler, (setter) set_trait_handler },
-        { "post_setattr", (getter) get_trait_post_setattr,
-                      (setter) set_trait_post_setattr },
+        { "__dict__",       (getter) get_trait_dict,    (setter) set_trait_dict },
+        { "handler",        (getter) get_trait_handler, (setter) set_trait_handler },
+        { "post_setattr",   (getter) get_trait_post_setattr,
+                            (setter) set_trait_post_setattr },
+        {"property_flag", (getter) get_trait_property_flag, NULL,
+         "Whether the trait is a property trait.", NULL},
+        {"modify_delegate_flag", (getter) get_trait_modify_delegate_flag,
+         (setter) set_trait_modify_delegate_flag,
+         "Whether changes to the trait modify the delegate as well", NULL},
+        {"object_identity_flag", (getter) get_trait_object_identity_flag,
+         NULL, "Whether change comparisons are by object identity.", NULL},
+        {"setattr_original_value_flag",
+         (getter) get_trait_setattr_original_value_flag,
+         (setter) set_trait_setattr_original_value_flag,
+         "Whether setattr gets the original value set on the trait or the "
+         "stored value,", NULL},
+        {"post_setattr_original_value_flag",
+         (getter) get_trait_post_setattr_original_value_flag,
+         (setter) set_trait_post_setattr_original_value_flag,
+         "Whether post_setattr gets the original value set on the trait or "
+         "the stored value,", NULL},
+        {"is_mapped_flag", (getter) get_trait_is_mapped_flag,
+         (setter) set_trait_is_mapped_flag,
+         "Whether the trait is a mapped trait.", NULL},
+        {"no_value_test_flag", (getter) get_trait_no_value_test_flag, NULL,
+         "Whether trait changes are fired on every assignment, or only when "
+         "the value tests as different.", NULL},
         { 0 }
 };
 
