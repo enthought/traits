@@ -20,6 +20,8 @@ logger = logging.getLogger(__name__)
 
 
 class TraitDictEvent(object):
+    """ An object reporting in-place changes to a traits dicts. """
+
     def __init__(self, added=None, changed=None, removed=None):
         """
         Parameters
@@ -48,6 +50,8 @@ class TraitDictEvent(object):
 
 
 class TraitDictObject(dict):
+    """ A subclass of dict that fires trait events when mutated. """
+
     def __init__(self, trait, object, name, value):
         self.trait = trait
         self.object = ref(object)

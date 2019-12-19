@@ -17,18 +17,19 @@ from .trait_errors import TraitError
 
 class TraitListEvent(object):
     """ An object reporting in-place changes to a traits list.
-
-    Attributes
-    ----------
-    index : int
-        The location of the first change in the list.
-    added : list
-        The list of values added to the list.
-    removed : list
-        The list of values removed from the list.
     """
 
     def __init__(self, index=0, removed=None, added=None):
+        """
+        Parameters
+        ----------
+        index : int
+            The location of the first change in the list.
+        added : list
+            The list of values added to the list.
+        removed : list
+            The list of values removed from the list.
+        """
         self.index = index
 
         if removed is None:
@@ -41,7 +42,7 @@ class TraitListEvent(object):
 
 
 class TraitListObject(list):
-    """ A list subclass that emits trait events when modified. """
+    """ A subclass of list that fires trait events when mutated. """
 
     def __init__(self, trait, object, name, value):
         self.trait = trait

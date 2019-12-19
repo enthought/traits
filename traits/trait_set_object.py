@@ -16,12 +16,17 @@ from .trait_errors import TraitError
 
 
 class TraitSetEvent(object):
-
-    # ---------------------------------------------------------------------------
-    #  Initialize the object:
-    # ---------------------------------------------------------------------------
+    """ An object reporting in-place changes to a traits sets. """
 
     def __init__(self, removed=None, added=None):
+        """
+        Parameters
+        ----------
+        added : dict
+            New values added to the set.
+        removed : dict
+            Old values that were removed.
+        """
         if removed is None:
             removed = set()
         self.removed = removed
@@ -32,6 +37,8 @@ class TraitSetEvent(object):
 
 
 class TraitSetObject(set):
+    """ A subclass of set that fires trait events when mutated. """
+
     def __init__(self, trait, object, name, value):
         self.trait = trait
         self.object = ref(object)
