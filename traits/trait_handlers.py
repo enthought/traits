@@ -50,6 +50,7 @@ from .trait_base import (
     Self,
 )
 from .trait_errors import TraitError
+from .trait_list_object import TraitListEvent, TraitListObject
 
 
 # Patched by 'traits.py' once class is defined!
