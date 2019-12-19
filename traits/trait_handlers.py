@@ -2115,13 +2115,10 @@ class TraitDict(TraitHandler):
 
 
 # -------------------------------------------------------------------------------
-#  Tell the C-based traits module about 'TraitListObject', 'TraitSetObject and
-#  'TraitDictObject', and the PyProtocols 'adapt' function:
+#  Tell the C-based traits module about the PyProtocols 'adapt' function:
 # -------------------------------------------------------------------------------
 
 from . import ctraits
-
-ctraits._list_classes(TraitListObject, TraitSetObject, TraitDictObject)
 
 
 def _adapt_wrapper(*args, **kw):
