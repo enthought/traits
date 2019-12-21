@@ -133,8 +133,8 @@ def _infer_default_value_type(default_value):
         return DefaultValue.missing
     elif default_value is Self:
         return DefaultValue.object
-    elif isinstance(default_value, TraitListObject):
-        return DefaultValue.trait_list_object
+    #elif isinstance(default_value, TraitListObject):
+    #    return DefaultValue.trait_list_object
     elif isinstance(default_value, TraitDictObject):
         return DefaultValue.trait_dict_object
     elif isinstance(default_value, TraitSetObject):
