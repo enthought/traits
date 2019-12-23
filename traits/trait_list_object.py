@@ -74,7 +74,10 @@ class TraitList(list):
             If validatation fails.
         """
         if self.validator is None:
-            return list(value)
+            if isinstance(index, slice):
+                return list(value)
+            else:
+                return value
         else:
             return self.validator(self, index, removed, value)
 
