@@ -311,7 +311,13 @@ invalid_attribute_error ( PyObject * name ) {
 static int
 bad_trait_error ( void ) {
 
-    PyErr_SetString( TraitError, "Invalid argument to trait constructor." );
+    if (TraitError != NULL) {
+        PyErr_SetString(TraitError, "Invalid argument to trait constructor.");
+    }
+    else {
+        // TraitError hasn't been set yet, use generic exception.
+        PyErr_SetString(PyExc_Exception, "Invalid argument to trait constructor.");
+    }
 
     return -1;
 }
