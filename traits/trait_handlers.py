@@ -38,6 +38,7 @@ import sys
 from types import FunctionType, MethodType
 from weakref import ref
 
+from .constants import DefaultValue, TraitKind, ValidateTrait
 from .trait_base import (
     strx,
     SequenceTypes,
@@ -64,53 +65,9 @@ logger = logging.getLogger(__name__)
 #  Constants:
 # -------------------------------------------------------------------------------
 
-# Trait 'comparison_mode' enum values:
-NO_COMPARE = 0
-OBJECT_IDENTITY_COMPARE = 1
-RICH_COMPARE = 2
-
 RangeTypes = (int, float)
 
 CallableTypes = (FunctionType, MethodType)
-
-
-#: Default value types
-#: The default value type has not been specified
-UNSPECIFIED_DEFAULT_VALUE = -1
-#: The default_value of the trait is the default value.
-CONSTANT_DEFAULT_VALUE = 0
-#: The default_value of the trait is Missing.
-MISSING_DEFAULT_VALUE = 1
-#: The object containing the trait is the default value.
-OBJECT_DEFAULT_VALUE = 2
-#: A new copy of the list specified by default_value is the default value.
-LIST_COPY_DEFAULT_VALUE = 3
-#: A new copy of the dict specified by default_value is the default value.
-DICT_COPY_DEFAULT_VALUE = 4
-#: A new instance of TraitListObject constructed using the default_value list
-#: is the default value.
-TRAIT_LIST_OBJECT_DEFAULT_VALUE = 5
-#: A new instance of TraitDictObject constructed using the default_value dict
-#: is the default value.
-TRAIT_DICT_OBJECT_DEFAULT_VALUE = 6
-#: The default_value is a tuple of the form: (*callable*, *args*, *kw*),
-#: where *callable* is a callable, *args* is a tuple, and *kw* is either a
-#: dictionary or None. The default value is the result obtained by invoking
-#: ``callable(\*args, \*\*kw)``.
-CALLABLE_AND_ARGS_DEFAULT_VALUE = 7
-#: The default_value is a callable. The default value is the result obtained
-#: by invoking *default_value*(*object*), where *object* is the object
-#: containing the trait. If the trait has a validate() method, the validate()
-#: method is also called to validate the result.
-CALLABLE_DEFAULT_VALUE = 8
-#: A new instance of TraitSetObject constructed using the default_value set
-#: is the default value.
-TRAIT_SET_OBJECT_DEFAULT_VALUE = 9
-
-#: Maximum legal value for default_value_type, for use in testing
-#: and validation.
-MAXIMUM_DEFAULT_VALUE_TYPE = 9
-
 
 # Mapping from trait metadata 'type' to CTrait 'type':
 trait_types = {"python": 1, "event": 2}
@@ -172,21 +129,21 @@ def _infer_default_value_type(default_value):
     Figure out the appropriate default value type given a default value.
     """
     if default_value is Missing:
-        return MISSING_DEFAULT_VALUE
+        return DefaultValue.missing
     elif default_value is Self:
-        return OBJECT_DEFAULT_VALUE
+        return DefaultValue.object
     elif isinstance(default_value, TraitListObject):
-        return TRAIT_LIST_OBJECT_DEFAULT_VALUE
+        return DefaultValue.trait_list_object
     elif isinstance(default_value, TraitDictObject):
-        return TRAIT_DICT_OBJECT_DEFAULT_VALUE
+        return DefaultValue.trait_dict_object
     elif isinstance(default_value, TraitSetObject):
-        return TRAIT_SET_OBJECT_DEFAULT_VALUE
+        return DefaultValue.trait_set_object
     elif isinstance(default_value, list):
-        return LIST_COPY_DEFAULT_VALUE
+        return DefaultValue.list_copy
     elif isinstance(default_value, dict):
-        return DICT_COPY_DEFAULT_VALUE
+        return DefaultValue.dict_copy
     else:
-        return CONSTANT_DEFAULT_VALUE
+        return DefaultValue.constant
 
 
 # -------------------------------------------------------------------------------
@@ -211,7 +168,7 @@ class BaseTraitHandler(object):
           wider range of cases, such as interactions with other components.
     """
 
-    default_value_type = UNSPECIFIED_DEFAULT_VALUE
+    default_value_type = DefaultValue.unspecified
     has_items = False
     is_mapped = False
     editor = None
@@ -624,7 +581,7 @@ class TraitType(BaseTraitHandler):
             elif setter is None:
                 setter = _read_only
                 metadata.setdefault("transient", True)
-            trait = CTrait(4)
+            trait = CTrait(TraitKind.property)
             n = 0
             validate = getattr(self, "validate", None)
             if validate is not None:
@@ -823,7 +780,7 @@ class TraitCoerceType(TraitHandler):
         try:
             self.fast_validate = CoercableTypes[aType]
         except:
-            self.fast_validate = (11, aType)
+            self.fast_validate = (ValidateTrait.coerce, aType)
 
     def validate(self, object, name, value):
         fv = self.fast_validate
@@ -933,7 +890,7 @@ class TraitCastType(TraitCoerceType):
         if not isinstance(aType, type):
             aType = type(aType)
         self.aType = aType
-        self.fast_validate = (12, aType)
+        self.fast_validate = (ValidateTrait.cast, aType)
 
     def validate(self, object, name, value):
 
@@ -973,9 +930,9 @@ class ThisClass(TraitHandler):
         if allow_none:
             self.validate = self.validate_none
             self.info = self.info_none
-            self.fast_validate = (2, None)
+            self.fast_validate = (ValidateTrait.self_type, None)
         else:
-            self.fast_validate = (2,)
+            self.fast_validate = (ValidateTrait.self_type,)
 
     def validate(self, object, name, value):
         if isinstance(value, object.__class__):
@@ -1070,11 +1027,11 @@ class TraitInstance(ThisClass):
             self.set_fast_validate()
 
     def set_fast_validate(self):
-        fast_validate = [1, self.aClass]
+        fast_validate = [ValidateTrait.instance, self.aClass]
         if self._allow_none:
-            fast_validate = [1, None, self.aClass]
+            fast_validate = [ValidateTrait.instance, None, self.aClass]
         if self.aClass in TypeTypes:
-            fast_validate[0] = 0
+            fast_validate[0] = ValidateTrait.type
         self.fast_validate = tuple(fast_validate)
 
     def validate(self, object, name, value):
@@ -1269,7 +1226,7 @@ class TraitFunction(TraitHandler):
         if not isinstance(aFunc, CallableTypes):
             raise TraitError("Argument must be callable.")
         self.aFunc = aFunc
-        self.fast_validate = (13, aFunc)
+        self.fast_validate = (ValidateTrait.function, aFunc)
 
     def validate(self, object, name, value):
         try:
@@ -1334,7 +1291,7 @@ class TraitEnum(TraitHandler):
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
         self.values = tuple(values)
-        self.fast_validate = (5, self.values)
+        self.fast_validate = (ValidateTrait.enum, self.values)
 
     def validate(self, object, name, value):
         if value in self.values:
@@ -1412,7 +1369,7 @@ class TraitPrefixList(TraitHandler):
         self.values_ = values_ = {}
         for key in values:
             values_[key] = key
-        self.fast_validate = (10, values_, self.validate)
+        self.fast_validate = (ValidateTrait.prefix_map, values_, self.validate)
 
     def validate(self, object, name, value):
         try:
@@ -1502,7 +1459,7 @@ class TraitMap(TraitHandler):
             trait attribute.
         """
         self.map = map
-        self.fast_validate = (6, map)
+        self.fast_validate = (ValidateTrait.map, map)
 
     def validate(self, object, name, value):
         try:
@@ -1573,7 +1530,7 @@ class TraitPrefixMap(TraitMap):
         self._map = _map = {}
         for key in map.keys():
             _map[key] = key
-        self.fast_validate = (10, _map, self.validate)
+        self.fast_validate = (ValidateTrait.prefix_map, _map, self.validate)
 
     def validate(self, object, name, value):
         try:
@@ -1715,7 +1672,7 @@ class TraitCompound(TraitHandler):
             if len(slow_validates) > 0:
                 fast_validates.append((8, self))
             # Create the 'complex' fast validator:
-            self.fast_validate = (7, tuple(fast_validates))
+            self.fast_validate = (ValidateTrait.complex, tuple(fast_validates))
         elif hasattr(self, "fast_validate"):
             del self.fast_validate
 
@@ -1830,7 +1787,7 @@ class TraitTuple(TraitHandler):
         *trait*\ :sub:`i`.
         """
         self.types = tuple([trait_from(arg) for arg in args])
-        self.fast_validate = (9, self.types)
+        self.fast_validate = (ValidateTrait.tuple, self.types)
 
     def validate(self, object, name, value):
         try:
@@ -1945,7 +1902,7 @@ class TraitList(TraitHandler):
     """
 
     info_trait = None
-    default_value_type = TRAIT_LIST_OBJECT_DEFAULT_VALUE
+    default_value_type = DefaultValue.trait_list_object
     _items_event = None
 
     def __init__(
@@ -2740,7 +2697,7 @@ class TraitDict(TraitHandler):
     """
 
     info_trait = None
-    default_value_type = TRAIT_DICT_OBJECT_DEFAULT_VALUE
+    default_value_type = DefaultValue.trait_list_object
     _items_event = None
 
     def __init__(self, key_trait=None, value_trait=None, has_items=True):

@@ -52,6 +52,7 @@ from types import FunctionType, MethodType
 NoneType = type(None)  # Python 3's types does not include NoneType
 
 from . import trait_handlers
+from .constants import DefaultValue, TraitKind, default_value_map
 from .ctraits import cTrait
 from .trait_errors import TraitError
 from .trait_base import (
@@ -80,40 +81,10 @@ from .trait_handlers import (
     _undefined_get,
     _undefined_set,
     _infer_default_value_type,
-    UNSPECIFIED_DEFAULT_VALUE,
-    CONSTANT_DEFAULT_VALUE,
-    MISSING_DEFAULT_VALUE,
-    OBJECT_DEFAULT_VALUE,
-    LIST_COPY_DEFAULT_VALUE,
-    DICT_COPY_DEFAULT_VALUE,
-    TRAIT_LIST_OBJECT_DEFAULT_VALUE,
-    TRAIT_DICT_OBJECT_DEFAULT_VALUE,
-    CALLABLE_AND_ARGS_DEFAULT_VALUE,
-    CALLABLE_DEFAULT_VALUE,
-    TRAIT_SET_OBJECT_DEFAULT_VALUE,
     TraitListObject,
     TraitDictObject,
     TraitSetObject,
 )
-
-
-# -------------------------------------------------------------------------------
-#  Constants:
-# -------------------------------------------------------------------------------
-
-# Mapping from 'ctrait' default value types to a string representation:
-KindMap = {
-    CONSTANT_DEFAULT_VALUE: "value",
-    MISSING_DEFAULT_VALUE: "value",
-    OBJECT_DEFAULT_VALUE: "self",
-    LIST_COPY_DEFAULT_VALUE: "list",
-    DICT_COPY_DEFAULT_VALUE: "dict",
-    TRAIT_LIST_OBJECT_DEFAULT_VALUE: "list",
-    TRAIT_DICT_OBJECT_DEFAULT_VALUE: "dict",
-    CALLABLE_AND_ARGS_DEFAULT_VALUE: "factory",
-    CALLABLE_DEFAULT_VALUE: "method",
-    TRAIT_SET_OBJECT_DEFAULT_VALUE: "set",
-}
 
 # -------------------------------------------------------------------------------
 #  Editor factory functions:
@@ -354,23 +325,23 @@ class CTrait(cTrait):
     def default(self):
         kind, value = self.default_value()
         if kind in (
-            OBJECT_DEFAULT_VALUE,
-            CALLABLE_AND_ARGS_DEFAULT_VALUE,
-            CALLABLE_DEFAULT_VALUE,
+            DefaultValue.object,
+            DefaultValue.callable_and_args,
+            DefaultValue.callable,
         ):
             return Undefined
         elif kind in (
-            DICT_COPY_DEFAULT_VALUE,
-            TRAIT_DICT_OBJECT_DEFAULT_VALUE,
-            TRAIT_SET_OBJECT_DEFAULT_VALUE,
+            DefaultValue.dict_copy,
+            DefaultValue.trait_dict_object,
+            DefaultValue.trait_set_object,
         ):
             return value.copy()
         elif kind in (
-            LIST_COPY_DEFAULT_VALUE,
-            TRAIT_LIST_OBJECT_DEFAULT_VALUE,
+            DefaultValue.list_copy,
+            DefaultValue.trait_list_object,
         ):
             return value[:]
-        elif kind in (CONSTANT_DEFAULT_VALUE, MISSING_DEFAULT_VALUE):
+        elif kind in {DefaultValue.constant, DefaultValue.missing}:
             return value
         else:
             # This shouldn't ever happen.
@@ -380,7 +351,7 @@ class CTrait(cTrait):
 
     @property
     def default_kind(self):
-        return KindMap[self.default_value()[0]]
+        return default_value_map[self.default_value()[0]]
 
     @property
     def trait_type(self):
@@ -834,15 +805,16 @@ def Trait(*value_type, **metadata):
         more information on trait editors.
     comparison_mode : int
         Indicates when trait change notifications should be generated based upon
-        the result of comparing the old and new values of a trait assignment:
+        the result of comparing the old and new values of a trait assignment.
+        Possible values come from the ``ComparisonMode`` enum:
 
-        * 0 (NO_COMPARE): The values are not compared and a trait change
+        * 0 (no_compare): The values are not compared and a trait change
           notification is generated on each assignment.
-        * 1 (OBJECT_IDENTITY_COMPARE): A trait change notification is
+        * 1 (object_id_compare): A trait change notification is
           generated if the old and new values are not the same object.
-        * 2 (RICH_COMPARE): A trait change notification is generated if the
-          old and new values are not equal using Python's
-          'rich comparison' operator. This is the default.
+        * 2 (equality_compare): A trait change notification is generated if the
+          old and new values are not equal using Python's standard equality
+          testing. This is the default.
 
     rich_compare : bool
         Indicates whether the basis for considering a trait attribute value to
@@ -886,7 +858,7 @@ class _TraitMaker(object):
     # ---------------------------------------------------------------------------
 
     def define(self, *value_type, **metadata):
-        default_value_type = UNSPECIFIED_DEFAULT_VALUE
+        default_value_type = DefaultValue.unspecified
         default_value = handler = clone = None
 
         if len(value_type) > 0:
@@ -974,7 +946,7 @@ class _TraitMaker(object):
 
                         elif isinstance(default_value, _InstanceArgs):
                             default_value_type = (
-                                CALLABLE_AND_ARGS_DEFAULT_VALUE
+                                DefaultValue.callable_and_args
                             )
                             default_value = (
                                 handler.create_default_value,
@@ -988,14 +960,14 @@ class _TraitMaker(object):
 
                             if typeValue is dict:
                                 default_value_type = (
-                                    CALLABLE_AND_ARGS_DEFAULT_VALUE
+                                    DefaultValue.callable_and_args
                                 )
                                 default_value = (aClass, (), default_value)
                             elif not isinstance(default_value, aClass):
                                 if typeValue is not tuple:
                                     default_value = (default_value,)
                                 default_value_type = (
-                                    CALLABLE_AND_ARGS_DEFAULT_VALUE
+                                    DefaultValue.callable_and_args
                                 )
                                 default_value = (aClass, default_value, None)
                 else:
@@ -1020,7 +992,7 @@ class _TraitMaker(object):
 
         if default_value_type < 0:
             if isinstance(default_value, Default):
-                default_value_type = CALLABLE_AND_ARGS_DEFAULT_VALUE
+                default_value_type = DefaultValue.callable_and_args
                 default_value = default_value.default_value
             else:
                 if (handler is None) and (clone is not None):
@@ -1084,7 +1056,7 @@ class _TraitMaker(object):
 
     def as_ctrait(self):
         metadata = self.metadata
-        trait = CTrait(self.type_map.get(metadata.get("type"), 0))
+        trait = CTrait(self.type_map.get(metadata.get("type"), TraitKind.trait))
         clone = self.clone
         if clone is not None:
             trait.clone(clone)
@@ -1255,7 +1227,7 @@ def Property(
         metadata.setdefault("cached", True)
 
     n = 0
-    trait = CTrait(4)
+    trait = CTrait(TraitKind.property)
     trait.__dict__ = metadata.copy()
     if fvalidate is not None:
         n = _arg_count(fvalidate)
@@ -1311,7 +1283,7 @@ SpecialNames = {
 # -------------------------------------------------------------------------------
 
 # Generic trait with 'object' behavior:
-generic_trait = CTrait(8)
+generic_trait = CTrait(TraitKind.generic)
 
 # -------------------------------------------------------------------------------
 #  User interface related color and font traits:
