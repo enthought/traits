@@ -22,8 +22,6 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-import sys
-
 from .trait_base import class_of
 
 # -------------------------------------------------------------------------------
@@ -135,12 +133,3 @@ class DelegationError(TraitError):
     def __init__(self, args):
         # .args must be a tuple.
         self.args = (args,)
-
-
-# -------------------------------------------------------------------------------
-#  Export the defined exceptions to the C-base traits module:
-# -------------------------------------------------------------------------------
-
-from . import ctraits
-
-ctraits._exceptions(TraitError, DelegationError)

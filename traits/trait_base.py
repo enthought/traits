@@ -136,11 +136,6 @@ class _Undefined(object):
 #: parameter, to indicate that the attribute previously had no value.
 Undefined = _Undefined()
 
-# Tell the C-base code about singleton 'Undefined' and 'Uninitialized' objects:
-from . import ctraits
-
-ctraits._undefined(Undefined, Uninitialized)
-
 # -------------------------------------------------------------------------------
 #  Singleton 'Missing' object (used as missing method argument marker):
 # -------------------------------------------------------------------------------
