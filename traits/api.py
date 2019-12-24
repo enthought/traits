@@ -21,9 +21,7 @@ Use this module for importing Traits names into your namespace. For example::
     from traits.api import HasTraits
 """
 
-from .constants import (
-    ComparisonMode
-)
+from .constants import ComparisonMode
 
 from .trait_base import Uninitialized, Undefined, Missing, Self
 

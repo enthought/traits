@@ -84,7 +84,7 @@ SetTypes = SequenceTypes + (set,)
 
 # A few words about the next block of code:
 
-# Validator #ValidateTrait.coerce is a generic validator for possibly coercible types
+# The coerce validator is a generic validator for possibly coercible types
 # (see validate_trait_coerce_type in ctraits.c).
 #
 # The tuples below are of the form
