@@ -843,7 +843,7 @@ trait_handlers.Trait = Trait
 class _TraitMaker(object):
 
     # Ctrait type map for special trait types:
-    type_map = {"event": 2, "constant": 7}
+    type_map = {"event": TraitKind.event, "constant": TraitKind.constant}
 
     # ---------------------------------------------------------------------------
     #  Initialize the object:

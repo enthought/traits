@@ -1653,7 +1653,7 @@ class BaseRange(TraitType):
 
         if vtype is float:
             self._validate = "float_validate"
-            kind = 4
+            kind = ValidateTrait.float_range
             self._type_desc = "a floating point number"
             if low is not None:
                 low = float(low)
@@ -1663,7 +1663,7 @@ class BaseRange(TraitType):
 
         elif vtype is int:
             self._validate = "int_validate"
-            kind = 3
+            kind = ValidateTrait.int_range
             self._type_desc = "an integer"
             if low is not None:
                 low = int(low)
@@ -1974,7 +1974,7 @@ class BaseEnum(TraitType):
 
             self.name = ""
             self.values = tuple(args)
-            self.init_fast_validator(5, self.values)
+            self.init_fast_validator(ValidateTrait.enum, self.values)
 
         super(BaseEnum, self).__init__(default_value, **metadata)
 
@@ -2116,7 +2116,7 @@ class BaseTuple(TraitType):
                 types = [Trait(element) for element in default_value]
 
         self.types = tuple([trait_from(type) for type in types])
-        self.init_fast_validator(9, self.types)
+        self.init_fast_validator(ValidateTrait.tuple, self.types)
 
         if default_value is None:
             default_value = tuple(

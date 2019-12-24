@@ -1633,7 +1633,7 @@ class TraitCompound(TraitHandler):
             fv = getattr(handler, "fast_validate", None)
             if fv is not None:
                 validates.append(handler.validate)
-                if fv[0] == 7:
+                if fv[0] == ValidateTrait.complex:
                     # If this is a nested complex fast validator, expand its
                     # contents and adds its list to our list:
                     fast_validates.extend(fv[1])
@@ -1670,7 +1670,7 @@ class TraitCompound(TraitHandler):
             # If there are any 'slow' validators, add a special handler at
             # the end of the fast validator list to handle them:
             if len(slow_validates) > 0:
-                fast_validates.append((8, self))
+                fast_validates.append((ValidateTrait.slow, self))
             # Create the 'complex' fast validator:
             self.fast_validate = (ValidateTrait.complex, tuple(fast_validates))
         elif hasattr(self, "fast_validate"):
