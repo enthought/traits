@@ -59,7 +59,7 @@ class ValidateTrait(IntEnum):
     self_type = 2
 
     #: An integer range check (unused).
-    integer_range = 3
+    int_range = 3
 
     #: A floating-point range check.
     float_range = 4
@@ -73,7 +73,7 @@ class ValidateTrait(IntEnum):
     #: A complex fast validator check with multiple fast validators.
     complex = 7
 
-    #: A slow validator (unused).
+    #: A slow validator (only used in complex validators).
     slow = 8
 
     #: A tuple type check.
