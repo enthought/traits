@@ -23,6 +23,7 @@
 # -------------------------------------------------------------------------------
 
 import datetime
+import enum
 import operator
 import re
 import sys
@@ -36,6 +37,7 @@ from .trait_base import (
     strx,
     get_module_name,
     class_of,
+    EnumTypes,
     SequenceTypes,
     TypeTypes,
     Undefined,
@@ -1972,15 +1974,21 @@ class BaseEnum(TraitType):
             self.get, self.set, self.validate = self._get, self._set, None
         else:
             default_value = args[0]
-            if (len(args) == 1) and isinstance(default_value, SequenceTypes):
+            if (len(args) == 1) and isinstance(default_value, EnumTypes):
                 args = default_value
-                default_value = args[0]
-            elif (len(args) == 2) and isinstance(args[1], SequenceTypes):
+                if isinstance(default_value, enum.EnumMeta):
+                    default_value = tuple(args)[0]
+                else:
+                    default_value = args[0]
+            elif (len(args) == 2) and isinstance(args[1], EnumTypes):
                 args = args[1]
 
             self.name = ""
             self.values = tuple(args)
             self.init_fast_validator(5, self.values)
+            if isinstance(args, enum.EnumMeta):
+                self.format_func = operator.attrgetter('value')
+                self.evaluate = args
 
         super(BaseEnum, self).__init__(default_value, **metadata)
 
@@ -2023,7 +2031,8 @@ class BaseEnum(TraitType):
             name=self.name,
             cols=self.cols or 3,
             evaluate=self.evaluate,
-            mode=self.mode or "radio",
+            mode=self.mode if self.mode else "radio",
+            format_func=getattr(self, 'format_func', None),
         )
 
     def _get(self, object, name, trait):

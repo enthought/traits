@@ -24,6 +24,7 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
+import enum
 import os
 import sys
 from os import getcwd
@@ -39,6 +40,8 @@ enumerate = enumerate
 # -------------------------------------------------------------------------------
 
 SequenceTypes = (list, tuple)
+
+EnumTypes = (list, tuple, enum.EnumMeta)
 
 ComplexTypes = (float, int)
 
