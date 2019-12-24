@@ -10,6 +10,7 @@ Traits core
     traits
     has_traits
     interface_checker
+    constants
     trait_base
     trait_errors
     trait_handlers
