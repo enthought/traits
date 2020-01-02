@@ -208,14 +208,6 @@ from .trait_handlers import (
     RICH_COMPARE,
 )
 
-from .trait_value import (
-    BaseTraitValue,
-    TraitValue,
-    SyncValue,
-    TypeValue,
-    DefaultValue,
-)
-
 from .adaptation.adapter import Adapter
 from .adaptation.adaptation_error import AdaptationError
 from .adaptation.adaptation_manager import (
