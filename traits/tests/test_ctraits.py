@@ -21,6 +21,21 @@ from traits.trait_handlers import (
 )
 
 
+def getter():
+    """ Trivial getter. """
+    return True
+
+
+def setter(value):
+    """ Trivial setter. """
+    pass
+
+
+def validator(value):
+    """ Trivial validator. """
+    return value
+
+
 class TestCTrait(unittest.TestCase):
     """ Tests for the CTrait class. """
 
@@ -63,3 +78,75 @@ class TestCTrait(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             trait.set_default_value(MAXIMUM_DEFAULT_VALUE_TYPE + 1, None)
+
+    def test_property_flag(self):
+        trait = CTrait(0)
+
+        self.assertFalse(trait.property_flag)
+
+        trait.property(getter, 0, setter, 1, validator, 1)
+
+        self.assertTrue(trait.property_flag)
+
+        with self.assertRaises(AttributeError):
+            trait.property_flag = False
+
+    def test_modify_delegate_flag(self):
+        trait = CTrait(0)
+
+        self.assertFalse(trait.modify_delegate_flag)
+
+        trait.modify_delegate_flag = True
+
+        self.assertTrue(trait.modify_delegate_flag)
+
+    def test_object_identity_flag(self):
+        trait = CTrait(0)
+
+        self.assertFalse(trait.object_identity_flag)
+
+        trait.comparison_mode(1)
+
+        self.assertTrue(trait.object_identity_flag)
+
+        with self.assertRaises(AttributeError):
+            trait.object_identity_flag = False
+
+    def test_setattr_original_value_flag(self):
+        trait = CTrait(0)
+
+        self.assertFalse(trait.setattr_original_value_flag)
+
+        trait.setattr_original_value_flag = True
+
+        self.assertTrue(trait.setattr_original_value_flag)
+
+    def test_post_setattr_original_value_flag(self):
+        trait = CTrait(0)
+
+        self.assertFalse(trait.post_setattr_original_value_flag)
+
+        trait.post_setattr_original_value_flag = True
+
+        self.assertTrue(trait.post_setattr_original_value_flag)
+
+    def test_is_mapped_flag(self):
+        trait = CTrait(0)
+
+        self.assertFalse(trait.is_mapped_flag)
+
+        trait.is_mapped_flag = True
+
+        self.assertTrue(trait.is_mapped_flag)
+
+    def test_no_value_test_flag(self):
+        trait = CTrait(0)
+
+        self.assertFalse(trait.no_value_test_flag)
+
+        trait.comparison_mode(0)
+
+        self.assertTrue(trait.no_value_test_flag)
+
+        with self.assertRaises(AttributeError):
+            trait.no_value_test_flag = False

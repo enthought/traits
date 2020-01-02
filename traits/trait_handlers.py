@@ -662,7 +662,7 @@ class TraitType(BaseTraitHandler):
             post_setattr = getattr(self, "post_setattr", None)
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
-                trait.is_mapped(self.is_mapped)
+                trait.is_mapped_flag = self.is_mapped
 
             # Note: The use of 'rich_compare' metadata is deprecated; use
             # 'comparison_mode' metadata instead:
@@ -677,8 +677,6 @@ class TraitType(BaseTraitHandler):
             metadata.setdefault("type", "trait")
 
         trait.set_default_value(*self.get_default_value())
-
-        trait.value_allowed(metadata.get("trait_value", False) is True)
 
         trait.handler = self
 

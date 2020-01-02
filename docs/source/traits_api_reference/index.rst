@@ -15,7 +15,6 @@ Traits core
     trait_handlers
     trait_numeric
     trait_types
-    trait_value
     traits_listener
     trait_notifiers
     editor_factories
