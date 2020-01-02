@@ -41,7 +41,7 @@ enumerate = enumerate
 
 SequenceTypes = (list, tuple)
 
-EnumTypes = (list, tuple, enum.EnumMeta)
+EnumTypes = (list, tuple, set, enum.EnumMeta)
 
 ComplexTypes = (float, int)
 
@@ -206,6 +206,23 @@ CoercableTypes = {
     float: (11, float, int),
     complex: (11, complex, float, int),
 }
+
+
+def collection_default(collection):
+    """ Get the first item of a collection, returning None if empty.
+
+    Parameters
+    ----------
+    collection : collection
+        A Python collection, which is presumed to be repeatably iterable.
+
+    Returns
+    -------
+    default : any
+        The first item of the collectio, or None if the collection is empty.
+    """
+    return next(iter(collection), None)
+
 
 # -------------------------------------------------------------------------------
 #  Return a string containing the class name of an object with the correct

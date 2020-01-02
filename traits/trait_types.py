@@ -22,8 +22,8 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
+from collections.abc import MutableSequence
 import datetime
-import enum
 import operator
 import re
 import sys
@@ -37,11 +37,13 @@ from .trait_base import (
     strx,
     get_module_name,
     class_of,
+    collection_default,
     EnumTypes,
     SequenceTypes,
     TypeTypes,
     Undefined,
     TraitsCache,
+    xgetattr,
 )
 
 from .trait_handlers import (
@@ -1950,8 +1952,16 @@ class BaseEnum(TraitType):
 
         Parameters
         ----------
-        values : list or tuple
-            The enumeration of all legal values for the trait
+        *args : *values or (default, values) or values
+            The enumeration of all legal values for the trait, either as
+            positional arguments or a list, enum.Enum or tuple.  The default
+            value is the first positional argument, or the first item of
+            the sequence.
+        values : str
+            The name of a trait holding the values, in which case there
+            must be at most one positional argument holding the default
+            value.  If there is no default value, then the default value
+            is the first item of the value stored in the trait.
 
         Default Value
         -------------
@@ -1959,38 +1969,32 @@ class BaseEnum(TraitType):
         """
         values = metadata.pop("values", None)
         if isinstance(values, str):
+            self.name = values
+            self.get, self.set, self.validate = self._get, self._set, None
             n = len(args)
             if n == 0:
-                default_value = None
+                super(BaseEnum, self).__init__(**metadata)
             elif n == 1:
                 default_value = args[0]
+                super(BaseEnum, self).__init__(default_value, **metadata)
             else:
                 raise TraitError(
                     "Incorrect number of arguments specified "
                     "when using the 'values' keyword"
                 )
-            self.name = values
-            self.values = compile("object." + values, "<string>", "eval")
-            self.get, self.set, self.validate = self._get, self._set, None
         else:
             default_value = args[0]
             if (len(args) == 1) and isinstance(default_value, EnumTypes):
                 args = default_value
-                if isinstance(default_value, enum.EnumMeta):
-                    default_value = tuple(args)[0]
-                else:
-                    default_value = args[0]
+                default_value = collection_default(args)
             elif (len(args) == 2) and isinstance(args[1], EnumTypes):
                 args = args[1]
 
             self.name = ""
             self.values = tuple(args)
             self.init_fast_validator(5, self.values)
-            if isinstance(args, enum.EnumMeta):
-                self.format_func = operator.attrgetter('value')
-                self.evaluate = args
 
-        super(BaseEnum, self).__init__(default_value, **metadata)
+            super(BaseEnum, self).__init__(default_value, **metadata)
 
     def init_fast_validator(self, *args):
         """ Does nothing for the BaseEnum class. Used in the Enum class to set
@@ -2013,7 +2017,7 @@ class BaseEnum(TraitType):
         if self.name == "":
             values = self.values
         else:
-            values = eval(self.values)
+            values = xgetattr(object, self.name)
 
         return " or ".join([repr(x) for x in values])
 
@@ -2032,25 +2036,22 @@ class BaseEnum(TraitType):
             cols=self.cols or 3,
             evaluate=self.evaluate,
             mode=self.mode if self.mode else "radio",
-            format_func=getattr(self, 'format_func', None),
         )
 
     def _get(self, object, name, trait):
         """ Returns the current value of a dynamic enum trait.
         """
         value = self.get_value(object, name, trait)
-        values = eval(self.values)
+        values = xgetattr(object, self.name)
         if value not in values:
-            value = None
-            if len(values) > 0:
-                value = values[0]
+            value = collection_default(values)
 
         return value
 
     def _set(self, object, name, value):
         """ Sets the current value of a dynamic range trait.
         """
-        if value in eval(self.values):
+        if value in xgetattr(object, self.name):
             self.set_value(object, name, value)
         else:
             self.error(object, name, value)
