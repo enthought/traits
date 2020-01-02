@@ -13,6 +13,7 @@
 import unittest
 import warnings
 
+import traits.ctraits
 from traits.traits import CTrait
 from traits.trait_handlers import (
     CONSTANT_DEFAULT_VALUE,
@@ -150,3 +151,35 @@ class TestCTrait(unittest.TestCase):
 
         with self.assertRaises(AttributeError):
             trait.no_value_test_flag = False
+
+    def test_module_constants_exist(self):
+        ctraits_module_constants = [
+            # CHasTraits flags
+            "_HASTRAITS_INITED",
+            "_HASTRAITS_NO_NOTIFY",
+            "_HASTRAITS_VETO_NOTIFY",
+            # cTrait flags
+            "_TRAIT_PROPERTY",
+            "_TRAIT_MODIFY_DELEGATE",
+            "_TRAIT_MODIFY_DELEGATE",
+            "_TRAIT_OBJECT_IDENTITY",
+            "_TRAIT_SETATTR_ORIGINAL_VALUE",
+            "_TRAIT_POST_SETATTR_ORIGINAL_VALUE",
+            "_TRAIT_IS_MAPPED",
+            "_TRAIT_NO_VALUE_TEST",
+            # Default value type constants
+            "_CONSTANT_DEFAULT_VALUE",
+            "_MISSING_DEFAULT_VALUE",
+            "_OBJECT_DEFAULT_VALUE",
+            "_LIST_COPY_DEFAULT_VALUE",
+            "_DICT_COPY_DEFAULT_VALUE",
+            "_TRAIT_LIST_OBJECT_DEFAULT_VALUE",
+            "_TRAIT_DICT_OBJECT_DEFAULT_VALUE",
+            "_CALLABLE_AND_ARGS_DEFAULT_VALUE",
+            "_CALLABLE_DEFAULT_VALUE",
+            "_TRAIT_SET_OBJECT_DEFAULT_VALUE",
+            "_MAXIMUM_DEFAULT_VALUE_TYPE",
+        ]
+        for var in ctraits_module_constants:
+            cnst = getattr(traits.ctraits, var)
+            self.assertIsInstance(cnst, int)
