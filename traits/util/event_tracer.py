@@ -20,24 +20,21 @@ import threading
 from contextlib import contextmanager
 from datetime import datetime
 
-import six
-
 from traits import trait_notifiers
 
 
 CHANGEMSG = (
-    u"{time} {direction:-{direction}{length}} {name!r} changed from "
+    "{time} {direction:-{direction}{length}} {name!r} changed from "
     "{old!r} to {new!r} in {class_name!r}\n"
 )
-CALLINGMSG = u"{time} {action:>{gap}}: {handler!r} in {source}\n"
+CALLINGMSG = "{time} {action:>{gap}}: {handler!r} in {source}\n"
 EXITMSG = (
-    u"{time} {direction:-{direction}{length}} "
+    "{time} {direction:-{direction}{length}} "
     "EXIT: {handler!r}{exception}\n"
 )
 SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE = 9
 
 
-@six.python_2_unicode_compatible
 class SentinelRecord(object):
     """ Sentinel record to separate groups of chained change event dispatches.
 
@@ -46,10 +43,9 @@ class SentinelRecord(object):
     __slots__ = ()
 
     def __str__(self):
-        return u"\n"
+        return "\n"
 
 
-@six.python_2_unicode_compatible
 class ChangeMessageRecord(object):
     """ Message record for a change event dispatch.
 
@@ -84,7 +80,6 @@ class ChangeMessageRecord(object):
         )
 
 
-@six.python_2_unicode_compatible
 class CallingMessageRecord(object):
     """ Message record for a change handler call.
 
@@ -113,7 +108,6 @@ class CallingMessageRecord(object):
         )
 
 
-@six.python_2_unicode_compatible
 class ExitMessageRecord(object):
     """ Message record for returning from a change event dispatch.
 
@@ -165,7 +159,7 @@ class RecordContainer(object):
         """
         with open(filename, "w") as fh:
             for record in self._records:
-                fh.write(six.text_type(record))
+                fh.write(str(record))
 
 
 class MultiThreadRecordContainer(object):
@@ -205,7 +199,7 @@ class MultiThreadRecordContainer(object):
         """
         with self._creation_lock:
             containers = self._record_containers
-            for thread_name, container in six.iteritems(containers):
+            for thread_name, container in containers.items():
                 filename = os.path.join(
                     directory_name, "{0}.trace".format(thread_name)
                 )

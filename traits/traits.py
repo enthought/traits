@@ -46,12 +46,8 @@ Visualization:
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 import sys
 from types import FunctionType, MethodType
-
-import six
 
 NoneType = type(None)  # Python 3's types does not include NoneType
 
@@ -76,7 +72,6 @@ from .trait_handlers import (
     TraitEnum,
     TraitCompound,
     TraitMap,
-    TraitString,
     ThisClass,
     TraitType,
     _arg_count,
@@ -175,7 +170,7 @@ def bytes_editor(auto_set=True, enter_set=False, encoding=None):
         from traitsui.api import TextEditor
 
         if encoding is None:
-            # py3-compatible bytes <-> hex unicode string
+            # py3-compatible bytes <-> hex string
             format = lambda b: b.encode("hex").decode("ascii")
             evaluate = lambda s: s.encode("ascii").decode("hex")
         else:
@@ -531,44 +526,6 @@ class CTrait(cTrait):
     def __reduce_ex__(self, protocol):
         return (__newobj__, (self.__class__, 0), self.__getstate__())
 
-    # ---------------------------------------------------------------------------
-    #  Registers listeners on an assigned 'TraitValue' object's 'value'
-    #  property:
-    # ---------------------------------------------------------------------------
-
-    def _register(self, object, name):
-        """ Registers listeners on an assigned 'TraitValue' object's 'value'
-            property.
-        """
-
-        def handler():
-            object.trait_property_changed(name, None)
-
-        tv = self._trait_value
-        handlers = tv._handlers
-        if handlers is None:
-            tv._handlers = handlers = {}
-        handlers[(id(object), name)] = handler
-
-        tv.on_trait_change(handler, "value")
-
-    # ---------------------------------------------------------------------------
-    #  Unregisters listeners on an assigned 'TraitValue' object's 'value'
-    #  property:
-    # ---------------------------------------------------------------------------
-
-    def _unregister(self, object, name):
-        """ Unregisters listeners on an assigned 'TraitValue' object's 'value'
-            property.
-        """
-        tv = self._trait_value
-        handlers = tv._handlers
-        key = (id(object), name)
-        handler = handlers.get(key)
-        if handler is not None:
-            del handlers[key]
-            tv.on_trait_change(handler, "value", remove=True)
-
 
 # Make sure the Python-level version of the trait class is known to all
 # interested parties:
@@ -580,11 +537,10 @@ ctraits._ctrait(CTrait)
 #  Constants:
 # -------------------------------------------------------------------------------
 
-ConstantTypes = (NoneType, int, float, complex, str, six.text_type)
+ConstantTypes = (NoneType, int, float, complex, str)
 
 PythonTypes = (
     str,
-    six.text_type,
     int,
     float,
     complex,
@@ -597,21 +553,12 @@ PythonTypes = (
     NoneType,
 )
 
-if six.PY2:
-    from types import InstanceType, ClassType
-
-    PythonTypes = (
-        PythonTypes[:-2] + (InstanceType, ClassType) + PythonTypes[2:]
-    )
-
-
 CallableTypes = (FunctionType, MethodType)
 
 TraitTypes = (TraitHandler, CTrait)
 
 DefaultValues = {
     str: "",
-    six.text_type: "",
     int: 0,
     float: 0.0,
     complex: 0j,
@@ -973,17 +920,7 @@ class _TraitMaker(object):
 
                 else:
                     typeValue = type(default_value)
-
-                    if isinstance(default_value, six.string_types):
-                        string_options = self.extract(
-                            metadata, "min_len", "max_len", "regex"
-                        )
-                        if len(string_options) == 0:
-                            handler = TraitCastType(typeValue)
-                        else:
-                            handler = TraitString(**string_options)
-
-                    elif typeValue in TypeTypes:
+                    if typeValue in TypeTypes:
                         handler = TraitCastType(typeValue)
 
                     else:
@@ -1154,7 +1091,7 @@ class _TraitMaker(object):
             if clone.__dict__ is not None:
                 trait.__dict__ = clone.__dict__.copy()
 
-        trait.default_value(self.default_value_type, self.default_value)
+        trait.set_default_value(self.default_value_type, self.default_value)
 
         handler = self.handler
         if handler is not None:
@@ -1167,7 +1104,7 @@ class _TraitMaker(object):
             post_setattr = getattr(handler, "post_setattr", None)
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
-                trait.is_mapped(handler.is_mapped)
+                trait.is_mapped_flag = handler.is_mapped
 
         # Note: The use of 'rich_compare' metadata is deprecated; use
         # 'comparison_mode' metadata instead:
@@ -1179,8 +1116,6 @@ class _TraitMaker(object):
         if comparison_mode is not None:
             trait.comparison_mode(comparison_mode)
 
-        trait.value_allowed(metadata.get("trait_value", False) is True)
-
         if len(metadata) > 0:
             if trait.__dict__ is None:
                 trait.__dict__ = metadata
@@ -1188,18 +1123,6 @@ class _TraitMaker(object):
                 trait.__dict__.update(metadata)
 
         return trait
-
-    # ---------------------------------------------------------------------------
-    #  Extract a set of keywords from a dictionary:
-    # ---------------------------------------------------------------------------
-
-    def extract(self, from_dict, *keys):
-        to_dict = {}
-        for key in keys:
-            if key in from_dict:
-                to_dict[key] = from_dict[key]
-                del from_dict[key]
-        return to_dict
 
 
 # -------------------------------------------------------------------------------
@@ -1368,7 +1291,6 @@ SpecialNames = {
     ###   'float':   trait_factory( Float ),
     ###   'complex': trait_factory( Complex ),
     ###   'str':     trait_factory( Str ),
-    ###   'unicode': trait_factory( Unicode ),
     ###   'bool':    trait_factory( Bool ),
     ###   'list':    trait_factory( List ),
     ###   'tuple':   trait_factory( Tuple ),

@@ -9,14 +9,7 @@ the iteration. As this is not a common use for such caches, we have not
 bothered to make these dicts robust to that case.
 """
 
-try:
-    # Collections Abstract Base Classes was moved to the collections.abc 
-    # module in python 3.3
-    # This try expect block can be removed when python 2 support is dropped.
-    from collections.abc import MutableMapping
-except ImportError:
-    from collections import MutableMapping
-
+from collections.abc import MutableMapping
 from weakref import ref
 
 

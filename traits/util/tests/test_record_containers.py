@@ -16,8 +16,6 @@ import tempfile
 import threading
 import unittest
 
-import six
-
 from traits.util.event_tracer import (
     SentinelRecord,
     RecordContainer,
@@ -65,7 +63,7 @@ class TestRecordContainers(unittest.TestCase):
         thread_1.join()
 
         self.assertEqual(len(container._record_containers), 3)
-        for collector in six.itervalues(container._record_containers):
+        for collector in container._record_containers.values():
             self.assertTrue(isinstance(collector._records[0], SentinelRecord))
             self.assertEqual(len(collector._records), 1)
 

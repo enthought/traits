@@ -17,7 +17,7 @@ Tests for the Float trait type.
 """
 import unittest
 
-from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
+from traits.api import BaseFloat, Either, Float, HasTraits, Str, TraitError
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
@@ -45,7 +45,7 @@ class FloatModel(HasTraits):
     # validate_trait_complex in ctraits.c).
     value_or_none = Either(None, Float)
 
-    float_or_text = Either(Float, Unicode)
+    float_or_text = Either(Float, Str)
 
 
 class BaseFloatModel(HasTraits):
@@ -53,7 +53,7 @@ class BaseFloatModel(HasTraits):
 
     value_or_none = Either(None, BaseFloat)
 
-    float_or_text = Either(Float, Unicode)
+    float_or_text = Either(Float, Str)
 
 
 class CommonFloatTests(object):
@@ -123,8 +123,8 @@ class CommonFloatTests(object):
         # Check that a failure to convert to float doesn't terminate
         # an assignment to a compound trait.
         a = self.test_class()
-        a.float_or_text = u"not a float"
-        self.assertEqual(a.float_or_text, u"not a float")
+        a.float_or_text = "not a float"
+        self.assertEqual(a.float_or_text, "not a float")
 
     def test_accepts_small_integer(self):
         a = self.test_class()

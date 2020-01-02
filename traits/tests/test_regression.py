@@ -3,9 +3,6 @@ import gc
 import sys
 import unittest
 
-import six
-import six.moves as sm
-
 from traits.has_traits import (
     HasStrictTraits,
     HasTraits,
@@ -177,11 +174,11 @@ class TestRegression(unittest.TestCase):
         """
         dummy = Dummy()
         ctrait = dummy._trait("x", 2)
-        self.assertEqual(len(ctrait._notifiers(1)), 0)
+        self.assertEqual(len(ctrait._notifiers(True)), 0)
         presenter = Presenter(obj=dummy)
-        self.assertEqual(len(ctrait._notifiers(1)), 1)
+        self.assertEqual(len(ctrait._notifiers(True)), 1)
         del presenter
-        self.assertEqual(len(ctrait._notifiers(1)), 0)
+        self.assertEqual(len(ctrait._notifiers(True)), 0)
 
     def test_init_list_depends(self):
         """ Using two lists with bracket notation in extended name notation
@@ -210,7 +207,7 @@ class TestRegression(unittest.TestCase):
             obj.on_trait_change(handler)
 
         # Warmup.
-        for _ in sm.range(cycles):
+        for _ in range(cycles):
             f()
             gc.collect()
             counts.append(len(gc.get_objects()))
@@ -223,7 +220,7 @@ class TestRegression(unittest.TestCase):
         cycles = 10
         counts = []
 
-        for _ in sm.range(cycles):
+        for _ in range(cycles):
             DelegateLeak()
             gc.collect()
             counts.append(len(gc.get_objects()))
@@ -262,17 +259,13 @@ class TestRegression(unittest.TestCase):
         with self.assertRaises(TraitError):
             StrictDummy(forbidden=53)
 
-        if six.PY2:
-            with self.assertRaises(TraitError):
-                StrictDummy(**{b"forbidden": 53})
-
         # This is the case that used to fail on Python 2.
         with self.assertRaises(TraitError):
-            StrictDummy(**{u"forbidden": 53})
+            StrictDummy(**{"forbidden": 53})
 
         a = StrictDummy()
         with self.assertRaises(TraitError):
-            setattr(a, u"forbidden", 53)
+            setattr(a, "forbidden", 53)
 
     def test_validate_exception_propagates(self):
         class A(HasTraits):

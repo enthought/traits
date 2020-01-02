@@ -22,13 +22,9 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 import sys
 
 from .trait_base import class_of
-
-from . import _py2to3
 
 # -------------------------------------------------------------------------------
 #  Utilities
@@ -39,7 +35,7 @@ def repr_type(obj):
     """ Return a string representation of a value and its type for readable
     error messages.
     """
-    the_type = _py2to3.type_w_old_style(obj)
+    the_type = type(obj)
     msg = "%r %r" % (obj, the_type)
     return msg
 
@@ -89,7 +85,6 @@ class TraitError(Exception):
 
         # Note: self.args must be a tuple so be sure to leave the trailing
         # commas.
-        the_type = _py2to3.type_w_old_style(self.value)
         if obj is not None:
             self.args = (
                 (

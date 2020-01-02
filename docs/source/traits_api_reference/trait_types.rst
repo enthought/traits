@@ -9,8 +9,6 @@ Traits
 
 .. autoclass:: Any
 
-.. autoclass:: Generic
-
 .. autoclass:: BaseInt
 
 .. autoclass:: Int
@@ -28,10 +26,6 @@ Traits
 .. autoclass:: Str
 
 .. autoclass:: Title
-
-.. autoclass:: BaseUnicode
-
-.. autoclass:: Unicode
 
 .. autoclass:: BaseBytes
 
@@ -56,10 +50,6 @@ Traits
 .. autoclass:: BaseCStr
 
 .. autoclass:: CStr
-
-.. autoclass:: BaseCUnicode
-
-.. autoclass:: CUnicode
 
 .. autoclass:: BaseCBytes
 
@@ -176,6 +166,36 @@ Traits
 
 .. autodata:: Time
 
+Deprecated Traits
+-----------------
+
+The following :class:`~.TraitType` classes and instances are deprecated,
+and may be removed in a future version of Traits.
+
+.. deprecated:: 6.0.0
+
+.. autodata:: BaseUnicode
+
+.. autodata:: Unicode
+
+.. autodata:: BaseCUnicode
+
+.. autodata:: CUnicode
+
+.. autodata:: BaseLong
+
+.. autodata:: Long
+
+.. autodata:: BaseCLong
+
+.. autodata:: CLong
+
+.. autodata:: false
+
+.. autodata:: true
+
+.. autodata:: undefined
+
 .. autodata:: ListInt
 
 .. autodata:: ListFloat
@@ -205,6 +225,7 @@ Traits
 .. autodata:: DictStrBool
 
 .. autodata:: DictStrList
+
 
 Private Classes
 ---------------

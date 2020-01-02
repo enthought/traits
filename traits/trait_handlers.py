@@ -31,17 +31,11 @@ consistent.
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
-import sys
-import re
 import copy
-
-import six
-import six.moves as sm
-
+import copyreg
+import re
+import sys
 from types import FunctionType, MethodType
-
 from weakref import ref
 
 from .trait_base import (
@@ -49,7 +43,6 @@ from .trait_base import (
     SequenceTypes,
     Undefined,
     TypeTypes,
-    ClassTypes,
     CoercableTypes,
     TraitsCache,
     class_of,
@@ -57,8 +50,6 @@ from .trait_base import (
     Self,
 )
 from .trait_errors import TraitError
-
-from . import _py2to3
 
 
 # Patched by 'traits.py' once class is defined!
@@ -115,6 +106,10 @@ CALLABLE_DEFAULT_VALUE = 8
 #: A new instance of TraitSetObject constructed using the default_value set
 #: is the default value.
 TRAIT_SET_OBJECT_DEFAULT_VALUE = 9
+
+#: Maximum legal value for default_value_type, for use in testing
+#: and validation.
+MAXIMUM_DEFAULT_VALUE_TYPE = 9
 
 
 # Mapping from trait metadata 'type' to CTrait 'type':
@@ -526,7 +521,7 @@ class TraitType(BaseTraitHandler):
 
         return (dvt, dv)
 
-    def clone(self, default_value=Missing, **metadata):
+    def clone(self, default_value=NoDefaultSpecified, **metadata):
         """ Clones the contents of this object into a new instance of the same
             class, and then modifies the cloned copy using the specified
             *default_value* and *metadata*. Returns the cloned object as the
@@ -552,7 +547,7 @@ class TraitType(BaseTraitHandler):
 
         new._metadata.update(metadata)
 
-        if default_value is not Missing:
+        if default_value is not NoDefaultSpecified:
             new.default_value = default_value
             if self.validate is not None:
                 try:
@@ -667,7 +662,7 @@ class TraitType(BaseTraitHandler):
             post_setattr = getattr(self, "post_setattr", None)
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
-                trait.is_mapped(self.is_mapped)
+                trait.is_mapped_flag = self.is_mapped
 
             # Note: The use of 'rich_compare' metadata is deprecated; use
             # 'comparison_mode' metadata instead:
@@ -681,9 +676,7 @@ class TraitType(BaseTraitHandler):
 
             metadata.setdefault("type", "trait")
 
-        trait.default_value(*self.get_default_value())
-
-        trait.value_allowed(metadata.get("trait_value", False) is True)
+        trait.set_default_value(*self.get_default_value())
 
         trait.handler = self
 
@@ -763,129 +756,6 @@ class TraitHandler(BaseTraitHandler):
 
 
 # -------------------------------------------------------------------------------
-#  'TraitString' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitString(TraitHandler):
-    """ Ensures that a trait attribute value is a string that satisfied some
-    additional, optional constraints.
-
-    The optional constraints include minimum and maximum lengths, and a regular
-    expression that the string must match.
-
-    If the value assigned to the trait attribute is a Python numeric type, the
-    TraitString handler first coerces the value to a string. Values of other
-    non-string types result in a TraitError being raised. The handler then
-    makes sure that the resulting string is within the specified length range
-    and that it matches the regular expression.
-
-    Example
-    -------
-
-    class Person(HasTraits):
-        name = Trait('', TraitString(maxlen=50, regex=r'^[A-Za-z]*$'))
-
-
-    This example defines a **Person** class with a **name** attribute, which
-    must be a string of between 0 and 50 characters that consist of only
-    upper and lower case letters.
-    """
-
-    def __init__(self, minlen=0, maxlen=six.MAXSIZE, regex=""):
-        """ Creates a TraitString handler.
-
-        Parameters
-        ----------
-        minlen : int
-            The minimum length allowed for the string.
-        maxlen : int
-            The maximum length allowed for the string.
-        regex : str
-            A Python regular expression that the string must match.
-
-        """
-        self.minlen = max(0, minlen)
-        self.maxlen = max(self.minlen, maxlen)
-        self.regex = regex
-        self._init()
-
-    def _init(self):
-        if self.regex != "":
-            self.match = re.compile(self.regex).match
-            if (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
-                self.validate = self.validate_regex
-        elif (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
-            self.validate = self.validate_str
-        else:
-            self.validate = self.validate_len
-
-    def validate(self, object, name, value):
-        try:
-            value = strx(value)
-            if (self.minlen <= len(value) <= self.maxlen) and (
-                self.match(value) is not None
-            ):
-                return value
-        except:
-            pass
-        self.error(object, name, value)
-
-    def validate_str(self, object, name, value):
-        try:
-            return strx(value)
-        except:
-            pass
-        self.error(object, name, value)
-
-    def validate_len(self, object, name, value):
-        try:
-            value = strx(value)
-            if self.minlen <= len(value) <= self.maxlen:
-                return value
-        except:
-            pass
-        self.error(object, name, value)
-
-    def validate_regex(self, object, name, value):
-        try:
-            value = strx(value)
-            if self.match(value) is not None:
-                return value
-        except:
-            pass
-        self.error(object, name, value)
-
-    def info(self):
-        msg = ""
-        if (self.minlen != 0) and (self.maxlen != six.MAXSIZE):
-            msg = " between %d and %d characters long" % (
-                self.minlen,
-                self.maxlen,
-            )
-        elif self.maxlen != six.MAXSIZE:
-            msg = " <= %d characters long" % self.maxlen
-        elif self.minlen != 0:
-            msg = " >= %d characters long" % self.minlen
-        if self.regex != "":
-            if msg != "":
-                msg += " and"
-            msg += " matching the pattern '%s'" % self.regex
-        return "a string" + msg
-
-    def __getstate__(self):
-        result = self.__dict__.copy()
-        for name in ["validate", "match"]:
-            if name in result:
-                del result[name]
-        return result
-
-    def __setstate__(self, state):
-        self.__dict__.update(state)
-        self._init()
-
-
-# -------------------------------------------------------------------------------
 #  'TraitCoerceType' class:
 # -------------------------------------------------------------------------------
 
@@ -929,7 +799,6 @@ class TraitCoerceType(TraitHandler):
     ============ =================
     complex      float, int
     float        int
-    unicode      str
     ============ =================
     """
 
@@ -1145,9 +1014,6 @@ class ThisClass(TraitHandler):
 #  'TraitInstance' class:
 # -------------------------------------------------------------------------------
 
-# Mapping from 'adapt' parameter values to 'fast validate' values
-AdaptMap = {"no": -1, "yes": 0, "default": 1}
-
 
 class TraitInstance(ThisClass):
     """Ensures that trait attribute values belong to a specified Python class
@@ -1170,7 +1036,7 @@ class TraitInstance(ThisClass):
     (i.e., no coercion is performed).
     """
 
-    def __init__(self, aClass, allow_none=True, adapt="no", module=""):
+    def __init__(self, aClass, allow_none=True, module=""):
         """Creates a TraitInstance handler.
 
         Parameters
@@ -1180,14 +1046,6 @@ class TraitInstance(ThisClass):
         allow_none : bool
             Flag indicating whether None is accepted as a valid value.
             (True or non-zero) or not (False or 0)
-        adapt : str
-            Value indicating how adaptation should be handled:
-
-            - 'no' (-1): Adaptation is not allowed.
-            - 'yes' (0): Adaptation is allowed and should raise an exception if
-              adaptation fails.
-            - 'default' (1): Adaption is allowed and should return the default
-              value if adaptation fails.
         module : module
             The module that the class belongs to.
 
@@ -1197,12 +1055,11 @@ class TraitInstance(ThisClass):
         of.
         """
         self._allow_none = allow_none
-        self.adapt = AdaptMap[adapt]
         self.module = module
-        if isinstance(aClass, six.string_types):
+        if isinstance(aClass, str):
             self.aClass = aClass
         else:
-            if not isinstance(aClass, ClassTypes):
+            if not isinstance(aClass, type):
                 aClass = aClass.__class__
             self.aClass = aClass
             self.set_fast_validate()
@@ -1213,24 +1070,14 @@ class TraitInstance(ThisClass):
             self.set_fast_validate()
 
     def set_fast_validate(self):
-        if self.adapt < 0:
-            fast_validate = [1, self.aClass]
-            if self._allow_none:
-                fast_validate = [1, None, self.aClass]
-            if self.aClass in TypeTypes:
-                fast_validate[0] = 0
-            self.fast_validate = tuple(fast_validate)
-        else:
-            self.fast_validate = (
-                19,
-                self.aClass,
-                self.adapt,
-                self._allow_none,
-            )
+        fast_validate = [1, self.aClass]
+        if self._allow_none:
+            fast_validate = [1, None, self.aClass]
+        if self.aClass in TypeTypes:
+            fast_validate[0] = 0
+        self.fast_validate = tuple(fast_validate)
 
     def validate(self, object, name, value):
-
-        from traits.adaptation.api import adapt
 
         if value is None:
             if self._allow_none:
@@ -1238,23 +1085,11 @@ class TraitInstance(ThisClass):
             else:
                 self.validate_failed(object, name, value)
 
-        if isinstance(self.aClass, six.string_types):
+        if isinstance(self.aClass, str):
             self.resolve_class(object, name, value)
 
-        if self.adapt < 0:
-            if isinstance(value, self.aClass):
-                return value
-        elif self.adapt == 0:
-            try:
-                return adapt(value, self.aClass)
-            except:
-                pass
-        else:
-            # fixme: The 'None' value is not really correct. It should return
-            # the default value for the trait, but the handler does not have
-            # any way to know this currently. Since the 'fast validate' code
-            # does the correct thing, this should not normally be a problem.
-            return adapt(value, self.aClass, None)
+        if isinstance(value, self.aClass):
+            return value
 
         self.validate_failed(object, name, value)
 
@@ -1263,13 +1098,7 @@ class TraitInstance(ThisClass):
         if type(aClass) is not str:
             aClass = aClass.__name__
 
-        if self.adapt < 0:
-            result = class_of(aClass)
-        else:
-            result = (
-                "an implementor of, or can be adapted to implement, %s"
-                % aClass
-            )
+        result = class_of(aClass)
 
         if self._allow_none:
             return result + " or None"
@@ -1321,40 +1150,12 @@ class TraitInstance(ThisClass):
 
     def create_default_value(self, *args, **kw):
         aClass = args[0]
-        if isinstance(aClass, six.string_types):
+        if isinstance(aClass, str):
             aClass = self.validate_class(self.find_class(aClass))
             if aClass is None:
                 raise TraitError("Unable to locate class: " + args[0])
 
         return aClass(*args[1:], **kw)
-
-
-# -------------------------------------------------------------------------------
-#  'TraitWeakRef' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitWeakRef(TraitInstance):
-    def _get(self, object, name):
-        value = getattr(object, name + "_", None)
-        if value is not None:
-            return value.value()
-        return None
-
-    def _set(self, object, name, value):
-        if value is not None:
-            value = HandleWeakRef(object, name, value)
-        object.__dict__[name + "_"] = value
-
-    def resolve_class(self, object, name, value):
-        # fixme: We have to override this method to prevent the 'fast validate'
-        # from being set up, since the trait using this is a 'property' style
-        # trait which is not currently compatible with the 'fast_validate'
-        # style (causes internal Python SystemError messages).
-        aClass = self.find_class(self.aClass)
-        if aClass is None:
-            self.validate_failed(object, name, value)
-        self.aClass = aClass
 
 
 # -- Private Class --------------------------------------------------------------
@@ -1405,13 +1206,11 @@ class TraitClass(TraitHandler):
         If *aClass* is an instance, it is mapped to the class it is an instance
         of.
         """
-        if _py2to3.is_old_style_instance(aClass):
-            aClass = aClass.__class__
         self.aClass = aClass
 
     def validate(self, object, name, value):
         try:
-            if isinstance(value, six.string_types):
+            if isinstance(value, str):
                 value = value.strip()
                 col = value.rfind(".")
                 if col >= 0:
@@ -2150,7 +1949,7 @@ class TraitList(TraitHandler):
     _items_event = None
 
     def __init__(
-        self, trait=None, minlen=0, maxlen=six.MAXSIZE, has_items=True
+        self, trait=None, minlen=0, maxlen=sys.maxsize, has_items=True
     ):
         """ Creates a TraitList handler.
 
@@ -2192,12 +1991,12 @@ class TraitList(TraitHandler):
 
     def full_info(self, object, name, value):
         if self.minlen == 0:
-            if self.maxlen == six.MAXSIZE:
+            if self.maxlen == sys.maxsize:
                 size = "items"
             else:
                 size = "at most %d items" % self.maxlen
         else:
-            if self.maxlen == six.MAXSIZE:
+            if self.maxlen == sys.maxsize:
                 size = "at least %d items" % self.minlen
             else:
                 size = "from %s to %s items" % (self.minlen, self.maxlen)
@@ -2356,11 +2155,6 @@ class TraitListObject(list):
             excp.set_prefix("Each element of the")
             raise excp
 
-    if six.PY2:
-
-        def __setslice__(self, i, j, values):
-            self.__setitem__(slice(i, j), values)
-
     def __delitem__(self, key):
         trait = getattr(self, "trait", None)
         if trait is None:
@@ -2397,11 +2191,6 @@ class TraitListObject(list):
             self._send_trait_items_event(
                 self.name_items, TraitListEvent(index, removed)
             )
-
-    if six.PY2:
-
-        def __delslice__(self, i, j):
-            self.__delitem__(slice(i, j))
 
     def __iadd__(self, other):
         self.extend(other)
@@ -2560,21 +2349,9 @@ class TraitListObject(list):
         else:
             self.len_error(len(self) - 1)
 
-    if six.PY2:
-
-        def sort(self, cmp=None, key=None, reverse=False):
-            removed = self[:]
-            list.sort(self, cmp=cmp, key=key, reverse=reverse)
-            self._sort_common(removed)
-
-    else:
-
-        def sort(self, key=None, reverse=False):
-            removed = self[:]
-            list.sort(self, key=key, reverse=reverse)
-            self._sort_common(removed)
-
-    def _sort_common(self, removed):
+    def sort(self, key=None, reverse=False):
+        removed = self[:]
+        list.sort(self, key=key, reverse=reverse)
         if (
             getattr(self, "name_items", None) is not None
             and getattr(self, "trait", None) is not None
@@ -2863,7 +2640,7 @@ class TraitSetObject(set):
         """ Overridden to make sure we call our custom __getstate__.
         """
         return (
-            sm.copyreg._reconstructor,
+            copyreg._reconstructor,
             (type(self), set, list(self)),
             self.__getstate__(),
         )
@@ -3080,7 +2857,7 @@ class TraitDictObject(dict):
             self.trait,
             lambda: None,
             self.name,
-            dict([copy.deepcopy(x, memo) for x in six.iteritems(self)]),
+            dict(copy.deepcopy(x, memo) for x in self.items()),
         )
 
         return result
@@ -3170,7 +2947,7 @@ class TraitDictObject(dict):
             if self.name_items is not None:
                 added = {}
                 changed = {}
-                for key, value in six.iteritems(new_dic):
+                for key, value in new_dic.items():
                     if key in self:
                         changed[key] = self[key]
                     else:
@@ -3264,7 +3041,7 @@ class TraitDictObject(dict):
             value_validate = lambda object, name, value: value
 
         object = self.object()
-        for key, value in six.iteritems(dic):
+        for key, value in dic.items():
             try:
                 key = key_validate(object, name, key)
             except TraitError as excp:

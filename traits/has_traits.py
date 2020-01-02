@@ -25,17 +25,14 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import, division, print_function
-
 import abc
 import copy as copy_module
 import os
+import pickle
 import re
 import weakref
 
 from types import FunctionType, MethodType
-
-import six
 
 from . import __version__ as TraitsVersion
 
@@ -73,7 +70,6 @@ from .trait_handlers import (
 )
 
 from .trait_base import (
-    Missing,
     SequenceTypes,
     TraitsCache,
     Undefined,
@@ -106,8 +102,7 @@ CHECK_INTERFACES = 0
 # -------------------------------------------------------------------------------
 
 
-@six.add_metaclass(abc.ABCMeta)
-class AbstractViewElement(object):
+class AbstractViewElement(abc.ABC):
     pass
 
 
@@ -120,15 +115,9 @@ WrapperTypes = (
     StaticTraitChangeNotifyWrapper,
 )
 
-if six.PY2:
-    BoundMethodTypes = (MethodType,)
-    UnboundMethodTypes = (MethodType,)
-else:
-    # in python 3, unbound methods do not exist anymore, they're just functions
-    BoundMethodTypes = (MethodType,)
-    UnboundMethodTypes = (FunctionType,)
-
-
+# In Python 3, unbound methods do not exist anymore, they're just functions
+BoundMethodTypes = (MethodType,)
+UnboundMethodTypes = (FunctionType,)
 FunctionTypes = (FunctionType,)
 
 # Class dictionary entries used to save trait, listener and view information and
@@ -210,10 +199,7 @@ def _get_def(class_name, class_dict, bases, method):
         if (
             (result is not None)
             and is_unbound_method_type(result)
-            and (
-                getattr(six.get_unbound_function, "on_trait_change", None)
-                is None
-            )
+            and (getattr(result, "on_trait_change", None) is None)
         ):
             return result
 
@@ -432,7 +418,7 @@ def _add_event_handlers(trait, cls, handlers):
     """
     events = trait.event
     if events is not None:
-        if isinstance(events, six.string_types):
+        if isinstance(events, str):
             events = [events]
 
         for event in events:
@@ -519,7 +505,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
 
     Parameters
     ----------
-    class_name : str or unicode
+    class_name : str
         The name of the HasTraits class.
     bases : tuple
         The base classes for the HasTraits class.
@@ -604,7 +590,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                         )
                 elif value_type == "event":
                     on_trait_change = value.on_trait_change
-                    if isinstance(on_trait_change, six.string_types):
+                    if isinstance(on_trait_change, str):
                         listeners[name] = ("event", on_trait_change)
             else:
                 name = name[:-1]
@@ -647,7 +633,8 @@ def update_traits_class_dict(class_name, bases, class_dict):
                     class_traits[name] = value = ictrait(default_value)
                     # Make sure that the trait now has the default value
                     # has the correct initializer.
-                    value.default_value(MISSING_DEFAULT_VALUE, value.default)
+                    value.set_default_value(
+                        MISSING_DEFAULT_VALUE, value.default)
                     del class_dict[name]
                     handler = value.handler
                     if (handler is not None) and handler.is_mapped:
@@ -751,7 +738,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
         events = trait.event
         if events is not None:
 
-            if isinstance(events, six.string_types):
+            if isinstance(events, str):
                 events = [events]
 
             for event in events:
@@ -775,10 +762,10 @@ def update_traits_class_dict(class_name, bases, class_dict):
                 class_traits[name] = trait = _clone_trait(trait)
 
             if len(handlers) > 0:
-                _add_notifiers(trait._notifiers(1), handlers)
+                _add_notifiers(trait._notifiers(True), handlers)
 
             if default is not None:
-                trait.default_value(CALLABLE_DEFAULT_VALUE, default)
+                trait.set_default_value(CALLABLE_DEFAULT_VALUE, default)
 
         # Handle the case of properties whose value depends upon the value
         # of other traits:
@@ -1022,8 +1009,7 @@ def weak_arg(arg):
 # -------------------------------------------------------------------------------
 
 
-@six.add_metaclass(MetaHasTraits)
-class HasTraits(CHasTraits):
+class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     """ Enables any Python class derived from it to have trait attributes.
 
     Most of the methods of HasTraits operated by default only on the trait
@@ -1068,7 +1054,7 @@ class HasTraits(CHasTraits):
     # -- Trait Definitions ------------------------------------------------------
 
     #: An event fired when a new trait is dynamically added to the object
-    trait_added = Event(six.string_types[0])
+    trait_added = Event(str)
 
     #: An event that can be fired to indicate that the state of the object has
     #: been modified
@@ -1189,7 +1175,7 @@ class HasTraits(CHasTraits):
         # If there are and handlers, add them to the trait's notifier's list:
         if len(handlers) > 0:
             trait = _clone_trait(trait)
-            _add_notifiers(trait._notifiers(1), handlers)
+            _add_notifiers(trait._notifiers(True), handlers)
 
         # Finally, add the new trait to the class trait dictionary:
         class_traits[name] = trait
@@ -1387,9 +1373,11 @@ class HasTraits(CHasTraits):
         elif n == 0:
             names = self.trait_names(**metadata)
 
+        # Sentinel for missing attributes.
+        missing = object()
         for name in names:
-            value = getattr(self, name, Missing)
-            if value is not Missing:
+            value = getattr(self, name, missing)
+            if value is not missing:
                 result[name] = value
 
         return result
@@ -2160,7 +2148,7 @@ class HasTraits(CHasTraits):
         if filename is not None:
             if os.path.exists(filename):
                 with open(filename, "rb") as fd:
-                    self.copy_traits(six.moves.cPickle.Unpickler(fd).load())
+                    self.copy_traits(pickle.Unpickler(fd).load())
 
         if edit:
             from traitsui.api import toolkit
@@ -2178,7 +2166,7 @@ class HasTraits(CHasTraits):
             )
             if rc and (filename is not None):
                 with open(filename, "wb") as fd:
-                    six.moves.cPickle.Pickler(fd, True).dump(self)
+                    pickle.Pickler(fd, True).dump(self)
             return rc
 
         return True
@@ -2317,12 +2305,12 @@ class HasTraits(CHasTraits):
 
         if remove:
             if name == "anytrait":
-                notifiers = self._notifiers(0)
+                notifiers = self._notifiers(False)
             else:
                 trait = self._trait(name, 1)
                 if trait is None:
                     return
-                notifiers = trait._notifiers(0)
+                notifiers = trait._notifiers(False)
 
             if notifiers is not None:
                 for i, notifier in enumerate(notifiers):
@@ -2334,9 +2322,9 @@ class HasTraits(CHasTraits):
             return
 
         if name == "anytrait":
-            notifiers = self._notifiers(1)
+            notifiers = self._notifiers(True)
         else:
-            notifiers = self._trait(name, 2)._notifiers(1)
+            notifiers = self._trait(name, 2)._notifiers(True)
 
         for notifier in notifiers:
             if notifier.equals(handler):
@@ -2577,7 +2565,7 @@ class HasTraits(CHasTraits):
         # Check to see if we can do a quick exit to the basic trait change
         # handler:
         if (
-            isinstance(name, six.string_types)
+            isinstance(name, str)
             and (extended_trait_pat.match(name) is None)
         ) or (name is None):
             self._on_trait_change(
@@ -2846,9 +2834,9 @@ class HasTraits(CHasTraits):
         # If there already was a trait with the same name:
         if old_trait is not None:
             # Copy the old traits notifiers into the new trait:
-            old_notifiers = old_trait._notifiers(0)
+            old_notifiers = old_trait._notifiers(False)
             if old_notifiers is not None:
-                trait._notifiers(1).extend(old_notifiers)
+                trait._notifiers(True).extend(old_notifiers)
         else:
             # Otherwise, see if there are any static notifiers that should be
             # applied to the trait:
@@ -2869,7 +2857,7 @@ class HasTraits(CHasTraits):
 
             # If there are any static notifiers, attach them to the trait:
             if len(handlers) > 0:
-                _add_notifiers(trait._notifiers(1), handlers)
+                _add_notifiers(trait._notifiers(True), handlers)
 
         # If this was a new trait, fire the 'trait_added' event:
         if old_trait is None:
@@ -3229,7 +3217,7 @@ class HasTraits(CHasTraits):
                 # list:
                 if len(handlers) > 0:
                     trait = _clone_trait(trait)
-                    _add_notifiers(trait._notifiers(1), handlers)
+                    _add_notifiers(trait._notifiers(True), handlers)
 
                 return trait
 
@@ -3612,8 +3600,7 @@ class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
 
     pass
 
-@six.add_metaclass(ABCMetaHasTraits)
-class ABCHasTraits(HasTraits):
+class ABCHasTraits(HasTraits, metaclass=ABCMetaHasTraits):
     """ A HasTraits subclass which enables the features of Abstract
     Base Classes (ABC). See the 'abc' module in the standard library
     for more information.
@@ -3719,8 +3706,7 @@ class MetaInterface(ABCMetaHasTraits):
 # -------------------------------------------------------------------------------
 
 
-@six.add_metaclass(MetaInterface)
-class Interface(HasTraits):
+class Interface(HasTraits, metaclass=MetaInterface):
     """ The base class for all interfaces.
     """
 

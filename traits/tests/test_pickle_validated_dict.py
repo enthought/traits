@@ -6,11 +6,8 @@
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 
-from __future__ import absolute_import
-
+import pickle
 import unittest
-
-import six.moves as sm
 
 from traits.api import Dict, HasTraits, Int, List
 
@@ -29,8 +26,8 @@ class PickleValidatedDictTestCase(unittest.TestCase):
     def test_pickle_validated_dict(self):
 
         # And we must unpickle one
-        x = sm.cPickle.dumps(C())
+        x = pickle.dumps(C())
         try:
-            sm.cPickle.loads(x)
+            pickle.loads(x)
         except AttributeError as e:
             self.fail("Unpickling raised an AttributeError: %s" % e)

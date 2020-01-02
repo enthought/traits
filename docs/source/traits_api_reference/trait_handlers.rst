@@ -15,8 +15,6 @@ Classes
 
 .. autoclass:: TraitHandler
 
-.. autoclass:: TraitString
-
 .. autoclass:: TraitCoerceType
 
 .. autoclass:: TraitCastType
@@ -24,8 +22,6 @@ Classes
 .. autoclass:: ThisClass
 
 .. autoclass:: TraitInstance
-
-.. autoclass:: TraitWeakRef
 
 .. autoclass:: HandleWeakRef
 

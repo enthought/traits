@@ -21,8 +21,6 @@ Use this module for importing Traits names into your namespace. For example::
     from traits.api import HasTraits
 """
 
-from __future__ import absolute_import
-
 from .trait_base import Uninitialized, Undefined, Missing, Self
 
 from .trait_errors import TraitError, TraitNotificationError, DelegationError
@@ -46,20 +44,17 @@ from .traits import (
 
 from .trait_types import (
     Any,
-    Generic,
     Int,
     Float,
     Complex,
     Str,
     Title,
-    Unicode,
     Bytes,
     Bool,
     CInt,
     CFloat,
     CComplex,
     CStr,
-    CUnicode,
     CBytes,
     CBool,
     String,
@@ -104,13 +99,23 @@ from .trait_types import (
     WeakRef,
     Date,
     Time,
-    false,
-    true,
-    undefined,
     Supports,
 )
 
+# Deprecated TraitType subclasses and instances.
+
 from .trait_types import (
+    BaseUnicode,
+    Unicode,
+    BaseCUnicode,
+    CUnicode,
+    BaseLong,
+    Long,
+    BaseCLong,
+    CLong,
+    false,
+    true,
+    undefined,
     ListInt,
     ListFloat,
     ListStr,
@@ -133,14 +138,12 @@ from .trait_types import (
     BaseFloat,
     BaseComplex,
     BaseStr,
-    BaseUnicode,
     BaseBytes,
     BaseBool,
     BaseCInt,
     BaseCFloat,
     BaseCComplex,
     BaseCStr,
-    BaseCUnicode,
     BaseCBool,
     BaseFile,
     BaseDirectory,
@@ -180,7 +183,6 @@ from .trait_handlers import (
     BaseTraitHandler,
     TraitType,
     TraitHandler,
-    TraitString,
     TraitCoerceType,
     TraitCastType,
     TraitInstance,
@@ -204,14 +206,6 @@ from .trait_handlers import (
     NO_COMPARE,
     OBJECT_IDENTITY_COMPARE,
     RICH_COMPARE,
-)
-
-from .trait_value import (
-    BaseTraitValue,
-    TraitValue,
-    SyncValue,
-    TypeValue,
-    DefaultValue,
 )
 
 from .adaptation.adapter import Adapter

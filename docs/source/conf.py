@@ -12,13 +12,10 @@
 #
 # All configuration values have a default value; values that are commented out
 # serve to show the default value.
-from __future__ import print_function
 import datetime
 import io
 import os
 import sys
-
-import six
 
 
 # The docset build will use slightly different formatting rules
@@ -75,19 +72,7 @@ def mock_modules():
     else:
         return
 
-    if six.PY2:
-        try:
-            from mock import MagicMock
-        except ImportError:
-            if len(MOCK_MODULES) != 0:
-                print(
-                    "NOTE: TraitsUI is not installed and mock is not "
-                    "available to mock the missing modules, some classes "
-                    "will not be documented"
-                )
-                return
-    else:
-        from unittest.mock import MagicMock
+    from unittest.mock import MagicMock
 
     # Create the custom types for the HasTraits based traitsui objects.
     TYPES = {
