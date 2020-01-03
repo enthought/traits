@@ -63,6 +63,9 @@ from .trait_base import (
     TypeTypes,
     add_article,
 )
+from .trait_dict_object import TraitDictObject
+from .trait_list_object import TraitListObject
+from .trait_set_object import TraitSetObject
 
 from .trait_handlers import (
     TraitHandler,
@@ -92,9 +95,6 @@ from .trait_handlers import (
     CALLABLE_AND_ARGS_DEFAULT_VALUE,
     CALLABLE_DEFAULT_VALUE,
     TRAIT_SET_OBJECT_DEFAULT_VALUE,
-    TraitListObject,
-    TraitDictObject,
-    TraitSetObject,
 )
 
 
@@ -524,6 +524,9 @@ class CTrait(cTrait):
 from . import ctraits
 
 ctraits._ctrait(CTrait)
+
+#: Register Trait container object classes with ctraits.c
+ctraits._list_classes(TraitListObject, TraitSetObject, TraitDictObject)
 
 # -------------------------------------------------------------------------------
 #  Constants:
