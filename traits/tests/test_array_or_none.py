@@ -18,7 +18,7 @@ Tests for the ArrayOrNone TraitType.
 
 import unittest
 
-from traits.api import ArrayOrNone, HasTraits, NO_COMPARE, TraitError
+from traits.api import ArrayOrNone, ComparisonMode, HasTraits, TraitError
 from traits.testing.unittest_tools import UnittestTools
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
@@ -35,7 +35,8 @@ if numpy is not None:
 
         maybe_array_with_default = ArrayOrNone(value=[1, 2, 3])
 
-        maybe_array_no_compare = ArrayOrNone(comparison_mode=NO_COMPARE)
+        maybe_array_no_compare = ArrayOrNone(
+            comparison_mode=ComparisonMode.no_compare)
 
 
 @requires_numpy
