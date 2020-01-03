@@ -197,15 +197,15 @@ from .trait_handlers import (
     TraitPrefixMap,
     TraitCompound,
     TraitList,
-    TraitListObject,
-    TraitListEvent,
-    TraitSetObject,
-    TraitSetEvent,
     TraitDict,
-    TraitDictObject,
-    TraitDictEvent,
     TraitTuple,
 )
+
+
+from .trait_dict_object import TraitDictEvent, TraitDictObject
+from .trait_list_object import TraitListEvent, TraitListObject
+from .trait_set_object import TraitSetEvent, TraitSetObject
+
 
 from .adaptation.adapter import Adapter
 from .adaptation.adaptation_error import AdaptationError

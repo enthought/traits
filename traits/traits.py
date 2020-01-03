@@ -47,6 +47,7 @@ Visualization:
 # -------------------------------------------------------------------------------
 
 import sys
+from functools import partial
 from types import FunctionType, MethodType
 
 NoneType = type(None)  # Python 3's types does not include NoneType
@@ -63,6 +64,9 @@ from .trait_base import (
     TypeTypes,
     add_article,
 )
+from .trait_dict_object import TraitDictObject
+from .trait_list_object import TraitListObject
+from .trait_set_object import TraitSetObject
 
 from .trait_handlers import (
     TraitHandler,
@@ -81,16 +85,24 @@ from .trait_handlers import (
     _undefined_get,
     _undefined_set,
     _infer_default_value_type,
-    TraitListObject,
-    TraitDictObject,
-    TraitSetObject,
+    UNSPECIFIED_DEFAULT_VALUE,
+    CONSTANT_DEFAULT_VALUE,
+    MISSING_DEFAULT_VALUE,
+    OBJECT_DEFAULT_VALUE,
+    LIST_COPY_DEFAULT_VALUE,
+    DICT_COPY_DEFAULT_VALUE,
+    TRAIT_LIST_OBJECT_DEFAULT_VALUE,
+    TRAIT_DICT_OBJECT_DEFAULT_VALUE,
+    CALLABLE_AND_ARGS_DEFAULT_VALUE,
+    CALLABLE_DEFAULT_VALUE,
+    TRAIT_SET_OBJECT_DEFAULT_VALUE,
 )
 
 # -------------------------------------------------------------------------------
 #  Editor factory functions:
 # -------------------------------------------------------------------------------
 
-PasswordEditor = None
+PasswordEditors = {}
 MultilineTextEditors = {}
 BytesEditors = {}
 SourceCodeEditor = None
@@ -103,16 +115,14 @@ TimeEditor = None
 def password_editor(auto_set=True, enter_set=False):
     """ Factory function that returns an editor for passwords.
     """
-    global PasswordEditor
-
-    if PasswordEditor is None:
+    if (auto_set, enter_set) not in PasswordEditors:
         from traitsui.api import TextEditor
 
-        PasswordEditor = TextEditor(
+        PasswordEditors[auto_set, enter_set] = TextEditor(
             password=True, auto_set=auto_set, enter_set=enter_set
         )
 
-    return PasswordEditor
+    return PasswordEditors[auto_set, enter_set]
 
 
 def multi_line_text_editor(auto_set=True, enter_set=False):
@@ -131,22 +141,15 @@ def multi_line_text_editor(auto_set=True, enter_set=False):
 def bytes_editor(auto_set=True, enter_set=False, encoding=None):
     """ Factory function that returns a text editor for bytes.
     """
-    if encoding is not None:
-        if isinstance(encoding, str):
-            import codecs
-
-            encoding = codecs.lookup(encoding)
-
     if (auto_set, enter_set, encoding) not in BytesEditors:
         from traitsui.api import TextEditor
 
         if encoding is None:
-            # py3-compatible bytes <-> hex string
-            format = lambda b: b.encode("hex").decode("ascii")
-            evaluate = lambda s: s.encode("ascii").decode("hex")
+            format = bytes.hex
+            evaluate = bytes.fromhex
         else:
-            format = encoding.decode
-            evaluate = encoding.encode
+            format = partial(bytes.decode, encoding=encoding)
+            evaluate = partial(str.encode, encoding=encoding)
 
         BytesEditors[(auto_set, enter_set, encoding)] = TextEditor(
             multi_line=True,
@@ -503,6 +506,9 @@ class CTrait(cTrait):
 from . import ctraits
 
 ctraits._ctrait(CTrait)
+
+#: Register Trait container object classes with ctraits.c
+ctraits._list_classes(TraitListObject, TraitSetObject, TraitDictObject)
 
 # -------------------------------------------------------------------------------
 #  Constants:
