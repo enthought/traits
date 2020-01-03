@@ -41,14 +41,12 @@ from .trait_base import (
     Undefined,
     TraitsCache,
 )
+from .trait_dict_object import TraitDictEvent, TraitDictObject
+from .trait_list_object import TraitListObject
+from .trait_set_object import TraitSetEvent, TraitSetObject
 
 from .trait_handlers import (
     TraitType,
-    TraitListObject,
-    TraitSetObject,
-    TraitSetEvent,
-    TraitDictObject,
-    TraitDictEvent,
     ThisClass,
     items_event,
     RangeTypes,
