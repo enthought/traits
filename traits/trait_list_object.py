@@ -73,7 +73,8 @@ class TraitList(list):
         TraitError
             If validatation fails.
         """
-        if self.validator is None:
+        # Use getattr as pickle can call `extend` before validator is set.
+        if getattr(self, 'validator', None) is None:
             if isinstance(index, slice):
                 return list(value)
             else:
@@ -102,7 +103,8 @@ class TraitList(list):
         """
         if removed == added:
             return
-        for notifier in self.notifiers:
+        # Use getattr as pickle can call `extend` before notifiers are set.
+        for notifier in getattr(self, 'notifiers', []):
             notifier(self, index, removed, added)
 
     def object(self):
