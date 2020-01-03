@@ -59,7 +59,7 @@ Traits has the following optional dependencies:
 
 To build the full documentation one needs:
 
-* sphinx > 1.2.3
+* sphinx >= 1.8
 * `enthought-sphinx-theme
   <https://github.com/enthought/enthought-sphinx-theme>`_
   (a version of the documentation can be built without this, but
