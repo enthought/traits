@@ -35,13 +35,13 @@ from traits.testing.optional_dependencies import requires_traitsui, traitsui
 class SimpleEditorTestMixin:
 
     def setUp(self):
-        import traits.traits
-        self.factory = getattr(traits.traits, self.factory_name)
+        import traits.editor_factories
+        self.factory = getattr(traits.editor_factories, self.factory_name)
         self.traitsui_factory = getattr(traitsui.api, self.traitsui_name)
 
     def tearDown(self):
         import traits.editor_factories
-        setattr(traits.traits, self.cache_name, None)
+        setattr(traits.editor_factories, self.cache_name, None)
 
     def test_editor(self):
         editor = self.factory()
