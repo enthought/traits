@@ -20,7 +20,7 @@ import unittest
 
 from traits.has_traits import HasTraits
 from traits.trait_types import Instance, List, Str
-from traits.traits import (
+from traits.editor_factories import (
     BytesEditors,
     MultilineTextEditors,
     PasswordEditors,
@@ -35,13 +35,13 @@ from traits.testing.optional_dependencies import requires_traitsui, traitsui
 class SimpleEditorTestMixin:
 
     def setUp(self):
-        import traits.traits
-        self.factory = getattr(traits.traits, self.factory_name)
+        import traits.editor_factories
+        self.factory = getattr(traits.editor_factories, self.factory_name)
         self.traitsui_factory = getattr(traitsui.api, self.traitsui_name)
 
     def tearDown(self):
-        import traits.traits
-        setattr(traits.traits, self.cache_name, None)
+        import traits.editor_factories
+        setattr(traits.editor_factories, self.cache_name, None)
 
     def test_editor(self):
         editor = self.factory()
