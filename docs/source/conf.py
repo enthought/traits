@@ -27,101 +27,6 @@ BUILD_DOCSET = bool(os.environ.get("BUILD_DOCSET"))
 sys.path.append(os.path.abspath("../../"))
 
 
-def mock_modules():
-    """ Optionally Mock missing modules to allow autodoc based documentation.
-
-    The ``traits.has_dynamics_view`` imports the traitsui module and
-    thus traitsui is needed so that the ``autodoc`` extension can
-    extract the docstrings from the has_dynamics_view module. This
-    function optionally mocks the traitsui module so that the traits
-    documentation can be built without the traitui optional dependency
-    installed.
-
-    .. note::
-
-       The mock library is needed in order to mock the traitsui
-       package.
-
-    """
-
-    MOCK_MODULES = []
-    MOCK_TYPES = []
-
-    # Check to see if we need to mock the traitsui package
-    try:
-        import traitsui
-    except ImportError:
-        # Modules that we need to mock
-        MOCK_MODULES = [
-            "traitsui",
-            "traitsui.api",
-            "traitsui.delegating_handler",
-        ]
-
-        # Collect the types from traitsui that are based on HasTraits
-        # We will need to mock them in a special way so that
-        # TraitDocumenter can properly identify and document traits.
-        from traits.api import HasTraits, HasPrivateTraits
-
-        MOCK_TYPES.append(
-            ("traitsui.delegating_handler", "DelegatingHandler", (HasTraits,))
-        )
-        MOCK_TYPES.append(
-            ("traitsui.view_element", "ViewSubElement", (HasPrivateTraits,))
-        )
-    else:
-        return
-
-    from unittest.mock import MagicMock
-
-    # Create the custom types for the HasTraits based traitsui objects.
-    TYPES = {
-        mock_type: type(mock_type, bases, {"__module__": path})
-        for path, mock_type, bases in MOCK_TYPES
-    }
-
-    class DocMock(MagicMock):
-        """ The special sphinx friendly mocking class to mock missing packages.
-
-        Based on the suggestion from http://docs.readthedocs.org/en/latest/faq.html#i-get-import-errors-on-libraries-that-depend-on-c-modules
-
-        """
-
-        @classmethod
-        def __getattr__(self, name):
-            if name in ("__file__", "__path__", "_mock_methods"):
-                # sphinx does not like getting a Mock object in this case.
-                return "/dev/null"
-            else:
-                # Return a mock or a custom type as requested.
-                return TYPES.get(name, DocMock(mocked_name=name))
-
-        # MagicMock does not define __call__ we do just to make sure
-        # that we cover all cases.
-        def __call__(self, *args, **kwards):
-            return DocMock()
-
-        @property
-        def __name__(self):
-            # Make sure that if sphinx asks for the name of a Mocked class
-            # it gets a nice strings to use (instead of "DocMock")
-            return self.mocked_name
-
-    # Add the mocked modules to sys
-    sys.modules.update(
-        (mod_name, DocMock(mocked_name=mod_name)) for mod_name in MOCK_MODULES
-    )
-
-    # Report on what was mocked.
-    print(
-        "mocking modules {0} and types {1}".format(
-            MOCK_MODULES, [mocked[1] for mocked in MOCK_TYPES]
-        )
-    )
-
-
-mock_modules()
-
 # General configuration
 # ---------------------
 
@@ -189,7 +94,9 @@ today_fmt = "%B %d, %Y"
 pygments_style = "sphinx"
 
 # Options for the autodoc extension.
-autodoc_default_flags = ["members"]
+autodoc_default_options = {
+    "members": None,
+}
 
 autodoc_member_order = "bysource"
 
