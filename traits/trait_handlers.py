@@ -1944,7 +1944,7 @@ class TraitList(TraitHandler):
         return "a list of %s%s" % (size, info)
 
     def get_editor(self, trait):
-        from traits.traits import list_editor
+        from traits.editor_factories import list_editor
 
         return list_editor(trait, self)
 
