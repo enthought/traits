@@ -41,14 +41,12 @@ from .trait_base import (
     Undefined,
     TraitsCache,
 )
+from .trait_dict_object import TraitDictEvent, TraitDictObject
+from .trait_list_object import TraitListObject
+from .trait_set_object import TraitSetEvent, TraitSetObject
 
 from .trait_handlers import (
     TraitType,
-    TraitListObject,
-    TraitSetObject,
-    TraitSetEvent,
-    TraitDictObject,
-    TraitDictEvent,
     ThisClass,
     items_event,
     RangeTypes,
@@ -61,11 +59,7 @@ from .trait_handlers import (
     TRAIT_SET_OBJECT_DEFAULT_VALUE,
 )
 
-from .traits import (
-    Trait,
-    trait_from,
-    _TraitMaker,
-    _InstanceArgs,
+from .editor_factories import (
     code_editor,
     html_editor,
     password_editor,
@@ -73,6 +67,12 @@ from .traits import (
     date_editor,
     time_editor,
     list_editor,
+)
+from .traits import (
+    Trait,
+    trait_from,
+    _TraitMaker,
+    _InstanceArgs,
 )
 
 from .trait_errors import TraitError
@@ -356,7 +356,7 @@ class BaseStr(TraitType):
     def create_editor(self):
         """ Returns the default traits UI editor for this type of trait.
         """
-        from .traits import multi_line_text_editor
+        from .editor_factories import multi_line_text_editor
 
         auto_set = self.auto_set
         if auto_set is None:
@@ -1362,7 +1362,7 @@ class Expression(TraitType):
         # Tell the C code that 'setattr' should store the original, unadapted
         # value passed to it:
         ctrait = super(Expression, self).as_ctrait()
-        ctrait.setattr_original_value_flag = True
+        ctrait.setattr_original_value = True
         return ctrait
 
 
@@ -3020,7 +3020,7 @@ class Supports(Instance):
 
         # Tell the C code that the 'post_setattr' method wants the original,
         # unadapted value passed to 'setattr':
-        ctrait.post_setattr_original_value_flag = True
+        ctrait.post_setattr_original_value = True
         return ctrait
 
 
@@ -3043,7 +3043,7 @@ class AdaptsTo(Supports):
     def modify_ctrait(self, ctrait):
         # Tell the C code that 'setattr' should store the original, unadapted
         # value passed to it:
-        ctrait.setattr_original_value_flag = True
+        ctrait.setattr_original_value = True
         return ctrait
 
 

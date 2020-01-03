@@ -17,6 +17,10 @@ Traits core
     trait_types
     traits_listener
     trait_notifiers
+    editor_factories
+    trait_dict_object
+    trait_list_object
+    trait_set_object
     version
 
 Subpackages

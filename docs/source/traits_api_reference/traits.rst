@@ -32,18 +32,6 @@ Functions
 
 .. autofunction:: Trait
 
-.. autofunction:: password_editor
-
-.. autofunction:: multi_line_text_editor
-
-.. autofunction:: code_editor
-
-.. autofunction:: shell_editor
-
-.. autofunction:: time_editor
-
-.. autofunction:: date_editor
-
 .. autofunction:: trait_factory
 
 .. autofunction:: trait_cast
