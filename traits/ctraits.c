@@ -4796,40 +4796,6 @@ static PyTypeObject trait_type = {
 };
 
 /*-----------------------------------------------------------------------------
-|  Sets the global 'Undefined' and 'Uninitialized' values:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_ctraits_undefined ( PyObject * self, PyObject * args ) {
-
-    if ( !PyArg_ParseTuple( args, "OO", &Undefined, &Uninitialized ) )
-        return NULL;
-
-    Py_INCREF( Undefined );
-    Py_INCREF( Uninitialized );
-
-    Py_INCREF( Py_None );
-    return Py_None;
-}
-
-/*-----------------------------------------------------------------------------
-|  Sets the global 'TraitError' and 'DelegationError' exception types:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_ctraits_exceptions ( PyObject * self, PyObject * args ) {
-
-    if ( !PyArg_ParseTuple( args, "OO", &TraitError, &DelegationError ) )
-        return NULL;
-
-    Py_INCREF( TraitError );
-    Py_INCREF( DelegationError );
-
-    Py_INCREF( Py_None );
-    return Py_None;
-}
-
-/*-----------------------------------------------------------------------------
 |  Sets the global 'TraitListObject', TraitSetObject and 'TraitDictObject'
 |  classes:
 +----------------------------------------------------------------------------*/
@@ -4887,10 +4853,6 @@ _ctraits_ctrait ( PyObject * self, PyObject * args ) {
 +----------------------------------------------------------------------------*/
 
 static PyMethodDef ctraits_methods[] = {
-        { "_undefined",    (PyCFunction) _ctraits_undefined,    METH_VARARGS,
-                PyDoc_STR( "_undefined(Undefined,Uninitialized)" ) },
-        { "_exceptions",   (PyCFunction) _ctraits_exceptions,   METH_VARARGS,
-                PyDoc_STR( "_exceptions(TraitError,DelegationError)" ) },
         { "_list_classes", (PyCFunction) _ctraits_list_classes, METH_VARARGS,
                 PyDoc_STR( "_list_classes(TraitListObject,TraitSetObject,TraitDictObject)" ) },
         { "_adapt", (PyCFunction) _ctraits_adapt, METH_VARARGS,
@@ -4916,6 +4878,8 @@ static struct PyModuleDef ctraitsmodule = {
 PyMODINIT_FUNC PyInit_ctraits(void) {
     /* Create the 'ctraits' module: */
     PyObject * module;
+    PyObject * trait_base;
+    PyObject * trait_errors;
 
     module = PyModule_Create(&ctraitsmodule);
     if ( module == NULL )
@@ -4967,6 +4931,40 @@ PyMODINIT_FUNC PyInit_ctraits(void) {
 
     /* Create the 'is_callable' marker: */
     is_callable = PyLong_FromLong( -1 );
+
+    /* Import Undefined and Uninitialized */
+    trait_base = PyImport_ImportModule("traits.trait_base");
+    if (trait_base == NULL) {
+        return NULL;
+    }
+    Undefined = PyObject_GetAttrString(trait_base, "Undefined");
+    if (Undefined == NULL) {
+        Py_DECREF(trait_base);
+        return NULL;
+    }
+    Uninitialized = PyObject_GetAttrString(trait_base, "Uninitialized");
+    if (Uninitialized == NULL) {
+        Py_DECREF(trait_base);
+        return NULL;
+    }
+    Py_DECREF(trait_base);
+
+    /* Import TraitError and DelegationError */
+    trait_errors = PyImport_ImportModule("traits.trait_errors");
+    if (trait_errors == NULL) {
+        return NULL;
+    }
+    TraitError = PyObject_GetAttrString(trait_errors, "TraitError");
+    if (TraitError == NULL) {
+        Py_DECREF(trait_errors);
+        return NULL;
+    }
+    DelegationError = PyObject_GetAttrString(trait_errors, "DelegationError");
+    if (DelegationError == NULL) {
+        Py_DECREF(trait_errors);
+        return NULL;
+    }
+    Py_DECREF(trait_errors);
 
     return module;
 }
