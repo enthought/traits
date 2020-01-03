@@ -1832,25 +1832,6 @@ class TraitTuple(TraitHandler):
 
 
 # -------------------------------------------------------------------------------
-#  'TraitCallable' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitCallable(TraitHandler):
-    """Ensures that the value of a trait attribute is a callable Python object
-    (usually a function or method).
-    """
-
-    def validate(self, object, name, value):
-        if (value is None) or callable(value):
-            return value
-        self.error(object, name, value)
-
-    def info(self):
-        return "a callable value"
-
-
-# -------------------------------------------------------------------------------
 #  'TraitList' class:
 # -------------------------------------------------------------------------------
 
