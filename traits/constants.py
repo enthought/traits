@@ -18,7 +18,7 @@ class TraitKind(IntEnum):
     trait = 0
 
     #: A standard Python attribute (no validation or notification).
-    #: This sets valus into the object dict, so is not suitable for use with
+    #: This sets values into the object dict, so is not suitable for use with
     #: standard Python descriptors - generally you want ``generic``.
     python = 1
 
@@ -41,7 +41,7 @@ class TraitKind(IntEnum):
     #: A trait whose value is constant (can only be read).
     constant = 7
 
-    #: A standard Python attribute or descriptors (no validation or
+    #: A standard Python attribute or descriptor (no validation or
     #: notification).
     generic = 8
 
