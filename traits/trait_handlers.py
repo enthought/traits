@@ -1556,36 +1556,6 @@ class TraitPrefixMap(TraitMap):
 
 
 # -------------------------------------------------------------------------------
-#  'TraitExpression' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitExpression(TraitHandler):
-    """ Ensures that a value assigned to a trait attribute is a valid Python
-        expression. The compiled form of a valid expression is stored as the
-        mapped value of the trait.
-    """
-
-    is_mapped = True
-
-    def validate(self, object, name, value):
-        try:
-            compile(value, "<string>", "eval")
-            return value
-        except:
-            self.error(object, name, value)
-
-    def post_setattr(self, object, name, value):
-        object.__dict__[name + "_"] = self.mapped_value(value)
-
-    def info(self):
-        return "a valid Python expression"
-
-    def mapped_value(self, value):
-        return compile(value, "<string>", "eval")
-
-
-# -------------------------------------------------------------------------------
 #  'TraitCompound' class:
 # -------------------------------------------------------------------------------
 

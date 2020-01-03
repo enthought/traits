@@ -37,8 +37,6 @@ Classes
 
 .. autoclass:: TraitPrefixMap
 
-.. autoclass:: TraitExpression
-
 .. autoclass:: TraitCompound
 
 .. autoclass:: TraitTuple
