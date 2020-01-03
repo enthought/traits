@@ -21,6 +21,8 @@ Use this module for importing Traits names into your namespace. For example::
     from traits.api import HasTraits
 """
 
+from .constants import ComparisonMode
+
 from .trait_base import Uninitialized, Undefined, Missing, Self
 
 from .trait_errors import TraitError, TraitNotificationError, DelegationError
@@ -197,9 +199,6 @@ from .trait_handlers import (
     TraitList,
     TraitDict,
     TraitTuple,
-    NO_COMPARE,
-    OBJECT_IDENTITY_COMPARE,
-    RICH_COMPARE,
 )
 
 
@@ -230,3 +229,8 @@ try:
         AbstractViewElement.register(ViewElement)
 except ImportError:
     pass
+
+# Backward compatibility for comparison mode constants.
+NO_COMPARE = ComparisonMode.no_compare
+OBJECT_IDENTITY_COMPARE = ComparisonMode.object_id_compare
+RICH_COMPARE = ComparisonMode.equality_compare
