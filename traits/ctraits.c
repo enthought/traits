@@ -5016,10 +5016,12 @@ PyMODINIT_FUNC PyInit_ctraits(void) {
     }
     Undefined = PyObject_GetAttrString(trait_base, "Undefined");
     if (Undefined == NULL) {
+        Py_DECREF(trait_base);
         return NULL;
     }
     Uninitialized = PyObject_GetAttrString(trait_base, "Uninitialized");
     if (Uninitialized == NULL) {
+        Py_DECREF(trait_base);
         return NULL;
     }
     Py_DECREF(trait_base);
@@ -5031,10 +5033,12 @@ PyMODINIT_FUNC PyInit_ctraits(void) {
     }
     TraitError = PyObject_GetAttrString(trait_errors, "TraitError");
     if (TraitError == NULL) {
+        Py_DECREF(trait_errors);
         return NULL;
     }
     DelegationError = PyObject_GetAttrString(trait_errors, "DelegationError");
     if (DelegationError == NULL) {
+        Py_DECREF(trait_errors);
         return NULL;
     }
     Py_DECREF(trait_errors);
