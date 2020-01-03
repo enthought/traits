@@ -77,74 +77,74 @@ class TestCTrait(unittest.TestCase):
         with self.assertRaises(ValueError):
             trait.set_default_value(MAXIMUM_DEFAULT_VALUE_TYPE + 1, None)
 
-    def test_property_flag(self):
+    def test_is_property(self):
         trait = CTrait(TraitKind.trait)
 
-        self.assertFalse(trait.property_flag)
+        self.assertFalse(trait.is_property)
 
         trait.property(getter, 0, setter, 1, validator, 1)
 
-        self.assertTrue(trait.property_flag)
+        self.assertTrue(trait.is_property)
 
         with self.assertRaises(AttributeError):
-            trait.property_flag = False
+            trait.is_property = False
 
-    def test_modify_delegate_flag(self):
+    def test_modify_delegate(self):
         trait = CTrait(TraitKind.trait)
 
-        self.assertFalse(trait.modify_delegate_flag)
+        self.assertFalse(trait.modify_delegate)
 
-        trait.modify_delegate_flag = True
+        trait.modify_delegate = True
 
-        self.assertTrue(trait.modify_delegate_flag)
+        self.assertTrue(trait.modify_delegate)
 
-    def test_object_identity_flag(self):
+    def test_object_id_test(self):
         trait = CTrait(TraitKind.trait)
 
-        self.assertFalse(trait.object_identity_flag)
+        self.assertFalse(trait.object_id_test)
 
         trait.comparison_mode(ComparisonMode.object_id_compare)
 
-        self.assertTrue(trait.object_identity_flag)
+        self.assertTrue(trait.object_id_test)
 
         with self.assertRaises(AttributeError):
-            trait.object_identity_flag = False
+            trait.object_id_test = False
 
-    def test_setattr_original_value_flag(self):
+    def test_setattr_original_value(self):
         trait = CTrait(TraitKind.trait)
 
-        self.assertFalse(trait.setattr_original_value_flag)
+        self.assertFalse(trait.setattr_original_value)
 
-        trait.setattr_original_value_flag = True
+        trait.setattr_original_value = True
 
-        self.assertTrue(trait.setattr_original_value_flag)
+        self.assertTrue(trait.setattr_original_value)
 
-    def test_post_setattr_original_value_flag(self):
+    def test_post_setattr_original_value(self):
         trait = CTrait(TraitKind.trait)
 
-        self.assertFalse(trait.post_setattr_original_value_flag)
+        self.assertFalse(trait.post_setattr_original_value)
 
-        trait.post_setattr_original_value_flag = True
+        trait.post_setattr_original_value = True
 
-        self.assertTrue(trait.post_setattr_original_value_flag)
+        self.assertTrue(trait.post_setattr_original_value)
 
-    def test_is_mapped_flag(self):
+    def test_is_mapped(self):
         trait = CTrait(TraitKind.trait)
 
-        self.assertFalse(trait.is_mapped_flag)
+        self.assertFalse(trait.is_mapped)
 
-        trait.is_mapped_flag = True
+        trait.is_mapped = True
 
-        self.assertTrue(trait.is_mapped_flag)
+        self.assertTrue(trait.is_mapped)
 
-    def test_no_value_test_flag(self):
+    def test_no_value_test(self):
         trait = CTrait(TraitKind.trait)
 
-        self.assertFalse(trait.no_value_test_flag)
+        self.assertFalse(trait.no_value_test)
 
         trait.comparison_mode(ComparisonMode.no_compare)
 
-        self.assertTrue(trait.no_value_test_flag)
+        self.assertTrue(trait.no_value_test)
 
         with self.assertRaises(AttributeError):
-            trait.no_value_test_flag = False
+            trait.no_value_test = False
