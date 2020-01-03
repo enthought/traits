@@ -43,8 +43,6 @@ Classes
 
 .. autoclass:: TraitTuple
 
-.. autoclass:: TraitCallable
-
 .. autoclass:: TraitList
 
 .. autoclass:: TraitDict
