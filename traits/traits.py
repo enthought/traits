@@ -85,17 +85,6 @@ from .trait_handlers import (
     _undefined_get,
     _undefined_set,
     _infer_default_value_type,
-    UNSPECIFIED_DEFAULT_VALUE,
-    CONSTANT_DEFAULT_VALUE,
-    MISSING_DEFAULT_VALUE,
-    OBJECT_DEFAULT_VALUE,
-    LIST_COPY_DEFAULT_VALUE,
-    DICT_COPY_DEFAULT_VALUE,
-    TRAIT_LIST_OBJECT_DEFAULT_VALUE,
-    TRAIT_DICT_OBJECT_DEFAULT_VALUE,
-    CALLABLE_AND_ARGS_DEFAULT_VALUE,
-    CALLABLE_DEFAULT_VALUE,
-    TRAIT_SET_OBJECT_DEFAULT_VALUE,
 )
 
 # -------------------------------------------------------------------------------
