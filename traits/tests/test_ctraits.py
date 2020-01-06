@@ -148,40 +148,4 @@ class TestCTrait(unittest.TestCase):
         self.assertTrue(trait.no_value_test)
 
         with self.assertRaises(AttributeError):
-<<<<<<< HEAD
             trait.no_value_test_flag = False
-
-    def test_module_constants_exist(self):
-        ctraits_module_constants = [
-            # CHasTraits flags
-            "_HASTRAITS_INITED",
-            "_HASTRAITS_NO_NOTIFY",
-            "_HASTRAITS_VETO_NOTIFY",
-            # cTrait flags
-            "_TRAIT_PROPERTY",
-            "_TRAIT_MODIFY_DELEGATE",
-            "_TRAIT_MODIFY_DELEGATE",
-            "_TRAIT_OBJECT_IDENTITY",
-            "_TRAIT_SETATTR_ORIGINAL_VALUE",
-            "_TRAIT_POST_SETATTR_ORIGINAL_VALUE",
-            "_TRAIT_IS_MAPPED",
-            "_TRAIT_NO_VALUE_TEST",
-            # Default value type constants
-            "_CONSTANT_DEFAULT_VALUE",
-            "_MISSING_DEFAULT_VALUE",
-            "_OBJECT_DEFAULT_VALUE",
-            "_LIST_COPY_DEFAULT_VALUE",
-            "_DICT_COPY_DEFAULT_VALUE",
-            "_TRAIT_LIST_OBJECT_DEFAULT_VALUE",
-            "_TRAIT_DICT_OBJECT_DEFAULT_VALUE",
-            "_CALLABLE_AND_ARGS_DEFAULT_VALUE",
-            "_CALLABLE_DEFAULT_VALUE",
-            "_TRAIT_SET_OBJECT_DEFAULT_VALUE",
-            "_MAXIMUM_DEFAULT_VALUE_TYPE",
-        ]
-        for constant_name in ctraits_module_constants:
-            constant_value = getattr(traits.ctraits, constant_name)
-            self.assertIsInstance(constant_value, int)
-=======
-            trait.no_value_test = False
->>>>>>> c703654ba8e1546c651669be38514f4f85184a34

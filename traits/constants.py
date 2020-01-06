@@ -10,6 +10,19 @@
 
 from enum import IntEnum
 
+from traits.ctraits import (
+    _CONSTANT_DEFAULT_VALUE,
+    _MISSING_DEFAULT_VALUE,
+    _OBJECT_DEFAULT_VALUE,
+    _LIST_COPY_DEFAULT_VALUE,
+    _DICT_COPY_DEFAULT_VALUE,
+    _TRAIT_LIST_COPY_DEFAULT_VALUE,
+    _TRAIT_DICT_COPY_DEFAULT_VALUE,
+    _CALLABLE_AND_ARGS_DEFAULT_VALUE,
+    _CALLABLE_DEFAULT_VALUE,
+    _TRAIT_SET_OBJECT_DEFAULT_VALUE,
+)
+
 
 class TraitKind(IntEnum):
     """ These determine the getters and setters used by the cTrait instance. """
@@ -136,43 +149,43 @@ class DefaultValue(IntEnum):
     unspecified = -1
 
     #: The default_value of the trait is the default value.
-    constant = 0
+    constant = _CONSTANT_DEFAULT_VALUE
 
     #: The default_value of the trait is Missing.
-    missing = 1
+    missing = _MISSING_DEFAULT_VALUE
 
     #: The object containing the trait is the default value.
-    object = 2
+    object = _OBJECT_DEFAULT_VALUE
 
     #: A new copy of the list specified by default_value is the default value.
-    list_copy = 3
+    list_copy = _LIST_COPY_DEFAULT_VALUE
 
     #: A new copy of the dict specified by default_value is the default value.
-    dict_copy = 4
+    dict_copy = _DICT_COPY_DEFAULT_VALUE
 
     #: A new instance of TraitListObject constructed using the default_value list
     #: is the default value.
-    trait_list_object = 5
+    trait_list_object = _TRAIT_LIST_COPY_DEFAULT_VALUE
 
     #: A new instance of TraitDictObject constructed using the default_value dict
     #: is the default value.
-    trait_dict_object = 6
+    trait_dict_object = _TRAIT_DICT_COPY_DEFAULT_VALUE
 
     #: The default_value is a tuple of the form: (*callable*, *args*, *kw*),
     #: where *callable* is a callable, *args* is a tuple, and *kw* is either a
     #: dictionary or None. The default value is the result obtained by invoking
     #: ``callable(\*args, \*\*kw)``.
-    callable_and_args = 7
+    callable_and_args = _CALLABLE_AND_ARGS_DEFAULT_VALUE
 
     #: The default_value is a callable. The default value is the result obtained
     #: by invoking *default_value*(*object*), where *object* is the object
     #: containing the trait. If the trait has a validate() method, the validate()
     #: method is also called to validate the result.
-    callable = 8
+    callable = _CALLABLE_DEFAULT_VALUE
 
     #: A new instance of TraitSetObject constructed using the default_value set
     #: is the default value.
-    trait_set_object = 9
+    trait_set_object = _TRAIT_SET_OBJECT_DEFAULT_VALUE
 
 
 #: Maximum legal value for default_value_type, for use in testing
