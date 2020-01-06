@@ -10,7 +10,7 @@ from traits.has_traits import (
     InstanceTraits,
     HasTraits,
 )
-from traits.traits import ForwardProperty, generic_trait
+from traits.traits import CTrait, ForwardProperty, generic_trait
 from traits.trait_types import Float, Int
 
 
@@ -194,3 +194,33 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             class_dict[BaseTraits]["my_trait"],
             class_dict[ClassTraits]["my_trait"],
         )
+
+    def test__class_traits(self):
+        # Exercise the _class_traits() private introspection method.
+        class Base(HasTraits):
+            pin = Int
+
+        a = Base()
+        a_class_traits = a._class_traits()
+        self.assertIsInstance(a_class_traits, dict)
+        self.assertIn("pin", a_class_traits)
+        self.assertIsInstance(a_class_traits["pin"], CTrait)
+
+        b = Base()
+        self.assertIs(b._class_traits(), a_class_traits)
+
+    def test__instance_traits(self):
+        # Exercise the _instance_traits() private introspection method.
+        class Base(HasTraits):
+            pin = Int
+
+        a = Base()
+        a_instance_traits = a._instance_traits()
+        self.assertIsInstance(a_instance_traits, dict)
+
+        # A second call should return the same dictionary.
+        self.assertIs(a._instance_traits(), a_instance_traits)
+
+        # A different instance should have its own instance traits dict.
+        b = Base()
+        self.assertIsNot(b._instance_traits(), a_instance_traits)
