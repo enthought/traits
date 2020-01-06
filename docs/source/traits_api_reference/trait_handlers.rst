@@ -37,29 +37,13 @@ Classes
 
 .. autoclass:: TraitPrefixMap
 
-.. autoclass:: TraitExpression
-
 .. autoclass:: TraitCompound
 
 .. autoclass:: TraitTuple
 
-.. autoclass:: TraitCallable
-
-.. autoclass:: TraitListEvent
-
 .. autoclass:: TraitList
 
-.. autoclass:: TraitListObject
-
-.. autoclass:: TraitSetEvent
-
-.. autoclass:: TraitSetObject
-
-.. autoclass:: TraitDictEvent
-
 .. autoclass:: TraitDict
-
-.. autoclass:: TraitDictObject
 
 Private Functions
 -----------------

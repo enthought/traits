@@ -30,6 +30,7 @@ from os import getcwd
 from os.path import dirname, exists, join
 
 from .etsconfig.api import ETSConfig
+from .constants import ValidateTrait
 
 # backwards compatibility: trait_base used to provide a patched enumerate
 enumerate = enumerate
@@ -136,11 +137,6 @@ class _Undefined(object):
 #: parameter, to indicate that the attribute previously had no value.
 Undefined = _Undefined()
 
-# Tell the C-base code about singleton 'Undefined' and 'Uninitialized' objects:
-from . import ctraits
-
-ctraits._undefined(Undefined, Uninitialized)
-
 # -------------------------------------------------------------------------------
 #  Singleton 'Missing' object (used as missing method argument marker):
 # -------------------------------------------------------------------------------
@@ -200,8 +196,8 @@ StringTypes = (str, int, float, complex)
 
 # Mapping of coercable types.
 CoercableTypes = {
-    float: (11, float, int),
-    complex: (11, complex, float, int),
+    float: (ValidateTrait.coerce, float, int),
+    complex: (ValidateTrait.coerce, complex, float, int),
 }
 
 # -------------------------------------------------------------------------------

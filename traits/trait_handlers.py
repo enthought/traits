@@ -31,13 +31,12 @@ consistent.
 #  Imports:
 # -------------------------------------------------------------------------------
 
-import copy
-import copyreg
 import re
 import sys
 from types import FunctionType, MethodType
 from weakref import ref
 
+from .constants import DefaultValue, TraitKind, ValidateTrait
 from .trait_base import (
     strx,
     SequenceTypes,
@@ -50,6 +49,9 @@ from .trait_base import (
     Self,
 )
 from .trait_errors import TraitError
+from .trait_dict_object import TraitDictEvent, TraitDictObject
+from .trait_list_object import TraitListEvent, TraitListObject
+from .trait_set_object import TraitSetEvent, TraitSetObject
 
 
 # Patched by 'traits.py' once class is defined!
@@ -64,53 +66,9 @@ logger = logging.getLogger(__name__)
 #  Constants:
 # -------------------------------------------------------------------------------
 
-# Trait 'comparison_mode' enum values:
-NO_COMPARE = 0
-OBJECT_IDENTITY_COMPARE = 1
-RICH_COMPARE = 2
-
 RangeTypes = (int, float)
 
 CallableTypes = (FunctionType, MethodType)
-
-
-#: Default value types
-#: The default value type has not been specified
-UNSPECIFIED_DEFAULT_VALUE = -1
-#: The default_value of the trait is the default value.
-CONSTANT_DEFAULT_VALUE = 0
-#: The default_value of the trait is Missing.
-MISSING_DEFAULT_VALUE = 1
-#: The object containing the trait is the default value.
-OBJECT_DEFAULT_VALUE = 2
-#: A new copy of the list specified by default_value is the default value.
-LIST_COPY_DEFAULT_VALUE = 3
-#: A new copy of the dict specified by default_value is the default value.
-DICT_COPY_DEFAULT_VALUE = 4
-#: A new instance of TraitListObject constructed using the default_value list
-#: is the default value.
-TRAIT_LIST_OBJECT_DEFAULT_VALUE = 5
-#: A new instance of TraitDictObject constructed using the default_value dict
-#: is the default value.
-TRAIT_DICT_OBJECT_DEFAULT_VALUE = 6
-#: The default_value is a tuple of the form: (*callable*, *args*, *kw*),
-#: where *callable* is a callable, *args* is a tuple, and *kw* is either a
-#: dictionary or None. The default value is the result obtained by invoking
-#: ``callable(\*args, \*\*kw)``.
-CALLABLE_AND_ARGS_DEFAULT_VALUE = 7
-#: The default_value is a callable. The default value is the result obtained
-#: by invoking *default_value*(*object*), where *object* is the object
-#: containing the trait. If the trait has a validate() method, the validate()
-#: method is also called to validate the result.
-CALLABLE_DEFAULT_VALUE = 8
-#: A new instance of TraitSetObject constructed using the default_value set
-#: is the default value.
-TRAIT_SET_OBJECT_DEFAULT_VALUE = 9
-
-#: Maximum legal value for default_value_type, for use in testing
-#: and validation.
-MAXIMUM_DEFAULT_VALUE_TYPE = 9
-
 
 # Mapping from trait metadata 'type' to CTrait 'type':
 trait_types = {"python": 1, "event": 2}
@@ -172,21 +130,21 @@ def _infer_default_value_type(default_value):
     Figure out the appropriate default value type given a default value.
     """
     if default_value is Missing:
-        return MISSING_DEFAULT_VALUE
+        return DefaultValue.missing
     elif default_value is Self:
-        return OBJECT_DEFAULT_VALUE
+        return DefaultValue.object
     elif isinstance(default_value, TraitListObject):
-        return TRAIT_LIST_OBJECT_DEFAULT_VALUE
+        return DefaultValue.trait_list_object
     elif isinstance(default_value, TraitDictObject):
-        return TRAIT_DICT_OBJECT_DEFAULT_VALUE
+        return DefaultValue.trait_dict_object
     elif isinstance(default_value, TraitSetObject):
-        return TRAIT_SET_OBJECT_DEFAULT_VALUE
+        return DefaultValue.trait_set_object
     elif isinstance(default_value, list):
-        return LIST_COPY_DEFAULT_VALUE
+        return DefaultValue.list_copy
     elif isinstance(default_value, dict):
-        return DICT_COPY_DEFAULT_VALUE
+        return DefaultValue.dict_copy
     else:
-        return CONSTANT_DEFAULT_VALUE
+        return DefaultValue.constant
 
 
 # -------------------------------------------------------------------------------
@@ -211,7 +169,7 @@ class BaseTraitHandler(object):
           wider range of cases, such as interactions with other components.
     """
 
-    default_value_type = UNSPECIFIED_DEFAULT_VALUE
+    default_value_type = DefaultValue.unspecified
     has_items = False
     is_mapped = False
     editor = None
@@ -624,7 +582,7 @@ class TraitType(BaseTraitHandler):
             elif setter is None:
                 setter = _read_only
                 metadata.setdefault("transient", True)
-            trait = CTrait(4)
+            trait = CTrait(TraitKind.property)
             n = 0
             validate = getattr(self, "validate", None)
             if validate is not None:
@@ -662,7 +620,7 @@ class TraitType(BaseTraitHandler):
             post_setattr = getattr(self, "post_setattr", None)
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
-                trait.is_mapped_flag = self.is_mapped
+                trait.is_mapped = self.is_mapped
 
             # Note: The use of 'rich_compare' metadata is deprecated; use
             # 'comparison_mode' metadata instead:
@@ -823,7 +781,7 @@ class TraitCoerceType(TraitHandler):
         try:
             self.fast_validate = CoercableTypes[aType]
         except:
-            self.fast_validate = (11, aType)
+            self.fast_validate = (ValidateTrait.coerce, aType)
 
     def validate(self, object, name, value):
         fv = self.fast_validate
@@ -933,7 +891,7 @@ class TraitCastType(TraitCoerceType):
         if not isinstance(aType, type):
             aType = type(aType)
         self.aType = aType
-        self.fast_validate = (12, aType)
+        self.fast_validate = (ValidateTrait.cast, aType)
 
     def validate(self, object, name, value):
 
@@ -973,9 +931,9 @@ class ThisClass(TraitHandler):
         if allow_none:
             self.validate = self.validate_none
             self.info = self.info_none
-            self.fast_validate = (2, None)
+            self.fast_validate = (ValidateTrait.self_type, None)
         else:
-            self.fast_validate = (2,)
+            self.fast_validate = (ValidateTrait.self_type,)
 
     def validate(self, object, name, value):
         if isinstance(value, object.__class__):
@@ -1070,11 +1028,11 @@ class TraitInstance(ThisClass):
             self.set_fast_validate()
 
     def set_fast_validate(self):
-        fast_validate = [1, self.aClass]
+        fast_validate = [ValidateTrait.instance, self.aClass]
         if self._allow_none:
-            fast_validate = [1, None, self.aClass]
+            fast_validate = [ValidateTrait.instance, None, self.aClass]
         if self.aClass in TypeTypes:
-            fast_validate[0] = 0
+            fast_validate[0] = ValidateTrait.type
         self.fast_validate = tuple(fast_validate)
 
     def validate(self, object, name, value):
@@ -1269,7 +1227,7 @@ class TraitFunction(TraitHandler):
         if not isinstance(aFunc, CallableTypes):
             raise TraitError("Argument must be callable.")
         self.aFunc = aFunc
-        self.fast_validate = (13, aFunc)
+        self.fast_validate = (ValidateTrait.function, aFunc)
 
     def validate(self, object, name, value):
         try:
@@ -1334,7 +1292,7 @@ class TraitEnum(TraitHandler):
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
         self.values = tuple(values)
-        self.fast_validate = (5, self.values)
+        self.fast_validate = (ValidateTrait.enum, self.values)
 
     def validate(self, object, name, value):
         if value in self.values:
@@ -1412,7 +1370,7 @@ class TraitPrefixList(TraitHandler):
         self.values_ = values_ = {}
         for key in values:
             values_[key] = key
-        self.fast_validate = (10, values_, self.validate)
+        self.fast_validate = (ValidateTrait.prefix_map, values_, self.validate)
 
     def validate(self, object, name, value):
         try:
@@ -1502,7 +1460,7 @@ class TraitMap(TraitHandler):
             trait attribute.
         """
         self.map = map
-        self.fast_validate = (6, map)
+        self.fast_validate = (ValidateTrait.map, map)
 
     def validate(self, object, name, value):
         try:
@@ -1573,7 +1531,7 @@ class TraitPrefixMap(TraitMap):
         self._map = _map = {}
         for key in map.keys():
             _map[key] = key
-        self.fast_validate = (10, _map, self.validate)
+        self.fast_validate = (ValidateTrait.prefix_map, _map, self.validate)
 
     def validate(self, object, name, value):
         try:
@@ -1595,36 +1553,6 @@ class TraitPrefixMap(TraitMap):
 
     def info(self):
         return super(TraitPrefixMap, self).info() + " (or any unique prefix)"
-
-
-# -------------------------------------------------------------------------------
-#  'TraitExpression' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitExpression(TraitHandler):
-    """ Ensures that a value assigned to a trait attribute is a valid Python
-        expression. The compiled form of a valid expression is stored as the
-        mapped value of the trait.
-    """
-
-    is_mapped = True
-
-    def validate(self, object, name, value):
-        try:
-            compile(value, "<string>", "eval")
-            return value
-        except:
-            self.error(object, name, value)
-
-    def post_setattr(self, object, name, value):
-        object.__dict__[name + "_"] = self.mapped_value(value)
-
-    def info(self):
-        return "a valid Python expression"
-
-    def mapped_value(self, value):
-        return compile(value, "<string>", "eval")
 
 
 # -------------------------------------------------------------------------------
@@ -1676,7 +1604,7 @@ class TraitCompound(TraitHandler):
             fv = getattr(handler, "fast_validate", None)
             if fv is not None:
                 validates.append(handler.validate)
-                if fv[0] == 7:
+                if fv[0] == ValidateTrait.complex:
                     # If this is a nested complex fast validator, expand its
                     # contents and adds its list to our list:
                     fast_validates.extend(fv[1])
@@ -1713,9 +1641,9 @@ class TraitCompound(TraitHandler):
             # If there are any 'slow' validators, add a special handler at
             # the end of the fast validator list to handle them:
             if len(slow_validates) > 0:
-                fast_validates.append((8, self))
+                fast_validates.append((ValidateTrait.slow, self))
             # Create the 'complex' fast validator:
-            self.fast_validate = (7, tuple(fast_validates))
+            self.fast_validate = (ValidateTrait.complex, tuple(fast_validates))
         elif hasattr(self, "fast_validate"):
             del self.fast_validate
 
@@ -1830,7 +1758,7 @@ class TraitTuple(TraitHandler):
         *trait*\ :sub:`i`.
         """
         self.types = tuple([trait_from(arg) for arg in args])
-        self.fast_validate = (9, self.types)
+        self.fast_validate = (ValidateTrait.tuple, self.types)
 
     def validate(self, object, name, value):
         try:
@@ -1874,48 +1802,6 @@ class TraitTuple(TraitHandler):
 
 
 # -------------------------------------------------------------------------------
-#  'TraitCallable' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitCallable(TraitHandler):
-    """Ensures that the value of a trait attribute is a callable Python object
-    (usually a function or method).
-    """
-
-    def validate(self, object, name, value):
-        if (value is None) or callable(value):
-            return value
-        self.error(object, name, value)
-
-    def info(self):
-        return "a callable value"
-
-
-# -------------------------------------------------------------------------------
-#  'TraitListEvent' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitListEvent(object):
-
-    # ---------------------------------------------------------------------------
-    #  Initialize the object:
-    # ---------------------------------------------------------------------------
-
-    def __init__(self, index=0, removed=None, added=None):
-        self.index = index
-
-        if removed is None:
-            removed = []
-        self.removed = removed
-
-        if added is None:
-            added = []
-        self.added = added
-
-
-# -------------------------------------------------------------------------------
 #  'TraitList' class:
 # -------------------------------------------------------------------------------
 
@@ -1945,7 +1831,7 @@ class TraitList(TraitHandler):
     """
 
     info_trait = None
-    default_value_type = TRAIT_LIST_OBJECT_DEFAULT_VALUE
+    default_value_type = DefaultValue.trait_list_object
     _items_event = None
 
     def __init__(
@@ -2009,7 +1895,7 @@ class TraitList(TraitHandler):
         return "a list of %s%s" % (size, info)
 
     def get_editor(self, trait):
-        from traits.traits import list_editor
+        from traits.editor_factories import list_editor
 
         return list_editor(trait, self)
 
@@ -2024,692 +1910,6 @@ def items_event():
         ).as_ctrait()
 
     return TraitList._items_event
-
-
-# -------------------------------------------------------------------------------
-#  'TraitListObject' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitListObject(list):
-    def __init__(self, trait, object, name, value):
-        self.trait = trait
-        self.object = ref(object)
-        self.name = name
-        self.name_items = None
-        if trait.has_items:
-            self.name_items = name + "_items"
-
-        # Do the validated 'setslice' assignment without raising an
-        # 'items_changed' event:
-        if trait.minlen <= len(value) <= trait.maxlen:
-            try:
-                validate = trait.item_trait.handler.validate
-                if validate is not None:
-                    value = [validate(object, name, val) for val in value]
-
-                list.__setitem__(self, slice(0, 0), value)
-
-                return
-
-            except TraitError as excp:
-                excp.set_prefix("Each element of the")
-                raise excp
-
-        self.len_error(len(value))
-
-    def _send_trait_items_event(self, name, event, items_event=None):
-        """ Send a TraitListEvent to the owning object if there is one.
-        """
-        object = self.object()
-        if object is not None:
-            if items_event is None and hasattr(self, "trait"):
-                items_event = self.trait.items_event()
-            object.trait_items_event(name, event, items_event)
-
-    def __deepcopy__(self, memo):
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
-        memo[id_self] = result = TraitListObject(
-            self.trait,
-            lambda: None,
-            self.name,
-            [copy.deepcopy(x, memo) for x in self],
-        )
-
-        return result
-
-    def __setitem__(self, key, value):
-        self_trait = getattr(self, "trait", None)
-        if self_trait is None:
-            return list.__setitem__(self, key, value)
-        try:
-            removed = self[key]
-        except:
-            removed = []
-        try:
-            object = self.object()
-            validate = self.trait.item_trait.handler.validate
-            name = self.name
-
-            if isinstance(key, slice):
-                values = value
-                slice_len = len(removed)
-
-                delta = len(values) - slice_len
-                step = 1 if key.step is None else key.step
-                if step != 1 and delta != 0:
-                    raise ValueError(
-                        "attempt to assign sequence of size %d to extended slice of size %d"
-                        % (len(values), slice_len)
-                    )
-                newlen = len(self) + delta
-                if not (self_trait.minlen <= newlen <= self_trait.maxlen):
-                    self.len_error(newlen)
-                    return
-
-                if validate is not None:
-                    values = [
-                        validate(object, name, value) for value in values
-                    ]
-                value = values
-                if step == 1:
-                    # FIXME: Bug-for-bug compatibility with old __setslice__ code.
-                    # In this case, we return a TraitListEvent with an
-                    # index=key.start and the removed and added lists as they
-                    # are.
-                    index = 0 if key.start is None else key.start
-                else:
-                    # Otherwise, we have an extended slice which was handled,
-                    # badly, by __setitem__ before. In this case, we return the
-                    # removed and added lists wrapped in another list.
-                    index = key
-                    values = [values]
-                    removed = [removed]
-            else:
-                if validate is not None:
-                    value = validate(object, name, value)
-
-                values = [value]
-                removed = [removed]
-                delta = 0
-
-                index = len(self) + key if key < 0 else key
-
-            list.__setitem__(self, key, value)
-            if self.name_items is not None:
-                if delta == 0:
-                    try:
-                        if removed == values:
-                            return
-                    except:
-                        # Treat incomparable values as equal:
-                        pass
-                self._send_trait_items_event(
-                    self.name_items, TraitListEvent(index, removed, values)
-                )
-
-        except TraitError as excp:
-            excp.set_prefix("Each element of the")
-            raise excp
-
-    def __delitem__(self, key):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            return list.__delitem__(self, key)
-
-        try:
-            removed = self[key]
-        except:
-            removed = []
-
-        if isinstance(key, slice):
-            slice_len = len(removed)
-            delta = slice_len
-            step = 1 if key.step is None else key.step
-            if step == 1:
-                # FIXME: See corresponding comment in __setitem__() for
-                # explanation.
-                index = 0 if key.start is None else key.start
-            else:
-                index = key
-                removed = [removed]
-        else:
-            delta = 1
-            index = len(self) + key + 1 if key < 0 else key
-            removed = [removed]
-
-        if not (trait.minlen <= (len(self) - delta)):
-            self.len_error(len(self) - delta)
-            return
-
-        list.__delitem__(self, key)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitListEvent(index, removed)
-            )
-
-    def __iadd__(self, other):
-        self.extend(other)
-        return self
-
-    def __imul__(self, count):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            return list.__imul__(self, count)
-
-        original_len = len(self)
-
-        if trait.minlen <= original_len * count <= trait.maxlen:
-            if self.name_items is not None:
-                removed = None if count else self[:]
-
-            result = list.__imul__(self, count)
-
-            if self.name_items is not None:
-                added = self[original_len:] if count else None
-                index = original_len if count else 0
-                self._send_trait_items_event(
-                    self.name_items, TraitListEvent(index, removed, added)
-                )
-
-            return result
-        else:
-            self.len_error(original_len * count)
-
-    def append(self, value):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            list.append(self, value)
-            return
-
-        if trait.minlen <= (len(self) + 1) <= trait.maxlen:
-            try:
-                validate = trait.item_trait.handler.validate
-                object = self.object()
-                if validate is not None:
-                    value = validate(object, self.name, value)
-                list.append(self, value)
-                if self.name_items is not None:
-                    self._send_trait_items_event(
-                        self.name_items,
-                        TraitListEvent(len(self) - 1, None, [value]),
-                        trait.items_event(),
-                    )
-                return
-
-            except TraitError as excp:
-                excp.set_prefix("Each element of the")
-                raise excp
-
-        self.len_error(len(self) + 1)
-
-    def insert(self, index, value):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            return list.insert(self, index, value)
-        if trait.minlen <= (len(self) + 1) <= trait.maxlen:
-            try:
-                validate = trait.item_trait.handler.validate
-                object = self.object()
-                if validate is not None:
-                    value = validate(object, self.name, value)
-
-                list.insert(self, index, value)
-
-                if self.name_items is not None:
-                    # Length before the insertion.
-                    original_len = len(self) - 1
-
-                    # Indices outside [-original_len, original_len] are clipped.
-                    # This matches the behaviour of insert on the
-                    # underlying list.
-                    if index < 0:
-                        index += original_len
-                        if index < 0:
-                            index = 0
-                    elif index > original_len:
-                        index = original_len
-
-                    self._send_trait_items_event(
-                        self.name_items,
-                        TraitListEvent(index, None, [value]),
-                        trait.items_event(),
-                    )
-
-                return
-
-            except TraitError as excp:
-                excp.set_prefix("Each element of the")
-                raise excp
-
-        self.len_error(len(self) + 1)
-
-    def extend(self, xlist):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            list.extend(self, xlist)
-
-            return
-
-        try:
-            len_xlist = len(xlist)
-        except:
-            raise TypeError("list.extend() argument must be iterable")
-
-        if trait.minlen <= (len(self) + len_xlist) <= trait.maxlen:
-            object = self.object()
-            name = self.name
-            validate = trait.item_trait.handler.validate
-            try:
-                if validate is not None:
-                    xlist = [validate(object, name, value) for value in xlist]
-
-                list.extend(self, xlist)
-
-                if (self.name_items is not None) and (len(xlist) != 0):
-                    self._send_trait_items_event(
-                        self.name_items,
-                        TraitListEvent(len(self) - len(xlist), None, xlist),
-                        trait.items_event(),
-                    )
-
-                return
-
-            except TraitError as excp:
-                excp.set_prefix("The elements of the")
-                raise excp
-
-        self.len_error(len(self) + len(xlist))
-
-    def remove(self, value):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            list.remove(self, value)
-            return
-        if trait.minlen < len(self):
-            try:
-                index = self.index(value)
-                removed = [self[index]]
-            except:
-                pass
-
-            list.remove(self, value)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitListEvent(index, removed)
-                )
-        elif len(self) == 0:
-            # Let whatever system error (ValueError) should be raised be raised.
-            list.remove(self, value)
-        else:
-            self.len_error(len(self) - 1)
-
-    def sort(self, key=None, reverse=False):
-        removed = self[:]
-        list.sort(self, key=key, reverse=reverse)
-        if (
-            getattr(self, "name_items", None) is not None
-            and getattr(self, "trait", None) is not None
-        ):
-            self._send_trait_items_event(
-                self.name_items, TraitListEvent(0, removed, self[:])
-            )
-
-    def reverse(self):
-        removed = self[:]
-        if len(self) > 1:
-            list.reverse(self)
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitListEvent(0, removed, self[:])
-                )
-
-    def pop(self, *args):
-        if not hasattr(self, "trait"):
-            return list.pop(self, *args)
-        if self.trait.minlen < len(self):
-            if len(args) > 0:
-                index = args[0]
-            else:
-                index = -1
-
-            try:
-                removed = [self[index]]
-            except:
-                pass
-
-            result = list.pop(self, *args)
-
-            if self.name_items is not None:
-                if index < 0:
-                    index = len(self) + index + 1
-
-                self._send_trait_items_event(
-                    self.name_items, TraitListEvent(index, removed)
-                )
-
-            return result
-
-        else:
-            self.len_error(len(self) - 1)
-
-    def rename(self, name):
-        trait = self.object()._trait(name, 0)
-        if trait is not None:
-            self.name = name
-            self.trait = trait.handler
-
-    def len_error(self, len):
-        raise TraitError(
-            "The '%s' trait of %s instance must be %s, "
-            "but you attempted to change its length to %d element%s."
-            % (
-                self.name,
-                class_of(self.object()),
-                self.trait.full_info(self.object(), self.name, Undefined),
-                len,
-                "s"[len == 1 :],
-            )
-        )
-
-    def __getstate__(self):
-        result = self.__dict__.copy()
-        result.pop("object", None)
-        result.pop("trait", None)
-
-        return result
-
-    def __setstate__(self, state):
-        name = state.setdefault("name", "")
-        object = state.pop("object", None)
-        if object is not None:
-            self.object = ref(object)
-            self.rename(name)
-        else:
-            self.object = lambda: None
-
-        self.__dict__.update(state)
-
-
-# -------------------------------------------------------------------------------
-#  'TraitSetEvent' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitSetEvent(object):
-
-    # ---------------------------------------------------------------------------
-    #  Initialize the object:
-    # ---------------------------------------------------------------------------
-
-    def __init__(self, removed=None, added=None):
-        if removed is None:
-            removed = set()
-        self.removed = removed
-
-        if added is None:
-            added = set()
-        self.added = added
-
-
-# -------------------------------------------------------------------------------
-#  'TraitSetObject' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitSetObject(set):
-    def __init__(self, trait, object, name, value):
-        self.trait = trait
-        self.object = ref(object)
-        self.name = name
-        self.name_items = None
-        if trait.has_items:
-            self.name_items = name + "_items"
-
-        # Validate and assign the initial set value:
-        try:
-            validate = trait.item_trait.handler.validate
-            if validate is not None:
-                value = [validate(object, name, val) for val in value]
-
-            super(TraitSetObject, self).__init__(value)
-
-            return
-
-        except TraitError as excp:
-            excp.set_prefix("Each element of the")
-            raise excp
-
-    def _send_trait_items_event(self, name, event, items_event=None):
-        """ Send a TraitDictEvent to the owning object if there is one.
-        """
-        object = self.object()
-        if object is not None:
-            if items_event is None and hasattr(self, "trait"):
-                items_event = self.trait.items_event()
-            object.trait_items_event(name, event, items_event)
-
-    def __deepcopy__(self, memo):
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
-        memo[id_self] = result = TraitSetObject(
-            self.trait,
-            lambda: None,
-            self.name,
-            [copy.deepcopy(x, memo) for x in self],
-        )
-
-        return result
-
-    def update(self, value):
-        if not hasattr(self, "trait"):
-            return set.update(self, value)
-        try:
-            if not isinstance(value, set):
-                value = set(value)
-            added = value.difference(self)
-            if len(added) > 0:
-                object = self.object()
-                validate = self.trait.item_trait.handler.validate
-                if validate is not None:
-                    name = self.name
-                    added = set(
-                        [validate(object, name, item) for item in added]
-                    )
-
-                set.update(self, added)
-
-                if self.name_items is not None:
-                    self._send_trait_items_event(
-                        self.name_items, TraitSetEvent(None, added)
-                    )
-        except TraitError as excp:
-            excp.set_prefix("Each element of the")
-            raise excp
-
-    def intersection_update(self, value):
-        removed = self.difference(value)
-        if len(removed) > 0:
-            set.difference_update(self, removed)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitSetEvent(removed)
-                )
-
-    def difference_update(self, value):
-        removed = self.intersection(value)
-        if len(removed) > 0:
-            set.difference_update(self, removed)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitSetEvent(removed)
-                )
-
-    def symmetric_difference_update(self, value):
-        if not hasattr(self, "trait"):
-            return set.symmetric_difference_update(self, value)
-        if not isinstance(value, set):
-            value = set(value)
-        removed = self.intersection(value)
-        added = value.difference(self)
-        if (len(removed) > 0) or (len(added) > 0):
-            object = self.object()
-            set.difference_update(self, removed)
-
-            if len(added) > 0:
-                validate = self.trait.item_trait.handler.validate
-                if validate is not None:
-                    name = self.name
-                    added = set(
-                        [validate(object, name, item) for item in added]
-                    )
-
-                set.update(self, added)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitSetEvent(removed, added)
-                )
-
-    def add(self, value):
-        if not hasattr(self, "trait"):
-            return set.add(self, value)
-        if value not in self:
-            try:
-                object = self.object()
-                validate = self.trait.item_trait.handler.validate
-                if validate is not None:
-                    value = validate(object, self.name, value)
-
-                set.add(self, value)
-
-                if self.name_items is not None:
-                    self._send_trait_items_event(
-                        self.name_items, TraitSetEvent(None, set([value]))
-                    )
-            except TraitError as excp:
-                excp.set_prefix("Each element of the")
-                raise excp
-
-    def remove(self, value):
-        set.remove(self, value)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitSetEvent(set([value]))
-            )
-
-    def discard(self, value):
-        if value in self:
-            self.remove(value)
-
-    def pop(self):
-        value = set.pop(self)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitSetEvent(set([value]))
-            )
-
-        return value
-
-    def clear(self):
-        removed = set(self)
-        set.clear(self)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitSetEvent(removed)
-            )
-
-    def copy(self):
-        """ Return a true ``set`` object with a copy of the data.
-        """
-        return set(self)
-
-    def __reduce_ex__(self, protocol=None):
-        """ Overridden to make sure we call our custom __getstate__.
-        """
-        return (
-            copyreg._reconstructor,
-            (type(self), set, list(self)),
-            self.__getstate__(),
-        )
-
-    def __getstate__(self):
-        result = self.__dict__.copy()
-        result.pop("object", None)
-        result.pop("trait", None)
-        return result
-
-    def __setstate__(self, state):
-        name = state.setdefault("name", "")
-        object = state.pop("object", None)
-        if object is not None:
-            self.object = ref(object)
-            self.rename(name)
-        else:
-            self.object = lambda: None
-
-        self.__dict__.update(state)
-
-    def __ior__(self, value):
-        self.update(value)
-        return self
-
-    def __iand__(self, value):
-        self.intersection_update(value)
-        return self
-
-    def __ixor__(self, value):
-        self.symmetric_difference_update(value)
-        return self
-
-    def __isub__(self, value):
-        self.difference_update(value)
-        return self
-
-
-# -------------------------------------------------------------------------------
-#  'TraitDictEvent' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitDictEvent(object):
-    def __init__(self, added=None, changed=None, removed=None):
-        """
-        Parameters
-        ----------
-        added : dict
-            New keys and values.
-        changed : dict
-            Updated keys and their previous values.
-        removed : dict
-            Old keys and values that were just removed.
-        """
-        # Construct new empty dicts every time instead of using a default value
-        # in the method argument, just in case someone gets the bright idea of
-        # modifying the dict they get in-place.
-        if added is None:
-            added = {}
-        self.added = added
-
-        if changed is None:
-            changed = {}
-        self.changed = changed
-
-        if removed is None:
-            removed = {}
-        self.removed = removed
 
 
 # -------------------------------------------------------------------------------
@@ -2740,7 +1940,7 @@ class TraitDict(TraitHandler):
     """
 
     info_trait = None
-    default_value_type = TRAIT_DICT_OBJECT_DEFAULT_VALUE
+    default_value_type = DefaultValue.trait_list_object
     _items_event = None
 
     def __init__(self, key_trait=None, value_trait=None, has_items=True):
@@ -2823,250 +2023,10 @@ class TraitDict(TraitHandler):
 
 
 # -------------------------------------------------------------------------------
-#  'TraitDictObject' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitDictObject(dict):
-    def __init__(self, trait, object, name, value):
-        self.trait = trait
-        self.object = ref(object)
-        self.name = name
-        self.name_items = None
-        if trait.has_items:
-            self.name_items = name + "_items"
-
-        if len(value) > 0:
-            dict.update(self, self._validate_dic(value))
-
-    def _send_trait_items_event(self, name, event, items_event=None):
-        """ Send a TraitDictEvent to the owning object if there is one.
-        """
-        object = self.object()
-        if object is not None:
-            if items_event is None and hasattr(self, "trait"):
-                items_event = self.trait.items_event()
-            object.trait_items_event(name, event, items_event)
-
-    def __deepcopy__(self, memo):
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
-        memo[id_self] = result = TraitDictObject(
-            self.trait,
-            lambda: None,
-            self.name,
-            dict(copy.deepcopy(x, memo) for x in self.items()),
-        )
-
-        return result
-
-    def __setitem__(self, key, value):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            dict.__setitem__(self, key, value)
-            return
-
-        object = self.object()
-        try:
-            validate = trait.key_trait.handler.validate
-            if validate is not None:
-                key = validate(object, self.name, key)
-
-        except TraitError as excp:
-            excp.set_prefix("Each key of the")
-            raise excp
-
-        try:
-            validate = trait.value_handler.validate
-            if validate is not None:
-                value = validate(object, self.name, value)
-
-            if self.name_items is not None:
-                if key in self:
-                    added = None
-                    old = self[key]
-                    changed = {key: old}
-                else:
-                    added = {key: value}
-                    changed = None
-
-            dict.__setitem__(self, key, value)
-
-            if self.name_items is not None:
-                if added is None:
-                    try:
-                        if old == value:
-                            return
-                    except:
-                        # Treat incomparable objects as unequal:
-                        pass
-                self._send_trait_items_event(
-                    self.name_items,
-                    TraitDictEvent(added, changed),
-                    trait.items_event(),
-                )
-
-        except TraitError as excp:
-            excp.set_prefix("Each value of the")
-            raise excp
-
-    def __delitem__(self, key):
-        if self.name_items is not None:
-            removed = {key: self[key]}
-
-        dict.__delitem__(self, key)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitDictEvent(removed=removed)
-            )
-
-    def clear(self):
-        if len(self) > 0:
-            if self.name_items is not None:
-                removed = self.copy()
-
-            dict.clear(self)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitDictEvent(removed=removed)
-                )
-
-    def update(self, dic):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            dict.update(self, dic)
-            return
-
-        if len(dic) > 0:
-            new_dic = self._validate_dic(dic)
-
-            if self.name_items is not None:
-                added = {}
-                changed = {}
-                for key, value in new_dic.items():
-                    if key in self:
-                        changed[key] = self[key]
-                    else:
-                        added[key] = value
-
-                dict.update(self, new_dic)
-
-                self._send_trait_items_event(
-                    self.name_items,
-                    TraitDictEvent(added=added, changed=changed),
-                )
-            else:
-                dict.update(self, new_dic)
-
-    def setdefault(self, key, value=None):
-        if key in self:
-            return self[key]
-
-        self[key] = value
-        result = self[key]
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitDictEvent(added={key: result})
-            )
-
-        return result
-
-    def pop(self, key, value=Undefined):
-        if (value is Undefined) or key in self:
-            result = dict.pop(self, key)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitDictEvent(removed={key: result})
-                )
-
-            return result
-
-        return value
-
-    def popitem(self):
-        result = dict.popitem(self)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitDictEvent(removed={result[0]: result[1]})
-            )
-
-        return result
-
-    def rename(self, name):
-        trait = self.object()._trait(name, 0)
-        if trait is not None:
-            self.name = name
-            self.trait = trait.handler
-        else:
-            logger.debug(
-                "rename: No 'trait' in %s for '%s'" % (self.object(), name)
-            )
-
-    def __getstate__(self):
-        result = self.__dict__.copy()
-        result.pop("object", None)
-        result.pop("trait", None)
-        return result
-
-    def __setstate__(self, state):
-        name = state.setdefault("name", "")
-        object = state.pop("object", None)
-        if object is not None:
-            self.object = ref(object)
-            self.rename(name)
-        else:
-            self.object = lambda: None
-
-        self.__dict__.update(state)
-
-    # -- Private Methods ------------------------------------------------------------
-
-    def _validate_dic(self, dic):
-        name = self.name
-        new_dic = {}
-
-        key_validate = self.trait.key_trait.handler.validate
-        if key_validate is None:
-            key_validate = lambda object, name, key: key
-
-        value_validate = self.trait.value_trait.handler.validate
-        if value_validate is None:
-            value_validate = lambda object, name, value: value
-
-        object = self.object()
-        for key, value in dic.items():
-            try:
-                key = key_validate(object, name, key)
-            except TraitError as excp:
-                excp.set_prefix("Each key of the")
-                raise excp
-
-            try:
-                value = value_validate(object, name, value)
-            except TraitError as excp:
-                excp.set_prefix("Each value of the")
-                raise excp
-
-            new_dic[key] = value
-
-        return new_dic
-
-
-# -------------------------------------------------------------------------------
-#  Tell the C-based traits module about 'TraitListObject', 'TraitSetObject and
-#  'TraitDictObject', and the PyProtocols 'adapt' function:
+#  Tell the C-based traits module about the PyProtocols 'adapt' function:
 # -------------------------------------------------------------------------------
 
 from . import ctraits
-
-ctraits._list_classes(TraitListObject, TraitSetObject, TraitDictObject)
 
 
 def _adapt_wrapper(*args, **kw):

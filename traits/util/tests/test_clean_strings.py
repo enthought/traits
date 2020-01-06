@@ -16,7 +16,7 @@ import unittest
 from traits.util.clean_strings import clean_filename
 
 # Safe strings should only contain the following characters.
-LEGAL_CHARS = set("-0123456789_abcdefghijklmnopqrstuvwxyz0123456789")
+LEGAL_CHARS = set("-0123456789_abcdefghijklmnopqrstuvwxyz")
 
 
 class TestCleanStrings(unittest.TestCase):

@@ -47,12 +47,25 @@ Visualization:
 # -------------------------------------------------------------------------------
 
 import sys
+from functools import partial
 from types import FunctionType, MethodType
 
 NoneType = type(None)  # Python 3's types does not include NoneType
 
 from . import trait_handlers
+from .constants import DefaultValue, TraitKind, default_value_map
 from .ctraits import cTrait
+from .editor_factories import (
+    bytes_editor,
+    code_editor,
+    date_editor,
+    html_editor,
+    list_editor,
+    multi_line_text_editor,
+    password_editor,
+    shell_editor,
+    time_editor,
+)
 from .trait_errors import TraitError
 from .trait_base import (
     SequenceTypes,
@@ -62,6 +75,9 @@ from .trait_base import (
     TypeTypes,
     add_article,
 )
+from .trait_dict_object import TraitDictObject
+from .trait_list_object import TraitListObject
+from .trait_set_object import TraitSetObject
 
 from .trait_handlers import (
     TraitHandler,
@@ -80,246 +96,7 @@ from .trait_handlers import (
     _undefined_get,
     _undefined_set,
     _infer_default_value_type,
-    UNSPECIFIED_DEFAULT_VALUE,
-    CONSTANT_DEFAULT_VALUE,
-    MISSING_DEFAULT_VALUE,
-    OBJECT_DEFAULT_VALUE,
-    LIST_COPY_DEFAULT_VALUE,
-    DICT_COPY_DEFAULT_VALUE,
-    TRAIT_LIST_OBJECT_DEFAULT_VALUE,
-    TRAIT_DICT_OBJECT_DEFAULT_VALUE,
-    CALLABLE_AND_ARGS_DEFAULT_VALUE,
-    CALLABLE_DEFAULT_VALUE,
-    TRAIT_SET_OBJECT_DEFAULT_VALUE,
-    TraitListObject,
-    TraitDictObject,
-    TraitSetObject,
 )
-
-
-# -------------------------------------------------------------------------------
-#  Constants:
-# -------------------------------------------------------------------------------
-
-# Mapping from 'ctrait' default value types to a string representation:
-KindMap = {
-    CONSTANT_DEFAULT_VALUE: "value",
-    MISSING_DEFAULT_VALUE: "value",
-    OBJECT_DEFAULT_VALUE: "self",
-    LIST_COPY_DEFAULT_VALUE: "list",
-    DICT_COPY_DEFAULT_VALUE: "dict",
-    TRAIT_LIST_OBJECT_DEFAULT_VALUE: "list",
-    TRAIT_DICT_OBJECT_DEFAULT_VALUE: "dict",
-    CALLABLE_AND_ARGS_DEFAULT_VALUE: "factory",
-    CALLABLE_DEFAULT_VALUE: "method",
-    TRAIT_SET_OBJECT_DEFAULT_VALUE: "set",
-}
-
-# -------------------------------------------------------------------------------
-#  Editor factory functions:
-# -------------------------------------------------------------------------------
-
-PasswordEditor = None
-MultilineTextEditors = {}
-BytesEditors = {}
-SourceCodeEditor = None
-HTMLTextEditor = None
-PythonShellEditor = None
-DateEditor = None
-TimeEditor = None
-
-
-def password_editor(auto_set=True, enter_set=False):
-    """ Factory function that returns an editor for passwords.
-    """
-    global PasswordEditor
-
-    if PasswordEditor is None:
-        from traitsui.api import TextEditor
-
-        PasswordEditor = TextEditor(
-            password=True, auto_set=auto_set, enter_set=enter_set
-        )
-
-    return PasswordEditor
-
-
-def multi_line_text_editor(auto_set=True, enter_set=False):
-    """ Factory function that returns a text editor for multi-line strings.
-    """
-    if (auto_set, enter_set) not in MultilineTextEditors:
-        from traitsui.api import TextEditor
-
-        MultilineTextEditors[auto_set, enter_set] = TextEditor(
-            multi_line=True, auto_set=auto_set, enter_set=enter_set
-        )
-
-    return MultilineTextEditors[auto_set, enter_set]
-
-
-def bytes_editor(auto_set=True, enter_set=False, encoding=None):
-    """ Factory function that returns a text editor for bytes.
-    """
-    if encoding is not None:
-        if isinstance(encoding, str):
-            import codecs
-
-            encoding = codecs.lookup(encoding)
-
-    if (auto_set, enter_set, encoding) not in BytesEditors:
-        from traitsui.api import TextEditor
-
-        if encoding is None:
-            # py3-compatible bytes <-> hex string
-            format = lambda b: b.encode("hex").decode("ascii")
-            evaluate = lambda s: s.encode("ascii").decode("hex")
-        else:
-            format = encoding.decode
-            evaluate = encoding.encode
-
-        BytesEditors[(auto_set, enter_set, encoding)] = TextEditor(
-            multi_line=True,
-            format_func=format,
-            evaluate=evaluate,
-            auto_set=auto_set,
-            enter_set=enter_set,
-        )
-
-    return BytesEditors[(auto_set, enter_set, encoding)]
-
-
-def code_editor():
-    """ Factory function that returns an editor that treats a multi-line string
-    as source code.
-    """
-    global SourceCodeEditor
-
-    if SourceCodeEditor is None:
-        from traitsui.api import CodeEditor
-
-        SourceCodeEditor = CodeEditor()
-
-    return SourceCodeEditor
-
-
-def html_editor():
-    """ Factory function for an "editor" that displays a multi-line string as
-    interpreted HTML.
-    """
-    global HTMLTextEditor
-
-    if HTMLTextEditor is None:
-        from traitsui.api import HTMLEditor
-
-        HTMLTextEditor = HTMLEditor()
-
-    return HTMLTextEditor
-
-
-def shell_editor():
-    """ Factory function that returns a Python shell for editing Python values.
-    """
-    global PythonShellEditor
-
-    if PythonShellEditor is None:
-        from traitsui.api import ShellEditor
-
-        PythonShellEditor = ShellEditor()
-
-    return PythonShellEditor
-
-
-def time_editor():
-    """ Factory function that returns a Time editor for editing Time values.
-    """
-    global TimeEditor
-
-    if TimeEditor is None:
-        from traitsui.api import TimeEditor
-
-        TimeEditor = TimeEditor()
-
-    return TimeEditor
-
-
-def date_editor():
-    """ Factory function that returns a Date editor for editing Date values.
-    """
-    global DateEditor
-
-    if DateEditor is None:
-        from traitsui.api import DateEditor
-
-        DateEditor = DateEditor()
-
-    return DateEditor
-
-
-def _expects_hastraits_instance(handler):
-    """ Does a trait handler or type expect a HasTraits subclass instance?
-    """
-    from traits.api import HasTraits, BaseInstance, TraitInstance
-
-    if isinstance(handler, TraitInstance):
-        cls = handler.aClass
-    elif isinstance(handler, BaseInstance):
-        cls = handler.klass
-    else:
-        return False
-    return issubclass(cls, HasTraits)
-
-
-def _instance_handler_factory(handler):
-    """ Get the instance factory of an Instance or TraitInstance
-    """
-    from traits.api import BaseInstance, TraitInstance
-
-    if isinstance(handler, TraitInstance):
-        return handler.aClass
-    elif isinstance(handler, BaseInstance):
-        return handler.default_value
-    else:
-        msg = "handler should be TraitInstance or BaseInstance, but got {}"
-        raise ValueError(msg.format(repr(handler)))
-
-
-def list_editor(trait, handler):
-    """ Factory that constructs an appropriate editor for a list.
-    """
-    item_handler = handler.item_trait.handler
-    if _expects_hastraits_instance(item_handler):
-        from traitsui.table_column import ObjectColumn
-        from traitsui.table_filter import (
-            EvalFilterTemplate,
-            RuleFilterTemplate,
-            MenuFilterTemplate,
-            EvalTableFilter,
-        )
-        from traitsui.api import TableEditor
-
-        return TableEditor(
-            filters=[
-                RuleFilterTemplate,
-                MenuFilterTemplate,
-                EvalFilterTemplate,
-            ],
-            edit_view="",
-            orientation="vertical",
-            search=EvalTableFilter(),
-            deletable=True,
-            show_toolbar=True,
-            reorderable=True,
-            row_factory=_instance_handler_factory(item_handler),
-        )
-    else:
-        from traitsui.api import ListEditor
-
-        return ListEditor(
-            trait_handler=handler,
-            rows=trait.rows if trait.rows else 5,
-            use_notebook=bool(trait.use_notebook),
-            page_name=trait.page_name if trait.page_name else "",
-        )
 
 
 # -------------------------------------------------------------------------------
@@ -354,23 +131,23 @@ class CTrait(cTrait):
     def default(self):
         kind, value = self.default_value()
         if kind in (
-            OBJECT_DEFAULT_VALUE,
-            CALLABLE_AND_ARGS_DEFAULT_VALUE,
-            CALLABLE_DEFAULT_VALUE,
+            DefaultValue.object,
+            DefaultValue.callable_and_args,
+            DefaultValue.callable,
         ):
             return Undefined
         elif kind in (
-            DICT_COPY_DEFAULT_VALUE,
-            TRAIT_DICT_OBJECT_DEFAULT_VALUE,
-            TRAIT_SET_OBJECT_DEFAULT_VALUE,
+            DefaultValue.dict_copy,
+            DefaultValue.trait_dict_object,
+            DefaultValue.trait_set_object,
         ):
             return value.copy()
         elif kind in (
-            LIST_COPY_DEFAULT_VALUE,
-            TRAIT_LIST_OBJECT_DEFAULT_VALUE,
+            DefaultValue.list_copy,
+            DefaultValue.trait_list_object,
         ):
             return value[:]
-        elif kind in (CONSTANT_DEFAULT_VALUE, MISSING_DEFAULT_VALUE):
+        elif kind in {DefaultValue.constant, DefaultValue.missing}:
             return value
         else:
             # This shouldn't ever happen.
@@ -380,7 +157,7 @@ class CTrait(cTrait):
 
     @property
     def default_kind(self):
-        return KindMap[self.default_value()[0]]
+        return default_value_map[self.default_value()[0]]
 
     @property
     def trait_type(self):
@@ -532,6 +309,9 @@ class CTrait(cTrait):
 from . import ctraits
 
 ctraits._ctrait(CTrait)
+
+#: Register Trait container object classes with ctraits.c
+ctraits._list_classes(TraitListObject, TraitSetObject, TraitDictObject)
 
 # -------------------------------------------------------------------------------
 #  Constants:
@@ -834,15 +614,16 @@ def Trait(*value_type, **metadata):
         more information on trait editors.
     comparison_mode : int
         Indicates when trait change notifications should be generated based upon
-        the result of comparing the old and new values of a trait assignment:
+        the result of comparing the old and new values of a trait assignment.
+        Possible values come from the ``ComparisonMode`` enum:
 
-        * 0 (NO_COMPARE): The values are not compared and a trait change
+        * 0 (no_compare): The values are not compared and a trait change
           notification is generated on each assignment.
-        * 1 (OBJECT_IDENTITY_COMPARE): A trait change notification is
+        * 1 (object_id_compare): A trait change notification is
           generated if the old and new values are not the same object.
-        * 2 (RICH_COMPARE): A trait change notification is generated if the
-          old and new values are not equal using Python's
-          'rich comparison' operator. This is the default.
+        * 2 (equality_compare): A trait change notification is generated if the
+          old and new values are not equal using Python's standard equality
+          testing. This is the default.
 
     rich_compare : bool
         Indicates whether the basis for considering a trait attribute value to
@@ -871,7 +652,7 @@ trait_handlers.Trait = Trait
 class _TraitMaker(object):
 
     # Ctrait type map for special trait types:
-    type_map = {"event": 2, "constant": 7}
+    type_map = {"event": TraitKind.event, "constant": TraitKind.constant}
 
     # ---------------------------------------------------------------------------
     #  Initialize the object:
@@ -886,7 +667,7 @@ class _TraitMaker(object):
     # ---------------------------------------------------------------------------
 
     def define(self, *value_type, **metadata):
-        default_value_type = UNSPECIFIED_DEFAULT_VALUE
+        default_value_type = DefaultValue.unspecified
         default_value = handler = clone = None
 
         if len(value_type) > 0:
@@ -974,7 +755,7 @@ class _TraitMaker(object):
 
                         elif isinstance(default_value, _InstanceArgs):
                             default_value_type = (
-                                CALLABLE_AND_ARGS_DEFAULT_VALUE
+                                DefaultValue.callable_and_args
                             )
                             default_value = (
                                 handler.create_default_value,
@@ -988,14 +769,14 @@ class _TraitMaker(object):
 
                             if typeValue is dict:
                                 default_value_type = (
-                                    CALLABLE_AND_ARGS_DEFAULT_VALUE
+                                    DefaultValue.callable_and_args
                                 )
                                 default_value = (aClass, (), default_value)
                             elif not isinstance(default_value, aClass):
                                 if typeValue is not tuple:
                                     default_value = (default_value,)
                                 default_value_type = (
-                                    CALLABLE_AND_ARGS_DEFAULT_VALUE
+                                    DefaultValue.callable_and_args
                                 )
                                 default_value = (aClass, default_value, None)
                 else:
@@ -1020,7 +801,7 @@ class _TraitMaker(object):
 
         if default_value_type < 0:
             if isinstance(default_value, Default):
-                default_value_type = CALLABLE_AND_ARGS_DEFAULT_VALUE
+                default_value_type = DefaultValue.callable_and_args
                 default_value = default_value.default_value
             else:
                 if (handler is None) and (clone is not None):
@@ -1084,7 +865,7 @@ class _TraitMaker(object):
 
     def as_ctrait(self):
         metadata = self.metadata
-        trait = CTrait(self.type_map.get(metadata.get("type"), 0))
+        trait = CTrait(self.type_map.get(metadata.get("type"), TraitKind.trait))
         clone = self.clone
         if clone is not None:
             trait.clone(clone)
@@ -1104,7 +885,7 @@ class _TraitMaker(object):
             post_setattr = getattr(handler, "post_setattr", None)
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
-                trait.is_mapped_flag = handler.is_mapped
+                trait.is_mapped = handler.is_mapped
 
         # Note: The use of 'rich_compare' metadata is deprecated; use
         # 'comparison_mode' metadata instead:
@@ -1255,7 +1036,7 @@ def Property(
         metadata.setdefault("cached", True)
 
     n = 0
-    trait = CTrait(4)
+    trait = CTrait(TraitKind.property)
     trait.__dict__ = metadata.copy()
     if fvalidate is not None:
         n = _arg_count(fvalidate)
@@ -1311,7 +1092,7 @@ SpecialNames = {
 # -------------------------------------------------------------------------------
 
 # Generic trait with 'object' behavior:
-generic_trait = CTrait(8)
+generic_trait = CTrait(TraitKind.generic)
 
 # -------------------------------------------------------------------------------
 #  User interface related color and font traits:
