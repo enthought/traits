@@ -1264,7 +1264,7 @@ _has_traits_veto_notify ( has_traits_object * obj, PyObject * args ) {
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_has_traits_init ( has_traits_object * obj ) {
+_has_traits_init ( has_traits_object * obj, PyObject *Py_UNUSED(ignored) ) {
 
     Py_INCREF( Py_None );
     return Py_None;
@@ -1298,10 +1298,7 @@ _has_traits_inited ( has_traits_object * obj, PyObject * args ) {
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_has_traits_instance_traits ( has_traits_object * obj, PyObject * args ) {
-
-    if ( !PyArg_ParseTuple( args, "" ) )
-        return NULL;
+_has_traits_instance_traits ( has_traits_object * obj, PyObject *Py_UNUSED(ignored) ) {
 
     if ( obj->itrait_dict == NULL )
                 obj->itrait_dict = (PyDictObject *) PyDict_New();
@@ -1398,7 +1395,7 @@ static PyMethodDef has_traits_methods[] = {
         { "_trait",           (PyCFunction) _has_traits_trait,     METH_VARARGS,
       PyDoc_STR( "_trait(name,instance) -> trait" ) },
         { "_instance_traits", (PyCFunction) _has_traits_instance_traits,
-      METH_VARARGS,
+      METH_NOARGS,
       PyDoc_STR( "_instance_traits() -> dict" ) },
         { "_notifiers",       (PyCFunction) _has_traits_notifiers, METH_VARARGS,
       PyDoc_STR( "_notifiers(force_create) -> list" ) },
@@ -3907,7 +3904,7 @@ done:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_trait_get_validate ( trait_object * trait ) {
+_trait_get_validate ( trait_object * trait, PyObject *Py_UNUSED(ignored) ) {
 
     if ( trait->validate != NULL ) {
         Py_INCREF( trait->py_validate );
@@ -4259,12 +4256,9 @@ func_index ( void * function, void ** function_table ) {
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_trait_getstate ( trait_object * trait, PyObject * args ) {
+_trait_getstate ( trait_object * trait, PyObject *Py_UNUSED(ignored) ) {
 
     PyObject * result;
-
-    if ( !PyArg_ParseTuple( args, "" ) )
-        return NULL;
 
     result = PyTuple_New( 15 );
     if ( result == NULL )
@@ -4684,7 +4678,7 @@ PyDoc_STRVAR(_notifiers_doc,
 
 
 static PyMethodDef trait_methods[] = {
-        { "__getstate__", (PyCFunction) _trait_getstate,       METH_VARARGS,
+        { "__getstate__", (PyCFunction) _trait_getstate,       METH_NOARGS,
                 PyDoc_STR( "__getstate__()" ) },
         { "__setstate__", (PyCFunction) _trait_setstate,       METH_VARARGS,
                 PyDoc_STR( "__setstate__(state)" ) },
