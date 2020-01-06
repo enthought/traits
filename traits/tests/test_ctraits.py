@@ -13,7 +13,6 @@
 import unittest
 import warnings
 
-import traits.ctraits
 from traits.constants import (
     ComparisonMode, DefaultValue, TraitKind, MAXIMUM_DEFAULT_VALUE_TYPE
 )
@@ -148,4 +147,4 @@ class TestCTrait(unittest.TestCase):
         self.assertTrue(trait.no_value_test)
 
         with self.assertRaises(AttributeError):
-            trait.no_value_test_flag = False
+            trait.no_value_test = False
