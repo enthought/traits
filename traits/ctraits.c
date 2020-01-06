@@ -4984,9 +4984,6 @@ PyMODINIT_FUNC PyInit_ctraits(void) {
             "_TRAIT_SET_OBJECT_DEFAULT_VALUE",
             TRAIT_SET_OBJECT_DEFAULT_VALUE) < 0 )
         return NULL;
-    if ( PyModule_AddIntConstant(
-            module, "_MAXIMUM_DEFAULT_VALUE_TYPE", MAXIMUM_DEFAULT_VALUE_TYPE) < 0 )
-        return NULL;
 
     /* Predefine a Python string == "__class_traits__": */
     class_traits = PyUnicode_FromString( "__class_traits__" );
