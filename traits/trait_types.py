@@ -24,6 +24,7 @@
 
 from collections.abc import MutableSequence
 import datetime
+import enum
 import operator
 import re
 import sys
@@ -1990,6 +1991,10 @@ class BaseEnum(TraitType):
             elif (len(args) == 2) and isinstance(args[1], EnumTypes):
                 args = args[1]
 
+            if isinstance(args, enum.EnumMeta):
+                metadata.setdefault('format_func', operator.attrgetter('name'))
+                metadata.setdefault('evaluate', args)
+
             self.name = ""
             self.values = tuple(args)
             self.init_fast_validator(5, self.values)
@@ -2035,6 +2040,7 @@ class BaseEnum(TraitType):
             name=self.name,
             cols=self.cols or 3,
             evaluate=self.evaluate,
+            format_func=self.format_func,
             mode=self.mode if self.mode else "radio",
         )
 
