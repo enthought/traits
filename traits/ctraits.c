@@ -5023,62 +5023,83 @@ PyMODINIT_FUNC PyInit_ctraits(void) {
 
     /* Expose module-level constants used by cTrait and CHasTraits */
     /* CHasTraits flags */
-    PyModule_AddIntConstant(module, "_HASTRAITS_INITED", HASTRAITS_INITED);
-    PyModule_AddIntConstant(
-        module, "_HASTRAITS_NO_NOTIFY", HASTRAITS_NO_NOTIFY);
-    PyModule_AddIntConstant(
-        module, "_HASTRAITS_VETO_NOTIFY", HASTRAITS_VETO_NOTIFY);
+    if ( PyModule_AddIntConstant(module, "_HASTRAITS_INITED", HASTRAITS_INITED) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module, "_HASTRAITS_NO_NOTIFY", HASTRAITS_NO_NOTIFY) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module, "_HASTRAITS_VETO_NOTIFY", HASTRAITS_VETO_NOTIFY) < 0 )
+        return NULL;
 
     /* cTrait flags */
-    PyModule_AddIntConstant(module, "_TRAIT_PROPERTY", TRAIT_PROPERTY);
-    PyModule_AddIntConstant(
-        module, "_TRAIT_MODIFY_DELEGATE", TRAIT_MODIFY_DELEGATE);
-    PyModule_AddIntConstant(
-        module, "_TRAIT_OBJECT_IDENTITY", TRAIT_OBJECT_IDENTITY);
-    PyModule_AddIntConstant(
-        module,
-        "_TRAIT_SETATTR_ORIGINAL_VALUE",
-        TRAIT_SETATTR_ORIGINAL_VALUE);
-    PyModule_AddIntConstant(
-        module,
-        "_TRAIT_POST_SETATTR_ORIGINAL_VALUE",
-        TRAIT_POST_SETATTR_ORIGINAL_VALUE);
-    PyModule_AddIntConstant(
-        module, "_TRAIT_IS_MAPPED", TRAIT_IS_MAPPED);
-    PyModule_AddIntConstant(
-        module, "_TRAIT_NO_VALUE_TEST", TRAIT_NO_VALUE_TEST);
+    if ( PyModule_AddIntConstant(module, "_TRAIT_PROPERTY", TRAIT_PROPERTY) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module, "_TRAIT_MODIFY_DELEGATE", TRAIT_MODIFY_DELEGATE) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module, "_TRAIT_OBJECT_IDENTITY", TRAIT_OBJECT_IDENTITY) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module,
+            "_TRAIT_SETATTR_ORIGINAL_VALUE",
+            TRAIT_SETATTR_ORIGINAL_VALUE) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module,
+            "_TRAIT_POST_SETATTR_ORIGINAL_VALUE",
+            TRAIT_POST_SETATTR_ORIGINAL_VALUE) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module, "_TRAIT_IS_MAPPED", TRAIT_IS_MAPPED) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module, "_TRAIT_NO_VALUE_TEST", TRAIT_NO_VALUE_TEST) < 0 )
+        return NULL;
 
     /* Default value type constants */
-    PyModule_AddIntConstant(
-        module, "_CONSTANT_DEFAULT_VALUE", CONSTANT_DEFAULT_VALUE);
-    PyModule_AddIntConstant(
-        module, "_MISSING_DEFAULT_VALUE", MISSING_DEFAULT_VALUE);
-    PyModule_AddIntConstant(
-        module, "_OBJECT_DEFAULT_VALUE", OBJECT_DEFAULT_VALUE);
-    PyModule_AddIntConstant(
-        module, "_LIST_COPY_DEFAULT_VALUE", LIST_COPY_DEFAULT_VALUE);
-    PyModule_AddIntConstant(
-        module, "_DICT_COPY_DEFAULT_VALUE", DICT_COPY_DEFAULT_VALUE);
-    PyModule_AddIntConstant(
-        module,
-        "_TRAIT_LIST_OBJECT_DEFAULT_VALUE",
-        TRAIT_LIST_OBJECT_DEFAULT_VALUE);
-    PyModule_AddIntConstant(
-        module,
-        "_TRAIT_DICT_OBJECT_DEFAULT_VALUE",
-        TRAIT_DICT_OBJECT_DEFAULT_VALUE);
-    PyModule_AddIntConstant(
-        module,
-        "_CALLABLE_AND_ARGS_DEFAULT_VALUE",
-        CALLABLE_AND_ARGS_DEFAULT_VALUE);
-    PyModule_AddIntConstant(
-        module, "_CALLABLE_DEFAULT_VALUE", CALLABLE_DEFAULT_VALUE);
-    PyModule_AddIntConstant(
-        module,
-        "_TRAIT_SET_OBJECT_DEFAULT_VALUE",
-        TRAIT_SET_OBJECT_DEFAULT_VALUE);
-    PyModule_AddIntConstant(
-        module, "_MAXIMUM_DEFAULT_VALUE_TYPE", MAXIMUM_DEFAULT_VALUE_TYPE);
+    if ( PyModule_AddIntConstant(
+            module, "_CONSTANT_DEFAULT_VALUE", CONSTANT_DEFAULT_VALUE) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module, "_MISSING_DEFAULT_VALUE", MISSING_DEFAULT_VALUE) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module, "_OBJECT_DEFAULT_VALUE", OBJECT_DEFAULT_VALUE) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module, "_LIST_COPY_DEFAULT_VALUE", LIST_COPY_DEFAULT_VALUE) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module, "_DICT_COPY_DEFAULT_VALUE", DICT_COPY_DEFAULT_VALUE) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module,
+            "_TRAIT_LIST_OBJECT_DEFAULT_VALUE",
+            TRAIT_LIST_OBJECT_DEFAULT_VALUE) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module,
+            "_TRAIT_DICT_OBJECT_DEFAULT_VALUE",
+            TRAIT_DICT_OBJECT_DEFAULT_VALUE) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module,
+            "_CALLABLE_AND_ARGS_DEFAULT_VALUE",
+            CALLABLE_AND_ARGS_DEFAULT_VALUE) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module, "_CALLABLE_DEFAULT_VALUE", CALLABLE_DEFAULT_VALUE) < 0 )
+            return NULL;
+    if ( PyModule_AddIntConstant(
+            module,
+            "_TRAIT_SET_OBJECT_DEFAULT_VALUE",
+            TRAIT_SET_OBJECT_DEFAULT_VALUE) < 0 )
+        return NULL;
+    if ( PyModule_AddIntConstant(
+            module, "_MAXIMUM_DEFAULT_VALUE_TYPE", MAXIMUM_DEFAULT_VALUE_TYPE) < 0 )
+        return NULL;
 
     /* Predefine a Python string == "__class_traits__": */
     class_traits = PyUnicode_FromString( "__class_traits__" );

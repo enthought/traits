@@ -180,6 +180,6 @@ class TestCTrait(unittest.TestCase):
             "_TRAIT_SET_OBJECT_DEFAULT_VALUE",
             "_MAXIMUM_DEFAULT_VALUE_TYPE",
         ]
-        for var in ctraits_module_constants:
-            cnst = getattr(traits.ctraits, var)
-            self.assertIsInstance(cnst, int)
+        for constant_name in ctraits_module_constants:
+            constant_value = getattr(traits.ctraits, constant_name)
+            self.assertIsInstance(constant_value, int)
