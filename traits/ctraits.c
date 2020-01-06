@@ -1309,6 +1309,20 @@ _has_traits_instance_traits ( has_traits_object * obj, PyObject *Py_UNUSED(ignor
 }
 
 /*-----------------------------------------------------------------------------
+|  Returns the class trait dictionary:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_has_traits_class_traits(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
+{
+    PyObject *ctrait_dict;
+
+    ctrait_dict = (PyObject *)obj->ctrait_dict;
+    Py_INCREF(ctrait_dict);
+    return ctrait_dict;
+}
+
+/*-----------------------------------------------------------------------------
 |  Returns (and optionally creates) the anytrait 'notifiers' list:
 +----------------------------------------------------------------------------*/
 
@@ -1397,6 +1411,9 @@ static PyMethodDef has_traits_methods[] = {
         { "_instance_traits", (PyCFunction) _has_traits_instance_traits,
       METH_NOARGS,
       PyDoc_STR( "_instance_traits() -> dict" ) },
+        { "_class_traits", (PyCFunction) _has_traits_class_traits,
+      METH_NOARGS,
+      PyDoc_STR( "_class_traits() -> dict" ) },
         { "_notifiers",       (PyCFunction) _has_traits_notifiers, METH_VARARGS,
       PyDoc_STR( "_notifiers(force_create) -> list" ) },
         { NULL, NULL },
