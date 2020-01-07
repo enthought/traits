@@ -195,6 +195,8 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             class_dict[ClassTraits]["my_trait"],
         )
 
+
+class TestHasTraits(unittest.TestCase):
     def test__class_traits(self):
         # Exercise the _class_traits() private introspection method.
         class Base(HasTraits):
@@ -224,3 +226,36 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         # A different instance should have its own instance traits dict.
         b = Base()
         self.assertIsNot(b._instance_traits(), a_instance_traits)
+
+    def test__trait_notifications_enabled(self):
+        class Base(HasTraits):
+            foo = Int(0)
+
+            foo_notify_count = Int(0)
+
+            def _foo_changed(self):
+                self.foo_notify_count += 1
+
+        a = Base()
+
+        # Default state is that notifications are enabled.
+        self.assertTrue(a._trait_notifications_enabled())
+
+        # Changing foo increments the count.
+        old_count = a.foo_notify_count
+        a.foo += 1
+        self.assertEqual(a.foo_notify_count, old_count + 1)
+
+        # After disabling notifications, count is not increased.
+        a._trait_change_notify(False)
+        self.assertFalse(a._trait_notifications_enabled())
+        old_count = a.foo_notify_count
+        a.foo += 1
+        self.assertEqual(a.foo_notify_count, old_count)
+
+        # After re-enabling notifications, count is increased.
+        a._trait_change_notify(True)
+        self.assertTrue(a._trait_notifications_enabled())
+        old_count = a.foo_notify_count
+        a.foo += 1
+        self.assertEqual(a.foo_notify_count, old_count + 1)
