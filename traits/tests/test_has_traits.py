@@ -11,7 +11,7 @@ from traits.has_traits import (
     HasTraits,
 )
 from traits.traits import CTrait, ForwardProperty, generic_trait
-from traits.trait_types import Float, Int
+from traits.trait_types import Event, Float, Instance, Int
 
 
 def _dummy_getter(self):
@@ -259,3 +259,40 @@ class TestHasTraits(unittest.TestCase):
         old_count = a.foo_notify_count
         a.foo += 1
         self.assertEqual(a.foo_notify_count, old_count + 1)
+
+    def test__trait_notifications_vetoed(self):
+        class SomeEvent(HasTraits):
+            event_id = Int()
+
+        class Target(HasTraits):
+            event = Event(Instance(SomeEvent))
+
+            event_count = Int(0)
+
+            def _event_fired(self):
+                self.event_count += 1
+
+        target = Target()
+        event = SomeEvent(event_id=1234)
+
+        # Default state is not vetoed.
+        self.assertFalse(event._trait_notifications_vetoed())
+
+        # Firing the event increments the count.
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count + 1)
+
+        # Now veto the event. Firing the event won't affect the count.
+        event._trait_veto_notify(True)
+        self.assertTrue(event._trait_notifications_vetoed())
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count)
+
+        # Unveto the event.
+        event._trait_veto_notify(False)
+        self.assertFalse(event._trait_notifications_vetoed())
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count + 1)

@@ -1250,6 +1250,22 @@ _has_traits_change_notify ( has_traits_object * obj, PyObject * args ) {
 }
 
 /*-----------------------------------------------------------------------------
+| Reports whether trait change notifications are enabled when this object is
+| assigned to a trait:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_has_traits_notifications_vetoed(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
+{
+    if (obj->flags & HASTRAITS_VETO_NOTIFY) {
+        Py_RETURN_TRUE;
+    }
+    else {
+        Py_RETURN_FALSE;
+    }
+}
+
+/*-----------------------------------------------------------------------------
 |  Enables/Disables trait change notifications when this object is assigned to
 |  a trait:
 +----------------------------------------------------------------------------*/
@@ -1416,7 +1432,23 @@ PyDoc_STRVAR(_trait_notifications_enabled_doc,
 "Returns\n"
 "-------\n"
 "enabled : bool\n"
-"    True if notifications are current enabled for this object, else False.\n"
+"    True if notifications are currently enabled for this object, else False.\n"
+);
+
+PyDoc_STRVAR(_trait_notifications_vetoed_doc,
+"_trait_notifications_vetoed()\n"
+"\n"
+"Report whether trait notifications are vetoed for this object.\n"
+"\n"
+"If trait notifications are vetoed for an object, assignment of that object\n"
+"to a trait will not generate a notification.\n"
+"This setting can be enabled or disabled using the ``_trait_veto_notify``\n"
+"method. By default, notifications are not vetoed.\n"
+"\n"
+"Returns\n"
+"-------\n"
+"vetoed : bool\n"
+"    True if notifications are currently vetoed for this object, else False.\n"
 );
 
 static PyMethodDef has_traits_methods[] = {
@@ -1437,6 +1469,12 @@ static PyMethodDef has_traits_methods[] = {
         { "_trait_veto_notify", (PyCFunction) _has_traits_veto_notify,
       METH_VARARGS,
       PyDoc_STR( "_trait_veto_notify(boolean)" ) },
+        {
+            "_trait_notifications_vetoed",
+            (PyCFunction) _has_traits_notifications_vetoed,
+            METH_NOARGS,
+            _trait_notifications_vetoed_doc,
+        },
         { "traits_init", (PyCFunction) _has_traits_init,
       METH_NOARGS,
       PyDoc_STR( "traits_init()" ) },
