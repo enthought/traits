@@ -189,7 +189,6 @@ from .trait_handlers import (
     TraitCastType,
     TraitInstance,
     ThisClass,
-    TraitClass,
     TraitFunction,
     TraitEnum,
     TraitPrefixList,
