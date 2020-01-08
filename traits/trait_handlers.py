@@ -630,6 +630,7 @@ class TraitType(BaseTraitHandler):
                     "The 'rich_compare' kwarg has been removed. Please "
                     "use the 'comparison_mode' kwarg instead.",
                     RuntimeWarning,
+                    stacklevel=5,
                 )
 
             comparison_mode = metadata.get("comparison_mode")

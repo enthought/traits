@@ -203,4 +203,5 @@ class OldRichCompareTestCase(unittest.TestCase):
             "'rich_compare' kwarg has been removed",
             str(warn_msg.message)
         )
-        self.assertIn("trait_handlers", warn_msg.filename)
+        this_module = __name__.split(".")[-1]
+        self.assertIn(this_module, warn_msg.filename)
