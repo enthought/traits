@@ -1,5 +1,9 @@
 """ A function to import symbols. """
 
+from importlib import import_module
+
+from traits.trait_base import xgetattr
+
 
 def import_symbol(symbol_path):
     """ Import the symbol defined by the specified symbol path.
@@ -21,15 +25,15 @@ def import_symbol(symbol_path):
     if ":" in symbol_path:
         module_name, symbol_name = symbol_path.split(":")
 
-        module = __import__(module_name, {}, {}, [symbol_name], 0)
-        symbol = eval(symbol_name, module.__dict__)
+        module = import_module(module_name)
+        symbol = xgetattr(module, symbol_name)
 
     else:
         components = symbol_path.split(".")
         module_name = ".".join(components[:-1])
         symbol_name = components[-1]
 
-        module = __import__(module_name, {}, {}, [symbol_name], 0)
+        module = import_module(module_name)
         symbol = getattr(module, symbol_name)
 
     return symbol
