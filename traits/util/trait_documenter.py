@@ -6,6 +6,7 @@
     :copyright: Copyright 2012 by Enthought, Inc
 
 """
+from importlib import import_module
 import inspect
 import io
 import sys
@@ -78,7 +79,7 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         """
         try:
-            __import__(self.modname)
+            import_module(self.modname)
             current = self.module = sys.modules[self.modname]
             for part in self.objpath[:-1]:
                 current = self.get_attr(current, part)

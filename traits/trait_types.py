@@ -23,6 +23,7 @@
 # -------------------------------------------------------------------------------
 
 import datetime
+from importlib import import_module
 import operator
 import re
 import sys
@@ -70,6 +71,8 @@ from .traits import (
 )
 
 from .trait_errors import TraitError
+from .util.import_symbol import import_symbol
+
 
 # -------------------------------------------------------------------------------
 #  Constants:
@@ -2679,12 +2682,9 @@ class BaseClass(TraitType):
         theClass = getattr(sys.modules.get(module), klass, None)
         if (theClass is None) and (col >= 0):
             try:
-                mod = __import__(module)
-                for component in module.split(".")[1:]:
-                    mod = getattr(mod, component)
-
+                mod = import_module(module)
                 theClass = getattr(mod, klass, None)
-            except:
+            except Exception:
                 pass
 
         return theClass
@@ -3381,16 +3381,8 @@ class Symbol(TraitType):
 
     def _resolve(self, ref):
         try:
-            path = ref.split(":", 1)
-            module = __import__(path[0])
-            for component in path[0].split(".")[1:]:
-                module = getattr(module, component)
-
-            if len(path) == 1:
-                return module
-
-            elements = path[1].split("(", 1)
-            symbol = getattr(module, elements[0])
+            elements = ref.split("(", 1)
+            symbol = import_symbol(elements[0])
             if len(elements) == 1:
                 return symbol
 
@@ -3399,7 +3391,7 @@ class Symbol(TraitType):
                 args = (args,)
 
             return symbol(*args)
-        except:
+        except Exception:
             raise TraitError(
                 "Could not resolve '%s' into a valid symbol." % ref
             )
