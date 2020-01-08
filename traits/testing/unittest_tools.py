@@ -34,7 +34,6 @@ from traits.api import (
     Property,
 )
 from traits.util.async_trait_wait import wait_for_condition
-from traits import _py2to3
 
 
 class _AssertTraitChangesContext(object):
@@ -332,6 +331,7 @@ class UnittestTools(object):
             callableObj(*args, **kwargs)
         return
 
+    @contextlib.contextmanager
     def assertMultiTraitChanges(
         self, objects, traits_modified, traits_not_modified
     ):
@@ -352,13 +352,16 @@ class UnittestTools(object):
             The extended trait names of traits not expected to change.
 
         """
-        args = []
-        for obj in objects:
-            for trait in traits_modified:
-                args.append(self.assertTraitChanges(obj, trait))
-            for trait in traits_not_modified:
-                args.append(self.assertTraitDoesNotChange(obj, trait))
-        return _py2to3.nested_context_mgrs(*args)
+        with contextlib.ExitStack() as exit_stack:
+            cms = []
+            for obj in objects:
+                for trait in traits_modified:
+                    cms.append(exit_stack.enter_context(
+                        self.assertTraitChanges(obj, trait)))
+                for trait in traits_not_modified:
+                    cms.append(exit_stack.enter_context(
+                        self.assertTraitDoesNotChange(obj, trait)))
+            yield tuple(cms)
 
     @contextlib.contextmanager
     def assertTraitChangesAsync(self, obj, trait, count=1, timeout=5.0):

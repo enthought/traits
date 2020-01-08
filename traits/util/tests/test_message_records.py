@@ -12,8 +12,6 @@
 # ----------------------------------------------------------------------------
 import unittest
 
-import six
-
 from traits.util.event_tracer import (
     SentinelRecord,
     ChangeMessageRecord,
@@ -26,8 +24,8 @@ class TestMessageRecords(unittest.TestCase):
     def test_base_message_record(self):
         record = SentinelRecord()
 
-        # Check unicode output
-        self.assertEqual(six.text_type(record), u"\n")
+        # Check str output
+        self.assertEqual(str(record), "\n")
 
         # Check initialization
         self.assertRaises(TypeError, SentinelRecord, sdd=0)
@@ -37,10 +35,10 @@ class TestMessageRecords(unittest.TestCase):
             time=1, indent=3, name="john", old=1, new=1, class_name="MyClass"
         )
 
-        # Check unicode output
+        # Check str output
         self.assertEqual(
-            six.text_type(record),
-            u"1 -----> 'john' changed from 1 to 1 in 'MyClass'\n",
+            str(record),
+            "1 -----> 'john' changed from 1 to 1 in 'MyClass'\n",
         )
 
         # Check initialization
@@ -51,9 +49,9 @@ class TestMessageRecords(unittest.TestCase):
             time=7, indent=5, handler="john", exception="sssss"
         )
 
-        # Check unicode output
+        # Check str output
         self.assertEqual(
-            six.text_type(record), u"7 <--------- EXIT: 'john'sssss\n"
+            str(record), "7 <--------- EXIT: 'john'sssss\n"
         )
 
         # Check initialization
@@ -64,9 +62,9 @@ class TestMessageRecords(unittest.TestCase):
             time=7, indent=5, handler="john", source="sssss"
         )
 
-        # Check unicode output
+        # Check str output
         self.assertEqual(
-            six.text_type(record), u"7             CALLING: 'john' in sssss\n"
+            str(record), "7             CALLING: 'john' in sssss\n"
         )
 
         # Check initialization

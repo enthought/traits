@@ -14,8 +14,6 @@
 """ Unit test case for testing interfaces and adaptation.
 """
 
-from __future__ import absolute_import
-
 import unittest
 
 from traits.api import (
@@ -91,6 +89,15 @@ class SampleAverage(HasTraits):
         for item in value:
             average += item
         return average / len(value)
+
+
+class UndeclaredAverageProvider(HasTraits):
+    """
+    Class that conforms to the IAverage interface, but doesn't declare
+    that it does so.
+    """
+    def get_average(self):
+        return 5.6
 
 
 class SampleBad(HasTraits):
@@ -307,3 +314,9 @@ class InterfacesTest(unittest.TestCase):
     def test_decorated_class_name_and_docstring(self):
         self.assertEqual(SampleList.__name__, "SampleList")
         self.assertEqual(SampleList.__doc__, "SampleList docstring.")
+
+    def test_instance_requires_provides(self):
+        ta = TraitsHolder()
+        provider = UndeclaredAverageProvider()
+        with self.assertRaises(TraitError):
+            ta.a_no = provider

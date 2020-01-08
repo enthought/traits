@@ -17,7 +17,6 @@ class DirectoryTestCase(unittest.TestCase):
     def test_valid_directory(self):
         example_model = ExampleModel(path=gettempdir())
         example_model.path = "."
-        example_model.path = u"."
 
     def test_invalid_directory(self):
         example_model = ExampleModel(path=gettempdir())
@@ -46,4 +45,3 @@ class DirectoryTestCase(unittest.TestCase):
     def test_fast(self):
         example_model = FastExampleModel(path=gettempdir())
         example_model.path = "."
-        example_model.path = u"."

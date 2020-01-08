@@ -137,7 +137,6 @@ that applies to properties as well.
 """
 
 # --<Imports>-------------------------------------------------------------------
-from __future__ import print_function
 from traits.api import *
 
 

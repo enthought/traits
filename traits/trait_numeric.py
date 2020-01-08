@@ -22,13 +22,12 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 import warnings
 
+from .constants import ComparisonMode, DefaultValue
 from .trait_base import SequenceTypes
 from .trait_errors import TraitError
-from .trait_handlers import TraitType, OBJECT_IDENTITY_COMPARE
+from .trait_handlers import TraitType
 from .trait_types import Str, Any, Int as TInt, Float as TFloat
 
 # -------------------------------------------------------------------------------
@@ -98,7 +97,9 @@ class AbstractArray(TraitType):
         metadata["array"] = True
 
         # Normally use object identity to detect array values changing:
-        metadata.setdefault("comparison_mode", OBJECT_IDENTITY_COMPARE)
+        metadata.setdefault(
+            "comparison_mode", ComparisonMode.object_id_compare
+        )
 
         if typecode is not None:
             warnings.warn(
@@ -266,7 +267,7 @@ class AbstractArray(TraitType):
             trait factory.
         """
         return (
-            7,
+            DefaultValue.callable_and_args,
             (
                 self.copy_default_value,
                 (self.validate(None, None, self.default_value),),
@@ -420,7 +421,9 @@ class ArrayOrNone(CArray):
 
     def __init__(self, *args, **metadata):
         # Normally use object identity to detect array values changing:
-        metadata.setdefault("comparison_mode", OBJECT_IDENTITY_COMPARE)
+        metadata.setdefault(
+            "comparison_mode", ComparisonMode.object_id_compare
+        )
         super(ArrayOrNone, self).__init__(*args, **metadata)
 
     def validate(self, object, name, value):
@@ -431,10 +434,10 @@ class ArrayOrNone(CArray):
     def get_default_value(self):
         dv = self.default_value
         if dv is None:
-            return (0, dv)
+            return (DefaultValue.constant, dv)
         else:
             return (
-                7,
+                DefaultValue.callable_and_args,
                 (
                     self.copy_default_value,
                     (self.validate(None, None, dv),),

@@ -22,7 +22,6 @@ are:
 - Code
 - Complex
 - CStr
-- CUnicode
 - Dict
 - Directory
 - Enum
@@ -40,7 +39,6 @@ are:
 - Str
 - String
 - Tuple
-- Unicode
 - WeakRef
 
 This may be useful information if you find yourself in need of creating a new

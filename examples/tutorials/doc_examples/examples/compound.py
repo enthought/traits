@@ -5,7 +5,6 @@
 
 
 # --[Imports]-------------------------------------------------------------------
-from __future__ import print_function
 from traits.api import HasTraits, Range, Trait, TraitError
 
 

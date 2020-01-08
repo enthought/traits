@@ -14,8 +14,6 @@
 """ Unit test case for testing HasTraits 'on_trait_change' support.
 """
 
-from __future__ import absolute_import
-
 import unittest
 
 from traits.api import (
@@ -27,16 +25,16 @@ from traits.api import (
     List,
     Property,
     TraitDictEvent,
+    TraitDictObject,
     TraitError,
     TraitListEvent,
+    TraitListObject,
     Undefined,
     cached_property,
     on_trait_change,
     pop_exception_handler,
     push_exception_handler,
 )
-
-from traits.trait_handlers import TraitListObject, TraitDictObject
 
 
 class ArgCheckBase(HasTraits):

@@ -1,8 +1,6 @@
 # Copyright (c) 2008-2019 by Enthought, Inc.
 # All rights reserved.
 
-from __future__ import absolute_import
-
 try:
     from traits.version import version as __version__
 except ImportError:

@@ -21,7 +21,7 @@ Use this module for importing Traits names into your namespace. For example::
     from traits.api import HasTraits
 """
 
-from __future__ import absolute_import
+from .constants import ComparisonMode
 
 from .trait_base import Uninitialized, Undefined, Missing, Self
 
@@ -46,20 +46,17 @@ from .traits import (
 
 from .trait_types import (
     Any,
-    Generic,
     Int,
     Float,
     Complex,
     Str,
     Title,
-    Unicode,
     Bytes,
     Bool,
     CInt,
     CFloat,
     CComplex,
     CStr,
-    CUnicode,
     CBytes,
     CBool,
     String,
@@ -104,13 +101,23 @@ from .trait_types import (
     WeakRef,
     Date,
     Time,
-    false,
-    true,
-    undefined,
     Supports,
 )
 
+# Deprecated TraitType subclasses and instances.
+
 from .trait_types import (
+    BaseUnicode,
+    Unicode,
+    BaseCUnicode,
+    CUnicode,
+    BaseLong,
+    Long,
+    BaseCLong,
+    CLong,
+    false,
+    true,
+    undefined,
     ListInt,
     ListFloat,
     ListStr,
@@ -133,14 +140,12 @@ from .trait_types import (
     BaseFloat,
     BaseComplex,
     BaseStr,
-    BaseUnicode,
     BaseBytes,
     BaseBool,
     BaseCInt,
     BaseCFloat,
     BaseCComplex,
     BaseCStr,
-    BaseCUnicode,
     BaseCBool,
     BaseFile,
     BaseDirectory,
@@ -153,6 +158,10 @@ from .trait_types import (
 from .trait_types import UUID, ValidatedTuple
 
 from .has_traits import (
+    ABCHasStrictTraits,
+    ABCHasTraits,
+    ABCMetaHasTraits,
+    AbstractViewElement,
     HasTraits,
     HasStrictTraits,
     HasPrivateTraits,
@@ -172,21 +181,14 @@ from .has_traits import (
     isinterface,
 )
 
-try:
-    from .has_traits import ABCHasTraits, ABCHasStrictTraits, ABCMetaHasTraits
-except ImportError:
-    pass
-
 from .trait_handlers import (
     BaseTraitHandler,
     TraitType,
     TraitHandler,
-    TraitString,
     TraitCoerceType,
     TraitCastType,
     TraitInstance,
     ThisClass,
-    TraitClass,
     TraitFunction,
     TraitEnum,
     TraitPrefixList,
@@ -194,26 +196,15 @@ from .trait_handlers import (
     TraitPrefixMap,
     TraitCompound,
     TraitList,
-    TraitListObject,
-    TraitListEvent,
-    TraitSetObject,
-    TraitSetEvent,
     TraitDict,
-    TraitDictObject,
-    TraitDictEvent,
     TraitTuple,
-    NO_COMPARE,
-    OBJECT_IDENTITY_COMPARE,
-    RICH_COMPARE,
 )
 
-from .trait_value import (
-    BaseTraitValue,
-    TraitValue,
-    SyncValue,
-    TypeValue,
-    DefaultValue,
-)
+
+from .trait_dict_object import TraitDictEvent, TraitDictObject
+from .trait_list_object import TraitListEvent, TraitListObject
+from .trait_set_object import TraitSetEvent, TraitSetObject
+
 
 from .adaptation.adapter import Adapter
 from .adaptation.adaptation_error import AdaptationError
@@ -226,26 +217,19 @@ from .adaptation.adaptation_manager import (
 from .trait_numeric import Array, ArrayOrNone, CArray
 
 try:
-    from . import has_traits as has_traits
-
-    # ---------------------------------------------------------------------------
-    #  Patch the main traits module with the correct definition for the
-    #  ViewElements class:
-    #  NOTE: We do this in a try..except block because traits.ui depends on
-    #  the pyface module (part of the TraitsGUI package) which may not
-    #  necessarily be installed. Not having TraitsGUI means that the 'ui'
-    #  features of traits will not work.
-    # ---------------------------------------------------------------------------
-
-    from traitsui import view_elements
-
-    has_traits.ViewElements = view_elements.ViewElements
-
     # -------------------------------------------------------------------------------
     #  Patch the main traits module with the correct definition for the
-    #  ViewElement and ViewSubElement class:
+    #  ViewElement class:
     # -------------------------------------------------------------------------------
 
-    has_traits.ViewElement = view_elements.ViewElement
+    from traitsui.view_element import ViewElement
+
+    if not isinstance(ViewElement, AbstractViewElement):
+        AbstractViewElement.register(ViewElement)
 except ImportError:
     pass
+
+# Backward compatibility for comparison mode constants.
+NO_COMPARE = ComparisonMode.no_compare
+OBJECT_IDENTITY_COMPARE = ComparisonMode.object_id_compare
+RICH_COMPARE = ComparisonMode.equality_compare

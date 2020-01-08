@@ -24,18 +24,13 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 import os
 import sys
 from os import getcwd
 from os.path import dirname, exists, join
 
-import six
-
-from . import _py2to3
-
 from .etsconfig.api import ETSConfig
+from .constants import ValidateTrait
 
 # backwards compatibility: trait_base used to provide a patched enumerate
 enumerate = enumerate
@@ -44,15 +39,12 @@ enumerate = enumerate
 #  Constants:
 # -------------------------------------------------------------------------------
 
-ClassTypes = _py2to3.ClassTypes
-
 SequenceTypes = (list, tuple)
 
 ComplexTypes = (float, int)
 
 TypeTypes = (
     str,
-    six.text_type,
     int,
     float,
     complex,
@@ -145,11 +137,6 @@ class _Undefined(object):
 #: parameter, to indicate that the attribute previously had no value.
 Undefined = _Undefined()
 
-# Tell the C-base code about singleton 'Undefined' and 'Uninitialized' objects:
-from . import ctraits
-
-ctraits._undefined(Undefined, Uninitialized)
-
 # -------------------------------------------------------------------------------
 #  Singleton 'Missing' object (used as missing method argument marker):
 # -------------------------------------------------------------------------------
@@ -201,7 +188,7 @@ def strx(arg):
 #  Constants:
 # -------------------------------------------------------------------------------
 
-StringTypes = (str, six.text_type, int, float, complex)
+StringTypes = (str, int, float, complex)
 
 # -------------------------------------------------------------------------------
 #  Define a mapping of coercable types:
@@ -209,9 +196,8 @@ StringTypes = (str, six.text_type, int, float, complex)
 
 # Mapping of coercable types.
 CoercableTypes = {
-    float: (11, float, int),
-    complex: (11, complex, float, int),
-    six.text_type: (11, six.text_type, str),
+    float: (ValidateTrait.coerce, float, int),
+    complex: (ValidateTrait.coerce, complex, float, int),
 }
 
 # -------------------------------------------------------------------------------
@@ -225,7 +211,7 @@ def class_of(object):
     correct indefinite article ('a' or 'an') preceding it (e.g., 'an Image',
     'a PlotValue').
     """
-    if isinstance(object, six.string_types):
+    if isinstance(object, str):
         return add_article(object)
 
     return add_article(object.__class__.__name__)
@@ -432,4 +418,4 @@ def not_event(value):
 
 
 def is_str(value):
-    return isinstance(value, six.string_types)
+    return isinstance(value, str)

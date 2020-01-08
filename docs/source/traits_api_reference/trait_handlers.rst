@@ -15,8 +15,6 @@ Classes
 
 .. autoclass:: TraitHandler
 
-.. autoclass:: TraitString
-
 .. autoclass:: TraitCoerceType
 
 .. autoclass:: TraitCastType
@@ -25,11 +23,7 @@ Classes
 
 .. autoclass:: TraitInstance
 
-.. autoclass:: TraitWeakRef
-
 .. autoclass:: HandleWeakRef
-
-.. autoclass:: TraitClass
 
 .. autoclass:: TraitFunction
 
@@ -41,29 +35,13 @@ Classes
 
 .. autoclass:: TraitPrefixMap
 
-.. autoclass:: TraitExpression
-
 .. autoclass:: TraitCompound
 
 .. autoclass:: TraitTuple
 
-.. autoclass:: TraitCallable
-
-.. autoclass:: TraitListEvent
-
 .. autoclass:: TraitList
 
-.. autoclass:: TraitListObject
-
-.. autoclass:: TraitSetEvent
-
-.. autoclass:: TraitSetObject
-
-.. autoclass:: TraitDictEvent
-
 .. autoclass:: TraitDict
-
-.. autoclass:: TraitDictObject
 
 Private Functions
 -----------------

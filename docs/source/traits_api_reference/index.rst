@@ -9,17 +9,19 @@ Traits core
 
     traits
     has_traits
-    has_dynamic_views
     interface_checker
+    constants
     trait_base
     trait_errors
     trait_handlers
     trait_numeric
     trait_types
-    trait_value
     traits_listener
     trait_notifiers
-    ustr_trait
+    editor_factories
+    trait_dict_object
+    trait_list_object
+    trait_set_object
     version
 
 Subpackages

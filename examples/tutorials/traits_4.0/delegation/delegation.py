@@ -90,8 +90,6 @@ notification handler.
 
 """
 
-from __future__ import print_function
-
 # FIXME - this need to be redone without traitsui
 
 from traits.api import *

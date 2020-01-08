@@ -18,8 +18,6 @@ import inspect
 import itertools
 import functools
 
-import six
-
 from traits.adaptation.adaptation_error import AdaptationError
 from traits.has_traits import HasTraits
 from traits.trait_types import Dict, List, Str
@@ -122,9 +120,7 @@ class AdaptationManager(HasTraits):
 
         # If the object already provides the given protocol then it is
         # simply returned.
-        # We use adaptee.__class__ instead of type(adaptee) as a courtesy to
-        # old-style classes.
-        if self.provides_protocol(adaptee.__class__, to_protocol):
+        if self.provides_protocol(type(adaptee), to_protocol):
             result = adaptee
 
         # Otherwise, try adapting the object.
@@ -265,15 +261,11 @@ class AdaptationManager(HasTraits):
             edges = self._get_applicable_offers(current_protocol, path)
 
             # Sort by weight first, then by from_protocol type.
-            if six.PY2:
-                edges.sort(cmp=_by_weight_then_from_protocol_specificity)
-            else:
-                # functools.cmp_to_key is available from 2.7 and 3.2
-                edges.sort(
-                    key=functools.cmp_to_key(
-                        _by_weight_then_from_protocol_specificity
-                    )
+            edges.sort(
+                key=functools.cmp_to_key(
+                    _by_weight_then_from_protocol_specificity
                 )
+            )
 
             # At this point, the first edges are the shortest ones. Within
             # edges with the same distance, interfaces which are subclasses
