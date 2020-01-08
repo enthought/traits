@@ -802,6 +802,10 @@ class NotifierTests(unittest.TestCase):
         self.assertEqual(obj.value2_count, 2)
 
     def test_complex(self):
+        result = __import__("sys", globals=globals(), level=1)
+
+        import pdb; pdb.set_trace()
+
         obj = self.obj
 
         obj.on_trait_change(self.on_value1_changed, "value1")

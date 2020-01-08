@@ -62,6 +62,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
+test = __import__("trait_base", globals=globals(), level=1)
+print("test: ", test)
+#import pdb; pdb.set_trace()
+
 # -------------------------------------------------------------------------------
 #  Constants:
 # -------------------------------------------------------------------------------
@@ -1135,62 +1140,6 @@ class HandleWeakRef(object):
         self.object = object_ref
         self.name = name
         self.value = ref(value, _value_freed)
-
-
-# -------------------------------------------------------------------------------
-#  'TraitClass' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitClass(TraitHandler):
-    """Ensures that trait attribute values are subclasses of a specified class
-    (or the class itself).
-
-    A value is valid if it is a subclass of the specified class (including the
-    class itself), or it is a string that is equivalent to the name of a valid
-    class.
-    """
-
-    def __init__(self, aClass):
-        """Creates a TraitClass handler.
-
-        Parameters
-        ----------
-        aClass : class
-            A Python class.
-
-        Description
-        -----------
-        If *aClass* is an instance, it is mapped to the class it is an instance
-        of.
-        """
-        self.aClass = aClass
-
-    def validate(self, object, name, value):
-        try:
-            if isinstance(value, str):
-                value = value.strip()
-                col = value.rfind(".")
-                if col >= 0:
-                    module_name = value[:col]
-                    class_name = value[col + 1 :]
-                    module = sys.modules.get(module_name)
-                    if module is None:
-                        exec("import " + module_name)
-                        module = sys.modules[module_name]
-                    value = getattr(module, class_name)
-                else:
-                    value = globals().get(value)
-
-            if issubclass(value, self.aClass):
-                return value
-        except:
-            pass
-
-        self.error(object, name, value)
-
-    def info(self):
-        return "a subclass of " + self.aClass.__name__
 
 
 # -------------------------------------------------------------------------------
