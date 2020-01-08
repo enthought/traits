@@ -638,15 +638,8 @@ HasTraits objects:
   used to label trait attribute values in user interface trait editors.
 * **comparison_mode**: Indicates when trait change notifications should be
   generated based upon the result of comparing the old and new values of a
-  trait assignment:
-
-  * 0 (NO_COMPARE): The values are not compared and a trait change
-    notification is generated on each assignment.
-  * 1 (OBJECT_IDENTITY_COMPARE): A trait change notification is
-    generated if the old and new values are not the same object.
-  * 2 (RICH_COMPARE): A trait change notification is generated if the
-    old and new values are not equal using Python's
-    'rich comparison' operator. This is the default.
+  trait assignment. This should be a member of the
+  :class:`~traits.constants.ComparisonMode` enumeration class.
 * **transient**: A Boolean indicating that the trait value is not persisted
   when the object containing it is persisted. The default value for most
   predefined traits is False (the value will be persisted if its container is).
