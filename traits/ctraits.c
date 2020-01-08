@@ -727,12 +727,13 @@ has_traits_new ( PyTypeObject * type, PyObject * args, PyObject * kwds ) {
     }
     new_kwds = PyDict_New();
     if (new_kwds == NULL) {
+        Py_DECREF(new_args);
         return NULL;
     }
     obj = (has_traits_object *) PyBaseObject_Type.tp_new(
         type, new_args, new_kwds);
-    Py_DECREF(kwds);
-    Py_DECREF(args);
+    Py_DECREF(new_kwds);
+    Py_DECREF(new_args);
 
     if ( obj != NULL ) {
         if (type->tp_dict == NULL) {
