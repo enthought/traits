@@ -79,8 +79,7 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         """
         try:
-            import_module(self.modname)
-            current = self.module = sys.modules[self.modname]
+            current = self.module = import_module(self.modname)
             for part in self.objpath[:-1]:
                 current = self.get_attr(current, part)
             name = self.objpath[-1]
