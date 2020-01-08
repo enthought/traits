@@ -10,8 +10,8 @@ from traits.has_traits import (
     InstanceTraits,
     HasTraits,
 )
-from traits.traits import ForwardProperty, generic_trait
-from traits.trait_types import Float, Int
+from traits.traits import CTrait, ForwardProperty, generic_trait
+from traits.trait_types import Event, Float, Instance, Int
 
 
 def _dummy_getter(self):
@@ -194,3 +194,105 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             class_dict[BaseTraits]["my_trait"],
             class_dict[ClassTraits]["my_trait"],
         )
+
+
+class TestHasTraits(unittest.TestCase):
+    def test__class_traits(self):
+        # Exercise the _class_traits() private introspection method.
+        class Base(HasTraits):
+            pin = Int
+
+        a = Base()
+        a_class_traits = a._class_traits()
+        self.assertIsInstance(a_class_traits, dict)
+        self.assertIn("pin", a_class_traits)
+        self.assertIsInstance(a_class_traits["pin"], CTrait)
+
+        b = Base()
+        self.assertIs(b._class_traits(), a_class_traits)
+
+    def test__instance_traits(self):
+        # Exercise the _instance_traits() private introspection method.
+        class Base(HasTraits):
+            pin = Int
+
+        a = Base()
+        a_instance_traits = a._instance_traits()
+        self.assertIsInstance(a_instance_traits, dict)
+
+        # A second call should return the same dictionary.
+        self.assertIs(a._instance_traits(), a_instance_traits)
+
+        # A different instance should have its own instance traits dict.
+        b = Base()
+        self.assertIsNot(b._instance_traits(), a_instance_traits)
+
+    def test__trait_notifications_enabled(self):
+        class Base(HasTraits):
+            foo = Int(0)
+
+            foo_notify_count = Int(0)
+
+            def _foo_changed(self):
+                self.foo_notify_count += 1
+
+        a = Base()
+
+        # Default state is that notifications are enabled.
+        self.assertTrue(a._trait_notifications_enabled())
+
+        # Changing foo increments the count.
+        old_count = a.foo_notify_count
+        a.foo += 1
+        self.assertEqual(a.foo_notify_count, old_count + 1)
+
+        # After disabling notifications, count is not increased.
+        a._trait_change_notify(False)
+        self.assertFalse(a._trait_notifications_enabled())
+        old_count = a.foo_notify_count
+        a.foo += 1
+        self.assertEqual(a.foo_notify_count, old_count)
+
+        # After re-enabling notifications, count is increased.
+        a._trait_change_notify(True)
+        self.assertTrue(a._trait_notifications_enabled())
+        old_count = a.foo_notify_count
+        a.foo += 1
+        self.assertEqual(a.foo_notify_count, old_count + 1)
+
+    def test__trait_notifications_vetoed(self):
+        class SomeEvent(HasTraits):
+            event_id = Int()
+
+        class Target(HasTraits):
+            event = Event(Instance(SomeEvent))
+
+            event_count = Int(0)
+
+            def _event_fired(self):
+                self.event_count += 1
+
+        target = Target()
+        event = SomeEvent(event_id=1234)
+
+        # Default state is not vetoed.
+        self.assertFalse(event._trait_notifications_vetoed())
+
+        # Firing the event increments the count.
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count + 1)
+
+        # Now veto the event. Firing the event won't affect the count.
+        event._trait_veto_notify(True)
+        self.assertTrue(event._trait_notifications_vetoed())
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count)
+
+        # Unveto the event.
+        event._trait_veto_notify(False)
+        self.assertFalse(event._trait_notifications_vetoed())
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count + 1)

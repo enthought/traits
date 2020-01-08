@@ -78,14 +78,14 @@ PyDoc_STRVAR( ctraits__doc__,
 +----------------------------------------------------------------------------*/
 
 /* Object has been initialized: */
-#define HASTRAITS_INITED      0x00000001
+#define HASTRAITS_INITED      0x00000001U
 
 /* Do not send notifications when a trait changes value: */
-#define HASTRAITS_NO_NOTIFY   0x00000002
+#define HASTRAITS_NO_NOTIFY   0x00000002U
 
 /* Requests that no event notifications be sent when this object is assigned to
    a trait: */
-#define HASTRAITS_VETO_NOTIFY 0x00000004
+#define HASTRAITS_VETO_NOTIFY 0x00000004U
 
 /*-----------------------------------------------------------------------------
 |  'CHasTraits' instance definition:
@@ -104,7 +104,7 @@ typedef struct {
         PyDictObject * itrait_dict; /* Instance traits dictionary */
     PyListObject * notifiers;   /* List of 'any trait changed' notification
                                    handlers */
-    int            flags;       /* Behavior modification flags */
+    unsigned int flags;         /* Behavior modification flags */
         PyObject     * obj_dict;    /* Object attribute dictionary ('__dict__') */
                                 /* NOTE: 'obj_dict' field MUST be last field */
 } has_traits_object;
@@ -118,26 +118,26 @@ static int call_notifiers ( PyListObject *, PyListObject *,
 +----------------------------------------------------------------------------*/
 
 /* The trait is a Property: */
-#define TRAIT_PROPERTY 0x00000001
+#define TRAIT_PROPERTY 0x00000001U
 
 /* Should the delegate be modified (or the original object)? */
-#define TRAIT_MODIFY_DELEGATE 0x00000002
+#define TRAIT_MODIFY_DELEGATE 0x00000002U
 
 /* Should a simple object identity test be performed (or a rich compare)? */
-#define TRAIT_OBJECT_IDENTITY 0x00000004
+#define TRAIT_OBJECT_ID_TEST 0x00000004U
 
 /* Make 'setattr' store the original unvalidated value */
-#define TRAIT_SETATTR_ORIGINAL_VALUE 0x00000008
+#define TRAIT_SETATTR_ORIGINAL_VALUE 0x00000008U
 
 /* Send the 'post_setattr' method the original unvalidated value */
-#define TRAIT_POST_SETATTR_ORIGINAL_VALUE 0x00000010
+#define TRAIT_POST_SETATTR_ORIGINAL_VALUE 0x00000010U
 
 /* Does this trait have an associated 'mapped' trait? */
-#define TRAIT_IS_MAPPED 0x00000080
+#define TRAIT_IS_MAPPED 0x00000080U
 
 /* Should any old/new value test be performed before generating
    notifications? */
-#define TRAIT_NO_VALUE_TEST 0x00000100
+#define TRAIT_NO_VALUE_TEST 0x00000100U
 
 
 /*-----------------------------------------------------------------------------
@@ -206,7 +206,7 @@ typedef PyObject * (*delegate_attr_name_func)( a_trait_object *,
 
 typedef struct _trait_object {
     PyObject_HEAD                    /* Standard Python object header */
-    int                flags;        /* Flag bits */
+    unsigned int       flags;        /* Flag bits */
     trait_getattr      getattr;      /* Get trait value handler */
     trait_setattr      setattr;      /* Set trait value handler */
     trait_post_setattr post_setattr; /* Optional post 'setattr' handler */
@@ -587,11 +587,11 @@ set_value ( PyObject ** field, PyObject * value ) {
 static PyObject *
 get_trait_flag(trait_object * trait, int mask)
 {
-    if ((trait->flags & mask) == 0) {
-        Py_RETURN_FALSE;
+    if (trait->flags & mask) {
+        Py_RETURN_TRUE;
     }
     else {
-        Py_RETURN_TRUE;
+        Py_RETURN_FALSE;
     }
 }
 
@@ -612,7 +612,7 @@ set_trait_flag(trait_object * trait, int mask, PyObject * value)
         trait->flags |= mask;
     }
     else {
-        trait->flags &= (~mask);
+        trait->flags &= ~mask;
     }
 
     return 0;
@@ -1210,6 +1210,22 @@ add_trait:
 }
 
 /*-----------------------------------------------------------------------------
+| Reports whether trait change notifications are enabled for this object:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_has_traits_notifications_enabled(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
+{
+    if (obj->flags & HASTRAITS_NO_NOTIFY) {
+        Py_RETURN_FALSE;
+    }
+    else {
+        Py_RETURN_TRUE;
+    }
+}
+
+
+/*-----------------------------------------------------------------------------
 |  Enables/Disables trait change notification for the object:
 +----------------------------------------------------------------------------*/
 
@@ -1224,13 +1240,29 @@ _has_traits_change_notify ( has_traits_object * obj, PyObject * args ) {
         return NULL;
 
     if ( enabled ) {
-        obj->flags &= (~HASTRAITS_NO_NOTIFY);
+        obj->flags &= ~HASTRAITS_NO_NOTIFY;
     } else {
         obj->flags |= HASTRAITS_NO_NOTIFY;
     }
 
     Py_INCREF( Py_None );
     return Py_None;
+}
+
+/*-----------------------------------------------------------------------------
+| Reports whether trait change notifications are enabled when this object is
+| assigned to a trait:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_has_traits_notifications_vetoed(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
+{
+    if (obj->flags & HASTRAITS_VETO_NOTIFY) {
+        Py_RETURN_TRUE;
+    }
+    else {
+        Py_RETURN_FALSE;
+    }
 }
 
 /*-----------------------------------------------------------------------------
@@ -1251,7 +1283,7 @@ _has_traits_veto_notify ( has_traits_object * obj, PyObject * args ) {
     if ( enabled ) {
         obj->flags |= HASTRAITS_VETO_NOTIFY;
     } else {
-        obj->flags &= (~HASTRAITS_VETO_NOTIFY);
+        obj->flags &= ~HASTRAITS_VETO_NOTIFY;
     }
 
     Py_INCREF( Py_None );
@@ -1264,7 +1296,7 @@ _has_traits_veto_notify ( has_traits_object * obj, PyObject * args ) {
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_has_traits_init ( has_traits_object * obj ) {
+_has_traits_init ( has_traits_object * obj, PyObject *Py_UNUSED(ignored) ) {
 
     Py_INCREF( Py_None );
     return Py_None;
@@ -1298,10 +1330,7 @@ _has_traits_inited ( has_traits_object * obj, PyObject * args ) {
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_has_traits_instance_traits ( has_traits_object * obj, PyObject * args ) {
-
-    if ( !PyArg_ParseTuple( args, "" ) )
-        return NULL;
+_has_traits_instance_traits ( has_traits_object * obj, PyObject *Py_UNUSED(ignored) ) {
 
     if ( obj->itrait_dict == NULL )
                 obj->itrait_dict = (PyDictObject *) PyDict_New();
@@ -1309,6 +1338,20 @@ _has_traits_instance_traits ( has_traits_object * obj, PyObject * args ) {
     Py_XINCREF( obj->itrait_dict );
 
     return (PyObject *) obj->itrait_dict;
+}
+
+/*-----------------------------------------------------------------------------
+|  Returns the class trait dictionary:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_has_traits_class_traits(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
+{
+    PyObject *ctrait_dict;
+
+    ctrait_dict = (PyObject *)obj->ctrait_dict;
+    Py_INCREF(ctrait_dict);
+    return ctrait_dict;
 }
 
 /*-----------------------------------------------------------------------------
@@ -1378,6 +1421,36 @@ set_has_traits_dict ( has_traits_object * obj, PyObject * value,
 |  'CHasTraits' instance methods:
 +----------------------------------------------------------------------------*/
 
+PyDoc_STRVAR(_trait_notifications_enabled_doc,
+"_trait_notifications_enabled()\n"
+"\n"
+"Report whether trait notifications are enabled for this object.\n"
+"\n"
+"Notifications can be enabled or disabled using the ``_trait_change_notify``\n"
+"method. By default, notifications are enabled.\n"
+"\n"
+"Returns\n"
+"-------\n"
+"enabled : bool\n"
+"    True if notifications are currently enabled for this object, else False.\n"
+);
+
+PyDoc_STRVAR(_trait_notifications_vetoed_doc,
+"_trait_notifications_vetoed()\n"
+"\n"
+"Report whether trait notifications are vetoed for this object.\n"
+"\n"
+"If trait notifications are vetoed for an object, assignment of that object\n"
+"to a trait will not generate a notification.\n"
+"This setting can be enabled or disabled using the ``_trait_veto_notify``\n"
+"method. By default, notifications are not vetoed.\n"
+"\n"
+"Returns\n"
+"-------\n"
+"vetoed : bool\n"
+"    True if notifications are currently vetoed for this object, else False.\n"
+);
+
 static PyMethodDef has_traits_methods[] = {
         { "trait_property_changed", (PyCFunction) _has_traits_property_changed,
       METH_VARARGS,
@@ -1387,9 +1460,21 @@ static PyMethodDef has_traits_methods[] = {
         { "_trait_change_notify", (PyCFunction) _has_traits_change_notify,
       METH_VARARGS,
       PyDoc_STR( "_trait_change_notify(boolean)" ) },
+        {
+            "_trait_notifications_enabled",
+            (PyCFunction) _has_traits_notifications_enabled,
+            METH_NOARGS,
+            _trait_notifications_enabled_doc,
+        },
         { "_trait_veto_notify", (PyCFunction) _has_traits_veto_notify,
       METH_VARARGS,
       PyDoc_STR( "_trait_veto_notify(boolean)" ) },
+        {
+            "_trait_notifications_vetoed",
+            (PyCFunction) _has_traits_notifications_vetoed,
+            METH_NOARGS,
+            _trait_notifications_vetoed_doc,
+        },
         { "traits_init", (PyCFunction) _has_traits_init,
       METH_NOARGS,
       PyDoc_STR( "traits_init()" ) },
@@ -1398,8 +1483,11 @@ static PyMethodDef has_traits_methods[] = {
         { "_trait",           (PyCFunction) _has_traits_trait,     METH_VARARGS,
       PyDoc_STR( "_trait(name,instance) -> trait" ) },
         { "_instance_traits", (PyCFunction) _has_traits_instance_traits,
-      METH_VARARGS,
+      METH_NOARGS,
       PyDoc_STR( "_instance_traits() -> dict" ) },
+        { "_class_traits", (PyCFunction) _has_traits_class_traits,
+      METH_NOARGS,
+      PyDoc_STR( "_class_traits() -> dict" ) },
         { "_notifiers",       (PyCFunction) _has_traits_notifiers, METH_VARARGS,
       PyDoc_STR( "_notifiers(force_create) -> list" ) },
         { NULL, NULL },
@@ -1591,7 +1679,7 @@ getattr_trait ( trait_object      * trait,
 
                 rc = 0;
                 if ( (trait->post_setattr != NULL) &&
-                     ((trait->flags & TRAIT_IS_MAPPED) == 0) )
+                     !(trait->flags & TRAIT_IS_MAPPED) )
                     rc = trait->post_setattr( trait, obj, name, result );
 
                 if (rc == 0) {
@@ -1620,7 +1708,7 @@ getattr_trait ( trait_object      * trait,
 
             rc = 0;
             if ( (trait->post_setattr != NULL) &&
-                 ((trait->flags & TRAIT_IS_MAPPED) == 0) )
+                  !(trait->flags & TRAIT_IS_MAPPED) )
                 rc = trait->post_setattr( trait, obj, name, result );
 
             if (rc == 0) {
@@ -1912,7 +2000,7 @@ call_notifiers ( PyListObject      * tnotifiers,
 
     // Do nothing if the user has explicitly requested no traits notifications
     // to be sent.
-    if ( (obj->flags & HASTRAITS_NO_NOTIFY) != 0 )
+    if ( (obj->flags & HASTRAITS_NO_NOTIFY) )
        goto exit2;
 
     if ( tnotifiers != NULL ) {
@@ -2069,7 +2157,7 @@ setattr_trait ( trait_object      * traito,
         }
 
         rc = 0;
-        if ( (obj->flags & HASTRAITS_NO_NOTIFY) == 0 ) {
+        if ( !(obj->flags & HASTRAITS_NO_NOTIFY) ) {
             tnotifiers = traito->notifiers;
             onotifiers = obj->notifiers;
             if ( (tnotifiers != NULL) || (onotifiers != NULL) ) {
@@ -2082,7 +2170,7 @@ setattr_trait ( trait_object      * traito,
                 if ( !changed ) {
                     changed = (old_value != value );
                     if ( changed &&
-                         ((traitd->flags & TRAIT_OBJECT_IDENTITY) == 0) ) {
+                         !(traitd->flags & TRAIT_OBJECT_ID_TEST) ) {
                         changed = PyObject_RichCompareBool( old_value,
                                                             value, Py_NE );
                         if ( changed == -1 ) {
@@ -2164,7 +2252,7 @@ setattr_trait ( trait_object      * traito,
         if ( !changed ) {
             changed = (old_value != value);
             if ( changed &&
-                 ((traitd->flags & TRAIT_OBJECT_IDENTITY) == 0) ) {
+                 !(traitd->flags & TRAIT_OBJECT_ID_TEST) ) {
                 changed = PyObject_RichCompareBool( old_value, value, Py_NE );
                 if ( changed == -1 ) {
                     PyErr_Clear();
@@ -3907,7 +3995,7 @@ done:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_trait_get_validate ( trait_object * trait ) {
+_trait_get_validate ( trait_object * trait, PyObject *Py_UNUSED(ignored) ) {
 
     if ( trait->validate != NULL ) {
         Py_INCREF( trait->py_validate );
@@ -4048,7 +4136,7 @@ _trait_delegate ( trait_object * trait, PyObject * args ) {
     if ( modify_delegate ) {
         trait->flags |= TRAIT_MODIFY_DELEGATE;
     } else {
-        trait->flags &= (~TRAIT_MODIFY_DELEGATE);
+        trait->flags &= ~TRAIT_MODIFY_DELEGATE;
     }
 
     trait->delegate_name   = delegate_name;
@@ -4074,9 +4162,9 @@ _trait_rich_comparison ( trait_object * trait, PyObject * args ) {
     if ( !PyArg_ParseTuple( args, "p", &compare_type ) )
         return NULL;
 
-    trait->flags &= (~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_IDENTITY));
+    trait->flags &= ~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_ID_TEST);
     if ( compare_type == 0 )
-        trait->flags |= TRAIT_OBJECT_IDENTITY;
+        trait->flags |= TRAIT_OBJECT_ID_TEST;
 
     Py_INCREF( Py_None );
     return Py_None;
@@ -4094,85 +4182,16 @@ _trait_comparison_mode ( trait_object * trait, PyObject * args ) {
     if ( !PyArg_ParseTuple( args, "i", &comparison_mode ) )
         return NULL;
 
-    trait->flags &= (~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_IDENTITY));
+    trait->flags &= ~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_ID_TEST);
     switch ( comparison_mode ) {
         case 0:  trait->flags |= TRAIT_NO_VALUE_TEST;
                  break;
-        case 1:  trait->flags |= TRAIT_OBJECT_IDENTITY;
+        case 1:  trait->flags |= TRAIT_OBJECT_ID_TEST;
         default: break;
     }
 
     Py_INCREF( Py_None );
     return Py_None;
-}
-
-
-/*-----------------------------------------------------------------------------
-|  Sets the value of the 'setattr_original_value' flag of a CTrait instance:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_trait_setattr_original_value ( trait_object * trait, PyObject * args ) {
-
-    int original_value;
-
-    if ( !PyArg_ParseTuple( args, "p", &original_value ) )
-        return NULL;
-
-    if ( original_value != 0 ) {
-        trait->flags |= TRAIT_SETATTR_ORIGINAL_VALUE;
-    } else {
-        trait->flags &= (~TRAIT_SETATTR_ORIGINAL_VALUE);
-    }
-
-    Py_INCREF( trait );
-    return (PyObject *) trait;
-}
-
-/*-----------------------------------------------------------------------------
-|  Sets the value of the 'post_setattr_original_value' flag of a CTrait
-|  instance (used in the processing of 'post_settattr' calls):
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_trait_post_setattr_original_value ( trait_object * trait, PyObject * args ) {
-
-    int original_value;
-
-    if ( !PyArg_ParseTuple( args, "p", &original_value ) )
-        return NULL;
-
-    if ( original_value != 0 ) {
-        trait->flags |= TRAIT_POST_SETATTR_ORIGINAL_VALUE;
-    } else {
-        trait->flags &= (~TRAIT_POST_SETATTR_ORIGINAL_VALUE);
-    }
-
-    Py_INCREF( trait );
-    return (PyObject *) trait;
-}
-
-/*-----------------------------------------------------------------------------
-|  Sets the value of the 'is_mapped' flag of a CTrait instance (used in the
-|  processing of the default value of a trait with a 'post_settattr' handler):
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_trait_is_mapped ( trait_object * trait, PyObject * args ) {
-
-    int is_mapped;
-
-    if ( !PyArg_ParseTuple( args, "p", &is_mapped ) )
-        return NULL;
-
-    if ( is_mapped != 0 ) {
-        trait->flags |= TRAIT_IS_MAPPED;
-    } else {
-        trait->flags &= (~TRAIT_IS_MAPPED);
-    }
-
-    Py_INCREF( trait );
-    return (PyObject *) trait;
 }
 
 /*-----------------------------------------------------------------------------
@@ -4222,7 +4241,7 @@ _trait_property ( trait_object * trait, PyObject * args ) {
         return NULL;
     }
 
-    trait->flags  |= TRAIT_PROPERTY;
+    trait->flags |= TRAIT_PROPERTY;
     trait->getattr = getattr_property_handlers[ get_n ];
         if ( validate != Py_None ) {
         trait->setattr      = setattr_validate_property;
@@ -4328,12 +4347,9 @@ func_index ( void * function, void ** function_table ) {
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_trait_getstate ( trait_object * trait, PyObject * args ) {
+_trait_getstate ( trait_object * trait, PyObject *Py_UNUSED(ignored) ) {
 
     PyObject * result;
-
-    if ( !PyArg_ParseTuple( args, "" ) )
-        return NULL;
 
     result = PyTuple_New( 15 );
     if ( result == NULL )
@@ -4352,7 +4368,7 @@ _trait_getstate ( trait_object * trait, PyObject * args ) {
     PyTuple_SET_ITEM( result,  5, get_callable_value( trait->py_validate ) );
     PyTuple_SET_ITEM( result,  6, PyLong_FromLong( trait->default_value_type ) );
     PyTuple_SET_ITEM( result,  7, get_value( trait->default_value ) );
-    PyTuple_SET_ITEM( result,  8, PyLong_FromLong( trait->flags ) );
+    PyTuple_SET_ITEM( result,  8, PyLong_FromUnsignedLong( trait->flags ) );
     PyTuple_SET_ITEM( result,  9, get_value( trait->delegate_name ) );
     PyTuple_SET_ITEM( result, 10, get_value( trait->delegate_prefix ) );
     PyTuple_SET_ITEM( result, 11, PyLong_FromLong( func_index(
@@ -4376,7 +4392,7 @@ _trait_setstate ( trait_object * trait, PyObject * args ) {
     int getattr_index, setattr_index, post_setattr_index, validate_index,
         delegate_attr_name_index;
 
-    if ( !PyArg_ParseTuple( args, "(iiiOiOiOiOOiOOO)",
+    if ( !PyArg_ParseTuple( args, "(iiiOiOiOIOOiOOO)",
                 &getattr_index,             &setattr_index,
                 &post_setattr_index,        &trait->py_post_setattr,
                 &validate_index,            &trait->py_validate,
@@ -4533,13 +4549,13 @@ set_trait_modify_delegate_flag(trait_object * trait, PyObject * value,
 }
 
 /*-----------------------------------------------------------------------------
-|  Returns the current object_identity flag value:
+|  Returns the current object_id_test flag value:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-get_trait_object_identity_flag(trait_object * trait, void * closure)
+get_trait_object_id_test_flag(trait_object * trait, void * closure)
 {
-    return get_trait_flag(trait, TRAIT_OBJECT_IDENTITY);
+    return get_trait_flag(trait, TRAIT_OBJECT_ID_TEST);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4753,7 +4769,7 @@ PyDoc_STRVAR(_notifiers_doc,
 
 
 static PyMethodDef trait_methods[] = {
-        { "__getstate__", (PyCFunction) _trait_getstate,       METH_VARARGS,
+        { "__getstate__", (PyCFunction) _trait_getstate,       METH_NOARGS,
                 PyDoc_STR( "__getstate__()" ) },
         { "__setstate__", (PyCFunction) _trait_setstate,       METH_VARARGS,
                 PyDoc_STR( "__setstate__(state)" ) },
@@ -4775,14 +4791,6 @@ static PyMethodDef trait_methods[] = {
                 PyDoc_STR( "rich_comparison(rich_comparison_boolean)" ) },
         { "comparison_mode",  (PyCFunction) _trait_comparison_mode,  METH_VARARGS,
                 PyDoc_STR( "comparison_mode(comparison_mode_enum)" ) },
-        { "setattr_original_value",
-        (PyCFunction) _trait_setattr_original_value,       METH_VARARGS,
-                PyDoc_STR( "setattr_original_value(original_value_boolean)" ) },
-        { "post_setattr_original_value",
-        (PyCFunction) _trait_post_setattr_original_value,  METH_VARARGS,
-                PyDoc_STR( "post_setattr_original_value(original_value_boolean)" ) },
-        { "is_mapped", (PyCFunction) _trait_is_mapped,  METH_VARARGS,
-                PyDoc_STR( "is_mapped(is_mapped_boolean)" ) },
         { "property",      (PyCFunction) _trait_property,      METH_VARARGS,
                 PyDoc_STR( "property([get,set,validate])" ) },
         { "clone",         (PyCFunction) _trait_clone,         METH_VARARGS,
@@ -4801,27 +4809,27 @@ static PyGetSetDef trait_properties[] = {
         { "handler",        (getter) get_trait_handler, (setter) set_trait_handler },
         { "post_setattr",   (getter) get_trait_post_setattr,
                             (setter) set_trait_post_setattr },
-        {"property_flag", (getter) get_trait_property_flag, NULL,
+        {"is_property", (getter) get_trait_property_flag, NULL,
          "Whether the trait is a property trait.", NULL},
-        {"modify_delegate_flag", (getter) get_trait_modify_delegate_flag,
+        {"modify_delegate", (getter) get_trait_modify_delegate_flag,
          (setter) set_trait_modify_delegate_flag,
          "Whether changes to the trait modify the delegate as well", NULL},
-        {"object_identity_flag", (getter) get_trait_object_identity_flag,
+        {"object_id_test", (getter) get_trait_object_id_test_flag,
          NULL, "Whether change comparisons are by object identity.", NULL},
-        {"setattr_original_value_flag",
+        {"setattr_original_value",
          (getter) get_trait_setattr_original_value_flag,
          (setter) set_trait_setattr_original_value_flag,
          "Whether setattr gets the original value set on the trait or the "
          "stored value,", NULL},
-        {"post_setattr_original_value_flag",
+        {"post_setattr_original_value",
          (getter) get_trait_post_setattr_original_value_flag,
          (setter) set_trait_post_setattr_original_value_flag,
          "Whether post_setattr gets the original value set on the trait or "
          "the stored value,", NULL},
-        {"is_mapped_flag", (getter) get_trait_is_mapped_flag,
+        {"is_mapped", (getter) get_trait_is_mapped_flag,
          (setter) set_trait_is_mapped_flag,
          "Whether the trait is a mapped trait.", NULL},
-        {"no_value_test_flag", (getter) get_trait_no_value_test_flag, NULL,
+        {"no_value_test", (getter) get_trait_no_value_test_flag, NULL,
          "Whether trait changes are fired on every assignment, or only when "
          "the value tests as different.", NULL},
         { 0 }
@@ -4871,40 +4879,6 @@ static PyTypeObject trait_type = {
     0,                                             /* tp_alloc */
     0                                              /* tp_new */
 };
-
-/*-----------------------------------------------------------------------------
-|  Sets the global 'Undefined' and 'Uninitialized' values:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_ctraits_undefined ( PyObject * self, PyObject * args ) {
-
-    if ( !PyArg_ParseTuple( args, "OO", &Undefined, &Uninitialized ) )
-        return NULL;
-
-    Py_INCREF( Undefined );
-    Py_INCREF( Uninitialized );
-
-    Py_INCREF( Py_None );
-    return Py_None;
-}
-
-/*-----------------------------------------------------------------------------
-|  Sets the global 'TraitError' and 'DelegationError' exception types:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_ctraits_exceptions ( PyObject * self, PyObject * args ) {
-
-    if ( !PyArg_ParseTuple( args, "OO", &TraitError, &DelegationError ) )
-        return NULL;
-
-    Py_INCREF( TraitError );
-    Py_INCREF( DelegationError );
-
-    Py_INCREF( Py_None );
-    return Py_None;
-}
 
 /*-----------------------------------------------------------------------------
 |  Sets the global 'TraitListObject', TraitSetObject and 'TraitDictObject'
@@ -4964,10 +4938,6 @@ _ctraits_ctrait ( PyObject * self, PyObject * args ) {
 +----------------------------------------------------------------------------*/
 
 static PyMethodDef ctraits_methods[] = {
-        { "_undefined",    (PyCFunction) _ctraits_undefined,    METH_VARARGS,
-                PyDoc_STR( "_undefined(Undefined,Uninitialized)" ) },
-        { "_exceptions",   (PyCFunction) _ctraits_exceptions,   METH_VARARGS,
-                PyDoc_STR( "_exceptions(TraitError,DelegationError)" ) },
         { "_list_classes", (PyCFunction) _ctraits_list_classes, METH_VARARGS,
                 PyDoc_STR( "_list_classes(TraitListObject,TraitSetObject,TraitDictObject)" ) },
         { "_adapt", (PyCFunction) _ctraits_adapt, METH_VARARGS,
@@ -4993,6 +4963,8 @@ static struct PyModuleDef ctraitsmodule = {
 PyMODINIT_FUNC PyInit_ctraits(void) {
     /* Create the 'ctraits' module: */
     PyObject * module;
+    PyObject * trait_base;
+    PyObject * trait_errors;
 
     module = PyModule_Create(&ctraitsmodule);
     if ( module == NULL )
@@ -5044,6 +5016,40 @@ PyMODINIT_FUNC PyInit_ctraits(void) {
 
     /* Create the 'is_callable' marker: */
     is_callable = PyLong_FromLong( -1 );
+
+    /* Import Undefined and Uninitialized */
+    trait_base = PyImport_ImportModule("traits.trait_base");
+    if (trait_base == NULL) {
+        return NULL;
+    }
+    Undefined = PyObject_GetAttrString(trait_base, "Undefined");
+    if (Undefined == NULL) {
+        Py_DECREF(trait_base);
+        return NULL;
+    }
+    Uninitialized = PyObject_GetAttrString(trait_base, "Uninitialized");
+    if (Uninitialized == NULL) {
+        Py_DECREF(trait_base);
+        return NULL;
+    }
+    Py_DECREF(trait_base);
+
+    /* Import TraitError and DelegationError */
+    trait_errors = PyImport_ImportModule("traits.trait_errors");
+    if (trait_errors == NULL) {
+        return NULL;
+    }
+    TraitError = PyObject_GetAttrString(trait_errors, "TraitError");
+    if (TraitError == NULL) {
+        Py_DECREF(trait_errors);
+        return NULL;
+    }
+    DelegationError = PyObject_GetAttrString(trait_errors, "DelegationError");
+    if (DelegationError == NULL) {
+        Py_DECREF(trait_errors);
+        return NULL;
+    }
+    Py_DECREF(trait_errors);
 
     return module;
 }

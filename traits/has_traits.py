@@ -38,6 +38,7 @@ from . import __version__ as TraitsVersion
 
 from .adaptation.adaptation_error import AdaptationError
 
+from .constants import DefaultValue, TraitKind
 from .ctraits import CHasTraits
 
 from .traits import (
@@ -64,9 +65,6 @@ from .trait_notifiers import (
 
 from .trait_handlers import (
     TraitType,
-    MISSING_DEFAULT_VALUE,
-    TRAIT_LIST_OBJECT_DEFAULT_VALUE,
-    CALLABLE_DEFAULT_VALUE,
 )
 
 from .trait_base import (
@@ -156,7 +154,7 @@ any_trait = Any().as_ctrait()
 def _clone_trait(clone, metadata=None):
     """ Creates a clone of a specified trait.
     """
-    trait = CTrait(0)
+    trait = CTrait(TraitKind.trait)
     trait.clone(clone)
 
     if clone.__dict__ is not None:
@@ -634,7 +632,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                     # Make sure that the trait now has the default value
                     # has the correct initializer.
                     value.set_default_value(
-                        MISSING_DEFAULT_VALUE, value.default)
+                        DefaultValue.missing, value.default)
                     del class_dict[name]
                     handler = value.handler
                     if (handler is not None) and handler.is_mapped:
@@ -765,7 +763,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                 _add_notifiers(trait._notifiers(True), handlers)
 
             if default is not None:
-                trait.set_default_value(CALLABLE_DEFAULT_VALUE, default)
+                trait.set_default_value(DefaultValue.callable, default)
 
         # Handle the case of properties whose value depends upon the value
         # of other traits:
@@ -2783,7 +2781,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         handler = self.base_trait(trait_name).handler
 
         return (handler is not None) and (
-            handler.default_value_type == TRAIT_LIST_OBJECT_DEFAULT_VALUE
+            handler.default_value_type == DefaultValue.trait_list_object
         )
 
     # ---------------------------------------------------------------------------

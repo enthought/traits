@@ -25,6 +25,7 @@
 from collections.abc import MutableSequence
 import datetime
 import enum
+from importlib import import_module
 import operator
 import re
 import sys
@@ -33,7 +34,7 @@ from types import FunctionType, MethodType, ModuleType
 import uuid
 
 from . import trait_handlers
-
+from .constants import DefaultValue, TraitKind, ValidateTrait
 from .trait_base import (
     strx,
     get_module_name,
@@ -46,31 +47,19 @@ from .trait_base import (
     TraitsCache,
     xgetattr,
 )
+from .trait_dict_object import TraitDictEvent, TraitDictObject
+from .trait_list_object import TraitListObject
+from .trait_set_object import TraitSetEvent, TraitSetObject
 
 from .trait_handlers import (
     TraitType,
-    TraitListObject,
-    TraitSetObject,
-    TraitSetEvent,
-    TraitDictObject,
-    TraitDictEvent,
     ThisClass,
     items_event,
     RangeTypes,
     HandleWeakRef,
-    OBJECT_DEFAULT_VALUE,
-    TRAIT_LIST_OBJECT_DEFAULT_VALUE,
-    TRAIT_DICT_OBJECT_DEFAULT_VALUE,
-    CALLABLE_AND_ARGS_DEFAULT_VALUE,
-    CALLABLE_DEFAULT_VALUE,
-    TRAIT_SET_OBJECT_DEFAULT_VALUE,
 )
 
-from .traits import (
-    Trait,
-    trait_from,
-    _TraitMaker,
-    _InstanceArgs,
+from .editor_factories import (
     code_editor,
     html_editor,
     password_editor,
@@ -79,8 +68,16 @@ from .traits import (
     time_editor,
     list_editor,
 )
+from .traits import (
+    Trait,
+    trait_from,
+    _TraitMaker,
+    _InstanceArgs,
+)
 
 from .trait_errors import TraitError
+from .util.import_symbol import import_symbol
+
 
 # -------------------------------------------------------------------------------
 #  Constants:
@@ -95,11 +92,11 @@ SetTypes = SequenceTypes + (set,)
 
 # A few words about the next block of code:
 
-# Validator #11 is a generic validator for possibly coercible types
+# The coerce validator is a generic validator for possibly coercible types
 # (see validate_trait_coerce_type in ctraits.c).
 #
 # The tuples below are of the form
-# (11, type1, [type2, type3, ...], [None, ctype1, [ctype2, ...]])
+# (ValidateTrait.coerce, type1, [type2, type3, ...], [None, ctype1, [ctype2, ...]])
 #
 # 'type1' corresponds to the main type for the trait
 # 'None' acts as the separator between 'types' and 'ctypes' (coercible types)
@@ -116,10 +113,10 @@ try:
     # The numpy enhanced definitions:
     from numpy import integer, floating, complexfloating, bool_
 
-    int_fast_validate = (11, int, integer)
-    float_fast_validate = (11, float, floating, None, int, integer)
+    int_fast_validate = (ValidateTrait.coerce, int, integer)
+    float_fast_validate = (ValidateTrait.coerce, float, floating, None, int, integer)
     complex_fast_validate = (
-        11,
+        ValidateTrait.coerce,
         complex,
         complexfloating,
         None,
@@ -128,15 +125,15 @@ try:
         int,
         integer,
     )
-    bool_fast_validate = (11, bool, None, bool_)
+    bool_fast_validate = (ValidateTrait.coerce, bool, None, bool_)
     # Tuple or single type suitable for an isinstance check.
     _BOOL_TYPES = (bool, bool_)
 except ImportError:
     # The standard python definitions (without numpy):
-    int_fast_validate = (11, int)
-    float_fast_validate = (11, float, None, int)
-    complex_fast_validate = (11, complex, None, float, int)
-    bool_fast_validate = (11, bool)
+    int_fast_validate = (ValidateTrait.coerce, int)
+    float_fast_validate = (ValidateTrait.coerce, float, None, int)
+    complex_fast_validate = (ValidateTrait.coerce, complex, None, float, int)
+    bool_fast_validate = (ValidateTrait.coerce, bool)
     # Tuple or single type suitable for an isinstance check.
     _BOOL_TYPES = bool
 
@@ -241,7 +238,7 @@ class Int(BaseInt):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (20,)
+    fast_validate = (ValidateTrait.int,)
 
 
 # -------------------------------------------------------------------------------
@@ -284,7 +281,7 @@ class Float(BaseFloat):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (21,)
+    fast_validate = (ValidateTrait.float,)
 
 
 # -------------------------------------------------------------------------------
@@ -361,7 +358,7 @@ class BaseStr(TraitType):
     def create_editor(self):
         """ Returns the default traits UI editor for this type of trait.
         """
-        from .traits import multi_line_text_editor
+        from .editor_factories import multi_line_text_editor
 
         auto_set = self.auto_set
         if auto_set is None:
@@ -377,7 +374,7 @@ class Str(BaseStr):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (11, str)
+    fast_validate = (ValidateTrait.coerce, str)
 
 
 class Title(Str):
@@ -443,7 +440,7 @@ class Bytes(BaseBytes):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (11, bytes)
+    fast_validate = (ValidateTrait.coerce, bytes)
 
 
 # -------------------------------------------------------------------------------
@@ -521,7 +518,7 @@ class CInt(BaseCInt):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (12, int)
+    fast_validate = (ValidateTrait.cast, int)
 
 
 # -------------------------------------------------------------------------------
@@ -554,7 +551,7 @@ class CFloat(BaseCFloat):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (12, float)
+    fast_validate = (ValidateTrait.cast, float)
 
 
 # -------------------------------------------------------------------------------
@@ -588,7 +585,7 @@ class CComplex(BaseCComplex):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (12, complex)
+    fast_validate = (ValidateTrait.cast, complex)
 
 
 # -------------------------------------------------------------------------------
@@ -619,7 +616,7 @@ class CStr(BaseCStr):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (12, str)
+    fast_validate = (ValidateTrait.cast, str)
 
 
 # -------------------------------------------------------------------------------
@@ -650,7 +647,7 @@ class CBytes(BaseCBytes):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (12, bytes)
+    fast_validate = (ValidateTrait.cast, bytes)
 
 
 # -------------------------------------------------------------------------------
@@ -684,7 +681,7 @@ class CBool(BaseCBool):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (12, bool)
+    fast_validate = (ValidateTrait.cast, bool)
 
 
 # -------------------------------------------------------------------------------
@@ -955,7 +952,7 @@ class This(BaseType):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (2,)
+    fast_validate = (ValidateTrait.self_type,)
 
     #: A description of the type of value this trait accepts:
     info_text = "an instance of the same type as the receiver"
@@ -964,7 +961,7 @@ class This(BaseType):
         super(This, self).__init__(value, **metadata)
 
         if allow_none:
-            self.fast_validate = (2, None)
+            self.fast_validate = (ValidateTrait.self_type, None)
             self.validate = self.validate_none
             self.info = self.info_none
 
@@ -999,7 +996,7 @@ class self(This):
     """
 
     #: The default value type to use (i.e. 'self'):
-    default_value_type = OBJECT_DEFAULT_VALUE
+    default_value_type = DefaultValue.object
 
 
 class Function(TraitType):
@@ -1007,7 +1004,7 @@ class Function(TraitType):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (11, FunctionType)
+    fast_validate = (ValidateTrait.coerce, FunctionType)
 
     #: A description of the type of value this trait accepts:
     info_text = "a function"
@@ -1018,7 +1015,7 @@ class Method(TraitType):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (11, MethodType)
+    fast_validate = (ValidateTrait.coerce, MethodType)
 
     #: A description of the type of value this trait accepts:
     info_text = "a method"
@@ -1029,7 +1026,7 @@ class Module(TraitType):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = (11, ModuleType)
+    fast_validate = (ValidateTrait.coerce, ModuleType)
 
     #: A description of the type of value this trait accepts:
     info_text = "a module"
@@ -1074,7 +1071,7 @@ class ReadOnly(TraitType):
     """
 
     # Defines the CTrait type to use for this trait:
-    ctrait_type = 6
+    ctrait_type = TraitKind.read_only
 
     #: The default value for the trait:
     default_value = Undefined
@@ -1097,7 +1094,7 @@ class Disallow(TraitType):
     """
 
     #: Defines the CTrait type to use for this trait:
-    ctrait_type = 5
+    ctrait_type = TraitKind.disallow
 
 
 # Create a singleton instance as the trait:
@@ -1113,7 +1110,7 @@ class Constant(TraitType):
     """
 
     #: Defines the CTrait type to use for this trait:
-    ctrait_type = 7
+    ctrait_type = TraitKind.constant
 
     #: The standard metadata for the trait:
     metadata = {"type": "constant", "transient": True}
@@ -1155,7 +1152,7 @@ class Delegate(TraitType):
     """
 
     #: Defines the CTrait type to use for this trait:
-    ctrait_type = 3
+    ctrait_type = TraitKind.delegate
 
     #: The standard metadata for the trait:
     metadata = {"type": "delegate", "transient": False}
@@ -1367,7 +1364,7 @@ class Expression(TraitType):
         # Tell the C code that 'setattr' should store the original, unadapted
         # value passed to it:
         ctrait = super(Expression, self).as_ctrait()
-        ctrait.setattr_original_value_flag = True
+        ctrait.setattr_original_value = True
         return ctrait
 
 
@@ -1494,7 +1491,7 @@ class File(BaseFile):
         """
         if not exists:
             # Define the C-level fast validator to use:
-            self.fast_validate = (11, str)
+            self.fast_validate = (ValidateTrait.coerce, str)
 
         super(File, self).__init__(
             value, filter, auto_set, entries, exists, **metadata
@@ -1589,7 +1586,7 @@ class Directory(BaseDirectory):
         # Define the C-level fast validator to use if the directory existence
         #: test is not required:
         if not exists:
-            self.fast_validate = (11, str)
+            self.fast_validate = (ValidateTrait.coerce, str)
         super(Directory, self).__init__(
             value, auto_set, entries, exists, **metadata
         )
@@ -1664,7 +1661,7 @@ class BaseRange(TraitType):
 
         if vtype is float:
             self._validate = "float_validate"
-            kind = 4
+            kind = ValidateTrait.float_range
             self._type_desc = "a floating point number"
             if low is not None:
                 low = float(low)
@@ -1674,7 +1671,7 @@ class BaseRange(TraitType):
 
         elif vtype is int:
             self._validate = "int_validate"
-            kind = 3
+            kind = ValidateTrait.int_range
             self._type_desc = "an integer"
             if low is not None:
                 low = int(low)
@@ -1702,7 +1699,7 @@ class BaseRange(TraitType):
                 value = "object." + value
             self._value = compile(str(value), "<string>", "eval")
 
-            self.default_value_type = CALLABLE_DEFAULT_VALUE
+            self.default_value_type = DefaultValue.callable
             self.default_value = self._get_default_value
 
         exclude_mask = 0
@@ -1997,7 +1994,7 @@ class BaseEnum(TraitType):
 
             self.name = ""
             self.values = tuple(args)
-            self.init_fast_validator(5, self.values)
+            self.init_fast_validator(ValidateTrait.enum, self.values)
 
             super(BaseEnum, self).__init__(default_value, **metadata)
 
@@ -2124,7 +2121,7 @@ class BaseTuple(TraitType):
         default value is ``('','',0)``.
         """
         if len(types) == 0:
-            self.init_fast_validator(11, tuple, None, list)
+            self.init_fast_validator(ValidateTrait.coerce, tuple, None, list)
 
             super(BaseTuple, self).__init__((), **metadata)
 
@@ -2138,7 +2135,7 @@ class BaseTuple(TraitType):
                 types = [Trait(element) for element in default_value]
 
         self.types = tuple([trait_from(type) for type in types])
-        self.init_fast_validator(9, self.types)
+        self.init_fast_validator(ValidateTrait.tuple, self.types)
 
         if default_value is None:
             default_value = tuple(
@@ -2150,7 +2147,7 @@ class BaseTuple(TraitType):
     def init_fast_validator(self, *args):
         """ Saves the validation parameters.
         """
-        self.no_type_check = args[0] == 11
+        self.no_type_check = args[0] == ValidateTrait.coerce
 
     def validate(self, object, name, value):
         """ Validates that the value is a valid tuple.
@@ -2292,7 +2289,7 @@ class List(TraitType):
     """
 
     info_trait = None
-    default_value_type = TRAIT_LIST_OBJECT_DEFAULT_VALUE
+    default_value_type = DefaultValue.trait_list_object
     _items_event = None
 
     def __init__(
@@ -2442,7 +2439,7 @@ class Set(TraitType):
     """
 
     info_trait = None
-    default_value_type = TRAIT_SET_OBJECT_DEFAULT_VALUE
+    default_value_type = DefaultValue.trait_set_object
     _items_event = None
 
     def __init__(self, trait=None, value=None, items=True, **metadata):
@@ -2562,7 +2559,7 @@ class Dict(TraitType):
     """
 
     info_trait = None
-    default_value_type = TRAIT_DICT_OBJECT_DEFAULT_VALUE
+    default_value_type = DefaultValue.trait_dict_object
     _items_event = None
 
     def __init__(
@@ -2701,12 +2698,9 @@ class BaseClass(TraitType):
         theClass = getattr(sys.modules.get(module), klass, None)
         if (theClass is None) and (col >= 0):
             try:
-                mod = __import__(module)
-                for component in module.split(".")[1:]:
-                    mod = getattr(mod, component)
-
+                mod = import_module(module)
                 theClass = getattr(mod, klass, None)
-            except:
+            except Exception:
                 pass
 
         return theClass
@@ -2905,7 +2899,7 @@ class BaseInstance(BaseClass):
             if not isinstance(dv, _InstanceArgs):
                 return super(BaseInstance, self).get_default_value()
 
-            self.default_value_type = dvt = CALLABLE_AND_ARGS_DEFAULT_VALUE
+            self.default_value_type = dvt = DefaultValue.callable_and_args
             self.default_value = dv = (
                 self.create_default_value,
                 dv.args,
@@ -2991,18 +2985,18 @@ class Instance(BaseInstance):
         """ Sets up the C-level fast validator. """
 
         if self.adapt == 0:
-            fast_validate = [1, self.klass]
+            fast_validate = [ValidateTrait.instance, self.klass]
             if self._allow_none:
-                fast_validate = [1, None, self.klass]
+                fast_validate = [ValidateTrait.instance, None, self.klass]
             else:
-                fast_validate = [1, self.klass]
+                fast_validate = [ValidateTrait.instance, self.klass]
 
             if self.klass in TypeTypes:
-                fast_validate[0] = 0
+                fast_validate[0] = ValidateTrait.type
 
             self.fast_validate = tuple(fast_validate)
         else:
-            self.fast_validate = (19, self.klass, self.adapt, self._allow_none)
+            self.fast_validate = (ValidateTrait.adapt, self.klass, self.adapt, self._allow_none)
 
 
 class Supports(Instance):
@@ -3036,7 +3030,7 @@ class Supports(Instance):
 
         # Tell the C code that the 'post_setattr' method wants the original,
         # unadapted value passed to 'setattr':
-        ctrait.post_setattr_original_value_flag = True
+        ctrait.post_setattr_original_value = True
         return ctrait
 
 
@@ -3059,7 +3053,7 @@ class AdaptsTo(Supports):
     def modify_ctrait(self, ctrait):
         # Tell the C code that 'setattr' should store the original, unadapted
         # value passed to it:
-        ctrait.setattr_original_value_flag = True
+        ctrait.setattr_original_value = True
         return ctrait
 
 
@@ -3157,7 +3151,7 @@ class Type(BaseClass):
             return super(Type, self).get_default_value()
 
         return (
-            CALLABLE_AND_ARGS_DEFAULT_VALUE,
+            DefaultValue.callable_and_args,
             (self.resolve_default_value, (), None),
         )
 
@@ -3403,16 +3397,8 @@ class Symbol(TraitType):
 
     def _resolve(self, ref):
         try:
-            path = ref.split(":", 1)
-            module = __import__(path[0])
-            for component in path[0].split(".")[1:]:
-                module = getattr(module, component)
-
-            if len(path) == 1:
-                return module
-
-            elements = path[1].split("(", 1)
-            symbol = getattr(module, elements[0])
+            elements = ref.split("(", 1)
+            symbol = import_symbol(elements[0])
             if len(elements) == 1:
                 return symbol
 
@@ -3421,7 +3407,7 @@ class Symbol(TraitType):
                 args = (args,)
 
             return symbol(*args)
-        except:
+        except Exception:
             raise TraitError(
                 "Could not resolve '%s' into a valid symbol." % ref
             )
@@ -3490,7 +3476,7 @@ class UUID(TraitType):
 
     def get_default_value(self):
         return (
-            CALLABLE_AND_ARGS_DEFAULT_VALUE,
+            DefaultValue.callable_and_args,
             (self._create_uuid, (), None),
         )
 
