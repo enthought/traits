@@ -881,13 +881,14 @@ class _TraitMaker(object):
                 trait.post_setattr = post_setattr
                 trait.is_mapped = handler.is_mapped
 
-        # Ref: enthought/traits#602
         rich_compare = metadata.get("rich_compare")
         if rich_compare is not None:
+            # Ref: enthought/traits#602
             warnings.warn(
-                "The 'rich_compare' kwarg has been removed. Please "
-                "use the 'comparison_mode' kwarg instead.",
-                RuntimeWarning,
+                "The 'rich_compare' metadata has been deprecated. Please "
+                "use the 'comparison_mode' metadata instead. In a future "
+                "release, rich_compare will have no effect.",
+                DeprecationWarning,
                 stacklevel=3,
             )
             trait.comparison_mode(

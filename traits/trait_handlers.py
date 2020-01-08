@@ -38,7 +38,12 @@ from types import FunctionType, MethodType
 import warnings
 from weakref import ref
 
-from .constants import DefaultValue, TraitKind, ValidateTrait
+from .constants import (
+    ComparisonMode,
+    DefaultValue,
+    TraitKind,
+    ValidateTrait,
+)
 from .trait_base import (
     strx,
     SequenceTypes,
@@ -624,13 +629,20 @@ class TraitType(BaseTraitHandler):
                 trait.post_setattr = post_setattr
                 trait.is_mapped = self.is_mapped
 
-            # Ref: enthought/traits#602
-            if "rich_compare" in metadata:
+            rich_compare = metadata.get("rich_compare")
+            if rich_compare is not None:
+                # Ref: enthought/traits#602
                 warnings.warn(
-                    "The 'rich_compare' kwarg has been removed. Please "
-                    "use the 'comparison_mode' kwarg instead.",
-                    RuntimeWarning,
+                    "The 'rich_compare' metadata has been deprecated. Please "
+                    "use the 'comparison_mode' metadata instead. In a future "
+                    "release, rich_compare will have no effect.",
+                    DeprecationWarning,
                     stacklevel=5,
+                )
+                trait.comparison_mode(
+                    ComparisonMode.equality_compare
+                    if rich_compare
+                    else ComparisonMode.object_id_compare
                 )
 
             comparison_mode = metadata.get("comparison_mode")
