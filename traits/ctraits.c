@@ -1843,7 +1843,7 @@ getattr_property0 ( trait_object      * trait,
 
     PyObject * result;
 
-    PyObject *args = PyTuple_New(0);
+    PyObject * args = PyTuple_New(0);
     if (args == NULL) {
         return NULL;
     }
@@ -1859,7 +1859,7 @@ getattr_property1 ( trait_object      * trait,
 
     PyObject * result;
 
-    PyObject *args = PyTuple_Pack(1, (PyObject *)obj);
+    PyObject * args = PyTuple_Pack(1, (PyObject *)obj);
     if ( args == NULL )
         return NULL;
     result = PyObject_Call( trait->delegate_name, args, NULL );
@@ -1875,7 +1875,7 @@ getattr_property2 ( trait_object      * trait,
 
     PyObject * result;
 
-    PyObject *args = PyTuple_Pack(2, (PyObject *)obj, name);
+    PyObject * args = PyTuple_Pack(2, (PyObject *)obj, name);
     if ( args == NULL )
         return NULL;
     result = PyObject_Call( trait->delegate_name, args, NULL );
@@ -2401,7 +2401,8 @@ setattr_property0 ( trait_object      * traito,
                     PyObject          * name,
                     PyObject          * value ) {
 
-    PyObject *result, *args;
+    PyObject * result;
+    PyObject * args;
 
     if ( value == NULL )
         return set_delete_property_error( obj, name );
@@ -2431,12 +2432,10 @@ setattr_property1 ( trait_object      * traito,
     if ( value == NULL )
         return set_delete_property_error( obj, name );
 
-    args = PyTuple_New( 1 );
+    args = PyTuple_Pack( 1, value );
     if ( args == NULL )
         return -1;
 
-    PyTuple_SET_ITEM( args, 0, value );
-    Py_INCREF( value );
     result = PyObject_Call( traitd->delegate_prefix, args, NULL );
     Py_DECREF( args );
     if ( result == NULL )
@@ -2459,14 +2458,10 @@ setattr_property2 ( trait_object      * traito,
     if ( value == NULL )
         return set_delete_property_error( obj, name );
 
-    args = PyTuple_New( 2 );
+    args = PyTuple_Pack( 2 , (PyObject *)obj, value);
     if ( args == NULL )
         return -1;
 
-    PyTuple_SET_ITEM( args, 0, (PyObject *) obj );
-    PyTuple_SET_ITEM( args, 1, value );
-    Py_INCREF( obj );
-    Py_INCREF( value );
     result = PyObject_Call( traitd->delegate_prefix, args, NULL );
     Py_DECREF( args );
     if ( result == NULL )
@@ -2489,16 +2484,10 @@ setattr_property3 ( trait_object      * traito,
     if ( value == NULL )
         return set_delete_property_error( obj, name );
 
-    args = PyTuple_New( 3 );
+    args = PyTuple_Pack( 3, (PyObject *)obj, name, value );
     if ( args == NULL )
         return -1;
 
-    PyTuple_SET_ITEM( args, 0, (PyObject *) obj );
-    PyTuple_SET_ITEM( args, 1, name );
-    PyTuple_SET_ITEM( args, 2, value );
-    Py_INCREF( obj );
-    Py_INCREF( name );
-    Py_INCREF( value );
     result = PyObject_Call( traitd->delegate_prefix, args, NULL );
     Py_DECREF( args );
     if ( result == NULL )
