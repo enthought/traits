@@ -31,6 +31,7 @@ consistent.
 #  Imports:
 # -------------------------------------------------------------------------------
 
+from importlib import import_module
 import re
 import sys
 from types import FunctionType, MethodType
@@ -1084,21 +1085,19 @@ class TraitInstance(ThisClass):
             trait = handler.item_trait
         trait.set_validate(self.fast_validate)
 
-    def find_class(self, aClass):
+    def find_class(self, klass):
         module = self.module
-        col = aClass.rfind(".")
+        col = klass.rfind(".")
         if col >= 0:
-            module = aClass[:col]
-            aClass = aClass[col + 1 :]
+            module = klass[:col]
+            klass = klass[col + 1 :]
 
-        theClass = getattr(sys.modules.get(module), aClass, None)
+        theClass = getattr(sys.modules.get(module), klass, None)
         if (theClass is None) and (col >= 0):
             try:
-                mod = __import__(module, globals=globals(), level=1)
-                for component in module.split(".")[1:]:
-                    mod = getattr(mod, component)
-                theClass = getattr(mod, aClass, None)
-            except:
+                mod = import_module(module)
+                theClass = getattr(mod, klass, None)
+            except Exception:
                 pass
 
         return theClass
