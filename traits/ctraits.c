@@ -32,8 +32,6 @@ static PyObject * listener_traits;     /* == "__listener_traits__" */
 static PyObject * editor_property;     /* == "editor" */
 static PyObject * class_prefix;        /* == "__prefix__" */
 static PyObject * trait_added;         /* == "trait_added" */
-static PyObject * empty_tuple;         /* == () */
-static PyObject * empty_dict;          /* == {} */
 static PyObject * Undefined;           /* Global 'Undefined' value */
 static PyObject * Uninitialized;       /* Global 'Uninitialized' value */
 static PyObject * TraitError;          /* TraitError exception */
@@ -720,7 +718,23 @@ has_traits_new ( PyTypeObject * type, PyObject * args, PyObject * kwds ) {
     // Call PyBaseObject_Type.tp_new to do the actual construction.
     // This allows things like ABCMeta machinery to work correctly
     // which is implemented at the C level.
-    has_traits_object * obj = (has_traits_object *) PyBaseObject_Type.tp_new(type, empty_tuple, empty_dict);
+    PyObject *new_args, *new_kwds;
+    has_traits_object *obj;
+
+    new_args = PyTuple_New(0);
+    if (new_args == NULL) {
+        return NULL;
+    }
+    new_kwds = PyDict_New();
+    if (new_kwds == NULL) {
+        Py_DECREF(new_args);
+        return NULL;
+    }
+    obj = (has_traits_object *) PyBaseObject_Type.tp_new(
+        type, new_args, new_kwds);
+    Py_DECREF(new_kwds);
+    Py_DECREF(new_args);
+
     if ( obj != NULL ) {
         if (type->tp_dict == NULL) {
             PyErr_SetString(PyExc_RuntimeError, "No tp_dict");
@@ -1827,7 +1841,15 @@ getattr_property0 ( trait_object      * trait,
                     has_traits_object * obj,
                     PyObject          * name ) {
 
-    return PyObject_Call( trait->delegate_name, empty_tuple, NULL );
+    PyObject * result;
+
+    PyObject * args = PyTuple_New(0);
+    if (args == NULL) {
+        return NULL;
+    }
+    result = PyObject_Call( trait->delegate_name, args, NULL );
+    Py_DECREF(args);
+    return result;
 }
 
 static PyObject *
@@ -1837,12 +1859,9 @@ getattr_property1 ( trait_object      * trait,
 
     PyObject * result;
 
-    PyObject * args = PyTuple_New( 1 );
+    PyObject * args = PyTuple_Pack(1, (PyObject *)obj);
     if ( args == NULL )
         return NULL;
-
-    PyTuple_SET_ITEM( args, 0, (PyObject *) obj );
-    Py_INCREF( obj );
     result = PyObject_Call( trait->delegate_name, args, NULL );
     Py_DECREF( args );
 
@@ -1856,14 +1875,9 @@ getattr_property2 ( trait_object      * trait,
 
     PyObject * result;
 
-    PyObject * args = PyTuple_New( 2 );
+    PyObject * args = PyTuple_Pack(2, (PyObject *)obj, name);
     if ( args == NULL )
         return NULL;
-
-    PyTuple_SET_ITEM( args, 0, (PyObject *) obj );
-    Py_INCREF( obj );
-    PyTuple_SET_ITEM( args, 1, name );
-    Py_INCREF( name );
     result = PyObject_Call( trait->delegate_name, args, NULL );
     Py_DECREF( args );
 
@@ -1877,16 +1891,10 @@ getattr_property3 ( trait_object      * trait,
 
     PyObject * result;
 
-    PyObject * args = PyTuple_New( 3 );
+    PyObject *args = PyTuple_Pack(3, (PyObject *)obj, name, (PyObject *)trait);
     if ( args == NULL )
         return NULL;
 
-    PyTuple_SET_ITEM( args, 0, (PyObject *) obj );
-    Py_INCREF( obj );
-    PyTuple_SET_ITEM( args, 1, name );
-    Py_INCREF( name );
-    PyTuple_SET_ITEM( args, 2, (PyObject *) trait );
-    Py_INCREF( trait );
     result = PyObject_Call( trait->delegate_name, args, NULL );
     Py_DECREF( args );
 
@@ -2394,11 +2402,16 @@ setattr_property0 ( trait_object      * traito,
                     PyObject          * value ) {
 
     PyObject * result;
+    PyObject * args;
 
     if ( value == NULL )
         return set_delete_property_error( obj, name );
 
-    result = PyObject_Call( traitd->delegate_prefix, empty_tuple, NULL );
+    args = PyTuple_New(0);
+    if (args == NULL) {
+        return -1;
+    }
+    result = PyObject_Call( traitd->delegate_prefix, args, NULL );
     if ( result == NULL )
         return -1;
 
@@ -2419,12 +2432,10 @@ setattr_property1 ( trait_object      * traito,
     if ( value == NULL )
         return set_delete_property_error( obj, name );
 
-    args = PyTuple_New( 1 );
+    args = PyTuple_Pack( 1, value );
     if ( args == NULL )
         return -1;
 
-    PyTuple_SET_ITEM( args, 0, value );
-    Py_INCREF( value );
     result = PyObject_Call( traitd->delegate_prefix, args, NULL );
     Py_DECREF( args );
     if ( result == NULL )
@@ -2447,14 +2458,10 @@ setattr_property2 ( trait_object      * traito,
     if ( value == NULL )
         return set_delete_property_error( obj, name );
 
-    args = PyTuple_New( 2 );
+    args = PyTuple_Pack( 2 , (PyObject *)obj, value);
     if ( args == NULL )
         return -1;
 
-    PyTuple_SET_ITEM( args, 0, (PyObject *) obj );
-    PyTuple_SET_ITEM( args, 1, value );
-    Py_INCREF( obj );
-    Py_INCREF( value );
     result = PyObject_Call( traitd->delegate_prefix, args, NULL );
     Py_DECREF( args );
     if ( result == NULL )
@@ -2477,16 +2484,10 @@ setattr_property3 ( trait_object      * traito,
     if ( value == NULL )
         return set_delete_property_error( obj, name );
 
-    args = PyTuple_New( 3 );
+    args = PyTuple_Pack( 3, (PyObject *)obj, name, value );
     if ( args == NULL )
         return -1;
 
-    PyTuple_SET_ITEM( args, 0, (PyObject *) obj );
-    PyTuple_SET_ITEM( args, 1, name );
-    PyTuple_SET_ITEM( args, 2, value );
-    Py_INCREF( obj );
-    Py_INCREF( name );
-    Py_INCREF( value );
     result = PyObject_Call( traitd->delegate_prefix, args, NULL );
     Py_DECREF( args );
     if ( result == NULL )
@@ -2528,7 +2529,15 @@ setattr_validate0 ( trait_object      * trait,
                     PyObject          * name,
                     PyObject          * value ) {
 
-    return PyObject_Call( trait->py_validate, empty_tuple, NULL );
+    PyObject *validated;
+
+    PyObject *args = PyTuple_New(0);
+    if (args == NULL) {
+        return NULL;
+    }
+    validated = PyObject_Call( trait->py_validate, args, NULL );
+    Py_DECREF(args);
+    return validated;
 }
 
 static PyObject *
@@ -2539,11 +2548,9 @@ setattr_validate1 ( trait_object      * trait,
 
     PyObject * validated;
 
-    PyObject * args = PyTuple_New( 1 );
+    PyObject *args = PyTuple_Pack(1, value);
     if ( args == NULL )
         return NULL;
-    PyTuple_SET_ITEM( args, 0, value );
-    Py_INCREF( value );
     validated = PyObject_Call( trait->py_validate, args, NULL );
     Py_DECREF( args );
     return validated;
@@ -2557,13 +2564,9 @@ setattr_validate2 ( trait_object      * trait,
 
     PyObject * validated;
 
-    PyObject * args = PyTuple_New( 2 );
+    PyObject * args = PyTuple_Pack(2, (PyObject *)obj, value);
     if ( args == NULL )
         return NULL;
-    PyTuple_SET_ITEM( args, 0, (PyObject *) obj );
-    PyTuple_SET_ITEM( args, 1, value );
-    Py_INCREF( obj );
-    Py_INCREF( value );
     validated = PyObject_Call( trait->py_validate, args, NULL );
     Py_DECREF( args );
     return validated;
@@ -2577,15 +2580,9 @@ setattr_validate3 ( trait_object      * trait,
 
     PyObject * validated;
 
-    PyObject * args = PyTuple_New( 3 );
+    PyObject * args = PyTuple_Pack(3, (PyObject *)obj, name, value);
     if ( args == NULL )
         return NULL;
-    PyTuple_SET_ITEM( args, 0, (PyObject *) obj );
-    PyTuple_SET_ITEM( args, 1, name );
-    PyTuple_SET_ITEM( args, 2, value );
-    Py_INCREF( obj );
-    Py_INCREF( name );
-    Py_INCREF( value );
     validated = PyObject_Call( trait->py_validate, args, NULL );
     Py_DECREF( args );
     return validated;
@@ -5007,12 +5004,6 @@ PyMODINIT_FUNC PyInit_ctraits(void) {
 
     /* Predefine a Python string == "trait_added": */
     trait_added = PyUnicode_FromString( "trait_added" );
-
-    /* Create an empty tuple: */
-    empty_tuple = PyTuple_New( 0 );
-
-    /* Create an empty dict: */
-    empty_dict = PyDict_New();
 
     /* Create the 'is_callable' marker: */
     is_callable = PyLong_FromLong( -1 );
