@@ -25,8 +25,6 @@ Classes
 
 .. autoclass:: HandleWeakRef
 
-.. autoclass:: TraitClass
-
 .. autoclass:: TraitFunction
 
 .. autoclass:: TraitEnum
