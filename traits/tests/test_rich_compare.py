@@ -15,17 +15,15 @@
 import unittest
 import warnings
 
-from traits.api import (
-    HasTraits, Any, Str, OBJECT_IDENTITY_COMPARE, RICH_COMPARE,
-)
+from traits.api import Any, ComparisonMode, HasTraits, Str
 
 
 class IdentityCompare(HasTraits):
-    bar = Any(comparison_mode=OBJECT_IDENTITY_COMPARE)
+    bar = Any(comparison_mode=ComparisonMode.object_id_compare)
 
 
 class RichCompare(HasTraits):
-    bar = Any(comparison_mode=RICH_COMPARE)
+    bar = Any(comparison_mode=ComparisonMode.equality_compare)
 
 
 class RichCompareTests:
