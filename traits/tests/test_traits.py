@@ -15,6 +15,7 @@
 #  Imports
 
 import unittest
+import warnings
 
 from traits.api import (
     Any,
@@ -22,6 +23,7 @@ from traits.api import (
     CBytes,
     CFloat,
     CInt,
+    ComparisonMode,
     Delegate,
     Float,
     HasTraits,
@@ -1148,3 +1150,116 @@ class TestThis(unittest.TestCase):
         with self.assertRaises(TraitError):
             d.allows_none = object()
         self.assertIsNone(d.allows_none)
+
+
+class ComparisonModeTests(unittest.TestCase):
+    def test_comparison_mode_no_compare(self):
+        class A(HasTraits):
+            foo = Trait(comparison_mode=ComparisonMode.no_compare)
+
+            foo_events = List()
+
+            def _foo_changed(self, new):
+                self.foo_events.append(new)
+
+        some_list = [1, 2, 3]
+        other_list = [1, 2, 3]
+
+        a = A()
+        self.assertEqual(len(a.foo_events), 0)
+        a.foo = some_list
+        self.assertEqual(len(a.foo_events), 1)
+        a.foo = some_list
+        self.assertEqual(len(a.foo_events), 2)
+        a.foo = other_list
+        self.assertEqual(len(a.foo_events), 3)
+        a.foo = [4, 5, 6]
+        self.assertEqual(len(a.foo_events), 4)
+
+    def test_comparison_mode_id_compare(self):
+        class A(HasTraits):
+            foo = Trait(comparison_mode=ComparisonMode.object_id_compare)
+
+            foo_events = List()
+
+            def _foo_changed(self, new):
+                self.foo_events.append(new)
+
+        some_list = [1, 2, 3]
+        other_list = [1, 2, 3]
+
+        a = A()
+        self.assertEqual(len(a.foo_events), 0)
+        a.foo = some_list
+        self.assertEqual(len(a.foo_events), 1)
+        a.foo = some_list
+        self.assertEqual(len(a.foo_events), 1)
+        a.foo = other_list
+        self.assertEqual(len(a.foo_events), 2)
+        a.foo = [4, 5, 6]
+        self.assertEqual(len(a.foo_events), 3)
+
+    def test_comparison_mode_equality_compare(self):
+        class A(HasTraits):
+            foo = Trait(comparison_mode=ComparisonMode.equality_compare)
+
+            foo_events = List()
+
+            def _foo_changed(self, new):
+                self.foo_events.append(new)
+
+        some_list = [1, 2, 3]
+        other_list = [1, 2, 3]
+
+        a = A()
+        self.assertEqual(len(a.foo_events), 0)
+        a.foo = some_list
+        self.assertEqual(len(a.foo_events), 1)
+        a.foo = some_list
+        self.assertEqual(len(a.foo_events), 1)
+        a.foo = other_list
+        self.assertEqual(len(a.foo_events), 1)
+        a.foo = [4, 5, 6]
+        self.assertEqual(len(a.foo_events), 2)
+
+    def test_rich_compare_true_warning(self):
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", RuntimeWarning)
+
+            class A(HasTraits):
+                foo = Trait(rich_compare=True)
+
+                foo_events = List()
+
+                def _foo_changed(self, new):
+                    self.foo_events.append(new)
+
+        self.assertEqual(len(warn_msgs), 1)
+        warn_msg = warn_msgs[0]
+        self.assertIn(
+            "'rich_compare' kwarg has been removed",
+            str(warn_msg.message)
+        )
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warn_msg.filename)
+
+    def test_rich_compare_false_warning(self):
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", RuntimeWarning)
+
+            class A(HasTraits):
+                foo = Trait(rich_compare=True)
+
+                foo_events = List()
+
+                def _foo_changed(self, new):
+                    self.foo_events.append(new)
+
+        self.assertEqual(len(warn_msgs), 1)
+        warn_msg = warn_msgs[0]
+        self.assertIn(
+            "'rich_compare' kwarg has been removed",
+            str(warn_msg.message)
+        )
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warn_msg.filename)
