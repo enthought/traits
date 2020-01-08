@@ -1222,7 +1222,7 @@ class ComparisonModeTests(unittest.TestCase):
         a.foo = [4, 5, 6]
         self.assertEqual(len(a.foo_events), 2)
 
-    def test_rich_compare_true_warning(self):
+    def test_rich_compare_true(self):
         with warnings.catch_warnings(record=True) as warn_msgs:
             warnings.simplefilter("always", RuntimeWarning)
 
@@ -1234,6 +1234,7 @@ class ComparisonModeTests(unittest.TestCase):
                 def _foo_changed(self, new):
                     self.foo_events.append(new)
 
+        # Check for warning.
         self.assertEqual(len(warn_msgs), 1)
         warn_msg = warn_msgs[0]
         self.assertIn(
@@ -1243,18 +1244,34 @@ class ComparisonModeTests(unittest.TestCase):
         _, _, this_module = __name__.rpartition(".")
         self.assertIn(this_module, warn_msg.filename)
 
-    def test_rich_compare_false_warning(self):
+        # Behaviour should match ComparisonMode.equality_compare.
+        some_list = [1, 2, 3]
+        other_list = [1, 2, 3]
+
+        a = A()
+        self.assertEqual(len(a.foo_events), 0)
+        a.foo = some_list
+        self.assertEqual(len(a.foo_events), 1)
+        a.foo = some_list
+        self.assertEqual(len(a.foo_events), 1)
+        a.foo = other_list
+        self.assertEqual(len(a.foo_events), 1)
+        a.foo = [4, 5, 6]
+        self.assertEqual(len(a.foo_events), 2)
+
+    def test_rich_compare_false(self):
         with warnings.catch_warnings(record=True) as warn_msgs:
             warnings.simplefilter("always", RuntimeWarning)
 
             class A(HasTraits):
-                foo = Trait(rich_compare=True)
+                foo = Trait(rich_compare=False)
 
                 foo_events = List()
 
                 def _foo_changed(self, new):
                     self.foo_events.append(new)
 
+        # Check for warning.
         self.assertEqual(len(warn_msgs), 1)
         warn_msg = warn_msgs[0]
         self.assertIn(
@@ -1263,3 +1280,18 @@ class ComparisonModeTests(unittest.TestCase):
         )
         _, _, this_module = __name__.rpartition(".")
         self.assertIn(this_module, warn_msg.filename)
+
+        # Behaviour should match ComparisonMode.identity_compare.
+        some_list = [1, 2, 3]
+        other_list = [1, 2, 3]
+
+        a = A()
+        self.assertEqual(len(a.foo_events), 0)
+        a.foo = some_list
+        self.assertEqual(len(a.foo_events), 1)
+        a.foo = some_list
+        self.assertEqual(len(a.foo_events), 1)
+        a.foo = other_list
+        self.assertEqual(len(a.foo_events), 2)
+        a.foo = [4, 5, 6]
+        self.assertEqual(len(a.foo_events), 3)

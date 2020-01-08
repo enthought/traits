@@ -54,7 +54,12 @@ import warnings
 NoneType = type(None)  # Python 3's types does not include NoneType
 
 from . import trait_handlers
-from .constants import DefaultValue, TraitKind, default_value_map
+from .constants import (
+    ComparisonMode,
+    DefaultValue,
+    TraitKind,
+    default_value_map,
+)
 from .ctraits import cTrait
 from .editor_factories import (
     bytes_editor,
@@ -877,12 +882,18 @@ class _TraitMaker(object):
                 trait.is_mapped = handler.is_mapped
 
         # Ref: enthought/traits#602
-        if "rich_compare" in metadata:
+        rich_compare = metadata.get("rich_compare")
+        if rich_compare is not None:
             warnings.warn(
                 "The 'rich_compare' kwarg has been removed. Please "
                 "use the 'comparison_mode' kwarg instead.",
                 RuntimeWarning,
                 stacklevel=3,
+            )
+            trait.comparison_mode(
+                ComparisonMode.equality_compare
+                if rich_compare
+                else ComparisonMode.object_id_compare
             )
 
         comparison_mode = metadata.get("comparison_mode")
