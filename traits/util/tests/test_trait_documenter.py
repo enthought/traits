@@ -142,7 +142,10 @@ class TestTraitDocumenter(unittest.TestCase):
             app = SphinxTestApp(srcdir=path(tmpdir))
             app.builder.env.app = app
             app.builder.env.temp_data["docname"] = "dummy"
-            yield DocumenterBridge(app.env, LoggingReporter(''), Options(), 1)
+            state = mock.Mock()
+            state.document.settings.tab_width = 8
+            yield DocumenterBridge(
+                app.env, LoggingReporter(''), Options(), 1, state)
 
     @contextlib.contextmanager
     def tmpdir(self):
