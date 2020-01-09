@@ -110,12 +110,15 @@ class ComparisonMode(IntEnum):
     Indicates when trait change notifications should be generated based upon
     the result of comparing the old and new values of a trait assignment:
 
-    * 0 (no_compare): The values are not compared and a trait change
-        notification is generated on each assignment.
-    * 1 (object_id_compare): A trait change notification is
-        generated if the old and new values are not the same object.
-    * 2 (equality_compare): A trait change notification is generated if the
-        old and new values are not equal using Python's standard equality
+    0 (no_compare)
+        The values are not compared and a trait change notification is
+        generated on each assignment.
+    1 (object_id_compare)
+        A trait change notification is generated if the old and new values are
+        not the same object.
+    2 (equality_compare)
+        A trait change notification is generated if the old and new values are
+        not the same object, and not equal using Python's standard equality
         testing. This is the default.
     """
 
@@ -127,6 +130,18 @@ class ComparisonMode(IntEnum):
 
     #: Compare values by equality.
     equality_compare = 2
+
+
+# Backward compatibility for comparison mode constants.
+
+#: Deprecated alias for ``ComparisonMode.no_compare``.
+NO_COMPARE = ComparisonMode.no_compare
+
+#: Deprecated alias for ``ComparisonMode.object_id_compare``.
+OBJECT_IDENTITY_COMPARE = ComparisonMode.object_id_compare
+
+#: Deprecated alias for ``ComparisonMode.equality_compare``.
+RICH_COMPARE = ComparisonMode.equality_compare
 
 
 class DefaultValue(IntEnum):
