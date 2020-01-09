@@ -417,15 +417,24 @@ class TraitListObject(list):
             self.trait = trait.handler
 
     def clear(self):
+        if self.trait.minlen > 0:
+            self.len_error(0)
+            return
+
         if not self.trait.has_items:
             list.clear(self)
             return
 
-        removed = self.copy()
+        removed = list.copy(self)
         list.clear(self)
 
+        if len(removed) > 0:
+            index = 0
+        else:
+            index = -1
+
         self._send_trait_items_event(
-            self.name_items, TraitListEvent(0, removed)
+            self.name_items, TraitListEvent(index, removed)
         )
 
     def copy(self):
