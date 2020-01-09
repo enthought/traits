@@ -11,9 +11,9 @@ Classes
 
 .. autodata:: ValidateTrait
 
-.. autodata:: ComparisonMode
-
 .. autodata:: DefaultValue
+
+.. autodata:: ComparisonMode
 
 .. autodata:: NO_COMPARE
 
