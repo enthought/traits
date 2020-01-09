@@ -342,17 +342,16 @@ class MultiThreadChangeEventRecorder(object):
 def record_events():
     """ Multi-threaded trait change event tracer.
 
-    Usage
-    -----
-    ::
+    Example
+    -------
+
+    This will install a tracer that will record all events that occur from
+    setting of some_trait on the my_model instance::
 
         >>> from trace_recorder import record_events
         >>> with record_events() as change_event_container:
         ...     my_model.some_trait = True
         >>> change_event_container.save_to_directory('C:\\dev\\trace')
-
-    This will install a tracer that will record all events that occur from
-    setting of some_trait on the my_model instance.
 
     The results will be stored in one file per running thread in the
     directory 'C:\\dev\\trace'.  The files are named after the thread being

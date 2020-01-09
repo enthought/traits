@@ -2356,37 +2356,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         """Causes the object to invoke a handler whenever a trait attribute
         matching a specified pattern is modified, or removes the association.
 
-        Parameters
-        ----------
-        handler : function
-            A trait notification function for the *name* trait attribute, with
-            one of the signatures described below.
-        name : str
-            The name of the trait attribute whose value changes trigger the
-            notification. The *name* can specify complex patterns of trait
-            changes using an extended *name* syntax, which is described below.
-        remove : bool
-            If True, removes the previously-set association between
-            *handler* and *name*; if False (the default), creates the
-            association.
-        dispatch : str
-            A string indicating the thread on which notifications must be run.
-            Possible values are:
-
-            =========== =======================================================
-            value       dispatch
-            =========== =======================================================
-            ``same``    Run notifications on the same thread as this one.
-            ``ui``      Run notifications on the UI thread. If the current
-                        thread is the UI thread, the notifications are executed
-                        immediately; otherwise, they are placed on the UI
-                        event queue.
-            ``fast_ui`` Alias for ``ui``.
-            ``new``     Run notifications in a new thread.
-            =========== =======================================================
-
-        Description
-        -----------
         Multiple handlers can be defined for the same object, or even for the
         same trait attribute on the same object. If *name* is not specified or
         is None, *handler* is invoked when any trait attribute on the
@@ -2558,6 +2527,35 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         final trait has been changed. For all other *handler* signatures,
         you must explicitly specify the 'xxx_items' trait if you want to
         be notified of changes to any of the items of the 'xxx' trait.
+
+        Parameters
+        ----------
+        handler : function
+            A trait notification function for the *name* trait attribute, with
+            one of the signatures described below.
+        name : str
+            The name of the trait attribute whose value changes trigger the
+            notification. The *name* can specify complex patterns of trait
+            changes using an extended *name* syntax, which is described below.
+        remove : bool
+            If True, removes the previously-set association between
+            *handler* and *name*; if False (the default), creates the
+            association.
+        dispatch : str
+            A string indicating the thread on which notifications must be run.
+            Possible values are:
+
+            =========== =======================================================
+            value       dispatch
+            =========== =======================================================
+            ``same``    Run notifications on the same thread as this one.
+            ``ui``      Run notifications on the UI thread. If the current
+                        thread is the UI thread, the notifications are executed
+                        immediately; otherwise, they are placed on the UI
+                        event queue.
+            ``fast_ui`` Alias for ``ui``.
+            ``new``     Run notifications in a new thread.
+            =========== =======================================================
 
         """
         # Check to see if we can do a quick exit to the basic trait change
