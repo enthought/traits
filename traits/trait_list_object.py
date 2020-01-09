@@ -422,7 +422,7 @@ class TraitListObject(list):
             return
 
         removed = self.copy()
-        list.clear()
+        list.clear(self)
 
         self._send_trait_items_event(
             self.name_items, TraitListEvent(0, removed)
