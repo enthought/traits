@@ -31,29 +31,32 @@ from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 import uuid
 
-from . import trait_handlers
 from .constants import DefaultValue, TraitKind, ValidateTrait
 from .trait_base import (
     strx,
     get_module_name,
+    HandleWeakRef,
     class_of,
+    RangeTypes,
     SequenceTypes,
     TypeTypes,
     Undefined,
     TraitsCache,
 )
+from .trait_converters import trait_from
 from .trait_dict_object import TraitDictEvent, TraitDictObject
-from .trait_list_object import TraitListObject
+from .trait_errors import TraitError
+from .trait_list_object import TraitListEvent, TraitListObject
 from .trait_set_object import TraitSetEvent, TraitSetObject
-
-from .trait_handlers import (
-    TraitType,
-    ThisClass,
-    items_event,
-    RangeTypes,
-    HandleWeakRef,
+from .trait_type import TraitType
+from .traits import (
+    Trait,
+    _TraitMaker,
+    _InstanceArgs,
 )
+from .util.import_symbol import import_symbol
 
+# TraitsUI integration imports
 from .editor_factories import (
     code_editor,
     html_editor,
@@ -63,15 +66,7 @@ from .editor_factories import (
     time_editor,
     list_editor,
 )
-from .traits import (
-    Trait,
-    trait_from,
-    _TraitMaker,
-    _InstanceArgs,
-)
 
-from .trait_errors import TraitError
-from .util.import_symbol import import_symbol
 
 
 # -------------------------------------------------------------------------------
@@ -2376,7 +2371,14 @@ class List(TraitType):
     # -- Private Methods --------------------------------------------------------
 
     def items_event(self):
-        return items_event()
+        cls = self.__class__
+        if cls._items_event is None:
+            cls._items_event = Event(
+                TraitListEvent, is_base=False
+            ).as_ctrait()
+
+        return cls._items_event
+
 
 
 # -------------------------------------------------------------------------------
@@ -3183,10 +3185,6 @@ class Event(TraitType):
 
         return trait.full_info(object, name, value)
 
-
-#  Handle circular module dependencies:
-trait_handlers.Event = Event
-
 # -------------------------------------------------------------------------------
 #  'Button' trait:
 # -------------------------------------------------------------------------------
@@ -3652,7 +3650,7 @@ ListMethod = List(MethodType)
 
 #: List of container type values; default value is ``[]``. This trait type is
 #: deprecated. Use ``List(This(allow_none=False))`` instead.
-ListThis = List(ThisClass)
+ListThis = List(This(allow_none=False))
 
 # -- Dictionary Traits --------------------------------------------------------
 

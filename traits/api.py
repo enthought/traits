@@ -38,11 +38,11 @@ from .trait_notifiers import (
     TraitChangeNotifyWrapper,
 )
 
+from .ctrait import CTrait
+from .trait_factory import TraitFactory
 from .traits import (
-    CTrait,
     Trait,
     Property,
-    TraitFactory,
     Default,
     Color,
     RGBColor,
@@ -186,10 +186,10 @@ from .has_traits import (
     isinterface,
 )
 
+from .base_trait_handler import BaseTraitHandler
+from .trait_handler import TraitHandler
+from .trait_type import TraitType
 from .trait_handlers import (
-    BaseTraitHandler,
-    TraitType,
-    TraitHandler,
     TraitCoerceType,
     TraitCastType,
     TraitInstance,
