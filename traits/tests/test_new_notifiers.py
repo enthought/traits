@@ -49,17 +49,18 @@ class Foo(HasTraits):
     foo = Float
 
 
+class Receiver(HasTraits):
+    notifications = List()
+
+    def notified(self):
+        # Have we received any notifications?
+        return bool(self.notifications)
+
+
 class TestNewNotifiers(UnittestTools, unittest.TestCase):
     """ Tests for dynamic notifiers with `dispatch='new'`. """
 
     def test_notification_on_separate_thread(self):
-        class Receiver(HasTraits):
-            notifications = List()
-
-            def notified(self):
-                # Have we received any notifications?
-                return bool(self.notifications)
-
         receiver = Receiver()
 
         def on_foo_notifications(obj, name, old, new):
