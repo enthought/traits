@@ -358,3 +358,21 @@ class ListTestCase(unittest.TestCase):
         l_copy = f.l.copy()
 
         self.assertEqual(f.l, l_copy)
+
+    def test_clear(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+
+        f.l.clear()
+
+        self.assertEqual(len(f.l), 0)
+
+    def test_clear_with_min_length(self):
+        class FooMinLen(HasTraits):
+            l = List(Str, minlen=1)
+
+        f = FooMinLen()
+        f.l = ["a", "c", "b", "d"]
+
+        with self.assertRaises(TraitError):
+            f.l.clear()

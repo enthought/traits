@@ -419,7 +419,6 @@ class TraitListObject(list):
     def clear(self):
         if self.trait.minlen > 0:
             self.len_error(0)
-            return
 
         if not self.trait.has_items:
             list.clear(self)
