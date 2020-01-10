@@ -4184,7 +4184,10 @@ _trait_comparison_mode ( trait_object * trait, PyObject * args ) {
         case 0:  trait->flags |= TRAIT_NO_VALUE_TEST;
                  break;
         case 1:  trait->flags |= TRAIT_OBJECT_ID_TEST;
-        default: break;
+                 break;
+        case 2:  break;
+        default: raise_trait_error(trait, Py_None, Py_None, Py_None)
+                 break;
     }
 
     Py_INCREF( Py_None );
