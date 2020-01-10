@@ -155,8 +155,8 @@ class TestCTrait(unittest.TestCase):
 
         # comparison modes other than {0,1,2}
         # are invalid
-        with self.assertRaises(TraitError):
+        with self.assertRaises(ValueError):
             trait.comparison_mode(-1)
 
-        with self.assertRaises(TraitError):
+        with self.assertRaises(ValueError):
             trait.comparison_mode(3)
