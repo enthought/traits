@@ -126,14 +126,6 @@ class BaseTraitHandler(object):
     def get_editor(self, trait=None):
         """ Returns a trait editor that allows the user to modify the *trait*
         trait.
-
-        Parameters
-        ----------
-        trait : Trait
-            The trait to be edited.
-
-        Description
-        -----------
         This method only needs to be specified if traits defined using this
         trait handler require a non-default trait editor in trait user
         interfaces. The default implementation of this method returns a trait
@@ -141,6 +133,11 @@ class BaseTraitHandler(object):
 
         For more information on trait user interfaces, refer to the *Traits UI
         User Guide*.
+
+        Parameters
+        ----------
+        trait : Trait
+            The trait to be edited.
         """
         if self.editor is None:
             self.editor = self.create_editor()

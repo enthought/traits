@@ -60,28 +60,27 @@ def clean_filename(name, replace_empty=""):
 
 
 def clean_timestamp(dt=None, microseconds=False):
-    """ Return a timestamp that has been cleansed of characters that might
-        cause problems in filenames, namely colons.  If no datetime object
-        is provided, then uses the current time.
+    """
+    Return a timestamp that has been cleansed of characters that might
+    cause problems in filenames, namely colons.  If no datetime object
+    is provided, then uses the current time.
 
-        Description
-        -----------
-        The timestamp is in ISO-8601 format with the following exceptions:
+    The timestamp is in ISO-8601 format with the following exceptions:
 
-        * Colons ':' are replaced by underscores '_'.
-        * Microseconds are not displayed if the 'microseconds' parameter is
-          False.
+    * Colons ':' are replaced by underscores '_'.
+    * Microseconds are not displayed if the 'microseconds' parameter is
+        False.
 
-        Parameters
-        ----------
-        dt : None or datetime.datetime
-            If None, then the current time is used.
-        microseconds : bool
-            Display microseconds or not.
+    Parameters
+    ----------
+    dt : None or datetime.datetime
+        If None, then the current time is used.
+    microseconds : bool
+        Display microseconds or not.
 
-        Returns
-        -------
-        A string timestamp.
+    Returns
+    -------
+    A string timestamp.
     """
     if dt is None:
         dt = datetime.datetime.now()
