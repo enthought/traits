@@ -5,30 +5,11 @@ from traits import trait_notifiers
 from traits.api import Float, HasTraits, Undefined
 
 
-anycalls_0 = []
-
-
-class AnytraitStaticNotifiers0(HasTraits):
-    ok = Float
-
-    def _anytrait_changed():
-        anycalls_0.append(True)
-
-
 class AnytraitStaticNotifiers0Fail(HasTraits):
     fail = Float
 
     def _anytrait_changed():
         raise Exception("error")
-
-
-class AnytraitStaticNotifiers1(HasTraits):
-    ok = Float
-
-    def _anytrait_changed(self):
-        if not hasattr(self, "anycalls"):
-            self.anycalls = []
-        self.anycalls.append(True)
 
 
 class AnytraitStaticNotifiers1Fail(HasTraits):
@@ -38,15 +19,6 @@ class AnytraitStaticNotifiers1Fail(HasTraits):
         raise Exception("error")
 
 
-class AnytraitStaticNotifiers2(HasTraits):
-    ok = Float
-
-    def _anytrait_changed(self, name):
-        if not hasattr(self, "anycalls"):
-            self.anycalls = []
-        self.anycalls.append(name)
-
-
 class AnytraitStaticNotifiers2Fail(HasTraits):
     fail = Float
 
@@ -54,29 +26,11 @@ class AnytraitStaticNotifiers2Fail(HasTraits):
         raise Exception("error")
 
 
-class AnytraitStaticNotifiers3(HasTraits):
-    ok = Float
-
-    def _anytrait_changed(self, name, new):
-        if not hasattr(self, "anycalls"):
-            self.anycalls = []
-        self.anycalls.append((name, new))
-
-
 class AnytraitStaticNotifiers3Fail(HasTraits):
     fail = Float
 
     def _anytrait_changed(self, name, new):
         raise Exception("error")
-
-
-class AnytraitStaticNotifiers4(HasTraits):
-    ok = Float
-
-    def _anytrait_changed(self, name, old, new):
-        if not hasattr(self, "anycalls"):
-            self.anycalls = []
-        self.anycalls.append((name, old, new))
 
 
 class AnytraitStaticNotifiers4Fail(HasTraits):
@@ -107,12 +61,28 @@ class TestNotifiers(unittest.TestCase):
     #### Tests ################################################################
 
     def test_anytrait_static_notifiers_0(self):
+        anycalls_0 = []
+
+        class AnytraitStaticNotifiers0(HasTraits):
+            ok = Float
+
+            def _anytrait_changed():
+                anycalls_0.append(True)
+
         obj = AnytraitStaticNotifiers0(ok=2)
         obj.ok = 3
 
         self.assertEqual(len(anycalls_0), 2)
 
     def test_anytrait_static_notifiers_1(self):
+        class AnytraitStaticNotifiers1(HasTraits):
+            ok = Float
+
+            def _anytrait_changed(self):
+                if not hasattr(self, "anycalls"):
+                    self.anycalls = []
+                self.anycalls.append(True)
+
         obj = AnytraitStaticNotifiers1(ok=2)
         obj.ok = 3
 
@@ -123,6 +93,14 @@ class TestNotifiers(unittest.TestCase):
         self.assertEqual(len(obj.anycalls), 3)
 
     def test_anytrait_static_notifiers_2(self):
+        class AnytraitStaticNotifiers2(HasTraits):
+            ok = Float
+
+            def _anytrait_changed(self, name):
+                if not hasattr(self, "anycalls"):
+                    self.anycalls = []
+                self.anycalls.append(name)
+
         obj = AnytraitStaticNotifiers2(ok=2)
         obj.ok = 3
 
@@ -130,6 +108,14 @@ class TestNotifiers(unittest.TestCase):
         self.assertEqual(expected, obj.anycalls)
 
     def test_anytrait_static_notifiers_3(self):
+        class AnytraitStaticNotifiers3(HasTraits):
+            ok = Float
+
+            def _anytrait_changed(self, name, new):
+                if not hasattr(self, "anycalls"):
+                    self.anycalls = []
+                self.anycalls.append((name, new))
+
         obj = AnytraitStaticNotifiers3(ok=2)
         obj.ok = 3
 
@@ -137,6 +123,14 @@ class TestNotifiers(unittest.TestCase):
         self.assertEqual(expected, obj.anycalls)
 
     def test_anytrait_static_notifiers_4(self):
+        class AnytraitStaticNotifiers4(HasTraits):
+            ok = Float
+
+            def _anytrait_changed(self, name, old, new):
+                if not hasattr(self, "anycalls"):
+                    self.anycalls = []
+                self.anycalls.append((name, old, new))
+
         obj = AnytraitStaticNotifiers4(ok=2)
         obj.ok = 3
 
