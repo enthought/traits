@@ -182,7 +182,9 @@ def _get_def(class_name, class_dict, bases, method):
     """ Gets the definition of a specified method (if any).
     """
     if method[0:2] == "__":
-        method = "_%s%s" % (class_name, method)
+        # When name-mangling to handle the __ case (for _private traits),
+        # leading underscores in the class name are stripped out.
+        method = "_%s%s" % (class_name.lstrip('_'), method)
 
     result = class_dict.get(method)
     if (
