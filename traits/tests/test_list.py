@@ -350,3 +350,11 @@ class ListTestCase(unittest.TestCase):
         f.l = ["a", "c", "b", "d"]
         with self.assertRaises(TypeError):
             f.l.sort(cmp=lambda x, y: ord(x) - ord(y))
+
+    def test_copy(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+
+        l_copy = f.l.copy()
+
+        self.assertEqual(f.l, l_copy)

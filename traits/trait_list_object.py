@@ -439,7 +439,8 @@ class TraitListObject(list):
 
     def copy(self):
         items_copy = list.copy(self)
-        return TraitListObject(self.trait, self.object, self.name, items_copy)
+        object = self.object()
+        return TraitListObject(self.trait, object, self.name, items_copy)
 
     def len_error(self, len):
         raise TraitError(
