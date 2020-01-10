@@ -420,17 +420,9 @@ class TraitListObject(list):
         if self.trait.minlen > 0:
             self.len_error(0)
 
-        if not self.trait.has_items:
-            list.clear(self)
-            return
-
         removed = list.copy(self)
         list.clear(self)
-
-        if len(removed) > 0:
-            index = 0
-        else:
-            index = -1
+        index = 0
 
         self._send_trait_items_event(
             self.name_items, TraitListEvent(index, removed)
