@@ -359,6 +359,14 @@ class ListTestCase(unittest.TestCase):
 
         self.assertEqual(f.l, l_copy)
 
+    def test_copy_returns_list(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+
+        l_copy = f.l.copy()
+
+        self.assertEqual(type(l_copy), list)
+
     def test_clear(self):
         f = Foo()
         f.l = ["a", "c", "b", "d"]

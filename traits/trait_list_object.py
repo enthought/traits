@@ -419,11 +419,6 @@ class TraitListObject(list):
     def clear(self):
         del self[:]
 
-    def copy(self):
-        items_copy = list.copy(self)
-        object = self.object()
-        return TraitListObject(self.trait, object, self.name, items_copy)
-
     def len_error(self, len):
         raise TraitError(
             "The '%s' trait of %s instance must be %s, "
