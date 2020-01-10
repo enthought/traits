@@ -16,6 +16,7 @@ import warnings
 from traits.constants import (
     ComparisonMode, DefaultValue, TraitKind, MAXIMUM_DEFAULT_VALUE_TYPE
 )
+from traits.trait_errors import TraitError
 from traits.traits import CTrait
 
 
@@ -148,3 +149,9 @@ class TestCTrait(unittest.TestCase):
 
         with self.assertRaises(AttributeError):
             trait.no_value_test = False
+
+    def test_invalid_comparison_mode(self):
+        trait = CTrait(TraitKind.trait)
+
+        with self.assertRaises(TraitError):
+            trait.comparison_mode(-1)
