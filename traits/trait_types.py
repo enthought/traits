@@ -27,6 +27,7 @@ from importlib import import_module
 import operator
 import re
 import sys
+from os import fspath, PathLike
 from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 import uuid
@@ -1387,7 +1388,7 @@ class BaseFile(BaseStr):
     """
 
     #: A description of the type of value this trait accepts:
-    info_text = "a file name"
+    info_text = "a file name or PathLike object"
 
     def __init__(
         self,
@@ -1430,6 +1431,9 @@ class BaseFile(BaseStr):
 
             Note: The 'fast validator' version performs this check in C.
         """
+        if isinstance(value, PathLike):
+            value = fspath(value)
+
         validated_value = super(BaseFile, self).validate(object, name, value)
         if not self.exists:
             return validated_value
