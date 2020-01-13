@@ -96,73 +96,6 @@ class UnhashableDynamicNotifiers(DynamicNotifiers):
         raise NotImplementedError()
 
 
-# 'ok' function listeners
-
-calls_0 = []
-
-
-def function_listener_0():
-    calls_0.append(True)
-
-
-calls_1 = []
-
-
-def function_listener_1(new):
-    calls_1.append(new)
-
-
-calls_2 = []
-
-
-def function_listener_2(name, new):
-    calls_2.append((name, new))
-
-
-calls_3 = []
-
-
-def function_listener_3(obj, name, new):
-    calls_3.append((obj, name, new))
-
-
-calls_4 = []
-
-
-def function_listener_4(obj, name, old, new):
-    calls_4.append((obj, name, old, new))
-
-
-# 'fail' function listeners
-
-exceptions_from = []
-
-
-def failing_function_listener_0():
-    exceptions_from.append(0)
-    raise Exception("error")
-
-
-def failing_function_listener_1(new):
-    exceptions_from.append(1)
-    raise Exception("error")
-
-
-def failing_function_listener_2(name, new):
-    exceptions_from.append(2)
-    raise Exception("error")
-
-
-def failing_function_listener_3(obj, name, new):
-    exceptions_from.append(3)
-    raise Exception("error")
-
-
-def failing_function_listener_4(obj, name, old, new):
-    exceptions_from.append(4)
-    raise Exception("error")
-
-
 class TestDynamicNotifiers(unittest.TestCase):
 
     #### 'TestCase' protocol ##################################################
@@ -207,6 +140,31 @@ class TestDynamicNotifiers(unittest.TestCase):
         self.assertEqual([(obj, "fail", 0, 1)] * 5, self.exceptions)
 
     def test_dynamic_notifiers_functions(self):
+        calls_0 = []
+
+        def function_listener_0():
+            calls_0.append(())
+
+        calls_1 = []
+
+        def function_listener_1(new):
+            calls_1.append((new,))
+
+        calls_2 = []
+
+        def function_listener_2(name, new):
+            calls_2.append((name, new))
+
+        calls_3 = []
+
+        def function_listener_3(obj, name, new):
+            calls_3.append((obj, name, new))
+
+        calls_4 = []
+
+        def function_listener_4(obj, name, old, new):
+            calls_4.append((obj, name, old, new))
+
         obj = DynamicNotifiers()
 
         obj.on_trait_change(function_listener_0, "ok")
@@ -218,16 +176,19 @@ class TestDynamicNotifiers(unittest.TestCase):
         obj.ok = 2
         obj.ok = 3
 
-        expected_1 = [2, 3]
+        expected_0 = [(), ()]
+        self.assertEqual(expected_0, calls_0)
+
+        expected_1 = [(2.0,), (3.0,)]
         self.assertEqual(expected_1, calls_1)
 
-        expected_2 = [("ok", 2), ("ok", 3)]
+        expected_2 = [("ok", 2.0), ("ok", 3.0)]
         self.assertEqual(expected_2, calls_2)
 
-        expected_3 = [(obj, "ok", 2), (obj, "ok", 3)]
+        expected_3 = [(obj, "ok", 2.0), (obj, "ok", 3.0)]
         self.assertEqual(expected_3, calls_3)
 
-        expected_4 = [(obj, "ok", 0, 2), (obj, "ok", 2, 3)]
+        expected_4 = [(obj, "ok", 0.0, 2.0), (obj, "ok", 2.0, 3.0)]
         self.assertEqual(expected_4, calls_4)
 
     def test_priority_notifiers_first(self):
@@ -257,6 +218,28 @@ class TestDynamicNotifiers(unittest.TestCase):
     def test_dynamic_notifiers_functions_failing(self):
         obj = DynamicNotifiers()
 
+        exceptions_from = []
+
+        def failing_function_listener_0():
+            exceptions_from.append(0)
+            raise Exception("error")
+
+        def failing_function_listener_1(new):
+            exceptions_from.append(1)
+            raise Exception("error")
+
+        def failing_function_listener_2(name, new):
+            exceptions_from.append(2)
+            raise Exception("error")
+
+        def failing_function_listener_3(obj, name, new):
+            exceptions_from.append(3)
+            raise Exception("error")
+
+        def failing_function_listener_4(obj, name, old, new):
+            exceptions_from.append(4)
+            raise Exception("error")
+
         obj.on_trait_change(failing_function_listener_0, "fail")
         obj.on_trait_change(failing_function_listener_1, "fail")
         obj.on_trait_change(failing_function_listener_2, "fail")
@@ -265,6 +248,7 @@ class TestDynamicNotifiers(unittest.TestCase):
 
         obj.fail = 1
 
+        self.assertEqual([0, 1, 2, 3, 4], exceptions_from)
         self.assertCountEqual([0, 1, 2, 3, 4], obj.exceptions_from)
         # 10 failures: 5 are from the internal dynamic listeners, see
         # test_dynamic_notifiers_methods_failing
@@ -276,8 +260,11 @@ class TestDynamicNotifiers(unittest.TestCase):
 
         import weakref
 
+        def listener():
+            pass
+
         obj = DynamicNotifiers()
-        obj.on_trait_change(function_listener_0, "ok")
+        obj.on_trait_change(listener, "ok")
 
         # Create a weak reference to `obj` with a callback that flags when the
         # object is finalized.
@@ -293,6 +280,7 @@ class TestDynamicNotifiers(unittest.TestCase):
         del obj
 
         self.assertEqual(obj_collected, [True])
+        self.assertIsNone(obj_weakref())
 
     def test_unhashable_object_can_be_garbage_collected(self):
         # Make sure that an unhashable trait object can be garbage collected
@@ -300,8 +288,11 @@ class TestDynamicNotifiers(unittest.TestCase):
 
         import weakref
 
+        def listener():
+            pass
+
         obj = UnhashableDynamicNotifiers()
-        obj.on_trait_change(function_listener_0, "a_list:ok")
+        obj.on_trait_change(listener, "a_list:ok")
         # Changing a List trait is the easiest way to trigger a check into the
         # weak key dict.
         obj.a_list.append(UnhashableDynamicNotifiers())
@@ -320,6 +311,7 @@ class TestDynamicNotifiers(unittest.TestCase):
         del obj
 
         self.assertEqual(obj_collected, [True])
+        self.assertIsNone(obj_weakref())
 
     def test_creating_notifiers_dont_create_cyclic_garbage(self):
         gc.collect()

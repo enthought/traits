@@ -9,34 +9,81 @@ notification really occurs on a separate thread.
 
 """
 import threading
-import time
 import unittest
+from unittest import mock
 
-from traits.api import Float, HasTraits
+from traits.api import Float, HasTraits, List
+from traits.testing.unittest_tools import UnittestTools
+
+# Timeout for blocking calls, in seconds.
+SAFETY_TIMEOUT = 10.0
+
+
+class RememberThreads(object):
+    """
+    Context manager that behaves like Thread, but remembers created
+    threads so that they can be joined.
+    """
+    def __init__(self):
+        self._threads = []
+
+    def __call__(self, *args, **kwargs):
+        thread = threading.Thread(*args, **kwargs)
+        self._threads.append(thread)
+        return thread
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc_args):
+        threads = self._threads
+        while threads:
+            thread = threads.pop()
+            # Don't wait forever, but raise if we failed to join.
+            thread.join(timeout=SAFETY_TIMEOUT)
+            if thread.is_alive():
+                raise RuntimeError("Failed to join thread")
 
 
 class Foo(HasTraits):
     foo = Float
 
 
-class TestNewNotifiers(unittest.TestCase):
+class Receiver(HasTraits):
+    notifications = List()
+
+    def notified(self):
+        # Have we received any notifications?
+        return bool(self.notifications)
+
+
+class TestNewNotifiers(UnittestTools, unittest.TestCase):
     """ Tests for dynamic notifiers with `dispatch='new'`. """
 
     def test_notification_on_separate_thread(self):
-        notifications = []
+        receiver = Receiver()
 
         def on_foo_notifications(obj, name, old, new):
             thread_id = threading.current_thread().ident
             event = (thread_id, obj, name, old, new)
-            notifications.append(event)
+            receiver.notifications.append(event)
 
         obj = Foo()
         obj.on_trait_change(on_foo_notifications, "foo", dispatch="new")
 
-        obj.foo = 3
-        # Wait for a while to make sure the notification has finished.
-        time.sleep(0.1)
+        with RememberThreads() as remember_threads:
+            patcher = mock.patch(
+                "traits.trait_notifiers.Thread",
+                new=remember_threads
+            )
+            with patcher:
+                obj.foo = 3
 
+            self.assertEventuallyTrue(
+                receiver, "notifications_items", Receiver.notified,
+                timeout=SAFETY_TIMEOUT)
+
+        notifications = receiver.notifications
         self.assertEqual(len(notifications), 1)
         self.assertEqual(notifications[0][1:], (obj, "foo", 0, 3))
 
