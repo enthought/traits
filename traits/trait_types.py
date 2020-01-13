@@ -1488,13 +1488,13 @@ class File(BaseFile):
         -------------
         *value* or ''
         """
-        if not exists:
-            # Define the C-level fast validator to use:
-            self.fast_validate = (ValidateTrait.coerce, str)
 
         super(File, self).__init__(
             value, filter, auto_set, entries, exists, **metadata
         )
+
+    def validate(self, object, name, value):
+        return super(File, self).validate(object, name, value)
 
 
 # -------------------------------------------------------------------------------
