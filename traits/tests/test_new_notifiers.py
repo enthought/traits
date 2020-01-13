@@ -83,9 +83,9 @@ class TestNewNotifiers(UnittestTools, unittest.TestCase):
                 receiver, "notifications_items", Receiver.notified,
                 timeout=SAFETY_TIMEOUT)
 
-            notifications = receiver.notifications
-            self.assertEqual(len(notifications), 1)
-            self.assertEqual(notifications[0][1:], (obj, "foo", 0, 3))
+       notifications = receiver.notifications
+       self.assertEqual(len(notifications), 1)
+       self.assertEqual(notifications[0][1:], (obj, "foo", 0, 3))
 
-            this_thread_id = threading.current_thread().ident
-            self.assertNotEqual(this_thread_id, notifications[0][0])
+       this_thread_id = threading.current_thread().ident
+       self.assertNotEqual(this_thread_id, notifications[0][0])
