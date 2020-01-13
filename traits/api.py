@@ -105,6 +105,7 @@ from .trait_types import (
     Symbol,
     WeakRef,
     Date,
+    DateTime,
     Time,
     Supports,
 )

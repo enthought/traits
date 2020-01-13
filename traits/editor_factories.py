@@ -21,6 +21,7 @@ SourceCodeEditor = None
 HTMLTextEditor = None
 PythonShellEditor = None
 DateEditor = None
+DateTimeEditor = None
 TimeEditor = None
 
 
@@ -139,6 +140,20 @@ def date_editor():
         DateEditor = DateEditor()
 
     return DateEditor
+
+
+def datetime_editor():
+    """ Factory function that returns a Date editor with date & time for
+    editing DateTime values.
+    """
+    global DateTimeEditor
+
+    if DateTimeEditor is None:
+        from traitsui.api import DateEditor
+
+        DateTimeEditor = DateEditor(strftime="%b %d %Y %H:%M:%S")
+
+    return DateTimeEditor
 
 
 def _expects_hastraits_instance(handler):

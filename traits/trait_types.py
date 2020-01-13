@@ -60,6 +60,7 @@ from .editor_factories import (
     password_editor,
     shell_editor,
     date_editor,
+    datetime_editor,
     time_editor,
     list_editor,
 )
@@ -3552,6 +3553,10 @@ class WeakRef(Instance):
 
 # -- Date Trait definition ----------------------------------------------------
 Date = BaseInstance(datetime.date, editor=date_editor)
+
+
+# -- DateTime Trait definition ------------------------------------------------
+DateTime = BaseInstance(datetime.datetime, editor=datetime_editor)
 
 
 # -- Time Trait definition ----------------------------------------------------
