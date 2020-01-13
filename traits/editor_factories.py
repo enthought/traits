@@ -149,9 +149,9 @@ def datetime_editor():
     global DateTimeEditor
 
     if DateTimeEditor is None:
-        from traitsui.api import DateEditor
+        from traitsui.api import DateTimeEditor
 
-        DateTimeEditor = DateEditor(strftime="%b %d %Y %H:%M:%S")
+        DateTimeEditor = DateTimeEditor()
 
     return DateTimeEditor
 
