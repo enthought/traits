@@ -103,6 +103,8 @@ class TestNotifiers(unittest.TestCase):
         self.exceptions.append((obj, name, old, new))
 
     def test_static_notifiers_0(self):
+        calls_0.clear()
+
         obj = StaticNotifiers0(ok=2)
         obj.ok = 3
         self.assertEqual(len(calls_0), 2)
