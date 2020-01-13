@@ -661,6 +661,7 @@ dict_getitem ( PyDictObject * dict, PyObject *key ) {
 |    the implementation is complicated in C and does not need to be executed
 |    very often relative to other operations.
 |
+| Note: returns a *borrowed* reference, to match dict_getitem.
 +----------------------------------------------------------------------------*/
 
 static trait_object *
@@ -678,6 +679,7 @@ get_prefix_trait ( has_traits_object * obj, PyObject * name, int is_set ) {
             return NULL;
 
         trait = get_trait( obj, name, 0 );
+        /* We return a borrowed reference, to match dict_getitem. */
         Py_DECREF( trait );
     }
 
