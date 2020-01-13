@@ -964,13 +964,13 @@ class This(BaseType):
         if isinstance(value, object.__class__):
             return value
 
-        self.validate_failed(object, name, value)
+        self.error(object, name, value)
 
     def validate_none(self, object, name, value):
         if isinstance(value, object.__class__) or (value is None):
             return value
 
-        self.validate_failed(object, name, value)
+        self.error(object, name, value)
 
     def info(self):
         return "an instance of the same type as the receiver"
@@ -978,11 +978,6 @@ class This(BaseType):
     def info_none(self):
         return "an instance of the same type as the receiver or None"
 
-    def validate_failed(self, object, name, value):
-        kind = type(value)
-        msg = "%s (i.e. %s)" % (str(kind)[1:-1], repr(value))
-
-        self.error(object, name, msg)
 
 
 class self(This):
