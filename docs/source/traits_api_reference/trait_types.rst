@@ -147,6 +147,8 @@ Traits
 
 .. autoclass:: Type
 
+.. autoclass:: Subclass
+
 .. autoclass:: Event
 
 .. autoclass:: Button

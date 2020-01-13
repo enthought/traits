@@ -102,6 +102,7 @@ from .trait_types import (
     ToolbarButton,
     Either,
     Type,
+    Subclass,
     Symbol,
     WeakRef,
     Date,
