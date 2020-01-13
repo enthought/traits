@@ -526,8 +526,6 @@ class Default(object):
 def Trait(*value_type, **metadata):
     """ Creates a trait definition.
 
-    Parameters
-    ----------
     This function accepts a variety of forms of parameter lists:
 
     +-------------------+---------------+-------------------------------------+
@@ -606,8 +604,6 @@ def Trait(*value_type, **metadata):
 
     The following predefined keywords are accepted:
 
-    Keywords
-    --------
     desc : str
         Describes the intended meaning of the trait. It is used in
         exception messages and fly-over help in user interfaces.

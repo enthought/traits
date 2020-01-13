@@ -139,7 +139,8 @@ class AnyTrait(HasTraits):
 
 class AnyTraitTest(BaseTest, unittest.TestCase):
 
-    obj = AnyTrait()
+    def setUp(self):
+        self.obj = AnyTrait()
 
     _default_value = None
     _good_values = [10.0, b"ten", "ten", [10], {"ten": 10}, (10,), None, 1j]
@@ -157,7 +158,8 @@ class IntTrait(HasTraits):
 
 class CoercibleIntTest(AnyTraitTest):
 
-    obj = CoercibleIntTrait()
+    def setUp(self):
+        self.obj = CoercibleIntTrait()
 
     _default_value = 99
     _good_values = [
@@ -197,7 +199,8 @@ class CoercibleIntTest(AnyTraitTest):
 
 class IntTest(AnyTraitTest):
 
-    obj = IntTrait()
+    def setUp(self):
+        self.obj = IntTrait()
 
     _default_value = 99
     _good_values = [10, -10]
@@ -257,7 +260,8 @@ class FloatTrait(HasTraits):
 
 
 class CoercibleFloatTest(AnyTraitTest):
-    obj = CoercibleFloatTrait()
+    def setUp(self):
+        self.obj = CoercibleFloatTrait()
 
     _default_value = 99.0
     _good_values = [
@@ -293,7 +297,8 @@ class CoercibleFloatTest(AnyTraitTest):
 
 
 class FloatTest(AnyTraitTest):
-    obj = FloatTrait()
+    def setUp(self):
+        self.obj = FloatTrait()
 
     _default_value = 99.0
     _good_values = [10, -10, 10.1, -10.1]
@@ -331,8 +336,8 @@ class ImaginaryValueTrait(HasTraits):
 
 
 class ImaginaryValueTest(AnyTraitTest):
-
-    obj = ImaginaryValueTrait()
+    def setUp(self):
+        self.obj = ImaginaryValueTrait()
 
     _default_value = 99.0 - 99.0j
     _good_values = [
@@ -366,7 +371,8 @@ class StringTrait(HasTraits):
 
 class StringTest(AnyTraitTest):
 
-    obj = StringTrait()
+    def setUp(self):
+        self.obj = StringTrait()
 
     _default_value = "string"
     _good_values = [
@@ -400,7 +406,8 @@ class BytesTrait(HasTraits):
 
 class BytesTest(StringTest):
 
-    obj = BytesTrait()
+    def setUp(self):
+        self.obj = BytesTrait()
 
     _default_value = b"bytes"
     _good_values = [b"", b"10", b"-10"]
@@ -429,7 +436,8 @@ class CoercibleBytesTrait(HasTraits):
 
 class CoercibleBytesTest(StringTest):
 
-    obj = CoercibleBytesTrait()
+    def setUp(self):
+        self.obj = CoercibleBytesTrait()
 
     _default_value = b"bytes"
     _good_values = [
@@ -473,7 +481,8 @@ class EnumTrait(HasTraits):
 
 class EnumTest(AnyTraitTest):
 
-    obj = EnumTrait()
+    def setUp(self):
+        self.obj = EnumTrait()
 
     _default_value = 1
     _good_values = [1, "one", 2, "two", 3, "three", 4.4, "four.four"]
@@ -485,7 +494,8 @@ class MappedTrait(HasTraits):
 
 
 class MappedTest(AnyTraitTest):
-    obj = MappedTrait()
+    def setUp(self):
+        self.obj = MappedTrait()
 
     _default_value = "one"
     _good_values = ["one", "two", "three"]
@@ -498,7 +508,8 @@ class PrefixListTrait(HasTraits):
 
 
 class PrefixListTest(AnyTraitTest):
-    obj = PrefixListTrait()
+    def setUp(self):
+        self.obj = PrefixListTrait()
 
     _default_value = "one"
     _good_values = [
@@ -523,7 +534,8 @@ class PrefixMapTrait(HasTraits):
 
 
 class PrefixMapTest(AnyTraitTest):
-    obj = PrefixMapTrait()
+    def setUp(self):
+        self.obj = PrefixMapTrait()
 
     _default_value = "one"
     _good_values = [
@@ -571,7 +583,8 @@ class OldInstanceTrait(HasTraits):
 
 
 class OldInstanceTest(AnyTraitTest):
-    obj = OldInstanceTrait()
+    def setUp(self):
+        self.obj = OldInstanceTrait()
 
     _default_value = otrait_test1
     _good_values = [
@@ -621,7 +634,8 @@ class NewInstanceTrait(HasTraits):
 
 
 class NewInstanceTest(AnyTraitTest):
-    obj = NewInstanceTrait()
+    def setUp(self):
+        self.obj = NewInstanceTrait()
 
     _default_value = ntrait_test1
     _good_values = [
@@ -710,7 +724,8 @@ class OddIntegerTrait(HasTraits):
 
 
 class OddIntegerTest(AnyTraitTest):
-    obj = OddIntegerTrait()
+    def setUp(self):
+        self.obj = OddIntegerTrait()
 
     _default_value = 99
     _good_values = [
@@ -762,13 +777,8 @@ class NotifierTraits(HasTraits):
 
 
 class NotifierTests(unittest.TestCase):
-    obj = NotifierTraits()
-
-    def __init__(self, value):
-        unittest.TestCase.__init__(self, value)
-
     def setUp(self):
-        obj = self.obj
+        obj = self.obj = NotifierTraits()
         obj.value1 = 0
         obj.value2 = 0
         obj.value1_count = 0
@@ -958,7 +968,8 @@ class complex_value(HasTraits):
 
 
 class test_complex_value(test_base2):
-    obj = complex_value()
+    def setUp(self):
+        self.obj = complex_value()
 
     def test_num1(self):
         self.check_values(
@@ -1004,10 +1015,8 @@ class list_value(HasTraits):
 
 class test_list_value(test_base2):
 
-    obj = list_value()
-
     def setUp(self):
-        test_base2.setUp(self)
+        self.obj = list_value()
         self.last_event = None
 
     def tearDown(self):

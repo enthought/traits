@@ -269,13 +269,6 @@ class BaseTraitHandler(object):
         """ Returns a trait editor that allows the user to modify the *trait*
         trait.
 
-        Parameters
-        ----------
-        trait : Trait
-            The trait to be edited.
-
-        Description
-        -----------
         This method only needs to be specified if traits defined using this
         trait handler require a non-default trait editor in trait user
         interfaces. The default implementation of this method returns a trait
@@ -283,6 +276,12 @@ class BaseTraitHandler(object):
 
         For more information on trait user interfaces, refer to the *Traits UI
         User Guide*.
+
+        Parameters
+        ----------
+        trait : Trait
+            The trait to be edited.
+
         """
         if self.editor is None:
             self.editor = self.create_editor()
@@ -1384,11 +1383,13 @@ class TraitMap(TraitHandler):
     dictionary, and the other whose value is the corresponding value of the
     TraitMap dictionary. The name of the shadow attribute is simply the base
     attribute name with an underscore ('_') appended. Mapped trait attributes
-    can be used to allow a variety of user-friendly input values to be mapped to
-    a set of internal, program-friendly values.
+    can be used to allow a variety of user-friendly input values to be mapped
+    to a set of internal, program-friendly values.
 
     Example
     -------
+
+    The following example defines a ``Person`` class::
 
         >>>class Person(HasTraits):
         ...    married = Trait('yes', TraitMap({'yes': 1, 'no': 0 })
@@ -1399,10 +1400,10 @@ class TraitMap(TraitHandler):
         >>>print bob.married_
         1
 
-    In this example, the default value of the **married** attribute of the
+    In this example, the default value of the ``married`` attribute of the
     Person class is 'yes'. Because this attribute is defined using
     TraitPrefixList, instances of Person have another attribute,
-    **married_**, whose default value is 1, the dictionary value corresponding
+    ``married_``, whose default value is 1, the dictionary value corresponding
     to the key 'yes'.
     """
 
@@ -1688,12 +1689,14 @@ class TraitTuple(TraitHandler):
     Example
     -------
 
+    The following example defines a ``Card`` class::
+
         rank = Range(1, 13)
         suit = Trait('Hearts', 'Diamonds', 'Spades', 'Clubs')
         class Card(HasTraits):
             value = Trait(TraitTuple(rank, suit))
 
-    This example defines a Card class, which has a **value** trait attribute,
+    The Card class has a **value** trait attribute,
     which must be a tuple of two elments. The first element must be an integer
     in the range from 1 to 13, and the second element must be one of the four
     strings, 'Hearts', 'Diamonds', 'Spades', or 'Clubs'.
