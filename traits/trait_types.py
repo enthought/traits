@@ -27,7 +27,7 @@ from importlib import import_module
 import operator
 import re
 import sys
-from os import fspath, PathLike
+from os import PathLike
 from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 import uuid
@@ -1431,8 +1431,20 @@ class BaseFile(BaseStr):
 
             Note: The 'fast validator' version performs this check in C.
         """
-        if isinstance(value, PathLike):
+        try:
+            # Note: Python 3.5 does not implement __fspath__
+            from os import fspath
+
+            # If value is of type os.PathLike, get the path representation
+            # The path representation could be either a str type or bytes type
+            # If fspath returns bytes, further validation will fail.
             value = fspath(value)
+        except ImportError:
+            # Workaround for Python 3.5
+            if isinstance(value, PathLike):
+                value = str(value)
+        except TypeError:
+            pass
 
         validated_value = super(BaseFile, self).validate(object, name, value)
         if not self.exists:
