@@ -96,92 +96,97 @@ class TraitType(BaseTraitHandler):
 
     The optional methods are as follows:
 
-    * **get ( self, object, name ):**
+    ``get(self, object, name)``
 
         This is the getter method of a trait that behaves like a property.
 
-        :Parameters:
-        **object** (*object*) -- The object that the property applies to.
-
-        **name** (str) -- The name of the property on *object* property.
-
-        *Description*
-
-        If neither this method nor the set() method is defined, the value
+        If neither this method nor the ``set()`` method is defined, the value
         of the trait is handled like a normal object attribute. If this
-        method is not defined, but the set() method is defined, the trait
+        method is not defined, but the ``set()`` method is defined, the trait
         behaves like a write-only property. This method should return the
-        value of the *name* property for the *object* object.
+        value of the ``name`` property for the ``object`` object.
 
-    * **set ( self, object, name, value )**
+        Parameters
+            object : any
+                The object that the property applies to.
+            name : str
+                The name of the property on ``object``.
+
+    ``set(self, object, name, value)``
 
         This is the setter method of a trait that behaves like a property.
 
-        :Parameters:
-        **object** (*object*) -- The object that the property applies to.
-
-        **name** (str) -- The name of the property on *object*.
-
-        **value** -- The value being assigned as the value of the property.
-
-        *Description*
-
-        If neither this method nor the get() method is implemented, the
+        If neither this method nor the ``get()`` method is implemented, the
         trait behaves like a normal trait attribute. If this method is not
-        defined, but the get() method is defined, the trait behaves like a
+        defined, but the ``get()`` method is defined, the trait behaves like a
         read-only property. This method does not need to return a value,
-        but it should raise a TraitError exception if the specified *value*
-        is not valid and cannot be coerced or adapted to a valid value.
+        but it should raise a ``TraitError`` exception if the specified
+        ``value`` is not valid and cannot be coerced or adapted to a valid
+        value.
 
-    * **validate ( self, object, name, value )**
+        Parameters
+            object : any
+                The object that the property applies to.
+            name : str
+                The name of the property on ``object``.
+            value : any
+                The value being assigned as the value of the property.
 
-        This method validates, coerces, or adapts the specified *value* as
-        the value of the *name* trait of the *object* object. This method
+    ``validate(self, object, name, value)``
+
+        This method validates, coerces, or adapts the specified ``value`` as
+        the value of the ``name`` trait of the ``object`` object. This method
         is called when a value is assigned to an object trait that is
-        based on this subclass of *TraitType* and the class does not
+        based on this subclass of ``TraitType`` and the class does not
         contain a definition for either the get() or set() methods. This
-        method must return the original *value* or any suitably coerced or
-        adapted value that is a legal value for the trait. If *value* is
+        method must return the original ``value`` or any suitably coerced or
+        adapted value that is a legal value for the trait. If ``value`` is
         not a legal value for the trait, and cannot be coerced or adapted
-        to a legal value, the method should either raise a **TraitError** or
-        call the **error** method to raise the **TraitError** on its behalf.
+        to a legal value, the method should either raise a ``TraitError`` or
+        call the ``error`` method to raise the ``TraitError`` on its behalf.
 
-    * **is_valid_for ( self, value )**
+    ``is_valid_for(self, value)``
 
-        As an alternative to implementing the **validate** method, you can
-        instead implement the **is_valid_for** method, which receives only
-        the *value* being assigned. It should return **True** if the value is
-        valid, and **False** otherwise.
+        As an alternative to implementing the ``validate`` method, you can
+        instead implement the ``is_valid_for`` method, which receives only
+        the ``value`` being assigned. It should return ``True`` if the value is
+        valid, and ``False`` otherwise.
 
-    * **value_for ( self, value )**
+    ``value_for ( self, value )``
 
-        As another alternative to implementing the **validate** method, you
-        can instead implement the **value_for** method, which receives only
-        the *value* being assigned. It should return the validated form of
-        *value* if it is valid, or raise a **TraitError** if the value is not
+        As another alternative to implementing the ``validate`` method, you
+        can instead implement the ``value_for`` method, which receives only
+        the ``value`` being assigned. It should return the validated form of
+        ``value`` if it is valid, or raise a ``TraitError`` if the value is not
         valid.
 
-    * **post_setattr ( self, object, name, value )**
+    ``post_setattr(self, object, name, value)``
 
         This method allows the trait to do additional processing after
-        *value* has been successfully assigned to the *name* trait of the
-        *object* object. For most traits there is no additional processing
+        ``value`` has been successfully assigned to the ``name`` trait of the
+        ``object`` object. For most traits there is no additional processing
         that needs to be done, and this method need not be defined. It is
         normally used for creating "shadow" (i.e., "mapped" traits), but
         other uses may arise as well. This method does not need to return
         a value, and should normally not raise any exceptions.
+
     """
 
+    #: The default value for the trait type.
     default_value = Undefined
+
+    #: The metadata for the trait.
     metadata = {}
 
     def __init__(self, default_value=NoDefaultSpecified, **metadata):
-        """ This constructor method is the only method normally called
-            directly by client code. It defines the trait. The
-            default implementation accepts an optional, untype-checked default
-            value, and caller-supplied trait metadata. Override this method
-            whenever a different method signature or a type-checked
-            default value is needed.
+        """ TraitType initializer
+
+        This is the only method normally called directly by client code.
+        It defines the trait. The default implementation accepts an optional,
+        unvalidated default value, and caller-supplied trait metadata.
+
+        Override this method whenever a different method signature or a
+        validated default value is needed.
         """
         if default_value is not NoDefaultSpecified:
             self.default_value = default_value
@@ -209,36 +214,45 @@ class TraitType(BaseTraitHandler):
         pass
 
     def get_default_value(self):
-        r"""Returns a tuple of the form: (*default_value_type*, *default_value*)
-            which describes the default value for this trait. The default
-            implementation analyzes the value of the trait's **default_value**
-            attribute and determines an appropriate *default_value_type* for
-            *default_value*. If you need to override this method to provide a
-            different result tuple, the following values are valid values for
-            *default_value_type*:
+        r""" Get information about the default value.
 
-                - 0, 1: The *default_value* item of the tuple is the default
-                  value.
-                - 2: The object containing the trait is the default value.
-                - 3: A new copy of the list specified by *default_value* is
-                  the default value.
-                - 4: A new copy of the dictionary specified by *default_value*
-                  is the default value.
-                - 5: A new instance of TraitListObject constructed using the
-                  *default_value* list is the default value.
-                - 6: A new instance of TraitDictObject constructed using the
-                  *default_value* dictionary is the default value.
-                - 7: *default_value* is a tuple of the form: (*callable*, *args*,
-                  *kw*), where *callable* is a callable, *args* is a tuple, and
-                  *kw* is either a dictionary or None. The default value is the
-                  result obtained by invoking callable(\*args, \*\*kw).
-                - 8: *default_value* is a callable. The default value is the
-                  result obtained by invoking *default_value*(*object*), where
-                  *object* is the object containing the trait. If the trait has
-                  a validate() method, the validate() method is also called to
-                  validate the result.
-                - 9: A new instance of TraitSetObject constructed using the
-                  *default_value* set is the default value.
+        The default implementation analyzes the value of the trait's
+        ``default_value`` attribute and determines an appropriate
+        ``default_value_type`` for the ``default_value``. If you need to
+        override this method to provide a different result tuple, the
+        following values are valid values for ``default_value_type``:
+
+        - 0, 1: The ``default_value`` item of the tuple is the default
+          value.
+        - 2: The object containing the trait is the default value.
+        - 3: A new copy of the list specified by ``default_value`` is
+          the default value.
+        - 4: A new copy of the dictionary specified by ``default_value``
+          is the default value.
+        - 5: A new instance of TraitListObject constructed using the
+          ``default_value`` list is the default value.
+        - 6: A new instance of TraitDictObject constructed using the
+          ``default_value`` dictionary is the default value.
+        - 7: ``default_value`` is a tuple of the form:
+          ``(callable, args, kw)``, where ``callable`` is a callable,
+          ``args`` is a tuple, and ``kw`` is either a dictionary or None.
+          The default value is the result obtained by invoking
+          ``callable(\*args, \*\*kw)``.
+        - 8: ``default_value`` is a callable. The default value is the
+          result obtained by invoking ``default_value(object)``, where
+          ``object`` is the object containing the trait. If the trait has
+          a ``validate()`` method, the ``validate()`` method is also called
+          to validate the result.
+        - 9: A new instance of ``TraitSetObject`` constructed using the
+          ``default_value`` set is the default value.
+
+        Returns
+        -------
+        default_value_type, default_value : int, any
+            The default value information, consisting of an integer, giving
+            the type of default value, and the corresponding default value
+            as described above.
+
         """
         dv = self.default_value
         dvt = self.default_value_type
@@ -249,13 +263,24 @@ class TraitType(BaseTraitHandler):
         return (dvt, dv)
 
     def clone(self, default_value=NoDefaultSpecified, **metadata):
-        """ Clones the contents of this object into a new instance of the same
-            class, and then modifies the cloned copy using the specified
-            *default_value* and *metadata*. Returns the cloned object as the
-            result.
+        """ Copy, optionally modifying default value and metadata.
 
-            Note that subclasses can change the signature of this method if
-            needed, but should always call the 'super' method if possible.
+        Clones the contents of this object into a new instance of the same
+        class, and then modifies the cloned copy using the specified
+        ``default_value`` and ``metadata``. Returns the cloned object as the
+        result.
+
+        Note that subclasses can change the signature of this method if
+        needed, but should always call the 'super' method if possible.
+
+        Parameters
+        ----------
+        default_value : any
+            The new default value for the trait.
+        **metadata : dict
+            A dictionary of metadata names and corresponding values as
+            arbitrary keyword arguments.
+
         """
         if "parent" not in metadata:
             metadata["parent"] = self

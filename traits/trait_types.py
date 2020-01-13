@@ -2062,19 +2062,8 @@ class BaseTuple(TraitType):
     def __init__(self, *types, **metadata):
         """ Returns a Tuple trait.
 
-        Parameters
-        ----------
-        types : zero or more arguments
-            Definition of the default and allowed tuples. If the first item of
-            *types* is a tuple, it is used as the default value.
-            The remaining argument list is used to form a tuple that constrains
-            the  values assigned to the returned trait. The trait's value must
-            be a tuple of the same length as the remaining argument list, whose
-            elements must match the types specified by the corresponding items
-            of the remaining argument list.
+        The default value is determined as follows:
 
-        Default Value
-        -------------
         1. If no arguments are specified, the default value is ().
         2. If a tuple is specified as the first argument, it is the default
            value.
@@ -2098,6 +2087,17 @@ class BaseTuple(TraitType):
         The trait's value must be a 3-element tuple whose first and second
         elements are strings, and whose third element is an integer. The
         default value is ``('','',0)``.
+
+        Parameters
+        ----------
+        types : zero or more arguments
+            Definition of the default and allowed tuples. If the first item of
+            *types* is a tuple, it is used as the default value.
+            The remaining argument list is used to form a tuple that constrains
+            the  values assigned to the returned trait. The trait's value must
+            be a tuple of the same length as the remaining argument list, whose
+            elements must match the types specified by the corresponding items
+            of the remaining argument list.
         """
         if len(types) == 0:
             self.init_fast_validator(ValidateTrait.coerce, tuple, None, list)
@@ -2221,12 +2221,14 @@ class ValidatedTuple(BaseTuple):
             A string describing the custom validation to use for the error
             messages.
 
-        For example::
+        Example
+        -------
+        The definition::
 
           value_range = ValidatedTuple(Int(0), Int(1), fvalidate=lambda x: x[0] < x[1])
 
-        This definition will accept only tuples ``(a, b)`` containing two integers
-        that satisfy ``a < b``.
+        will accept only tuples ``(a, b)`` containing two integers that
+        satisfy ``a < b``.
         """
         metadata.setdefault("fvalidate", None)
         metadata.setdefault("fvalidate_info", "")
