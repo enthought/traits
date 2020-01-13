@@ -199,7 +199,7 @@ class TraitListObject(list):
 
         list.__delitem__(self, key)
 
-        if self.name_items is not None and removed:
+        if self.name_items is not None and removed not in ([], [[]]):
             self._send_trait_items_event(
                 self.name_items, TraitListEvent(index, removed)
             )

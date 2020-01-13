@@ -201,3 +201,13 @@ class ListEventTestCase(unittest.TestCase):
         del foo.l[:]
         self.assertEqual(foo.l, [])
         self.assertEqual(len(foo.l_events), 1)
+
+    def test_remove_empty_slices_steps(self):
+        # Same as above but slices with steps are handled differently.
+        # This is why `removed not in ([], [[]])` cannot just be `removed`
+        foo = MyClass()
+
+        # Delete no items and get no events
+        del foo.l[3::2]
+        self.assertEqual(foo.l, [1, 2, 3])
+        self.assertEqual(len(foo.l_events), 0)
