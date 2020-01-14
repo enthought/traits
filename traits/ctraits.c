@@ -5051,50 +5051,50 @@ static PyMethodDef ctraits_methods[] = {
 };
 
 /*-----------------------------------------------------------------------------
-|  Performs module and type initialization:
+|  Create 'CHasTrait' type
 +----------------------------------------------------------------------------*/
-
-static struct PyModuleDef ctraitsmodule = {
-    PyModuleDef_HEAD_INIT, "ctraits", ctraits__doc__, -1, ctraits_methods};
-
-PyMODINIT_FUNC
-PyInit_ctraits(void)
-{
-    /* Create the 'ctraits' module: */
-    PyObject *module;
-    PyObject *trait_base;
-    PyObject *trait_errors;
-
-    module = PyModule_Create(&ctraitsmodule);
-    if (module == NULL) {
-        return NULL;
-    }
+static int create_CHasTraits_type(PyObject *module){
 
     /* Create the 'CHasTraits' type: */
     has_traits_type.tp_base = &PyBaseObject_Type;
     has_traits_type.tp_alloc = PyType_GenericAlloc;
     if (PyType_Ready(&has_traits_type) < 0) {
-        return NULL;
+        return -1;
     }
 
     Py_INCREF(&has_traits_type);
     if (PyModule_AddObject(module, "CHasTraits", (PyObject *)&has_traits_type)
         < 0) {
-        return NULL;
+        return -1;
     }
+    return 0;
+}
+
+/*-----------------------------------------------------------------------------
+|  Create 'CTrait' type
++----------------------------------------------------------------------------*/
+static int create_CTrait_type(PyObject *module){
 
     /* Create the 'CTrait' type: */
     trait_type.tp_base = &PyBaseObject_Type;
     trait_type.tp_alloc = PyType_GenericAlloc;
     trait_type.tp_new = PyType_GenericNew;
     if (PyType_Ready(&trait_type) < 0) {
-        return NULL;
+        return -1;
     }
 
     Py_INCREF(&trait_type);
     if (PyModule_AddObject(module, "cTrait", (PyObject *)&trait_type) < 0) {
-        return NULL;
+        return -1;
     }
+
+    return 0;
+}
+
+/*-----------------------------------------------------------------------------
+|  Define strings and markers for the module
++----------------------------------------------------------------------------*/
+static int define_strings_and_markers(){
 
     /* Predefine a Python string == "__class_traits__": */
     class_traits = PyUnicode_FromString("__class_traits__");
@@ -5114,39 +5114,200 @@ PyInit_ctraits(void)
     /* Create the 'is_callable' marker: */
     is_callable = PyLong_FromLong(-1);
 
+    return 0;
+}
+
+/*-----------------------------------------------------------------------------
+|  Perform imports
++----------------------------------------------------------------------------*/
+static int do_imports(){
+    PyObject *trait_base;
+    PyObject *trait_errors;
+
     /* Import Undefined and Uninitialized */
     trait_base = PyImport_ImportModule("traits.trait_base");
     if (trait_base == NULL) {
-        return NULL;
+        return -1;
     }
     Undefined = PyObject_GetAttrString(trait_base, "Undefined");
     if (Undefined == NULL) {
         Py_DECREF(trait_base);
-        return NULL;
+        return -1;
     }
     Uninitialized = PyObject_GetAttrString(trait_base, "Uninitialized");
     if (Uninitialized == NULL) {
         Py_DECREF(trait_base);
-        return NULL;
+        return -1;
     }
     Py_DECREF(trait_base);
 
     /* Import TraitError and DelegationError */
     trait_errors = PyImport_ImportModule("traits.trait_errors");
     if (trait_errors == NULL) {
-        return NULL;
+        return -1;
     }
     TraitError = PyObject_GetAttrString(trait_errors, "TraitError");
     if (TraitError == NULL) {
         Py_DECREF(trait_errors);
-        return NULL;
+        return -1;
     }
     DelegationError = PyObject_GetAttrString(trait_errors, "DelegationError");
     if (DelegationError == NULL) {
         Py_DECREF(trait_errors);
-        return NULL;
+        return -1;
     }
     Py_DECREF(trait_errors);
 
+    return 0;
+}
+
+/*-----------------------------------------------------------------------------
+|  Value for 'Py_mod_create'
++----------------------------------------------------------------------------*/
+static PyObject* ctraits_create_module(PyObject *spec, PyModuleDef *def)
+{
+    /*
+     * This function receives a ModuleSpec instance and the PyModuleDef structure.
+     * It should return a new module object, or set an error and return NULL.
+     * This function is not responsible for setting import-related attributes specified
+     * in PEP 451 (such as __name__ or __loader__) on the new module.
+     */
+
+    /* Create the 'ctraits' module: */
+    PyObject *module;
+    module = PyModule_Create(def);
+    if (module == NULL) {
+        return NULL;
+    }
     return module;
+}
+
+/*-----------------------------------------------------------------------------
+|  Value for 'Py_mod_exec'
++----------------------------------------------------------------------------*/
+static int ctraits_execute_module(PyObject *module)
+{
+   /*
+    *This specifies a function that is called to execute the module.
+    *This is equivalent to executing the code of a Python module.
+    *Typically, this function adds classes and constants to the module.
+    *If multiple Py_mod_exec slots are specified, they are processed in the order they appear in the m_slots array.
+    */
+
+    /* Create CHasTraits type */
+    if (create_CHasTraits_type(module) != 0){
+        Py_DECREF(module);
+        return -1;
+    }
+
+    /* Create CTrait type */
+    if (create_CTrait_type(module) != 0){
+        Py_DECREF(module);
+        return -1;
+    }
+
+    define_strings_and_markers();
+
+    if (do_imports() != 0){
+        Py_DECREF(module);
+       return -1;
+    }
+
+    return 0;
+}
+
+/*-----------------------------------------------------------------------------
+|  'm_slots'
++----------------------------------------------------------------------------*/
+
+static PyModuleDef_Slot ctraits_slots[] = {
+        {Py_mod_create, ctraits_create_module},
+        {Py_mod_exec, ctraits_execute_module},
+        {0, NULL},
+};
+
+/*-----------------------------------------------------------------------------
+|  'm_traverse'
++----------------------------------------------------------------------------*/
+
+static int ctraits_traverse(PyObject *self, visitproc visit, void *arg)
+{
+    /* TODO */
+    return 0;
+};
+
+/*-----------------------------------------------------------------------------
+|  'm_clear'
++----------------------------------------------------------------------------*/
+
+static int ctraits_clear(PyObject *obj)
+{
+    /* TODO */
+    return 0;
+};
+
+/*-----------------------------------------------------------------------------
+|  'm_free'
++----------------------------------------------------------------------------*/
+
+void ctraits_free(void *p)
+{
+    /* TODO */
+};
+
+/*-----------------------------------------------------------------------------
+|  Performs module and type initialization:
++----------------------------------------------------------------------------*/
+
+static struct PyModuleDef ctraitsmodule = {
+    PyModuleDef_HEAD_INIT,
+    "ctraits",                       /* m_name */
+    ctraits__doc__,                  /* m_doc */
+    -1,                              /* m_size */
+    ctraits_methods,                 /* m_methods */
+    ctraits_slots,                   /* m_slots */
+    0,//ctraits_traverse,                /* m_traverse */
+    0,//ctraits_clear,                   /* m_clear */
+    0,//ctraits_free,                    /* m_free */
+};
+
+
+
+PyMODINIT_FUNC
+PyInit_ctraits(void)
+{
+#ifdef Py_mod_exec
+    // For multi-phase initialization
+    return PyModuleDef_Init(&ctraitsmodule);
+#else
+    // Single-phase initialization, for backward compatibility
+    /* Create the 'ctraits' module: */
+    PyObject *module;
+
+    module = PyModule_Create(&ctraitsmodule);
+    if (module == NULL) {
+        return NULL;
+    }
+
+    /* Create CHasTraits type */
+    if (create_CHasTraits_type(module) != 0){
+        Py_DECREF(module);
+        return NULL;
+    }
+
+    /* Create CTrait type */
+    if (create_CTrait_type(module) != 0){
+        Py_DECREF(module);
+        return NULL;
+    }
+
+    define_strings_and_markers();
+
+    if (do_imports() != 0){
+        Py_DECREF(module);
+        return NULL;
+    }
+
+    return module;
+#endif
 }
