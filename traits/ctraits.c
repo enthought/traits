@@ -5035,6 +5035,13 @@ _ctraits_ctrait(PyObject *self, PyObject *args)
     return Py_None;
 }
 
+struct ctraits_state {
+    has_traits_object *has_traits_obj;
+    trait_object *trait_obj;
+};
+
+#define get_ctraits_state(o) ((struct ctraits_state*)PyModule_GetState(o))
+
 /*-----------------------------------------------------------------------------
 |  'CTrait' instance methods:
 +----------------------------------------------------------------------------*/
@@ -5232,7 +5239,8 @@ static PyModuleDef_Slot ctraits_slots[] = {
 
 static int ctraits_traverse(PyObject *self, visitproc visit, void *arg)
 {
-    /* TODO */
+    has_traits_traverse(get_ctraits_state(self)->has_traits_obj, visit, arg);
+    trait_traverse(get_ctraits_state(self)->trait_obj, visit, arg);
     return 0;
 };
 
@@ -5240,9 +5248,10 @@ static int ctraits_traverse(PyObject *self, visitproc visit, void *arg)
 |  'm_clear'
 +----------------------------------------------------------------------------*/
 
-static int ctraits_clear(PyObject *obj)
+static int ctraits_clear(PyObject *self)
 {
-    /* TODO */
+    has_traits_clear(get_ctraits_state(self)->has_traits_obj);
+    trait_clear(get_ctraits_state(self)->trait_obj);
     return 0;
 };
 
@@ -5266,8 +5275,8 @@ static struct PyModuleDef ctraitsmodule = {
     sizeof(has_traits_object) + sizeof(trait_object),   /* m_size */
     ctraits_methods,                                    /* m_methods */
     ctraits_slots,                                      /* m_slots */
-    0,//ctraits_traverse,                               /* m_traverse */
-    0,//ctraits_clear,                                  /* m_clear */
+    ctraits_traverse,                                   /* m_traverse */
+    ctraits_clear,                                      /* m_clear */
     0,//ctraits_free,                                   /* m_free */
 };
 
