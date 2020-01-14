@@ -5261,14 +5261,14 @@ void ctraits_free(void *p)
 
 static struct PyModuleDef ctraitsmodule = {
     PyModuleDef_HEAD_INIT,
-    "ctraits",                       /* m_name */
-    ctraits__doc__,                  /* m_doc */
-    -1,                              /* m_size */
-    ctraits_methods,                 /* m_methods */
-    ctraits_slots,                   /* m_slots */
-    0,//ctraits_traverse,                /* m_traverse */
-    0,//ctraits_clear,                   /* m_clear */
-    0,//ctraits_free,                    /* m_free */
+    "ctraits",                                          /* m_name */
+    ctraits__doc__,                                     /* m_doc */
+    sizeof(has_traits_object) + sizeof(trait_object),   /* m_size */
+    ctraits_methods,                                    /* m_methods */
+    ctraits_slots,                                      /* m_slots */
+    0,//ctraits_traverse,                               /* m_traverse */
+    0,//ctraits_clear,                                  /* m_clear */
+    0,//ctraits_free,                                   /* m_free */
 };
 
 
