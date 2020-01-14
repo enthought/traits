@@ -5182,7 +5182,7 @@ static PyObject* ctraits_create_module(PyObject *spec, PyModuleDef *def)
 
     /* Create the 'ctraits' module: */
     PyObject *module;
-    module = PyModule_Create(def);
+    module = PyModule_FromDefAndSpec(def, spec);
     if (module == NULL) {
         return NULL;
     }
@@ -5202,20 +5202,20 @@ static int ctraits_execute_module(PyObject *module)
     */
 
     /* Create CHasTraits type */
-    if (create_CHasTraits_type(module) != 0){
+    if (create_CHasTraits_type(module) < 0){
         Py_DECREF(module);
         return -1;
     }
 
     /* Create CTrait type */
-    if (create_CTrait_type(module) != 0){
+    if (create_CTrait_type(module) < 0){
         Py_DECREF(module);
         return -1;
     }
 
     define_strings_and_markers();
 
-    if (do_imports() != 0){
+    if (do_imports() < 0){
         Py_DECREF(module);
        return -1;
     }
