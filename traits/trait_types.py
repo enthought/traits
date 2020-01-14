@@ -27,8 +27,8 @@ from importlib import import_module
 import operator
 import re
 import sys
-from os import PathLike
 from os.path import isfile, isdir
+from pathlib import Path
 from types import FunctionType, MethodType, ModuleType
 import uuid
 
@@ -1441,7 +1441,7 @@ class BaseFile(BaseStr):
             value = fspath(value)
         except ImportError:
             # Workaround for Python 3.5
-            if isinstance(value, PathLike):
+            if isinstance(value, Path):
                 value = str(value)
         except TypeError:
             pass
