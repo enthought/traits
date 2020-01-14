@@ -5261,7 +5261,8 @@ static int ctraits_clear(PyObject *self)
 
 void ctraits_free(void *p)
 {
-    /* TODO */
+    has_traits_dealloc(get_ctraits_state((PyObject*)p)->has_traits_obj);
+    trait_dealloc(get_ctraits_state((PyObject*)p)->trait_obj);
 };
 
 /*-----------------------------------------------------------------------------
@@ -5277,9 +5278,8 @@ static struct PyModuleDef ctraitsmodule = {
     ctraits_slots,                                      /* m_slots */
     ctraits_traverse,                                   /* m_traverse */
     ctraits_clear,                                      /* m_clear */
-    0,//ctraits_free,                                   /* m_free */
+    ctraits_free,                                       /* m_free */
 };
-
 
 
 PyMODINIT_FUNC
