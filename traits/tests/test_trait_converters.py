@@ -12,7 +12,6 @@ import unittest
 from traits.ctrait import CTrait
 from traits.trait_converters import (
     check_trait,
-    mapped_trait_for,
     trait_cast,
     trait_for,
     trait_from,

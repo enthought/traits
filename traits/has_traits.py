@@ -45,8 +45,6 @@ from .traits import (
     Trait,
     generic_trait,
 )
-from .trait_factory import TraitFactory, trait_factory
-from .trait_type import TraitType
 from .trait_types import Any, Bool, Disallow, Event, Python
 from .trait_notifiers import (
     ExtendedTraitChangeNotifyWrapper,

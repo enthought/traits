@@ -1,4 +1,3 @@
-import gc
 import unittest
 
 from ..weakiddict import WeakIDDict, WeakIDKeyDict
