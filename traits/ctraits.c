@@ -189,7 +189,7 @@ call_notifiers(
 
 /* The maximum value for comparison_mode. Valid values are between 0 and
    the maximum value. */
-#define MAXIMUM_COMPARISON_MODE_VALUE 3
+#define MAXIMUM_COMPARISON_MODE_VALUE 2
 
 /*-----------------------------------------------------------------------------
 |  'CTrait' instance definition:
