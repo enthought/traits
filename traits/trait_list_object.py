@@ -420,6 +420,9 @@ class TraitListObject(list):
         if self.trait.minlen > 0:
             self.len_error(0)
 
+        if len(self) == 0:
+            return
+
         removed = list.copy(self)
         list.clear(self)
         index = 0
