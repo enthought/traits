@@ -1,1 +1,1 @@
-from .etsconfig import ETSConfig, ETSToolkitError
+from .etsconfig import ETSConfig, ETSToolkitError  # noqa: F401
