@@ -178,3 +178,20 @@ class ListEventTestCase(unittest.TestCase):
         self.assertEqual(event.added, [])
         self.assertEqual(event.removed, [1, 2, 3])
         self.assertEqual(event.index, 0)
+
+    def test_clear(self):
+        foo = MyClass()
+        foo.l.clear()
+        self.assertEqual(len(foo.l_events), 1)
+        event = foo.l_events[0]
+        self.assertEqual(event.index, 0)
+        self.assertEqual(event.removed, [1, 2, 3])
+        self.assertEqual(event.added, [])
+
+    def test_clear_empty_list(self):
+        foo = MyClass()
+        foo.l = []
+
+        foo.l.clear()
+
+        self.assertEqual(len(foo.l_events), 0)

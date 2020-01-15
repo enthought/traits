@@ -350,3 +350,37 @@ class ListTestCase(unittest.TestCase):
         f.l = ["a", "c", "b", "d"]
         with self.assertRaises(TypeError):
             f.l.sort(cmp=lambda x, y: ord(x) - ord(y))
+
+    def test_copy(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+
+        l_copy = f.l.copy()
+
+        self.assertEqual(f.l, l_copy)
+
+    def test_copy_returns_list(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+
+        l_copy = f.l.copy()
+
+        self.assertEqual(type(l_copy), list)
+
+    def test_clear(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+
+        f.l.clear()
+
+        self.assertEqual(len(f.l), 0)
+
+    def test_clear_with_min_length(self):
+        class FooMinLen(HasTraits):
+            l = List(Str, minlen=1)
+
+        f = FooMinLen()
+        f.l = ["a", "c", "b", "d"]
+
+        with self.assertRaises(TraitError):
+            f.l.clear()
