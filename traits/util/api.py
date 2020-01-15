@@ -1,5 +1,3 @@
-__all__ = ["deprecated", "import_symbol", "record_events"]
-
-from .deprecated import deprecated
-from .event_tracer import record_events
-from .import_symbol import import_symbol
+from .deprecated import deprecated  # noqa: F401
+from .event_tracer import record_events  # noqa: F401
+from .import_symbol import import_symbol  # noqa: F401
