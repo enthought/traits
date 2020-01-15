@@ -4436,6 +4436,7 @@ func_index(void *function, void **function_table)
 static PyObject *
 _trait_getstate(trait_object *trait, PyObject *Py_UNUSED(ignored))
 {
+
     PyObject *result;
 
     result = PyTuple_New(15);
@@ -5090,6 +5091,7 @@ static int create_CTrait_type(PyObject *module){
         return -1;
     }
 
+
     Py_INCREF(&trait_type);
     if (PyModule_AddObject(module, "cTrait", (PyObject *)&trait_type) < 0) {
         return -1;
@@ -5182,7 +5184,8 @@ static PyObject* ctraits_create_module(PyObject *spec, PyModuleDef *def)
 
     /* Create the 'ctraits' module: */
     PyObject *module;
-    module = PyModule_FromDefAndSpec(def, spec);
+    module = PyModule_New(def->m_name);
+
     if (module == NULL) {
         return NULL;
     }
@@ -5207,6 +5210,7 @@ static int ctraits_execute_module(PyObject *module)
         return -1;
     }
 
+
     /* Create CTrait type */
     if (create_CTrait_type(module) < 0){
         Py_DECREF(module);
@@ -5214,6 +5218,7 @@ static int ctraits_execute_module(PyObject *module)
     }
 
     define_strings_and_markers();
+
 
     if (do_imports() < 0){
         Py_DECREF(module);
@@ -5239,8 +5244,9 @@ static PyModuleDef_Slot ctraits_slots[] = {
 
 static int ctraits_traverse(PyObject *self, visitproc visit, void *arg)
 {
-    has_traits_traverse(get_ctraits_state(self)->has_traits_obj, visit, arg);
-    trait_traverse(get_ctraits_state(self)->trait_obj, visit, arg);
+    /*TODO*/
+//    has_traits_traverse(get_ctraits_state(self)->has_traits_obj, visit, arg);
+//    trait_traverse(get_ctraits_state(self)->trait_obj, visit, arg);
     return 0;
 };
 
@@ -5250,8 +5256,9 @@ static int ctraits_traverse(PyObject *self, visitproc visit, void *arg)
 
 static int ctraits_clear(PyObject *self)
 {
-    has_traits_clear(get_ctraits_state(self)->has_traits_obj);
-    trait_clear(get_ctraits_state(self)->trait_obj);
+    /*TODO*/
+//    has_traits_clear(get_ctraits_state(self)->has_traits_obj);
+//    trait_clear(get_ctraits_state(self)->trait_obj);
     return 0;
 };
 
@@ -5261,8 +5268,9 @@ static int ctraits_clear(PyObject *self)
 
 void ctraits_free(void *p)
 {
-    has_traits_dealloc(get_ctraits_state((PyObject*)p)->has_traits_obj);
-    trait_dealloc(get_ctraits_state((PyObject*)p)->trait_obj);
+    /*TODO*/
+//    has_traits_dealloc(get_ctraits_state((PyObject*)p)->has_traits_obj);
+//    trait_dealloc(get_ctraits_state((PyObject*)p)->trait_obj);
 };
 
 /*-----------------------------------------------------------------------------
