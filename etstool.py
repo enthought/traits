@@ -83,11 +83,12 @@ from contextlib import contextmanager
 
 import click
 
-# Dependencies common to both Python 2 and Python 3.
+# Dependencies common to all configurations.
 common_dependencies = {
     "coverage",
     "cython",
     "enthought_sphinx_theme",
+    "flake8",
     "numpy",
     "pyqt",
     "Sphinx",
@@ -219,6 +220,24 @@ def install(edm, runtime, environment, editable, docs, source):
             "{environment}'.".format(**parameters)
         )
     click.echo("Done install")
+
+
+@cli.command()
+@edm_option
+@runtime_option
+@click.option(
+    "--environment", default=None, help="Name of EDM environment to check."
+)
+def flake8(edm, runtime, environment):
+    """ Run a flake8 check in a given environment.
+
+    """
+    parameters = get_parameters(edm, runtime, environment)
+
+    commands = [
+        "{edm} run -e {environment} -- python -m flake8 traits"
+    ]
+    execute(commands, parameters)
 
 
 @cli.command()
