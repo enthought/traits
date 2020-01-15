@@ -26,7 +26,8 @@ import shutil
 import subprocess
 import unittest
 
-from traits.api import Float, TraitType
+from traits.trait_type import TraitType
+from traits.trait_types import Float
 from traits.testing.optional_dependencies import requires_numpy
 
 

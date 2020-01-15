@@ -16,7 +16,7 @@ import traceback
 
 from sphinx.ext.autodoc import ClassLevelDocumenter
 
-from ..trait_handlers import TraitType
+from ..trait_type import TraitType
 from ..has_traits import MetaHasTraits
 
 

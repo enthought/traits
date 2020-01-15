@@ -7,14 +7,6 @@
 Classes
 -------
 
-.. autoclass:: BaseTraitHandler
-
-.. autoclass:: NoDefaultSpecified
-
-.. autoclass:: TraitType
-
-.. autoclass:: TraitHandler
-
 .. autoclass:: TraitCoerceType
 
 .. autoclass:: TraitCastType
@@ -22,8 +14,6 @@ Classes
 .. autoclass:: ThisClass
 
 .. autoclass:: TraitInstance
-
-.. autoclass:: HandleWeakRef
 
 .. autoclass:: TraitFunction
 
@@ -45,12 +35,6 @@ Classes
 
 Private Functions
 -----------------
-
-.. autofunction:: traits.trait_handlers._arg_count
-
-.. autofunction:: traits.trait_handlers._write_only
-
-.. autofunction:: traits.trait_handlers._read_only
 
 .. autofunction:: traits.trait_handlers._undefined_get
 
