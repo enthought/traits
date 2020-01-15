@@ -421,15 +421,15 @@ class TraitListObject(list):
             self.len_error(0)
 
         if len(self) == 0:
+            list.clear(self)
             return
 
-        removed = list.copy(self)
+        removed = self.copy()
         list.clear(self)
-        index = 0
 
         if self.name_items is not None:
             self._send_trait_items_event(
-                self.name_items, TraitListEvent(index, removed)
+                self.name_items, TraitListEvent(0, removed)
             )
 
     def len_error(self, len):
