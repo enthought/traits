@@ -427,9 +427,10 @@ class TraitListObject(list):
         list.clear(self)
         index = 0
 
-        self._send_trait_items_event(
-            self.name_items, TraitListEvent(index, removed)
-        )
+        if self.name_items is not None:
+            self._send_trait_items_event(
+                self.name_items, TraitListEvent(index, removed)
+            )
 
     def len_error(self, len):
         raise TraitError(
