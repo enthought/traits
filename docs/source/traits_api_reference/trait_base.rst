@@ -15,6 +15,8 @@ Classes
 
 .. autodata:: Self
 
+.. autoclass:: HandleWeakRef
+
 Functions
 ---------
 
