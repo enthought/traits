@@ -9,6 +9,7 @@
 #  Thanks for using Enthought open source!
 
 from functools import partial
+import logging
 
 # -------------------------------------------------------------------------------
 #  Editor factory functions:
@@ -23,6 +24,13 @@ PythonShellEditor = None
 DateEditor = None
 DateTimeEditor = None
 TimeEditor = None
+
+# -------------------------------------------------------------------------------
+#  Logging:
+# -------------------------------------------------------------------------------
+
+logger = logging.getLogger(__name__)
+
 
 
 def password_editor(auto_set=True, enter_set=False):
@@ -143,15 +151,25 @@ def date_editor():
 
 
 def datetime_editor():
-    """ Factory function that returns a Date editor with date & time for
+    """ Factory function that returns an editor with date & time for
     editing DateTime values.
     """
     global DateTimeEditor
 
     if DateTimeEditor is None:
-        from traitsui.api import DateTimeEditor
+        try:
+            from traitsui.api import DateTimeEditor
 
-        DateTimeEditor = DateTimeEditor()
+            DateTimeEditor = DateTimeEditor()
+
+        except ImportError:
+
+            logger.warn(msg="Could not import DateTimeEditor from "
+                            "traitsui.api, using TextEditor instead")
+
+            from traitsui.api import TextEditor
+
+            DateTimeEditor = TextEditor()
 
     return DateTimeEditor
 
