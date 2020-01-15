@@ -16,8 +16,7 @@ import warnings
 from traits.constants import (
     ComparisonMode, DefaultValue, TraitKind, MAXIMUM_DEFAULT_VALUE_TYPE
 )
-from traits.trait_errors import TraitError
-from traits.traits import CTrait
+from traits.ctrait import CTrait
 
 
 def getter():

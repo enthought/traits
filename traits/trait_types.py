@@ -31,29 +31,32 @@ from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 import uuid
 
-from . import trait_handlers
 from .constants import DefaultValue, TraitKind, ValidateTrait
 from .trait_base import (
     strx,
     get_module_name,
+    HandleWeakRef,
     class_of,
+    RangeTypes,
     SequenceTypes,
     TypeTypes,
     Undefined,
     TraitsCache,
 )
+from .trait_converters import trait_from
 from .trait_dict_object import TraitDictEvent, TraitDictObject
-from .trait_list_object import TraitListObject
+from .trait_errors import TraitError
+from .trait_list_object import TraitListEvent, TraitListObject
 from .trait_set_object import TraitSetEvent, TraitSetObject
-
-from .trait_handlers import (
-    TraitType,
-    ThisClass,
-    items_event,
-    RangeTypes,
-    HandleWeakRef,
+from .trait_type import TraitType
+from .traits import (
+    Trait,
+    _TraitMaker,
+    _InstanceArgs,
 )
+from .util.import_symbol import import_symbol
 
+# TraitsUI integration imports
 from .editor_factories import (
     code_editor,
     html_editor,
@@ -63,15 +66,7 @@ from .editor_factories import (
     time_editor,
     list_editor,
 )
-from .traits import (
-    Trait,
-    trait_from,
-    _TraitMaker,
-    _InstanceArgs,
-)
 
-from .trait_errors import TraitError
-from .util.import_symbol import import_symbol
 
 
 # -------------------------------------------------------------------------------
@@ -2062,19 +2057,8 @@ class BaseTuple(TraitType):
     def __init__(self, *types, **metadata):
         """ Returns a Tuple trait.
 
-        Parameters
-        ----------
-        types : zero or more arguments
-            Definition of the default and allowed tuples. If the first item of
-            *types* is a tuple, it is used as the default value.
-            The remaining argument list is used to form a tuple that constrains
-            the  values assigned to the returned trait. The trait's value must
-            be a tuple of the same length as the remaining argument list, whose
-            elements must match the types specified by the corresponding items
-            of the remaining argument list.
+        The default value is determined as follows:
 
-        Default Value
-        -------------
         1. If no arguments are specified, the default value is ().
         2. If a tuple is specified as the first argument, it is the default
            value.
@@ -2098,6 +2082,17 @@ class BaseTuple(TraitType):
         The trait's value must be a 3-element tuple whose first and second
         elements are strings, and whose third element is an integer. The
         default value is ``('','',0)``.
+
+        Parameters
+        ----------
+        types : zero or more arguments
+            Definition of the default and allowed tuples. If the first item of
+            *types* is a tuple, it is used as the default value.
+            The remaining argument list is used to form a tuple that constrains
+            the  values assigned to the returned trait. The trait's value must
+            be a tuple of the same length as the remaining argument list, whose
+            elements must match the types specified by the corresponding items
+            of the remaining argument list.
         """
         if len(types) == 0:
             self.init_fast_validator(ValidateTrait.coerce, tuple, None, list)
@@ -2221,12 +2216,14 @@ class ValidatedTuple(BaseTuple):
             A string describing the custom validation to use for the error
             messages.
 
-        For example::
+        Example
+        -------
+        The definition::
 
           value_range = ValidatedTuple(Int(0), Int(1), fvalidate=lambda x: x[0] < x[1])
 
-        This definition will accept only tuples ``(a, b)`` containing two integers
-        that satisfy ``a < b``.
+        will accept only tuples ``(a, b)`` containing two integers that
+        satisfy ``a < b``.
         """
         metadata.setdefault("fvalidate", None)
         metadata.setdefault("fvalidate_info", "")
@@ -2371,7 +2368,14 @@ class List(TraitType):
     # -- Private Methods --------------------------------------------------------
 
     def items_event(self):
-        return items_event()
+        cls = self.__class__
+        if cls._items_event is None:
+            cls._items_event = Event(
+                TraitListEvent, is_base=False
+            ).as_ctrait()
+
+        return cls._items_event
+
 
 
 # -------------------------------------------------------------------------------
@@ -3178,10 +3182,6 @@ class Event(TraitType):
 
         return trait.full_info(object, name, value)
 
-
-#  Handle circular module dependencies:
-trait_handlers.Event = Event
-
 # -------------------------------------------------------------------------------
 #  'Button' trait:
 # -------------------------------------------------------------------------------
@@ -3647,7 +3647,7 @@ ListMethod = List(MethodType)
 
 #: List of container type values; default value is ``[]``. This trait type is
 #: deprecated. Use ``List(This(allow_none=False))`` instead.
-ListThis = List(ThisClass)
+ListThis = List(This(allow_none=False))
 
 # -- Dictionary Traits --------------------------------------------------------
 

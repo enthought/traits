@@ -11,7 +11,7 @@ from traits.has_traits import (
 )
 from traits.testing.optional_dependencies import numpy, requires_numpy
 from traits.trait_errors import TraitError
-from traits.trait_handlers import TraitType
+from traits.trait_type import TraitType
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
 
 if numpy is not None:
