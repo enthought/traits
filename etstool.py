@@ -267,7 +267,7 @@ def test(edm, runtime, verbose, environment):
 @click.option(
     "--error-on-warn/--no-error-on-warn",
     default=True,
-    help="Turn warnings into errors?  [default: --error-on-warn] "
+    help="Turn warnings into errors?  [default: --error-on-warn] ",
 )
 def docs(edm, runtime, environment, error_on_warn):
     """ Build the html documentation.
