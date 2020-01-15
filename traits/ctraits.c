@@ -4225,28 +4225,6 @@ _trait_delegate(trait_object *trait, PyObject *args)
 }
 
 /*-----------------------------------------------------------------------------
-|  Sets the value of the 'comparison' mode of a CTrait instance:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_trait_rich_comparison(trait_object *trait, PyObject *args)
-{
-    int compare_type;
-
-    if (!PyArg_ParseTuple(args, "p", &compare_type)) {
-        return NULL;
-    }
-
-    trait->flags &= ~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_ID_TEST);
-    if (compare_type == 0) {
-        trait->flags |= TRAIT_OBJECT_ID_TEST;
-    }
-
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-
-/*-----------------------------------------------------------------------------
 |  Sets the appropriate value comparison mode flags of a CTrait instance:
 +----------------------------------------------------------------------------*/
 
@@ -4885,8 +4863,6 @@ static PyMethodDef trait_methods[] = {
     {"validate", (PyCFunction)_trait_validate, METH_VARARGS, validate_doc},
     {"delegate", (PyCFunction)_trait_delegate, METH_VARARGS,
      PyDoc_STR("delegate(delegate_name,prefix,prefix_type,modify_delegate)")},
-    {"rich_comparison", (PyCFunction)_trait_rich_comparison, METH_VARARGS,
-     PyDoc_STR("rich_comparison(rich_comparison_boolean)")},
     {"comparison_mode", (PyCFunction)_trait_comparison_mode, METH_VARARGS,
      PyDoc_STR("comparison_mode(comparison_mode_enum)")},
     {"property", (PyCFunction)_trait_property, METH_VARARGS,
