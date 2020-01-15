@@ -417,7 +417,16 @@ class TraitListObject(list):
             self.trait = trait.handler
 
     def clear(self):
-        del self[:]
+        if self.trait.minlen > 0:
+            self.len_error(0)
+
+        removed = list.copy(self)
+        list.clear(self)
+        index = 0
+
+        self._send_trait_items_event(
+            self.name_items, TraitListEvent(index, removed)
+        )
 
     def len_error(self, len):
         raise TraitError(
