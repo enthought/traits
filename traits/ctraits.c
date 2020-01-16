@@ -4254,6 +4254,32 @@ _trait_comparison_mode(trait_object *trait, PyObject *args)
 }
 
 /*-----------------------------------------------------------------------------
+|  getter for trait comparison mode
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_get_trait_comparison_mode_int(trait_object *trait, PyObject *Py_UNUSED(ignored))
+{
+    PyLongObject *comparison_mode = PyLong_FromLong(2);
+
+    if (trait->flags & TRAIT_NO_VALUE_TEST) {
+        comparison_mode = PyLong_FromLong(0);
+    }
+    else if (trait->flags & TRAIT_OBJECT_ID_TEST) {
+        comparison_mode = PyLong_FromLong(1);
+    }
+
+    if (comparison_mode == NULL) {
+        PyErr_SetString(PyExc_TypeError, "Could not retrieve comparison mode.");
+        return NULL;
+    }
+
+    Py_INCREF(comparison_mode);
+    return comparison_mode;
+}
+
+
+/*-----------------------------------------------------------------------------
 |  Sets the 'property' value fields of a CTrait instance:
 +----------------------------------------------------------------------------*/
 
@@ -4866,6 +4892,8 @@ static PyMethodDef trait_methods[] = {
      PyDoc_STR("delegate(delegate_name,prefix,prefix_type,modify_delegate)")},
     {"comparison_mode", (PyCFunction)_trait_comparison_mode, METH_VARARGS,
      PyDoc_STR("comparison_mode(comparison_mode_enum)")},
+    {"_get_comparison_mode_int", (PyCFunction)_get_trait_comparison_mode_int,
+     METH_NOARGS, PyDoc_STR("Get comparison mode as an integer.")},
     {"property", (PyCFunction)_trait_property, METH_VARARGS,
      PyDoc_STR("property([get,set,validate])")},
     {"clone", (PyCFunction)_trait_clone, METH_VARARGS,
