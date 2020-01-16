@@ -8,7 +8,6 @@
 from importlib import import_module
 import inspect
 import io
-import sys
 import token
 import tokenize
 import traceback
