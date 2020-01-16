@@ -22,9 +22,8 @@ import re
 import sys
 try:
     from os import fspath
-    _IMPORT_FSPATH_SUCCESS = True
 except ImportError:
-    _IMPORT_FSPATH_SUCCESS = False
+    fspath = None
 from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 import uuid
@@ -1419,7 +1418,7 @@ class BaseFile(BaseStr):
 
             Note: The 'fast validator' version performs this check in C.
         """
-        if _IMPORT_FSPATH_SUCCESS:
+        if fspath is not None:
             # Python 3.5 does not implement __fspath__
             try:
                 # If value is of type os.PathLike, get the path representation
