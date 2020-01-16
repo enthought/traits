@@ -349,6 +349,9 @@ the table.
 | String           | String( [*value* = '', *minlen* = 0, *maxlen* =          |
 |                  | sys.maxint, *regex* = '', \*\*\ *metadata*] )            |
 +------------------+----------------------------------------------------------+
+| Subclass         | Subclass( [*value* = None, *klass* = None, *allow_none* =|
+|                  | True, \*\*\ *metadata*] )                                |
++------------------+----------------------------------------------------------+
 | This             | n/a                                                      |
 +------------------+----------------------------------------------------------+
 | ToolbarButton    | ToolbarButton( [*label* = '', *image* = None, *style* =  |
