@@ -13,7 +13,7 @@ class TestHasRequiredTraits(unittest.TestCase):
 
     def test_missing_required_trait(self):
         with self.assertRaises(TraitError) as exc:
-            test_instance = RequiredTest(i_trait=3)
+            RequiredTest(i_trait=3)
         self.assertEqual(
             exc.exception.args[0],
             "The following required traits were not "

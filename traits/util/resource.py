@@ -29,7 +29,10 @@
 
 
 # Standard library imports.
-import inspect, os, sys
+import inspect
+import os
+import sys
+
 from distutils.sysconfig import get_python_lib
 
 

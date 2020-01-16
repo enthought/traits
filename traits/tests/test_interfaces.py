@@ -228,17 +228,17 @@ class InterfacesTest(unittest.TestCase):
     def test_instance_adapt_yes(self):
         ta = TraitsHolder()
 
-        ta.a_yes = object = SampleAverage()
+        ta.a_yes = SampleAverage()
         self.assertEqual(ta.a_yes.get_average(), 200.0)
         self.assertIsInstance(ta.a_yes, SampleAverage)
         self.assertFalse(hasattr(ta, "a_yes_"))
 
-        ta.a_yes = object = SampleList()
+        ta.a_yes = SampleList()
         self.assertEqual(ta.a_yes.get_average(), 20.0)
         self.assertIsInstance(ta.a_yes, ListAverageAdapter)
         self.assertFalse(hasattr(ta, "a_yes_"))
 
-        ta.a_yes = object = Sample()
+        ta.a_yes = Sample()
         self.assertEqual(ta.a_yes.get_average(), 2.0)
         self.assertIsInstance(ta.a_yes, ListAverageAdapter)
         self.assertFalse(hasattr(ta, "a_yes_"))
@@ -248,22 +248,22 @@ class InterfacesTest(unittest.TestCase):
     def test_instance_adapt_default(self):
         ta = TraitsHolder()
 
-        ta.a_default = object = SampleAverage()
+        ta.a_default = SampleAverage()
         self.assertEqual(ta.a_default.get_average(), 200.0)
         self.assertIsInstance(ta.a_default, SampleAverage)
         self.assertFalse(hasattr(ta, "a_default_"))
 
-        ta.a_default = object = SampleList()
+        ta.a_default = SampleList()
         self.assertEqual(ta.a_default.get_average(), 20.0)
         self.assertIsInstance(ta.a_default, ListAverageAdapter)
         self.assertFalse(hasattr(ta, "a_default_"))
 
-        ta.a_default = object = Sample()
+        ta.a_default = Sample()
         self.assertEqual(ta.a_default.get_average(), 2.0)
         self.assertIsInstance(ta.a_default, ListAverageAdapter)
         self.assertFalse(hasattr(ta, "a_default_"))
 
-        ta.a_default = object = SampleBad()
+        ta.a_default = SampleBad()
         self.assertEqual(ta.a_default, None)
         self.assertFalse(hasattr(ta, "a_default_"))
 

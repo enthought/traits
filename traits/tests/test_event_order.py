@@ -20,16 +20,16 @@ class TestEventOrder(unittest.TestCase):
     Baz receives the "effect" event before it receives the "cause" event.
     """
 
-    def setUp(self):
+    def test_lifo_order(self):
         foo = Foo(cause="ORIGINAL")
         bar = Bar(foo=foo, test=self)
-        baz = Baz(bar=bar, test=self)
+        # flake8 complains about unused "baz", but we need to keep it
+        # alive for listeners to fire.
+        baz = Baz(bar=bar, test=self)  # noqa: F841
 
         self.events_delivered = []
         foo.cause = "CHANGE"
-        return
 
-    def test_lifo_order(self):
         lifo = [
             "Bar._caused_changed",
             "Baz._effect_changed",
@@ -37,17 +37,6 @@ class TestEventOrder(unittest.TestCase):
         ]
 
         self.assertEqual(self.events_delivered, lifo)
-        return
-
-    def test_not_fifo_order(self):
-        fifo = [
-            "Bar._caused_changed",
-            "Baz._caused_changed",
-            "Baz._effect_changed",
-        ]
-
-        self.assertNotEqual(self.events_delivered, fifo)
-        return
 
 
 class Foo(HasTraits):

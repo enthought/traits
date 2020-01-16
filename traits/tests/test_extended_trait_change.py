@@ -606,7 +606,7 @@ class OnTraitChangeTest(unittest.TestCase):
             dst_new={0: 0, 1: 1, 2: 2, 3: 3},
         )
         inst.ref.value[3] = 3
-        self.assertEqual(inst.calls,  {0: 1, 1: 0, 2: 0, 3: 0, 4: 0})
+        self.assertEqual(inst.calls, {0: 1, 1: 0, 2: 0, 3: 0, 4: 0})
         self.assertEqual(inst.ref.value, {0: 0, 1: 1, 2: 2, 3: 3})
 
     def test_instance_value_list_listener(self):
@@ -995,7 +995,7 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(pdo.pcalls, (3 * 3) + 1)
         self.assertEqual(pdo.calls, 3 * 3)
         for i in range(10):
-            x = pdo.sum
+            pdo.sum
         self.assertEqual(pdo.pcalls, (3 * 3) + 1)
         pdo.trait_set(exp_old=sum, exp_new=60)
         old_ref = pdo.ref
