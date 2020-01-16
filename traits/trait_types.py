@@ -28,9 +28,14 @@ import operator
 import re
 import sys
 from os.path import isfile, isdir
-from pathlib import Path
 from types import FunctionType, MethodType, ModuleType
 import uuid
+
+try:
+    from os import fspath
+    _IMPORT_FSPATH_SUCCESS = True
+except ImportError:
+    _IMPORT_FSPATH_SUCCESS = False
 
 from . import trait_handlers
 from .constants import DefaultValue, TraitKind, ValidateTrait
@@ -1388,7 +1393,7 @@ class BaseFile(BaseStr):
     """
 
     #: A description of the type of value this trait accepts:
-    info_text = "a file name or PathLike object"
+    info_text = "a filename or object implementing the os.PathLike interface"
 
     def __init__(
         self,
@@ -1431,20 +1436,15 @@ class BaseFile(BaseStr):
 
             Note: The 'fast validator' version performs this check in C.
         """
-        try:
-            # Note: Python 3.5 does not implement __fspath__
-            from os import fspath
-
-            # If value is of type os.PathLike, get the path representation
-            # The path representation could be either a str type or bytes type
-            # If fspath returns bytes, further validation will fail.
-            value = fspath(value)
-        except ImportError:
-            # Workaround for Python 3.5
-            if isinstance(value, Path):
-                value = str(value)
-        except TypeError:
-            pass
+        if _IMPORT_FSPATH_SUCCESS:
+            # Python 3.5 does not implement __fspath__
+            try:
+                # If value is of type os.PathLike, get the path representation
+                # The path representation could be either a str or bytes type
+                # If fspath returns bytes, further validation will fail.
+                value = fspath(value)
+            except TypeError:
+                pass
 
         validated_value = super(BaseFile, self).validate(object, name, value)
         if not self.exists:
