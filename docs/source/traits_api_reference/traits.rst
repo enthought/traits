@@ -9,12 +9,6 @@
 Classes
 -------
 
-.. autoclass:: CTrait
-
-.. autoclass:: TraitFactory
-
-.. autoclass:: TraitImportError
-
 .. autoclass:: Default
 
 .. autoclass:: Property
@@ -31,14 +25,6 @@ Functions
 ---------
 
 .. autofunction:: Trait
-
-.. autofunction:: trait_factory
-
-.. autofunction:: trait_cast
-
-.. autofunction:: try_trait_cast
-
-.. autofunction:: trait_from
 
 
 Private Classes

@@ -1,21 +1,12 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2005, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#  Author: David C. Morrill
-#  Date:   06/21/2002
-#
-#  Refactored into a separate module: 07/04/2003
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """ Defines common, low-level capabilities needed by the Traits package.
 """
@@ -28,6 +19,7 @@ import os
 import sys
 from os import getcwd
 from os.path import dirname, exists, join
+from weakref import ref
 
 from .etsconfig.api import ETSConfig
 from .constants import ValidateTrait
@@ -42,6 +34,8 @@ enumerate = enumerate
 SequenceTypes = (list, tuple)
 
 ComplexTypes = (float, int)
+
+RangeTypes = (int, float)
 
 TypeTypes = (
     str,
@@ -394,6 +388,28 @@ def xsetattr(object, xname, value):
         object = getattr(object, name)
 
     setattr(object, names[-1], value)
+
+# -------------------------------------------------------------------------------
+# Helpers for weak references
+# -------------------------------------------------------------------------------
+
+def _make_value_freed_callback(object_ref, name):
+    def _value_freed(value_ref):
+        object = object_ref()
+        if object is not None:
+            object.trait_property_changed(name, Undefined, None)
+
+    return _value_freed
+
+
+class HandleWeakRef(object):
+    def __init__(self, object, name, value):
+        object_ref = ref(object)
+        _value_freed = _make_value_freed_callback(object_ref, name)
+        self.object = object_ref
+        self.name = name
+        self.value = ref(value, _value_freed)
+
 
 
 # -------------------------------------------------------------------------------

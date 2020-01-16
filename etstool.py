@@ -1,14 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2017, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
+# Thanks for using Enthought open source!
+
 """
 Tasks for Test Runs
 ===================
@@ -264,15 +263,22 @@ def test(edm, runtime, verbose, environment):
     default=None,
     help="Name of EDM environment to build docs for.",
 )
-def docs(edm, runtime, environment):
+@click.option(
+    "--error-on-warn/--no-error-on-warn",
+    default=True,
+    help="Turn warnings into errors?  [default: --error-on-warn] ",
+)
+def docs(edm, runtime, environment, error_on_warn):
     """ Build the html documentation.
 
     """
     parameters = get_parameters(edm, runtime, environment)
-    commands = [
+    build_docs = (
         "{edm} run -e {environment} -- sphinx-build -b html "
-        "-d build/doctrees source build/html",
-    ]
+        + ("-W " if error_on_warn else "")
+        + "-d build/doctrees source build/html"
+    )
+    commands = [build_docs]
     with do_in_existingdir(os.path.join(os.getcwd(), "docs")):
         execute(commands, parameters)
 
