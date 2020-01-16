@@ -329,7 +329,7 @@ class ThisClass(TraitHandler):
 # -------------------------------------------------------------------------------
 
 
-class TraitInstance(ThisClass):
+class TraitInstance(TraitHandler):
     """Ensures that trait attribute values belong to a specified Python class
     or type.
 
@@ -407,6 +407,15 @@ class TraitInstance(ThisClass):
 
         self.validate_failed(object, name, value)
 
+    def validate_failed(self, object, name, value):
+        self.error(object, name, value)
+
+    def validate_none(self, object, name, value):
+        if isinstance(value, object.__class__) or (value is None):
+            return value
+
+        self.validate_failed(object, name, value)
+
     def info(self):
         aClass = self.aClass
         if type(aClass) is not str:
@@ -418,6 +427,9 @@ class TraitInstance(ThisClass):
             return result + " or None"
 
         return result
+
+    def info_none(self):
+        return "an instance of the same type as the receiver or None"
 
     def resolve_class(self, object, name, value):
         aClass = self.validate_class(self.find_class(self.aClass))
@@ -468,6 +480,17 @@ class TraitInstance(ThisClass):
                 raise TraitError("Unable to locate class: " + args[0])
 
         return aClass(*args[1:], **kw)
+
+    def get_editor(self, trait):
+        if self.editor is None:
+            from traitsui.api import InstanceEditor
+
+            self.editor = InstanceEditor(
+                label=trait.label or "",
+                view=trait.view or "",
+                kind=trait.kind or "live",
+            )
+        return self.editor
 
 
 # -------------------------------------------------------------------------------
