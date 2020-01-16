@@ -36,8 +36,7 @@ PRODUCT_CODE_HEADER_TEMPLATE = r"""
 
 ENTHOUGHT_PRODUCT_CODE_HEADER = re.compile(
     PRODUCT_CODE_HEADER_TEMPLATE.format(
-        company_name=r"Enthought, Inc\., Austin, TX",
-        year_range=YEAR_RANGE,
+        company_name=r"Enthought, Inc\., Austin, TX", year_range=YEAR_RANGE,
     )
 )
 
@@ -83,6 +82,7 @@ class HeaderError:
     """
     Base class for the copyright header errors.
     """
+
     def __init__(self, lineno, col_offset):
         self.lineno = lineno
         self.col_offset = col_offset
@@ -99,6 +99,7 @@ class MissingCopyrightHeaderError(HeaderError):
     """
     Error reported when no copyright header can be identified.
     """
+
     code = "H101"
     message = "Missing copyright header"
 
@@ -107,6 +108,7 @@ class DuplicateCopyrightHeaderError(HeaderError):
     """
     Error reported if multiple copyright headers found.
     """
+
     code = "H102"
     message = "Multiple copyright headers found"
 
@@ -116,6 +118,7 @@ class IncorrectCopyrightHeaderError(HeaderError):
     Error reported if a copyright header is found, but its wording
     doesn't match the officially approved wording.
     """
+
     code = "H103"
     message = "Wrong copyright header found"
 
@@ -125,6 +128,7 @@ class OutdatedCopyrightYearError(HeaderError):
     Error reported if the copyright header doesn't have the correct
     year information in it.
     """
+
     code = "H104"
 
     def __init__(self, lineno, col_offset, end_year):
@@ -160,8 +164,7 @@ def copyright_header(filename):
 
     if not copyrights_found:
         yield MissingCopyrightHeaderError(
-            lineno=1,
-            col_offset=0,
+            lineno=1, col_offset=0,
         )
         return
 
@@ -171,16 +174,14 @@ def copyright_header(filename):
         # correctness below.
         for lineno in copyrights_found[1:]:
             yield DuplicateCopyrightHeaderError(
-                lineno=lineno,
-                col_offset=0,
+                lineno=lineno, col_offset=0,
             )
 
     # Check that the first copyright statement is the right one.
     header_match = ENTHOUGHT_PRODUCT_CODE_HEADER.match(file_contents)
     if header_match is None:
         yield IncorrectCopyrightHeaderError(
-            lineno=1,
-            col_offset=0,
+            lineno=1, col_offset=0,
         )
         return
 
@@ -195,9 +196,7 @@ def copyright_header(filename):
 
     if end_year < MINIMUM_END_YEAR:
         yield OutdatedCopyrightYearError(
-            lineno=lineno,
-            col_offset=match_pos,
-            end_year=end_year,
+            lineno=lineno, col_offset=match_pos, end_year=end_year,
         )
 
 
@@ -205,8 +204,9 @@ class CopyrightHeaderExtension(object):
     """
     Flake8 extension for checking ETS copyright headers.
     """
-    name = 'headers'
-    version = '1.1.0'
+
+    name = "headers"
+    version = "1.1.0"
 
     def __init__(self, tree, filename):
         self.filename = filename

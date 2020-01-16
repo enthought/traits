@@ -22,5 +22,5 @@ if __name__ == "__main__":
             "flake8.extension": [
                 "H = copyright_header:CopyrightHeaderExtension",
             ],
-        }
+        },
     )
