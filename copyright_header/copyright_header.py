@@ -9,7 +9,6 @@
 # Thanks for using Enthought open source!
 
 import re
-import tokenize
 
 # Minimum end year for the copyright statement.
 MINIMUM_END_YEAR = 2020
@@ -143,14 +142,11 @@ class OutdatedCopyrightYearError(HeaderError):
         )
 
 
-def copyright_header(filename):
+def copyright_header(lines):
     """
     Check copyright header presence and accuracy in a Python file.
     """
-    # Use tokenize.open to ensure that we respect the coding cookie.
-    with tokenize.open(filename) as f:
-        file_contents = f.read()
-    file_lines = file_contents.splitlines(keepends=True)
+    file_contents = "".join(lines)
 
     # Empty files don't need a copyright header.
     if not file_contents:
@@ -158,7 +154,7 @@ def copyright_header(filename):
 
     # Not an empty file. See if we have a copyright header at all.
     copyrights_found = []
-    for lineno, line in enumerate(file_lines, start=1):
+    for lineno, line in enumerate(lines, start=1):
         if re.match(GENERIC_COPYRIGHT, line):
             copyrights_found.append(lineno)
 
@@ -186,7 +182,7 @@ def copyright_header(filename):
         return
 
     # Check the year range in the header.
-    for lineno, line in enumerate(file_lines, start=1):
+    for lineno, line in enumerate(lines, start=1):
         try:
             start_year, end_year, match_pos = parse_years(line)
         except ValueError:
@@ -208,11 +204,11 @@ class CopyrightHeaderExtension(object):
     name = "headers"
     version = "1.1.0"
 
-    def __init__(self, tree, filename):
-        self.filename = filename
+    def __init__(self, tree, lines):
+        self.lines = lines
 
     def run(self):
-        for error in copyright_header(self.filename):
+        for error in copyright_header(self.lines):
             yield (
                 error.lineno,
                 error.col_offset,
