@@ -37,52 +37,28 @@ Visualization:
 #  Imports:
 # -------------------------------------------------------------------------------
 
-import sys
-from functools import partial
 from types import FunctionType, MethodType
 import warnings
 
-from . import trait_handlers
 from .constants import (
     ComparisonMode,
     DefaultValue,
     TraitKind,
-    default_value_map,
 )
-from .ctrait import CTrait, __newobj__
-from .ctraits import cTrait
-from .editor_factories import (
-    bytes_editor,
-    code_editor,
-    date_editor,
-    html_editor,
-    list_editor,
-    multi_line_text_editor,
-    password_editor,
-    shell_editor,
-    time_editor,
-)
+from .ctrait import CTrait
 from .trait_errors import TraitError
 from .trait_base import (
     SequenceTypes,
-    Self,
-    Undefined,
-    Missing,
     TypeTypes,
     add_article,
 )
 from .trait_converters import (
     trait_cast,
-    trait_from,
     check_trait as try_trait_cast,
 )
-from .trait_dict_object import TraitDictObject
-from .trait_list_object import TraitListObject
-from .trait_set_object import TraitSetObject
 
 from .trait_handler import TraitHandler
 from .trait_type import (
-    TraitType,
     _arg_count,
     _infer_default_value_type,
     _read_only,
@@ -102,9 +78,6 @@ from .trait_handlers import (
 )
 from .trait_factory import (
     TraitFactory,
-    TraitImportError,
-    trait_factory,
-    _trait_factory_instances
 )
 
 # -------------------------------------------------------------------------------

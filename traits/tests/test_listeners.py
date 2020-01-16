@@ -137,8 +137,6 @@ class TestListeners(unittest.TestCase):
     def test_trait_exception_handler_can_access_exception(self):
         """ Tests if trait exception handlers can access the traceback of the exception.
         """
-        import traceback
-
         from traits import trait_notifiers
 
         def _handle_exception(obj, name, old, new):

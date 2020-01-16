@@ -11,13 +11,10 @@
 import unittest
 
 from traits.api import (
-    Float,
     HasTraits,
     Int,
-    ReadOnly,
     Str,
     TraitError,
-    Undefined,
 )
 
 

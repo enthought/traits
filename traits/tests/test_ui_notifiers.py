@@ -27,12 +27,12 @@ import unittest
 
 # Preamble: Try importing Qt, and set QT_FOUND to True on success.
 try:
-    from pyface.util.guisupport import get_app_qt4, start_event_loop_qt4
+    from pyface.util.guisupport import get_app_qt4
 
     # This import is necessary to set the `ui_handler` global variable in
     # `traits.trait_notifiers`, which is responsible for dispatching the events
     # to the UI thread.
-    from traitsui.qt4 import toolkit
+    from traitsui.qt4 import toolkit  # noqa: F401
 
     qt4_app = get_app_qt4()
 

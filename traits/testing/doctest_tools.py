@@ -17,7 +17,6 @@
 
 # Standard library imports
 import doctest
-import sys
 import unittest
 
 

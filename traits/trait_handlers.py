@@ -22,31 +22,22 @@ consistent.
 # -------------------------------------------------------------------------------
 
 from importlib import import_module
-import re
 import sys
 from types import FunctionType, MethodType
 
-from .constants import DefaultValue, TraitKind, ValidateTrait
-from .base_trait_handler import BaseTraitHandler
-from .trait_type import TraitType, trait_types
+from .constants import DefaultValue, ValidateTrait
 from .trait_base import (
-    strx,
     SequenceTypes,
-    Undefined,
     TypeTypes,
     CoercableTypes,
-    TraitsCache,
     class_of,
-    Missing,
-    RangeTypes,
-    Self,
 )
+from .trait_base import RangeTypes  # noqa: F401, used by TraitsUI
 from .trait_errors import TraitError
 from .trait_dict_object import TraitDictEvent, TraitDictObject
 from .trait_converters import trait_from
 from .trait_handler import TraitHandler
 from .trait_list_object import TraitListEvent, TraitListObject
-from .trait_set_object import TraitSetEvent, TraitSetObject
 
 # Set up a logger:
 import logging

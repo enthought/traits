@@ -10,10 +10,9 @@
 
 """ Test the adaptation manager. """
 
-import sys
 import unittest
 
-from traits.adaptation.api import AdaptationManager, adapt
+from traits.adaptation.api import AdaptationManager
 import traits.adaptation.tests.abc_examples
 import traits.adaptation.tests.interface_examples
 
