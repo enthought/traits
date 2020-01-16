@@ -54,17 +54,12 @@ class Callback:
         self.changed = changed
         self.removed = removed
         self.called = False
-        return
 
     def __call__(self, event):
-        if event.added != self.added:
-            print("\n\n******Error\nevent.added:", event.added)
-        else:
-            self.obj.assertEqual(event.added, self.added)
+        self.obj.assertEqual(event.added, self.added)
         self.obj.assertEqual(event.changed, self.changed)
         self.obj.assertEqual(event.removed, self.removed)
         self.called = True
-        return
 
 
 class DictEventTestCase(unittest.TestCase):
