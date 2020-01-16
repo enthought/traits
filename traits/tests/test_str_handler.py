@@ -33,7 +33,6 @@ def validator(object, name, value):
 # Validation via Handler
 class MyHandler(TraitHandler):
     def validate(self, object, name, value):
-        # print 'myvalidate "%s" %s' % (value, type(value))
         try:
             value = strx(value)
             if value.find("fail") < 0:

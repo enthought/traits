@@ -96,41 +96,27 @@ class test_base2(unittest.TestCase):
         mapped_values=None,
     ):
         obj = self.obj
-        try:
-            # Make sure the default value is correct:
-            msg = "default value"
-            value = default_value
-            self.assertEqual(getattr(obj, name), value)
 
-            # Iterate over all legal values being tested:
-            if actual_values is None:
-                actual_values = good_values
-            msg = "legal values"
-            i = 0
-            for value in good_values:
-                setattr(obj, name, value)
-                self.assertEqual(getattr(obj, name), actual_values[i])
-                if mapped_values is not None:
-                    self.assertEqual(
-                        getattr(obj, name + "_"), mapped_values[i]
-                    )
-                i += 1
+        # Make sure the default value is correct:
+        value = default_value
+        self.assertEqual(getattr(obj, name), value)
 
-            # Iterate over all illegal values being tested:
-            msg = "illegal values"
-            for value in bad_values:
-                self.assertRaises(TraitError, setattr, obj, name, value)
-        except:
-            print(
-                "Failed while testing %s for value: %s(%s) in %s"
-                % (
-                    msg,
-                    value,
-                    value.__class__.__name__,
-                    self.__class__.__name__,
+        # Iterate over all legal values being tested:
+        if actual_values is None:
+            actual_values = good_values
+        i = 0
+        for value in good_values:
+            setattr(obj, name, value)
+            self.assertEqual(getattr(obj, name), actual_values[i])
+            if mapped_values is not None:
+                self.assertEqual(
+                    getattr(obj, name + "_"), mapped_values[i]
                 )
-            )
-            raise
+            i += 1
+
+        # Iterate over all illegal values being tested:
+        for value in bad_values:
+            self.assertRaises(TraitError, setattr, obj, name, value)
 
 
 class AnyTrait(HasTraits):
