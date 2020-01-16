@@ -188,6 +188,12 @@ def install(edm, runtime, environment, editable, docs, source):
         )
     commands.append(install_cmd)
 
+    install_copyright_checker = (
+        "{edm} run -e {environment} -- "
+        "python -m pip install copyright_header/"
+    )
+    commands.append(install_copyright_checker)
+
     click.echo("Creating environment '{environment}'".format(**parameters))
     execute(commands, parameters)
     if source:
