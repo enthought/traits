@@ -32,9 +32,6 @@ import pickle
 import re
 import weakref
 
-# XXX DELETE ME! Deliberately introduced unused import for testing flake8 CI
-import asyncio
-
 from types import FunctionType, MethodType
 
 from . import __version__ as TraitsVersion
