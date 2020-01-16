@@ -3010,8 +3010,6 @@ class Supports(Instance):
         return ctrait
 
 
-# Alias defined for backward compatibility with Traits 4.3.0
-AdaptedTo = Supports
 
 
 class AdaptsTo(Supports):
@@ -3560,6 +3558,10 @@ Time = BaseInstance(datetime.time, editor=time_editor)
 
 # Everything from this point onwards is deprecated, and has a simple
 # drop-in replacement.
+
+#: A traits whose value must support a specified protocol. This is
+#: an alias for :class:`Supports`. Use ``Supports`` instead.
+AdaptedTo = Supports
 
 #: A trait whose value must be a (Unicode) string. This is an alias for
 #: :class:`BaseStr`. Use ``BaseStr`` instead.
