@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # compound.py -- Example of multiple criteria in a trait definition
 
 

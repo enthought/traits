@@ -1,7 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
-
 # --[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Instance
 

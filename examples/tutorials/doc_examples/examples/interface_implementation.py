@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # interface_implementation.py - Example of implementing an interface
 
 # --[Imports]-------------------------------------------------------------------

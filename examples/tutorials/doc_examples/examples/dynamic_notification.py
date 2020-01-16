@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # dynamic_notification.py --- Example of dynamic notification
 
 # --[Imports]-------------------------------------------------------------------

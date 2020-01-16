@@ -1,7 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
-
 # add_class_trait.py --- Example of mutually-referring classes
 #                        using add_class_trait()
 

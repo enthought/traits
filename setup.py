@@ -1,6 +1,3 @@
-# Copyright (c) 2008-2019 by Enthought, Inc.
-# All rights reserved.
-
 import io
 import os
 import runpy

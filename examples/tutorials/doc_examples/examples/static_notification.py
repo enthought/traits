@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # static_notification.py --- Example of static attribute notification
 
 # --[Imports]-------------------------------------------------------------------

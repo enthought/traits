@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # deferring_notification.py -- Example of notification with deferring
 
 # --[Imports]-------------------------------------------------------------------

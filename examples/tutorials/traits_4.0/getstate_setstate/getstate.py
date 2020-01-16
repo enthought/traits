@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # --(__getstate__/__setstate__ Changes and Improvements)------------------------
 """
 __getstate__/__setstate__ Changes and Improvements

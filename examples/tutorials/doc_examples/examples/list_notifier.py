@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # list_notifier.py -- Example of zero-parameter handlers for an object
 #                     containing a list
 

@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # wildcard_rules.py --- Example of trait attribute wildcard rules
 
 # --[Imports]-------------------------------------------------------------------

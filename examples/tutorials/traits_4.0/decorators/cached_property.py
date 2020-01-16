@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # --(cached_property Decorator)-------------------------------------------------
 """
 cached_property Decorator

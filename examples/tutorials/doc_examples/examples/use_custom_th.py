@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # use_custom_th.py --- Example of using a custom TraitHandler
 
 # --[Imports]-------------------------------------------------------------------

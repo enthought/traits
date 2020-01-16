@@ -1,7 +1,3 @@
-##############################################################################
-# Copyright 2014 Enthought, Inc.
-##############################################################################
-
 """ Test the persistence behavior of TraitListObjects, TraitDictObjects and
 TraitSetObjects.
 """

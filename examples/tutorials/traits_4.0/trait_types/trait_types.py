@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # --(New Trait Definition Style)------------------------------------------------
 """
 New Trait Definition Style

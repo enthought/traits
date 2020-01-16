@@ -2,8 +2,6 @@
     A Trait Documenter
     (Subclassed from the autodoc ClassLevelDocumenter)
 
-    :copyright: Copyright 2012 by Enthought, Inc
-
 """
 from importlib import import_module
 import inspect

@@ -1,7 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
-
 # all_traits_features.py --- Shows primary features of the Traits
 #                            package
 

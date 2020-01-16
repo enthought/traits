@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # override_default.py -- Example of overriding a default value for
 #                        a trait attribute in a subclass
 

@@ -1,6 +1,3 @@
-# Copyright (c) 2019 by Enthought, Inc.
-# All rights reserved.
-
 import unittest
 
 from traits.api import HasTraits, Int, TraitError

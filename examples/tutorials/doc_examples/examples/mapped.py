@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # mapped.py --- Example of a mapped trait
 
 # --[Imports]-------------------------------------------------------------------

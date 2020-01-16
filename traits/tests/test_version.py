@@ -1,6 +1,3 @@
-# Copyright (c) 2019 by Enthought, Inc.
-# All rights reserved.
-
 """
 Tests for the traits.__version__ attribute and the traits.version
 module contents.

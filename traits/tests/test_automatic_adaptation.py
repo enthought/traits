@@ -1,7 +1,3 @@
-###############################################################################
-# Copyright 2014 Enthought, Inc.
-###############################################################################
-
 import unittest
 
 from traits.adaptation.api import reset_global_adaptation_manager

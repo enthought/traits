@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # scratch_adapter.py - Example of writing an adapter from scratch
 
 # --[Imports]-------------------------------------------------------------------

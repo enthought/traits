@@ -1,10 +1,3 @@
-# -----------------------------------------------------------------------------
-#
-#  Copyright (c) 2006 by Enthought, Inc.
-#  All rights reserved.
-#
-# -----------------------------------------------------------------------------
-
 """ Provides functions that mange strings to avoid characters that would be
     problematic in certain situations.
 """

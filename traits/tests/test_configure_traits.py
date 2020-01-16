@@ -1,6 +1,3 @@
-# Copyright (c) 2019 by Enthought, Inc.
-# All rights reserved.
-
 import os
 import pickle
 import shutil

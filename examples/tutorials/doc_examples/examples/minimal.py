@@ -1,6 +1,3 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
 # minimal.py --- Minimal example of using traits.
 
 # --[Imports]-------------------------------------------------------------------
