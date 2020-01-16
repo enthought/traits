@@ -5244,9 +5244,15 @@ static PyModuleDef_Slot ctraits_slots[] = {
 
 static int ctraits_traverse(PyObject *self, visitproc visit, void *arg)
 {
-    /*TODO*/
-//    has_traits_traverse(get_ctraits_state(self)->has_traits_obj, visit, arg);
-//    trait_traverse(get_ctraits_state(self)->trait_obj, visit, arg);
+    struct ctraits_state *state = get_ctraits_state(self);
+
+    if (state->has_traits_obj) {
+        has_traits_traverse(state->has_traits_obj, visit, arg);
+    }
+
+    if (state->trait_obj) {
+        trait_traverse(state->trait_obj, visit, arg);
+    }
     return 0;
 };
 
@@ -5256,9 +5262,15 @@ static int ctraits_traverse(PyObject *self, visitproc visit, void *arg)
 
 static int ctraits_clear(PyObject *self)
 {
-    /*TODO*/
-//    has_traits_clear(get_ctraits_state(self)->has_traits_obj);
-//    trait_clear(get_ctraits_state(self)->trait_obj);
+    struct ctraits_state *state = get_ctraits_state(self);
+
+    if (state->has_traits_obj) {
+        has_traits_clear(state->has_traits_obj);
+    }
+
+    if (state->trait_obj) {
+        trait_clear(state->trait_obj);
+    }
     return 0;
 };
 
@@ -5268,9 +5280,15 @@ static int ctraits_clear(PyObject *self)
 
 void ctraits_free(void *p)
 {
-    /*TODO*/
-//    has_traits_dealloc(get_ctraits_state((PyObject*)p)->has_traits_obj);
-//    trait_dealloc(get_ctraits_state((PyObject*)p)->trait_obj);
+    struct ctraits_state *state = get_ctraits_state(p);
+
+    if (state->has_traits_obj) {
+        has_traits_dealloc(state->has_traits_obj);
+    }
+
+    if (state->trait_obj) {
+        trait_dealloc(state->trait_obj);
+    }
 };
 
 /*-----------------------------------------------------------------------------
