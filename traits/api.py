@@ -106,6 +106,7 @@ from .trait_types import (  # noqa: F401
     ToolbarButton,
     Either,
     Type,
+    Subclass,
     Symbol,
     WeakRef,
     Date,
