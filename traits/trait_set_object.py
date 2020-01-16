@@ -207,11 +207,6 @@ class TraitSetObject(set):
                 self.name_items, TraitSetEvent(removed)
             )
 
-    def copy(self):
-        """ Return a true ``set`` object with a copy of the data.
-        """
-        return set(self)
-
     def __reduce_ex__(self, protocol=None):
         """ Overridden to make sure we call our custom __getstate__.
         """
