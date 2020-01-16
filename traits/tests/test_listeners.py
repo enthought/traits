@@ -1,21 +1,18 @@
-#  Test the 'add_trait_listener', 'remove_trait_listener' interface to
-#  the HasTraits class.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Written by: David C. Morrill
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  Date: 09/07/2005
-#
-#  (c) Copyright 2005 by Enthought, Inc.
-#
-#  Copyright (c) 2007, Enthought, Inc.
-#  All rights reserved.
-#
-#  This software is provided without warranty under the terms of the BSD
-#  License included in /LICENSE.txt and may be redistributed only under the
-#  conditions described in the aforementioned license.  The license is also
-#  available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
+# Thanks for using Enthought open source!
+
+"""
+Test the 'add_trait_listener', 'remove_trait_listener' interface to the
+HasTraits class.
+
+"""
 
 import contextlib
 import io
