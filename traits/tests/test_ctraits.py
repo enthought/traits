@@ -96,18 +96,6 @@ class TestCTrait(unittest.TestCase):
 
         self.assertTrue(trait.modify_delegate)
 
-    def test_object_id_test(self):
-        trait = CTrait(TraitKind.trait)
-
-        self.assertFalse(trait.object_id_test)
-
-        trait.comparison_mode = ComparisonMode.object_id_compare
-
-        self.assertTrue(trait.object_id_test)
-
-        with self.assertRaises(AttributeError):
-            trait.object_id_test = False
-
     def test_setattr_original_value(self):
         trait = CTrait(TraitKind.trait)
 
@@ -134,18 +122,6 @@ class TestCTrait(unittest.TestCase):
         trait.is_mapped = True
 
         self.assertTrue(trait.is_mapped)
-
-    def test_no_value_test(self):
-        trait = CTrait(TraitKind.trait)
-
-        self.assertFalse(trait.no_value_test)
-
-        trait.comparison_mode = ComparisonMode.no_compare
-
-        self.assertTrue(trait.no_value_test)
-
-        with self.assertRaises(AttributeError):
-            trait.no_value_test = False
 
     def test_default_comparison_mode(self):
         trait = CTrait(TraitKind.trait)
