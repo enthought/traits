@@ -101,7 +101,7 @@ class TestCTrait(unittest.TestCase):
 
         self.assertFalse(trait.object_id_test)
 
-        trait.comparison_mode(ComparisonMode.object_id_compare)
+        trait.comparison_mode = ComparisonMode.object_id_compare
 
         self.assertTrue(trait.object_id_test)
 
@@ -140,7 +140,7 @@ class TestCTrait(unittest.TestCase):
 
         self.assertFalse(trait.no_value_test)
 
-        trait.comparison_mode(ComparisonMode.no_compare)
+        trait.comparison_mode = ComparisonMode.no_compare
 
         self.assertTrue(trait.no_value_test)
 
@@ -153,7 +153,50 @@ class TestCTrait(unittest.TestCase):
         # comparison modes other than {0,1,2}
         # are invalid
         with self.assertRaises(ValueError):
-            trait.comparison_mode(-1)
+            trait.comparison_mode = -1
 
         with self.assertRaises(ValueError):
-            trait.comparison_mode(3)
+            trait.comparison_mode = 3
+
+    def test_comparison_mode_int(self):
+        trait = CTrait(TraitKind.trait)
+
+        trait.comparison_mode = 0
+
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.no_compare
+        )
+
+        trait.comparison_mode = 1
+
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.object_id_compare
+        )
+
+        trait.comparison_mode = 2
+
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.equality_compare
+        )
+
+    def test_comparison_mode_enum(self):
+        trait = CTrait(TraitKind.trait)
+
+        trait.comparison_mode = ComparisonMode.no_compare
+
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.no_compare
+        )
+
+        trait.comparison_mode = ComparisonMode.object_id_compare
+
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.object_id_compare
+        )
+
+        trait.comparison_mode = ComparisonMode.equality_compare
+
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.equality_compare
+        )
+

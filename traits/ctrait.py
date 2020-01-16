@@ -17,7 +17,7 @@ values are modified.
 """
 
 from . import ctraits
-from .constants import DefaultValue, default_value_map
+from .constants import ComparisonMode, DefaultValue, default_value_map
 from .trait_base import SequenceTypes, Undefined
 from .trait_dict_object import TraitDictObject
 from .trait_list_object import TraitListObject
@@ -110,6 +110,14 @@ class CTrait(ctraits.cTrait):
     # ---------------------------------------------------------------------------
     #  CTrait interface methods
     # ---------------------------------------------------------------------------
+
+    @property
+    def comparison_mode(self):
+        return ComparisonMode(self._get_comparison_mode_int())
+
+    @comparison_mode.setter
+    def comparison_mode(self, value):
+        self._set_comparison_mode(value)
 
     def is_trait_type(self, trait_type):
         """ Returns whether or not this trait is of a specified trait type.
