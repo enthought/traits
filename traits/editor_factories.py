@@ -8,6 +8,7 @@
 #
 #  Thanks for using Enthought open source!
 
+import datetime
 from functools import partial
 import logging
 
@@ -154,24 +155,24 @@ def datetime_editor():
     """ Factory function that returns an editor with date & time for
     editing DateTime values.
     """
-    global DateTimeEditor
 
-    if DateTimeEditor is None:
-        try:
-            from traitsui.api import DateTimeEditor
+    try:
+        from traitsui.api import DateTimeEditor
 
-            DateTimeEditor = DateTimeEditor()
+        return DateTimeEditor()
 
-        except ImportError:
+    except ImportError:
 
-            logger.warn(msg="Could not import DateTimeEditor from "
-                            "traitsui.api, using TextEditor instead")
+        logger.warn(msg="Could not import DateTimeEditor from "
+                        "traitsui.api, using TextEditor instead")
 
-            from traitsui.api import TextEditor
+        from traitsui.api import TextEditor
 
-            DateTimeEditor = TextEditor()
-
-    return DateTimeEditor
+        iso_frmt = "%Y-%m-%dT%H:%M:%S"
+        return TextEditor(
+            evaluate=lambda dtstr: datetime.datetime.strptime(dtstr, iso_frmt),
+            format_func=lambda dtobj: datetime.date.strftime(dtobj, iso_frmt)
+        )
 
 
 def _expects_hastraits_instance(handler):
