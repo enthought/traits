@@ -147,6 +147,13 @@ class TestCTrait(unittest.TestCase):
         with self.assertRaises(AttributeError):
             trait.no_value_test = False
 
+    def test_default_comparison_mode(self):
+        trait = CTrait(TraitKind.trait)
+
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.equality_compare
+        )
+
     def test_invalid_comparison_mode(self):
         trait = CTrait(TraitKind.trait)
 
