@@ -437,7 +437,7 @@ class TraitType(BaseTraitHandler):
                 else:
                     trait.comparison_mode = ComparisonMode.object_id_compare
 
-            comparison_mode = metadata.get("comparison_mode")
+            comparison_mode = metadata.pop("comparison_mode", None)
             if comparison_mode is not None:
                 trait.comparison_mode = comparison_mode
 
