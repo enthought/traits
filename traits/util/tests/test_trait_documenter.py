@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ Tests for the trait documenter. """
 
 import contextlib

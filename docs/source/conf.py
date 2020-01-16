@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Traits documentation build configuration file, created by
 # sphinx-quickstart on Tue Jul 22 10:52:03 2008.
 #

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     A Trait Documenter
     (Subclassed from the autodoc ClassLevelDocumenter)
