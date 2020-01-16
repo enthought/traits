@@ -4,12 +4,13 @@ This is not 'enforced' by any tests (i.e. we currently aren't bound to satisfy
 any performance criteria - but in the future we might be ;^).
 
 """
-import abc
-from pprint import pprint
+
+# Imports are needed by the 'exec'd code.
+import abc  # noqa: F401
 import time
 
 from traits.adaptation.adaptation_manager import AdaptationManager
-from traits.api import Adapter, HasTraits, Interface, provides
+from traits.api import Adapter, HasTraits, Interface, provides  # noqa: F401
 
 
 N_SOURCES = 3
@@ -29,7 +30,7 @@ for i in range(N_SOURCES):
     exec(create_classes_to_adapt.format(i=i))
 
 # The object that we will try to adapt!
-foo = Foo1()
+foo = Foo1()  # noqa: F821
 
 # Create a lot of other interfaces that we will adapt to.
 for i in range(N_PROTOCOLS):
@@ -47,7 +48,7 @@ for source in range(N_SOURCES):
         exec(create_traits_adapter_class.format(source=source, target=target))
 
 
-#### traits.adaptation with Interfaces ########################################
+# traits.adaptation with Interfaces ###########################################
 
 adaptation_manager = AdaptationManager()
 
@@ -70,12 +71,12 @@ for source in range(N_SOURCES):
 
 start_time = time.time()
 for _ in range(N_ITERATIONS):
-    adaptation_manager.adapt(foo, I0)
+    adaptation_manager.adapt(foo, I0)  # noqa: F821
 time_per_iter = (time.time() - start_time) / float(N_ITERATIONS) * 1000.0
 print("apptools using Interfaces: %.3f msec per iteration" % time_per_iter)
 
 
-#### traits.adaptation with ABCs ##############################################
+# traits.adaptation with ABCs #################################################
 
 # Create some classes to adapt (using ABCs!).
 for i in range(N_SOURCES):
@@ -91,7 +92,7 @@ class FooABC{i}(abc.ABC):
     exec("FooABC{i}.register(Foo{i})".format(i=i))
 
 # The object that we will try to adapt!
-foo = Foo0()
+foo = Foo0()  # noqa: F821
 
 # Create a lot of other ABCs!
 for i in range(N_PROTOCOLS):
@@ -137,6 +138,6 @@ for source in range(N_SOURCES):
 
 start_time = time.time()
 for _ in range(N_ITERATIONS):
-    adaptation_manager.adapt(foo, ABC0)
+    adaptation_manager.adapt(foo, ABC0)  # noqa: F821
 time_per_iter = (time.time() - start_time) / float(N_ITERATIONS) * 1000.0
 print("apptools using ABCs: %.3f msec per iteration" % time_per_iter)

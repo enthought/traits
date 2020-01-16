@@ -187,6 +187,10 @@ call_notifiers(
    validation. */
 #define MAXIMUM_DEFAULT_VALUE_TYPE 9
 
+/* The maximum value for comparison_mode. Valid values are between 0 and
+   the maximum value. */
+#define MAXIMUM_COMPARISON_MODE_VALUE 2
+
 /*-----------------------------------------------------------------------------
 |  'CTrait' instance definition:
 +----------------------------------------------------------------------------*/
@@ -4244,8 +4248,14 @@ _trait_comparison_mode(trait_object *trait, PyObject *args)
             break;
         case 1:
             trait->flags |= TRAIT_OBJECT_ID_TEST;
-        default:
             break;
+        case 2:
+            break;
+        default:
+            return PyErr_Format(
+                PyExc_ValueError,
+                "The comparison mode must be 0..%d, but %d was specified.",
+                MAXIMUM_COMPARISON_MODE_VALUE, comparison_mode);
     }
 
     Py_INCREF(Py_None);

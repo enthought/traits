@@ -416,6 +416,22 @@ class TraitListObject(list):
             self.name = name
             self.trait = trait.handler
 
+    def clear(self):
+        if self.trait.minlen > 0:
+            self.len_error(0)
+
+        if len(self) == 0:
+            list.clear(self)
+            return
+
+        removed = self.copy()
+        list.clear(self)
+
+        if self.name_items is not None:
+            self._send_trait_items_event(
+                self.name_items, TraitListEvent(0, removed)
+            )
+
     def len_error(self, len):
         raise TraitError(
             "The '%s' trait of %s instance must be %s, "
