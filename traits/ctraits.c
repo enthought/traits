@@ -4653,15 +4653,6 @@ set_trait_modify_delegate_flag(
     return set_trait_flag(trait, TRAIT_MODIFY_DELEGATE, value);
 }
 
-/*-----------------------------------------------------------------------------
-|  Returns the current object_id_test flag value:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-get_trait_object_id_test_flag(trait_object *trait, void *closure)
-{
-    return get_trait_flag(trait, TRAIT_OBJECT_ID_TEST);
-}
 
 /*-----------------------------------------------------------------------------
 |  Returns the current setattr_original_value flag value:
@@ -4723,16 +4714,6 @@ static int
 set_trait_is_mapped_flag(trait_object *trait, PyObject *value, void *closure)
 {
     return set_trait_flag(trait, TRAIT_IS_MAPPED, value);
-}
-
-/*-----------------------------------------------------------------------------
-|  Returns the current no_value_test flag value:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-get_trait_no_value_test_flag(trait_object *trait, void *closure)
-{
-    return get_trait_flag(trait, TRAIT_NO_VALUE_TEST);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4917,8 +4898,6 @@ static PyGetSetDef trait_properties[] = {
     {"modify_delegate", (getter)get_trait_modify_delegate_flag,
      (setter)set_trait_modify_delegate_flag,
      "Whether changes to the trait modify the delegate as well", NULL},
-    {"object_id_test", (getter)get_trait_object_id_test_flag, NULL,
-     "Whether change comparisons are by object identity.", NULL},
     {"setattr_original_value", (getter)get_trait_setattr_original_value_flag,
      (setter)set_trait_setattr_original_value_flag,
      "Whether setattr gets the original value set on the trait or the "
@@ -4932,10 +4911,6 @@ static PyGetSetDef trait_properties[] = {
      NULL},
     {"is_mapped", (getter)get_trait_is_mapped_flag,
      (setter)set_trait_is_mapped_flag, "Whether the trait is a mapped trait.",
-     NULL},
-    {"no_value_test", (getter)get_trait_no_value_test_flag, NULL,
-     "Whether trait changes are fired on every assignment, or only when "
-     "the value tests as different.",
      NULL},
     {0}};
 
