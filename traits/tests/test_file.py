@@ -32,7 +32,7 @@ class FileTestCase(unittest.TestCase):
 
     @unittest.skipIf(sys.version_info < (3, 6), "PathLike File trait test")
     def test_valid_pathlike_file(self):
-        example_model = ExampleModel(file_name=Path(__file__))
+        ExampleModel(file_name=Path(__file__))
 
     def test_invalid_file(self):
         example_model = ExampleModel(file_name=__file__)
