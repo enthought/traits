@@ -4620,7 +4620,7 @@ get_trait_modify_delegate_flag(trait_object *trait, void *closure)
 |  Sets the current modify_delegate flag value:
 +----------------------------------------------------------------------------*/
 
-static int
+static int *
 set_trait_modify_delegate_flag(
     trait_object *trait, PyObject *value, void *closure)
 {
