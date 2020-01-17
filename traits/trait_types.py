@@ -62,6 +62,7 @@ from .editor_factories import (
 )
 
 
+
 # -------------------------------------------------------------------------------
 #  Constants:
 # -------------------------------------------------------------------------------
@@ -965,6 +966,7 @@ class This(BaseType):
 
     def info_none(self):
         return "an instance of the same type as the receiver or None"
+
 
 
 class self(This):
