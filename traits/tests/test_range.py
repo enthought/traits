@@ -1,16 +1,13 @@
-# -----------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2019, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in /LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-# -----------------------------------------------------------------------------
+# Thanks for using Enthought open source!
+
 """
 Tests for the Range trait.
 """
@@ -22,7 +19,6 @@ Tests for the Range trait.
 # Float(), Float, float should all work.
 
 # XXX Add tests for cloning / pickling?
-
 
 import datetime
 import operator
@@ -1172,7 +1168,8 @@ def BaseRangeCompound(*args, **kwargs):
     return Either(impossible, BaseRange(*args, **kwargs))
 
 
-FloatModelWithRange = FloatModelFactory("FloatModelWithRange", RangeFactory=Range)
+FloatModelWithRange = FloatModelFactory(
+    "FloatModelWithRange", RangeFactory=Range)
 
 FloatModelWithBaseRange = FloatModelFactory(
     "FloatModelWithBaseRange", RangeFactory=BaseRange

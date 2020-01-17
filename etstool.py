@@ -1,14 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2017, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
+# Thanks for using Enthought open source!
+
 """
 Tasks for Test Runs
 ===================
@@ -52,7 +51,7 @@ you can run tests in all supported runtimes::
 
     python etstool.py test-all
 
-Currently supported runtime values are ``2.7``, ``3.5`` and ``3.6``.  Not all
+Currently supported runtime values are ``3.5`` and ``3.6``.  Not all
 combinations of runtimes will work, but the tasks will fail with
 a clear error if that is the case.
 
@@ -97,17 +96,12 @@ common_dependencies = {
 # Dependencies we install from source for testing
 source_dependencies = {"traitsui"}
 
-# Python 2-specific dependencies.
-python2_dependencies = {
-    "mock",
-}
-
 # Unix-specific dependencies.
 unix_dependencies = {
     "gnureadline",
 }
 
-supported_runtimes = ["2.7", "3.5", "3.6"]
+supported_runtimes = ["3.5", "3.6"]
 default_runtime = "3.6"
 
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
@@ -169,8 +163,6 @@ def install(edm, runtime, environment, editable, docs, source):
     """
     parameters = get_parameters(edm, runtime, environment)
     dependencies = common_dependencies.copy()
-    if runtime.startswith("2."):
-        dependencies.update(python2_dependencies)
     if sys.platform != "win32":
         dependencies.update(unix_dependencies)
     packages = " ".join(dependencies)
@@ -271,15 +263,22 @@ def test(edm, runtime, verbose, environment):
     default=None,
     help="Name of EDM environment to build docs for.",
 )
-def docs(edm, runtime, environment):
+@click.option(
+    "--error-on-warn/--no-error-on-warn",
+    default=True,
+    help="Turn warnings into errors?  [default: --error-on-warn] ",
+)
+def docs(edm, runtime, environment, error_on_warn):
     """ Build the html documentation.
 
     """
     parameters = get_parameters(edm, runtime, environment)
-    commands = [
+    build_docs = (
         "{edm} run -e {environment} -- sphinx-build -b html "
-        "-d build/doctrees source build/html",
-    ]
+        + ("-W " if error_on_warn else "")
+        + "-d build/doctrees source build/html"
+    )
+    commands = [build_docs]
     with do_in_existingdir(os.path.join(os.getcwd(), "docs")):
         execute(commands, parameters)
 

@@ -1,19 +1,12 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2008, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#  Author: Martin Chilvers
-#  Date:   03/20/2008
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """ An attempt at type-safe casting.
 """
@@ -22,18 +15,9 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
-# inspect.getargspec is deprecated in Python 3; inspect.getfullargspec is
-# unavailable in Python 2.
-try:
-    from inspect import getfullargspec, getmro
-except ImportError:
-    from inspect import getargspec as getfullargspec, getmro
+from inspect import getfullargspec, getmro
 import logging
 from types import FunctionType
-
-import six
 
 from .has_traits import HasTraits
 

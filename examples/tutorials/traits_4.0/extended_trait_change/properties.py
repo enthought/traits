@@ -1,5 +1,12 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
 # --(Extended Property depends_on References)-----------------------------------
 """
@@ -53,11 +60,7 @@ trait reference. In particular, take a look at the **LeagueModelView Class**
 tab's *total_hits* trait definition.
 """
 
-from __future__ import print_function
-
 # FIXME redo example without traitsui
-
-import six.moves as sm
 
 from traits.api import *
 
@@ -128,13 +131,9 @@ class LeagueModelView(ModelView):
     def _get_total_hits(self):
         """ Returns the total number of hits across all teams and players.
         """
-        return sm.reduce(
-            add,
-            [
-                sm.reduce(add, [p.hits for p in t.players], 0)
-                for t in self.model.teams
-            ],
-            0,
+        return sum(
+            sum(p.hits for p in t.players)
+            for t in self.model.teams
         )
 
     view = View(

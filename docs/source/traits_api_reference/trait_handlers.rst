@@ -7,16 +7,6 @@
 Classes
 -------
 
-.. autoclass:: BaseTraitHandler
-
-.. autoclass:: NoDefaultSpecified
-
-.. autoclass:: TraitType
-
-.. autoclass:: TraitHandler
-
-.. autoclass:: TraitString
-
 .. autoclass:: TraitCoerceType
 
 .. autoclass:: TraitCastType
@@ -24,12 +14,6 @@ Classes
 .. autoclass:: ThisClass
 
 .. autoclass:: TraitInstance
-
-.. autoclass:: TraitWeakRef
-
-.. autoclass:: HandleWeakRef
-
-.. autoclass:: TraitClass
 
 .. autoclass:: TraitFunction
 
@@ -41,38 +25,16 @@ Classes
 
 .. autoclass:: TraitPrefixMap
 
-.. autoclass:: TraitExpression
-
 .. autoclass:: TraitCompound
 
 .. autoclass:: TraitTuple
 
-.. autoclass:: TraitCallable
-
-.. autoclass:: TraitListEvent
-
 .. autoclass:: TraitList
-
-.. autoclass:: TraitListObject
-
-.. autoclass:: TraitSetEvent
-
-.. autoclass:: TraitSetObject
-
-.. autoclass:: TraitDictEvent
 
 .. autoclass:: TraitDict
 
-.. autoclass:: TraitDictObject
-
 Private Functions
 -----------------
-
-.. autofunction:: traits.trait_handlers._arg_count
-
-.. autofunction:: traits.trait_handlers._write_only
-
-.. autofunction:: traits.trait_handlers._read_only
 
 .. autofunction:: traits.trait_handlers._undefined_get
 

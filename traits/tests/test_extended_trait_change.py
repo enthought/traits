@@ -1,20 +1,15 @@
-#  Unit test case for testing HasTraits 'on_trait_change' support.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Written by: David C. Morrill
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  Date: 4/10/2007
-#
-#  (c) Copyright 2007 by Enthought, Inc.
-#
-#  This software is provided without warranty under the terms of the BSD
-#  license included in /LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
+# Thanks for using Enthought open source!
 
 """ Unit test case for testing HasTraits 'on_trait_change' support.
 """
-
-from __future__ import absolute_import
 
 import unittest
 
@@ -27,16 +22,16 @@ from traits.api import (
     List,
     Property,
     TraitDictEvent,
+    TraitDictObject,
     TraitError,
     TraitListEvent,
+    TraitListObject,
     Undefined,
     cached_property,
     on_trait_change,
     pop_exception_handler,
     push_exception_handler,
 )
-
-from traits.trait_handlers import TraitListObject, TraitDictObject
 
 
 class ArgCheckBase(HasTraits):

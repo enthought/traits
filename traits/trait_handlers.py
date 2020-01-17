@@ -1,25 +1,15 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2005, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#  Author: David C. Morrill
-#  Date:   06/21/2002
-#
-#  Refactored into a separate module: 07/04/2003
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """
-Defines the BaseTraitHandler class and a standard set of BaseTraitHandler
-subclasses for use with the Traits package.
+Defines a standard set of TraitHandler subclasses.
 
 A trait handler mediates the assignment of values to object traits. It
 verifies (via its validate() method) that a specified value is consistent
@@ -31,37 +21,23 @@ consistent.
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
+from importlib import import_module
 import sys
-import re
-import copy
-
-import six
-import six.moves as sm
-
 from types import FunctionType, MethodType
 
-from weakref import ref
-
+from .constants import DefaultValue, ValidateTrait
 from .trait_base import (
-    strx,
     SequenceTypes,
-    Undefined,
     TypeTypes,
-    ClassTypes,
     CoercableTypes,
-    TraitsCache,
     class_of,
-    Missing,
 )
+from .trait_base import RangeTypes  # noqa: F401, used by TraitsUI
 from .trait_errors import TraitError
-
-from . import _py2to3
-
-
-# Patched by 'traits.py' once class is defined!
-Trait = Event = None
+from .trait_dict_object import TraitDictEvent, TraitDictObject
+from .trait_converters import trait_from
+from .trait_handler import TraitHandler
+from .trait_list_object import TraitListEvent, TraitListObject
 
 # Set up a logger:
 import logging
@@ -72,90 +48,12 @@ logger = logging.getLogger(__name__)
 #  Constants:
 # -------------------------------------------------------------------------------
 
-# Trait 'comparison_mode' enum values:
-NO_COMPARE = 0
-OBJECT_IDENTITY_COMPARE = 1
-RICH_COMPARE = 2
-
-RangeTypes = (int, float)
-
 CallableTypes = (FunctionType, MethodType)
 
 
-#: Default value types
-#: The default value type has not been specified
-UNSPECIFIED_DEFAULT_VALUE = -1
-#: The default_value of the trait is the default value.
-CONSTANT_DEFAULT_VALUE = 0
-#: The default_value of the trait is Missing.
-MISSING_DEFAULT_VALUE = 1
-#: The object containing the trait is the default value.
-OBJECT_DEFAULT_VALUE = 2
-#: A new copy of the list specified by default_value is the default value.
-LIST_COPY_DEFAULT_VALUE = 3
-#: A new copy of the dict specified by default_value is the default value.
-DICT_COPY_DEFAULT_VALUE = 4
-#: A new instance of TraitListObject constructed using the default_value list
-#: is the default value.
-TRAIT_LIST_OBJECT_DEFAULT_VALUE = 5
-#: A new instance of TraitDictObject constructed using the default_value dict
-#: is the default value.
-TRAIT_DICT_OBJECT_DEFAULT_VALUE = 6
-#: The default_value is a tuple of the form: (*callable*, *args*, *kw*),
-#: where *callable* is a callable, *args* is a tuple, and *kw* is either a
-#: dictionary or None. The default value is the result obtained by invoking
-#: ``callable(\*args, \*\*kw)``.
-CALLABLE_AND_ARGS_DEFAULT_VALUE = 7
-#: The default_value is a callable. The default value is the result obtained
-#: by invoking *default_value*(*object*), where *object* is the object
-#: containing the trait. If the trait has a validate() method, the validate()
-#: method is also called to validate the result.
-CALLABLE_DEFAULT_VALUE = 8
-#: A new instance of TraitSetObject constructed using the default_value set
-#: is the default value.
-TRAIT_SET_OBJECT_DEFAULT_VALUE = 9
-
-
-# Mapping from trait metadata 'type' to CTrait 'type':
-trait_types = {"python": 1, "event": 2}
-
 # -------------------------------------------------------------------------------
-#  Forward references:
+#  Private functions:
 # -------------------------------------------------------------------------------
-
-trait_from = None  # Patched by 'traits.py' when real 'trait_from' is defined
-
-# -------------------------------------------------------------------------------
-#  Returns the correct argument count for a specified function or method:
-# -------------------------------------------------------------------------------
-
-
-def _arg_count(func):
-    """ Returns the correct argument count for a specified function or method.
-    """
-    if (type(func) is MethodType) and (func.__self__ is not None):
-        return func.__code__.co_argcount - 1
-    return func.__code__.co_argcount
-
-
-# -------------------------------------------------------------------------------
-#  Property error handling functions:
-# -------------------------------------------------------------------------------
-
-
-def _write_only(object, name):
-    raise TraitError(
-        "The '%s' trait of %s instance is 'write only'."
-        % (name, class_of(object))
-    )
-
-
-def _read_only(object, name, value):
-    raise TraitError(
-        "The '%s' trait of %s instance is 'read only'."
-        % (name, class_of(object))
-    )
-
 
 def _undefined_get(object, name):
     raise TraitError(
@@ -169,708 +67,6 @@ def _undefined_get(object, name):
 
 def _undefined_set(object, name, value):
     _undefined_get(object, name)
-
-
-# -------------------------------------------------------------------------------
-#  'BaseTraitHandler' class (base class for all user defined traits and trait
-#  handlers):
-# -------------------------------------------------------------------------------
-
-
-class BaseTraitHandler(object):
-    """ The task of this class and its subclasses is to verify the correctness
-    of values assigned to object trait attributes.
-
-    This class is an alternative to trait validator functions. A trait handler
-    has several advantages over a trait validator function, due to being an
-    object:
-
-        * Trait handlers have constructors and state. Therefore, you can use
-          them to create *parametrized types*.
-        * Trait handlers can have multiple methods, whereas validator functions
-          can have only one callable interface. This feature allows more
-          flexibility in their implementation, and allows them to handle a
-          wider range of cases, such as interactions with other components.
-    """
-
-    default_value_type = UNSPECIFIED_DEFAULT_VALUE
-    has_items = False
-    is_mapped = False
-    editor = None
-    info_text = "a legal value"
-
-    def is_valid(self, object, name, value):
-        try:
-            validate = self.validate
-            try:
-                validate(object, name, value)
-                return True
-            except:
-                return False
-        except:
-            return True
-
-    def error(self, object, name, value):
-        """Raises a TraitError exception.
-
-        Parameters
-        ----------
-        object : object
-            The object whose attribute is being assigned.
-        name : str
-            The name of the attribute being assigned.
-        value : object
-            The proposed new value for the attribute.
-
-        Description
-        -----------
-        This method is called by the validate() method when an assigned value
-        is not valid. Raising a TraitError exception either notifies the user of
-        the problem, or, in the case of compound traits, provides a chance for
-        another trait handler to handle to validate the value.
-        """
-        raise TraitError(
-            object, name, self.full_info(object, name, value), value
-        )
-
-    def full_info(self, object, name, value):
-        """Returns a string describing the type of value accepted by the
-        trait handler.
-
-        Parameters
-        ----------
-        object : object
-            The object whose attribute is being assigned.
-        name : str
-            The name of the attribute being assigned.
-        value :
-            The proposed new value for the attribute.
-
-        Description
-        -----------
-        The string should be a phrase describing the type defined by the
-        TraitHandler subclass, rather than a complete sentence. For example, use
-        the phrase, "a square sprocket" instead of the sentence, "The value must
-        be a square sprocket." The value returned by full_info() is combined
-        with other information whenever an error occurs and therefore makes more
-        sense to the user if the result is a phrase. The full_info() method is
-        similar in purpose and use to the **info** attribute of a validator
-        function.
-
-        Note that the result can include information specific to the particular
-        trait handler instance. If the full_info() method is not overridden,
-        the default method returns the value of calling the info() method.
-        """
-        return self.info()
-
-    def info(self):
-        """Must return a string describing the type of value accepted by the
-        trait handler.
-
-        The string should be a phrase describing the type defined by the
-        TraitHandler subclass, rather than a complete sentence. For example, use
-        the phrase, "a square sprocket" instead of the sentence, "The value must
-        be a square sprocket." The value returned by info() is combined with
-        other information whenever an error occurs and therefore makes more
-        sense to the user if the result is a phrase. The info() method is
-        similar in purpose and use to the **info** attribute of a validator
-        function.
-
-        Note that the result can include information specific to the particular
-        trait handler instance. If the info() method is not overridden, the
-        default method returns the value of the 'info_text' attribute.
-        """
-        return self.info_text
-
-    def get_editor(self, trait=None):
-        """ Returns a trait editor that allows the user to modify the *trait*
-        trait.
-
-        Parameters
-        ----------
-        trait : Trait
-            The trait to be edited.
-
-        Description
-        -----------
-        This method only needs to be specified if traits defined using this
-        trait handler require a non-default trait editor in trait user
-        interfaces. The default implementation of this method returns a trait
-        editor that allows the user to type an arbitrary string as the value.
-
-        For more information on trait user interfaces, refer to the *Traits UI
-        User Guide*.
-        """
-        if self.editor is None:
-            self.editor = self.create_editor()
-
-        return self.editor
-
-    def create_editor(self):
-        """ Returns the default traits UI editor to use for a trait.
-        """
-        from traitsui.api import TextEditor
-
-        return TextEditor()
-
-    def inner_traits(self):
-        """ Returns a tuple containing the *inner traits* for this trait. Most
-            trait handlers do not have any inner traits, and so will return an
-            empty tuple. The exceptions are **List** and **Dict** trait types,
-            which have inner traits used to validate the values assigned to the
-            trait. For example, in *List( Int )*, the *inner traits* for
-            **List** are ( **Int**, ).
-        """
-        return ()
-
-
-# -------------------------------------------------------------------------------
-#  'TraitType' (base class for class-based trait definitions:
-# -------------------------------------------------------------------------------
-
-# Create a singleton object for use in the TraitType constructor:
-class NoDefaultSpecified(object):
-    pass
-
-
-NoDefaultSpecified = NoDefaultSpecified()
-
-
-class TraitType(BaseTraitHandler):
-    """ Base class for new trait types.
-
-        This class enables you to define new traits using a class-based
-        approach, instead of by calling the Trait() factory function with an
-        instance of a TraitHandler derived object.
-
-        When subclassing this class, you can implement one or more of the
-        method signatures below. Note that these methods are defined only as
-        comments, because the absence of method definitions in the subclass
-        definition implicitly provides information about how the trait should
-        operate.
-
-        The optional methods are as follows:
-
-        * **get ( self, object, name ):**
-
-          This is the getter method of a trait that behaves like a property.
-
-          :Parameters:
-            **object** (*object*) -- The object that the property applies to.
-
-            **name** (str) -- The name of the property on *object* property.
-
-          *Description*
-
-          If neither this method nor the set() method is defined, the value
-          of the trait is handled like a normal object attribute. If this
-          method is not defined, but the set() method is defined, the trait
-          behaves like a write-only property. This method should return the
-          value of the *name* property for the *object* object.
-
-        * **set ( self, object, name, value )**
-
-          This is the setter method of a trait that behaves like a property.
-
-          :Parameters:
-            **object** (*object*) -- The object that the property applies to.
-
-            **name** (str) -- The name of the property on *object*.
-
-            **value** -- The value being assigned as the value of the property.
-
-          *Description*
-
-          If neither this method nor the get() method is implemented, the
-          trait behaves like a normal trait attribute. If this method is not
-          defined, but the get() method is defined, the trait behaves like a
-          read-only property. This method does not need to return a value,
-          but it should raise a TraitError exception if the specified *value*
-          is not valid and cannot be coerced or adapted to a valid value.
-
-        * **validate ( self, object, name, value )**
-
-          This method validates, coerces, or adapts the specified *value* as
-          the value of the *name* trait of the *object* object. This method
-          is called when a value is assigned to an object trait that is
-          based on this subclass of *TraitType* and the class does not
-          contain a definition for either the get() or set() methods. This
-          method must return the original *value* or any suitably coerced or
-          adapted value that is a legal value for the trait. If *value* is
-          not a legal value for the trait, and cannot be coerced or adapted
-          to a legal value, the method should either raise a **TraitError** or
-          call the **error** method to raise the **TraitError** on its behalf.
-
-        * **is_valid_for ( self, value )**
-
-          As an alternative to implementing the **validate** method, you can
-          instead implement the **is_valid_for** method, which receives only
-          the *value* being assigned. It should return **True** if the value is
-          valid, and **False** otherwise.
-
-        * **value_for ( self, value )**
-
-          As another alternative to implementing the **validate** method, you
-          can instead implement the **value_for** method, which receives only
-          the *value* being assigned. It should return the validated form of
-          *value* if it is valid, or raise a **TraitError** if the value is not
-          valid.
-
-        * **post_setattr ( self, object, name, value )**
-
-          This method allows the trait to do additional processing after
-          *value* has been successfully assigned to the *name* trait of the
-          *object* object. For most traits there is no additional processing
-          that needs to be done, and this method need not be defined. It is
-          normally used for creating "shadow" (i.e., "mapped" traits), but
-          other uses may arise as well. This method does not need to return
-          a value, and should normally not raise any exceptions.
-    """
-
-    default_value = Undefined
-    metadata = {}
-
-    def __init__(self, default_value=NoDefaultSpecified, **metadata):
-        """ This constructor method is the only method normally called
-            directly by client code. It defines the trait. The
-            default implementation accepts an optional, untype-checked default
-            value, and caller-supplied trait metadata. Override this method
-            whenever a different method signature or a type-checked
-            default value is needed.
-        """
-        if default_value is not NoDefaultSpecified:
-            self.default_value = default_value
-
-        if len(metadata) > 0:
-            if len(self.metadata) > 0:
-                self._metadata = self.metadata.copy()
-                self._metadata.update(metadata)
-            else:
-                self._metadata = metadata
-            # By default, private traits are not visible.
-            if (
-                self._metadata.get("private")
-                and self._metadata.get("visible") is None
-            ):
-                self._metadata["visible"] = False
-        else:
-            self._metadata = self.metadata.copy()
-
-        self.init()
-
-    def init(self):
-        """ Allows the trait to perform any additional initialization needed.
-        """
-        pass
-
-    def get_default_value(self):
-        r"""Returns a tuple of the form: (*default_value_type*, *default_value*)
-            which describes the default value for this trait. The default
-            implementation analyzes the value of the trait's **default_value**
-            attribute and determines an appropriate *default_value_type* for
-            *default_value*. If you need to override this method to provide a
-            different result tuple, the following values are valid values for
-            *default_value_type*:
-
-                - 0, 1: The *default_value* item of the tuple is the default
-                  value.
-                - 2: The object containing the trait is the default value.
-                - 3: A new copy of the list specified by *default_value* is
-                  the default value.
-                - 4: A new copy of the dictionary specified by *default_value*
-                  is the default value.
-                - 5: A new instance of TraitListObject constructed using the
-                  *default_value* list is the default value.
-                - 6: A new instance of TraitDictObject constructed using the
-                  *default_value* dictionary is the default value.
-                - 7: *default_value* is a tuple of the form: (*callable*, *args*,
-                  *kw*), where *callable* is a callable, *args* is a tuple, and
-                  *kw* is either a dictionary or None. The default value is the
-                  result obtained by invoking callable(\*args, \*\*kw).
-                - 8: *default_value* is a callable. The default value is the
-                  result obtained by invoking *default_value*(*object*), where
-                  *object* is the object containing the trait. If the trait has
-                  a validate() method, the validate() method is also called to
-                  validate the result.
-                - 9: A new instance of TraitSetObject constructed using the
-                  *default_value* set is the default value.
-        """
-        dv = self.default_value
-        dvt = self.default_value_type
-        if dvt < 0:
-            dvt = CONSTANT_DEFAULT_VALUE
-            if isinstance(dv, TraitListObject):
-                dvt = TRAIT_LIST_OBJECT_DEFAULT_VALUE
-            elif isinstance(dv, list):
-                dvt = LIST_COPY_DEFAULT_VALUE
-            elif isinstance(dv, TraitDictObject):
-                dvt = TRAIT_DICT_OBJECT_DEFAULT_VALUE
-            elif isinstance(dv, dict):
-                dvt = DICT_COPY_DEFAULT_VALUE
-            elif isinstance(dv, TraitSetObject):
-                dvt = TRAIT_SET_OBJECT_DEFAULT_VALUE
-
-            self.default_value_type = dvt
-
-        return (dvt, dv)
-
-    def clone(self, default_value=Missing, **metadata):
-        """ Clones the contents of this object into a new instance of the same
-            class, and then modifies the cloned copy using the specified
-            *default_value* and *metadata*. Returns the cloned object as the
-            result.
-
-            Note that subclasses can change the signature of this method if
-            needed, but should always call the 'super' method if possible.
-        """
-        if "parent" not in metadata:
-            metadata["parent"] = self
-
-        new = self.__class__.__new__(self.__class__)
-        new_dict = new.__dict__
-        new_dict.update(self.__dict__)
-
-        if "editor" in new_dict:
-            del new_dict["editor"]
-
-        if "_metadata" in new_dict:
-            new._metadata = new._metadata.copy()
-        else:
-            new._metadata = {}
-
-        new._metadata.update(metadata)
-
-        if default_value is not Missing:
-            new.default_value = default_value
-            if self.validate is not None:
-                try:
-                    new.default_value = self.validate(
-                        None, None, default_value
-                    )
-                except:
-                    pass
-
-        return new
-
-    def get_value(self, object, name, trait=None):
-        """ Returns the current value of a property-based trait.
-        """
-        cname = TraitsCache + name
-        value = object.__dict__.get(cname, Undefined)
-        if value is Undefined:
-            if trait is None:
-                trait = object.trait(name)
-
-            object.__dict__[cname] = value = trait.default_value_for(
-                object, name
-            )
-
-        return value
-
-    def set_value(self, object, name, value):
-        """ Sets the cached value of a property-based trait and fires the
-            appropriate trait change event.
-        """
-        cname = TraitsCache + name
-        old = object.__dict__.get(cname, Undefined)
-        if value != old:
-            object.__dict__[cname] = value
-            object.trait_property_changed(name, old, value)
-
-    # -- Private Methods --------------------------------------------------------
-
-    def __call__(self, *args, **kw):
-        """ Allows a derivative trait to be defined from this one.
-        """
-        return self.clone(*args, **kw).as_ctrait()
-
-    def _is_valid_for(self, object, name, value):
-        """ Handles a simplified validator that only returns whether or not the
-            original value is valid.
-        """
-        if self.is_valid_for(value):
-            return value
-
-        self.error(object, name, value)
-
-    def _value_for(self, object, name, value):
-        """ Handles a simplified validator that only receives the value
-            argument.
-        """
-        try:
-            return self.value_for(value)
-        except TraitError:
-            self.error(object, name, value)
-
-    def as_ctrait(self):
-        """ Returns a CTrait corresponding to the trait defined by this class.
-        """
-        from .traits import CTrait
-
-        metadata = getattr(self, "_metadata", {})
-        getter = getattr(self, "get", None)
-        setter = getattr(self, "set", None)
-        if (getter is not None) or (setter is not None):
-            if getter is None:
-                getter = _write_only
-                metadata.setdefault("transient", True)
-            elif setter is None:
-                setter = _read_only
-                metadata.setdefault("transient", True)
-            trait = CTrait(4)
-            n = 0
-            validate = getattr(self, "validate", None)
-            if validate is not None:
-                n = _arg_count(validate)
-            trait.property(
-                getter,
-                _arg_count(getter),
-                setter,
-                _arg_count(setter),
-                validate,
-                n,
-            )
-            metadata.setdefault("type", "property")
-        else:
-            type = getattr(self, "ctrait_type", None)
-            if type is None:
-                type = trait_types.get(metadata.get("type"), 0)
-            trait = CTrait(type)
-
-            validate = getattr(self, "fast_validate", None)
-            if validate is None:
-                validate = getattr(self, "validate", None)
-                if validate is None:
-                    validate = getattr(self, "is_valid_for", None)
-                    if validate is not None:
-                        validate = self._is_valid_for
-                    else:
-                        validate = getattr(self, "value_for", None)
-                        if validate is not None:
-                            validate = self._value_for
-
-            if validate is not None:
-                trait.set_validate(validate)
-
-            post_setattr = getattr(self, "post_setattr", None)
-            if post_setattr is not None:
-                trait.post_setattr = post_setattr
-                trait.is_mapped(self.is_mapped)
-
-            # Note: The use of 'rich_compare' metadata is deprecated; use
-            # 'comparison_mode' metadata instead:
-            rich_compare = metadata.get("rich_compare")
-            if rich_compare is not None:
-                trait.rich_comparison(rich_compare is True)
-
-            comparison_mode = metadata.get("comparison_mode")
-            if comparison_mode is not None:
-                trait.comparison_mode(comparison_mode)
-
-            metadata.setdefault("type", "trait")
-
-        trait.default_value(*self.get_default_value())
-
-        trait.value_allowed(metadata.get("trait_value", False) is True)
-
-        trait.handler = self
-
-        trait.__dict__ = metadata.copy()
-
-        return trait
-
-    def __getattr__(self, name):
-        if (name[:2] == "__") and (name[-2:] == "__"):
-            raise AttributeError(
-                "'%s' object has no attribute '%s'"
-                % (self.__class__.__name__, name)
-            )
-
-        return getattr(self, "_metadata", {}).get(name, None)
-
-
-# -------------------------------------------------------------------------------
-#  'TraitHandler' class (base class for all trait handlers):
-# -------------------------------------------------------------------------------
-
-
-class TraitHandler(BaseTraitHandler):
-    """ The task of this class and its subclasses is to verify the correctness
-    of values assigned to object trait attributes.
-
-    This class is an alternative to trait validator functions. A trait handler
-    has several advantages over a trait validator function, due to being an
-    object:
-
-        * Trait handlers have constructors and state. Therefore, you can use
-          them to create *parametrized types*.
-        * Trait handlers can have multiple methods, whereas validator functions
-          can have only one callable interface. This feature allows more
-          flexibility in their implementation, and allows them to handle a
-          wider range of cases, such as interactions with other components.
-
-    The only method of TraitHandler that *must* be implemented by subclasses
-    is validate().
-    """
-
-    def validate(self, object, name, value):
-        """ Verifies whether a new value assigned to a trait attribute is valid.
-
-        Parameters
-        ----------
-        object : object
-            The object whose attribute is being assigned.
-        name : str
-            The name of the attribute being assigned.
-        value :
-            The proposed new value for the attribute.
-
-        Returns
-        -------
-        If the new value is valid, this method must return either the original
-        value passed to it, or an alternate value to be assigned in place of the
-        original value. Whatever value this method returns is the actual value
-        assigned to *object.name*.
-
-        Description
-        -----------
-        This method *must* be implemented by subclasses of TraitHandler. It is
-        called whenever a new value is assigned to a trait attribute defined
-        using this trait handler.
-
-        If the value received by validate() is not valid for the trait
-        attribute, the method must called the predefined error() method to
-        raise a TraitError exception
-
-        """
-        raise TraitError(
-            "The '%s' trait of %s instance has an unknown type. "
-            "Contact the developer to correct the problem."
-            % (name, class_of(object))
-        )
-
-
-# -------------------------------------------------------------------------------
-#  'TraitString' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitString(TraitHandler):
-    """ Ensures that a trait attribute value is a string that satisfied some
-    additional, optional constraints.
-
-    The optional constraints include minimum and maximum lengths, and a regular
-    expression that the string must match.
-
-    If the value assigned to the trait attribute is a Python numeric type, the
-    TraitString handler first coerces the value to a string. Values of other
-    non-string types result in a TraitError being raised. The handler then
-    makes sure that the resulting string is within the specified length range
-    and that it matches the regular expression.
-
-    Example
-    -------
-
-    class Person(HasTraits):
-        name = Trait('', TraitString(maxlen=50, regex=r'^[A-Za-z]*$'))
-
-
-    This example defines a **Person** class with a **name** attribute, which
-    must be a string of between 0 and 50 characters that consist of only
-    upper and lower case letters.
-    """
-
-    def __init__(self, minlen=0, maxlen=six.MAXSIZE, regex=""):
-        """ Creates a TraitString handler.
-
-        Parameters
-        ----------
-        minlen : int
-            The minimum length allowed for the string.
-        maxlen : int
-            The maximum length allowed for the string.
-        regex : str
-            A Python regular expression that the string must match.
-
-        """
-        self.minlen = max(0, minlen)
-        self.maxlen = max(self.minlen, maxlen)
-        self.regex = regex
-        self._init()
-
-    def _init(self):
-        if self.regex != "":
-            self.match = re.compile(self.regex).match
-            if (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
-                self.validate = self.validate_regex
-        elif (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
-            self.validate = self.validate_str
-        else:
-            self.validate = self.validate_len
-
-    def validate(self, object, name, value):
-        try:
-            value = strx(value)
-            if (self.minlen <= len(value) <= self.maxlen) and (
-                self.match(value) is not None
-            ):
-                return value
-        except:
-            pass
-        self.error(object, name, value)
-
-    def validate_str(self, object, name, value):
-        try:
-            return strx(value)
-        except:
-            pass
-        self.error(object, name, value)
-
-    def validate_len(self, object, name, value):
-        try:
-            value = strx(value)
-            if self.minlen <= len(value) <= self.maxlen:
-                return value
-        except:
-            pass
-        self.error(object, name, value)
-
-    def validate_regex(self, object, name, value):
-        try:
-            value = strx(value)
-            if self.match(value) is not None:
-                return value
-        except:
-            pass
-        self.error(object, name, value)
-
-    def info(self):
-        msg = ""
-        if (self.minlen != 0) and (self.maxlen != six.MAXSIZE):
-            msg = " between %d and %d characters long" % (
-                self.minlen,
-                self.maxlen,
-            )
-        elif self.maxlen != six.MAXSIZE:
-            msg = " <= %d characters long" % self.maxlen
-        elif self.minlen != 0:
-            msg = " >= %d characters long" % self.minlen
-        if self.regex != "":
-            if msg != "":
-                msg += " and"
-            msg += " matching the pattern '%s'" % self.regex
-        return "a string" + msg
-
-    def __getstate__(self):
-        result = self.__dict__.copy()
-        for name in ["validate", "match"]:
-            if name in result:
-                del result[name]
-        return result
-
-    def __setstate__(self, state):
-        self.__dict__.update(state)
-        self._init()
 
 
 # -------------------------------------------------------------------------------
@@ -917,7 +113,6 @@ class TraitCoerceType(TraitHandler):
     ============ =================
     complex      float, int
     float        int
-    unicode      str
     ============ =================
     """
 
@@ -942,7 +137,7 @@ class TraitCoerceType(TraitHandler):
         try:
             self.fast_validate = CoercableTypes[aType]
         except:
-            self.fast_validate = (11, aType)
+            self.fast_validate = (ValidateTrait.coerce, aType)
 
     def validate(self, object, name, value):
         fv = self.fast_validate
@@ -1052,7 +247,7 @@ class TraitCastType(TraitCoerceType):
         if not isinstance(aType, type):
             aType = type(aType)
         self.aType = aType
-        self.fast_validate = (12, aType)
+        self.fast_validate = (ValidateTrait.cast, aType)
 
     def validate(self, object, name, value):
 
@@ -1092,9 +287,9 @@ class ThisClass(TraitHandler):
         if allow_none:
             self.validate = self.validate_none
             self.info = self.info_none
-            self.fast_validate = (2, None)
+            self.fast_validate = (ValidateTrait.self_type, None)
         else:
-            self.fast_validate = (2,)
+            self.fast_validate = (ValidateTrait.self_type,)
 
     def validate(self, object, name, value):
         if isinstance(value, object.__class__):
@@ -1133,9 +328,6 @@ class ThisClass(TraitHandler):
 #  'TraitInstance' class:
 # -------------------------------------------------------------------------------
 
-# Mapping from 'adapt' parameter values to 'fast validate' values
-AdaptMap = {"no": -1, "yes": 0, "default": 1}
-
 
 class TraitInstance(ThisClass):
     """Ensures that trait attribute values belong to a specified Python class
@@ -1158,7 +350,7 @@ class TraitInstance(ThisClass):
     (i.e., no coercion is performed).
     """
 
-    def __init__(self, aClass, allow_none=True, adapt="no", module=""):
+    def __init__(self, aClass, allow_none=True, module=""):
         """Creates a TraitInstance handler.
 
         Parameters
@@ -1168,14 +360,6 @@ class TraitInstance(ThisClass):
         allow_none : bool
             Flag indicating whether None is accepted as a valid value.
             (True or non-zero) or not (False or 0)
-        adapt : str
-            Value indicating how adaptation should be handled:
-
-            - 'no' (-1): Adaptation is not allowed.
-            - 'yes' (0): Adaptation is allowed and should raise an exception if
-              adaptation fails.
-            - 'default' (1): Adaption is allowed and should return the default
-              value if adaptation fails.
         module : module
             The module that the class belongs to.
 
@@ -1185,12 +369,11 @@ class TraitInstance(ThisClass):
         of.
         """
         self._allow_none = allow_none
-        self.adapt = AdaptMap[adapt]
         self.module = module
-        if isinstance(aClass, six.string_types):
+        if isinstance(aClass, str):
             self.aClass = aClass
         else:
-            if not isinstance(aClass, ClassTypes):
+            if not isinstance(aClass, type):
                 aClass = aClass.__class__
             self.aClass = aClass
             self.set_fast_validate()
@@ -1201,24 +384,14 @@ class TraitInstance(ThisClass):
             self.set_fast_validate()
 
     def set_fast_validate(self):
-        if self.adapt < 0:
-            fast_validate = [1, self.aClass]
-            if self._allow_none:
-                fast_validate = [1, None, self.aClass]
-            if self.aClass in TypeTypes:
-                fast_validate[0] = 0
-            self.fast_validate = tuple(fast_validate)
-        else:
-            self.fast_validate = (
-                19,
-                self.aClass,
-                self.adapt,
-                self._allow_none,
-            )
+        fast_validate = [ValidateTrait.instance, self.aClass]
+        if self._allow_none:
+            fast_validate = [ValidateTrait.instance, None, self.aClass]
+        if self.aClass in TypeTypes:
+            fast_validate[0] = ValidateTrait.type
+        self.fast_validate = tuple(fast_validate)
 
     def validate(self, object, name, value):
-
-        from traits.adaptation.api import adapt
 
         if value is None:
             if self._allow_none:
@@ -1226,23 +399,11 @@ class TraitInstance(ThisClass):
             else:
                 self.validate_failed(object, name, value)
 
-        if isinstance(self.aClass, six.string_types):
+        if isinstance(self.aClass, str):
             self.resolve_class(object, name, value)
 
-        if self.adapt < 0:
-            if isinstance(value, self.aClass):
-                return value
-        elif self.adapt == 0:
-            try:
-                return adapt(value, self.aClass)
-            except:
-                pass
-        else:
-            # fixme: The 'None' value is not really correct. It should return
-            # the default value for the trait, but the handler does not have
-            # any way to know this currently. Since the 'fast validate' code
-            # does the correct thing, this should not normally be a problem.
-            return adapt(value, self.aClass, None)
+        if isinstance(value, self.aClass):
+            return value
 
         self.validate_failed(object, name, value)
 
@@ -1251,13 +412,7 @@ class TraitInstance(ThisClass):
         if type(aClass) is not str:
             aClass = aClass.__name__
 
-        if self.adapt < 0:
-            result = class_of(aClass)
-        else:
-            result = (
-                "an implementor of, or can be adapted to implement, %s"
-                % aClass
-            )
+        result = class_of(aClass)
 
         if self._allow_none:
             return result + " or None"
@@ -1285,21 +440,19 @@ class TraitInstance(ThisClass):
             trait = handler.item_trait
         trait.set_validate(self.fast_validate)
 
-    def find_class(self, aClass):
+    def find_class(self, klass):
         module = self.module
-        col = aClass.rfind(".")
+        col = klass.rfind(".")
         if col >= 0:
-            module = aClass[:col]
-            aClass = aClass[col + 1 :]
+            module = klass[:col]
+            klass = klass[col + 1 :]
 
-        theClass = getattr(sys.modules.get(module), aClass, None)
+        theClass = getattr(sys.modules.get(module), klass, None)
         if (theClass is None) and (col >= 0):
             try:
-                mod = __import__(module, globals=globals(), level=1)
-                for component in module.split(".")[1:]:
-                    mod = getattr(mod, component)
-                theClass = getattr(mod, aClass, None)
-            except:
+                mod = import_module(module)
+                theClass = getattr(mod, klass, None)
+            except Exception:
                 pass
 
         return theClass
@@ -1309,119 +462,12 @@ class TraitInstance(ThisClass):
 
     def create_default_value(self, *args, **kw):
         aClass = args[0]
-        if isinstance(aClass, six.string_types):
+        if isinstance(aClass, str):
             aClass = self.validate_class(self.find_class(aClass))
             if aClass is None:
                 raise TraitError("Unable to locate class: " + args[0])
 
         return aClass(*args[1:], **kw)
-
-
-# -------------------------------------------------------------------------------
-#  'TraitWeakRef' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitWeakRef(TraitInstance):
-    def _get(self, object, name):
-        value = getattr(object, name + "_", None)
-        if value is not None:
-            return value.value()
-        return None
-
-    def _set(self, object, name, value):
-        if value is not None:
-            value = HandleWeakRef(object, name, value)
-        object.__dict__[name + "_"] = value
-
-    def resolve_class(self, object, name, value):
-        # fixme: We have to override this method to prevent the 'fast validate'
-        # from being set up, since the trait using this is a 'property' style
-        # trait which is not currently compatible with the 'fast_validate'
-        # style (causes internal Python SystemError messages).
-        aClass = self.find_class(self.aClass)
-        if aClass is None:
-            self.validate_failed(object, name, value)
-        self.aClass = aClass
-
-
-# -- Private Class --------------------------------------------------------------
-
-
-def _make_value_freed_callback(object_ref, name):
-    def _value_freed(value_ref):
-        object = object_ref()
-        if object is not None:
-            object.trait_property_changed(name, Undefined, None)
-
-    return _value_freed
-
-
-class HandleWeakRef(object):
-    def __init__(self, object, name, value):
-        object_ref = ref(object)
-        _value_freed = _make_value_freed_callback(object_ref, name)
-        self.object = object_ref
-        self.name = name
-        self.value = ref(value, _value_freed)
-
-
-# -------------------------------------------------------------------------------
-#  'TraitClass' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitClass(TraitHandler):
-    """Ensures that trait attribute values are subclasses of a specified class
-    (or the class itself).
-
-    A value is valid if it is a subclass of the specified class (including the
-    class itself), or it is a string that is equivalent to the name of a valid
-    class.
-    """
-
-    def __init__(self, aClass):
-        """Creates a TraitClass handler.
-
-        Parameters
-        ----------
-        aClass : class
-            A Python class.
-
-        Description
-        -----------
-        If *aClass* is an instance, it is mapped to the class it is an instance
-        of.
-        """
-        if _py2to3.is_old_style_instance(aClass):
-            aClass = aClass.__class__
-        self.aClass = aClass
-
-    def validate(self, object, name, value):
-        try:
-            if isinstance(value, six.string_types):
-                value = value.strip()
-                col = value.rfind(".")
-                if col >= 0:
-                    module_name = value[:col]
-                    class_name = value[col + 1 :]
-                    module = sys.modules.get(module_name)
-                    if module is None:
-                        exec("import " + module_name)
-                        module = sys.modules[module_name]
-                    value = getattr(module, class_name)
-                else:
-                    value = globals().get(value)
-
-            if issubclass(value, self.aClass):
-                return value
-        except:
-            pass
-
-        self.error(object, name, value)
-
-    def info(self):
-        return "a subclass of " + self.aClass.__name__
 
 
 # -------------------------------------------------------------------------------
@@ -1458,7 +504,7 @@ class TraitFunction(TraitHandler):
         if not isinstance(aFunc, CallableTypes):
             raise TraitError("Argument must be callable.")
         self.aFunc = aFunc
-        self.fast_validate = (13, aFunc)
+        self.fast_validate = (ValidateTrait.function, aFunc)
 
     def validate(self, object, name, value):
         try:
@@ -1523,7 +569,7 @@ class TraitEnum(TraitHandler):
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
         self.values = tuple(values)
-        self.fast_validate = (5, self.values)
+        self.fast_validate = (ValidateTrait.enum, self.values)
 
     def validate(self, object, name, value):
         if value in self.values:
@@ -1601,7 +647,7 @@ class TraitPrefixList(TraitHandler):
         self.values_ = values_ = {}
         for key in values:
             values_[key] = key
-        self.fast_validate = (10, values_, self.validate)
+        self.fast_validate = (ValidateTrait.prefix_map, values_, self.validate)
 
     def validate(self, object, name, value):
         try:
@@ -1656,11 +702,13 @@ class TraitMap(TraitHandler):
     dictionary, and the other whose value is the corresponding value of the
     TraitMap dictionary. The name of the shadow attribute is simply the base
     attribute name with an underscore ('_') appended. Mapped trait attributes
-    can be used to allow a variety of user-friendly input values to be mapped to
-    a set of internal, program-friendly values.
+    can be used to allow a variety of user-friendly input values to be mapped
+    to a set of internal, program-friendly values.
 
     Example
     -------
+
+    The following example defines a ``Person`` class::
 
         >>>class Person(HasTraits):
         ...    married = Trait('yes', TraitMap({'yes': 1, 'no': 0 })
@@ -1671,10 +719,10 @@ class TraitMap(TraitHandler):
         >>>print bob.married_
         1
 
-    In this example, the default value of the **married** attribute of the
+    In this example, the default value of the ``married`` attribute of the
     Person class is 'yes'. Because this attribute is defined using
     TraitPrefixList, instances of Person have another attribute,
-    **married_**, whose default value is 1, the dictionary value corresponding
+    ``married_``, whose default value is 1, the dictionary value corresponding
     to the key 'yes'.
     """
 
@@ -1691,7 +739,7 @@ class TraitMap(TraitHandler):
             trait attribute.
         """
         self.map = map
-        self.fast_validate = (6, map)
+        self.fast_validate = (ValidateTrait.map, map)
 
     def validate(self, object, name, value):
         try:
@@ -1762,7 +810,7 @@ class TraitPrefixMap(TraitMap):
         self._map = _map = {}
         for key in map.keys():
             _map[key] = key
-        self.fast_validate = (10, _map, self.validate)
+        self.fast_validate = (ValidateTrait.prefix_map, _map, self.validate)
 
     def validate(self, object, name, value):
         try:
@@ -1784,36 +832,6 @@ class TraitPrefixMap(TraitMap):
 
     def info(self):
         return super(TraitPrefixMap, self).info() + " (or any unique prefix)"
-
-
-# -------------------------------------------------------------------------------
-#  'TraitExpression' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitExpression(TraitHandler):
-    """ Ensures that a value assigned to a trait attribute is a valid Python
-        expression. The compiled form of a valid expression is stored as the
-        mapped value of the trait.
-    """
-
-    is_mapped = True
-
-    def validate(self, object, name, value):
-        try:
-            compile(value, "<string>", "eval")
-            return value
-        except:
-            self.error(object, name, value)
-
-    def post_setattr(self, object, name, value):
-        object.__dict__[name + "_"] = self.mapped_value(value)
-
-    def info(self):
-        return "a valid Python expression"
-
-    def mapped_value(self, value):
-        return compile(value, "<string>", "eval")
 
 
 # -------------------------------------------------------------------------------
@@ -1865,7 +883,7 @@ class TraitCompound(TraitHandler):
             fv = getattr(handler, "fast_validate", None)
             if fv is not None:
                 validates.append(handler.validate)
-                if fv[0] == 7:
+                if fv[0] == ValidateTrait.complex:
                     # If this is a nested complex fast validator, expand its
                     # contents and adds its list to our list:
                     fast_validates.extend(fv[1])
@@ -1902,9 +920,9 @@ class TraitCompound(TraitHandler):
             # If there are any 'slow' validators, add a special handler at
             # the end of the fast validator list to handle them:
             if len(slow_validates) > 0:
-                fast_validates.append((8, self))
+                fast_validates.append((ValidateTrait.slow, self))
             # Create the 'complex' fast validator:
-            self.fast_validate = (7, tuple(fast_validates))
+            self.fast_validate = (ValidateTrait.complex, tuple(fast_validates))
         elif hasattr(self, "fast_validate"):
             del self.fast_validate
 
@@ -1990,12 +1008,14 @@ class TraitTuple(TraitHandler):
     Example
     -------
 
+    The following example defines a ``Card`` class::
+
         rank = Range(1, 13)
         suit = Trait('Hearts', 'Diamonds', 'Spades', 'Clubs')
         class Card(HasTraits):
             value = Trait(TraitTuple(rank, suit))
 
-    This example defines a Card class, which has a **value** trait attribute,
+    The Card class has a **value** trait attribute,
     which must be a tuple of two elments. The first element must be an integer
     in the range from 1 to 13, and the second element must be one of the four
     strings, 'Hearts', 'Diamonds', 'Spades', or 'Clubs'.
@@ -2019,7 +1039,7 @@ class TraitTuple(TraitHandler):
         *trait*\ :sub:`i`.
         """
         self.types = tuple([trait_from(arg) for arg in args])
-        self.fast_validate = (9, self.types)
+        self.fast_validate = (ValidateTrait.tuple, self.types)
 
     def validate(self, object, name, value):
         try:
@@ -2063,48 +1083,6 @@ class TraitTuple(TraitHandler):
 
 
 # -------------------------------------------------------------------------------
-#  'TraitCallable' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitCallable(TraitHandler):
-    """Ensures that the value of a trait attribute is a callable Python object
-    (usually a function or method).
-    """
-
-    def validate(self, object, name, value):
-        if (value is None) or callable(value):
-            return value
-        self.error(object, name, value)
-
-    def info(self):
-        return "a callable value"
-
-
-# -------------------------------------------------------------------------------
-#  'TraitListEvent' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitListEvent(object):
-
-    # ---------------------------------------------------------------------------
-    #  Initialize the object:
-    # ---------------------------------------------------------------------------
-
-    def __init__(self, index=0, removed=None, added=None):
-        self.index = index
-
-        if removed is None:
-            removed = []
-        self.removed = removed
-
-        if added is None:
-            added = []
-        self.added = added
-
-
-# -------------------------------------------------------------------------------
 #  'TraitList' class:
 # -------------------------------------------------------------------------------
 
@@ -2134,11 +1112,11 @@ class TraitList(TraitHandler):
     """
 
     info_trait = None
-    default_value_type = TRAIT_LIST_OBJECT_DEFAULT_VALUE
+    default_value_type = DefaultValue.trait_list_object
     _items_event = None
 
     def __init__(
-        self, trait=None, minlen=0, maxlen=six.MAXSIZE, has_items=True
+        self, trait=None, minlen=0, maxlen=sys.maxsize, has_items=True
     ):
         """ Creates a TraitList handler.
 
@@ -2180,12 +1158,12 @@ class TraitList(TraitHandler):
 
     def full_info(self, object, name, value):
         if self.minlen == 0:
-            if self.maxlen == six.MAXSIZE:
+            if self.maxlen == sys.maxsize:
                 size = "items"
             else:
                 size = "at most %d items" % self.maxlen
         else:
-            if self.maxlen == six.MAXSIZE:
+            if self.maxlen == sys.maxsize:
                 size = "at least %d items" % self.minlen
             else:
                 size = "from %s to %s items" % (self.minlen, self.maxlen)
@@ -2198,7 +1176,7 @@ class TraitList(TraitHandler):
         return "a list of %s%s" % (size, info)
 
     def get_editor(self, trait):
-        from traits.traits import list_editor
+        from traits.editor_factories import list_editor
 
         return list_editor(trait, self)
 
@@ -2207,720 +1185,14 @@ class TraitList(TraitHandler):
 
 
 def items_event():
+    from .trait_types import Event
+
     if TraitList._items_event is None:
         TraitList._items_event = Event(
             TraitListEvent, is_base=False
         ).as_ctrait()
 
     return TraitList._items_event
-
-
-# -------------------------------------------------------------------------------
-#  'TraitListObject' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitListObject(list):
-    def __init__(self, trait, object, name, value):
-        self.trait = trait
-        self.object = ref(object)
-        self.name = name
-        self.name_items = None
-        if trait.has_items:
-            self.name_items = name + "_items"
-
-        # Do the validated 'setslice' assignment without raising an
-        # 'items_changed' event:
-        if trait.minlen <= len(value) <= trait.maxlen:
-            try:
-                validate = trait.item_trait.handler.validate
-                if validate is not None:
-                    value = [validate(object, name, val) for val in value]
-
-                list.__setitem__(self, slice(0, 0), value)
-
-                return
-
-            except TraitError as excp:
-                excp.set_prefix("Each element of the")
-                raise excp
-
-        self.len_error(len(value))
-
-    def _send_trait_items_event(self, name, event, items_event=None):
-        """ Send a TraitListEvent to the owning object if there is one.
-        """
-        object = self.object()
-        if object is not None:
-            if items_event is None and hasattr(self, "trait"):
-                items_event = self.trait.items_event()
-            object.trait_items_event(name, event, items_event)
-
-    def __deepcopy__(self, memo):
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
-        memo[id_self] = result = TraitListObject(
-            self.trait,
-            lambda: None,
-            self.name,
-            [copy.deepcopy(x, memo) for x in self],
-        )
-
-        return result
-
-    def __setitem__(self, key, value):
-        self_trait = getattr(self, "trait", None)
-        if self_trait is None:
-            return list.__setitem__(self, key, value)
-        try:
-            removed = self[key]
-        except:
-            removed = []
-        try:
-            object = self.object()
-            validate = self.trait.item_trait.handler.validate
-            name = self.name
-
-            if isinstance(key, slice):
-                values = value
-                slice_len = len(removed)
-
-                delta = len(values) - slice_len
-                step = 1 if key.step is None else key.step
-                if step != 1 and delta != 0:
-                    raise ValueError(
-                        "attempt to assign sequence of size %d to extended slice of size %d"
-                        % (len(values), slice_len)
-                    )
-                newlen = len(self) + delta
-                if not (self_trait.minlen <= newlen <= self_trait.maxlen):
-                    self.len_error(newlen)
-                    return
-
-                if validate is not None:
-                    values = [
-                        validate(object, name, value) for value in values
-                    ]
-                value = values
-                if step == 1:
-                    # FIXME: Bug-for-bug compatibility with old __setslice__ code.
-                    # In this case, we return a TraitListEvent with an
-                    # index=key.start and the removed and added lists as they
-                    # are.
-                    index = 0 if key.start is None else key.start
-                else:
-                    # Otherwise, we have an extended slice which was handled,
-                    # badly, by __setitem__ before. In this case, we return the
-                    # removed and added lists wrapped in another list.
-                    index = key
-                    values = [values]
-                    removed = [removed]
-            else:
-                if validate is not None:
-                    value = validate(object, name, value)
-
-                values = [value]
-                removed = [removed]
-                delta = 0
-
-                index = len(self) + key if key < 0 else key
-
-            list.__setitem__(self, key, value)
-            if self.name_items is not None:
-                if delta == 0:
-                    try:
-                        if removed == values:
-                            return
-                    except:
-                        # Treat incomparable values as equal:
-                        pass
-                self._send_trait_items_event(
-                    self.name_items, TraitListEvent(index, removed, values)
-                )
-
-        except TraitError as excp:
-            excp.set_prefix("Each element of the")
-            raise excp
-
-    if six.PY2:
-
-        def __setslice__(self, i, j, values):
-            self.__setitem__(slice(i, j), values)
-
-    def __delitem__(self, key):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            return list.__delitem__(self, key)
-
-        try:
-            removed = self[key]
-        except:
-            removed = []
-
-        if isinstance(key, slice):
-            slice_len = len(removed)
-            delta = slice_len
-            step = 1 if key.step is None else key.step
-            if step == 1:
-                # FIXME: See corresponding comment in __setitem__() for
-                # explanation.
-                index = 0 if key.start is None else key.start
-            else:
-                index = key
-                removed = [removed]
-        else:
-            delta = 1
-            index = len(self) + key + 1 if key < 0 else key
-            removed = [removed]
-
-        if not (trait.minlen <= (len(self) - delta)):
-            self.len_error(len(self) - delta)
-            return
-
-        list.__delitem__(self, key)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitListEvent(index, removed)
-            )
-
-    if six.PY2:
-
-        def __delslice__(self, i, j):
-            self.__delitem__(slice(i, j))
-
-    def __iadd__(self, other):
-        self.extend(other)
-        return self
-
-    def __imul__(self, count):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            return list.__imul__(self, count)
-
-        original_len = len(self)
-
-        if trait.minlen <= original_len * count <= trait.maxlen:
-            if self.name_items is not None:
-                removed = None if count else self[:]
-
-            result = list.__imul__(self, count)
-
-            if self.name_items is not None:
-                added = self[original_len:] if count else None
-                index = original_len if count else 0
-                self._send_trait_items_event(
-                    self.name_items, TraitListEvent(index, removed, added)
-                )
-
-            return result
-        else:
-            self.len_error(original_len * count)
-
-    def append(self, value):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            list.append(self, value)
-            return
-
-        if trait.minlen <= (len(self) + 1) <= trait.maxlen:
-            try:
-                validate = trait.item_trait.handler.validate
-                object = self.object()
-                if validate is not None:
-                    value = validate(object, self.name, value)
-                list.append(self, value)
-                if self.name_items is not None:
-                    self._send_trait_items_event(
-                        self.name_items,
-                        TraitListEvent(len(self) - 1, None, [value]),
-                        trait.items_event(),
-                    )
-                return
-
-            except TraitError as excp:
-                excp.set_prefix("Each element of the")
-                raise excp
-
-        self.len_error(len(self) + 1)
-
-    def insert(self, index, value):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            return list.insert(self, index, value)
-        if trait.minlen <= (len(self) + 1) <= trait.maxlen:
-            try:
-                validate = trait.item_trait.handler.validate
-                object = self.object()
-                if validate is not None:
-                    value = validate(object, self.name, value)
-
-                list.insert(self, index, value)
-
-                if self.name_items is not None:
-                    # Length before the insertion.
-                    original_len = len(self) - 1
-
-                    # Indices outside [-original_len, original_len] are clipped.
-                    # This matches the behaviour of insert on the
-                    # underlying list.
-                    if index < 0:
-                        index += original_len
-                        if index < 0:
-                            index = 0
-                    elif index > original_len:
-                        index = original_len
-
-                    self._send_trait_items_event(
-                        self.name_items,
-                        TraitListEvent(index, None, [value]),
-                        trait.items_event(),
-                    )
-
-                return
-
-            except TraitError as excp:
-                excp.set_prefix("Each element of the")
-                raise excp
-
-        self.len_error(len(self) + 1)
-
-    def extend(self, xlist):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            list.extend(self, xlist)
-
-            return
-
-        try:
-            len_xlist = len(xlist)
-        except:
-            raise TypeError("list.extend() argument must be iterable")
-
-        if trait.minlen <= (len(self) + len_xlist) <= trait.maxlen:
-            object = self.object()
-            name = self.name
-            validate = trait.item_trait.handler.validate
-            try:
-                if validate is not None:
-                    xlist = [validate(object, name, value) for value in xlist]
-
-                list.extend(self, xlist)
-
-                if (self.name_items is not None) and (len(xlist) != 0):
-                    self._send_trait_items_event(
-                        self.name_items,
-                        TraitListEvent(len(self) - len(xlist), None, xlist),
-                        trait.items_event(),
-                    )
-
-                return
-
-            except TraitError as excp:
-                excp.set_prefix("The elements of the")
-                raise excp
-
-        self.len_error(len(self) + len(xlist))
-
-    def remove(self, value):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            list.remove(self, value)
-            return
-        if trait.minlen < len(self):
-            try:
-                index = self.index(value)
-                removed = [self[index]]
-            except:
-                pass
-
-            list.remove(self, value)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitListEvent(index, removed)
-                )
-        elif len(self) == 0:
-            # Let whatever system error (ValueError) should be raised be raised.
-            list.remove(self, value)
-        else:
-            self.len_error(len(self) - 1)
-
-    if six.PY2:
-
-        def sort(self, cmp=None, key=None, reverse=False):
-            removed = self[:]
-            list.sort(self, cmp=cmp, key=key, reverse=reverse)
-            self._sort_common(removed)
-
-    else:
-
-        def sort(self, key=None, reverse=False):
-            removed = self[:]
-            list.sort(self, key=key, reverse=reverse)
-            self._sort_common(removed)
-
-    def _sort_common(self, removed):
-        if (
-            getattr(self, "name_items", None) is not None
-            and getattr(self, "trait", None) is not None
-        ):
-            self._send_trait_items_event(
-                self.name_items, TraitListEvent(0, removed, self[:])
-            )
-
-    def reverse(self):
-        removed = self[:]
-        if len(self) > 1:
-            list.reverse(self)
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitListEvent(0, removed, self[:])
-                )
-
-    def pop(self, *args):
-        if not hasattr(self, "trait"):
-            return list.pop(self, *args)
-        if self.trait.minlen < len(self):
-            if len(args) > 0:
-                index = args[0]
-            else:
-                index = -1
-
-            try:
-                removed = [self[index]]
-            except:
-                pass
-
-            result = list.pop(self, *args)
-
-            if self.name_items is not None:
-                if index < 0:
-                    index = len(self) + index + 1
-
-                self._send_trait_items_event(
-                    self.name_items, TraitListEvent(index, removed)
-                )
-
-            return result
-
-        else:
-            self.len_error(len(self) - 1)
-
-    def rename(self, name):
-        trait = self.object()._trait(name, 0)
-        if trait is not None:
-            self.name = name
-            self.trait = trait.handler
-
-    def len_error(self, len):
-        raise TraitError(
-            "The '%s' trait of %s instance must be %s, "
-            "but you attempted to change its length to %d element%s."
-            % (
-                self.name,
-                class_of(self.object()),
-                self.trait.full_info(self.object(), self.name, Undefined),
-                len,
-                "s"[len == 1 :],
-            )
-        )
-
-    def __getstate__(self):
-        result = self.__dict__.copy()
-        result.pop("object", None)
-        result.pop("trait", None)
-
-        return result
-
-    def __setstate__(self, state):
-        name = state.setdefault("name", "")
-        object = state.pop("object", None)
-        if object is not None:
-            self.object = ref(object)
-            self.rename(name)
-        else:
-            self.object = lambda: None
-
-        self.__dict__.update(state)
-
-
-# -------------------------------------------------------------------------------
-#  'TraitSetEvent' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitSetEvent(object):
-
-    # ---------------------------------------------------------------------------
-    #  Initialize the object:
-    # ---------------------------------------------------------------------------
-
-    def __init__(self, removed=None, added=None):
-        if removed is None:
-            removed = set()
-        self.removed = removed
-
-        if added is None:
-            added = set()
-        self.added = added
-
-
-# -------------------------------------------------------------------------------
-#  'TraitSetObject' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitSetObject(set):
-    def __init__(self, trait, object, name, value):
-        self.trait = trait
-        self.object = ref(object)
-        self.name = name
-        self.name_items = None
-        if trait.has_items:
-            self.name_items = name + "_items"
-
-        # Validate and assign the initial set value:
-        try:
-            validate = trait.item_trait.handler.validate
-            if validate is not None:
-                value = [validate(object, name, val) for val in value]
-
-            super(TraitSetObject, self).__init__(value)
-
-            return
-
-        except TraitError as excp:
-            excp.set_prefix("Each element of the")
-            raise excp
-
-    def _send_trait_items_event(self, name, event, items_event=None):
-        """ Send a TraitDictEvent to the owning object if there is one.
-        """
-        object = self.object()
-        if object is not None:
-            if items_event is None and hasattr(self, "trait"):
-                items_event = self.trait.items_event()
-            object.trait_items_event(name, event, items_event)
-
-    def __deepcopy__(self, memo):
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
-        memo[id_self] = result = TraitSetObject(
-            self.trait,
-            lambda: None,
-            self.name,
-            [copy.deepcopy(x, memo) for x in self],
-        )
-
-        return result
-
-    def update(self, value):
-        if not hasattr(self, "trait"):
-            return set.update(self, value)
-        try:
-            if not isinstance(value, set):
-                value = set(value)
-            added = value.difference(self)
-            if len(added) > 0:
-                object = self.object()
-                validate = self.trait.item_trait.handler.validate
-                if validate is not None:
-                    name = self.name
-                    added = set(
-                        [validate(object, name, item) for item in added]
-                    )
-
-                set.update(self, added)
-
-                if self.name_items is not None:
-                    self._send_trait_items_event(
-                        self.name_items, TraitSetEvent(None, added)
-                    )
-        except TraitError as excp:
-            excp.set_prefix("Each element of the")
-            raise excp
-
-    def intersection_update(self, value):
-        removed = self.difference(value)
-        if len(removed) > 0:
-            set.difference_update(self, removed)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitSetEvent(removed)
-                )
-
-    def difference_update(self, value):
-        removed = self.intersection(value)
-        if len(removed) > 0:
-            set.difference_update(self, removed)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitSetEvent(removed)
-                )
-
-    def symmetric_difference_update(self, value):
-        if not hasattr(self, "trait"):
-            return set.symmetric_difference_update(self, value)
-        if not isinstance(value, set):
-            value = set(value)
-        removed = self.intersection(value)
-        added = value.difference(self)
-        if (len(removed) > 0) or (len(added) > 0):
-            object = self.object()
-            set.difference_update(self, removed)
-
-            if len(added) > 0:
-                validate = self.trait.item_trait.handler.validate
-                if validate is not None:
-                    name = self.name
-                    added = set(
-                        [validate(object, name, item) for item in added]
-                    )
-
-                set.update(self, added)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitSetEvent(removed, added)
-                )
-
-    def add(self, value):
-        if not hasattr(self, "trait"):
-            return set.add(self, value)
-        if value not in self:
-            try:
-                object = self.object()
-                validate = self.trait.item_trait.handler.validate
-                if validate is not None:
-                    value = validate(object, self.name, value)
-
-                set.add(self, value)
-
-                if self.name_items is not None:
-                    self._send_trait_items_event(
-                        self.name_items, TraitSetEvent(None, set([value]))
-                    )
-            except TraitError as excp:
-                excp.set_prefix("Each element of the")
-                raise excp
-
-    def remove(self, value):
-        set.remove(self, value)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitSetEvent(set([value]))
-            )
-
-    def discard(self, value):
-        if value in self:
-            self.remove(value)
-
-    def pop(self):
-        value = set.pop(self)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitSetEvent(set([value]))
-            )
-
-        return value
-
-    def clear(self):
-        removed = set(self)
-        set.clear(self)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitSetEvent(removed)
-            )
-
-    def copy(self):
-        """ Return a true ``set`` object with a copy of the data.
-        """
-        return set(self)
-
-    def __reduce_ex__(self, protocol=None):
-        """ Overridden to make sure we call our custom __getstate__.
-        """
-        return (
-            sm.copyreg._reconstructor,
-            (type(self), set, list(self)),
-            self.__getstate__(),
-        )
-
-    def __getstate__(self):
-        result = self.__dict__.copy()
-        result.pop("object", None)
-        result.pop("trait", None)
-        return result
-
-    def __setstate__(self, state):
-        name = state.setdefault("name", "")
-        object = state.pop("object", None)
-        if object is not None:
-            self.object = ref(object)
-            self.rename(name)
-        else:
-            self.object = lambda: None
-
-        self.__dict__.update(state)
-
-    def __ior__(self, value):
-        self.update(value)
-        return self
-
-    def __iand__(self, value):
-        self.intersection_update(value)
-        return self
-
-    def __ixor__(self, value):
-        self.symmetric_difference_update(value)
-        return self
-
-    def __isub__(self, value):
-        self.difference_update(value)
-        return self
-
-
-# -------------------------------------------------------------------------------
-#  'TraitDictEvent' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitDictEvent(object):
-    def __init__(self, added=None, changed=None, removed=None):
-        """
-        Parameters
-        ----------
-        added : dict
-            New keys and values.
-        changed : dict
-            Updated keys and their previous values.
-        removed : dict
-            Old keys and values that were just removed.
-        """
-        # Construct new empty dicts every time instead of using a default value
-        # in the method argument, just in case someone gets the bright idea of
-        # modifying the dict they get in-place.
-        if added is None:
-            added = {}
-        self.added = added
-
-        if changed is None:
-            changed = {}
-        self.changed = changed
-
-        if removed is None:
-            removed = {}
-        self.removed = removed
 
 
 # -------------------------------------------------------------------------------
@@ -2951,7 +1223,7 @@ class TraitDict(TraitHandler):
     """
 
     info_trait = None
-    default_value_type = TRAIT_DICT_OBJECT_DEFAULT_VALUE
+    default_value_type = DefaultValue.trait_list_object
     _items_event = None
 
     def __init__(self, key_trait=None, value_trait=None, has_items=True):
@@ -3025,273 +1297,11 @@ class TraitDict(TraitHandler):
         return self.editor
 
     def items_event(self):
+        from .trait_types import Event
+
         if TraitDict._items_event is None:
             TraitDict._items_event = Event(
                 TraitDictEvent, is_base=False
             ).as_ctrait()
 
         return TraitDict._items_event
-
-
-# -------------------------------------------------------------------------------
-#  'TraitDictObject' class:
-# -------------------------------------------------------------------------------
-
-
-class TraitDictObject(dict):
-    def __init__(self, trait, object, name, value):
-        self.trait = trait
-        self.object = ref(object)
-        self.name = name
-        self.name_items = None
-        if trait.has_items:
-            self.name_items = name + "_items"
-
-        if len(value) > 0:
-            dict.update(self, self._validate_dic(value))
-
-    def _send_trait_items_event(self, name, event, items_event=None):
-        """ Send a TraitDictEvent to the owning object if there is one.
-        """
-        object = self.object()
-        if object is not None:
-            if items_event is None and hasattr(self, "trait"):
-                items_event = self.trait.items_event()
-            object.trait_items_event(name, event, items_event)
-
-    def __deepcopy__(self, memo):
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
-        memo[id_self] = result = TraitDictObject(
-            self.trait,
-            lambda: None,
-            self.name,
-            dict([copy.deepcopy(x, memo) for x in six.iteritems(self)]),
-        )
-
-        return result
-
-    def __setitem__(self, key, value):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            dict.__setitem__(self, key, value)
-            return
-
-        object = self.object()
-        try:
-            validate = trait.key_trait.handler.validate
-            if validate is not None:
-                key = validate(object, self.name, key)
-
-        except TraitError as excp:
-            excp.set_prefix("Each key of the")
-            raise excp
-
-        try:
-            validate = trait.value_handler.validate
-            if validate is not None:
-                value = validate(object, self.name, value)
-
-            if self.name_items is not None:
-                if key in self:
-                    added = None
-                    old = self[key]
-                    changed = {key: old}
-                else:
-                    added = {key: value}
-                    changed = None
-
-            dict.__setitem__(self, key, value)
-
-            if self.name_items is not None:
-                if added is None:
-                    try:
-                        if old == value:
-                            return
-                    except:
-                        # Treat incomparable objects as unequal:
-                        pass
-                self._send_trait_items_event(
-                    self.name_items,
-                    TraitDictEvent(added, changed),
-                    trait.items_event(),
-                )
-
-        except TraitError as excp:
-            excp.set_prefix("Each value of the")
-            raise excp
-
-    def __delitem__(self, key):
-        if self.name_items is not None:
-            removed = {key: self[key]}
-
-        dict.__delitem__(self, key)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitDictEvent(removed=removed)
-            )
-
-    def clear(self):
-        if len(self) > 0:
-            if self.name_items is not None:
-                removed = self.copy()
-
-            dict.clear(self)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitDictEvent(removed=removed)
-                )
-
-    def update(self, dic):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            dict.update(self, dic)
-            return
-
-        if len(dic) > 0:
-            new_dic = self._validate_dic(dic)
-
-            if self.name_items is not None:
-                added = {}
-                changed = {}
-                for key, value in six.iteritems(new_dic):
-                    if key in self:
-                        changed[key] = self[key]
-                    else:
-                        added[key] = value
-
-                dict.update(self, new_dic)
-
-                self._send_trait_items_event(
-                    self.name_items,
-                    TraitDictEvent(added=added, changed=changed),
-                )
-            else:
-                dict.update(self, new_dic)
-
-    def setdefault(self, key, value=None):
-        if key in self:
-            return self[key]
-
-        self[key] = value
-        result = self[key]
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitDictEvent(added={key: result})
-            )
-
-        return result
-
-    def pop(self, key, value=Undefined):
-        if (value is Undefined) or key in self:
-            result = dict.pop(self, key)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitDictEvent(removed={key: result})
-                )
-
-            return result
-
-        return value
-
-    def popitem(self):
-        result = dict.popitem(self)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitDictEvent(removed={result[0]: result[1]})
-            )
-
-        return result
-
-    def rename(self, name):
-        trait = self.object()._trait(name, 0)
-        if trait is not None:
-            self.name = name
-            self.trait = trait.handler
-        else:
-            logger.debug(
-                "rename: No 'trait' in %s for '%s'" % (self.object(), name)
-            )
-
-    def __getstate__(self):
-        result = self.__dict__.copy()
-        result.pop("object", None)
-        result.pop("trait", None)
-        return result
-
-    def __setstate__(self, state):
-        name = state.setdefault("name", "")
-        object = state.pop("object", None)
-        if object is not None:
-            self.object = ref(object)
-            self.rename(name)
-        else:
-            self.object = lambda: None
-
-        self.__dict__.update(state)
-
-    # -- Private Methods ------------------------------------------------------------
-
-    def _validate_dic(self, dic):
-        name = self.name
-        new_dic = {}
-
-        key_validate = self.trait.key_trait.handler.validate
-        if key_validate is None:
-            key_validate = lambda object, name, key: key
-
-        value_validate = self.trait.value_trait.handler.validate
-        if value_validate is None:
-            value_validate = lambda object, name, value: value
-
-        object = self.object()
-        for key, value in six.iteritems(dic):
-            try:
-                key = key_validate(object, name, key)
-            except TraitError as excp:
-                excp.set_prefix("Each key of the")
-                raise excp
-
-            try:
-                value = value_validate(object, name, value)
-            except TraitError as excp:
-                excp.set_prefix("Each value of the")
-                raise excp
-
-            new_dic[key] = value
-
-        return new_dic
-
-
-# -------------------------------------------------------------------------------
-#  Tell the C-based traits module about 'TraitListObject', 'TraitSetObject and
-#  'TraitDictObject', and the PyProtocols 'adapt' function:
-# -------------------------------------------------------------------------------
-
-from . import ctraits
-
-ctraits._list_classes(TraitListObject, TraitSetObject, TraitDictObject)
-
-
-def _adapt_wrapper(*args, **kw):
-    # We need this wrapper to defer the import of 'adapt' and avoid a circular
-    # import. The ctraits 'adapt' callback needs to be set as soon as possible,
-    # but the adaptation mechanism relies on traits.
-
-    # This wrapper is called once, after which we set the ctraits callback
-    # to point directly to 'adapt'.
-
-    from traits.adaptation.api import adapt
-
-    ctraits._adapt(adapt)
-    return adapt(*args, **kw)
-
-
-ctraits._adapt(_adapt_wrapper)

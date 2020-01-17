@@ -1,4 +1,18 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """ A function to import symbols. """
+
+from importlib import import_module
+
+from traits.trait_base import xgetattr
 
 
 def import_symbol(symbol_path):
@@ -21,15 +35,15 @@ def import_symbol(symbol_path):
     if ":" in symbol_path:
         module_name, symbol_name = symbol_path.split(":")
 
-        module = __import__(module_name, {}, {}, [symbol_name], 0)
-        symbol = eval(symbol_name, module.__dict__)
+        module = import_module(module_name)
+        symbol = xgetattr(module, symbol_name)
 
     else:
         components = symbol_path.split(".")
         module_name = ".".join(components[:-1])
         symbol_name = components[-1]
 
-        module = __import__(module_name, {}, {}, [symbol_name], 0)
+        module = import_module(module_name)
         symbol = getattr(module, symbol_name)
 
     return symbol

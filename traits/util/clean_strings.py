@@ -1,9 +1,12 @@
-# -----------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2006 by Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-# -----------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """ Provides functions that mange strings to avoid characters that would be
     problematic in certain situations.
@@ -19,7 +22,7 @@ import unicodedata
 
 def clean_filename(name, replace_empty=""):
     """
-    Make a user-supplied Unicode string safe for filename use.
+    Make a user-supplied string safe for filename use.
 
     Returns an ASCII-encodable string based on the input string that's safe for
     use as a component of a filename or URL. The returned value is a string
@@ -32,7 +35,7 @@ def clean_filename(name, replace_empty=""):
     Parameters
     ----------
     name : str
-        The (Unicode) string to be made safe.
+        The string to be made safe.
     replace_empty : str, optional
         The return value to be used in the event that the sanitised
         string ends up being empty. No validation is done on this
@@ -60,28 +63,27 @@ def clean_filename(name, replace_empty=""):
 
 
 def clean_timestamp(dt=None, microseconds=False):
-    """ Return a timestamp that has been cleansed of characters that might
-        cause problems in filenames, namely colons.  If no datetime object
-        is provided, then uses the current time.
+    """
+    Return a timestamp that has been cleansed of characters that might
+    cause problems in filenames, namely colons.  If no datetime object
+    is provided, then uses the current time.
 
-        Description
-        -----------
-        The timestamp is in ISO-8601 format with the following exceptions:
+    The timestamp is in ISO-8601 format with the following exceptions:
 
-        * Colons ':' are replaced by underscores '_'.
-        * Microseconds are not displayed if the 'microseconds' parameter is
-          False.
+    * Colons ':' are replaced by underscores '_'.
+    * Microseconds are not displayed if the 'microseconds' parameter is
+        False.
 
-        Parameters
-        ----------
-        dt : None or datetime.datetime
-            If None, then the current time is used.
-        microseconds : bool
-            Display microseconds or not.
+    Parameters
+    ----------
+    dt : None or datetime.datetime
+        If None, then the current time is used.
+    microseconds : bool
+        Display microseconds or not.
 
-        Returns
-        -------
-        A string timestamp.
+    Returns
+    -------
+    A string timestamp.
     """
     if dt is None:
         dt = datetime.datetime.now()

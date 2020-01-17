@@ -1,19 +1,12 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2005, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#  Author: David C. Morrill
-#  Date:   12/06/2005
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """ Pseudo-package for all of the core symbols from Traits and TraitsUI.
 Use this module for importing Traits names into your namespace. For example::
@@ -21,45 +14,51 @@ Use this module for importing Traits names into your namespace. For example::
     from traits.api import HasTraits
 """
 
-from __future__ import absolute_import
+from .constants import (  # noqa: F401
+    ComparisonMode,
+    NO_COMPARE,
+    OBJECT_IDENTITY_COMPARE,
+    RICH_COMPARE,
+)
 
-from .trait_base import Uninitialized, Undefined, Missing, Self
+from .trait_base import Uninitialized, Undefined, Missing, Self  # noqa: F401
 
-from .trait_errors import TraitError, TraitNotificationError, DelegationError
+from .trait_errors import (  # noqa: F401
+    TraitError,
+    TraitNotificationError,
+    DelegationError,
+)
 
-from .trait_notifiers import (
+from .trait_notifiers import (  # noqa: F401
     push_exception_handler,
     pop_exception_handler,
     TraitChangeNotifyWrapper,
 )
 
-from .traits import (
-    CTrait,
+from .ctrait import CTrait  # noqa: F401
+from .trait_factory import TraitFactory  # noqa: F401
+from .traits import (  # noqa: F401
     Trait,
     Property,
-    TraitFactory,
     Default,
     Color,
     RGBColor,
     Font,
 )
 
-from .trait_types import (
+from .trait_types import (  # noqa: F401
     Any,
-    Generic,
     Int,
     Float,
     Complex,
     Str,
     Title,
-    Unicode,
     Bytes,
     Bool,
     CInt,
     CFloat,
     CComplex,
     CStr,
-    CUnicode,
     CBytes,
     CBool,
     String,
@@ -100,17 +99,28 @@ from .trait_types import (
     ToolbarButton,
     Either,
     Type,
+    Subclass,
     Symbol,
     WeakRef,
     Date,
     Time,
-    false,
-    true,
-    undefined,
     Supports,
 )
 
-from .trait_types import (
+# Deprecated TraitType subclasses and instances.
+
+from .trait_types import (  # noqa: F401
+    BaseUnicode,
+    Unicode,
+    BaseCUnicode,
+    CUnicode,
+    BaseLong,
+    Long,
+    BaseCLong,
+    CLong,
+    false,
+    true,
+    undefined,
     ListInt,
     ListFloat,
     ListStr,
@@ -128,19 +138,17 @@ from .trait_types import (
     DictStrList,
 )
 
-from .trait_types import (
+from .trait_types import (  # noqa: F401
     BaseInt,
     BaseFloat,
     BaseComplex,
     BaseStr,
-    BaseUnicode,
     BaseBytes,
     BaseBool,
     BaseCInt,
     BaseCFloat,
     BaseCComplex,
     BaseCStr,
-    BaseCUnicode,
     BaseCBool,
     BaseFile,
     BaseDirectory,
@@ -150,9 +158,13 @@ from .trait_types import (
     BaseInstance,
 )
 
-from .trait_types import UUID, ValidatedTuple
+from .trait_types import UUID, ValidatedTuple  # noqa: F401
 
-from .has_traits import (
+from .has_traits import (  # noqa: F401
+    ABCHasStrictTraits,
+    ABCHasTraits,
+    ABCMetaHasTraits,
+    AbstractViewElement,
     HasTraits,
     HasStrictTraits,
     HasPrivateTraits,
@@ -172,21 +184,14 @@ from .has_traits import (
     isinterface,
 )
 
-try:
-    from .has_traits import ABCHasTraits, ABCHasStrictTraits, ABCMetaHasTraits
-except ImportError:
-    pass
-
-from .trait_handlers import (
-    BaseTraitHandler,
-    TraitType,
-    TraitHandler,
-    TraitString,
+from .base_trait_handler import BaseTraitHandler  # noqa: F401
+from .trait_handler import TraitHandler  # noqa: F401
+from .trait_type import TraitType  # noqa: F401
+from .trait_handlers import (  # noqa: F401
     TraitCoerceType,
     TraitCastType,
     TraitInstance,
     ThisClass,
-    TraitClass,
     TraitFunction,
     TraitEnum,
     TraitPrefixList,
@@ -194,58 +199,35 @@ from .trait_handlers import (
     TraitPrefixMap,
     TraitCompound,
     TraitList,
-    TraitListObject,
-    TraitListEvent,
-    TraitSetObject,
-    TraitSetEvent,
     TraitDict,
-    TraitDictObject,
-    TraitDictEvent,
     TraitTuple,
-    NO_COMPARE,
-    OBJECT_IDENTITY_COMPARE,
-    RICH_COMPARE,
 )
 
-from .trait_value import (
-    BaseTraitValue,
-    TraitValue,
-    SyncValue,
-    TypeValue,
-    DefaultValue,
-)
 
-from .adaptation.adapter import Adapter
-from .adaptation.adaptation_error import AdaptationError
-from .adaptation.adaptation_manager import (
+from .trait_dict_object import TraitDictEvent, TraitDictObject  # noqa: F401
+from .trait_list_object import TraitListEvent, TraitListObject  # noqa: F401
+from .trait_set_object import TraitSetEvent, TraitSetObject  # noqa: F401
+
+
+from .adaptation.adapter import Adapter  # noqa: F401
+from .adaptation.adaptation_error import AdaptationError  # noqa: F401
+from .adaptation.adaptation_manager import (  # noqa: F401
     adapt,
     register_factory,
     register_provides,
 )
 
-from .trait_numeric import Array, ArrayOrNone, CArray
+from .trait_numeric import Array, ArrayOrNone, CArray  # noqa: F401
 
 try:
-    from . import has_traits as has_traits
-
-    # ---------------------------------------------------------------------------
-    #  Patch the main traits module with the correct definition for the
-    #  ViewElements class:
-    #  NOTE: We do this in a try..except block because traits.ui depends on
-    #  the pyface module (part of the TraitsGUI package) which may not
-    #  necessarily be installed. Not having TraitsGUI means that the 'ui'
-    #  features of traits will not work.
-    # ---------------------------------------------------------------------------
-
-    from traitsui import view_elements
-
-    has_traits.ViewElements = view_elements.ViewElements
-
     # -------------------------------------------------------------------------------
     #  Patch the main traits module with the correct definition for the
-    #  ViewElement and ViewSubElement class:
+    #  ViewElement class:
     # -------------------------------------------------------------------------------
 
-    has_traits.ViewElement = view_elements.ViewElement
+    from traitsui.view_element import ViewElement
+
+    if not isinstance(ViewElement, AbstractViewElement):
+        AbstractViewElement.register(ViewElement)
 except ImportError:
     pass

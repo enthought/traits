@@ -1,19 +1,12 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2005-2013, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#  Author:        David C. Morrill
-#  Original Date: 06/21/2002
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """ Classes that implement and support the Traits change notification mechanism
 """
@@ -22,16 +15,10 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import, print_function
-
 import contextlib
-
-import six
-
 import threading
 from threading import local as thread_local
 from threading import Thread
-
 import traceback
 from types import MethodType
 import weakref

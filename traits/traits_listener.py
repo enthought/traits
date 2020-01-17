@@ -1,19 +1,12 @@
-# -------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2007, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#  Author: David C. Morrill
-#  Date:   03/05/2007
-#
-# -------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """ Defines classes used to implement and manage various trait listener
     patterns.
@@ -23,22 +16,16 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 import re
 import string
 import weakref
 from string import whitespace
 from types import MethodType
 
+from .constants import DefaultValue
 from .has_traits import HasPrivateTraits
 from .trait_base import Undefined, Uninitialized
 from .traits import Property
-from .trait_handlers import (
-    TRAIT_LIST_OBJECT_DEFAULT_VALUE,
-    TRAIT_DICT_OBJECT_DEFAULT_VALUE,
-    TRAIT_SET_OBJECT_DEFAULT_VALUE,
-)
 from .trait_types import Str, Int, Bool, Instance, List, Enum, Any
 from .trait_errors import TraitError
 from .trait_notifiers import TraitChangeNotifyWrapper
@@ -64,9 +51,9 @@ SET_LISTENER = "_register_set"
 
 # Mapping from trait default value types to listener types
 type_map = {
-    TRAIT_LIST_OBJECT_DEFAULT_VALUE: LIST_LISTENER,
-    TRAIT_DICT_OBJECT_DEFAULT_VALUE: DICT_LISTENER,
-    TRAIT_SET_OBJECT_DEFAULT_VALUE: SET_LISTENER,
+    DefaultValue.trait_list_object: LIST_LISTENER,
+    DefaultValue.trait_dict_object: DICT_LISTENER,
+    DefaultValue.trait_set_object: SET_LISTENER,
 }
 
 # Listener types:

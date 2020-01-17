@@ -1,21 +1,12 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2005, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#  Author:        David C. Morrill
-#  Original Date: 06/21/2002
-#
-#  Rewritten as a C-based type extension: 06/21/2004
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """ Defines the HasTraits class, along with several useful subclasses and
     associated metaclasses.
@@ -25,36 +16,27 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import, division, print_function
-
+import abc
 import copy as copy_module
 import os
+import pickle
 import re
 import weakref
 
 from types import FunctionType, MethodType
 
-import six
-
 from . import __version__ as TraitsVersion
-
 from .adaptation.adaptation_error import AdaptationError
-
+from .constants import DefaultValue, TraitKind
+from .ctrait import CTrait, __newobj__
 from .ctraits import CHasTraits
-
 from .traits import (
-    CTrait,
     ForwardProperty,
     Property,
     Trait,
-    TraitFactory,
-    __newobj__,
     generic_trait,
-    trait_factory,
 )
-
 from .trait_types import Any, Bool, Disallow, Event, Python
-
 from .trait_notifiers import (
     ExtendedTraitChangeNotifyWrapper,
     FastUITraitChangeNotifyWrapper,
@@ -63,16 +45,7 @@ from .trait_notifiers import (
     StaticTraitChangeNotifyWrapper,
     TraitChangeNotifyWrapper,
 )
-
-from .trait_handlers import (
-    TraitType,
-    MISSING_DEFAULT_VALUE,
-    TRAIT_LIST_OBJECT_DEFAULT_VALUE,
-    CALLABLE_DEFAULT_VALUE,
-)
-
 from .trait_base import (
-    Missing,
     SequenceTypes,
     TraitsCache,
     Undefined,
@@ -80,10 +53,9 @@ from .trait_base import (
     not_event,
     not_false,
 )
-
 from .trait_errors import TraitError
-
 from .util.deprecated import deprecated
+from .trait_converters import check_trait, mapped_trait_for, trait_for
 
 # -------------------------------------------------------------------------------
 #  Set CHECK_INTERFACES to one of the following values:
@@ -98,21 +70,15 @@ from .util.deprecated import deprecated
 CHECK_INTERFACES = 0
 
 # -------------------------------------------------------------------------------
-#  Deferred definitions:
-#
-#  The following classes have a 'chicken and the egg' definition problem. They
-#  require Traits to work, because they subclass Traits, but the Traits
-#  meta-class programming support uses them, so Traits can't be subclassed
-#  until they are defined.
+#  This ABC is a placeholder for the TraitsUI ViewElement class, which should
+#  inherit from or register as implementing the API.  This has to be done here
+#  so that the metaclass machinery has something to check against when filtering
+#  out TraitsUI elements that are declared as part of a HasTraits class.
 # -------------------------------------------------------------------------------
 
 
-class ViewElement(object):
+class AbstractViewElement(abc.ABC):
     pass
-
-
-def ViewElements():
-    return None
 
 
 # -------------------------------------------------------------------------------
@@ -124,15 +90,9 @@ WrapperTypes = (
     StaticTraitChangeNotifyWrapper,
 )
 
-if six.PY2:
-    BoundMethodTypes = (MethodType,)
-    UnboundMethodTypes = (MethodType,)
-else:
-    # in python 3, unbound methods do not exist anymore, they're just functions
-    BoundMethodTypes = (MethodType,)
-    UnboundMethodTypes = (FunctionType,)
-
-
+# In Python 3, unbound methods do not exist anymore, they're just functions
+BoundMethodTypes = (MethodType,)
+UnboundMethodTypes = (FunctionType,)
 FunctionTypes = (FunctionType,)
 
 # Class dictionary entries used to save trait, listener and view information and
@@ -171,7 +131,7 @@ any_trait = Any().as_ctrait()
 def _clone_trait(clone, metadata=None):
     """ Creates a clone of a specified trait.
     """
-    trait = CTrait(0)
+    trait = CTrait(TraitKind.trait)
     trait.clone(clone)
 
     if clone.__dict__ is not None:
@@ -199,7 +159,9 @@ def _get_def(class_name, class_dict, bases, method):
     """ Gets the definition of a specified method (if any).
     """
     if method[0:2] == "__":
-        method = "_%s%s" % (class_name, method)
+        # When name-mangling to handle the __ case (for _private traits),
+        # leading underscores in the class name are stripped out.
+        method = "_%s%s" % (class_name.lstrip('_'), method)
 
     result = class_dict.get(method)
     if (
@@ -214,10 +176,7 @@ def _get_def(class_name, class_dict, bases, method):
         if (
             (result is not None)
             and is_unbound_method_type(result)
-            and (
-                getattr(six.get_unbound_function, "on_trait_change", None)
-                is None
-            )
+            and (getattr(result, "on_trait_change", None) is None)
         ):
             return result
 
@@ -354,65 +313,6 @@ class _SimpleTest:
 
 
 # -------------------------------------------------------------------------------
-#  Returns either the original value or a valid CTrait if the value can be
-#  converted to a CTrait:
-# -------------------------------------------------------------------------------
-
-
-def _check_trait(trait):
-    """ Returns either the original value or a valid CTrait if the value can be
-        converted to a CTrait.
-    """
-    if isinstance(trait, CTrait):
-        return trait
-
-    if isinstance(trait, TraitFactory):
-        return trait_factory(trait)
-
-    if isinstance(trait, type) and issubclass(trait, TraitType):
-        trait = trait()
-
-    if isinstance(trait, TraitType):
-        return trait.as_ctrait()
-
-    return trait
-
-
-# -------------------------------------------------------------------------------
-#  Returns the trait corresponding to a specified value:
-# -------------------------------------------------------------------------------
-
-
-def _trait_for(trait):
-    """ Returns the trait corresponding to a specified value.
-    """
-    trait = _check_trait(trait)
-    if isinstance(trait, CTrait):
-        return trait
-
-    return Trait(trait)
-
-
-# -------------------------------------------------------------------------------
-#  Returns the 'mapped trait' definition for a mapped trait:
-# -------------------------------------------------------------------------------
-
-
-def _mapped_trait_for(trait):
-    """ Returns the 'mapped trait' definition for a mapped trait.
-    """
-    default_value = trait.default_value()[1]
-    try:
-        default_value = trait.handler.mapped_value(default_value)
-    except:
-        pass
-
-    return Any(
-        default_value, is_base=False, transient=True, editable=False
-    ).as_ctrait()
-
-
-# -------------------------------------------------------------------------------
 #  Adds a list of handlers to a specified notifiers list:
 # -------------------------------------------------------------------------------
 
@@ -436,7 +336,7 @@ def _add_event_handlers(trait, cls, handlers):
     """
     events = trait.event
     if events is not None:
-        if isinstance(events, six.string_types):
+        if isinstance(events, str):
             events = [events]
 
         for event in events:
@@ -523,7 +423,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
 
     Parameters
     ----------
-    class_name : str or unicode
+    class_name : str
         The name of the HasTraits class.
     bases : tuple
         The base classes for the HasTraits class.
@@ -537,7 +437,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
     prefix_traits = {}
     listeners = {}
     prefix_list = []
-    view_elements = ViewElements()
+    view_elements = {}
 
     # Create a list of just those base classes that derive from HasTraits:
     hastraits_bases = [
@@ -552,7 +452,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
     # Move all trait definitions from the class dictionary to the
     # appropriate trait class dictionaries:
     for name, value in list(class_dict.items()):
-        value = _check_trait(value)
+        value = check_trait(value)
         rc = isinstance(value, CTrait)
 
         if (not rc) and isinstance(value, ForwardProperty):
@@ -596,7 +496,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                             class_traits[name + "_items"] = items_trait
 
                         if handler.is_mapped:
-                            class_traits[name + "_"] = _mapped_trait_for(value)
+                            class_traits[name + "_"] = mapped_trait_for(value)
 
                 elif value_type == "delegate":
                     # Only add a listener if the trait.listenable metadata
@@ -608,7 +508,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                         )
                 elif value_type == "event":
                     on_trait_change = value.on_trait_change
-                    if isinstance(on_trait_change, six.string_types):
+                    if isinstance(on_trait_change, str):
                         listeners[name] = ("event", on_trait_change)
             else:
                 name = name[:-1]
@@ -626,21 +526,9 @@ def update_traits_class_dict(class_name, bases, class_dict):
             class_traits[name] = generic_trait
 
         # Handle any view elements found in the class:
-        elif isinstance(value, ViewElement):
+        elif isinstance(value, AbstractViewElement):
 
-            # Add the view element to the class's 'ViewElements' if it is
-            # not already defined (duplicate definitions are errors):
-            if name in view_elements.content:
-                raise TraitError(
-                    "Duplicate definition for view element '%s'" % name
-                )
-
-            view_elements.content[name] = value
-
-            # Replace all substitutable view sub elements with 'Include'
-            # objects, and add the substituted items to the
-            # 'ViewElements':
-            value.replace_include(view_elements)
+            view_elements[name] = value
 
             # Remove the view element from the class definition:
             del class_dict[name]
@@ -663,11 +551,12 @@ def update_traits_class_dict(class_name, bases, class_dict):
                     class_traits[name] = value = ictrait(default_value)
                     # Make sure that the trait now has the default value
                     # has the correct initializer.
-                    value.default_value(MISSING_DEFAULT_VALUE, value.default)
+                    value.set_default_value(
+                        DefaultValue.missing, value.default)
                     del class_dict[name]
                     handler = value.handler
                     if (handler is not None) and handler.is_mapped:
-                        class_traits[name + "_"] = _mapped_trait_for(value)
+                        class_traits[name + "_"] = mapped_trait_for(value)
                     break
 
     # Process all HasTraits base classes:
@@ -711,12 +600,6 @@ def update_traits_class_dict(class_name, bases, class_dict):
             if name not in prefix_list:
                 prefix_list.append(name)
                 prefix_traits[name] = base_prefix_traits[name]
-
-        # If the base class has a 'ViewElements' object defined, add it to
-        # the 'parents' list of this class's 'ViewElements':
-        parent_view_elements = base_dict.get(ViewTraits)
-        if parent_view_elements is not None:
-            view_elements.parents.append(parent_view_elements)
 
     # Make sure there is a definition for 'undefined' traits:
     if prefix_traits.get("") is None:
@@ -773,7 +656,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
         events = trait.event
         if events is not None:
 
-            if isinstance(events, six.string_types):
+            if isinstance(events, str):
                 events = [events]
 
             for event in events:
@@ -797,10 +680,10 @@ def update_traits_class_dict(class_name, bases, class_dict):
                 class_traits[name] = trait = _clone_trait(trait)
 
             if len(handlers) > 0:
-                _add_notifiers(trait._notifiers(1), handlers)
+                _add_notifiers(trait._notifiers(True), handlers)
 
             if default is not None:
-                trait.default_value(CALLABLE_DEFAULT_VALUE, default)
+                trait.set_default_value(DefaultValue.callable, default)
 
         # Handle the case of properties whose value depends upon the value
         # of other traits:
@@ -1044,8 +927,7 @@ def weak_arg(arg):
 # -------------------------------------------------------------------------------
 
 
-@six.add_metaclass(MetaHasTraits)
-class HasTraits(CHasTraits):
+class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     """ Enables any Python class derived from it to have trait attributes.
 
     Most of the methods of HasTraits operated by default only on the trait
@@ -1090,7 +972,7 @@ class HasTraits(CHasTraits):
     # -- Trait Definitions ------------------------------------------------------
 
     #: An event fired when a new trait is dynamically added to the object
-    trait_added = Event(six.string_types[0])
+    trait_added = Event(str)
 
     #: An event that can be fired to indicate that the state of the object has
     #: been modified
@@ -1140,7 +1022,7 @@ class HasTraits(CHasTraits):
         if len(trait) > 1:
             trait = Trait(*trait)
         else:
-            trait = _trait_for(trait[0])
+            trait = trait_for(trait[0])
 
         # Add the trait to the class:
         cls._add_class_trait(name, trait, False)
@@ -1187,7 +1069,7 @@ class HasTraits(CHasTraits):
             if handler.has_items:
                 cls.add_class_trait(name + "_items", handler.items_event())
             if handler.is_mapped:
-                cls.add_class_trait(name + "_", _mapped_trait_for(trait))
+                cls.add_class_trait(name + "_", mapped_trait_for(trait))
 
         # Make the new trait inheritable (if allowed):
         if trait.is_base is not False:
@@ -1211,7 +1093,7 @@ class HasTraits(CHasTraits):
         # If there are and handlers, add them to the trait's notifier's list:
         if len(handlers) > 0:
             trait = _clone_trait(trait)
-            _add_notifiers(trait._notifiers(1), handlers)
+            _add_notifiers(trait._notifiers(True), handlers)
 
         # Finally, add the new trait to the class trait dictionary:
         class_traits[name] = trait
@@ -1409,9 +1291,11 @@ class HasTraits(CHasTraits):
         elif n == 0:
             names = self.trait_names(**metadata)
 
+        # Sentinel for missing attributes.
+        missing = object()
         for name in names:
-            value = getattr(self, name, Missing)
-            if value is not Missing:
+            value = getattr(self, name, missing)
+            if value is not missing:
                 result[name] = value
 
         return result
@@ -1920,7 +1804,7 @@ class HasTraits(CHasTraits):
         """ Gets or sets a ViewElement associated with an object's class.
         """
         # If a view element was passed instead of a name or None, return it:
-        if isinstance(name, ViewElement):
+        if isinstance(name, AbstractViewElement):
             return name
 
         # Get the ViewElements object associated with the class:
@@ -1953,7 +1837,7 @@ class HasTraits(CHasTraits):
         name = default_name()
 
         # If the default is a View, return it:
-        if isinstance(name, ViewElement):
+        if isinstance(name, AbstractViewElement):
             return name
 
         # Otherwise, get all View objects associated with the object's class:
@@ -1967,7 +1851,7 @@ class HasTraits(CHasTraits):
             method = getattr(handler, name, None)
             if callable(method):
                 result = method()
-                if isinstance(result, ViewElement):
+                if isinstance(result, AbstractViewElement):
                     return result
 
         # If there is only one View, return it:
@@ -2025,7 +1909,10 @@ class HasTraits(CHasTraits):
         If *klass* is specified, the list of names is filtered such that only
         objects that are instances of the specified class are returned.
         """
-        return self.__class__.__dict__[ViewTraits].filter_by(klass)
+        view_elements = self.__class__.__dict__[ViewTraits]
+        if isinstance(view_elements, dict):
+            view_elements = self._init_trait_view_elements()
+        return view_elements.filter_by(klass)
 
     # ---------------------------------------------------------------------------
     #  Returns the ViewElements object associated with the object's class:
@@ -2047,7 +1934,47 @@ class HasTraits(CHasTraits):
         The returned object can be used to access all the view elements
         associated with the class.
         """
-        return cls.__dict__[ViewTraits]
+        view_elements = cls.__dict__[ViewTraits]
+        if isinstance(view_elements, dict):
+            view_elements = cls._init_trait_view_elements()
+        return view_elements
+
+    @classmethod
+    def _init_trait_view_elements(cls):
+        """ Lazily Initialize the ViewElements object from a dictionary. """
+        from traitsui.view_elements import ViewElements
+
+        hastraits_bases = [
+            base for base in cls.__bases__
+            if ClassTraits in base.__dict__
+        ]
+        view_elements = ViewElements()
+        elements_dict = cls.__dict__[ViewTraits]
+
+        for name, element in elements_dict.items():
+            # Add the view element to the class's 'ViewElements' if it is
+            # not already defined (duplicate definitions are errors):
+            if name in view_elements.content:
+                raise TraitError(
+                    "Duplicate definition for view element '%s'" % name
+                )
+
+            view_elements.content[name] = element
+
+            # Replace all substitutable view sub elements with 'Include'
+            # objects, and add the substituted items to the
+            # 'ViewElements':
+            element.replace_include(view_elements)
+
+        for base in hastraits_bases:
+            # If the base class has a 'ViewElements' object defined, add it to
+            # the 'parents' list of this class's 'ViewElements':
+            parent_view_elements = base.class_trait_view_elements()
+            if parent_view_elements is not None:
+                view_elements.parents.append(parent_view_elements)
+
+        setattr(cls, ViewTraits, view_elements)
+        return view_elements
 
     # ---------------------------------------------------------------------------
     #  Configure the object's traits:
@@ -2139,7 +2066,7 @@ class HasTraits(CHasTraits):
         if filename is not None:
             if os.path.exists(filename):
                 with open(filename, "rb") as fd:
-                    self.copy_traits(six.moves.cPickle.Unpickler(fd).load())
+                    self.copy_traits(pickle.Unpickler(fd).load())
 
         if edit:
             from traitsui.api import toolkit
@@ -2157,7 +2084,7 @@ class HasTraits(CHasTraits):
             )
             if rc and (filename is not None):
                 with open(filename, "wb") as fd:
-                    six.moves.cPickle.Pickler(fd, True).dump(self)
+                    pickle.Pickler(fd, True).dump(self)
             return rc
 
         return True
@@ -2296,12 +2223,12 @@ class HasTraits(CHasTraits):
 
         if remove:
             if name == "anytrait":
-                notifiers = self._notifiers(0)
+                notifiers = self._notifiers(False)
             else:
                 trait = self._trait(name, 1)
                 if trait is None:
                     return
-                notifiers = trait._notifiers(0)
+                notifiers = trait._notifiers(False)
 
             if notifiers is not None:
                 for i, notifier in enumerate(notifiers):
@@ -2313,9 +2240,9 @@ class HasTraits(CHasTraits):
             return
 
         if name == "anytrait":
-            notifiers = self._notifiers(1)
+            notifiers = self._notifiers(True)
         else:
-            notifiers = self._trait(name, 2)._notifiers(1)
+            notifiers = self._trait(name, 2)._notifiers(True)
 
         for notifier in notifiers:
             if notifier.equals(handler):
@@ -2349,37 +2276,6 @@ class HasTraits(CHasTraits):
         """Causes the object to invoke a handler whenever a trait attribute
         matching a specified pattern is modified, or removes the association.
 
-        Parameters
-        ----------
-        handler : function
-            A trait notification function for the *name* trait attribute, with
-            one of the signatures described below.
-        name : str
-            The name of the trait attribute whose value changes trigger the
-            notification. The *name* can specify complex patterns of trait
-            changes using an extended *name* syntax, which is described below.
-        remove : bool
-            If True, removes the previously-set association between
-            *handler* and *name*; if False (the default), creates the
-            association.
-        dispatch : str
-            A string indicating the thread on which notifications must be run.
-            Possible values are:
-
-            =========== =======================================================
-            value       dispatch
-            =========== =======================================================
-            ``same``    Run notifications on the same thread as this one.
-            ``ui``      Run notifications on the UI thread. If the current
-                        thread is the UI thread, the notifications are executed
-                        immediately; otherwise, they are placed on the UI
-                        event queue.
-            ``fast_ui`` Alias for ``ui``.
-            ``new``     Run notifications in a new thread.
-            =========== =======================================================
-
-        Description
-        -----------
         Multiple handlers can be defined for the same object, or even for the
         same trait attribute on the same object. If *name* is not specified or
         is None, *handler* is invoked when any trait attribute on the
@@ -2552,11 +2448,40 @@ class HasTraits(CHasTraits):
         you must explicitly specify the 'xxx_items' trait if you want to
         be notified of changes to any of the items of the 'xxx' trait.
 
+        Parameters
+        ----------
+        handler : function
+            A trait notification function for the *name* trait attribute, with
+            one of the signatures described below.
+        name : str
+            The name of the trait attribute whose value changes trigger the
+            notification. The *name* can specify complex patterns of trait
+            changes using an extended *name* syntax, which is described below.
+        remove : bool
+            If True, removes the previously-set association between
+            *handler* and *name*; if False (the default), creates the
+            association.
+        dispatch : str
+            A string indicating the thread on which notifications must be run.
+            Possible values are:
+
+            =========== =======================================================
+            value       dispatch
+            =========== =======================================================
+            ``same``    Run notifications on the same thread as this one.
+            ``ui``      Run notifications on the UI thread. If the current
+                        thread is the UI thread, the notifications are executed
+                        immediately; otherwise, they are placed on the UI
+                        event queue.
+            ``fast_ui`` Alias for ``ui``.
+            ``new``     Run notifications in a new thread.
+            =========== =======================================================
+
         """
         # Check to see if we can do a quick exit to the basic trait change
         # handler:
         if (
-            isinstance(name, six.string_types)
+            isinstance(name, str)
             and (extended_trait_pat.match(name) is None)
         ) or (name is None):
             self._on_trait_change(
@@ -2774,7 +2699,7 @@ class HasTraits(CHasTraits):
         handler = self.base_trait(trait_name).handler
 
         return (handler is not None) and (
-            handler.default_value_type == TRAIT_LIST_OBJECT_DEFAULT_VALUE
+            handler.default_value_type == DefaultValue.trait_list_object
         )
 
     # ---------------------------------------------------------------------------
@@ -2803,7 +2728,7 @@ class HasTraits(CHasTraits):
         if len(trait) > 1:
             trait = Trait(*trait)
         else:
-            trait = _trait_for(trait[0])
+            trait = trait_for(trait[0])
 
         # Check to see if the trait has additional sub-traits that need to be
         # defined also:
@@ -2812,7 +2737,7 @@ class HasTraits(CHasTraits):
             if handler.has_items:
                 self.add_trait(name + "_items", handler.items_event())
             if handler.is_mapped:
-                self.add_trait(name + "_", _mapped_trait_for(trait))
+                self.add_trait(name + "_", mapped_trait_for(trait))
 
         # See if there already is a class or instance trait with the same name:
         old_trait = self._trait(name, 0)
@@ -2825,9 +2750,9 @@ class HasTraits(CHasTraits):
         # If there already was a trait with the same name:
         if old_trait is not None:
             # Copy the old traits notifiers into the new trait:
-            old_notifiers = old_trait._notifiers(0)
+            old_notifiers = old_trait._notifiers(False)
             if old_notifiers is not None:
-                trait._notifiers(1).extend(old_notifiers)
+                trait._notifiers(True).extend(old_notifiers)
         else:
             # Otherwise, see if there are any static notifiers that should be
             # applied to the trait:
@@ -2848,7 +2773,7 @@ class HasTraits(CHasTraits):
 
             # If there are any static notifiers, attach them to the trait:
             if len(handlers) > 0:
-                _add_notifiers(trait._notifiers(1), handlers)
+                _add_notifiers(trait._notifiers(True), handlers)
 
         # If this was a new trait, fire the 'trait_added' event:
         if old_trait is None:
@@ -3208,7 +3133,7 @@ class HasTraits(CHasTraits):
                 # list:
                 if len(handlers) > 0:
                     trait = _clone_trait(trait)
-                    _add_notifiers(trait._notifiers(1), handlers)
+                    _add_notifiers(trait._notifiers(True), handlers)
 
                 return trait
 
@@ -3577,42 +3502,35 @@ class HasPrivateTraits(HasTraits):
 
 
 # ------------------------------------------------------------------------------
-# ABC classes with traits: (where available)
+# ABC classes with traits:
 # ------------------------------------------------------------------------------
-try:
-
-    import abc
-
-    class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
-        """ A MetaHasTraits subclass which also inherits from
-        abc.ABCMeta.
-
-        .. note:: The ABCMeta class is cooperative and behaves nicely
-            with MetaHasTraits, provided it is inherited first.
-        """
-
-        pass
-
-    @six.add_metaclass(ABCMetaHasTraits)
-    class ABCHasTraits(HasTraits):
-        """ A HasTraits subclass which enables the features of Abstract
-        Base Classes (ABC). See the 'abc' module in the standard library
-        for more information.
-
-        """
-
-    class ABCHasStrictTraits(ABCHasTraits):
-        """ A HasTraits subclass which behaves like HasStrictTraits but
-        also enables the features of Abstract Base Classes (ABC). See the
-        'abc' module in the standard library for more information.
-
-        """
-
-        _ = Disallow
 
 
-except ImportError:
+class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
+    """ A MetaHasTraits subclass which also inherits from
+    abc.ABCMeta.
+
+    .. note:: The ABCMeta class is cooperative and behaves nicely
+        with MetaHasTraits, provided it is inherited first.
+    """
+
     pass
+
+class ABCHasTraits(HasTraits, metaclass=ABCMetaHasTraits):
+    """ A HasTraits subclass which enables the features of Abstract
+    Base Classes (ABC). See the 'abc' module in the standard library
+    for more information.
+
+    """
+
+class ABCHasStrictTraits(ABCHasTraits):
+    """ A HasTraits subclass which behaves like HasStrictTraits but
+    also enables the features of Abstract Base Classes (ABC). See the
+    'abc' module in the standard library for more information.
+
+    """
+
+    _ = Disallow
 
 # -------------------------------------------------------------------------------
 #  Singleton classes with traits:
@@ -3704,8 +3622,7 @@ class MetaInterface(ABCMetaHasTraits):
 # -------------------------------------------------------------------------------
 
 
-@six.add_metaclass(MetaInterface)
-class Interface(HasTraits):
+class Interface(HasTraits, metaclass=MetaInterface):
     """ The base class for all interfaces.
     """
 

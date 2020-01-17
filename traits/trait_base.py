@@ -1,21 +1,12 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2005, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#  Author: David C. Morrill
-#  Date:   06/21/2002
-#
-#  Refactored into a separate module: 07/04/2003
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """ Defines common, low-level capabilities needed by the Traits package.
 """
@@ -24,18 +15,14 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 import os
 import sys
 from os import getcwd
 from os.path import dirname, exists, join
-
-import six
-
-from . import _py2to3
+from weakref import ref
 
 from .etsconfig.api import ETSConfig
+from .constants import ValidateTrait
 
 # backwards compatibility: trait_base used to provide a patched enumerate
 enumerate = enumerate
@@ -44,15 +31,14 @@ enumerate = enumerate
 #  Constants:
 # -------------------------------------------------------------------------------
 
-ClassTypes = _py2to3.ClassTypes
-
 SequenceTypes = (list, tuple)
 
 ComplexTypes = (float, int)
 
+RangeTypes = (int, float)
+
 TypeTypes = (
     str,
-    six.text_type,
     int,
     float,
     complex,
@@ -145,11 +131,6 @@ class _Undefined(object):
 #: parameter, to indicate that the attribute previously had no value.
 Undefined = _Undefined()
 
-# Tell the C-base code about singleton 'Undefined' and 'Uninitialized' objects:
-from . import ctraits
-
-ctraits._undefined(Undefined, Uninitialized)
-
 # -------------------------------------------------------------------------------
 #  Singleton 'Missing' object (used as missing method argument marker):
 # -------------------------------------------------------------------------------
@@ -201,7 +182,7 @@ def strx(arg):
 #  Constants:
 # -------------------------------------------------------------------------------
 
-StringTypes = (str, six.text_type, int, float, complex)
+StringTypes = (str, int, float, complex)
 
 # -------------------------------------------------------------------------------
 #  Define a mapping of coercable types:
@@ -209,9 +190,8 @@ StringTypes = (str, six.text_type, int, float, complex)
 
 # Mapping of coercable types.
 CoercableTypes = {
-    float: (11, float, int),
-    complex: (11, complex, float, int),
-    six.text_type: (11, six.text_type, str),
+    float: (ValidateTrait.coerce, float, int),
+    complex: (ValidateTrait.coerce, complex, float, int),
 }
 
 # -------------------------------------------------------------------------------
@@ -225,7 +205,7 @@ def class_of(object):
     correct indefinite article ('a' or 'an') preceding it (e.g., 'an Image',
     'a PlotValue').
     """
-    if isinstance(object, six.string_types):
+    if isinstance(object, str):
         return add_article(object)
 
     return add_article(object.__class__.__name__)
@@ -409,6 +389,28 @@ def xsetattr(object, xname, value):
 
     setattr(object, names[-1], value)
 
+# -------------------------------------------------------------------------------
+# Helpers for weak references
+# -------------------------------------------------------------------------------
+
+def _make_value_freed_callback(object_ref, name):
+    def _value_freed(value_ref):
+        object = object_ref()
+        if object is not None:
+            object.trait_property_changed(name, Undefined, None)
+
+    return _value_freed
+
+
+class HandleWeakRef(object):
+    def __init__(self, object, name, value):
+        object_ref = ref(object)
+        _value_freed = _make_value_freed_callback(object_ref, name)
+        self.object = object_ref
+        self.name = name
+        self.value = ref(value, _value_freed)
+
+
 
 # -------------------------------------------------------------------------------
 #  Traits metadata selection functions:
@@ -432,4 +434,4 @@ def not_event(value):
 
 
 def is_str(value):
-    return isinstance(value, six.string_types)
+    return isinstance(value, str)

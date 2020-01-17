@@ -1,21 +1,22 @@
-# Copyright (c) 2019 by Enthought, Inc.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
 # All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
-try:
-    # Python 3: mock in the standard library.
-    import unittest.mock as mock
-except ImportError:
-    # Python 2: need to use 3rd-party mock.
-    import mock
 import os
+import pickle
 import shutil
 import tempfile
 import unittest
-
-import six
+import unittest.mock as mock
 
 from traits.api import HasTraits, Int
-from traits.testing.optional_dependencies import requires_traitsui
+from traits.testing.optional_dependencies import requires_traitsui, traitsui
 
 
 class Model(HasTraits):
@@ -25,8 +26,6 @@ class Model(HasTraits):
 @requires_traitsui
 class TestConfigureTraits(unittest.TestCase):
     def setUp(self):
-        import traitsui.api
-
         self.toolkit = traitsui.api.toolkit()
         self.tmpdir = tempfile.mkdtemp()
 
@@ -52,7 +51,7 @@ class TestConfigureTraits(unittest.TestCase):
 
         self.assertTrue(os.path.exists(filename))
         with open(filename, "rb") as pickled_object:
-            unpickled = six.moves.cPickle.load(pickled_object)
+            unpickled = pickle.load(pickled_object)
 
         self.assertIsInstance(unpickled, Model)
         self.assertEqual(unpickled.count, model.count)
@@ -62,7 +61,7 @@ class TestConfigureTraits(unittest.TestCase):
         stored_model = Model(count=52)
         filename = os.path.join(self.tmpdir, "model.pkl")
         with open(filename, "wb") as pickled_object:
-            six.moves.cPickle.dump(stored_model, pickled_object)
+            pickle.dump(stored_model, pickled_object)
 
         model = Model(count=19)
         with mock.patch.object(self.toolkit, "view_application"):
@@ -77,14 +76,14 @@ class TestConfigureTraits(unittest.TestCase):
 
         model = Model(count=19)
         with mock.patch.object(self.toolkit, "view_application"):
-            with self.assertRaises(six.moves.cPickle.PickleError):
+            with self.assertRaises(pickle.PickleError):
                 model.configure_traits(filename=filename)
 
     def test_filename_with_existing_file_stores_updated_model(self):
         stored_model = Model(count=52)
         filename = os.path.join(self.tmpdir, "model.pkl")
         with open(filename, "wb") as pickled_object:
-            six.moves.cPickle.dump(stored_model, pickled_object)
+            pickle.dump(stored_model, pickled_object)
 
         def modify_model(*args, **kwargs):
             model.count = 23
@@ -97,7 +96,7 @@ class TestConfigureTraits(unittest.TestCase):
         self.assertEqual(model.count, 23)
 
         with open(filename, "rb") as pickled_object:
-            unpickled = six.moves.cPickle.load(pickled_object)
+            unpickled = pickle.load(pickled_object)
 
         self.assertIsInstance(unpickled, Model)
         self.assertEqual(unpickled.count, model.count)

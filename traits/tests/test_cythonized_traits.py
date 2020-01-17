@@ -1,3 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """ Test some usage of Trait classes when the code is cythonized.
 
 The tests reflects some of the patterns needed in different applications. They
@@ -10,28 +20,13 @@ properly.
 The tests need a Cython version > 0.19 and a compiler.
 
 """
-import sys
 import unittest
 
-import six
-
 from traits.testing.unittest_tools import UnittestTools
-from traits.testing.optional_dependencies import cython
-
-if cython is None:
-    skip_reason = "Cython is not installed"
-elif sys.platform == "win32" and six.PY2:
-    # Tests are failing for undiagnosed reasons on Windows / Python 2.7.
-    # Ref: enthought/traits#557.
-    skip_reason = (
-        "Compilation issues with Windows / Python 2.7. "
-        "See enthought/traits#557"
-    )
-else:
-    skip_reason = None
+from traits.testing.optional_dependencies import cython, requires_cython
 
 
-@unittest.skipIf(skip_reason, skip_reason)
+@requires_cython
 class CythonizedTraitsTestCase(unittest.TestCase, UnittestTools):
     def test_simple_default_methods(self):
 

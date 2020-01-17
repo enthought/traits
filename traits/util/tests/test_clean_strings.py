@@ -1,26 +1,19 @@
-# -----------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2019, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in /LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-# -----------------------------------------------------------------------------
-from __future__ import unicode_literals
+# Thanks for using Enthought open source!
 
 import unittest
-
-import six
 
 from traits.util.clean_strings import clean_filename
 
 # Safe strings should only contain the following characters.
-LEGAL_CHARS = set("-0123456789_abcdefghijklmnopqrstuvwxyz0123456789")
+LEGAL_CHARS = set("-0123456789_abcdefghijklmnopqrstuvwxyz")
 
 
 class TestCleanStrings(unittest.TestCase):
@@ -63,11 +56,10 @@ class TestCleanStrings(unittest.TestCase):
             self.assertEqual(safe_string, "abcdef")
 
     def test_clean_filename_all_chars(self):
-        chr_ = unichr if six.PY2 else chr
         test_strings = [
-            "".join(chr_(n) for n in range(10000)),
-            "".join(chr_(n) for n in range(10000)) * 2,
-            "".join(chr_(n) for n in reversed(range(10000))),
+            "".join(chr(n) for n in range(10000)),
+            "".join(chr(n) for n in range(10000)) * 2,
+            "".join(chr(n) for n in reversed(range(10000))),
         ]
         for test_string in test_strings:
             safe_string = clean_filename(test_string)
@@ -77,6 +69,6 @@ class TestCleanStrings(unittest.TestCase):
         """
         Check that a supposedly safe string is actually safe.
         """
-        self.assertIsInstance(safe_string, six.text_type)
+        self.assertIsInstance(safe_string, str)
         chars_in_string = set(safe_string)
         self.assertLessEqual(chars_in_string, LEGAL_CHARS)

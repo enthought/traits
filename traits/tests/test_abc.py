@@ -1,10 +1,18 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """ Test the ABC functionality.
 """
 import abc
 import unittest
 import warnings
-
-import six
 
 from traits.api import ABCHasTraits, ABCMetaHasTraits, HasTraits, Int, Float
 
@@ -62,8 +70,7 @@ class FooLike(HasTraits):
 AbstractFoo.register(FooLike)
 
 
-@six.add_metaclass(abc.ABCMeta)
-class AbstractBar(object):
+class AbstractBar(abc.ABC):
     pass
 
     @abc.abstractmethod
@@ -86,9 +93,7 @@ class TestABC(unittest.TestCase):
         self.assertTrue(isinstance(foolike, AbstractFoo))
 
     def test_post_hoc_mixing(self):
-        class TraitedBar(
-            six.with_metaclass(ABCMetaHasTraits, HasTraits, AbstractBar)
-        ):
+        class TraitedBar(HasTraits, AbstractBar, metaclass=ABCMetaHasTraits):
             x = Int(10)
 
             def bar(self):

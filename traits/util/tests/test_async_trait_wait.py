@@ -1,9 +1,17 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 import random
 import threading
 import time
 import unittest
-
-import six.moves as sm
 
 from traits.api import Enum, HasStrictTraits
 
@@ -21,7 +29,7 @@ class TrafficLights(HasStrictTraits):
     }
 
     def make_random_changes(self, change_count):
-        for _ in sm.range(change_count):
+        for _ in range(change_count):
             time.sleep(random.uniform(0.1, 0.3))
             self.colour = self._next_colour[self.colour]
 

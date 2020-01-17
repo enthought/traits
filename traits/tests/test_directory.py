@@ -1,3 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 from tempfile import gettempdir
 
 import unittest
@@ -17,7 +27,6 @@ class DirectoryTestCase(unittest.TestCase):
     def test_valid_directory(self):
         example_model = ExampleModel(path=gettempdir())
         example_model.path = "."
-        example_model.path = u"."
 
     def test_invalid_directory(self):
         example_model = ExampleModel(path=gettempdir())
@@ -46,4 +55,3 @@ class DirectoryTestCase(unittest.TestCase):
     def test_fast(self):
         example_model = FastExampleModel(path=gettempdir())
         example_model.path = "."
-        example_model.path = u"."

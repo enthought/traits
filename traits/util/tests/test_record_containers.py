@@ -1,22 +1,18 @@
-# ----------------------------------------------------------------------------
-# Copyright (c) 2014, Enthought, Inc.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in /LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
-#
-# ----------------------------------------------------------------------------
+
 import os
 import shutil
 import tempfile
 import threading
 import unittest
-
-import six
 
 from traits.util.event_tracer import (
     SentinelRecord,
@@ -65,7 +61,7 @@ class TestRecordContainers(unittest.TestCase):
         thread_1.join()
 
         self.assertEqual(len(container._record_containers), 3)
-        for collector in six.itervalues(container._record_containers):
+        for collector in container._record_containers.values():
             self.assertTrue(isinstance(collector._records[0], SentinelRecord))
             self.assertEqual(len(collector._records), 1)
 

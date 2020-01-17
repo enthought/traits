@@ -1,5 +1,12 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
 # --(cached_property Decorator)-------------------------------------------------
 """
@@ -66,9 +73,6 @@ Use of the *cached_property* decorator also eliminates the need to add *cached
 using *depends_on* metadata with a cached property definition.
 """
 
-from __future__ import print_function
-import six.moves as sm
-
 from traits.api import *
 from traitsui.api import *
 
@@ -83,7 +87,7 @@ class TestScores(HasPrivateTraits):
     def _get_average(self):
         print("...computing average:", end=" ")
         s = self.scores
-        return float(sm.reduce(lambda n1, n2: n1 + n2, s, 0)) / len(s)
+        return sum(s) / len(s)
 
 
 # --[Example*]------------------------------------------------------------------

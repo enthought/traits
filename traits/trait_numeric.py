@@ -1,19 +1,12 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2005, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#  Author: David C. Morrill
-#  Date:   12/13/2004
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """ Trait definitions related to the numpy library.
 """
@@ -22,13 +15,12 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 import warnings
 
+from .constants import ComparisonMode, DefaultValue
 from .trait_base import SequenceTypes
 from .trait_errors import TraitError
-from .trait_handlers import TraitType, OBJECT_IDENTITY_COMPARE
+from .trait_type import TraitType
 from .trait_types import Str, Any, Int as TInt, Float as TFloat
 
 # -------------------------------------------------------------------------------
@@ -98,7 +90,9 @@ class AbstractArray(TraitType):
         metadata["array"] = True
 
         # Normally use object identity to detect array values changing:
-        metadata.setdefault("comparison_mode", OBJECT_IDENTITY_COMPARE)
+        metadata.setdefault(
+            "comparison_mode", ComparisonMode.object_id_compare
+        )
 
         if typecode is not None:
             warnings.warn(
@@ -266,7 +260,7 @@ class AbstractArray(TraitType):
             trait factory.
         """
         return (
-            7,
+            DefaultValue.callable_and_args,
             (
                 self.copy_default_value,
                 (self.validate(None, None, self.default_value),),
@@ -420,7 +414,9 @@ class ArrayOrNone(CArray):
 
     def __init__(self, *args, **metadata):
         # Normally use object identity to detect array values changing:
-        metadata.setdefault("comparison_mode", OBJECT_IDENTITY_COMPARE)
+        metadata.setdefault(
+            "comparison_mode", ComparisonMode.object_id_compare
+        )
         super(ArrayOrNone, self).__init__(*args, **metadata)
 
     def validate(self, object, name, value):
@@ -431,10 +427,10 @@ class ArrayOrNone(CArray):
     def get_default_value(self):
         dv = self.default_value
         if dv is None:
-            return (0, dv)
+            return (DefaultValue.constant, dv)
         else:
             return (
-                7,
+                DefaultValue.callable_and_args,
                 (
                     self.copy_default_value,
                     (self.validate(None, None, dv),),

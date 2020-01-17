@@ -1,7 +1,15 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 import os
 import unittest
-
-import six
 
 from traits.api import File, HasTraits, TraitError
 from traits.testing.optional_dependencies import requires_traitsui
@@ -19,7 +27,6 @@ class FileTestCase(unittest.TestCase):
     def test_valid_file(self):
         example_model = ExampleModel(file_name=__file__)
         example_model.file_name = os.path.__file__
-        example_model.file_name = six.text_type(os.path.__file__)
 
     def test_invalid_file(self):
         example_model = ExampleModel(file_name=__file__)
@@ -48,7 +55,6 @@ class FileTestCase(unittest.TestCase):
     def test_fast(self):
         example_model = FastExampleModel(file_name=__file__)
         example_model.path = "."
-        example_model.path = u"."
 
 
 class TestCreateEditor(unittest.TestCase):
