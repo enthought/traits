@@ -133,7 +133,7 @@ class TestBytesEditor(unittest.TestCase):
         self.assertIs(editor_1, editor_2)
 
         editor_3 = bytes_editor(
-            auto_set=False, enter_set=True,encoding='ascii'
+            auto_set=False, enter_set=True, encoding='ascii'
         )
         editor_4 = bytes_editor(
             auto_set=False, enter_set=True, encoding='ascii'

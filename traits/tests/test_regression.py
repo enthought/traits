@@ -246,7 +246,7 @@ class TestRegression(unittest.TestCase):
         class MultiArrayDataSource(HasTraits):
             data = Either(None, Array)
 
-        b = MultiArrayDataSource(data=numpy.array([1, 2]))
+        b = MultiArrayDataSource(data=numpy.array([1, 2]))  # noqa: F841
         # The following line was necessary to trigger the bug: the previous
         # line set a Python exception, but didn't return the correct result to
         # the CPython interpreter, so the exception wasn't triggered until
