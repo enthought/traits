@@ -303,7 +303,7 @@ class TestRegression(unittest.TestCase):
 
     def test_clone_range_with_long_high(self):
         # Regression test for enthought/traits#421
-        Range(low=0, high=2**64-1)()
+        Range(low=0, high=2**64 - 1)()
 
     @requires_numpy
     def test_range_trait_with_numpy_floats(self):
