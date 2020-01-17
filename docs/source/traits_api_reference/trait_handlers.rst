@@ -11,13 +11,9 @@ Classes
 
 .. autoclass:: TraitCastType
 
-.. autoclass:: ThisClass
-
 .. autoclass:: TraitInstance
 
 .. autoclass:: TraitFunction
-
-.. autoclass:: TraitEnum
 
 .. autoclass:: TraitPrefixList
 
@@ -27,15 +23,27 @@ Classes
 
 .. autoclass:: TraitCompound
 
-.. autoclass:: TraitTuple
-
-.. autoclass:: TraitList
-
-.. autoclass:: TraitDict
-
 Private Functions
 -----------------
 
 .. autofunction:: traits.trait_handlers._undefined_get
 
 .. autofunction:: traits.trait_handlers._undefined_set
+
+Deprecated Handlers
+-------------------
+
+.. deprecated:: 6.0.0
+
+The following :class:`~.TraitHandler` classes and instances are deprecated,
+and may be removed in a future version of Traits.
+
+.. autodata:: ThisClass
+
+.. autodata:: TraitDict
+
+.. autodata:: TraitEnum
+
+.. autodata:: TraitList
+
+.. autodata:: TraitTuple
