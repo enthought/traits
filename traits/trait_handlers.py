@@ -329,7 +329,7 @@ class ThisClass(TraitHandler):
 # -------------------------------------------------------------------------------
 
 
-class TraitInstance(ThisClass):
+class TraitInstance(TraitHandler):
     """Ensures that trait attribute values belong to a specified Python class
     or type.
 
@@ -397,7 +397,7 @@ class TraitInstance(ThisClass):
             if self._allow_none:
                 return value
             else:
-                self.validate_failed(object, name, value)
+                self.error(object, name, value)
 
         if isinstance(self.aClass, str):
             self.resolve_class(object, name, value)
@@ -405,7 +405,7 @@ class TraitInstance(ThisClass):
         if isinstance(value, self.aClass):
             return value
 
-        self.validate_failed(object, name, value)
+        self.error(object, name, value)
 
     def info(self):
         aClass = self.aClass
@@ -422,7 +422,7 @@ class TraitInstance(ThisClass):
     def resolve_class(self, object, name, value):
         aClass = self.validate_class(self.find_class(self.aClass))
         if aClass is None:
-            self.validate_failed(object, name, value)
+            self.error(object, name, value)
         self.aClass = aClass
 
         # fixme: The following is quite ugly, because it wants to try and fix
@@ -468,6 +468,17 @@ class TraitInstance(ThisClass):
                 raise TraitError("Unable to locate class: " + args[0])
 
         return aClass(*args[1:], **kw)
+
+    def get_editor(self, trait):
+        if self.editor is None:
+            from traitsui.api import InstanceEditor
+
+            self.editor = InstanceEditor(
+                label=trait.label or "",
+                view=trait.view or "",
+                kind=trait.kind or "live",
+            )
+        return self.editor
 
 
 # -------------------------------------------------------------------------------
