@@ -33,7 +33,6 @@ TimeEditor = None
 logger = logging.getLogger(__name__)
 
 
-
 def password_editor(auto_set=True, enter_set=False):
     """ Factory function that returns an editor for passwords.
     """
@@ -151,6 +150,24 @@ def date_editor():
     return DateEditor
 
 
+def _datetime_str_to_datetime(datetime_str, format="%Y-%m-%dT%H:%M:%S"):
+    """ Returns the datetime object for a datetime string in the specified
+    format (default ISO format).
+
+    Raises a ValueError if datetime_str does not match the format.
+    """
+    if datetime_str is not None:
+        return datetime.datetime.strptime(datetime_str, format)
+
+
+def _datetime_to_datetime_str(datetime_obj, format="%Y-%m-%dT%H:%M:%S"):
+    """ Returns a string representation for a datetime object in the specified
+    format (default ISO format).
+    """
+    if datetime_obj is not None:
+        return datetime.date.strftime(datetime_obj, format)
+
+
 def datetime_editor():
     """ Factory function that returns an editor with date & time for
     editing DateTime values.
@@ -168,10 +185,9 @@ def datetime_editor():
 
         from traitsui.api import TextEditor
 
-        iso_frmt = "%Y-%m-%dT%H:%M:%S"
         return TextEditor(
-            evaluate=lambda dtstr: datetime.datetime.strptime(dtstr, iso_frmt),
-            format_func=lambda dtobj: datetime.date.strftime(dtobj, iso_frmt)
+            evaluate=_datetime_str_to_datetime,
+            format_func=_datetime_to_datetime_str
         )
 
 
