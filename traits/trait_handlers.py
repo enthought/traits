@@ -24,6 +24,7 @@ consistent.
 from importlib import import_module
 import sys
 from types import FunctionType, MethodType
+import warnings
 
 from .constants import DefaultValue, ValidateTrait
 from .trait_base import (
@@ -50,6 +51,11 @@ logger = logging.getLogger(__name__)
 
 CallableTypes = (FunctionType, MethodType)
 
+_warning_format_str = (
+    "'{handler}' trait handler has been deprecated. Its usage can be "
+    "replaced by, for example, {replacement}. Please refer "
+    "documentation for details."
+)
 
 # -------------------------------------------------------------------------------
 #  Private functions:
@@ -284,6 +290,9 @@ class ThisClass(TraitHandler):
             Flag indicating whether None is accepted as a valid value
             (True or non-zero) or not (False or 0).
         """
+        message = _warning_format_str.format(
+            handler="ThisClass", replacement="TraitInstance(<klass>)")
+        warnings.warn(message, DeprecationWarning, stacklevel=5)
         if allow_none:
             self.validate = self.validate_none
             self.info = self.info_none
@@ -577,6 +586,8 @@ class TraitEnum(TraitHandler):
         this example to the form shown in the preceding example whenever it
         encounters them in a trait definition.
         """
+        message = _warning_format_str.format(handler="TraitMap", replacement="Tuple")
+        warnings.warn(message, DeprecationWarning, stacklevel=5)
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
         self.values = tuple(values)
@@ -650,7 +661,7 @@ class TraitPrefixList(TraitHandler):
         -----------
         As with TraitEnum, the list of legal values can be provided as a list
         of values.  That is, ``TraitPrefixList(['one', 'two', 'three'])`` and
-        ``TraitPrefixList('one', 'two', 'three')`` are equivalent.
+        ``List('one', 'two', 'three')`` are equivalent.
         """
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
@@ -1049,6 +1060,8 @@ class TraitTuple(TraitHandler):
         *args*, and whose *i*\ th element is of the type specified by
         *trait*\ :sub:`i`.
         """
+        message = _warning_format_str.format(handler="TraitMap", replacement="Tuple")
+        warnings.warn(message, DeprecationWarning, stacklevel=5)
         self.types = tuple([trait_from(arg) for arg in args])
         self.fast_validate = (ValidateTrait.tuple, self.types)
 
@@ -1149,6 +1162,9 @@ class TraitList(TraitHandler):
         a value that can be converted to a trait using the Trait() function.
 
         """
+        message = _warning_format_str.format(
+            handler="TraitList", replacement="List(<Trait>)")
+        warnings.warn(message, DeprecationWarning, stacklevel=5)
         self.item_trait = trait_from(trait)
         self.minlen = max(0, minlen)
         self.maxlen = max(minlen, maxlen)
@@ -1264,6 +1280,9 @@ class TraitDict(TraitHandler):
         of the type specified by *value_trait*.
 
         """
+        message = _warning_format_str.format(
+            handler="TraitDict", replacement="Dict(key_trait, value_trait)")
+        warnings.warn(message, DeprecationWarning, stacklevel=5)
         self.key_trait = trait_from(key_trait)
         self.value_trait = trait_from(value_trait)
         self.has_items = has_items
