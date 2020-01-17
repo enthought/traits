@@ -44,6 +44,12 @@ and may be removed in a future version of Traits.
 
 .. autodata:: TraitEnum
 
+.. autodata:: TraitFunction
+
 .. autodata:: TraitList
+
+.. autodata:: TraitMap
+
+.. autodata:: TraitPrefixList
 
 .. autodata:: TraitTuple
