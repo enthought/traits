@@ -34,11 +34,6 @@ class MyCallableCanBeNone(HasTraits):
     value = Callable(allow_none=True)
 
 
-class MyCallableCannotBeNone(HasTraits):
-
-    value = Callable(allow_none=False)
-
-
 class TestCallable(unittest.TestCase):
 
     def test_default(self):
@@ -72,8 +67,3 @@ class TestCallable(unittest.TestCase):
 
         self.assertIn(
             "must be a callable value", str(exception_context.exception))
-
-    def test_rejects_none(self):
-        with self.assertRaises(TraitError):
-            MyCallableCannotBeNone(value=None)
-            
