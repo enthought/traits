@@ -8,8 +8,6 @@
 #
 # Thanks for using Enthought open source!
 
-#  Imports
-
 import unittest
 import warnings
 
