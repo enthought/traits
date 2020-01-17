@@ -131,6 +131,12 @@ call_notifiers(
    notifications? */
 #define TRAIT_NO_VALUE_TEST 0x00000100U
 
+/* Should old/new values be performed using equality */
+#define TRAIT_EQUALITY_COMPARE 0x00000000U
+
+/* Mask to read the trait comparison flag bits */
+#define TRAIT_COMPARE_MASK 0x000000104U
+
 /*-----------------------------------------------------------------------------
 | Default value type constants (see `default_value_for` method)
 +----------------------------------------------------------------------------*/
@@ -4232,7 +4238,7 @@ _trait_comparison_mode(trait_object *trait, PyObject *args)
         return NULL;
     }
 
-    trait->flags &= ~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_ID_TEST);
+    trait->flags &= ~(TRAIT_COMPARE_MASK);
     switch (comparison_mode) {
         case 0:
             trait->flags |= TRAIT_NO_VALUE_TEST;
@@ -4262,10 +4268,12 @@ _get_trait_comparison_mode_int(trait_object *trait, PyObject *Py_UNUSED(ignored)
 {
     int i_comparison_mode;
 
-    if (trait->flags & TRAIT_NO_VALUE_TEST) {
+    unsigned long compare_flag = trait->flags & TRAIT_COMPARE_MASK;
+
+    if (compare_flag == TRAIT_NO_VALUE_TEST) {
         i_comparison_mode = 0;
     }
-    else if (trait->flags & TRAIT_OBJECT_ID_TEST) {
+    else if (compare_flag == TRAIT_OBJECT_ID_TEST) {
         i_comparison_mode = 1;
     }
     else {
