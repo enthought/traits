@@ -28,7 +28,6 @@ from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 import uuid
 
-
 from .constants import DefaultValue, TraitKind, ValidateTrait
 from .trait_base import (
     strx,
@@ -1486,9 +1485,6 @@ class File(BaseFile):
         super(File, self).__init__(
             value, filter, auto_set, entries, exists, **metadata
         )
-
-    def validate(self, object, name, value):
-        return super(File, self).validate(object, name, value)
 
 
 # -------------------------------------------------------------------------------
