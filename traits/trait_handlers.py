@@ -661,7 +661,7 @@ class TraitPrefixList(TraitHandler):
         -----------
         As with TraitEnum, the list of legal values can be provided as a list
         of values.  That is, ``TraitPrefixList(['one', 'two', 'three'])`` and
-        ``List('one', 'two', 'three')`` are equivalent.
+        ``TraitPrefixList('one', 'two', 'three')`` are equivalent.
         """
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
