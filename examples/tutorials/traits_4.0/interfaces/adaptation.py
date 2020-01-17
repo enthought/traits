@@ -159,12 +159,12 @@ Now for the good part... how do you use adapters?
 And the answer is... you don't. At least not explicitly.
 
 In traits, adapters are created automatically whenever you assign an object to
-an *interface* **AdaptsTo** or **AdaptedTo** trait and the object being
+an *interface* **AdaptsTo** or **Supports** trait and the object being
 assigned does not implement the required interface. In this case, if an
 adapter class exists that can adapt the specified object to the required
 interface, an instance of the adapter class will be created for the object,
 and the resulting adapter object is what ends up being assigned to the trait,
-along with the original object. When using the **AdaptedTo** trait, the
+along with the original object. When using the **Supports** trait, the
 adapter is assigned as the value of the trait, and the original object is
 assigned as its *mapped* value. For the **AdaptsTo** trait, the original
 object is assigned as the trait value, and the adapter is assigned as its
@@ -203,10 +203,10 @@ Refer to the **Output** tab for the actual result of running this example.
 Controlling Adaptation
 ----------------------
 
-The **AdaptedTo** and **AdaptsTo** traits are actually subclasses of the
+The **Supports** and **AdaptsTo** traits are actually subclasses of the
 **Instance** trait. Normally, adaptation occurs automatically when values are
-assigned to an **AdaptedTo** or **AdaptsTo** trait. However, any of the
-**Instance**, **AdaptedTo** and **AdaptsTo** traits allow you to control how
+assigned to an **Supports** or **AdaptsTo** trait. However, any of the
+**Instance**, **Supports** and **AdaptsTo** traits allow you to control how
 adaptation is performed by means of the *adapt* metadata, which can have one of
 the following values:
 
@@ -215,18 +215,18 @@ no
 
 yes
     Adaptation is allowed. If adaptation fails, an exception is raised (This is
-    the default for both the **AdaptedTo** and **AdaptsTo** traits).
+    the default for both the **Supports** and **AdaptsTo** traits).
 
 default
     Adapation is allowed. If adaptation fails, the default value for the trait
     is assigned instead.
 
-As an example of modifying the adaptation behavior of an **AdaptedTo** trait,
+As an example of modifying the adaptation behavior of an **Supports** trait,
 we could rewrite the example **Apartment** class as follows::
 
     class Apartment(HasTraits):
 
-        renter = AdaptedTo(IName, adapt = 'no')
+        renter = Supports(IName, adapt = 'no')
 
 Using this definition, any value assigned to *renter* must itself implement
 the **IName** interface, otherwise an exception is raised. Try modifying and
@@ -271,7 +271,7 @@ class PersonINameAdapter(Adapter):
 # Define a class using an object that implements the 'IName' interface:
 class Apartment(HasTraits):
 
-    renter = AdaptedTo(IName)
+    renter = Supports(IName)
 
 
 # --[Example*]------------------------------------------------------------------
