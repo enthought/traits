@@ -3559,7 +3559,7 @@ Time = BaseInstance(datetime.time, editor=time_editor)
 # Everything from this point onwards is deprecated, and has a simple
 # drop-in replacement.
 
-#: A traits whose value must support a specified protocol. This is
+#: A trait whose value must support a specified protocol. This is
 #: an alias for :class:`Supports`. Use ``Supports`` instead.
 AdaptedTo = Supports
 
