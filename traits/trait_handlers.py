@@ -292,7 +292,7 @@ class ThisClass(TraitHandler):
         """
         message = _warning_format_str.format(
             handler="ThisClass", replacement="TraitInstance(<klass>)")
-        warnings.warn(message, DeprecationWarning, stacklevel=5)
+        warnings.warn(message, DeprecationWarning)
         if allow_none:
             self.validate = self.validate_none
             self.info = self.info_none
@@ -587,7 +587,7 @@ class TraitEnum(TraitHandler):
         encounters them in a trait definition.
         """
         message = _warning_format_str.format(handler="TraitEnum", replacement="Enum")
-        warnings.warn(message, DeprecationWarning, stacklevel=5)
+        warnings.warn(message, DeprecationWarning)
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
         self.values = tuple(values)
@@ -1061,7 +1061,7 @@ class TraitTuple(TraitHandler):
         *trait*\ :sub:`i`.
         """
         message = _warning_format_str.format(handler="TraitTuple", replacement="Tuple")
-        warnings.warn(message, DeprecationWarning, stacklevel=5)
+        warnings.warn(message, DeprecationWarning)
         self.types = tuple([trait_from(arg) for arg in args])
         self.fast_validate = (ValidateTrait.tuple, self.types)
 
@@ -1164,7 +1164,7 @@ class TraitList(TraitHandler):
         """
         message = _warning_format_str.format(
             handler="TraitList", replacement="List(<Trait>)")
-        warnings.warn(message, DeprecationWarning, stacklevel=5)
+        warnings.warn(message, DeprecationWarning)
         self.item_trait = trait_from(trait)
         self.minlen = max(0, minlen)
         self.maxlen = max(minlen, maxlen)
@@ -1282,7 +1282,7 @@ class TraitDict(TraitHandler):
         """
         message = _warning_format_str.format(
             handler="TraitDict", replacement="Dict(key_trait, value_trait)")
-        warnings.warn(message, DeprecationWarning, stacklevel=5)
+        warnings.warn(message, DeprecationWarning)
         self.key_trait = trait_from(key_trait)
         self.value_trait = trait_from(value_trait)
         self.has_items = has_items
