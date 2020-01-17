@@ -3477,10 +3477,7 @@ validate_trait_callable(
     PyObject *value)
 {
 
-    PyObject *type_info = trait->py_validate;
-    int kind = PyTuple_GET_SIZE(type_info);
-    if (((kind == 1) && (value == Py_None))
-        || (PyCallable_Check(value)> 0)) {
+    if ((value == Py_None) || (PyCallable_Check(value)> 0)) {
         Py_INCREF(value);
         return value;
     }
