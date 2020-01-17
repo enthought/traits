@@ -182,4 +182,3 @@ class TestCTrait(unittest.TestCase):
         self.assertEqual(
             trait.comparison_mode, ComparisonMode.equality_compare
         )
-
