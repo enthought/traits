@@ -238,13 +238,7 @@ def flake8(edm, runtime, environment):
 
     """
     parameters = get_parameters(edm, runtime, environment)
-
-    # Ideally we'd run flake8 on all Python files, but the examples
-    # directory currently contains too many flake8 issues.
-    commands = [
-        "{edm} run -e {environment} -- python -m flake8 "
-        "--exclude=examples"
-    ]
+    commands = ["{edm} run -e {environment} -- python -m flake8"]
     execute(commands, parameters)
 
 
