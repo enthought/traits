@@ -9,13 +9,14 @@
 # Thanks for using Enthought open source!
 
 import unittest
+from io import StringIO
 
 from traits.api import HasTraits, Property
 
+output_buffer = StringIO()
+
 
 class Test(HasTraits):
-
-    __traits__ = {}
 
     def __value_get(self):
         return self.__dict__.get("_value", 0)
@@ -26,52 +27,19 @@ class Test(HasTraits):
             self._value = value
             self.trait_property_changed("value", old_value, value)
 
-    __traits__["value"] = Property(__value_get, __value_set)
+    value = Property(__value_get, __value_set)
 
 
 class Test_1(Test):
-    def value_changed(self, value):
-        print("value_changed:", value)
-
-
-class Test_2(Test):
-    def anytrait_changed(self, name, value):
-        print("anytrait_changed for %s: %s" % (name, value))
-
-
-class Test_3(Test_2):
-    def value_changed(self, value):
-        print("value_changed:", value)
-
-
-def on_value_changed(value):
-    print("on_value_changed:", value)
-
-
-def on_anyvalue_changed(value):
-    print("on_anyvalue_changed:", value)
+    def _value_changed(self, value):
+        output_buffer.write(value)
 
 
 class TestPropertyNotifications(unittest.TestCase):
     def test_property_notifications(self):
-        Test_1().value = "test 1"
-        Test_2().value = "test 2"
-        Test_3().value = "test 3"
+        test_obj = Test_1()
+        test_obj.value = "value_1"
+        self.assertEqual(output_buffer.getvalue(), "value_1")
 
-        test_4 = Test()
-        test_4.on_trait_change(on_value_changed, "value")
-        test_4.value = "test 4"
-
-        test_5 = Test()
-        test_5.on_trait_change(on_anyvalue_changed)
-        test_5.value = "test 5"
-
-        test_6 = Test()
-        test_6.on_trait_change(on_value_changed, "value")
-        test_6.on_trait_change(on_anyvalue_changed)
-        test_6.value = "test 6"
-
-        test_7 = Test_3()
-        test_7.on_trait_change(on_value_changed, "value")
-        test_7.on_trait_change(on_anyvalue_changed)
-        test_7.value = "test 7"
+        test_obj.value = "value_2"
+        self.assertEqual(output_buffer.getvalue(), "value_1value_2")
