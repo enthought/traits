@@ -4260,21 +4260,24 @@ _trait_comparison_mode(trait_object *trait, PyObject *args)
 static PyObject *
 _get_trait_comparison_mode_int(trait_object *trait, PyObject *Py_UNUSED(ignored))
 {
-    PyLongObject *comparison_mode = PyLong_FromLong(2);
+    int i_comparison_mode;
 
     if (trait->flags & TRAIT_NO_VALUE_TEST) {
-        comparison_mode = PyLong_FromLong(0);
+        i_comparison_mode = 0;
     }
     else if (trait->flags & TRAIT_OBJECT_ID_TEST) {
-        comparison_mode = PyLong_FromLong(1);
+        i_comparison_mode = 1;
+    }
+    else {
+        i_comparison_mode = 2;
     }
 
+    PyLongObject *comparison_mode = PyLong_FromLong(i_comparison_mode);
+
     if (comparison_mode == NULL) {
-        PyErr_SetString(PyExc_TypeError, "Could not retrieve comparison mode.");
         return NULL;
     }
 
-    Py_INCREF(comparison_mode);
     return comparison_mode;
 }
 
