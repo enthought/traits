@@ -586,7 +586,7 @@ class TraitEnum(TraitHandler):
         this example to the form shown in the preceding example whenever it
         encounters them in a trait definition.
         """
-        message = _warning_format_str.format(handler="TraitMap", replacement="Tuple")
+        message = _warning_format_str.format(handler="TraitEnum", replacement="Enum")
         warnings.warn(message, DeprecationWarning, stacklevel=5)
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
@@ -1060,7 +1060,7 @@ class TraitTuple(TraitHandler):
         *args*, and whose *i*\ th element is of the type specified by
         *trait*\ :sub:`i`.
         """
-        message = _warning_format_str.format(handler="TraitMap", replacement="Tuple")
+        message = _warning_format_str.format(handler="TraitTuple", replacement="Tuple")
         warnings.warn(message, DeprecationWarning, stacklevel=5)
         self.types = tuple([trait_from(arg) for arg in args])
         self.fast_validate = (ValidateTrait.tuple, self.types)
