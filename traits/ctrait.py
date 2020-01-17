@@ -117,11 +117,12 @@ class CTrait(ctraits.cTrait):
         Getter returns a ComparisonMode enum.
         Setter acceps either an int or a ComparisonMode enum.
         """
-        return ComparisonMode(self._get_comparison_mode_int())
+        i_comparison_mode = super().comparison_mode
+        return ComparisonMode(i_comparison_mode)
 
     @comparison_mode.setter
     def comparison_mode(self, value):
-        self._set_comparison_mode(value)
+        ctraits.cTrait.comparison_mode.__set__(self, value)
 
     def is_trait_type(self, trait_type):
         """ Returns whether or not this trait is of a specified trait type.

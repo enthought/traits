@@ -4229,14 +4229,10 @@ _trait_delegate(trait_object *trait, PyObject *args)
 |  Sets the appropriate value comparison mode flags of a CTrait instance:
 +----------------------------------------------------------------------------*/
 
-static PyObject *
-_trait_comparison_mode(trait_object *trait, PyObject *args)
+static int *
+_set_trait_comparison_mode(trait_object *trait, PyObject *value, void *closure)
 {
-    int comparison_mode;
-
-    if (!PyArg_ParseTuple(args, "i", &comparison_mode)) {
-        return NULL;
-    }
+    long comparison_mode = PyLong_AsLong(value);
 
     trait->flags &= ~TRAIT_COMPARE_MASK;
     switch (comparison_mode) {
@@ -4249,14 +4245,14 @@ _trait_comparison_mode(trait_object *trait, PyObject *args)
         case 2:
             break;
         default:
-            return PyErr_Format(
+            PyErr_Format(
                 PyExc_ValueError,
                 "The comparison mode must be 0..%d, but %d was specified.",
                 MAXIMUM_COMPARISON_MODE_VALUE, comparison_mode);
+            return -1;
     }
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    return 0;
 }
 
 /*-----------------------------------------------------------------------------
@@ -4264,7 +4260,7 @@ _trait_comparison_mode(trait_object *trait, PyObject *args)
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_get_trait_comparison_mode_int(trait_object *trait, PyObject *Py_UNUSED(ignored))
+_get_trait_comparison_mode_int(trait_object *trait, void *closure)
 {
     int i_comparison_mode;
 
@@ -4876,10 +4872,6 @@ static PyMethodDef trait_methods[] = {
     {"validate", (PyCFunction)_trait_validate, METH_VARARGS, validate_doc},
     {"delegate", (PyCFunction)_trait_delegate, METH_VARARGS,
      PyDoc_STR("delegate(delegate_name,prefix,prefix_type,modify_delegate)")},
-    {"_set_comparison_mode", (PyCFunction)_trait_comparison_mode, METH_VARARGS,
-     PyDoc_STR("Set comparison_mode. Accepts an int or comparison_mode_enum.")},
-    {"_get_comparison_mode_int", (PyCFunction)_get_trait_comparison_mode_int,
-     METH_NOARGS, PyDoc_STR("Get comparison mode as an integer.")},
     {"property", (PyCFunction)_trait_property, METH_VARARGS,
      PyDoc_STR("property([get,set,validate])")},
     {"clone", (PyCFunction)_trait_clone, METH_VARARGS,
@@ -4916,6 +4908,12 @@ static PyGetSetDef trait_properties[] = {
      NULL},
     {"is_mapped", (getter)get_trait_is_mapped_flag,
      (setter)set_trait_is_mapped_flag, "Whether the trait is a mapped trait.",
+     NULL},
+    {"comparison_mode",
+     (getter)_get_trait_comparison_mode_int,
+     (setter)_set_trait_comparison_mode,
+     "Whether to use no compare(0) or object identity(1) compare or equality "
+     "compare(2) to determine a trait change.",
      NULL},
     {0}};
 
