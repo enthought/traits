@@ -135,7 +135,7 @@ call_notifiers(
 #define TRAIT_EQUALITY_COMPARE 0x00000000U
 
 /* Mask to read the trait comparison flag bits */
-#define TRAIT_COMPARE_MASK 0x000000104U
+#define TRAIT_COMPARE_MASK 0x00000104U
 
 /*-----------------------------------------------------------------------------
 | Default value type constants (see `default_value_for` method)
@@ -4229,7 +4229,7 @@ _trait_delegate(trait_object *trait, PyObject *args)
 |  Sets the appropriate value comparison mode flags of a CTrait instance:
 +----------------------------------------------------------------------------*/
 
-static int *
+static int
 _set_trait_comparison_mode(trait_object *trait, PyObject *value, void *closure)
 {
     long comparison_mode = PyLong_AsLong(value);
@@ -4247,7 +4247,7 @@ _set_trait_comparison_mode(trait_object *trait, PyObject *value, void *closure)
         default:
             PyErr_Format(
                 PyExc_ValueError,
-                "The comparison mode must be 0..%d, but %d was specified.",
+                "The comparison mode must be 0..%ld, but %d was specified.",
                 MAXIMUM_COMPARISON_MODE_VALUE, comparison_mode);
             return -1;
     }
@@ -4278,7 +4278,6 @@ _get_trait_comparison_mode_int(trait_object *trait, void *closure)
 
     return PyLong_FromLong(i_comparison_mode);
 }
-
 
 /*-----------------------------------------------------------------------------
 |  Sets the 'property' value fields of a CTrait instance:
