@@ -31,4 +31,4 @@ class TestTraitHandlerDeprecatedWarnings(unittest.TestCase):
 
                     with self.assertRaises(DeprecationWarning) as cm:
                         handler()
-            self.assertIn(handler.__name__, str(cm.exception))
+                self.assertIn(handler.__name__, str(cm.exception))
