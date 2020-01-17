@@ -14,7 +14,6 @@ import unittest
 import warnings
 
 from traits.api import (
-    Any,
     ThisClass,
     TraitDict,
     TraitEnum,
@@ -24,47 +23,14 @@ from traits.api import (
 
 class TestTraitHandlerDeprecatedWarnings(unittest.TestCase):
 
-    def test_this_class_warning(self):
-        with warnings.catch_warnings(record=True):
-            warnings.simplefilter("error", DeprecationWarning)
+    def test_handler_warning(self):
+        handlers = [ThisClass, TraitDict, TraitEnum, TraitList, TraitTuple]
 
-            with self.assertRaises(DeprecationWarning) as cm:
-                ThisClass()
+        for handler in handlers:
+            with self.subTest(handler=handler):
+                with warnings.catch_warnings(record=True):
+                    warnings.simplefilter("error", DeprecationWarning)
 
-        self.assertIn("ThisClass", str(cm.exception))
-
-    def test_trait_dict_warning(self):
-        with warnings.catch_warnings(record=True):
-            warnings.simplefilter("error", DeprecationWarning)
-
-            with self.assertRaises(DeprecationWarning) as cm:
-                TraitDict()
-
-        self.assertIn("TraitDict", str(cm.exception))
-
-    def test_trait_enum_warning(self):
-        with warnings.catch_warnings(record=True):
-            warnings.simplefilter("error", DeprecationWarning)
-
-            with self.assertRaises(DeprecationWarning) as cm:
-                TraitEnum([1, 2, 3])
-
-        self.assertIn("TraitEnum", str(cm.exception))
-
-    def test_trait_list_warning(self):
-        with warnings.catch_warnings(record=True):
-            warnings.simplefilter("error", DeprecationWarning)
-
-            with self.assertRaises(DeprecationWarning) as cm:
-                TraitList()
-
-        self.assertIn("TraitList", str(cm.exception))
-
-    def test_trait_tuple_warning(self):
-        with warnings.catch_warnings(record=True):
-            warnings.simplefilter("error", DeprecationWarning)
-
-            with self.assertRaises(DeprecationWarning) as cm:
-                TraitTuple([Any, Any])
-
-        self.assertIn("TraitTuple", str(cm.exception))
+                    with self.assertRaises(DeprecationWarning) as cm:
+                        handler()
+            self.assertIn(handler.__name__, str(cm.exception))
