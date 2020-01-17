@@ -4276,7 +4276,7 @@ _get_trait_comparison_mode_int(trait_object *trait, void *closure)
         i_comparison_mode = 2;
     }
 
-    return  PyLong_FromLong(i_comparison_mode);
+    return PyLong_FromLong(i_comparison_mode);
 }
 
 
