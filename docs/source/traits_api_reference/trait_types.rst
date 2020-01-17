@@ -176,6 +176,8 @@ and may be removed in a future version of Traits.
 
 .. deprecated:: 6.0.0
 
+.. autodata:: AdaptedTo
+
 .. autodata:: BaseUnicode
 
 .. autodata:: Unicode
