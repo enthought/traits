@@ -29,11 +29,6 @@ class MyCallable(HasTraits):
     value = Callable()
 
 
-class MyCallableCanBeNone(HasTraits):
-
-    value = Callable(allow_none=True)
-
-
 class TestCallable(unittest.TestCase):
 
     def test_default(self):
@@ -51,10 +46,6 @@ class TestCallable(unittest.TestCase):
     def test_accepts_method(self):
         dummy = Dummy()
         MyCallable(value=dummy.instance_method)
-
-    def test_accepts_none(self):
-        a = MyCallableCanBeNone()
-        a.value = None
 
     def test_accepts_function(self):
         MyCallable(value=function)
