@@ -113,6 +113,10 @@ class CTrait(ctraits.cTrait):
 
     @property
     def comparison_mode(self):
+        """ Get or set the comparison mode on the trait.
+        Getter returns a ComparisonMode enum.
+        Setter acceps either an int or a ComparisonMode enum.
+        """
         return ComparisonMode(self._get_comparison_mode_int())
 
     @comparison_mode.setter

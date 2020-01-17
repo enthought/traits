@@ -126,6 +126,7 @@ class TestCTrait(unittest.TestCase):
     def test_default_comparison_mode(self):
         trait = CTrait(TraitKind.trait)
 
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
         self.assertEqual(
             trait.comparison_mode, ComparisonMode.equality_compare
         )
@@ -146,18 +147,21 @@ class TestCTrait(unittest.TestCase):
 
         trait.comparison_mode = 0
 
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
         self.assertEqual(
             trait.comparison_mode, ComparisonMode.no_compare
         )
 
         trait.comparison_mode = 1
 
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
         self.assertEqual(
             trait.comparison_mode, ComparisonMode.object_id_compare
         )
 
         trait.comparison_mode = 2
 
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
         self.assertEqual(
             trait.comparison_mode, ComparisonMode.equality_compare
         )
@@ -167,18 +171,21 @@ class TestCTrait(unittest.TestCase):
 
         trait.comparison_mode = ComparisonMode.no_compare
 
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
         self.assertEqual(
             trait.comparison_mode, ComparisonMode.no_compare
         )
 
         trait.comparison_mode = ComparisonMode.object_id_compare
 
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
         self.assertEqual(
             trait.comparison_mode, ComparisonMode.object_id_compare
         )
 
         trait.comparison_mode = ComparisonMode.equality_compare
 
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
         self.assertEqual(
             trait.comparison_mode, ComparisonMode.equality_compare
         )

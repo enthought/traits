@@ -4238,7 +4238,7 @@ _trait_comparison_mode(trait_object *trait, PyObject *args)
         return NULL;
     }
 
-    trait->flags &= ~(TRAIT_COMPARE_MASK);
+    trait->flags &= ~TRAIT_COMPARE_MASK;
     switch (comparison_mode) {
         case 0:
             trait->flags |= TRAIT_NO_VALUE_TEST;
@@ -4268,7 +4268,7 @@ _get_trait_comparison_mode_int(trait_object *trait, PyObject *Py_UNUSED(ignored)
 {
     int i_comparison_mode;
 
-    unsigned long compare_flag = trait->flags & TRAIT_COMPARE_MASK;
+    unsigned int compare_flag = trait->flags & TRAIT_COMPARE_MASK;
 
     if (compare_flag == TRAIT_NO_VALUE_TEST) {
         i_comparison_mode = 0;
@@ -4280,13 +4280,7 @@ _get_trait_comparison_mode_int(trait_object *trait, PyObject *Py_UNUSED(ignored)
         i_comparison_mode = 2;
     }
 
-    PyLongObject *comparison_mode = PyLong_FromLong(i_comparison_mode);
-
-    if (comparison_mode == NULL) {
-        return NULL;
-    }
-
-    return comparison_mode;
+    return  PyLong_FromLong(i_comparison_mode);
 }
 
 
