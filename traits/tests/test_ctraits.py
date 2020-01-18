@@ -142,6 +142,23 @@ class TestCTrait(unittest.TestCase):
         with self.assertRaises(ValueError):
             trait.comparison_mode = 3
 
+    def test_comparison_mode_unchanged_if_invalid(self):
+        trait = CTrait(TraitKind.trait)
+        default_comparison_mode = trait.comparison_mode
+
+        self.assertNotEqual(
+            default_comparison_mode, ComparisonMode.no_compare
+        )
+
+        trait.comparison_mode = ComparisonMode.no_compare
+
+        with self.assertRaises(ValueError):
+            trait.comparison_mode = -1
+
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.no_compare
+        )
+
     def test_comparison_mode_int(self):
         trait = CTrait(TraitKind.trait)
 
