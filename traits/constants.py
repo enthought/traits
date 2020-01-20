@@ -103,6 +103,9 @@ class ValidateTrait(IntEnum):
     #: A floating-point check.
     float = 21
 
+    #: A callable check.
+    callable = 22
+
 
 class ComparisonMode(IntEnum):
     """ Comparison mode.

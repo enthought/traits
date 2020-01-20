@@ -3466,6 +3466,25 @@ validate_trait_function(
     return raise_trait_error(trait, obj, name, value);
 }
 
+
+/*-----------------------------------------------------------------------------
+|  Verifies a Python value is a callable (or None):
++----------------------------------------------------------------------------*/
+
+static PyObject *
+validate_trait_callable(
+    trait_object *trait, has_traits_object *obj, PyObject *name,
+    PyObject *value)
+{
+
+    if ((value == Py_None) || PyCallable_Check(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+
+    return raise_trait_error(trait, obj, name, value);
+}
+
 /*-----------------------------------------------------------------------------
 |  Attempts to 'adapt' an object to a specified interface:
 |
@@ -3886,6 +3905,7 @@ static trait_validate validate_handlers[] = {
     validate_trait_adapt,   /* case 19: Adaptable object check */
     validate_trait_integer, /* case 20: Integer check */
     validate_trait_float,   /* case 21: Float check */
+    validate_trait_callable,   /* case 22: Callable check */
 };
 
 static PyObject *
@@ -4035,6 +4055,12 @@ _trait_set_validate(trait_object *trait, PyObject *args)
                     break;
 
                 case 21: /* Float check: */
+                    if (n == 1) {
+                        goto done;
+                    }
+                    break;
+
+                case 22: /* Callable check: */
                     if (n == 1) {
                         goto done;
                     }
