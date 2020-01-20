@@ -13,7 +13,6 @@ import unittest
 from traits.api import Callable, HasTraits, TraitError
 
 
-
 def function():
     pass
 
@@ -36,7 +35,7 @@ class TestCallable(unittest.TestCase):
         self.assertIsNone(a.value)
 
     def test_accepts_lambda(self):
-        func = lambda v: v + 1
+        func = lambda v: v + 1    # noqa: E731
         a = MyCallable(value=func)
         self.assertIs(a.value, func)
 
