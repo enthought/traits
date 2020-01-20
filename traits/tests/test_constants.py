@@ -19,8 +19,8 @@ class TestConstants(unittest.TestCase):
         # Check availability of comparison constants.
         from traits.api import (
             NO_COMPARE, OBJECT_IDENTITY_COMPARE, RICH_COMPARE)
-        self.assertIs(NO_COMPARE, ComparisonMode.no_compare)
+        self.assertIs(NO_COMPARE, ComparisonMode.none)
         self.assertIs(
-            OBJECT_IDENTITY_COMPARE, ComparisonMode.object_id_compare)
+            OBJECT_IDENTITY_COMPARE, ComparisonMode.identity)
         self.assertIs(
-            RICH_COMPARE, ComparisonMode.equality_compare)
+            RICH_COMPARE, ComparisonMode.equality)

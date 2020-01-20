@@ -1144,9 +1144,9 @@ class TestThis(unittest.TestCase):
 
 
 class ComparisonModeTests(unittest.TestCase):
-    def test_comparison_mode_no_compare(self):
+    def test_comparison_mode_none(self):
         class HasComparisonMode(HasTraits):
-            bar = Trait(comparison_mode=ComparisonMode.no_compare)
+            bar = Trait(comparison_mode=ComparisonMode.none)
 
         old_compare = HasComparisonMode()
         events = []
@@ -1164,9 +1164,9 @@ class ComparisonModeTests(unittest.TestCase):
         old_compare.bar = [4, 5, 6]
         self.assertEqual(len(events), 4)
 
-    def test_comparison_mode_object_id_compare(self):
+    def test_comparison_mode_identity(self):
         class HasComparisonMode(HasTraits):
-            bar = Trait(comparison_mode=ComparisonMode.object_id_compare)
+            bar = Trait(comparison_mode=ComparisonMode.identity)
 
         old_compare = HasComparisonMode()
         events = []
@@ -1184,9 +1184,9 @@ class ComparisonModeTests(unittest.TestCase):
         old_compare.bar = [4, 5, 6]
         self.assertEqual(len(events), 3)
 
-    def test_comparison_mode_equality_compare(self):
+    def test_comparison_mode_equality(self):
         class HasComparisonMode(HasTraits):
-            bar = Trait(comparison_mode=ComparisonMode.equality_compare)
+            bar = Trait(comparison_mode=ComparisonMode.equality)
 
         old_compare = HasComparisonMode()
         events = []
@@ -1222,7 +1222,7 @@ class ComparisonModeTests(unittest.TestCase):
         _, _, this_module = __name__.rpartition(".")
         self.assertIn(this_module, warn_msg.filename)
 
-        # Behaviour matches comparison_mode=ComparisonMode.identity_compare.
+        # Behaviour matches comparison_mode=ComparisonMode.identity.
         old_compare = OldRichCompare()
         events = []
         old_compare.on_trait_change(lambda: events.append(None), "bar")
@@ -1257,7 +1257,7 @@ class ComparisonModeTests(unittest.TestCase):
         _, _, this_module = __name__.rpartition(".")
         self.assertIn(this_module, warn_msg.filename)
 
-        # Behaviour matches comparison_mode=ComparisonMode.identity_compare.
+        # Behaviour matches comparison_mode=ComparisonMode.identity.
         old_compare = OldRichCompare()
         events = []
         old_compare.on_trait_change(lambda: events.append(None), "bar")

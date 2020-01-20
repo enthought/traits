@@ -15,11 +15,11 @@ from traits.api import Any, ComparisonMode, HasTraits, Str
 
 
 class IdentityCompare(HasTraits):
-    bar = Any(comparison_mode=ComparisonMode.object_id_compare)
+    bar = Any(comparison_mode=ComparisonMode.identity)
 
 
 class RichCompare(HasTraits):
-    bar = Any(comparison_mode=ComparisonMode.equality_compare)
+    bar = Any(comparison_mode=ComparisonMode.equality)
 
 
 class RichCompareTests:
@@ -202,7 +202,7 @@ class OldRichCompareTestCase(unittest.TestCase):
         _, _, this_module = __name__.rpartition(".")
         self.assertIn(this_module, warn_msg.filename)
 
-        # Behaviour matches comparison_mode=ComparisonMode.identity_compare.
+        # Behaviour matches comparison_mode=ComparisonMode.identity.
         old_compare = OldRichCompare()
         events = []
         old_compare.on_trait_change(lambda: events.append(None), "bar")
@@ -237,7 +237,7 @@ class OldRichCompareTestCase(unittest.TestCase):
         _, _, this_module = __name__.rpartition(".")
         self.assertIn(this_module, warn_msg.filename)
 
-        # Behaviour matches comparison_mode=ComparisonMode.identity_compare.
+        # Behaviour matches comparison_mode=ComparisonMode.identity.
         old_compare = OldRichCompare()
         events = []
         old_compare.on_trait_change(lambda: events.append(None), "bar")
