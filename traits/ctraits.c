@@ -4233,21 +4233,27 @@ static int
 _set_trait_comparison_mode(trait_object *trait, PyObject *value, void *closure)
 {
     long comparison_mode = PyLong_AsLong(value);
+    
+    if (comparison_mode == -1 && PyErr_Occurred() != NULL) {
+        return NULL;
+    }
 
-    trait->flags &= ~TRAIT_COMPARE_MASK;
     switch (comparison_mode) {
         case 0:
+            trait->flags &= ~TRAIT_COMPARE_MASK;
             trait->flags |= TRAIT_NO_VALUE_TEST;
             break;
         case 1:
+            trait->flags &= ~TRAIT_COMPARE_MASK;
             trait->flags |= TRAIT_OBJECT_ID_TEST;
             break;
         case 2:
+            trait->flags &= ~TRAIT_COMPARE_MASK;
             break;
         default:
             PyErr_Format(
                 PyExc_ValueError,
-                "The comparison mode must be 0..%ld, but %d was specified.",
+                "The comparison mode must be 0..%d, but %ld was specified.",
                 MAXIMUM_COMPARISON_MODE_VALUE, comparison_mode);
             return -1;
     }
