@@ -4235,7 +4235,7 @@ _set_trait_comparison_mode(trait_object *trait, PyObject *value, void *closure)
     long comparison_mode = PyLong_AsLong(value);
     
     if (comparison_mode == -1 && PyErr_Occurred() != NULL) {
-        return NULL;
+        return -1;
     }
 
     switch (comparison_mode) {
