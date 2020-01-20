@@ -36,8 +36,6 @@ Deprecated Handlers
 The following :class:`~.TraitHandler` classes and instances are deprecated,
 and may be removed in a future version of Traits.
 
-.. autodata:: ThisClass
-
 .. autodata:: TraitDict
 
 .. autodata:: TraitEnum

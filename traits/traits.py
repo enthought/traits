@@ -72,7 +72,6 @@ from .trait_handlers import (
     TraitEnum,
     TraitCompound,
     TraitMap,
-    ThisClass,
     _undefined_get,
     _undefined_set,
 )
@@ -304,10 +303,6 @@ class _TraitMaker(object):
                     handler = default_value
                     default_value = None
 
-                elif default_value is ThisClass:
-                    handler = ThisClass()
-                    default_value = None
-
                 else:
                     typeValue = type(default_value)
                     if typeValue in TypeTypes:
@@ -458,9 +453,6 @@ class _TraitMaker(object):
 
                 elif typeItem in CallableTypes:
                     other.append(TraitFunction(item))
-
-                elif item is ThisClass:
-                    other.append(ThisClass())
 
                 elif isinstance(item, TraitTypes):
                     other.append(item)

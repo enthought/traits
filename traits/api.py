@@ -191,7 +191,6 @@ from .trait_handlers import (  # noqa: F401
     TraitCoerceType,
     TraitCastType,
     TraitInstance,
-    ThisClass,
     TraitFunction,
     TraitEnum,
     TraitPrefixList,
