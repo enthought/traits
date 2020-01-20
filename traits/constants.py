@@ -112,38 +112,38 @@ class ComparisonMode(IntEnum):
 
     Enumeration members:
 
-    no_compare
+    none
         The values are not compared and a trait change notification is
         generated on each assignment.
-    object_id_compare
+    identity
         A trait change notification is generated if the old and new values are
         not the same object.
-    equality_compare
+    equality
         A trait change notification is generated if the old and new values are
         not the same object, and not equal using Python's standard equality
         testing. This is the default.
     """
 
     #: Do not compare values (always fire trait change)
-    no_compare = 0
+    none = 0
 
     #: Compare values by object identity.
-    object_id_compare = 1
+    identity = 1
 
     #: Compare values by equality.
-    equality_compare = 2
+    equality = 2
 
 
 # Backward compatibility for comparison mode constants.
 
-#: Deprecated alias for ``ComparisonMode.no_compare``.
-NO_COMPARE = ComparisonMode.no_compare
+#: Deprecated alias for ``ComparisonMode.none``.
+NO_COMPARE = ComparisonMode.none
 
-#: Deprecated alias for ``ComparisonMode.object_id_compare``.
-OBJECT_IDENTITY_COMPARE = ComparisonMode.object_id_compare
+#: Deprecated alias for ``ComparisonMode.identity``.
+OBJECT_IDENTITY_COMPARE = ComparisonMode.identity
 
-#: Deprecated alias for ``ComparisonMode.equality_compare``.
-RICH_COMPARE = ComparisonMode.equality_compare
+#: Deprecated alias for ``ComparisonMode.equality``.
+RICH_COMPARE = ComparisonMode.equality
 
 
 class DefaultValue(IntEnum):
