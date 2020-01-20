@@ -1,3 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """ General regression tests for a variety of bugs. """
 import gc
 import sys
@@ -11,7 +21,7 @@ from traits.has_traits import (
 )
 from traits.testing.optional_dependencies import numpy, requires_numpy
 from traits.trait_errors import TraitError
-from traits.trait_handlers import TraitType
+from traits.trait_type import TraitType
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
 
 if numpy is not None:
@@ -235,7 +245,7 @@ class TestRegression(unittest.TestCase):
         class MultiArrayDataSource(HasTraits):
             data = Either(None, Array)
 
-        b = MultiArrayDataSource(data=numpy.array([1, 2]))
+        b = MultiArrayDataSource(data=numpy.array([1, 2]))  # noqa: F841
         # The following line was necessary to trigger the bug: the previous
         # line set a Python exception, but didn't return the correct result to
         # the CPython interpreter, so the exception wasn't triggered until

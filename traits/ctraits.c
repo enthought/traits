@@ -1,21 +1,12 @@
-/******************************************************************************
- *
- *  Description: C based implementation of the Traits package
- *
- *  Copyright (c) 2005, Enthought, Inc.
- *  All rights reserved.
- *
- *  This software is provided without warranty under the terms of the BSD
- *  license included in enthought/LICENSE.txt and may be redistributed only
- *  under the conditions described in the aforementioned license.  The license
- *  is also available online at http://www.enthought.com/licenses/BSD.txt
- *
- *  Thanks for using Enthought open source!
- *
- *  Author: David C. Morrill
- *  Date:   06/15/2004
- *
- ******************************************************************************/
+// (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+// All rights reserved.
+//
+// This software is provided without warranty under the terms of the BSD
+// license included in LICENSE.txt and may be redistributed only under
+// the conditions described in the aforementioned license. The license
+// is also available online at http://www.enthought.com/licenses/BSD.txt
+//
+// Thanks for using Enthought open source!
 
 /*-----------------------------------------------------------------------------
 |  Includes:
@@ -186,6 +177,10 @@ call_notifiers(
 /* Maximum legal value for default_value_type, for use in testing and
    validation. */
 #define MAXIMUM_DEFAULT_VALUE_TYPE 9
+
+/* The maximum value for comparison_mode. Valid values are between 0 and
+   the maximum value. */
+#define MAXIMUM_COMPARISON_MODE_VALUE 2
 
 /*-----------------------------------------------------------------------------
 |  'CTrait' instance definition:
@@ -3471,6 +3466,25 @@ validate_trait_function(
     return raise_trait_error(trait, obj, name, value);
 }
 
+
+/*-----------------------------------------------------------------------------
+|  Verifies a Python value is a callable (or None):
++----------------------------------------------------------------------------*/
+
+static PyObject *
+validate_trait_callable(
+    trait_object *trait, has_traits_object *obj, PyObject *name,
+    PyObject *value)
+{
+
+    if ((value == Py_None) || PyCallable_Check(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+
+    return raise_trait_error(trait, obj, name, value);
+}
+
 /*-----------------------------------------------------------------------------
 |  Attempts to 'adapt' an object to a specified interface:
 |
@@ -3891,6 +3905,7 @@ static trait_validate validate_handlers[] = {
     validate_trait_adapt,   /* case 19: Adaptable object check */
     validate_trait_integer, /* case 20: Integer check */
     validate_trait_float,   /* case 21: Float check */
+    validate_trait_callable,   /* case 22: Callable check */
 };
 
 static PyObject *
@@ -4040,6 +4055,12 @@ _trait_set_validate(trait_object *trait, PyObject *args)
                     break;
 
                 case 21: /* Float check: */
+                    if (n == 1) {
+                        goto done;
+                    }
+                    break;
+
+                case 22: /* Callable check: */
                     if (n == 1) {
                         goto done;
                     }
@@ -4225,28 +4246,6 @@ _trait_delegate(trait_object *trait, PyObject *args)
 }
 
 /*-----------------------------------------------------------------------------
-|  Sets the value of the 'comparison' mode of a CTrait instance:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-_trait_rich_comparison(trait_object *trait, PyObject *args)
-{
-    int compare_type;
-
-    if (!PyArg_ParseTuple(args, "p", &compare_type)) {
-        return NULL;
-    }
-
-    trait->flags &= ~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_ID_TEST);
-    if (compare_type == 0) {
-        trait->flags |= TRAIT_OBJECT_ID_TEST;
-    }
-
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-
-/*-----------------------------------------------------------------------------
 |  Sets the appropriate value comparison mode flags of a CTrait instance:
 +----------------------------------------------------------------------------*/
 
@@ -4266,8 +4265,14 @@ _trait_comparison_mode(trait_object *trait, PyObject *args)
             break;
         case 1:
             trait->flags |= TRAIT_OBJECT_ID_TEST;
-        default:
             break;
+        case 2:
+            break;
+        default:
+            return PyErr_Format(
+                PyExc_ValueError,
+                "The comparison mode must be 0..%d, but %d was specified.",
+                MAXIMUM_COMPARISON_MODE_VALUE, comparison_mode);
     }
 
     Py_INCREF(Py_None);
@@ -4885,8 +4890,6 @@ static PyMethodDef trait_methods[] = {
     {"validate", (PyCFunction)_trait_validate, METH_VARARGS, validate_doc},
     {"delegate", (PyCFunction)_trait_delegate, METH_VARARGS,
      PyDoc_STR("delegate(delegate_name,prefix,prefix_type,modify_delegate)")},
-    {"rich_comparison", (PyCFunction)_trait_rich_comparison, METH_VARARGS,
-     PyDoc_STR("rich_comparison(rich_comparison_boolean)")},
     {"comparison_mode", (PyCFunction)_trait_comparison_mode, METH_VARARGS,
      PyDoc_STR("comparison_mode(comparison_mode_enum)")},
     {"property", (PyCFunction)_trait_property, METH_VARARGS,

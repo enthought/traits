@@ -1,20 +1,17 @@
-# ------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: David C. Morrill Date: 03/20/2003 Description: Unit Test Case for the
-# Traits Package
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 #  Imports
 
 import unittest
+import warnings
 
 from traits.api import (
     Any,
@@ -22,6 +19,7 @@ from traits.api import (
     CBytes,
     CFloat,
     CInt,
+    ComparisonMode,
     Delegate,
     Float,
     HasTraits,
@@ -94,41 +92,27 @@ class test_base2(unittest.TestCase):
         mapped_values=None,
     ):
         obj = self.obj
-        try:
-            # Make sure the default value is correct:
-            msg = "default value"
-            value = default_value
-            self.assertEqual(getattr(obj, name), value)
 
-            # Iterate over all legal values being tested:
-            if actual_values is None:
-                actual_values = good_values
-            msg = "legal values"
-            i = 0
-            for value in good_values:
-                setattr(obj, name, value)
-                self.assertEqual(getattr(obj, name), actual_values[i])
-                if mapped_values is not None:
-                    self.assertEqual(
-                        getattr(obj, name + "_"), mapped_values[i]
-                    )
-                i += 1
+        # Make sure the default value is correct:
+        value = default_value
+        self.assertEqual(getattr(obj, name), value)
 
-            # Iterate over all illegal values being tested:
-            msg = "illegal values"
-            for value in bad_values:
-                self.assertRaises(TraitError, setattr, obj, name, value)
-        except:
-            print(
-                "Failed while testing %s for value: %s(%s) in %s"
-                % (
-                    msg,
-                    value,
-                    value.__class__.__name__,
-                    self.__class__.__name__,
+        # Iterate over all legal values being tested:
+        if actual_values is None:
+            actual_values = good_values
+        i = 0
+        for value in good_values:
+            setattr(obj, name, value)
+            self.assertEqual(getattr(obj, name), actual_values[i])
+            if mapped_values is not None:
+                self.assertEqual(
+                    getattr(obj, name + "_"), mapped_values[i]
                 )
-            )
-            raise
+            i += 1
+
+        # Iterate over all illegal values being tested:
+        for value in bad_values:
+            self.assertRaises(TraitError, setattr, obj, name, value)
 
 
 class AnyTrait(HasTraits):
@@ -1109,10 +1093,10 @@ class test_list_value(test_base2):
         self.assertIs(self.last_event, old_event)
         self.obj.alist[0:4:2] = [10, 11]
         self.assertLastTraitListEventEqual(
-            slice(0, 4, 2), [[8, 4]], [[10, 11]]
+            slice(0, 4, 2), [8, 4], [10, 11]
         )
         del self.obj.alist[1:4:2]
-        self.assertLastTraitListEventEqual(slice(1, 4, 2), [[9, 5]], [])
+        self.assertLastTraitListEventEqual(slice(1, 4, 2), [9, 5], [])
         self.obj.alist = [1, 2, 3, 4]
         del self.obj.alist[2:4]
         self.assertLastTraitListEventEqual(2, [3, 4], [])
@@ -1157,3 +1141,135 @@ class TestThis(unittest.TestCase):
         with self.assertRaises(TraitError):
             d.allows_none = object()
         self.assertIsNone(d.allows_none)
+
+
+class ComparisonModeTests(unittest.TestCase):
+    def test_comparison_mode_no_compare(self):
+        class HasComparisonMode(HasTraits):
+            bar = Trait(comparison_mode=ComparisonMode.no_compare)
+
+        old_compare = HasComparisonMode()
+        events = []
+        old_compare.on_trait_change(lambda: events.append(None), "bar")
+
+        some_list = [1, 2, 3]
+
+        self.assertEqual(len(events), 0)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 2)
+        old_compare.bar = [1, 2, 3]
+        self.assertEqual(len(events), 3)
+        old_compare.bar = [4, 5, 6]
+        self.assertEqual(len(events), 4)
+
+    def test_comparison_mode_object_id_compare(self):
+        class HasComparisonMode(HasTraits):
+            bar = Trait(comparison_mode=ComparisonMode.object_id_compare)
+
+        old_compare = HasComparisonMode()
+        events = []
+        old_compare.on_trait_change(lambda: events.append(None), "bar")
+
+        some_list = [1, 2, 3]
+
+        self.assertEqual(len(events), 0)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [1, 2, 3]
+        self.assertEqual(len(events), 2)
+        old_compare.bar = [4, 5, 6]
+        self.assertEqual(len(events), 3)
+
+    def test_comparison_mode_equality_compare(self):
+        class HasComparisonMode(HasTraits):
+            bar = Trait(comparison_mode=ComparisonMode.equality_compare)
+
+        old_compare = HasComparisonMode()
+        events = []
+        old_compare.on_trait_change(lambda: events.append(None), "bar")
+
+        some_list = [1, 2, 3]
+
+        self.assertEqual(len(events), 0)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [1, 2, 3]
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [4, 5, 6]
+        self.assertEqual(len(events), 2)
+
+    def test_rich_compare_false(self):
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", DeprecationWarning)
+
+            class OldRichCompare(HasTraits):
+                bar = Trait(rich_compare=False)
+
+        # Check for a DeprecationWarning.
+        self.assertEqual(len(warn_msgs), 1)
+        warn_msg = warn_msgs[0]
+        self.assertIs(warn_msg.category, DeprecationWarning)
+        self.assertIn(
+            "'rich_compare' metadata has been deprecated",
+            str(warn_msg.message)
+        )
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warn_msg.filename)
+
+        # Behaviour matches comparison_mode=ComparisonMode.identity_compare.
+        old_compare = OldRichCompare()
+        events = []
+        old_compare.on_trait_change(lambda: events.append(None), "bar")
+
+        some_list = [1, 2, 3]
+
+        self.assertEqual(len(events), 0)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [1, 2, 3]
+        self.assertEqual(len(events), 2)
+        old_compare.bar = [4, 5, 6]
+        self.assertEqual(len(events), 3)
+
+    def test_rich_compare_true(self):
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", DeprecationWarning)
+
+            class OldRichCompare(HasTraits):
+                bar = Trait(rich_compare=True)
+
+        # Check for a DeprecationWarning.
+        self.assertEqual(len(warn_msgs), 1)
+        warn_msg = warn_msgs[0]
+        self.assertIs(warn_msg.category, DeprecationWarning)
+        self.assertIn(
+            "'rich_compare' metadata has been deprecated",
+            str(warn_msg.message)
+        )
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warn_msg.filename)
+
+        # Behaviour matches comparison_mode=ComparisonMode.identity_compare.
+        old_compare = OldRichCompare()
+        events = []
+        old_compare.on_trait_change(lambda: events.append(None), "bar")
+
+        some_list = [1, 2, 3]
+
+        self.assertEqual(len(events), 0)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [1, 2, 3]
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [4, 5, 6]
+        self.assertEqual(len(events), 2)

@@ -147,6 +147,8 @@ Traits
 
 .. autoclass:: Type
 
+.. autoclass:: Subclass
+
 .. autoclass:: Event
 
 .. autoclass:: Button
@@ -173,6 +175,8 @@ The following :class:`~.TraitType` classes and instances are deprecated,
 and may be removed in a future version of Traits.
 
 .. deprecated:: 6.0.0
+
+.. autodata:: AdaptedTo
 
 .. autodata:: BaseUnicode
 

@@ -1,14 +1,12 @@
-# ------------------------------------------------------------------------------
-# Copyright (c) 2019, Enthought, Inc.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
+#
 # Thanks for using Enthought open source!
-# ------------------------------------------------------------------------------
-
 
 import unittest
 import warnings
@@ -16,7 +14,7 @@ import warnings
 from traits.constants import (
     ComparisonMode, DefaultValue, TraitKind, MAXIMUM_DEFAULT_VALUE_TYPE
 )
-from traits.traits import CTrait
+from traits.ctrait import CTrait
 
 
 def getter():
@@ -148,3 +146,14 @@ class TestCTrait(unittest.TestCase):
 
         with self.assertRaises(AttributeError):
             trait.no_value_test = False
+
+    def test_invalid_comparison_mode(self):
+        trait = CTrait(TraitKind.trait)
+
+        # comparison modes other than {0,1,2}
+        # are invalid
+        with self.assertRaises(ValueError):
+            trait.comparison_mode(-1)
+
+        with self.assertRaises(ValueError):
+            trait.comparison_mode(3)

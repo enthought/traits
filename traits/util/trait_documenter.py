@@ -1,22 +1,28 @@
-# -*- coding: utf-8 -*-
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """
     A Trait Documenter
     (Subclassed from the autodoc ClassLevelDocumenter)
-
-    :copyright: Copyright 2012 by Enthought, Inc
 
 """
 from importlib import import_module
 import inspect
 import io
-import sys
 import token
 import tokenize
 import traceback
 
 from sphinx.ext.autodoc import ClassLevelDocumenter
 
-from ..trait_handlers import TraitType
+from ..trait_type import TraitType
 from ..has_traits import MetaHasTraits
 
 

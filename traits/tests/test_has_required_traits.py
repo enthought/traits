@@ -1,3 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 import unittest
 from traits.api import Int, Float, String, HasRequiredTraits, TraitError
 
@@ -13,7 +23,7 @@ class TestHasRequiredTraits(unittest.TestCase):
 
     def test_missing_required_trait(self):
         with self.assertRaises(TraitError) as exc:
-            test_instance = RequiredTest(i_trait=3)
+            RequiredTest(i_trait=3)
         self.assertEqual(
             exc.exception.args[0],
             "The following required traits were not "

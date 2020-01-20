@@ -1,21 +1,12 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2005, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#  Author:        David C. Morrill
-#  Original Date: 06/21/2002
-#
-#  Rewritten as a C-based type extension: 06/21/2004
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """ Defines the HasTraits class, along with several useful subclasses and
     associated metaclasses.
@@ -35,25 +26,17 @@ import weakref
 from types import FunctionType, MethodType
 
 from . import __version__ as TraitsVersion
-
 from .adaptation.adaptation_error import AdaptationError
-
 from .constants import DefaultValue, TraitKind
+from .ctrait import CTrait, __newobj__
 from .ctraits import CHasTraits
-
 from .traits import (
-    CTrait,
     ForwardProperty,
     Property,
     Trait,
-    TraitFactory,
-    __newobj__,
     generic_trait,
-    trait_factory,
 )
-
 from .trait_types import Any, Bool, Disallow, Event, Python
-
 from .trait_notifiers import (
     ExtendedTraitChangeNotifyWrapper,
     FastUITraitChangeNotifyWrapper,
@@ -62,11 +45,6 @@ from .trait_notifiers import (
     StaticTraitChangeNotifyWrapper,
     TraitChangeNotifyWrapper,
 )
-
-from .trait_handlers import (
-    TraitType,
-)
-
 from .trait_base import (
     SequenceTypes,
     TraitsCache,
@@ -75,10 +53,9 @@ from .trait_base import (
     not_event,
     not_false,
 )
-
 from .trait_errors import TraitError
-
 from .util.deprecated import deprecated
+from .trait_converters import check_trait, mapped_trait_for, trait_for
 
 # -------------------------------------------------------------------------------
 #  Set CHECK_INTERFACES to one of the following values:
@@ -336,65 +313,6 @@ class _SimpleTest:
 
 
 # -------------------------------------------------------------------------------
-#  Returns either the original value or a valid CTrait if the value can be
-#  converted to a CTrait:
-# -------------------------------------------------------------------------------
-
-
-def _check_trait(trait):
-    """ Returns either the original value or a valid CTrait if the value can be
-        converted to a CTrait.
-    """
-    if isinstance(trait, CTrait):
-        return trait
-
-    if isinstance(trait, TraitFactory):
-        return trait_factory(trait)
-
-    if isinstance(trait, type) and issubclass(trait, TraitType):
-        trait = trait()
-
-    if isinstance(trait, TraitType):
-        return trait.as_ctrait()
-
-    return trait
-
-
-# -------------------------------------------------------------------------------
-#  Returns the trait corresponding to a specified value:
-# -------------------------------------------------------------------------------
-
-
-def _trait_for(trait):
-    """ Returns the trait corresponding to a specified value.
-    """
-    trait = _check_trait(trait)
-    if isinstance(trait, CTrait):
-        return trait
-
-    return Trait(trait)
-
-
-# -------------------------------------------------------------------------------
-#  Returns the 'mapped trait' definition for a mapped trait:
-# -------------------------------------------------------------------------------
-
-
-def _mapped_trait_for(trait):
-    """ Returns the 'mapped trait' definition for a mapped trait.
-    """
-    default_value = trait.default_value()[1]
-    try:
-        default_value = trait.handler.mapped_value(default_value)
-    except:
-        pass
-
-    return Any(
-        default_value, is_base=False, transient=True, editable=False
-    ).as_ctrait()
-
-
-# -------------------------------------------------------------------------------
 #  Adds a list of handlers to a specified notifiers list:
 # -------------------------------------------------------------------------------
 
@@ -534,7 +452,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
     # Move all trait definitions from the class dictionary to the
     # appropriate trait class dictionaries:
     for name, value in list(class_dict.items()):
-        value = _check_trait(value)
+        value = check_trait(value)
         rc = isinstance(value, CTrait)
 
         if (not rc) and isinstance(value, ForwardProperty):
@@ -578,7 +496,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                             class_traits[name + "_items"] = items_trait
 
                         if handler.is_mapped:
-                            class_traits[name + "_"] = _mapped_trait_for(value)
+                            class_traits[name + "_"] = mapped_trait_for(value)
 
                 elif value_type == "delegate":
                     # Only add a listener if the trait.listenable metadata
@@ -638,7 +556,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                     del class_dict[name]
                     handler = value.handler
                     if (handler is not None) and handler.is_mapped:
-                        class_traits[name + "_"] = _mapped_trait_for(value)
+                        class_traits[name + "_"] = mapped_trait_for(value)
                     break
 
     # Process all HasTraits base classes:
@@ -1104,7 +1022,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         if len(trait) > 1:
             trait = Trait(*trait)
         else:
-            trait = _trait_for(trait[0])
+            trait = trait_for(trait[0])
 
         # Add the trait to the class:
         cls._add_class_trait(name, trait, False)
@@ -1151,7 +1069,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             if handler.has_items:
                 cls.add_class_trait(name + "_items", handler.items_event())
             if handler.is_mapped:
-                cls.add_class_trait(name + "_", _mapped_trait_for(trait))
+                cls.add_class_trait(name + "_", mapped_trait_for(trait))
 
         # Make the new trait inheritable (if allowed):
         if trait.is_base is not False:
@@ -2810,7 +2728,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         if len(trait) > 1:
             trait = Trait(*trait)
         else:
-            trait = _trait_for(trait[0])
+            trait = trait_for(trait[0])
 
         # Check to see if the trait has additional sub-traits that need to be
         # defined also:
@@ -2819,7 +2737,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             if handler.has_items:
                 self.add_trait(name + "_items", handler.items_event())
             if handler.is_mapped:
-                self.add_trait(name + "_", _mapped_trait_for(trait))
+                self.add_trait(name + "_", mapped_trait_for(trait))
 
         # See if there already is a class or instance trait with the same name:
         old_trait = self._trait(name, 0)

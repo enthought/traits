@@ -1,16 +1,13 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2014, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in /LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
+
 """
 Tests for List items_changed events.
 
@@ -211,3 +208,44 @@ class ListEventTestCase(unittest.TestCase):
         del foo.l[3::2]
         self.assertEqual(foo.l, [1, 2, 3])
         self.assertEqual(len(foo.l_events), 0)
+
+    def test_clear(self):
+        foo = MyClass()
+        foo.l.clear()
+        self.assertEqual(len(foo.l_events), 1)
+        event = foo.l_events[0]
+        self.assertEqual(event.index, 0)
+        self.assertEqual(event.removed, [1, 2, 3])
+        self.assertEqual(event.added, [])
+
+    def test_clear_empty_list(self):
+        foo = MyClass()
+        foo.l = []
+
+        foo.l.clear()
+
+        self.assertEqual(len(foo.l_events), 0)
+
+    def test_delete_step_slice(self):
+        foo = MyClass()
+        foo.l = [0, 1, 2, 3, 4]
+
+        del foo.l[0:5:2]
+
+        self.assertEqual(len(foo.l_events), 1)
+        event, = foo.l_events
+        self.assertEqual(event.index, slice(0, 5, 2))
+        self.assertEqual(event.removed, [0, 2, 4])
+        self.assertEqual(event.added, [])
+
+    def test_assignment_step_slice(self):
+        foo = MyClass()
+        foo.l = [1, 2, 3]
+
+        foo.l[::2] = [3, 4]
+
+        self.assertEqual(len(foo.l_events), 1)
+        event, = foo.l_events
+        self.assertEqual(event.index, slice(None, None, 2))
+        self.assertEqual(event.added, [3, 4])
+        self.assertEqual(event.removed, [1, 3])
