@@ -433,9 +433,9 @@ class TraitType(BaseTraitHandler):
                 )
 
                 if rich_compare:
-                    trait.comparison_mode = ComparisonMode.equality_compare
+                    trait.comparison_mode = ComparisonMode.equality
                 else:
-                    trait.comparison_mode = ComparisonMode.object_id_compare
+                    trait.comparison_mode = ComparisonMode.identity
 
             comparison_mode = metadata.pop("comparison_mode", None)
             if comparison_mode is not None:
