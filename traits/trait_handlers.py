@@ -39,6 +39,7 @@ from .trait_dict_object import TraitDictEvent, TraitDictObject
 from .trait_converters import trait_from
 from .trait_handler import TraitHandler
 from .trait_list_object import TraitListEvent, TraitListObject
+from .util.deprecated import deprecated
 
 # Set up a logger:
 import logging
@@ -277,7 +278,8 @@ class ThisClass(TraitHandler):
        ThisClass is the underlying handler for the predefined traits **This**
        and **self**, and the elements of ListThis.
     """
-
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="ThisClass", replacement="This"))
     def __init__(self, allow_none=False):
         """Creates a ThisClass handler.
 
@@ -287,8 +289,6 @@ class ThisClass(TraitHandler):
             Flag indicating whether None is accepted as a valid value
             (True or non-zero) or not (False or 0).
         """
-        message = _WARNING_FORMAT_STR.format(handler="ThisClass", replacement="This")
-        warnings.warn(message, DeprecationWarning)
         if allow_none:
             self.validate = self.validate_none
             self.info = self.info_none
@@ -499,7 +499,8 @@ class TraitFunction(TraitHandler):
     **Function**, and for the use of function references as arguments to the
     Trait() function.
     """
-
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitFunction", replacement="Callable"))
     def __init__(self, aFunc):
         """ Creates a TraitFunction handler.
 
@@ -517,8 +518,6 @@ class TraitFunction(TraitHandler):
         actual value assigned to the trait attribute. If it is not, the
         function must raise a TraitError exception.
         """
-        message = _WARNING_FORMAT_STR.format(handler="TraitFunction", replacement="Callable")
-        warnings.warn(message, DeprecationWarning)
         if not isinstance(aFunc, CallableTypes):
             raise TraitError("Argument must be callable.")
         self.aFunc = aFunc
@@ -551,7 +550,8 @@ class TraitEnum(TraitHandler):
     TraitEnum is the underlying handler for the forms of the Trait() function
     that take a list of possible values
     """
-
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitEnum", replacement="Enum"))
     def __init__(self, *values):
         """ Creates a TraitEnum handler.
 
@@ -584,8 +584,6 @@ class TraitEnum(TraitHandler):
         this example to the form shown in the preceding example whenever it
         encounters them in a trait definition.
         """
-        message = _WARNING_FORMAT_STR.format(handler="TraitEnum", replacement="Enum")
-        warnings.warn(message, DeprecationWarning)
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
         self.values = tuple(values)
@@ -1041,6 +1039,8 @@ class TraitTuple(TraitHandler):
     strings, 'Hearts', 'Diamonds', 'Spades', or 'Clubs'.
     """
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitTuple", replacement="Tuple"))
     def __init__(self, *args):
         r""" Creates a TraitTuple handler.
 
@@ -1058,8 +1058,6 @@ class TraitTuple(TraitHandler):
         *args*, and whose *i*\ th element is of the type specified by
         *trait*\ :sub:`i`.
         """
-        message = _WARNING_FORMAT_STR.format(handler="TraitTuple", replacement="Tuple")
-        warnings.warn(message, DeprecationWarning)
         self.types = tuple([trait_from(arg) for arg in args])
         self.fast_validate = (ValidateTrait.tuple, self.types)
 
@@ -1137,6 +1135,8 @@ class TraitList(TraitHandler):
     default_value_type = DefaultValue.trait_list_object
     _items_event = None
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitList", replacement="List"))
     def __init__(
         self, trait=None, minlen=0, maxlen=sys.maxsize, has_items=True
     ):
@@ -1160,8 +1160,6 @@ class TraitList(TraitHandler):
         a value that can be converted to a trait using the Trait() function.
 
         """
-        message = _WARNING_FORMAT_STR.format(handler="TraitList", replacement="List")
-        warnings.warn(message, DeprecationWarning)
         self.item_trait = trait_from(trait)
         self.minlen = max(0, minlen)
         self.maxlen = max(minlen, maxlen)
@@ -1250,6 +1248,8 @@ class TraitDict(TraitHandler):
     default_value_type = DefaultValue.trait_list_object
     _items_event = None
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitDict", replacement="Dict"))
     def __init__(self, key_trait=None, value_trait=None, has_items=True):
         """ Creates a TraitDict handler.
 
@@ -1277,8 +1277,6 @@ class TraitDict(TraitHandler):
         of the type specified by *value_trait*.
 
         """
-        message = _WARNING_FORMAT_STR.format(handler="TraitDict", replacement="Dict")
-        warnings.warn(message, DeprecationWarning)
         self.key_trait = trait_from(key_trait)
         self.value_trait = trait_from(value_trait)
         self.has_items = has_items
