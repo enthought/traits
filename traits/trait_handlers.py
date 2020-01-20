@@ -51,7 +51,8 @@ logger = logging.getLogger(__name__)
 
 CallableTypes = (FunctionType, MethodType)
 
-_WARNING_FORMAT_STR = "'{handler}' trait handler has been deprecated."
+_WARNING_FORMAT_STR = ("'{handler}' trait handler has been deprecated. "
+                       "Use {replacement} instead.")
 
 # -------------------------------------------------------------------------------
 #  Private functions:
@@ -286,7 +287,7 @@ class ThisClass(TraitHandler):
             Flag indicating whether None is accepted as a valid value
             (True or non-zero) or not (False or 0).
         """
-        message = _WARNING_FORMAT_STR.format(handler="ThisClass")
+        message = _WARNING_FORMAT_STR.format(handler="ThisClass", replacement="This")
         warnings.warn(message, DeprecationWarning)
         if allow_none:
             self.validate = self.validate_none
@@ -516,7 +517,7 @@ class TraitFunction(TraitHandler):
         actual value assigned to the trait attribute. If it is not, the
         function must raise a TraitError exception.
         """
-        message = _WARNING_FORMAT_STR.format(handler="TraitFunction")
+        message = _WARNING_FORMAT_STR.format(handler="TraitFunction", replacement="Callable")
         warnings.warn(message, DeprecationWarning)
         if not isinstance(aFunc, CallableTypes):
             raise TraitError("Argument must be callable.")
@@ -583,7 +584,7 @@ class TraitEnum(TraitHandler):
         this example to the form shown in the preceding example whenever it
         encounters them in a trait definition.
         """
-        message = _WARNING_FORMAT_STR.format(handler="TraitEnum")
+        message = _WARNING_FORMAT_STR.format(handler="TraitEnum", replacement="Enum")
         warnings.warn(message, DeprecationWarning)
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
@@ -1057,7 +1058,7 @@ class TraitTuple(TraitHandler):
         *args*, and whose *i*\ th element is of the type specified by
         *trait*\ :sub:`i`.
         """
-        message = _WARNING_FORMAT_STR.format(handler="TraitTuple")
+        message = _WARNING_FORMAT_STR.format(handler="TraitTuple", replacement="Tuple")
         warnings.warn(message, DeprecationWarning)
         self.types = tuple([trait_from(arg) for arg in args])
         self.fast_validate = (ValidateTrait.tuple, self.types)
@@ -1159,7 +1160,7 @@ class TraitList(TraitHandler):
         a value that can be converted to a trait using the Trait() function.
 
         """
-        message = _WARNING_FORMAT_STR.format(handler="TraitList")
+        message = _WARNING_FORMAT_STR.format(handler="TraitList", replacement="List")
         warnings.warn(message, DeprecationWarning)
         self.item_trait = trait_from(trait)
         self.minlen = max(0, minlen)
@@ -1276,7 +1277,7 @@ class TraitDict(TraitHandler):
         of the type specified by *value_trait*.
 
         """
-        message = _WARNING_FORMAT_STR.format(handler="TraitDict")
+        message = _WARNING_FORMAT_STR.format(handler="TraitDict", replacement="Dict")
         warnings.warn(message, DeprecationWarning)
         self.key_trait = trait_from(key_trait)
         self.value_trait = trait_from(value_trait)
