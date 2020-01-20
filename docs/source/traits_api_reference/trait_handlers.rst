@@ -13,8 +13,6 @@ Classes
 
 .. autoclass:: TraitInstance
 
-.. autoclass:: TraitFunction
-
 .. autoclass:: TraitPrefixList
 
 .. autoclass:: TraitMap
@@ -47,9 +45,5 @@ and may be removed in a future version of Traits.
 .. autodata:: TraitFunction
 
 .. autodata:: TraitList
-
-.. autodata:: TraitMap
-
-.. autodata:: TraitPrefixList
 
 .. autodata:: TraitTuple

@@ -17,8 +17,6 @@ from traits.api import (
     TraitEnum,
     TraitFunction,
     TraitList,
-    TraitMap,
-    TraitPrefixList,
     TraitTuple,
 )
 
@@ -30,9 +28,7 @@ class TestTraitHandlerDeprecatedWarnings(unittest.TestCase):
             "TraitDict": TraitDict,
             "TraitEnum": TraitEnum,
             "TraitList": TraitList,
-            "TraitMap": lambda: TraitMap({}),
             "TraitFunction": lambda: TraitFunction(lambda x: 0),
-            "TraitPrefixList": TraitPrefixList,
             "TraitTuple": TraitTuple
         }
 
