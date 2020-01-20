@@ -200,8 +200,6 @@ class ListEventTestCase(unittest.TestCase):
         self.assertEqual(len(foo.l_events), 1)
 
     def test_remove_empty_slices_steps(self):
-        # Same as above but slices with steps are handled differently in
-        # TraitListObject.__delitem__
         foo = MyClass()
 
         # Delete no items and get no events
@@ -237,6 +235,16 @@ class ListEventTestCase(unittest.TestCase):
         self.assertEqual(event.index, slice(0, 5, 2))
         self.assertEqual(event.removed, [0, 2, 4])
         self.assertEqual(event.added, [])
+
+    def test_delete_step_slice_empty_list(self):
+        foo = MyClass()
+        foo.l = []
+
+        del foo.l[::-1]
+
+        # No items deleted, so no event fired
+        self.assertEqual(len(foo.l_events), 0)
+
 
     def test_assignment_step_slice(self):
         foo = MyClass()
