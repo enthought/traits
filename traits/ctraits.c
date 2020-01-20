@@ -3477,7 +3477,7 @@ validate_trait_callable(
     PyObject *value)
 {
 
-    if ((value == Py_None) || (PyCallable_Check(value)> 0)) {
+    if ((value == Py_None) || PyCallable_Check(value)) {
         Py_INCREF(value);
         return value;
     }
