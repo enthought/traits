@@ -904,7 +904,7 @@ class Callable(TraitType):
     info_text = "a callable value"
 
     #: The C-level fast validator to use
-    fast_validate = (ValidateTrait.callable, )
+    fast_validate = (ValidateTrait.callable,)
 
     def validate(self, object, name, value):
         """ Validates that the value is a Python callable.
