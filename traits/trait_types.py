@@ -3344,7 +3344,8 @@ class Either(TraitType):
 
 
 class NoneTrait(TraitType):
-    """ Defines a trait that only accepts the None value"""
+    """ Defines a trait that only accepts the None value
+    """
 
     info_text = "a None type"
 

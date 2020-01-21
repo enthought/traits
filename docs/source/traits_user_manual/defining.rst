@@ -478,14 +478,14 @@ will raise a TraitError if a value of any other type is assigned. For example::
 
 Union
 ::::::
-The Union trait accepts values that is considered valid by at least one
+The Union trait accepts a value that is considered valid by at least one
 of the traits in its definition. It is a simpler and therefore less error-prone
-alternative to the `Either` trait, which allows more complex constructs which
-allows for more mysterious behaviour. The Union trait however, validates the
-value assigned to it against each of the traits in its definition in the order
-they are defined. Union only accepts trait types or trait type instances or
-None in its definition. Prefer to use Union over `Either` to remain future
-proof.
+alternative to the `Either` trait, which allows more complex constructs and
+may sometimes exhibit mysterious validation behaviour. The Union trait however,
+validates the value assigned to it against each of the traits in its definition
+in the order they are defined. Union only accepts trait types or trait type
+instances or None in its definition. Prefer to use Union over `Either` to
+remain future proof.
 
 .. index::
    pair: Union trait; examples
