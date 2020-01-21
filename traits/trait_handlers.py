@@ -24,7 +24,6 @@ consistent.
 from importlib import import_module
 import sys
 from types import FunctionType, MethodType
-import warnings
 
 from .constants import DefaultValue, ValidateTrait
 from .trait_base import (
