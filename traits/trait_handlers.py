@@ -499,8 +499,7 @@ class TraitFunction(TraitHandler):
     **Function**, and for the use of function references as arguments to the
     Trait() function.
     """
-    @deprecated(_WARNING_FORMAT_STR.format(
-        handler="TraitFunction", replacement="Callable"))
+
     def __init__(self, aFunc):
         """ Creates a TraitFunction handler.
 
@@ -550,8 +549,7 @@ class TraitEnum(TraitHandler):
     TraitEnum is the underlying handler for the forms of the Trait() function
     that take a list of possible values
     """
-    @deprecated(_WARNING_FORMAT_STR.format(
-        handler="TraitEnum", replacement="Enum"))
+
     def __init__(self, *values):
         """ Creates a TraitEnum handler.
 
