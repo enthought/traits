@@ -14,8 +14,6 @@ import warnings
 from traits.api import (
     ThisClass,
     TraitDict,
-    TraitEnum,
-    TraitFunction,
     TraitList,
     TraitTuple,
 )
@@ -26,9 +24,7 @@ class TestTraitHandlerDeprecatedWarnings(unittest.TestCase):
         handlers = {
             "ThisClass": ThisClass,
             "TraitDict": TraitDict,
-            "TraitEnum": TraitEnum,
             "TraitList": TraitList,
-            "TraitFunction": lambda: TraitFunction(lambda x: 0),
             "TraitTuple": TraitTuple
         }
 
