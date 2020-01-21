@@ -506,15 +506,14 @@ class _TraitMaker(object):
                 DeprecationWarning,
                 stacklevel=3,
             )
-            trait.comparison_mode(
-                ComparisonMode.equality_compare
-                if rich_compare
-                else ComparisonMode.object_id_compare
-            )
+            if rich_compare:
+                trait.comparison_mode = ComparisonMode.equality_compare
+            else:
+                trait.comparison_mode = ComparisonMode.object_id_compare
 
-        comparison_mode = metadata.get("comparison_mode")
+        comparison_mode = metadata.pop("comparison_mode", None)
         if comparison_mode is not None:
-            trait.comparison_mode(comparison_mode)
+            trait.comparison_mode = comparison_mode
 
         if len(metadata) > 0:
             if trait.__dict__ is None:

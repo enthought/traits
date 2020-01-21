@@ -431,15 +431,15 @@ class TraitType(BaseTraitHandler):
                     DeprecationWarning,
                     stacklevel=5,
                 )
-                trait.comparison_mode(
-                    ComparisonMode.equality_compare
-                    if rich_compare
-                    else ComparisonMode.object_id_compare
-                )
 
-            comparison_mode = metadata.get("comparison_mode")
+                if rich_compare:
+                    trait.comparison_mode = ComparisonMode.equality_compare
+                else:
+                    trait.comparison_mode = ComparisonMode.object_id_compare
+
+            comparison_mode = metadata.pop("comparison_mode", None)
             if comparison_mode is not None:
-                trait.comparison_mode(comparison_mode)
+                trait.comparison_mode = comparison_mode
 
             metadata.setdefault("type", "trait")
 
