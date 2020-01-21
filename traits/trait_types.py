@@ -23,8 +23,10 @@ import sys
 from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 import uuid
+import warnings
 
-from .constants import DefaultValue, TraitKind, ValidateTrait
+from .constants import ComparisonMode, DefaultValue, TraitKind, ValidateTrait
+from .ctrait import CTrait
 from .trait_base import (
     strx,
     get_module_name,
@@ -3335,6 +3337,83 @@ class Either(TraitType):
         """ Returns a CTrait corresponding to the trait defined by this class.
         """
         return self.trait_maker.as_ctrait()
+
+# -------------------------------------------------------------------------------
+#  'Union' trait:
+# -------------------------------------------------------------------------------
+
+
+class Union(TraitType):
+    """ Defines a trait whose value can be any of of a specified list of
+    trait types or list of trait type instances or None
+    """
+
+    # CTrait type map for special trait types:
+    type_map = {"event": TraitKind.event, "constant": TraitKind.constant}
+
+    def __init__(self, *traits, **metadata):
+        super(Union, self).__init__(traits, **metadata)
+
+        self.list_ctrait_instances = []
+        for trait in traits:
+            if not isinstance(trait, (type, TraitType)):
+                raise ValueError("Union trait definition expects a trait type "
+                                 "or instance of trait type, but "
+                                 "got {} instead".format(trait))
+            ctrait_instance = trait().as_ctrait()
+            self.list_ctrait_instances.append(ctrait_instance)
+
+        self.default_value_type = DefaultValue.constant
+        self.default_value = metadata.pop("default", None)
+        self.metadata = metadata.copy()
+
+    def validate(self, obj, name, value):
+        """ Return the value by the first trait in the list that can
+        validate the assigned value, raise an error if none of them can.
+        """
+        for trait_type_instance in self.list_trait_type_instances:
+            try:
+                return trait_type_instance.validate(obj, name, value)
+            except TraitError:
+                pass
+
+        self.error(obj, name, value)
+
+    def as_ctrait(self):
+        """ Returns a CTrait corresponding to the trait defined by this class.
+        """
+        metadata = self.metadata
+        ctrait = CTrait(self.type_map.get(metadata.get("type"), TraitKind.trait))
+        ctrait.set_validate(self.validate)
+        ctrait.set_default_value(self.default_value_type, self.default_value)
+
+        rich_compare = metadata.get("rich_compare")
+        if rich_compare is not None:
+            # Ref: enthought/traits#602
+            warnings.warn(
+                "The 'rich_compare' metadata has been deprecated. Please "
+                "use the 'comparison_mode' metadata instead. In a future "
+                "release, rich_compare will have no effect.",
+                DeprecationWarning,
+                stacklevel=3,
+            )
+            ctrait.comparison_mode(
+                ComparisonMode.equality_compare
+                if rich_compare
+                else ComparisonMode.object_id_compare
+            )
+
+        comparison_mode = metadata.get("comparison_mode")
+        if comparison_mode is not None:
+            ctrait.comparison_mode(comparison_mode)
+
+        if len(metadata) > 0:
+            if ctrait.__dict__ is None:
+                ctrait.__dict__ = metadata
+            else:
+                ctrait.__dict__.update(metadata)
+
+        return ctrait
 
 
 # -------------------------------------------------------------------------------
