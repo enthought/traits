@@ -3339,6 +3339,19 @@ class Either(TraitType):
         return self.trait_maker.as_ctrait()
 
 # -------------------------------------------------------------------------------
+#  'None' trait:
+# -------------------------------------------------------------------------------
+
+
+class NoneTrait(TraitType):
+    """ Defines a trait that only accepts the None value"""
+
+    info_text = "a None type"
+    
+    #: The C-level fast validator to use:
+    fast_validate = (ValidateTrait.coerce, None)
+
+# -------------------------------------------------------------------------------
 #  'Union' trait:
 # -------------------------------------------------------------------------------
 
@@ -3347,19 +3360,19 @@ class Union(TraitType):
     """ Defines a trait whose value can be any of of a specified list of
     trait types or list of trait type instances or None
     """
-
     # CTrait type map for special trait types:
     type_map = {"event": TraitKind.event, "constant": TraitKind.constant}
 
     def __init__(self, *traits, **metadata):
-        super(Union, self).__init__(traits, **metadata)
-
         self.list_ctrait_instances = []
         for trait in traits:
-            if not isinstance(trait, (type, TraitType)):
-                raise ValueError("Union trait definition expects a trait type "
-                                 "or instance of trait type, but "
-                                 "got {} instead".format(trait))
+            if trait is None:
+                trait = NoneTrait
+            if not isinstance(trait, (TraitType, type)):
+                raise ValueError("Union trait declaration expects a trait "
+                                 "type or an instance of trait type or None,"
+                                 " but got {} instead".format(trait))
+
             ctrait_instance = trait().as_ctrait()
             self.list_ctrait_instances.append(ctrait_instance)
 
@@ -3378,6 +3391,10 @@ class Union(TraitType):
                 pass
 
         self.error(obj, name, value)
+
+    def info(self):
+        return " or ".join([ctrait.info() for ctrait in
+                            self.list_ctrait_instances])
 
     def as_ctrait(self):
         """ Returns a CTrait corresponding to the trait defined by this class.
