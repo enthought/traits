@@ -219,7 +219,7 @@ class TestTraitFor(unittest.TestCase):
 
 class TestAsCtrait(unittest.TestCase):
 
-    def test_as_ctraint_from_ctrait(self):
+    def test_as_ctrait_from_ctrait(self):
         ct = Int().as_ctrait()
 
         result = as_ctrait(ct)
