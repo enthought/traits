@@ -520,23 +520,6 @@ get_callable_value(PyObject *value)
         value = is_callable;
         Py_INCREF(value);
     }
-    else if (
-        PyTuple_Check(value) && (PyTuple_GET_SIZE(value) >= 3)
-        && (PyLong_AsLong(PyTuple_GET_ITEM(value, 0)) == 10)) {
-        tuple = PyTuple_New(3);
-        if (tuple != NULL) {
-            PyTuple_SET_ITEM(tuple, 0, temp = PyTuple_GET_ITEM(value, 0));
-            Py_INCREF(temp);
-            PyTuple_SET_ITEM(tuple, 1, temp = PyTuple_GET_ITEM(value, 1));
-            Py_INCREF(temp);
-            PyTuple_SET_ITEM(tuple, 2, is_callable);
-            Py_INCREF(is_callable);
-            value = tuple;
-        }
-        else {
-            value = NULL;
-        }
-    }
     else {
         Py_INCREF(value);
     }
@@ -4518,14 +4501,6 @@ _trait_setstate(trait_object *trait, PyObject *args)
     if (PyLong_Check(temp)) {
         trait->py_validate =
             PyObject_GetAttrString(trait->handler, "validate");
-    }
-    else if (
-        PyTuple_Check(temp)
-        && (PyLong_AsLong(PyTuple_GET_ITEM(temp, 0)) == 10)) {
-        temp2 = PyObject_GetAttrString(trait->handler, "validate");
-        Py_INCREF(temp2);
-        Py_DECREF(PyTuple_GET_ITEM(temp, 2));
-        PyTuple_SET_ITEM(temp, 2, temp2);
     }
 
     if (PyLong_Check(trait->py_post_setattr)) {
