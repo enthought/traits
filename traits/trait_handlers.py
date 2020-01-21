@@ -38,6 +38,7 @@ from .trait_dict_object import TraitDictEvent, TraitDictObject
 from .trait_converters import trait_from
 from .trait_handler import TraitHandler
 from .trait_list_object import TraitListEvent, TraitListObject
+from .util.deprecated import deprecated
 
 # Set up a logger:
 import logging
@@ -50,6 +51,8 @@ logger = logging.getLogger(__name__)
 
 CallableTypes = (FunctionType, MethodType)
 
+_WARNING_FORMAT_STR = ("'{handler}' trait handler has been deprecated. "
+                       "Use {replacement} instead.")
 
 # -------------------------------------------------------------------------------
 #  Private functions:
@@ -274,7 +277,8 @@ class ThisClass(TraitHandler):
        ThisClass is the underlying handler for the predefined traits **This**
        and **self**, and the elements of ListThis.
     """
-
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="ThisClass", replacement="This"))
     def __init__(self, allow_none=False):
         """Creates a ThisClass handler.
 
@@ -1032,6 +1036,8 @@ class TraitTuple(TraitHandler):
     strings, 'Hearts', 'Diamonds', 'Spades', or 'Clubs'.
     """
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitTuple", replacement="Tuple"))
     def __init__(self, *args):
         r""" Creates a TraitTuple handler.
 
@@ -1126,6 +1132,8 @@ class TraitList(TraitHandler):
     default_value_type = DefaultValue.trait_list_object
     _items_event = None
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitList", replacement="List"))
     def __init__(
         self, trait=None, minlen=0, maxlen=sys.maxsize, has_items=True
     ):
@@ -1237,6 +1245,8 @@ class TraitDict(TraitHandler):
     default_value_type = DefaultValue.trait_list_object
     _items_event = None
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitDict", replacement="Dict"))
     def __init__(self, key_trait=None, value_trait=None, has_items=True):
         """ Creates a TraitDict handler.
 
