@@ -32,14 +32,38 @@ from .ctrait import CTrait
 def trait_cast(obj):
     """ Convert to a CTrait if the object knows how, else return None.
     """
-    # special-case TraitType classes
+
+    try:
+        ctrait = as_ctrait(obj)
+    except TypeError:
+        ctrait = None
+
+    return ctrait
+
+
+def as_ctrait(obj):
+    """ Convert to CTrait if the object knows how, else raise TraitError.
+
+    Parameters:
+    -----------
+        obj: An object that supports conversion to `CTrait`.
+
+    Returns:
+    --------
+        ctrait.CTrait
+
+    Raises:
+    -------
+        TypeError if the object does not support conversion to CTrait.
+    """
     if isinstance(obj, type) and hasattr(obj, 'instantiate_and_get_ctrait'):
-        return obj.instantiate_and_get_ctrait()
+        ctrait = obj.instantiate_and_get_ctrait()
+    elif not isinstance(obj, type) and hasattr(obj, 'as_ctrait'):
+        ctrait = obj.as_ctrait()
+    else:
+        raise TypeError(f"{obj!r} does not support converting to CTrait")
 
-    if hasattr(obj, 'as_ctrait'):
-        return obj.as_ctrait()
-
-    return None
+    return ctrait
 
 
 def check_trait(trait):

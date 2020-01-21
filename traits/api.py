@@ -22,6 +22,7 @@ from .constants import (  # noqa: F401
 )
 
 from .trait_base import Uninitialized, Undefined, Missing, Self  # noqa: F401
+from .trait_converters import as_ctrait  # noqa: F401
 
 from .trait_errors import (  # noqa: F401
     TraitError,
