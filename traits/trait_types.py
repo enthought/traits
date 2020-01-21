@@ -3371,7 +3371,7 @@ class Union(TraitType):
         """ Return the value by the first trait in the list that can
         validate the assigned value, raise an error if none of them can.
         """
-        for trait_type_instance in self.list_trait_type_instances:
+        for trait_type_instance in self.list_ctrait_instances:
             try:
                 return trait_type_instance.validate(obj, name, value)
             except TraitError:
