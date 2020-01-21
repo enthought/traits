@@ -3385,6 +3385,7 @@ class Union(TraitType):
         metadata = self.metadata
         ctrait = CTrait(self.type_map.get(metadata.get("type"), TraitKind.trait))
         ctrait.set_validate(self.validate)
+        ctrait.handler = self  # So that ctrait redirects calls here
         ctrait.set_default_value(self.default_value_type, self.default_value)
 
         rich_compare = metadata.get("rich_compare")
@@ -3414,6 +3415,22 @@ class Union(TraitType):
                 ctrait.__dict__.update(metadata)
 
         return ctrait
+
+    def get_editor(self, trait):
+        from traitsui.api import TextEditor, CompoundEditor
+
+        the_editors = [x.get_editor() for x in self.list_ctrait_instances]
+        text_editor = TextEditor()
+        count = 0
+        editors = []
+        for editor in the_editors:
+            if isinstance(text_editor, editor.__class__):
+                count += 1
+                if count > 1:
+                    continue
+            editors.append(editor)
+
+        return CompoundEditor(editors=editors)
 
 
 # -------------------------------------------------------------------------------
