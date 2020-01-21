@@ -12,7 +12,6 @@ import unittest
 import warnings
 
 from traits.api import (
-    ThisClass,
     TraitDict,
     TraitList,
     TraitTuple,
@@ -22,7 +21,6 @@ class TestTraitHandlerDeprecatedWarnings(unittest.TestCase):
 
     def test_handler_warning(self):
         handlers = {
-            "ThisClass": ThisClass,
             "TraitDict": TraitDict,
             "TraitList": TraitList,
             "TraitTuple": TraitTuple
