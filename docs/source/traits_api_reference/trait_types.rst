@@ -157,6 +157,8 @@ Traits
 
 .. autoclass:: Either
 
+.. autoclass:: Union
+
 .. autoclass:: Symbol
 
 .. autoclass:: UUID
