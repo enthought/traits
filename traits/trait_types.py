@@ -3405,7 +3405,10 @@ class Union(TraitType):
         metadata = self.metadata
         ctrait = CTrait(self.type_map.get(metadata.get("type"), TraitKind.trait))
         ctrait.set_validate(self.validate)
-        ctrait.handler = self  # So that ctrait redirects calls here
+
+        # Set this instance as the handler so that CTrait redirects calls here.
+        # Avoids refactoring CTrait
+        ctrait.handler = self
         ctrait.set_default_value(self.default_value_type, self.default_value)
 
         rich_compare = metadata.get("rich_compare")
