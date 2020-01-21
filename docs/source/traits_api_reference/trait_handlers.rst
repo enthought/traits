@@ -13,9 +13,9 @@ Classes
 
 .. autoclass:: TraitInstance
 
-.. autodata:: TraitFunction
+.. autoclass:: TraitFunction
 
-.. autodata:: TraitEnum
+.. autoclass:: TraitEnum
 
 .. autoclass:: TraitPrefixList
 
