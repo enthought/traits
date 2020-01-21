@@ -54,6 +54,12 @@ class TestCaseEnumTrait(unittest.TestCase):
         with self.assertRaises(TraitError):
             TestClass(float_or_str_obj=3.5)
 
+    def test_union_with_none(self):
+        class TestClass(HasTraits):
+            int_or_none = Union(None, Int)
+
+        TestClass(int_or_none=None)
+
     def test_union_user_defined_class(self):
         class TestClass(HasTraits):
             obj = Union(Instance(CustomClass), Int)
@@ -69,6 +75,31 @@ class TestCaseEnumTrait(unittest.TestCase):
             type_value = Union(CustomStrType, Int)
 
         TestClass(type_value="new string")
+
+    def test_notification(self):
+        class TestClass(HasTraits):
+            union_attr = Union(Int)
+            shadow_union_trait = None
+
+            def _union_attr_changed(self, new):
+                self.shadow_union_trait = new
+
+        obj = TestClass(union_attr=-1)
+
+        obj.union_attr = 1
+        self.assertEqual(obj.shadow_union_trait, 1)
+
+    def test_extending_union_trait(self):
+        class UnionAllowSrt(Union):
+            def validate(self, obj, name, value):
+                if isinstance(value, str):
+                    return value
+                return super(UnionAllowSrt, self).validate(obj, name, value)
+
+        class TestClass(HasTraits):
+            s = UnionAllowSrt(Int, Float)
+
+        TestClass(s="sdf")
 
 
 if __name__ == '__main__':

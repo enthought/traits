@@ -3347,7 +3347,7 @@ class NoneTrait(TraitType):
     """ Defines a trait that only accepts the None value"""
 
     info_text = "a None type"
-    
+
     def validate(self, obj, name, value):
         if value is None:
             return value
