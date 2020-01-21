@@ -13,6 +13,10 @@ Classes
 
 .. autoclass:: TraitInstance
 
+.. autodata:: TraitFunction
+
+.. autodata:: TraitEnum
+
 .. autoclass:: TraitPrefixList
 
 .. autoclass:: TraitMap
@@ -39,10 +43,6 @@ and may be removed in a future version of Traits.
 .. autodata:: ThisClass
 
 .. autodata:: TraitDict
-
-.. autodata:: TraitEnum
-
-.. autodata:: TraitFunction
 
 .. autodata:: TraitList
 
