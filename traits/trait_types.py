@@ -20,6 +20,10 @@ from importlib import import_module
 import operator
 import re
 import sys
+try:
+    from os import fspath
+except ImportError:
+    fspath = None
 from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 import uuid
@@ -1374,7 +1378,7 @@ class BaseFile(BaseStr):
     """
 
     #: A description of the type of value this trait accepts:
-    info_text = "a file name"
+    info_text = "a filename or object implementing the os.PathLike interface"
 
     def __init__(
         self,
@@ -1417,6 +1421,16 @@ class BaseFile(BaseStr):
 
             Note: The 'fast validator' version performs this check in C.
         """
+        if fspath is not None:
+            # Python 3.5 does not implement __fspath__
+            try:
+                # If value is of type os.PathLike, get the path representation
+                # The path representation could be either a str or bytes type
+                # If fspath returns bytes, further validation will fail.
+                value = fspath(value)
+            except TypeError:
+                pass
+
         validated_value = super(BaseFile, self).validate(object, name, value)
         if not self.exists:
             return validated_value
@@ -1471,9 +1485,6 @@ class File(BaseFile):
         -------------
         *value* or ''
         """
-        if not exists:
-            # Define the C-level fast validator to use:
-            self.fast_validate = (ValidateTrait.coerce, str)
 
         super(File, self).__init__(
             value, filter, auto_set, entries, exists, **metadata
