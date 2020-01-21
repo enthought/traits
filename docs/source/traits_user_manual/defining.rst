@@ -472,6 +472,65 @@ will raise a TraitError if a value of any other type is assigned. For example::
     >>> steven.manager_name = 5
     traits.trait_errors.TraitError: The 'manager_name' trait of an Employee instance must be a string or None, but a value of 5 <type 'int'> was specified.
 
+.. index:: Union trait
+
+.. _union:
+
+Union
+::::::
+The Union trait accepts values that is considered valid by at least one
+of the traits in its definition. It is a simpler and therefore less error-prone
+alternative to the `Either` trait, which allows more complex constructs which
+allows for more mysterious behaviour. The Union trait however, validates the
+value assigned to it against each of the traits in its definition in the order
+they are defined. Union only accepts trait types or trait type instances or
+None in its definition. Prefer to use Union over `Either` to remain future
+proof.
+
+.. index::
+   pair: Union trait; examples
+
+The following is an example of using Union::
+
+    # union.py --- Example of Union predefined trait
+
+    from traits.api import HasTraits, Union, Int, Float, Instance
+
+    class Employee(HasTraits):
+        manager_name = Union(Str, None)
+        salary = Union(Instance(Int), Instance(Float))
+
+This example defines an Employee class, which has a **manager_name** trait
+attribute, which accepts either an Str instance or None as its value, a
+**salary** trait that accepts an instance of Int or Float and will raise a
+TraitError if a value of any other type is assigned. For example::
+
+    >>> from traits.api import HasTraits, Either, Str
+    >>> class Employee(HasTraits):
+    ...     manager_name = Union(Str, None)
+    ...
+    >>> steven = Employee(manager_name="Jenni")
+    >>> # Here steven's manager is named "Jenni"
+    >>> # Assigning a value that is neither a string nor None will fail.
+    >>> steven.manager_name = 5
+    traits.trait_errors.TraitError: The 'manager_name' trait of an Employee instance must be a string or a None type, but a value of 5 <class 'int'> was specified.
+
+The following example illustrates the difference between `Either` and `Union`::
+
+    >>> from traits.api import HasTraits, Either, Union, Str
+    >>> class IntegerClass(HasTraits):
+    ...     primes = Either([2], None, {'3':6}, 5, 7, 11)
+    ...
+    >>> i = IntegerClass(primes=2) # Acceptable value, no error
+    >>> i = IntegerClass(primes=4)
+    traits.trait_errors.TraitError: The 'primes' trait of an IntegerClass instance must be 2 or None or 5 or 7 or 11 or '3', but a value of 4 <class 'int'> was specified.
+    >>>
+    >>> # But Union does not allow such declerations.
+    >>> class IntegerClass(HasTraits):
+    ...     primes = Union([2], None, {'3':6}, 5, 7, 11)
+    ValueError: Union trait declaration expects a trait type or an instance of trait type or None, but got [2] instead
+
+
 .. index:: multiple values, defining trait with
 
 .. _list-of-possibl-values:
