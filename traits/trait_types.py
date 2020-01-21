@@ -1692,7 +1692,7 @@ class BaseRange(TraitType):
             exclude_mask |= 2
 
         if is_static and (vtype is not int):
-            self.init_fast_validator(kind, low, high, exclude_mask)
+            self.init_fast_validate(kind, low, high, exclude_mask)
 
         #: Assign type-corrected arguments to handler attributes:
         self._low = low
@@ -1700,7 +1700,7 @@ class BaseRange(TraitType):
         self._exclude_low = exclude_low
         self._exclude_high = exclude_high
 
-    def init_fast_validator(self, *args):
+    def init_fast_validate(self, *args):
         """ Does nothing for the BaseRange class. Used in the Range class to
             set up the fast validator.
         """
@@ -1912,7 +1912,7 @@ class Range(BaseRange):
         a C-level fast validator.
     """
 
-    def init_fast_validator(self, *args):
+    def init_fast_validate(self, *args):
         """ Set up the C-level fast validator.
         """
         self.fast_validate = args
@@ -1964,11 +1964,11 @@ class BaseEnum(TraitType):
 
             self.name = ""
             self.values = tuple(args)
-            self.init_fast_validator(ValidateTrait.enum, self.values)
+            self.init_fast_validate(ValidateTrait.enum, self.values)
 
         super(BaseEnum, self).__init__(default_value, **metadata)
 
-    def init_fast_validator(self, *args):
+    def init_fast_validate(self, *args):
         """ Does nothing for the BaseEnum class. Used in the Enum class to set
             up the fast validator.
         """
@@ -2036,7 +2036,7 @@ class Enum(BaseEnum):
         using a C-level fast validator.
     """
 
-    def init_fast_validator(self, *args):
+    def init_fast_validate(self, *args):
         """ Set up the C-level fast validator.
         """
         self.fast_validate = args
@@ -2092,7 +2092,7 @@ class BaseTuple(TraitType):
             of the remaining argument list.
         """
         if len(types) == 0:
-            self.init_fast_validator(ValidateTrait.coerce, tuple, None, list)
+            self.init_fast_validate(ValidateTrait.coerce, tuple, None, list)
 
             super(BaseTuple, self).__init__((), **metadata)
 
@@ -2106,7 +2106,7 @@ class BaseTuple(TraitType):
                 types = [Trait(element) for element in default_value]
 
         self.types = tuple([trait_from(type) for type in types])
-        self.init_fast_validator(ValidateTrait.tuple, self.types)
+        self.init_fast_validate(ValidateTrait.tuple, self.types)
 
         if default_value is None:
             default_value = tuple(
@@ -2115,7 +2115,7 @@ class BaseTuple(TraitType):
 
         super(BaseTuple, self).__init__(default_value, **metadata)
 
-    def init_fast_validator(self, *args):
+    def init_fast_validate(self, *args):
         """ Saves the validation parameters.
         """
         self.no_type_check = args[0] == ValidateTrait.coerce
@@ -2185,10 +2185,10 @@ class Tuple(BaseTuple):
         using a C-level fast validator.
     """
 
-    def init_fast_validator(self, *args):
+    def init_fast_validate(self, *args):
         """ Set up the C-level fast validator.
         """
-        super(Tuple, self).init_fast_validator(*args)
+        super(Tuple, self).init_fast_validate(*args)
 
         self.fast_validate = args
 
