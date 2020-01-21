@@ -63,7 +63,7 @@ def as_ctrait(obj):
         ctrait = obj.as_ctrait()
     else:
         raise TypeError(
-            f"Object {obj!r} does not support converting to CTrait")
+            f"Object {obj!r} does not support conversion to CTrait")
 
     return ctrait
 
