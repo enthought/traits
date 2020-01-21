@@ -3348,8 +3348,11 @@ class NoneTrait(TraitType):
 
     info_text = "a None type"
     
-    #: The C-level fast validator to use:
-    fast_validate = (ValidateTrait.coerce, None)
+    def validate(self, obj, name, value):
+        if value is None:
+            return value
+
+        self.error(obj, name, value)
 
 # -------------------------------------------------------------------------------
 #  'Union' trait:
