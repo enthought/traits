@@ -4249,6 +4249,7 @@ _set_trait_comparison_mode(trait_object *trait, PyObject *value, void *closure)
             break;
         case 2:
             trait->flags &= ~TRAIT_COMPARE_MASK;
+            trait->flags |= TRAIT_EQUALITY_COMPARE;
             break;
         default:
             PyErr_Format(
