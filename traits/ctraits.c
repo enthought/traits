@@ -4280,8 +4280,9 @@ _get_trait_comparison_mode_int(trait_object *trait, void *closure)
         i_comparison_mode = 1;
     }
     else {
+        assert(compare_flag == TRAIT_EQUALITY_COMPARE);
         i_comparison_mode = 2;
-    }
+    } 
 
     return PyLong_FromLong(i_comparison_mode);
 }
