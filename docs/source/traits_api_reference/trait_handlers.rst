@@ -13,6 +13,10 @@ Classes
 
 .. autoclass:: TraitInstance
 
+.. autoclass:: TraitFunction
+
+.. autoclass:: TraitEnum
+
 .. autoclass:: TraitPrefixList
 
 .. autoclass:: TraitMap
@@ -37,10 +41,6 @@ The following :class:`~.TraitHandler` classes and instances are deprecated,
 and may be removed in a future version of Traits.
 
 .. autodata:: TraitDict
-
-.. autodata:: TraitEnum
-
-.. autodata:: TraitFunction
 
 .. autodata:: TraitList
 

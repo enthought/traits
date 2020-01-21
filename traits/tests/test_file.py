@@ -9,6 +9,8 @@
 # Thanks for using Enthought open source!
 
 import os
+from pathlib import Path
+import sys
 import unittest
 
 from traits.api import File, HasTraits, TraitError
@@ -28,29 +30,41 @@ class FileTestCase(unittest.TestCase):
         example_model = ExampleModel(file_name=__file__)
         example_model.file_name = os.path.__file__
 
+    @unittest.skipIf(sys.version_info < (3, 6), "PathLike File trait test")
+    def test_valid_pathlike_file(self):
+        ExampleModel(file_name=Path(__file__))
+
     def test_invalid_file(self):
         example_model = ExampleModel(file_name=__file__)
 
-        def assign_invalid():
+        with self.assertRaises(TraitError):
             example_model.file_name = "not_valid_path!#!#!#"
 
-        self.assertRaises(TraitError, assign_invalid)
+    @unittest.skipIf(sys.version_info < (3, 6), "PathLike File trait test")
+    def test_invalid_pathlike_file(self):
+        example_model = ExampleModel(file_name=__file__)
+
+        with self.assertRaises(TraitError):
+            example_model.file_name = Path("not_valid_path!#!#!#")
 
     def test_directory(self):
         example_model = ExampleModel(file_name=__file__)
 
-        def assign_invalid():
+        with self.assertRaises(TraitError):
             example_model.file_name = os.path.dirname(__file__)
 
-        self.assertRaises(TraitError, assign_invalid)
+    @unittest.skipIf(sys.version_info < (3, 6), "PathLike File trait test")
+    def test_pathlike_directory(self):
+        example_model = ExampleModel(file_name=__file__)
+
+        with self.assertRaises(TraitError):
+            example_model.file_name = Path(os.path.dirname(__file__))
 
     def test_invalid_type(self):
         example_model = ExampleModel(file_name=__file__)
 
-        def assign_invalid():
+        with self.assertRaises(TraitError):
             example_model.file_name = 11
-
-        self.assertRaises(TraitError, assign_invalid)
 
     def test_fast(self):
         example_model = FastExampleModel(file_name=__file__)

@@ -96,18 +96,6 @@ class TestCTrait(unittest.TestCase):
 
         self.assertTrue(trait.modify_delegate)
 
-    def test_object_id_test(self):
-        trait = CTrait(TraitKind.trait)
-
-        self.assertFalse(trait.object_id_test)
-
-        trait.comparison_mode(ComparisonMode.object_id_compare)
-
-        self.assertTrue(trait.object_id_test)
-
-        with self.assertRaises(AttributeError):
-            trait.object_id_test = False
-
     def test_setattr_original_value(self):
         trait = CTrait(TraitKind.trait)
 
@@ -135,17 +123,13 @@ class TestCTrait(unittest.TestCase):
 
         self.assertTrue(trait.is_mapped)
 
-    def test_no_value_test(self):
+    def test_default_comparison_mode(self):
         trait = CTrait(TraitKind.trait)
 
-        self.assertFalse(trait.no_value_test)
-
-        trait.comparison_mode(ComparisonMode.no_compare)
-
-        self.assertTrue(trait.no_value_test)
-
-        with self.assertRaises(AttributeError):
-            trait.no_value_test = False
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.equality_compare
+        )
 
     def test_invalid_comparison_mode(self):
         trait = CTrait(TraitKind.trait)
@@ -153,7 +137,72 @@ class TestCTrait(unittest.TestCase):
         # comparison modes other than {0,1,2}
         # are invalid
         with self.assertRaises(ValueError):
-            trait.comparison_mode(-1)
+            trait.comparison_mode = -1
 
         with self.assertRaises(ValueError):
-            trait.comparison_mode(3)
+            trait.comparison_mode = 3
+
+    def test_comparison_mode_unchanged_if_invalid(self):
+        trait = CTrait(TraitKind.trait)
+        default_comparison_mode = trait.comparison_mode
+
+        self.assertNotEqual(
+            default_comparison_mode, ComparisonMode.no_compare
+        )
+
+        trait.comparison_mode = ComparisonMode.no_compare
+
+        with self.assertRaises(ValueError):
+            trait.comparison_mode = -1
+
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.no_compare
+        )
+
+    def test_comparison_mode_int(self):
+        trait = CTrait(TraitKind.trait)
+
+        trait.comparison_mode = 0
+
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.no_compare
+        )
+
+        trait.comparison_mode = 1
+
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.object_id_compare
+        )
+
+        trait.comparison_mode = 2
+
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.equality_compare
+        )
+
+    def test_comparison_mode_enum(self):
+        trait = CTrait(TraitKind.trait)
+
+        trait.comparison_mode = ComparisonMode.no_compare
+
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.no_compare
+        )
+
+        trait.comparison_mode = ComparisonMode.object_id_compare
+
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.object_id_compare
+        )
+
+        trait.comparison_mode = ComparisonMode.equality_compare
+
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(
+            trait.comparison_mode, ComparisonMode.equality_compare
+        )

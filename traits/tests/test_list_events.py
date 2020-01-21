@@ -176,6 +176,37 @@ class ListEventTestCase(unittest.TestCase):
         self.assertEqual(event.removed, [1, 2, 3])
         self.assertEqual(event.index, 0)
 
+    def test_remove_empty_slices(self):
+        # Test that no events are produced when no items are deleted
+        foo = MyClass()
+
+        # Delete no items and get no events
+        del foo.l[3:]
+        self.assertEqual(foo.l, [1, 2, 3])
+        self.assertEqual(len(foo.l_events), 0)
+
+        # Delete all items and get an expected event
+        del foo.l[:]
+        self.assertEqual(foo.l, [])
+        self.assertEqual(len(foo.l_events), 1)
+        event, = foo.l_events
+        self.assertEqual(event.added, [])
+        self.assertEqual(event.removed, [1, 2, 3])
+        self.assertEqual(event.index, 0)
+
+        # Delete no items and get no new events
+        del foo.l[:]
+        self.assertEqual(foo.l, [])
+        self.assertEqual(len(foo.l_events), 1)
+
+    def test_remove_empty_slices_steps(self):
+        foo = MyClass()
+
+        # Delete no items and get no events
+        del foo.l[3::2]
+        self.assertEqual(foo.l, [1, 2, 3])
+        self.assertEqual(len(foo.l_events), 0)
+
     def test_clear(self):
         foo = MyClass()
         foo.l.clear()
@@ -192,3 +223,37 @@ class ListEventTestCase(unittest.TestCase):
         foo.l.clear()
 
         self.assertEqual(len(foo.l_events), 0)
+
+    def test_delete_step_slice(self):
+        foo = MyClass()
+        foo.l = [0, 1, 2, 3, 4]
+
+        del foo.l[0:5:2]
+
+        self.assertEqual(len(foo.l_events), 1)
+        event, = foo.l_events
+        self.assertEqual(event.index, slice(0, 5, 2))
+        self.assertEqual(event.removed, [0, 2, 4])
+        self.assertEqual(event.added, [])
+
+    def test_delete_step_slice_empty_list(self):
+        foo = MyClass()
+        foo.l = []
+
+        del foo.l[::-1]
+
+        # No items deleted, so no event fired
+        self.assertEqual(len(foo.l_events), 0)
+
+
+    def test_assignment_step_slice(self):
+        foo = MyClass()
+        foo.l = [1, 2, 3]
+
+        foo.l[::2] = [3, 4]
+
+        self.assertEqual(len(foo.l_events), 1)
+        event, = foo.l_events
+        self.assertEqual(event.index, slice(None, None, 2))
+        self.assertEqual(event.added, [3, 4])
+        self.assertEqual(event.removed, [1, 3])

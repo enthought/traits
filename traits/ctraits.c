@@ -131,6 +131,12 @@ call_notifiers(
    notifications? */
 #define TRAIT_NO_VALUE_TEST 0x00000100U
 
+/* Should old/new values be performed using equality */
+#define TRAIT_EQUALITY_COMPARE 0x00000000U
+
+/* Mask to read the trait comparison flag bits */
+#define TRAIT_COMPARE_MASK 0x00000104U
+
 /*-----------------------------------------------------------------------------
 | Default value type constants (see `default_value_for` method)
 +----------------------------------------------------------------------------*/
@@ -3466,6 +3472,25 @@ validate_trait_function(
     return raise_trait_error(trait, obj, name, value);
 }
 
+
+/*-----------------------------------------------------------------------------
+|  Verifies a Python value is a callable (or None):
++----------------------------------------------------------------------------*/
+
+static PyObject *
+validate_trait_callable(
+    trait_object *trait, has_traits_object *obj, PyObject *name,
+    PyObject *value)
+{
+
+    if ((value == Py_None) || PyCallable_Check(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+
+    return raise_trait_error(trait, obj, name, value);
+}
+
 /*-----------------------------------------------------------------------------
 |  Attempts to 'adapt' an object to a specified interface:
 |
@@ -3886,6 +3911,7 @@ static trait_validate validate_handlers[] = {
     validate_trait_adapt,   /* case 19: Adaptable object check */
     validate_trait_integer, /* case 20: Integer check */
     validate_trait_float,   /* case 21: Float check */
+    validate_trait_callable,   /* case 22: Callable check */
 };
 
 static PyObject *
@@ -4035,6 +4061,12 @@ _trait_set_validate(trait_object *trait, PyObject *args)
                     break;
 
                 case 21: /* Float check: */
+                    if (n == 1) {
+                        goto done;
+                    }
+                    break;
+
+                case 22: /* Callable check: */
                     if (n == 1) {
                         goto done;
                     }
@@ -4223,34 +4255,62 @@ _trait_delegate(trait_object *trait, PyObject *args)
 |  Sets the appropriate value comparison mode flags of a CTrait instance:
 +----------------------------------------------------------------------------*/
 
-static PyObject *
-_trait_comparison_mode(trait_object *trait, PyObject *args)
+static int
+_set_trait_comparison_mode(trait_object *trait, PyObject *value, void *closure)
 {
-    int comparison_mode;
-
-    if (!PyArg_ParseTuple(args, "i", &comparison_mode)) {
-        return NULL;
+    long comparison_mode = PyLong_AsLong(value);
+    
+    if (comparison_mode == -1 && PyErr_Occurred()) {
+        return -1;
     }
 
-    trait->flags &= ~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_ID_TEST);
     switch (comparison_mode) {
         case 0:
+            trait->flags &= ~TRAIT_COMPARE_MASK;
             trait->flags |= TRAIT_NO_VALUE_TEST;
             break;
         case 1:
+            trait->flags &= ~TRAIT_COMPARE_MASK;
             trait->flags |= TRAIT_OBJECT_ID_TEST;
             break;
         case 2:
+            trait->flags &= ~TRAIT_COMPARE_MASK;
+            trait->flags |= TRAIT_EQUALITY_COMPARE;
             break;
         default:
-            return PyErr_Format(
+            PyErr_Format(
                 PyExc_ValueError,
-                "The comparison mode must be 0..%d, but %d was specified.",
+                "The comparison mode must be 0..%d, but %ld was specified.",
                 MAXIMUM_COMPARISON_MODE_VALUE, comparison_mode);
+            return -1;
     }
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    return 0;
+}
+
+/*-----------------------------------------------------------------------------
+|  getter for trait comparison mode
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_get_trait_comparison_mode_int(trait_object *trait, void *closure)
+{
+    int i_comparison_mode;
+
+    unsigned int compare_flag = trait->flags & TRAIT_COMPARE_MASK;
+
+    if (compare_flag == TRAIT_NO_VALUE_TEST) {
+        i_comparison_mode = 0;
+    }
+    else if (compare_flag == TRAIT_OBJECT_ID_TEST) {
+        i_comparison_mode = 1;
+    }
+    else {
+        assert(compare_flag == TRAIT_EQUALITY_COMPARE);
+        i_comparison_mode = 2;
+    } 
+
+    return PyLong_FromLong(i_comparison_mode);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4627,15 +4687,6 @@ set_trait_modify_delegate_flag(
     return set_trait_flag(trait, TRAIT_MODIFY_DELEGATE, value);
 }
 
-/*-----------------------------------------------------------------------------
-|  Returns the current object_id_test flag value:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-get_trait_object_id_test_flag(trait_object *trait, void *closure)
-{
-    return get_trait_flag(trait, TRAIT_OBJECT_ID_TEST);
-}
 
 /*-----------------------------------------------------------------------------
 |  Returns the current setattr_original_value flag value:
@@ -4697,16 +4748,6 @@ static int
 set_trait_is_mapped_flag(trait_object *trait, PyObject *value, void *closure)
 {
     return set_trait_flag(trait, TRAIT_IS_MAPPED, value);
-}
-
-/*-----------------------------------------------------------------------------
-|  Returns the current no_value_test flag value:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-get_trait_no_value_test_flag(trait_object *trait, void *closure)
-{
-    return get_trait_flag(trait, TRAIT_NO_VALUE_TEST);
 }
 
 /*-----------------------------------------------------------------------------
@@ -4864,8 +4905,6 @@ static PyMethodDef trait_methods[] = {
     {"validate", (PyCFunction)_trait_validate, METH_VARARGS, validate_doc},
     {"delegate", (PyCFunction)_trait_delegate, METH_VARARGS,
      PyDoc_STR("delegate(delegate_name,prefix,prefix_type,modify_delegate)")},
-    {"comparison_mode", (PyCFunction)_trait_comparison_mode, METH_VARARGS,
-     PyDoc_STR("comparison_mode(comparison_mode_enum)")},
     {"property", (PyCFunction)_trait_property, METH_VARARGS,
      PyDoc_STR("property([get,set,validate])")},
     {"clone", (PyCFunction)_trait_clone, METH_VARARGS,
@@ -4889,8 +4928,6 @@ static PyGetSetDef trait_properties[] = {
     {"modify_delegate", (getter)get_trait_modify_delegate_flag,
      (setter)set_trait_modify_delegate_flag,
      "Whether changes to the trait modify the delegate as well", NULL},
-    {"object_id_test", (getter)get_trait_object_id_test_flag, NULL,
-     "Whether change comparisons are by object identity.", NULL},
     {"setattr_original_value", (getter)get_trait_setattr_original_value_flag,
      (setter)set_trait_setattr_original_value_flag,
      "Whether setattr gets the original value set on the trait or the "
@@ -4905,9 +4942,11 @@ static PyGetSetDef trait_properties[] = {
     {"is_mapped", (getter)get_trait_is_mapped_flag,
      (setter)set_trait_is_mapped_flag, "Whether the trait is a mapped trait.",
      NULL},
-    {"no_value_test", (getter)get_trait_no_value_test_flag, NULL,
-     "Whether trait changes are fired on every assignment, or only when "
-     "the value tests as different.",
+    {"comparison_mode",
+     (getter)_get_trait_comparison_mode_int,
+     (setter)_set_trait_comparison_mode,
+     "Whether to use no compare(0) or object identity(1) compare or equality "
+     "compare(2) to determine a trait change.",
      NULL},
     {0}};
 

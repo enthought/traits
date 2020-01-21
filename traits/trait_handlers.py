@@ -39,6 +39,7 @@ from .trait_dict_object import TraitDictEvent, TraitDictObject
 from .trait_converters import trait_from
 from .trait_handler import TraitHandler
 from .trait_list_object import TraitListEvent, TraitListObject
+from .util.deprecated import deprecated
 
 # Set up a logger:
 import logging
@@ -977,6 +978,8 @@ class TraitTuple(TraitHandler):
     strings, 'Hearts', 'Diamonds', 'Spades', or 'Clubs'.
     """
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitTuple", replacement="Tuple"))
     def __init__(self, *args):
         r""" Creates a TraitTuple handler.
 
@@ -1073,6 +1076,8 @@ class TraitList(TraitHandler):
     default_value_type = DefaultValue.trait_list_object
     _items_event = None
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitList", replacement="List"))
     def __init__(
         self, trait=None, minlen=0, maxlen=sys.maxsize, has_items=True
     ):
@@ -1186,6 +1191,8 @@ class TraitDict(TraitHandler):
     default_value_type = DefaultValue.trait_list_object
     _items_event = None
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitDict", replacement="Dict"))
     def __init__(self, key_trait=None, value_trait=None, has_items=True):
         """ Creates a TraitDict handler.
 

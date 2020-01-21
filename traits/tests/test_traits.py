@@ -1093,10 +1093,10 @@ class test_list_value(test_base2):
         self.assertIs(self.last_event, old_event)
         self.obj.alist[0:4:2] = [10, 11]
         self.assertLastTraitListEventEqual(
-            slice(0, 4, 2), [[8, 4]], [[10, 11]]
+            slice(0, 4, 2), [8, 4], [10, 11]
         )
         del self.obj.alist[1:4:2]
-        self.assertLastTraitListEventEqual(slice(1, 4, 2), [[9, 5]], [])
+        self.assertLastTraitListEventEqual(slice(1, 4, 2), [9, 5], [])
         self.obj.alist = [1, 2, 3, 4]
         del self.obj.alist[2:4]
         self.assertLastTraitListEventEqual(2, [3, 4], [])

@@ -134,12 +134,7 @@ class TraitListObject(list):
                     # are.
                     index = 0 if key.start is None else key.start
                 else:
-                    # Otherwise, we have an extended slice which was handled,
-                    # badly, by __setitem__ before. In this case, we return the
-                    # removed and added lists wrapped in another list.
                     index = key
-                    values = [values]
-                    removed = [removed]
             else:
                 if validate is not None:
                     value = validate(object, name, value)
@@ -187,7 +182,6 @@ class TraitListObject(list):
                 index = 0 if key.start is None else key.start
             else:
                 index = key
-                removed = [removed]
         else:
             delta = 1
             index = len(self) + key + 1 if key < 0 else key
@@ -199,7 +193,7 @@ class TraitListObject(list):
 
         list.__delitem__(self, key)
 
-        if self.name_items is not None:
+        if self.name_items is not None and removed:
             self._send_trait_items_event(
                 self.name_items, TraitListEvent(index, removed)
             )
