@@ -46,7 +46,8 @@ def as_ctrait(obj):
 
     Parameters:
     -----------
-        obj: An object that supports conversion to `CTrait`.
+        obj: An object that supports conversion to `CTrait`. Refer
+            documentation for when the object supports this conversion.
 
     Returns:
     --------
@@ -61,7 +62,8 @@ def as_ctrait(obj):
     elif not isinstance(obj, type) and hasattr(obj, 'as_ctrait'):
         ctrait = obj.as_ctrait()
     else:
-        raise TypeError(f"{obj!r} does not support converting to CTrait")
+        raise TypeError(
+            f"Object {obj!r} does not support converting to CTrait")
 
     return ctrait
 
