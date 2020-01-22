@@ -66,7 +66,6 @@ from .editor_factories import (
 )
 
 
-
 # -------------------------------------------------------------------------------
 #  Constants:
 # -------------------------------------------------------------------------------
@@ -975,7 +974,6 @@ class This(BaseType):
         return "an instance of the same type as the receiver or None"
 
 
-
 class self(This):
     """ Defines a trait whose value must be an instance of the defining class
         and whose default value is the object containing the trait.
@@ -1875,22 +1873,22 @@ class BaseRange(TraitType):
 
             return "%s <%s %s" % (
                 self._type_desc,
-                "="[self._exclude_high :],
+                "="[self._exclude_high:],
                 high,
             )
 
         elif high is None:
             return "%s >%s %s" % (
                 self._type_desc,
-                "="[self._exclude_low :],
+                "="[self._exclude_low:],
                 low,
             )
 
         return "%s <%s %s <%s %s" % (
             low,
-            "="[self._exclude_low :],
+            "="[self._exclude_low:],
             self._type_desc,
-            "="[self._exclude_high :],
+            "="[self._exclude_high:],
             high,
         )
 
@@ -2385,7 +2383,6 @@ class List(TraitType):
         return cls._items_event
 
 
-
 # -------------------------------------------------------------------------------
 #  'CList' trait:
 # -------------------------------------------------------------------------------
@@ -2684,7 +2681,7 @@ class BaseClass(TraitType):
         col = klass.rfind(".")
         if col >= 0:
             module = klass[:col]
-            klass = klass[col + 1 :]
+            klass = klass[col + 1:]
 
         theClass = getattr(sys.modules.get(module), klass, None)
         if (theClass is None) and (col >= 0):
@@ -3023,8 +3020,6 @@ class Supports(Instance):
         # unadapted value passed to 'setattr':
         ctrait.post_setattr_original_value = True
         return ctrait
-
-
 
 
 class AdaptsTo(Supports):

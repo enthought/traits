@@ -389,6 +389,7 @@ def xsetattr(object, xname, value):
 
     setattr(object, names[-1], value)
 
+
 # -------------------------------------------------------------------------------
 # Helpers for weak references
 # -------------------------------------------------------------------------------
@@ -411,11 +412,9 @@ class HandleWeakRef(object):
         self.value = ref(value, _value_freed)
 
 
-
 # -------------------------------------------------------------------------------
 #  Traits metadata selection functions:
 # -------------------------------------------------------------------------------
-
 
 def is_none(value):
     return value is None

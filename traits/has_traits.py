@@ -269,7 +269,7 @@ def _get_instance_handlers(class_dict, bases):
                 n = 11
                 col = name.find("_fired_for_")
             if col >= 2:
-                key = name[col + n :]
+                key = name[col + n:]
                 if key != "":
                     arg_list = (name, name[1:col])
                     arg_lists = instance_traits.setdefault(key, [])
@@ -2156,8 +2156,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 value = repr(getattr(self, name)).replace("\n", "\\n")
                 if len(value) > maxval:
                     value = "%s...%s" % (
-                        value[: (maxval - 2) // 2],
-                        value[-((maxval - 3) // 2) :],
+                        value[:(maxval - 2) // 2],
+                        value[-((maxval - 3) // 2):],
                     )
             except:
                 value = "<undefined>"
@@ -3516,12 +3516,14 @@ class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
 
     pass
 
+
 class ABCHasTraits(HasTraits, metaclass=ABCMetaHasTraits):
     """ A HasTraits subclass which enables the features of Abstract
     Base Classes (ABC). See the 'abc' module in the standard library
     for more information.
 
     """
+
 
 class ABCHasStrictTraits(ABCHasTraits):
     """ A HasTraits subclass which behaves like HasStrictTraits but

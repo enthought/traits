@@ -17,6 +17,7 @@ from traits.api import (
     TraitTuple,
 )
 
+
 class TestTraitHandlerDeprecatedWarnings(unittest.TestCase):
 
     def test_handler_warning(self):

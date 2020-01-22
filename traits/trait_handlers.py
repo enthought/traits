@@ -54,6 +54,7 @@ CallableTypes = (FunctionType, MethodType)
 _WARNING_FORMAT_STR = ("'{handler}' trait handler has been deprecated. "
                        "Use {replacement} instead.")
 
+
 # -------------------------------------------------------------------------------
 #  Private functions:
 # -------------------------------------------------------------------------------
@@ -386,7 +387,7 @@ class TraitInstance(TraitHandler):
         col = klass.rfind(".")
         if col >= 0:
             module = klass[:col]
-            klass = klass[col + 1 :]
+            klass = klass[col + 1:]
 
         theClass = getattr(sys.modules.get(module), klass, None)
         if (theClass is None) and (col >= 0):

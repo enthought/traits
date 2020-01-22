@@ -35,7 +35,6 @@ class TestTraitPrefixList(unittest.TestCase):
         with self.assertRaises(TraitError):
             foo_trait.validate(a, "foo", "zero-knowledge")
 
-
         self.assertEqual(
             reconstituted.validate(a, "foo", "ze"),
             "zero",
