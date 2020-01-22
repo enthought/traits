@@ -140,6 +140,7 @@ from .trait_types import (  # noqa: F401
 )
 
 from .trait_types import (  # noqa: F401
+    BaseCallable,
     BaseInt,
     BaseFloat,
     BaseComplex,
