@@ -496,9 +496,13 @@ The following is an example of using Union::
 
     from traits.api import HasTraits, Union, Int, Float, Instance
 
+    class Salary(HasTraits):
+        basic = Float
+        bonus = Float
+
     class Employee(HasTraits):
         manager_name = Union(Str, None)
-        salary = Union(Instance(Int), Instance(Float))
+        pay = Union(Instance(Salary), Float)
 
 This example defines an Employee class, which has a **manager_name** trait
 attribute, which accepts either an Str instance or None as its value, a
