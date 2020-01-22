@@ -506,7 +506,7 @@ The following is an example of using Union::
 
 This example defines an Employee class, which has a **manager_name** trait
 attribute, which accepts either an Str instance or None as its value, a
-**salary** trait that accepts an instance of Int or Float and will raise a
+**salary** trait that accepts an instance of Salary or Float and will raise a
 TraitError if a value of any other type is assigned. For example::
 
     >>> from traits.api import HasTraits, Either, Str
