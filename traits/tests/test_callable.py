@@ -71,7 +71,7 @@ class TestBaseCallable(unittest.TestCase):
                     sig = Signature.from_callable(value)
                     if len(sig.parameters) == 0:
                         return value
-                
+
                 self.error(object, name, value)
 
         class Foo(HasTraits):
