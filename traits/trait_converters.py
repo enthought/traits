@@ -32,13 +32,14 @@ from .ctrait import CTrait
 def trait_cast(obj):
     """ Convert to a CTrait if the object knows how, else return None.
     """
+    # special-case TraitType classes
+    if isinstance(obj, type) and hasattr(obj, 'instantiate_and_get_ctrait'):
+        return obj.instantiate_and_get_ctrait()
 
-    try:
-        ctrait = as_ctrait(obj)
-    except TypeError:
-        ctrait = None
+    if hasattr(obj, 'as_ctrait'):
+        return obj.as_ctrait()
 
-    return ctrait
+    return None
 
 
 def as_ctrait(obj):
