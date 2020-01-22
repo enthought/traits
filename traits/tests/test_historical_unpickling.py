@@ -37,7 +37,7 @@ def find_test_pickles():
 
     for pickle_path in pickle_directory.glob("*.pkl"):
         header, _, protocol, _ = pickle_path.name.split("-", maxsplit=3)
-        if header != "hitp":
+        if header != "hipt":
             # Skip pickle files that don't follow the naming convention.
             continue
 
