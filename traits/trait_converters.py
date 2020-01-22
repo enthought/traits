@@ -70,14 +70,10 @@ def check_trait(trait):
     """ Returns either the original value or a valid CTrait if the value can be
         converted to a CTrait.
     """
-    # special-case TraitType classes
-    if isinstance(trait, type) and hasattr(trait, 'instantiate_and_get_ctrait'):
-        return trait.instantiate_and_get_ctrait()
-
-    if hasattr(trait, 'as_ctrait'):
-        return trait.as_ctrait()
-
-    return trait
+    try:
+        return as_ctrait(trait)
+    except TypeError:
+        return trait
 
 
 #: alias for check_trait
