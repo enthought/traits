@@ -105,11 +105,10 @@ def trait_for(trait):
 
     from .traits import Trait
 
-    trait = check_trait(trait)
-    if isinstance(trait, CTrait):
-        return trait
-
-    return Trait(trait)
+    try:
+        return as_ctrait(trait)
+    except TypeError:
+        return Trait(trait)
 
 
 def mapped_trait_for(trait):
