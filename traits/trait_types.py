@@ -38,7 +38,7 @@ from .trait_base import (
     Undefined,
     TraitsCache,
 )
-from .trait_converters import trait_from
+from .trait_converters import trait_from, trait_cast
 from .trait_dict_object import TraitDictEvent, TraitDictObject
 from .trait_errors import TraitError
 from .trait_list_object import TraitListEvent, TraitListObject
@@ -3347,7 +3347,19 @@ class NoneTrait(TraitType):
     """ Defines a trait that only accepts the None value
     """
 
-    info_text = "a None type"
+    info_text = "None"
+
+    default_value = None
+
+    default_value_type = DefaultValue.constant
+
+    def __init__(self, **metadata):
+        super(NoneTrait, self).__init__(**metadata)
+        default_value = metadata.pop("default", None)
+        if default_value is not None:
+            raise ValueError("Cannot set default value {} "
+                             "for NoneTrait".format(default_value))
+        self.metadata = metadata.copy()
 
     def validate(self, obj, name, value):
         if value is None:
@@ -3368,16 +3380,17 @@ class Union(TraitType):
     type_map = {"event": TraitKind.event, "constant": TraitKind.constant}
 
     def __init__(self, *traits, **metadata):
+        super(Union, self).__init__(traits, **metadata)
         self.list_ctrait_instances = []
         for trait in traits:
             if trait is None:
                 trait = NoneTrait
-            if not isinstance(trait, (TraitType, type)):
+            ctrait_instance = trait_cast(trait)
+            if ctrait_instance is None:
                 raise ValueError("Union trait declaration expects a trait "
                                  "type or an instance of trait type or None,"
                                  " but got {} instead".format(trait))
 
-            ctrait_instance = trait().as_ctrait()
             self.list_ctrait_instances.append(ctrait_instance)
 
         self.default_value_type = DefaultValue.constant
@@ -3399,6 +3412,9 @@ class Union(TraitType):
     def info(self):
         return " or ".join([ctrait.info() for ctrait in
                             self.list_ctrait_instances])
+
+    def inner_traits(self):
+        return tuple(self.list_ctrait_instances)
 
     def as_ctrait(self):
         """ Returns a CTrait corresponding to the trait defined by this class.

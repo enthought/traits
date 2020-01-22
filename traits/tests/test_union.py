@@ -41,6 +41,19 @@ class TestCaseEnumTrait(unittest.TestCase):
         with self.assertRaises(TraitError):
             TestClass(int_or_str_type=Int(3))
 
+    def test_malformed_declaration(self):
+        with self.assertRaises(ValueError):
+            class TestClass(HasTraits):
+                a = Union(int, Float)
+
+            TestClass(a=2.4)
+
+        with self.assertRaises(ValueError):
+            class TestClass(HasTraits):
+                a = Union([1, 2], Float)
+
+            TestClass(a=2.4)
+
     def test_list_trait_instances(self):
         class TestClass(HasTraits):
             float_or_str_obj = Union(Instance(Float), Instance(Str))
@@ -59,6 +72,16 @@ class TestCaseEnumTrait(unittest.TestCase):
             int_or_none = Union(None, Int)
 
         TestClass(int_or_none=None)
+
+    def test_inner_traits(self):
+        class TestClass(HasTraits):
+            atr = Union(Float, Int, Str)
+        obj = TestClass()
+        t1, t2, t3 = obj.trait('atr').inner_traits
+
+        self.assertEqual(type(t1.trait_type), Float)
+        self.assertEqual(type(t2.trait_type), Int)
+        self.assertEqual(type(t3.trait_type), Str)
 
     def test_union_user_defined_class(self):
         class TestClass(HasTraits):
@@ -100,6 +123,8 @@ class TestCaseEnumTrait(unittest.TestCase):
             s = UnionAllowSrt(Int, Float)
 
         TestClass(s="sdf")
+
+
 
 
 if __name__ == '__main__':
