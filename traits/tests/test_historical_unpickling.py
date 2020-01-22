@@ -20,8 +20,6 @@ import unittest
 
 import pkg_resources
 
-from traits.api import BaseFloat
-
 
 def find_test_pickles():
     """
@@ -30,8 +28,7 @@ def find_test_pickles():
     Yields paths to pickle files.
     """
     pickle_directory = pkg_resources.resource_filename(
-        "traits.tests",
-        "test-data/historical-pickles",
+        "traits.tests", "test-data/historical-pickles",
     )
 
     for filename in glob.glob(os.path.join(pickle_directory, "*.pkl")):

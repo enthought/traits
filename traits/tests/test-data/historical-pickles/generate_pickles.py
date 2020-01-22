@@ -15,8 +15,6 @@ Script to generate the historical pickle test data.
 import os
 import pickle
 
-import pkg_resources
-
 from traits.api import Float
 from traits import __version__
 
