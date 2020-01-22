@@ -13,8 +13,7 @@ Tests for unpicking of pickles created using previous versions
 of Traits.
 """
 
-import glob
-import os
+import pathlib
 import pickle
 import unittest
 
@@ -30,13 +29,14 @@ def find_test_pickles():
 
     Yields paths to pickle files.
     """
-    pickle_directory = pkg_resources.resource_filename(
-        "traits.tests", "test-data/historical-pickles",
+    pickle_directory = pathlib.Path(
+        pkg_resources.resource_filename(
+            "traits.tests", "test-data/historical-pickles",
+        )
     )
 
-    for pickle_path in glob.glob(os.path.join(pickle_directory, "*.pkl")):
-        filename = os.path.basename(pickle_path)
-        header, traitver, protocol, _ = filename.split("-", maxsplit=3)
+    for pickle_path in pickle_directory.glob("*.pkl"):
+        header, _, protocol, _ = pickle_path.name.split("-", maxsplit=3)
         if header != "hitp":
             # Skip pickle files that don't follow the naming convention.
             continue
@@ -48,14 +48,13 @@ def find_test_pickles():
             # Protocol not understood by current Python; skip.
             continue
 
-        yield filename
+        yield pickle_path
 
 
 class TestHistoricalPickles(unittest.TestCase):
     def test_unpickling_historical_pickles(self):
         # Just test that the pickle can be unpickled.
         for pickle_path in find_test_pickles():
-            filename = os.path.basename(pickle_path)
-            with self.subTest(filename=filename):
+            with self.subTest(filename=pickle_path.name):
                 with open(pickle_path, "rb") as f:
                     pickle.load(f)
