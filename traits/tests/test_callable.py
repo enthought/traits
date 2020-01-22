@@ -8,9 +8,10 @@
 #
 # Thanks for using Enthought open source!
 
+from inspect import Signature
 import unittest
 
-from traits.api import Callable, HasTraits, TraitError
+from traits.api import BaseCallable, Callable, HasTraits, TraitError
 
 
 def function():
@@ -57,3 +58,29 @@ class TestCallable(unittest.TestCase):
 
         self.assertIn(
             "must be a callable value", str(exception_context.exception))
+
+
+class TestBaseCallable(unittest.TestCase):
+
+    def test_override_validate(self):
+
+        class ZeroArgsCallable(BaseCallable):
+
+            def validate(self, object, name, value):
+                if callable(value):
+                    sig = Signature.from_callable(value)
+                    if len(sig.parameters) == 0:
+                        return value
+                
+                self.error(object, name, value)
+
+        class Foo(HasTraits):
+            value = ZeroArgsCallable
+
+        Foo(value=lambda: 1)
+
+        with self.assertRaises(TraitError):
+            Foo(value=lambda x: x)
+
+        with self.assertRaises(TraitError):
+            Foo(value=1)
