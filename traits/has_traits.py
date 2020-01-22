@@ -28,7 +28,7 @@ from types import FunctionType, MethodType
 from . import __version__ as TraitsVersion
 from .adaptation.adaptation_error import AdaptationError
 from .constants import DefaultValue, TraitKind
-from .ctrait import CTrait, __newobj__
+from .ctrait import CTrait
 from .ctraits import CHasTraits
 from .traits import (
     ForwardProperty,
@@ -68,6 +68,13 @@ from .trait_converters import check_trait, mapped_trait_for, trait_for
 # -------------------------------------------------------------------------------
 
 CHECK_INTERFACES = 0
+
+
+def __newobj__(cls, *args):
+    """ Unpickles new-style objects.
+    """
+    return cls.__new__(cls, *args)
+
 
 # -------------------------------------------------------------------------------
 #  This ABC is a placeholder for the TraitsUI ViewElement class, which should

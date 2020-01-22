@@ -24,12 +24,6 @@ from .trait_list_object import TraitListObject
 from .trait_set_object import TraitSetObject
 
 
-def __newobj__(cls, *args):
-    """ Unpickles new-style objects.
-    """
-    return cls.__new__(cls, *args)
-
-
 class CTrait(ctraits.cTrait):
     """ Extends the underlying C-based cTrait type.
     """
@@ -226,14 +220,6 @@ class CTrait(ctraits.cTrait):
     def as_ctrait(self):
         """ Method that returns self for trait converters. """
         return self
-
-    # ---------------------------------------------------------------------------
-    #  Private methods
-    # ---------------------------------------------------------------------------
-
-    def __reduce_ex__(self, protocol):
-        """ Returns the pickleable form of a CTrait object. """
-        return (__newobj__, (self.__class__, 0), self.__getstate__())
 
 
 def _adapt_wrapper(*args, **kw):
