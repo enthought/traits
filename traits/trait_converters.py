@@ -42,6 +42,34 @@ def trait_cast(obj):
     return None
 
 
+def as_ctrait(obj):
+    """ Convert to CTrait if the object knows how, else raise TraitError.
+
+    Parameters
+    ----------
+    obj
+        An object that supports conversion to `CTrait`. Refer
+        documentation for when the object supports this conversion.
+
+    Returns
+    -------
+    ctrait.CTrait
+        A CTrait object.
+
+    Raises
+    ------
+    TypeError
+        If the object does not support conversion to CTrait.
+    """
+    if isinstance(obj, type) and hasattr(obj, 'instantiate_and_get_ctrait'):
+        return obj.instantiate_and_get_ctrait()
+    elif not isinstance(obj, type) and hasattr(obj, 'as_ctrait'):
+        return obj.as_ctrait()
+    else:
+        raise TypeError(
+            "Object {!r} does not support conversion to CTrait".format(obj))
+
+
 def check_trait(trait):
     """ Returns either the original value or a valid CTrait if the value can be
         converted to a CTrait.

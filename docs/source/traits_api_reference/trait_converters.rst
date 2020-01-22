@@ -10,6 +10,8 @@
 Functions
 ---------
 
+.. autofunction:: as_ctrait
+
 .. autofunction:: check_trait
 
 .. autofunction:: trait_cast
