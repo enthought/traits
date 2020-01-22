@@ -496,7 +496,7 @@ class _TraitMaker(object):
                 "use the 'comparison_mode' metadata instead. In a future "
                 "release, rich_compare will have no effect.",
                 DeprecationWarning,
-                stacklevel=3,
+                stacklevel=4,
             )
             if rich_compare:
                 trait.comparison_mode = ComparisonMode.equality_compare

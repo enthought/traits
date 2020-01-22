@@ -26,20 +26,14 @@ To handle this, there is another informal interface with the deliberately
 unwieldy classmethod name ``instantiate_and_get_ctrait``.
 """
 
-from .ctrait import CTrait
-
 
 def trait_cast(obj):
     """ Convert to a CTrait if the object knows how, else return None.
     """
-    # special-case TraitType classes
-    if isinstance(obj, type) and hasattr(obj, 'instantiate_and_get_ctrait'):
-        return obj.instantiate_and_get_ctrait()
-
-    if hasattr(obj, 'as_ctrait'):
-        return obj.as_ctrait()
-
-    return None
+    try:
+        return as_ctrait(obj)
+    except TypeError:
+        return None
 
 
 def as_ctrait(obj):
@@ -74,14 +68,10 @@ def check_trait(trait):
     """ Returns either the original value or a valid CTrait if the value can be
         converted to a CTrait.
     """
-    # special-case TraitType classes
-    if isinstance(trait, type) and hasattr(trait, 'instantiate_and_get_ctrait'):
-        return trait.instantiate_and_get_ctrait()
-
-    if hasattr(trait, 'as_ctrait'):
-        return trait.as_ctrait()
-
-    return trait
+    try:
+        return as_ctrait(trait)
+    except TypeError:
+        return trait
 
 
 #: alias for check_trait
@@ -98,14 +88,10 @@ def trait_from(obj):
     if obj is None:
         return Any().as_ctrait()
 
-    # special-case TraitType classes
-    if isinstance(obj, type) and hasattr(obj, 'instantiate_and_get_ctrait'):
-        return obj.instantiate_and_get_ctrait()
-
-    if hasattr(obj, 'as_ctrait'):
-        return obj.as_ctrait()
-
-    return Trait(obj)
+    try:
+        return as_ctrait(obj)
+    except TypeError:
+        return Trait(obj)
 
 
 def trait_for(trait):
@@ -117,11 +103,10 @@ def trait_for(trait):
 
     from .traits import Trait
 
-    trait = check_trait(trait)
-    if isinstance(trait, CTrait):
-        return trait
-
-    return Trait(trait)
+    try:
+        return as_ctrait(trait)
+    except TypeError:
+        return Trait(trait)
 
 
 def mapped_trait_for(trait):
