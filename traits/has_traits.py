@@ -2084,7 +2084,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             )
             if rc and (filename is not None):
                 with open(filename, "wb") as fd:
-                    pickle.Pickler(fd, True).dump(self)
+                    pickle.Pickler(fd, protocol=3).dump(self)
             return rc
 
         return True

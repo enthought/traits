@@ -56,6 +56,23 @@ class TestConfigureTraits(unittest.TestCase):
         self.assertIsInstance(unpickled, Model)
         self.assertEqual(unpickled.count, model.count)
 
+    def test_pickle_protocol(self):
+        # Pickled files should use protocol 3 (a compromise between
+        # efficiency and wide applicability).
+
+        model = Model(count=37)
+        filename = os.path.join(self.tmpdir, "nonexistent.pkl")
+        self.assertFalse(os.path.exists(filename))
+
+        with mock.patch.object(self.toolkit, "view_application"):
+            model.configure_traits(filename=filename)
+
+        self.assertTrue(os.path.exists(filename))
+        with open(filename, "rb") as pickled_object:
+            protocol = pickled_object.read(2)
+
+        self.assertEqual(protocol, b'\x80\x03')
+
     def test_filename_with_existing_file(self):
         # Create pre-existing pickle file.
         stored_model = Model(count=52)
