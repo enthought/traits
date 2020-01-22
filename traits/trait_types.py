@@ -3354,12 +3354,11 @@ class NoneTrait(TraitType):
     default_value_type = DefaultValue.constant
 
     def __init__(self, **metadata):
-        super(NoneTrait, self).__init__(**metadata)
         default_value = metadata.pop("default", None)
         if default_value is not None:
             raise ValueError("Cannot set default value {} "
                              "for NoneTrait".format(default_value))
-        self.metadata = metadata.copy()
+        super(NoneTrait, self).__init__(**metadata)
 
     def validate(self, obj, name, value):
         if value is None:
