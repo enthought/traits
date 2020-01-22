@@ -287,6 +287,13 @@ setuptools.setup(
     download_url="https://github.com/enthought/traits",
     install_requires=[],
     ext_modules=[setuptools.Extension("traits.ctraits", ["traits/ctraits.c"])],
+    package_data={
+        "traits.tests": [
+            "test-data/historical-pickles/README",
+            "test-data/historical-pickles/*.pkl",
+            "test-data/historical-pickles/*.py",
+        ],
+    },
     license="BSD",
     maintainer="ETS Developers",
     maintainer_email="enthought-dev@enthought.com",

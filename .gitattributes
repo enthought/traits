@@ -1,2 +1,6 @@
 # For archives, substitute the commit hash in the setup.py file.
 /setup.py export-subst
+
+# Make sure that pickle files are treated as binary, else Git
+# may try to modify line-endings when cloning on Windows.
+*.pkl binary
