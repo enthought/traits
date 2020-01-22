@@ -21,6 +21,7 @@ import copy as copy_module
 import os
 import pickle
 import re
+import warnings
 import weakref
 
 from types import FunctionType, MethodType
@@ -2000,6 +2001,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         Parameters
         ----------
         filename : str
+            NOTE: Deprecated as of traits 6.0.0.
             The name (including path) of a file that contains a pickled
             representation of the current object. When this parameter is
             specified, the method reads the corresponding file (if it exists)
@@ -2064,6 +2066,9 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         modified by the user.
         """
         if filename is not None:
+            message = ('Restoring from pickle will not be supported starting '
+                       'with traits 7.0.0')
+            warnings.warn(message, DeprecationWarning)
             if os.path.exists(filename):
                 with open(filename, "rb") as fd:
                     self.copy_traits(pickle.Unpickler(fd).load())
