@@ -245,7 +245,6 @@ class ListEventTestCase(unittest.TestCase):
         # No items deleted, so no event fired
         self.assertEqual(len(foo.l_events), 0)
 
-
     def test_assignment_step_slice(self):
         foo = MyClass()
         foo.l = [1, 2, 3]

@@ -3516,12 +3516,14 @@ class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
 
     pass
 
+
 class ABCHasTraits(HasTraits, metaclass=ABCMetaHasTraits):
     """ A HasTraits subclass which enables the features of Abstract
     Base Classes (ABC). See the 'abc' module in the standard library
     for more information.
 
     """
+
 
 class ABCHasStrictTraits(ABCHasTraits):
     """ A HasTraits subclass which behaves like HasStrictTraits but

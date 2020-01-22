@@ -54,6 +54,7 @@ CallableTypes = (FunctionType, MethodType)
 _WARNING_FORMAT_STR = ("'{handler}' trait handler has been deprecated. "
                        "Use {replacement} instead.")
 
+
 # -------------------------------------------------------------------------------
 #  Private functions:
 # -------------------------------------------------------------------------------

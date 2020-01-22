@@ -82,42 +82,54 @@ class UKStandardToEUStandard(Adapter):
 
 EUStandard.register(UKStandardToEUStandard)
 
+
 # EU->Japan
+
 class EUStandardToJapanStandard(Adapter):
     pass
 
 
 JapanStandard.register(EUStandardToJapanStandard)
 
+
 # Japan->Iraq
+
 class JapanStandardToIraqStandard(Adapter):
     pass
 
 
 IraqStandard.register(JapanStandardToIraqStandard)
 
+
 # EU->Iraq
+
 class EUStandardToIraqStandard(Adapter):
     pass
 
 
 IraqStandard.register(EUStandardToIraqStandard)
 
+
 # UK->Japan
+
 class UKStandardToJapanStandard(Adapter):
     pass
 
 
 JapanStandard.register(UKStandardToJapanStandard)
 
+
 # Travel->Japan
+
 class TravelPlugToJapanStandard(Adapter):
     pass
 
 
 JapanStandard.register(TravelPlugToJapanStandard)
 
+
 # Travel->EU
+
 class TravelPlugToEUStandard(Adapter):
     pass
 

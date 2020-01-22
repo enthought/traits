@@ -66,7 +66,6 @@ from .editor_factories import (
 )
 
 
-
 # -------------------------------------------------------------------------------
 #  Constants:
 # -------------------------------------------------------------------------------
@@ -973,7 +972,6 @@ class This(BaseType):
 
     def info_none(self):
         return "an instance of the same type as the receiver or None"
-
 
 
 class self(This):
@@ -2385,7 +2383,6 @@ class List(TraitType):
         return cls._items_event
 
 
-
 # -------------------------------------------------------------------------------
 #  'CList' trait:
 # -------------------------------------------------------------------------------
@@ -3023,8 +3020,6 @@ class Supports(Instance):
         # unadapted value passed to 'setattr':
         ctrait.post_setattr_original_value = True
         return ctrait
-
-
 
 
 class AdaptsTo(Supports):
