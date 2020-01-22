@@ -25,13 +25,29 @@ def find_test_pickles():
     """
     Iterate over the pickle files in the test_data directory.
 
+    Skip files that correspond to a protocol not supported with
+    the current version of Python.
+
     Yields paths to pickle files.
     """
     pickle_directory = pkg_resources.resource_filename(
         "traits.tests", "test-data/historical-pickles",
     )
 
-    for filename in glob.glob(os.path.join(pickle_directory, "*.pkl")):
+    for pickle_path in glob.glob(os.path.join(pickle_directory, "*.pkl")):
+        filename = os.path.basename(pickle_path)
+        header, traitver, protocol, _ = filename.split("-", maxsplit=3)
+        if header != "hitp":
+            # Skip pickle files that don't follow the naming convention.
+            continue
+
+        if not protocol.startswith("p"):
+            raise RuntimeError("Can't interpret protocol: {}".format(protocol))
+        protocol = int(protocol[1:])
+        if protocol > pickle.HIGHEST_PROTOCOL:
+            # Protocol not understood by current Python; skip.
+            continue
+
         yield filename
 
 
