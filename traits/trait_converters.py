@@ -59,14 +59,12 @@ def as_ctrait(obj):
     TypeError if the object does not support conversion to CTrait.
     """
     if isinstance(obj, type) and hasattr(obj, 'instantiate_and_get_ctrait'):
-        ctrait = obj.instantiate_and_get_ctrait()
+        return obj.instantiate_and_get_ctrait()
     elif not isinstance(obj, type) and hasattr(obj, 'as_ctrait'):
-        ctrait = obj.as_ctrait()
+        return obj.as_ctrait()
     else:
         raise TypeError(
             "Object {!r} does not support conversion to CTrait".format(obj))
-
-    return ctrait
 
 
 def check_trait(trait):
