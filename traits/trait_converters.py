@@ -26,8 +26,6 @@ To handle this, there is another informal interface with the deliberately
 unwieldy classmethod name ``instantiate_and_get_ctrait``.
 """
 
-from .ctrait import CTrait
-
 
 def trait_cast(obj):
     """ Convert to a CTrait if the object knows how, else return None.
