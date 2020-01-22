@@ -54,6 +54,7 @@ def as_ctrait(obj):
     Returns
     -------
     ctrait.CTrait
+        A CTrait object.
 
     Raises
     ------
