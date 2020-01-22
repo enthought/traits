@@ -73,9 +73,31 @@ class TestCaseEnumTrait(unittest.TestCase):
 
         TestClass(int_or_none=None)
 
+    def test_default_value(self):
+        class TestClass(HasTraits):
+            atr = Union(Int(3), Float(4.1), Str("Something"))
+
+        self.assertEqual(TestClass().atr, 3)
+
+        class TestClass(HasTraits):
+            atr = Union(Int(3), Float(4.1), Str("Something"), default="XYZ")
+
+        self.assertEqual(TestClass().atr, "XYZ")
+
+        class TestClass(HasTraits):
+            atr = Union()
+
+        self.assertEqual(TestClass().atr, None)
+
+        class TestClass(HasTraits):
+            atr = Union(None)
+
+        self.assertEqual(TestClass().atr, None)
+
     def test_inner_traits(self):
         class TestClass(HasTraits):
             atr = Union(Float, Int, Str)
+
         obj = TestClass()
         t1, t2, t3 = obj.trait('atr').inner_traits
 
@@ -123,8 +145,6 @@ class TestCaseEnumTrait(unittest.TestCase):
             s = UnionAllowSrt(Int, Float)
 
         TestClass(s="sdf")
-
-
 
 
 if __name__ == '__main__':

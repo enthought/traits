@@ -43,7 +43,7 @@ from .trait_dict_object import TraitDictEvent, TraitDictObject
 from .trait_errors import TraitError
 from .trait_list_object import TraitListEvent, TraitListObject
 from .trait_set_object import TraitSetEvent, TraitSetObject
-from .trait_type import TraitType
+from .trait_type import TraitType, _infer_default_value_type
 from .traits import (
     Trait,
     _TraitMaker,
@@ -3393,8 +3393,14 @@ class Union(TraitType):
 
             self.list_ctrait_instances.append(ctrait_instance)
 
-        self.default_value_type = DefaultValue.constant
-        self.default_value = metadata.pop("default", None)
+        if 'default' in metadata:
+            self.default_value = metadata.pop("default")
+        elif self.list_ctrait_instances:
+            self.default_value = self.list_ctrait_instances[0].default
+        else:
+            self.default_value = None
+
+        self.default_value_type = _infer_default_value_type(self.default_value)
         self.metadata = metadata.copy()
 
     def validate(self, obj, name, value):
