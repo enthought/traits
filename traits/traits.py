@@ -674,30 +674,6 @@ class ForwardProperty(object):
 
 
 # -------------------------------------------------------------------------------
-#  Dictionary used to handle return type mapping special cases:
-# -------------------------------------------------------------------------------
-
-SpecialNames = {
-    ###   'int':     trait_factory( Int ),
-    ###   'float':   trait_factory( Float ),
-    ###   'complex': trait_factory( Complex ),
-    ###   'str':     trait_factory( Str ),
-    ###   'bool':    trait_factory( Bool ),
-    ###   'list':    trait_factory( List ),
-    ###   'tuple':   trait_factory( Tuple ),
-    ###   'dict':    trait_factory( Dict )
-}
-
-
-# -- Date Trait definition ----------------------------------------------------
-# Date = Instance(datetime.date, metadata = { 'editor': date_editor })
-
-
-# -- Time Trait definition ----------------------------------------------------
-# Time = Instance(datetime.time, metadata = { 'editor': time_editor })
-
-
-# -------------------------------------------------------------------------------
 #  Create predefined, reusable trait instances:
 # -------------------------------------------------------------------------------
 
