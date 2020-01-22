@@ -435,7 +435,7 @@ class TraitListObject(list):
                 class_of(self.object()),
                 self.trait.full_info(self.object(), self.name, Undefined),
                 len,
-                "s"[len == 1 :],
+                "s"[len == 1:],
             )
         )
 

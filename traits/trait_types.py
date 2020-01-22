@@ -1875,22 +1875,22 @@ class BaseRange(TraitType):
 
             return "%s <%s %s" % (
                 self._type_desc,
-                "="[self._exclude_high :],
+                "="[self._exclude_high:],
                 high,
             )
 
         elif high is None:
             return "%s >%s %s" % (
                 self._type_desc,
-                "="[self._exclude_low :],
+                "="[self._exclude_low:],
                 low,
             )
 
         return "%s <%s %s <%s %s" % (
             low,
-            "="[self._exclude_low :],
+            "="[self._exclude_low:],
             self._type_desc,
-            "="[self._exclude_high :],
+            "="[self._exclude_high:],
             high,
         )
 
@@ -2684,7 +2684,7 @@ class BaseClass(TraitType):
         col = klass.rfind(".")
         if col >= 0:
             module = klass[:col]
-            klass = klass[col + 1 :]
+            klass = klass[col + 1:]
 
         theClass = getattr(sys.modules.get(module), klass, None)
         if (theClass is None) and (col >= 0):

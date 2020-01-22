@@ -269,7 +269,7 @@ def _get_instance_handlers(class_dict, bases):
                 n = 11
                 col = name.find("_fired_for_")
             if col >= 2:
-                key = name[col + n :]
+                key = name[col + n:]
                 if key != "":
                     arg_list = (name, name[1:col])
                     arg_lists = instance_traits.setdefault(key, [])
@@ -2156,8 +2156,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 value = repr(getattr(self, name)).replace("\n", "\\n")
                 if len(value) > maxval:
                     value = "%s...%s" % (
-                        value[: (maxval - 2) // 2],
-                        value[-((maxval - 3) // 2) :],
+                        value[:(maxval - 2) // 2],
+                        value[-((maxval - 3) // 2):],
                     )
             except:
                 value = "<undefined>"
