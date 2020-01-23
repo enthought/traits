@@ -38,6 +38,7 @@ from .trait_base import (
     collection_default,
     EnumTypes,
     RangeTypes,
+    safe_contains,
     SequenceTypes,
     TypeTypes,
     Undefined,
@@ -2003,7 +2004,7 @@ class BaseEnum(TraitType):
         """ Validates that the value is one of the enumerated set of valid
             values.
         """
-        if value in self.values:
+        if safe_contains(value, self.values):
             return value
 
         self.error(object, name, value)
@@ -2041,15 +2042,14 @@ class BaseEnum(TraitType):
         """
         value = self.get_value(object, name, trait)
         values = xgetattr(object, self.name)
-        if value not in values:
+        if not safe_contains(value, values):
             value = collection_default(values)
-
         return value
 
     def _set(self, object, name, value):
         """ Sets the current value of a dynamic range trait.
         """
-        if value in xgetattr(object, self.name):
+        if safe_contains(value, xgetattr(object, self.name)):
             self.set_value(object, name, value)
         else:
             self.error(object, name, value)

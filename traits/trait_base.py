@@ -34,7 +34,7 @@ enumerate = enumerate
 
 SequenceTypes = (list, tuple)
 
-EnumTypes = (list, tuple, set, enum.EnumMeta)
+EnumTypes = (list, tuple, enum.EnumMeta)
 
 ComplexTypes = (float, int)
 
@@ -198,6 +198,19 @@ CoercableTypes = {
 }
 
 
+def safe_contains(value, container):
+    """ Perform "in" containment check, allowing for TypeErrors.
+
+    This is required because in some circumstances ``x in y`` can raise a
+    TypeError.  In these cases we make the (reasonable) assumption that the
+    value is _not_ contained in the container.
+    """
+    try:
+        return value in container
+    except TypeError:
+        return False
+
+
 def collection_default(collection):
     """ Get the first item of a collection, returning None if empty.
 
@@ -209,7 +222,7 @@ def collection_default(collection):
     Returns
     -------
     default : any
-        The first item of the collectio, or None if the collection is empty.
+        The first item of the collection, or None if the collection is empty.
     """
     return next(iter(collection), None)
 
