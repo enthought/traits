@@ -3379,7 +3379,6 @@ class Union(TraitType):
     type_map = {"event": TraitKind.event, "constant": TraitKind.constant}
 
     def __init__(self, *traits, **metadata):
-        super(Union, self).__init__(traits, **metadata)
         self.list_ctrait_instances = []
         for trait in traits:
             if trait is None:
@@ -3392,15 +3391,14 @@ class Union(TraitType):
 
             self.list_ctrait_instances.append(ctrait_instance)
 
+        default_value = None
         if 'default' in metadata:
-            self.default_value = metadata.pop("default")
+            default_value = metadata.pop("default")
         elif self.list_ctrait_instances:
-            self.default_value = self.list_ctrait_instances[0].default
-        else:
-            self.default_value = None
+            default_value = self.list_ctrait_instances[0].default
 
-        self.default_value_type = _infer_default_value_type(self.default_value)
-        self.metadata = metadata.copy()
+        self.default_value_type = _infer_default_value_type(default_value)
+        super().__init__(default_value, **metadata)
 
     def validate(self, obj, name, value):
         """ Return the value by the first trait in the list that can
