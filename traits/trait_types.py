@@ -15,7 +15,6 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
-from collections.abc import MutableSequence
 import datetime
 import enum
 from importlib import import_module
