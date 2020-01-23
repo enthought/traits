@@ -16,6 +16,7 @@
 # -------------------------------------------------------------------------------
 
 import datetime
+import enum
 from importlib import import_module
 import operator
 import re
@@ -34,11 +35,15 @@ from .trait_base import (
     get_module_name,
     HandleWeakRef,
     class_of,
+    collection_default,
+    EnumTypes,
     RangeTypes,
+    safe_contains,
     SequenceTypes,
     TypeTypes,
     Undefined,
     TraitsCache,
+    xgetattr,
 )
 from .trait_converters import trait_from
 from .trait_dict_object import TraitDictEvent, TraitDictObject
@@ -1941,8 +1946,16 @@ class BaseEnum(TraitType):
 
         Parameters
         ----------
-        values : list or tuple
-            The enumeration of all legal values for the trait
+        *args : *values or (default, values) or values
+            The enumeration of all legal values for the trait, either as
+            positional arguments or a list, enum.Enum or tuple.  The default
+            value is the first positional argument, or the first item of
+            the sequence.
+        values : str
+            The name of a trait holding the values, in which case there
+            must be at most one positional argument holding the default
+            value.  If there is no default value, then the default value
+            is the first item of the value stored in the trait.
 
         Default Value
         -------------
@@ -1950,32 +1963,36 @@ class BaseEnum(TraitType):
         """
         values = metadata.pop("values", None)
         if isinstance(values, str):
+            self.name = values
+            self.get, self.set, self.validate = self._get, self._set, None
             n = len(args)
             if n == 0:
-                default_value = None
+                super(BaseEnum, self).__init__(**metadata)
             elif n == 1:
                 default_value = args[0]
+                super(BaseEnum, self).__init__(default_value, **metadata)
             else:
                 raise TraitError(
                     "Incorrect number of arguments specified "
                     "when using the 'values' keyword"
                 )
-            self.name = values
-            self.values = compile("object." + values, "<string>", "eval")
-            self.get, self.set, self.validate = self._get, self._set, None
         else:
             default_value = args[0]
-            if (len(args) == 1) and isinstance(default_value, SequenceTypes):
+            if (len(args) == 1) and isinstance(default_value, EnumTypes):
                 args = default_value
-                default_value = args[0]
-            elif (len(args) == 2) and isinstance(args[1], SequenceTypes):
+                default_value = collection_default(args)
+            elif (len(args) == 2) and isinstance(args[1], EnumTypes):
                 args = args[1]
+
+            if isinstance(args, enum.EnumMeta):
+                metadata.setdefault('format_func', operator.attrgetter('name'))
+                metadata.setdefault('evaluate', args)
 
             self.name = ""
             self.values = tuple(args)
             self.init_fast_validate(ValidateTrait.enum, self.values)
 
-        super(BaseEnum, self).__init__(default_value, **metadata)
+            super(BaseEnum, self).__init__(default_value, **metadata)
 
     def init_fast_validate(self, *args):
         """ Does nothing for the BaseEnum class. Used in the Enum class to set
@@ -1987,7 +2004,7 @@ class BaseEnum(TraitType):
         """ Validates that the value is one of the enumerated set of valid
             values.
         """
-        if value in self.values:
+        if safe_contains(value, self.values):
             return value
 
         self.error(object, name, value)
@@ -1998,7 +2015,7 @@ class BaseEnum(TraitType):
         if self.name == "":
             values = self.values
         else:
-            values = eval(self.values)
+            values = xgetattr(object, self.name)
 
         return " or ".join([repr(x) for x in values])
 
@@ -2016,25 +2033,23 @@ class BaseEnum(TraitType):
             name=self.name,
             cols=self.cols or 3,
             evaluate=self.evaluate,
-            mode=self.mode or "radio",
+            format_func=self.format_func,
+            mode=self.mode if self.mode else "radio",
         )
 
     def _get(self, object, name, trait):
         """ Returns the current value of a dynamic enum trait.
         """
         value = self.get_value(object, name, trait)
-        values = eval(self.values)
-        if value not in values:
-            value = None
-            if len(values) > 0:
-                value = values[0]
-
+        values = xgetattr(object, self.name)
+        if not safe_contains(value, values):
+            value = collection_default(values)
         return value
 
     def _set(self, object, name, value):
         """ Sets the current value of a dynamic range trait.
         """
-        if value in eval(self.values):
+        if safe_contains(value, xgetattr(object, self.name)):
             self.set_value(object, name, value)
         else:
             self.error(object, name, value)
