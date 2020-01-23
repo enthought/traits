@@ -29,6 +29,11 @@ class MyCallable(HasTraits):
     value = Callable()
 
 
+class MyBaseCallable(HasTraits):
+
+    value = BaseCallable
+
+
 class TestCallable(unittest.TestCase):
 
     def test_default(self):
@@ -84,3 +89,22 @@ class TestBaseCallable(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             Foo(value=1)
+
+    def test_accepts_function(self):
+        MyBaseCallable(value=lambda x: x)
+
+    def test_accepts_method(self):
+        MyBaseCallable(value=Dummy.instance_method)
+
+    def test_accepts_type(self):
+        MyBaseCallable(value=int)
+
+    def test_accepts_none(self):
+        MyBaseCallable(value=None)
+
+    def test_rejects_non_callable(self):
+        with self.assertRaises(TraitError):
+            MyBaseCallable(value=Dummy())
+
+        with self.assertRaises(TraitError):
+            MyBaseCallable(value=1)
