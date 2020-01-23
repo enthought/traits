@@ -347,6 +347,12 @@ Fixes
 * Fix cyclic garbage arising from dynamic trait change handlers. (#101)
 
 
+Releases 4.3.0 - 3.6.0
+----------------------
+
+Changelogs unavailable.
+
+
 Traits 3.5.0 (Oct 15, 2010)
 ===========================
 
