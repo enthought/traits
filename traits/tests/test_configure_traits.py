@@ -10,6 +10,7 @@
 
 import os
 import pickle
+import pickletools
 import shutil
 import tempfile
 import unittest
@@ -68,10 +69,13 @@ class TestConfigureTraits(unittest.TestCase):
             model.configure_traits(filename=filename)
 
         self.assertTrue(os.path.exists(filename))
-        with open(filename, "rb") as pickled_object:
-            protocol = pickled_object.read(2)
+        with open(filename, "rb") as pickled_object_file:
+            pickled_object = pickled_object_file.read()
 
-        self.assertEqual(protocol, b'\x80\x03')
+        # Get and check the first opcode
+        opcode, arg, _ = next(pickletools.genops(pickled_object))
+        self.assertEqual(opcode.name, "PROTO")
+        self.assertEqual(arg, 3)
 
     def test_filename_with_existing_file(self):
         # Create pre-existing pickle file.
