@@ -353,57 +353,52 @@ Releases 4.3.0 - 3.6.0
 Changelogs unavailable.
 
 
-Traits 3.5.0 (Oct 15, 2010)
-===========================
+Release 3.5.0
+-------------
+
+Released: 2010-10-15
 
 Enhancements
-------------
-* adding support for drop-down menu in Button traits, but only for qt backend
 
+* adding support for drop-down menu in Button traits, but only for qt backend
 * adding 'show_notebook_menu' option to ListEditor so that the user can
   right-click and show or hide the context menu (Qt)
-
 * added selection range traits to make it possible for users to replace
   selected text
 
-
 Fixes
------
-* fixed null color editor to work with tuples
 
+* fixed null color editor to work with tuples
 * bug when opening a view with the ToolbarButton
 
 
+Release 3.4.0
+-------------
 
-Traits 3.4.0 (May 26, 2010)
-===========================
+Released: 2010-05-26
 
 Enhancements
-------------
+
 * adding new example to make testing rgb color editor easier
 
-
 Fixes
------
+
 * fixed NumericColumn to not expect object to have model_selection attribute,
   and removed more dead theming code
-
 * fixed API bugs with the NumericColumn where its function signatures
   differed from its base class, but the calling code expected them to all
   be the same
-
 * fixed bug which was related to type name errors caused when running Sphinx
-
 * when using File(exists=True), be sure to validate the type of the value
   first before using os.path.isfile()
 
 
+Release 3.3.0
+-------------
 
-Traits 3.3.0 (Feb 24, 2010)
-===========================
+Released: 2010-02-24
 
 Enhancements
-------------
 
 The major enhancement this release is that the entire Traits package has been
 changed to use relative imports so that it can be installed as a sub-package
@@ -412,57 +407,40 @@ since the various modules inside Traits would import each other directly
 through "traits.[module]".  Many thanks to Darren Dale for the
 patch.
 
-
 Fixes
------
 
 There have been numerous minor bugfixes since the last release.  The most notable
 ones are:
 
- * Many fixes involve making Traits UI more robust if wxPython is not installed
-   on a system.  In the past, we have been able to use Qt if it was also
-   installed, but removing Wx would lead to a variety of little bugs in various
-   places.  We've squashed a number of these.  We've also added better checks
-   to make sure we're selecting the right toolkit at import and at runtime.
-
- * A nasty cyclic reference was discovered and eliminated in DelegatesTo traits.
-
- * The Undefined and Uninitialized Traits were made into true singletons.
-
- * Much of the inconsistent formatting across the entire Traits source has
-   been eliminated and normalized (tabs/spaces, line endings).
+* Many fixes involve making Traits UI more robust if wxPython is not installed
+  on a system.  In the past, we have been able to use Qt if it was also
+  installed, but removing Wx would lead to a variety of little bugs in various
+  places.  We've squashed a number of these.  We've also added better checks
+  to make sure we're selecting the right toolkit at import and at runtime.
+* A nasty cyclic reference was discovered and eliminated in DelegatesTo traits.
+* The Undefined and Uninitialized Traits were made into true singletons.
+* Much of the inconsistent formatting across the entire Traits source has
+  been eliminated and normalized (tabs/spaces, line endings).
 
 
-Traits 3.2.0 (July 15, 2009)
-============================
+Release 3.2.0
+-------------
+
+Released: 2009-07-15
 
 Enhancements
-------------
 
- * Implemented editable_labels attribute in the TabularEditor for enabling editing of the labels (i.e. the first column)
-
- * Saving/restoring window positions works with multiple displays of different sizes
-
- * New ProgressEditor
-
- * Changed default colors for TableEditor
-
- * Added support for HTMLEditor for QT backend using QtWebKit
-
- * Improved support for opening links in external browser from HTMLEditor
-
- * Added support for TabularEditor for QT backend
-
- * Added support for marking up the CodeEditor, including adding squiggles and dimming lines
-
- * Added SearchEditor
-
- * Improved unicode support
-
- * Changed behavior of RangeEditor text box to not auto-set
-
- * Added support in RangeEditor for specifying the method to evaluate new values.
-
- * Add DefaultOverride editor factory courtesy Stéfan van der Walt
-
- * Removed sys.exit() call from SaveHandler.exit()
+* Implemented editable_labels attribute in the TabularEditor for enabling editing of the labels (i.e. the first column)
+* Saving/restoring window positions works with multiple displays of different sizes
+* New ProgressEditor
+* Changed default colors for TableEditor
+* Added support for HTMLEditor for QT backend using QtWebKit
+* Improved support for opening links in external browser from HTMLEditor
+* Added support for TabularEditor for QT backend
+* Added support for marking up the CodeEditor, including adding squiggles and dimming lines
+* Added SearchEditor
+* Improved unicode support
+* Changed behavior of RangeEditor text box to not auto-set
+* Added support in RangeEditor for specifying the method to evaluate new values.
+* Add DefaultOverride editor factory courtesy Stéfan van der Walt
+* Removed sys.exit() call from SaveHandler.exit()
