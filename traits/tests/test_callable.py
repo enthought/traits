@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-from inspect import Signature
+import inspect
 import unittest
 
 from traits.api import BaseCallable, Callable, HasTraits, TraitError
@@ -73,7 +73,7 @@ class TestBaseCallable(unittest.TestCase):
 
             def validate(self, object, name, value):
                 if callable(value):
-                    sig = Signature.from_callable(value)
+                    sig = inspect.signature(value)
                     if len(sig.parameters) == 0:
                         return value
 
