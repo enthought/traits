@@ -69,6 +69,8 @@ Traits
 
 .. autoclass:: Password
 
+.. autoclass:: BaseCallable
+
 .. autoclass:: Callable
 
 .. autoclass:: BaseType

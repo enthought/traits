@@ -895,12 +895,15 @@ class Password(String):
 
 
 # -------------------------------------------------------------------------------
-#  'Callable' trait:
+#  'BaseCallable' trait:
 # -------------------------------------------------------------------------------
 
 
-class Callable(TraitType):
+class BaseCallable(TraitType):
     """ Defines a trait whose value must be a Python callable.
+
+    This class can be subclassed to define new callable trait types; for
+    example, by overriding the validate method.
     """
 
     #: The standard metadata for the trait:
@@ -912,9 +915,6 @@ class Callable(TraitType):
     #: A description of the type of value this trait accepts:
     info_text = "a callable value"
 
-    #: The C-level fast validator to use
-    fast_validate = (ValidateTrait.callable,)
-
     def validate(self, object, name, value):
         """ Validates that the value is a Python callable.
         """
@@ -923,6 +923,21 @@ class Callable(TraitType):
 
         self.error(object, name, value)
 
+
+# -------------------------------------------------------------------------------
+#  'Callable' trait:
+# -------------------------------------------------------------------------------
+
+
+class Callable(BaseCallable):
+    """ Defines a trait whose value must be a Python callable using a
+    C level validator.
+
+    Subclass :class:`~.BaseCallable` to define new callable trait types.
+    """
+
+    #: The C-level fast validator to use
+    fast_validate = (ValidateTrait.callable,)
 
 # -------------------------------------------------------------------------------
 #  'BaseType' base class:
