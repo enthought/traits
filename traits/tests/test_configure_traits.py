@@ -10,6 +10,7 @@
 
 import os
 import pickle
+import pickletools
 import shutil
 import tempfile
 import unittest
@@ -55,6 +56,26 @@ class TestConfigureTraits(unittest.TestCase):
 
         self.assertIsInstance(unpickled, Model)
         self.assertEqual(unpickled.count, model.count)
+
+    def test_pickle_protocol(self):
+        # Pickled files should use protocol 3 (a compromise between
+        # efficiency and wide applicability).
+
+        model = Model(count=37)
+        filename = os.path.join(self.tmpdir, "nonexistent.pkl")
+        self.assertFalse(os.path.exists(filename))
+
+        with mock.patch.object(self.toolkit, "view_application"):
+            model.configure_traits(filename=filename)
+
+        self.assertTrue(os.path.exists(filename))
+        with open(filename, "rb") as pickled_object_file:
+            pickled_object = pickled_object_file.read()
+
+        # Get and check the first opcode
+        opcode, arg, _ = next(pickletools.genops(pickled_object))
+        self.assertEqual(opcode.name, "PROTO")
+        self.assertEqual(arg, 3)
 
     def test_filename_with_existing_file(self):
         # Create pre-existing pickle file.
