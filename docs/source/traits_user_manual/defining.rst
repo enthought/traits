@@ -349,6 +349,9 @@ the table.
 | String           | String( [*value* = '', *minlen* = 0, *maxlen* =          |
 |                  | sys.maxint, *regex* = '', \*\*\ *metadata*] )            |
 +------------------+----------------------------------------------------------+
+| Subclass         | Subclass( [*value* = None, *klass* = None, *allow_none* =|
+|                  | True, \*\*\ *metadata*] )                                |
++------------------+----------------------------------------------------------+
 | This             | n/a                                                      |
 +------------------+----------------------------------------------------------+
 | ToolbarButton    | ToolbarButton( [*label* = '', *image* = None, *style* =  |
@@ -624,7 +627,7 @@ The following metadata attributes are not predefined, but are recognized by
 HasTraits objects:
 
 .. index:: desc metadata attribute, editor metadata attribute
-.. index:: label; metadata attribute, rich_compare metadata attribute
+.. index:: label; metadata attribute, comparison_mode metadata attribute
 .. index:: transient metadata attribute
 
 * **desc**: A string describing the intended meaning of the trait. It is used
@@ -636,12 +639,10 @@ HasTraits objects:
   for more information on trait editors.
 * **label**: A string providing a human-readable name for the trait. It is
   used to label trait attribute values in user interface trait editors.
-* **rich_compare**: A Boolean indicating whether the basis for considering a
-  trait attribute value to have changed is a "rich" comparison (True, the
-  default), or simple object identity (False). This attribute can be useful
-  in cases where a detailed comparison of two objects is very expensive, or
-  where you do not care if the details of an object change, as long as the
-  same object is used.
+* **comparison_mode**: Indicates when trait change notifications should be
+  generated based upon the result of comparing the old and new values of a
+  trait assignment. This should be a member of the
+  :class:`~traits.constants.ComparisonMode` enumeration class.
 * **transient**: A Boolean indicating that the trait value is not persisted
   when the object containing it is persisted. The default value for most
   predefined traits is False (the value will be persisted if its container is).

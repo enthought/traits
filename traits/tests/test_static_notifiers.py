@@ -1,12 +1,18 @@
-##############################################################################
-# Copyright 2014 Enthought, Inc.
-##############################################################################
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
 """ Tests for the static notifiers. """
 import unittest
 
 from traits import trait_notifiers
-from traits.api import Float, HasTraits
+from traits.api import Float, HasTraits, List
 
 
 calls_0 = []
@@ -80,6 +86,14 @@ class StaticNotifiers4(HasTraits):
         raise Exception("error")
 
 
+class _LeadingUnderscore(HasTraits):
+    _ok = Float()
+    calls = List()
+
+    def __ok_changed(self, name, old, new):
+        self.calls.append((name, old, new))
+
+
 class TestNotifiers(unittest.TestCase):
     """ Tests for the static notifiers, and the "anytrait" static notifiers.
     """
@@ -95,6 +109,8 @@ class TestNotifiers(unittest.TestCase):
         self.exceptions.append((obj, name, old, new))
 
     def test_static_notifiers_0(self):
+        calls_0.clear()
+
         obj = StaticNotifiers0(ok=2)
         obj.ok = 3
         self.assertEqual(len(calls_0), 2)
@@ -131,3 +147,10 @@ class TestNotifiers(unittest.TestCase):
 
         obj.fail = 1
         self.assertEqual(self.exceptions, [(obj, "fail", 0, 1)])
+
+    def test_leading_underscore(self):
+        """ Test the name-mangling for the double-underscored change handlers.
+        """
+        obj = _LeadingUnderscore(_ok=2.0)
+        obj._ok = 3.0
+        self.assertEqual(obj.calls, [("_ok", 0.0, 2.0), ("_ok", 2.0, 3.0)])

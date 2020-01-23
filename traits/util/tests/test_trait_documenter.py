@@ -1,4 +1,13 @@
-# -*- coding: utf-8 -*-
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """ Tests for the trait documenter. """
 
 import contextlib
@@ -142,7 +151,19 @@ class TestTraitDocumenter(unittest.TestCase):
             app = SphinxTestApp(srcdir=path(tmpdir))
             app.builder.env.app = app
             app.builder.env.temp_data["docname"] = "dummy"
-            yield DocumenterBridge(app.env, LoggingReporter(''), Options(), 1)
+
+            # Backwards compatibility hack: for now, we need to be compatible
+            # with both Sphinx < 2.1 (whose DocumenterBridge doesn't take
+            # a state argument) and Sphinx >= 2.3 (which warns if the state
+            # isn't passed). Eventually we should be able to drop support
+            # for Sphinx < 2.1.
+            kwds = {}
+            if sphinx.version_info >= (2, 1):
+                state = mock.Mock()
+                state.document.settings.tab_width = 8
+                kwds["state"] = state
+            yield DocumenterBridge(
+                app.env, LoggingReporter(''), Options(), 1, **kwds)
 
     @contextlib.contextmanager
     def tmpdir(self):

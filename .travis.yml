@@ -7,6 +7,7 @@ env:
   global:
     - INSTALL_EDM_VERSION=2.0.0
       PYTHONUNBUFFERED="1"
+      CFLAGS="-Werror -UNDEBUG"
 
 matrix:
   include:
@@ -30,6 +31,7 @@ install:
   - edm run -- python etstool.py install --runtime=${RUNTIME} || exit
   - if [[ ${TRAVIS_EVENT_TYPE} == 'cron' ]]; then edm run -- python etstool.py install --runtime=${RUNTIME} --source || exit; fi
 script:
+  - edm run -- python etstool.py flake8 --runtime=${RUNTIME} || exit
   - edm run -- python etstool.py test --runtime=${RUNTIME} || exit
   - edm run -- python etstool.py docs --runtime=${RUNTIME} || exit
 

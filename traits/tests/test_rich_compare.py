@@ -1,28 +1,25 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2007, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in /LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 import unittest
+import warnings
 
-from traits.api import HasTraits, Any, Str
+from traits.api import Any, ComparisonMode, HasTraits, Str
 
 
 class IdentityCompare(HasTraits):
-    bar = Any(rich_compare=False)
+    bar = Any(comparison_mode=ComparisonMode.object_id_compare)
 
 
 class RichCompare(HasTraits):
-    bar = Any(rich_compare=True)
+    bar = Any(comparison_mode=ComparisonMode.equality_compare)
 
 
 class RichCompareTests:
@@ -184,3 +181,75 @@ class RichCompareHasTraitsTestCase(unittest.TestCase, RichCompareTests):
         self.assertEqual(self.a.name, self.same_as_a.name)
         self.assertNotEqual(self.a.name, self.different_from_a.name)
         return
+
+
+class OldRichCompareTestCase(unittest.TestCase):
+    def test_rich_compare_false(self):
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", DeprecationWarning)
+
+            class OldRichCompare(HasTraits):
+                bar = Any(rich_compare=False)
+
+        # Check for a DeprecationWarning.
+        self.assertEqual(len(warn_msgs), 1)
+        warn_msg = warn_msgs[0]
+        self.assertIs(warn_msg.category, DeprecationWarning)
+        self.assertIn(
+            "'rich_compare' metadata has been deprecated",
+            str(warn_msg.message)
+        )
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warn_msg.filename)
+
+        # Behaviour matches comparison_mode=ComparisonMode.identity_compare.
+        old_compare = OldRichCompare()
+        events = []
+        old_compare.on_trait_change(lambda: events.append(None), "bar")
+
+        some_list = [1, 2, 3]
+
+        self.assertEqual(len(events), 0)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [1, 2, 3]
+        self.assertEqual(len(events), 2)
+        old_compare.bar = [4, 5, 6]
+        self.assertEqual(len(events), 3)
+
+    def test_rich_compare_true(self):
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", DeprecationWarning)
+
+            class OldRichCompare(HasTraits):
+                bar = Any(rich_compare=True)
+
+        # Check for a DeprecationWarning.
+        self.assertEqual(len(warn_msgs), 1)
+        warn_msg = warn_msgs[0]
+        self.assertIs(warn_msg.category, DeprecationWarning)
+        self.assertIn(
+            "'rich_compare' metadata has been deprecated",
+            str(warn_msg.message)
+        )
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warn_msg.filename)
+
+        # Behaviour matches comparison_mode=ComparisonMode.identity_compare.
+        old_compare = OldRichCompare()
+        events = []
+        old_compare.on_trait_change(lambda: events.append(None), "bar")
+
+        some_list = [1, 2, 3]
+
+        self.assertEqual(len(events), 0)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [1, 2, 3]
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [4, 5, 6]
+        self.assertEqual(len(events), 2)

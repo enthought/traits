@@ -1,19 +1,12 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2007, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#  Author: David C. Morrill
-#  Date:   03/22/2007
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """ Core Trait definitions.
 """
@@ -29,54 +22,53 @@ from importlib import import_module
 import operator
 import re
 import sys
+try:
+    from os import fspath
+except ImportError:
+    fspath = None
 from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 import uuid
 
-from . import trait_handlers
 from .constants import DefaultValue, TraitKind, ValidateTrait
 from .trait_base import (
     strx,
     get_module_name,
+    HandleWeakRef,
     class_of,
     collection_default,
     EnumTypes,
+    RangeTypes,
     SequenceTypes,
     TypeTypes,
     Undefined,
     TraitsCache,
     xgetattr,
 )
+from .trait_converters import trait_from
 from .trait_dict_object import TraitDictEvent, TraitDictObject
-from .trait_list_object import TraitListObject
+from .trait_errors import TraitError
+from .trait_list_object import TraitListEvent, TraitListObject
 from .trait_set_object import TraitSetEvent, TraitSetObject
-
-from .trait_handlers import (
-    TraitType,
-    ThisClass,
-    items_event,
-    RangeTypes,
-    HandleWeakRef,
+from .trait_type import TraitType
+from .traits import (
+    Trait,
+    _TraitMaker,
+    _InstanceArgs,
 )
+from .util.import_symbol import import_symbol
 
+# TraitsUI integration imports
 from .editor_factories import (
     code_editor,
     html_editor,
     password_editor,
     shell_editor,
     date_editor,
+    datetime_editor,
     time_editor,
     list_editor,
 )
-from .traits import (
-    Trait,
-    trait_from,
-    _TraitMaker,
-    _InstanceArgs,
-)
-
-from .trait_errors import TraitError
-from .util.import_symbol import import_symbol
 
 
 # -------------------------------------------------------------------------------
@@ -920,6 +912,9 @@ class Callable(TraitType):
     #: A description of the type of value this trait accepts:
     info_text = "a callable value"
 
+    #: The C-level fast validator to use
+    fast_validate = (ValidateTrait.callable,)
+
     def validate(self, object, name, value):
         """ Validates that the value is a Python callable.
         """
@@ -969,25 +964,19 @@ class This(BaseType):
         if isinstance(value, object.__class__):
             return value
 
-        self.validate_failed(object, name, value)
+        self.error(object, name, value)
 
     def validate_none(self, object, name, value):
         if isinstance(value, object.__class__) or (value is None):
             return value
 
-        self.validate_failed(object, name, value)
+        self.error(object, name, value)
 
     def info(self):
         return "an instance of the same type as the receiver"
 
     def info_none(self):
         return "an instance of the same type as the receiver or None"
-
-    def validate_failed(self, object, name, value):
-        kind = type(value)
-        msg = "%s (i.e. %s)" % (str(kind)[1:-1], repr(value))
-
-        self.error(object, name, msg)
 
 
 class self(This):
@@ -1392,7 +1381,7 @@ class BaseFile(BaseStr):
     """
 
     #: A description of the type of value this trait accepts:
-    info_text = "a file name"
+    info_text = "a filename or object implementing the os.PathLike interface"
 
     def __init__(
         self,
@@ -1435,6 +1424,16 @@ class BaseFile(BaseStr):
 
             Note: The 'fast validator' version performs this check in C.
         """
+        if fspath is not None:
+            # Python 3.5 does not implement __fspath__
+            try:
+                # If value is of type os.PathLike, get the path representation
+                # The path representation could be either a str or bytes type
+                # If fspath returns bytes, further validation will fail.
+                value = fspath(value)
+            except TypeError:
+                pass
+
         validated_value = super(BaseFile, self).validate(object, name, value)
         if not self.exists:
             return validated_value
@@ -1489,9 +1488,6 @@ class File(BaseFile):
         -------------
         *value* or ''
         """
-        if not exists:
-            # Define the C-level fast validator to use:
-            self.fast_validate = (ValidateTrait.coerce, str)
 
         super(File, self).__init__(
             value, filter, auto_set, entries, exists, **metadata
@@ -1710,7 +1706,7 @@ class BaseRange(TraitType):
             exclude_mask |= 2
 
         if is_static and (vtype is not int):
-            self.init_fast_validator(kind, low, high, exclude_mask)
+            self.init_fast_validate(kind, low, high, exclude_mask)
 
         #: Assign type-corrected arguments to handler attributes:
         self._low = low
@@ -1718,7 +1714,7 @@ class BaseRange(TraitType):
         self._exclude_low = exclude_low
         self._exclude_high = exclude_high
 
-    def init_fast_validator(self, *args):
+    def init_fast_validate(self, *args):
         """ Does nothing for the BaseRange class. Used in the Range class to
             set up the fast validator.
         """
@@ -1882,22 +1878,22 @@ class BaseRange(TraitType):
 
             return "%s <%s %s" % (
                 self._type_desc,
-                "="[self._exclude_high :],
+                "="[self._exclude_high:],
                 high,
             )
 
         elif high is None:
             return "%s >%s %s" % (
                 self._type_desc,
-                "="[self._exclude_low :],
+                "="[self._exclude_low:],
                 low,
             )
 
         return "%s <%s %s <%s %s" % (
             low,
-            "="[self._exclude_low :],
+            "="[self._exclude_low:],
             self._type_desc,
-            "="[self._exclude_high :],
+            "="[self._exclude_high:],
             high,
         )
 
@@ -1930,7 +1926,7 @@ class Range(BaseRange):
         a C-level fast validator.
     """
 
-    def init_fast_validator(self, *args):
+    def init_fast_validate(self, *args):
         """ Set up the C-level fast validator.
         """
         self.fast_validate = args
@@ -1994,11 +1990,11 @@ class BaseEnum(TraitType):
 
             self.name = ""
             self.values = tuple(args)
-            self.init_fast_validator(ValidateTrait.enum, self.values)
+            self.init_fast_validate(ValidateTrait.enum, self.values)
 
             super(BaseEnum, self).__init__(default_value, **metadata)
 
-    def init_fast_validator(self, *args):
+    def init_fast_validate(self, *args):
         """ Does nothing for the BaseEnum class. Used in the Enum class to set
             up the fast validator.
         """
@@ -2065,7 +2061,7 @@ class Enum(BaseEnum):
         using a C-level fast validator.
     """
 
-    def init_fast_validator(self, *args):
+    def init_fast_validate(self, *args):
         """ Set up the C-level fast validator.
         """
         self.fast_validate = args
@@ -2083,19 +2079,8 @@ class BaseTuple(TraitType):
     def __init__(self, *types, **metadata):
         """ Returns a Tuple trait.
 
-        Parameters
-        ----------
-        types : zero or more arguments
-            Definition of the default and allowed tuples. If the first item of
-            *types* is a tuple, it is used as the default value.
-            The remaining argument list is used to form a tuple that constrains
-            the  values assigned to the returned trait. The trait's value must
-            be a tuple of the same length as the remaining argument list, whose
-            elements must match the types specified by the corresponding items
-            of the remaining argument list.
+        The default value is determined as follows:
 
-        Default Value
-        -------------
         1. If no arguments are specified, the default value is ().
         2. If a tuple is specified as the first argument, it is the default
            value.
@@ -2119,9 +2104,20 @@ class BaseTuple(TraitType):
         The trait's value must be a 3-element tuple whose first and second
         elements are strings, and whose third element is an integer. The
         default value is ``('','',0)``.
+
+        Parameters
+        ----------
+        types : zero or more arguments
+            Definition of the default and allowed tuples. If the first item of
+            *types* is a tuple, it is used as the default value.
+            The remaining argument list is used to form a tuple that constrains
+            the  values assigned to the returned trait. The trait's value must
+            be a tuple of the same length as the remaining argument list, whose
+            elements must match the types specified by the corresponding items
+            of the remaining argument list.
         """
         if len(types) == 0:
-            self.init_fast_validator(ValidateTrait.coerce, tuple, None, list)
+            self.init_fast_validate(ValidateTrait.coerce, tuple, None, list)
 
             super(BaseTuple, self).__init__((), **metadata)
 
@@ -2135,7 +2131,7 @@ class BaseTuple(TraitType):
                 types = [Trait(element) for element in default_value]
 
         self.types = tuple([trait_from(type) for type in types])
-        self.init_fast_validator(ValidateTrait.tuple, self.types)
+        self.init_fast_validate(ValidateTrait.tuple, self.types)
 
         if default_value is None:
             default_value = tuple(
@@ -2144,7 +2140,7 @@ class BaseTuple(TraitType):
 
         super(BaseTuple, self).__init__(default_value, **metadata)
 
-    def init_fast_validator(self, *args):
+    def init_fast_validate(self, *args):
         """ Saves the validation parameters.
         """
         self.no_type_check = args[0] == ValidateTrait.coerce
@@ -2214,10 +2210,10 @@ class Tuple(BaseTuple):
         using a C-level fast validator.
     """
 
-    def init_fast_validator(self, *args):
+    def init_fast_validate(self, *args):
         """ Set up the C-level fast validator.
         """
-        super(Tuple, self).init_fast_validator(*args)
+        super(Tuple, self).init_fast_validate(*args)
 
         self.fast_validate = args
 
@@ -2242,12 +2238,14 @@ class ValidatedTuple(BaseTuple):
             A string describing the custom validation to use for the error
             messages.
 
-        For example::
+        Example
+        -------
+        The definition::
 
           value_range = ValidatedTuple(Int(0), Int(1), fvalidate=lambda x: x[0] < x[1])
 
-        This definition will accept only tuples ``(a, b)`` containing two integers
-        that satisfy ``a < b``.
+        will accept only tuples ``(a, b)`` containing two integers that
+        satisfy ``a < b``.
         """
         metadata.setdefault("fvalidate", None)
         metadata.setdefault("fvalidate_info", "")
@@ -2392,7 +2390,13 @@ class List(TraitType):
     # -- Private Methods --------------------------------------------------------
 
     def items_event(self):
-        return items_event()
+        cls = self.__class__
+        if cls._items_event is None:
+            cls._items_event = Event(
+                TraitListEvent, is_base=False
+            ).as_ctrait()
+
+        return cls._items_event
 
 
 # -------------------------------------------------------------------------------
@@ -2693,7 +2697,7 @@ class BaseClass(TraitType):
         col = klass.rfind(".")
         if col >= 0:
             module = klass[:col]
-            klass = klass[col + 1 :]
+            klass = klass[col + 1:]
 
         theClass = getattr(sys.modules.get(module), klass, None)
         if (theClass is None) and (col >= 0):
@@ -3034,10 +3038,6 @@ class Supports(Instance):
         return ctrait
 
 
-# Alias defined for backward compatibility with Traits 4.3.0
-AdaptedTo = Supports
-
-
 class AdaptsTo(Supports):
     """ A traits whose value must support a specified protocol.
 
@@ -3172,6 +3172,14 @@ class Type(BaseClass):
 
 
 # -------------------------------------------------------------------------------
+#  'Subclass' trait:
+# -------------------------------------------------------------------------------
+
+# Is just an alias for the Type trait
+Subclass = Type
+
+
+# -------------------------------------------------------------------------------
 #  'Event' trait:
 # -------------------------------------------------------------------------------
 
@@ -3198,10 +3206,6 @@ class Event(TraitType):
             return "any value"
 
         return trait.full_info(object, name, value)
-
-
-#  Handle circular module dependencies:
-trait_handlers.Event = Event
 
 # -------------------------------------------------------------------------------
 #  'Button' trait:
@@ -3570,6 +3574,10 @@ class WeakRef(Instance):
 Date = BaseInstance(datetime.date, editor=date_editor)
 
 
+# -- DateTime Trait definition ------------------------------------------------
+DateTime = BaseInstance(datetime.datetime, editor=datetime_editor)
+
+
 # -- Time Trait definition ----------------------------------------------------
 Time = BaseInstance(datetime.time, editor=time_editor)
 
@@ -3580,6 +3588,10 @@ Time = BaseInstance(datetime.time, editor=time_editor)
 
 # Everything from this point onwards is deprecated, and has a simple
 # drop-in replacement.
+
+#: A trait whose value must support a specified protocol. This is
+#: an alias for :class:`Supports`. Use ``Supports`` instead.
+AdaptedTo = Supports
 
 #: A trait whose value must be a (Unicode) string. This is an alias for
 #: :class:`BaseStr`. Use ``BaseStr`` instead.
@@ -3668,7 +3680,7 @@ ListMethod = List(MethodType)
 
 #: List of container type values; default value is ``[]``. This trait type is
 #: deprecated. Use ``List(This(allow_none=False))`` instead.
-ListThis = List(ThisClass)
+ListThis = List(This(allow_none=False))
 
 # -- Dictionary Traits --------------------------------------------------------
 

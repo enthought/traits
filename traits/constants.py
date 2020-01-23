@@ -1,12 +1,12 @@
-#  Copyright (c) 2019, Enthought, Inc.
-#  All rights reserved.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  Thanks for using Enthought open source!
+# Thanks for using Enthought open source!
 
 from enum import IntEnum
 
@@ -103,6 +103,9 @@ class ValidateTrait(IntEnum):
     #: A floating-point check.
     float = 21
 
+    #: A callable check.
+    callable = 22
+
 
 class ComparisonMode(IntEnum):
     """ Comparison mode.
@@ -110,12 +113,17 @@ class ComparisonMode(IntEnum):
     Indicates when trait change notifications should be generated based upon
     the result of comparing the old and new values of a trait assignment:
 
-    * 0 (no_compare): The values are not compared and a trait change
-        notification is generated on each assignment.
-    * 1 (object_id_compare): A trait change notification is
-        generated if the old and new values are not the same object.
-    * 2 (equality_compare): A trait change notification is generated if the
-        old and new values are not equal using Python's standard equality
+    Enumeration members:
+
+    no_compare
+        The values are not compared and a trait change notification is
+        generated on each assignment.
+    object_id_compare
+        A trait change notification is generated if the old and new values are
+        not the same object.
+    equality_compare
+        A trait change notification is generated if the old and new values are
+        not the same object, and not equal using Python's standard equality
         testing. This is the default.
     """
 
@@ -127,6 +135,18 @@ class ComparisonMode(IntEnum):
 
     #: Compare values by equality.
     equality_compare = 2
+
+
+# Backward compatibility for comparison mode constants.
+
+#: Deprecated alias for ``ComparisonMode.no_compare``.
+NO_COMPARE = ComparisonMode.no_compare
+
+#: Deprecated alias for ``ComparisonMode.object_id_compare``.
+OBJECT_IDENTITY_COMPARE = ComparisonMode.object_id_compare
+
+#: Deprecated alias for ``ComparisonMode.equality_compare``.
+RICH_COMPARE = ComparisonMode.equality_compare
 
 
 class DefaultValue(IntEnum):
