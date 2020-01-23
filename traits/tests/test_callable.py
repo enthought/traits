@@ -92,6 +92,7 @@ class TestCallable(unittest.TestCase):
 
 
 class TestBaseCallable(unittest.TestCase):
+
     def test_override_validate(self):
         """ Verify `BaseCallable` can be subclassed to create new traits.
         """
