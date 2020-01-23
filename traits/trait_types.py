@@ -897,6 +897,9 @@ class Password(String):
 
 class BaseCallable(TraitType):
     """ Defines a trait whose value must be a Python callable.
+
+    This class can be subclassed to define new callable trait types; for
+    example, by overriding the validate method.
     """
 
     #: The standard metadata for the trait:
@@ -925,6 +928,8 @@ class BaseCallable(TraitType):
 class Callable(BaseCallable):
     """ Defines a trait whose value must be a Python callable using a
     C level validator.
+
+    Subclass :class:`~.BaseCallable` to define new callable trait types.
     """
 
     #: The C-level fast validator to use
