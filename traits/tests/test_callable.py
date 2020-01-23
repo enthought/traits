@@ -11,7 +11,14 @@
 import inspect
 import unittest
 
-from traits.api import BaseCallable, Callable, HasTraits, TraitError
+from traits.api import (
+    BaseCallable,
+    Callable,
+    Either,
+    HasTraits,
+    Str,
+    TraitError,
+)
 
 
 def function():
@@ -27,6 +34,8 @@ class Dummy(object):
 class MyCallable(HasTraits):
 
     value = Callable()
+
+    callable_or_str = Either(Callable(), Str())
 
 
 class MyBaseCallable(HasTraits):

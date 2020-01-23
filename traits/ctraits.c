@@ -3838,6 +3838,12 @@ validate_trait_complex(
                 }
                 return result;
 
+            case 22: /* Callable check: */
+                if (value == Py_None || PyCallable_Check(value)) {
+                    goto done;
+                }
+                break;
+
             default: /* Should never happen...indicates an internal error: */
                 goto error;
         }
@@ -4223,7 +4229,7 @@ static int
 _set_trait_comparison_mode(trait_object *trait, PyObject *value, void *closure)
 {
     long comparison_mode = PyLong_AsLong(value);
-    
+
     if (comparison_mode == -1 && PyErr_Occurred()) {
         return -1;
     }
@@ -4272,7 +4278,7 @@ _get_trait_comparison_mode_int(trait_object *trait, void *closure)
     else {
         assert(compare_flag == TRAIT_EQUALITY_COMPARE);
         i_comparison_mode = 2;
-    } 
+    }
 
     return PyLong_FromLong(i_comparison_mode);
 }
