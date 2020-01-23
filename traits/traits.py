@@ -117,6 +117,17 @@ DefaultValues = {
 }
 
 
+# This function is needed when unpickling historical pickles (pickles
+# created on versions of Traits prior to 6.0). It can be removed when
+# there's no longer any need to support pickles generated on older
+# versions of Traits.
+
+def __newobj__(cls, *args):
+    """ Unpickles new-style objects.
+    """
+    return cls.__new__(cls, *args)
+
+
 # --- 'instance' traits ---------------------------------------------------------
 
 
