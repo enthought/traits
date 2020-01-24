@@ -168,6 +168,8 @@ Traits
 
 .. autodata:: Date
 
+.. autodata:: Datetime
+
 .. autodata:: Time
 
 Deprecated Traits
