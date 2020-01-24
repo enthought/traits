@@ -1670,6 +1670,8 @@ class BaseRange(TraitType):
         self._low_name = self._high_name = ""
         self._vtype = Undefined
 
+        kind = None
+
         if vtype is float:
             self._validate = "float_validate"
             kind = ValidateTrait.float_range
@@ -1682,7 +1684,6 @@ class BaseRange(TraitType):
 
         elif vtype is int:
             self._validate = "int_validate"
-            kind = ValidateTrait.int_range
             self._type_desc = "an integer"
             if low is not None:
                 low = int(low)
@@ -1720,7 +1721,7 @@ class BaseRange(TraitType):
         if exclude_high:
             exclude_mask |= 2
 
-        if is_static and (vtype is not int):
+        if is_static and kind is not None:
             self.init_fast_validate(kind, low, high, exclude_mask)
 
         #: Assign type-corrected arguments to handler attributes:
