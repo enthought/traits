@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 class TraitDictEvent(object):
-    """ An object reporting in-place changes to a traits dicts.
+    """ An object reporting in-place changes to a traits dict.
 
     Parameters
     ----------

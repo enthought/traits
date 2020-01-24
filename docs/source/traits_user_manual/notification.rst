@@ -688,7 +688,7 @@ handler with the ``[]`` suffix as noted in the Table
 :ref:`semantics-of-extended-name-notation-table`, or you can define an
 *name*\ _items event handler.
 
-For these trait types, an auxilliary *name*\ _items Event traits are defined which
+For these trait types, an auxilliary *name*\ _items Event trait is defined which
 you can listen to either with a static handler _\ *name*\ _items_changed()
 or a dynamic handler which matches *name*\ _items, and these handlers will be
 called with notifications of changes to the contents of the list, set or
@@ -701,7 +701,7 @@ For these handlers the *new* parameter is a :index:`TraitListEvent`,
 indicate the nature of the change and, because they are Event handlers, the
 *old* parameter is Undefined.
 
-All of these event object have **added** and **removed** attributes that
+All of these event objects have **added** and **removed** attributes that
 hold a list, set or dictionary of the items that were added and removed,
 respectively.
 

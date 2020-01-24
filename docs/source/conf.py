@@ -182,9 +182,6 @@ html_use_smartypants = True
 # template names.
 # html_additional_pages = {}
 
-# If false, no module index is generated.
-html_use_modindex = True
-
 # If false, no index is generated.
 html_use_index = True
 
