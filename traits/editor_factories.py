@@ -170,17 +170,17 @@ def _datetime_to_datetime_str(datetime_obj, format="%Y-%m-%dT%H:%M:%S"):
 
 def datetime_editor():
     """ Factory function that returns an editor with date & time for
-    editing DateTime values.
+    editing Datetime values.
     """
 
     try:
-        from traitsui.api import DateTimeEditor
+        from traitsui.api import DatetimeEditor
 
-        return DateTimeEditor()
+        return DatetimeEditor()
 
     except ImportError:
 
-        logger.warn(msg="Could not import DateTimeEditor from "
+        logger.warn(msg="Could not import DatetimeEditor from "
                         "traitsui.api, using TextEditor instead")
 
         from traitsui.api import TextEditor
