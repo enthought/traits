@@ -3845,6 +3845,7 @@ validate_trait_complex(
                 break;
 
             default: /* Should never happen...indicates an internal error: */
+                assert("Unexpected validator; please report");
                 goto error;
         }
     }
