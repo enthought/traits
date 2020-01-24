@@ -1,6 +1,94 @@
 Traits CHANGELOG
 ================
 
+Release 6.0.0
+-------------
+
+Released: YYYY-MM-DD
+
+Enhancements
+
+* New ``BaseCallable`` trait for easy subclassing. (#795)
+* ``as_ctrait`` converter to create parametric traits. (#783)
+* Fast validation for ``Callable`` trait. (#767)
+* Support for CTrait introspection: ``comparison_mode`` and
+  various flags. (#758, #735, #693, #666)
+* ``PathLike`` suport for ``File`` trait. (#736)
+* New Subclass and Datetime traits. (#739, #737)
+* Python Enums are now valid values for ``Enum`` trait. (#685)
+* Support for full ``HasTraits`` introspection. (#704, #702).
+
+Fixes
+
+* Don't send traits notification if no items deleted from ``List``. (#740)
+* Ensure added/ removed lists in list notification handlers are correctly 
+  formed. (#771)
+* Fix ``clear`` method in ``TraitListObject`` to send appropriate
+  notifications. (#732)
+* Handle name mangling in ``HasTraits`` correctly. (#724)
+* Bug fixes for ``bytes_editor`` and ``password_editor``. (#660)
+
+Changes
+
+* Always use pickle protocol 3 when pickling objects 
+  in ``configure_traits``. (#796)
+
+Miscellaneous
+
+* Add machinery for testing unpickling of historical pickles. (#787)
+* Fix ``test_property_notifications`` unit test. (#768)
+* Fix dynamic notifiers unit tests: thread handling (#731) 
+  and test repeatability (#729)
+* Fix and cleanup Sphinx configuration. (#696)
+
+Deprecated
+
+* Pickling of ``HasTraits`` objects using ``configure_traits``. (#792)
+* ``TraitDict``, ``TraitList`` and ``TraitTuple`` trait handlers. (#770)
+* ``AdaptedTo`` trait. (#760)
+
+Removed
+
+* ``ThisClass`` trait handler. (#782)
+* ``TraitClass`` trait handler. (#711)
+* ``TraitExpression`` trait handler. (#699)
+* ``TraitCallable` trait handler. (#698)
+
+Not User visible
+
+* Fix validation of ``Callable`` in ``Either`` trait. (#798)
+* Refactor trait converters to use ``as_ctrait``. (#794)
+* Enable C asserts. (#791)
+* Remove prefix list special handling. (#780)
+* Renamed ``init_fast_validator`` method as ``init_fast_validate`` in fast
+  validated traits. (#777)
+* Abort CI on compiler warnings (#769)
+* Refactor flake8 configuration. (#762)
+* Changed ``TraitInstance`` base class to ``TraitHandler`` (#761)
+* Add and fix copyright headers. (#754)
+* Removed unnecessary over-ridden copy method from TraitSetObject. (#759)
+* Clean up test suite. (#752)
+* flake8 cleaning. (#749, #753, #746, #747, #748)
+* Delete dead code. (#598)
+* Major refactor to remove circular dependencies (#730)
+* Reformat ctraits.c (#715)
+* Note that get_prefix_trait returns a borrowed reference. (#726)
+* Fix Sphinx warnings (#717)
+* Fix confusing error message when [None] passed into
+  List(This(allow_none=False)) trait (#734)
+* Fix a Sphinx deprecation warning in tests. (#716)
+* Remove empty_tuple and empty_dict globals from ctraits.c (#714)
+* Move and document ComparisonMode member aliases (#719)
+* Replace uses of ``__import__`` with ``import_module``. (#712)
+* Make flags field unsigned. (#708)
+* Clean up METH_NOARGS functions (#701)
+* Fix unnecessarily repeated characters in a test (#700)
+* Handle missing TraitError _better_ (#682)
+* Move editor factories (#661)
+* Create modules for Trait container object classes (#677)
+* Add Enum constants for trait kinds, validators and default values (#680)
+
+
 Release 5.2.0
 -------------
 
