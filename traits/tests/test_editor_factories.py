@@ -36,10 +36,6 @@ class SimpleEditorTestMixin:
         self.factory = getattr(traits.editor_factories, self.factory_name)
         self.traitsui_factory = getattr(traitsui.api, self.traitsui_name)
 
-    def tearDown(self):
-        import traits.editor_factories
-        setattr(traits.editor_factories, self.cache_name, None)
-
     def test_editor(self):
         editor = self.factory()
 
@@ -47,6 +43,13 @@ class SimpleEditorTestMixin:
             self.assertIsInstance(editor, traitsui.api.BasicEditorFactory)
         else:
             self.assertIsInstance(editor, self.traitsui_factory)
+
+
+class SimpleEditorWithCachingTestMixin(SimpleEditorTestMixin):
+
+    def tearDown(self):
+        import traits.editor_factories
+        setattr(traits.editor_factories, self.cache_name, None)
 
     def test_editor_caching(self):
         editor_1 = self.factory()
@@ -56,35 +59,43 @@ class SimpleEditorTestMixin:
 
 
 @requires_traitsui
-class TestDateEditor(SimpleEditorTestMixin, unittest.TestCase):
+class TestDateEditor(SimpleEditorWithCachingTestMixin, unittest.TestCase):
     cache_name = "DateEditor"
     traitsui_name = "DateEditor"
     factory_name = "date_editor"
 
 
 @requires_traitsui
-class TestCodeEditor(SimpleEditorTestMixin, unittest.TestCase):
+@unittest.skipIf(getattr(traitsui.api, 'DatetimeEditor', None) is None,
+                 "DatetimeEditor is not in traitsui.api")
+class TestDateTimeEditor(SimpleEditorTestMixin, unittest.TestCase):
+    traitsui_name = "DatetimeEditor"
+    factory_name = "datetime_editor"
+
+
+@requires_traitsui
+class TestCodeEditor(SimpleEditorWithCachingTestMixin, unittest.TestCase):
     cache_name = "SourceCodeEditor"
     traitsui_name = "CodeEditor"
     factory_name = "code_editor"
 
 
 @requires_traitsui
-class TestHTMLEditor(SimpleEditorTestMixin, unittest.TestCase):
+class TestHTMLEditor(SimpleEditorWithCachingTestMixin, unittest.TestCase):
     cache_name = "HTMLTextEditor"
     traitsui_name = "HTMLEditor"
     factory_name = "html_editor"
 
 
 @requires_traitsui
-class TestShellEditor(SimpleEditorTestMixin, unittest.TestCase):
+class TestShellEditor(SimpleEditorWithCachingTestMixin, unittest.TestCase):
     cache_name = "PythonShellEditor"
     traitsui_name = "ShellEditor"
     factory_name = "shell_editor"
 
 
 @requires_traitsui
-class TestTimeEditor(SimpleEditorTestMixin, unittest.TestCase):
+class TestTimeEditor(SimpleEditorWithCachingTestMixin, unittest.TestCase):
     cache_name = "TimeEditor"
     traitsui_name = "TimeEditor"
     factory_name = "time_editor"
