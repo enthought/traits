@@ -62,14 +62,6 @@ class TestDateEditor(SimpleEditorTestMixin, unittest.TestCase):
     factory_name = "date_editor"
 
 
-@unittest.skip("DateTimeEditor does not exist in traitsui")
-@requires_traitsui
-class TestDateTimeEditor(SimpleEditorTestMixin, unittest.TestCase):
-    cache_name = "DateTimeEditor"
-    traitsui_name = "DateTimeEditor"
-    factory_name = "datetime_editor"
-
-
 @requires_traitsui
 class TestCodeEditor(SimpleEditorTestMixin, unittest.TestCase):
     cache_name = "SourceCodeEditor"
