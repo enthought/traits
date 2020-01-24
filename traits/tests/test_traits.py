@@ -988,16 +988,18 @@ class test_complex_value(test_base2):
         )
 
 
-class list_value(HasTraits):
-    # Trait definitions:
-    list1 = Trait([2], TraitList(Trait([1, 2, 3, 4]), maxlen=4))
-    list2 = Trait([2], TraitList(Trait([1, 2, 3, 4]), minlen=1, maxlen=4))
-    alist = List()
-
-
 class test_list_value(test_base2):
-
     def setUp(self):
+        with self.assertWarns(DeprecationWarning):
+
+            class list_value(HasTraits):
+                # Trait definitions:
+                list1 = Trait([2], TraitList(Trait([1, 2, 3, 4]), maxlen=4))
+                list2 = Trait(
+                    [2], TraitList(Trait([1, 2, 3, 4]), minlen=1, maxlen=4)
+                )
+                alist = List()
+
         self.obj = list_value()
         self.last_event = None
 
