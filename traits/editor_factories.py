@@ -170,7 +170,7 @@ def _datetime_to_datetime_str(datetime_obj, format="%Y-%m-%dT%H:%M:%S"):
 
 def datetime_editor():
     """ Factory function that returns an editor with date & time for
-    editing DateTime values.
+    editing Datetime values.
     """
 
     try:

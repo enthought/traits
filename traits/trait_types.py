@@ -3588,7 +3588,7 @@ class WeakRef(Instance):
 Date = BaseInstance(datetime.date, editor=date_editor)
 
 
-# -- DateTime Trait definition ------------------------------------------------
+# -- Datetime Trait definition ------------------------------------------------
 Datetime = BaseInstance(datetime.datetime, editor=datetime_editor)
 
 
