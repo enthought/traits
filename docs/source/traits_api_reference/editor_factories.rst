@@ -15,6 +15,8 @@ Functions
 
 .. autofunction:: date_editor
 
+.. autofunction:: datetime_editor
+
 .. autofunction:: html_editor
 
 .. autofunction:: list_editor
