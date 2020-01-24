@@ -174,13 +174,13 @@ def datetime_editor():
     """
 
     try:
-        from traitsui.api import DateTimeEditor
+        from traitsui.api import DatetimeEditor
 
-        return DateTimeEditor()
+        return DatetimeEditor()
 
     except ImportError:
 
-        logger.warn(msg="Could not import DateTimeEditor from "
+        logger.warn(msg="Could not import DatetimeEditor from "
                         "traitsui.api, using TextEditor instead")
 
         from traitsui.api import TextEditor

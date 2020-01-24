@@ -104,7 +104,7 @@ from .trait_types import (  # noqa: F401
     Symbol,
     WeakRef,
     Date,
-    DateTime,
+    Datetime,
     Time,
     Supports,
 )

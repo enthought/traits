@@ -3589,7 +3589,7 @@ Date = BaseInstance(datetime.date, editor=date_editor)
 
 
 # -- DateTime Trait definition ------------------------------------------------
-DateTime = BaseInstance(datetime.datetime, editor=datetime_editor)
+Datetime = BaseInstance(datetime.datetime, editor=datetime_editor)
 
 
 # -- Time Trait definition ----------------------------------------------------
