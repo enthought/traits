@@ -11,10 +11,10 @@ Enhancements
 * New ``BaseCallable`` trait for easy subclassing. (#795)
 * ``as_ctrait`` converter to create parametric traits. (#783)
 * Fast validation for ``Callable`` trait. (#767)
-* Support for CTrait introspection: ``comparison_mode`` and
+* Support for ``CTrait`` introspection: ``comparison_mode`` and
   various flags. (#758, #735, #693, #666)
 * ``PathLike`` suport for ``File`` trait. (#736)
-* New Subclass and Datetime traits. (#739, #737)
+* New ``Subclass`` and ``Datetime`` traits. (#739, #737)
 * Python Enums are now valid values for ``Enum`` trait. (#685)
 * Support for full ``HasTraits`` introspection. (#704, #702).
 
@@ -38,7 +38,7 @@ Miscellaneous
 * Add machinery for testing unpickling of historical pickles. (#787)
 * Fix ``test_property_notifications`` unit test. (#768)
 * Fix dynamic notifiers unit tests: thread handling (#731) 
-  and test repeatability (#729)
+  and test repeatability. (#729)
 * Fix and cleanup Sphinx configuration. (#696)
 
 Deprecated
@@ -62,31 +62,31 @@ Not User visible
 * Remove prefix list special handling. (#780)
 * Renamed ``init_fast_validator`` method as ``init_fast_validate`` in fast
   validated traits. (#777)
-* Abort CI on compiler warnings (#769)
+* Abort CI on compiler warnings. (#769)
 * Refactor flake8 configuration. (#762)
-* Changed ``TraitInstance`` base class to ``TraitHandler`` (#761)
+* Changed ``TraitInstance`` base class to ``TraitHandler``. (#761)
 * Add and fix copyright headers. (#754)
 * Removed unnecessary over-ridden copy method from TraitSetObject. (#759)
 * Clean up test suite. (#752)
 * flake8 cleaning. (#749, #753, #746, #747, #748)
 * Delete dead code. (#598)
-* Major refactor to remove circular dependencies (#730)
+* Major refactor to remove circular dependencies. (#730)
 * Reformat ctraits.c (#715)
 * Note that get_prefix_trait returns a borrowed reference. (#726)
-* Fix Sphinx warnings (#717)
+* Fix Sphinx warnings. (#717)
 * Fix confusing error message when [None] passed into
-  List(This(allow_none=False)) trait (#734)
+  List(This(allow_none=False)) trait. (#734)
 * Fix a Sphinx deprecation warning in tests. (#716)
-* Remove empty_tuple and empty_dict globals from ctraits.c (#714)
-* Move and document ComparisonMode member aliases (#719)
+* Remove empty_tuple and empty_dict globals from ctraits.c. (#714)
+* Move and document ComparisonMode member aliases. (#719)
 * Replace uses of ``__import__`` with ``import_module``. (#712)
 * Make flags field unsigned. (#708)
-* Clean up METH_NOARGS functions (#701)
-* Fix unnecessarily repeated characters in a test (#700)
-* Handle missing TraitError _better_ (#682)
-* Move editor factories (#661)
-* Create modules for Trait container object classes (#677)
-* Add Enum constants for trait kinds, validators and default values (#680)
+* Clean up METH_NOARGS functions. (#701)
+* Fix unnecessarily repeated characters in a test. (#700)
+* Handle missing TraitError _better_. (#682)
+* Move editor factories. (#661)
+* Create modules for Trait container object classes. (#677)
+* Add Enum constants for trait kinds, validators and default values. (#680)
 
 
 Release 5.2.0
