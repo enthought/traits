@@ -4951,21 +4951,12 @@ PyDoc_STRVAR(
     "    Whether to modify the delegate when the value of this trait\n"
     "    is modified.\n");
 
-PyDoc_STRVAR(
-    property_doc,
-    "property()\n"
-    "property(get, get_n, set, set_n, validate, validate_n)\n"
+PyDoc_STVAR(set_property_doc,
+    "set_property(get, set, validate)\n"
     "\n"
-    "Get or set property fields for this trait.\n"
+    "Set property fields for this trait.\n"
     "\n"
-    "When called with no arguments on a property trait, this method returns a\n"
-    "tuple (get, set, validate) of length 3 containing the getter, setter and\n"
-    "validator for this property trait.\n"
-    "\n"
-    "When called with no arguments on a non-property trait, this method\n"
-    "returns *None*.\n"
-    "\n"
-    "Otherwise, the *property* method expects six arguments, and uses these\n"
+    "The *set_property* method expects three arguments, and uses these\n"
     "arguments to set the get, set and validation for the trait. It also\n"
     "sets the property flag on the trait.\n"
     "\n"
@@ -4981,9 +4972,6 @@ PyDoc_STRVAR(
     "    - a pair of arguments ``obj, name``\n"
     "    - a triple of arguments ``obj, name, trait``\n"
     "\n"
-    "get_n : int\n"
-    "    Number of arguments to supply to the getter. This should be\n"
-    "    between 0 and 3, inclusive.\n"
     "set : callable\n"
     "    Function called when setting the value of this property trait.\n"
     "    This function will be called with one of the following argument\n"
@@ -4994,9 +4982,6 @@ PyDoc_STRVAR(
     "    - a pair of arguments ``obj, value``\n"
     "    - a triple of arguments ``obj, name, value``\n"
     "\n"
-    "set_n : int\n"
-    "    Number of arguments to supply to the setter. This should be\n"
-    "    between 0 and 3, inclusive.\n"
     "validate : callable or None\n"
     "    Function called for validation. This function will be called\n"
     "    with one of the following argument combinations, depending on\n"
@@ -5006,10 +4991,19 @@ PyDoc_STRVAR(
     "    - a single argument ``value``\n"
     "    - a pair of arguments ``obj, value``\n"
     "    - a triple of arguments ``obj, name, value``\n"
+    "\n");
+
+PyDoc_STVAR(get_property_doc,
+    "get_property()\n"
     "\n"
-    "validate_n : int\n"
-    "    Number of arguments to supply to the validator. This should be\n"
-    "    between 0 and 3, inclusive.\n");
+    "Get the property fields for this trait.\n"
+    "\n"
+    "When called with no arguments on a property trait, this method returns a\n"
+    "tuple (get, set, validate) of length 3 containing the getter, setter and\n"
+    "validator for this property trait.\n"
+    "\n"
+    "When called with no arguments on a non-property trait, this method\n"
+    "returns *None*.\n");
 
 PyDoc_STRVAR(
     clone_doc,
@@ -5069,9 +5063,9 @@ static PyMethodDef trait_methods[] = {
     {"delegate", (PyCFunction)_trait_delegate, METH_VARARGS,
      PyDoc_STR("delegate(delegate_name,prefix,prefix_type,modify_delegate)")},
     {"set_property", (PyCFunction)_trait_set_property, METH_VARARGS,
-     PyDoc_STR("set_property(get,set,validate)")},
+     set_property_doc},
     {"get_property", (PyCFunction)_trait_get_property, METH_VARARGS,
-     PyDoc_STR("get_property()")},
+     get_property_doc},
     {"clone", (PyCFunction)_trait_clone, METH_VARARGS,
      clone_doc},
     {"_notifiers", (PyCFunction)_trait_notifiers, METH_VARARGS,
