@@ -68,7 +68,7 @@ class TestDateEditor(SimpleEditorWithCachingTestMixin, unittest.TestCase):
 @requires_traitsui
 @unittest.skipIf(getattr(traitsui.api, 'DatetimeEditor', None) is None,
                  "DatetimeEditor is not in traitsui.api")
-class TestDateTimeEditor(SimpleEditorTestMixin, unittest.TestCase):
+class TestDatetimeEditor(SimpleEditorTestMixin, unittest.TestCase):
     traitsui_name = "DatetimeEditor"
     factory_name = "datetime_editor"
 
