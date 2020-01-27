@@ -1428,6 +1428,43 @@ set_has_traits_dict(has_traits_object *obj, PyObject *value, void *closure)
 +----------------------------------------------------------------------------*/
 
 PyDoc_STRVAR(
+    has_traits_trait_property_changed_doc,
+    "trait_property_changed(name, old_value[, new_value])\n"
+    "\n"
+    "Call notifiers when a trait property value is explicitly changed.\n"
+    "\n"
+    "Calls trait and object notifiers for a property value change.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "name : str\n"
+    "    Name of the trait whose value has changed\n"
+    "old_value : any\n"
+    "    Old value for this trait.\n"
+    "new_value : any, optional\n"
+    "    New value for this trait. If the new value is not provided,\n"
+    "    it's looked up on the object.\n");
+
+PyDoc_STRVAR(
+    has_traits_trait_items_event_doc,
+/*
+trait_items_event(name, event_object, event_trait)
+
+Fire an items event for changes to a Traits collection.
+
+Parameters
+----------
+name : str
+    Name of the trait for which an event is being fired.
+    (XXX includes the _items part?)
+
+
+
+*/
+)
+
+
+PyDoc_STRVAR(
     _trait_notifications_enabled_doc,
     "_trait_notifications_enabled()\n"
     "\n"
@@ -1463,20 +1500,31 @@ PyDoc_STRVAR(
     "False.\n");
 
 static PyMethodDef has_traits_methods[] = {
-    {"trait_property_changed", (PyCFunction)_has_traits_property_changed,
+    {
+        "trait_property_changed",
+        (PyCFunction)_has_traits_property_changed,
+        METH_VARARGS,
+        has_traits_trait_property_changed_doc
+    },
+    {
+        "trait_items_event",
+        (PyCFunction)_has_traits_items_event,
+        METH_VARARGS,
+        PyDoc_STR("trait_items_event(event_trait,name,items_event)")
+    },
+    {"_trait_change_notify",
+    (PyCFunction)_has_traits_change_notify,
      METH_VARARGS,
-     PyDoc_STR("trait_property_changed(name,old_value[,new_value])")},
-    {"trait_items_event", (PyCFunction)_has_traits_items_event, METH_VARARGS,
-     PyDoc_STR("trait_items_event(event_trait,name,items_event)")},
-    {"_trait_change_notify", (PyCFunction)_has_traits_change_notify,
-     METH_VARARGS, PyDoc_STR("_trait_change_notify(boolean)")},
+     PyDoc_STR("_trait_change_notify(boolean)")},
     {
         "_trait_notifications_enabled",
         (PyCFunction)_has_traits_notifications_enabled,
         METH_NOARGS,
         _trait_notifications_enabled_doc,
     },
-    {"_trait_veto_notify", (PyCFunction)_has_traits_veto_notify, METH_VARARGS,
+    {"_trait_veto_notify",
+     (PyCFunction)_has_traits_veto_notify,
+     METH_VARARGS,
      PyDoc_STR("_trait_veto_notify(boolean)")},
     {
         "_trait_notifications_vetoed",
