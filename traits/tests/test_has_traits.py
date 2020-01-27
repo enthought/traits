@@ -307,3 +307,17 @@ class TestHasTraits(unittest.TestCase):
         old_count = target.event_count
         target.event = event
         self.assertEqual(target.event_count, old_count + 1)
+
+    def test_traits_inited(self):
+        foo = HasTraits()
+
+        self.assertTrue(foo.traits_inited())
+
+    def test_set_traits_inited(self):
+        foo = HasTraits().__new__(HasTraits)
+
+        self.assertFalse(foo.traits_inited())
+
+        foo.set_traits_inited()
+
+        self.assertTrue(foo.traits_inited())
