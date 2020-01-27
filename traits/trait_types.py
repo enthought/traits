@@ -35,7 +35,7 @@ from .trait_base import (
     get_module_name,
     HandleWeakRef,
     class_of,
-    collection_default,
+    enum_default,
     EnumTypes,
     RangeTypes,
     safe_contains,
@@ -1996,7 +1996,7 @@ class BaseEnum(TraitType):
             default_value = args[0]
             if (len(args) == 1) and isinstance(default_value, EnumTypes):
                 args = default_value
-                default_value = collection_default(args)
+                default_value = enum_default(args)
             elif (len(args) == 2) and isinstance(args[1], EnumTypes):
                 args = args[1]
 
@@ -2059,7 +2059,7 @@ class BaseEnum(TraitType):
         value = self.get_value(object, name, trait)
         values = xgetattr(object, self.name)
         if not safe_contains(value, values):
-            value = collection_default(values)
+            value = enum_default(values)
         return value
 
     def _set(self, object, name, value):
