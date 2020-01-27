@@ -1314,12 +1314,11 @@ static PyObject *
 _has_traits_inited(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
 {
     if (obj->flags & HASTRAITS_INITED) {
-        Py_INCREF(Py_True);
-        return Py_True;
+        Py_RETURN_TRUE;
     }
-
-    Py_INCREF(Py_False);
-    return Py_False;
+    else {
+        Py_RETURN_FALSE;
+    }
 }
 
 
