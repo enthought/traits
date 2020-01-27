@@ -212,11 +212,11 @@ def safe_contains(value, container):
 
 
 def enum_default(values):
-    """ Get the first item of an EnumType, returning None if empty.
+    """ Get a default value from the valid values of an Enum trait.
 
     Parameters
     ----------
-    values : EnumType
+    values : tuple, list or enum.Enum
         The collection of valid values for an enum trait.
 
     Returns
@@ -225,7 +225,6 @@ def enum_default(values):
         The first valid value, or None if the collection is empty.
     """
     if isinstance(values, enum.EnumMeta):
-        # XXX special-case enum.Enums; generalize to Collections?
         default = next(iter(values), None)
     elif len(values) > 0:
         default = values[0]
