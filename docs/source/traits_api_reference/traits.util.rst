@@ -1,6 +1,11 @@
 :mod:`traits.util` Package
 ==========================
 
+.. automodule:: traits.util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`async_trait_wait` Module
 ------------------------------
 

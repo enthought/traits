@@ -1,6 +1,11 @@
 :mod:`traits.adaptation` Package
 ================================
 
+.. automodule:: traits.adaptation
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`traits.adaptation.adaptation_error` Module
 ------------------------------------------------
 

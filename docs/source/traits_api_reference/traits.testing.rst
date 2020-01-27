@@ -1,6 +1,11 @@
 :mod:`traits.testing` Package
 =============================
 
+.. automodule:: traits.testing
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`doctest_tools` Module
 ---------------------------
 
