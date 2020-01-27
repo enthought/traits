@@ -188,3 +188,8 @@ class TestCTrait(unittest.TestCase):
 
         self.assertIsInstance(trait.comparison_mode, ComparisonMode)
         self.assertEqual(trait.comparison_mode, ComparisonMode.equality)
+
+    def test_assign_post_setattr_none(self):
+        trait = CTrait(TraitKind.trait)
+
+        trait.post_setattr = None
