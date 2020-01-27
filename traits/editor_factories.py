@@ -23,7 +23,6 @@ SourceCodeEditor = None
 HTMLTextEditor = None
 PythonShellEditor = None
 DateEditor = None
-DateTimeEditor = None
 TimeEditor = None
 
 # -------------------------------------------------------------------------------
