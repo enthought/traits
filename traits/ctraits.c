@@ -1447,22 +1447,45 @@ PyDoc_STRVAR(
 
 PyDoc_STRVAR(
     has_traits_trait_items_event_doc,
-/*
-trait_items_event(name, event_object, event_trait)
+    "trait_items_event(name, event_object, event_trait)\n"
+    "\n"
+    "Fire an items event for changes to a Traits collection.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "name : str\n"
+    "    Name of the item trait for which an event is being fired. (The name\n"
+    "    will usually end in '_items'.)\n"
+    "event_object : object\n"
+    "    Object of type ``TraitListEvent``, ``TraitDictEvent`` or ``TraitSetEvent``\n"
+    "    describing the changes to the underlying collection trait value.\n"
+    "event_trait : CTrait\n"
+    "    The items trait, of trait type ``Event``.\n");
 
-Fire an items event for changes to a Traits collection.
+PyDoc_STRVAR(
+    has_traits__trait_change_notify_doc,
+    "_trait_change_notify(enabled)\n"
+    "\n"
+    "Enable or disable trait change notifications for this object.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "enabled : bool\n"
+    "    If true, enable trait change notifications for this object.\n"
+    "    If false, disable trait change notifications for this object.\n");
 
-Parameters
-----------
-name : str
-    Name of the trait for which an event is being fired.
-    (XXX includes the _items part?)
-
-
-
-*/
-)
-
+PyDoc_STRVAR(
+    has_traits__trait_veto_notify_doc,
+    "_trait_veto_notify(vetoed)\n"
+    "\n"
+    "Enable or disable vetoing of trait change notifications by this object.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "vetoed : bool\n"
+    "    If true, veto trait change notifications for this object: no\n"
+    "    notifications will be issued when this object is assigned to\n"
+    "    a trait. If false, notifications will be issued as usual.\n");
 
 PyDoc_STRVAR(
     _trait_notifications_enabled_doc,
@@ -1499,6 +1522,109 @@ PyDoc_STRVAR(
     "    True if notifications are currently vetoed for this object, else "
     "False.\n");
 
+PyDoc_STRVAR(
+    has_traits_traits_init_doc,
+    "traits_init()\n"
+    "\n"
+    "Perform any final object initialization needed.\n"
+    "\n"
+    "For the CHasTraits base class, this method currently does nothing.\n");
+
+PyDoc_STRVAR(
+    has_traits_traits_inited_doc,
+    "traits_inited()\n"
+    "traits_inited(value)\n"
+    "\n"
+    "Get or set the initialization state of this object.\n"
+    "\n"
+    "With zero arguments, get the state: return True if the object has\n"
+    "already been initialized, and False otherwise.\n"
+    "\n"
+    "With a single argument, if that argument is true, mark the object\n"
+    "as initialized. If the argument is false, the state is unchanged.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "value : bool\n"
+    "    Only the value True (or another truthy value) should be passed.\n"
+    "\n"
+    "Returns\n"
+    "-------\n"
+    "initialized : bool\n"
+    "    True if the object is initialized, else False.\n");
+
+PyDoc_STRVAR(
+    has_traits__trait_doc,
+    "_trait(name, instance)\n"
+    "\n"
+    "Return and optionally create a specified instance or class trait.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "name : str\n"
+    "    Name of the trait to be retrieved or created.\n"
+    "instance : int\n"
+    "    An integer determining the action to be taken. One of\n"
+    "    {-2, -1, 0, 1, 2}. The meaning of the values is as follows:\n"
+    "\n"
+    "    2\n"
+    "        Return an instance trait, creating a new trait if none exists.\n"
+    "    1\n"
+    "        Return an existing instance trait. Do not create a new trait.\n"
+    "    0\n"
+    "        Return an existing instance or class trait. Do not create a\n"
+    "        new trait.\n"
+    "    -1\n"
+    "        Return an instance trait, or create a new class trait if no\n"
+    "        instance trait exists.\n"
+    "    -2\n"
+    "        Return the base trait after resolving delegation.\n");
+
+PyDoc_STRVAR(
+    has_traits__instance_traits_doc,
+    "_instance_traits()\n"
+    "\n"
+    "Return this object's instance traits dictionary.\n"
+    "\n"
+    "The object's instance traits dictionary is created if it doesn't\n"
+    "already exist.\n"
+    "\n"
+    "Returns\n"
+    "-------\n"
+    "instance_traits : dict\n"
+    "    Dictionary mapping trait names to corresponding CTrait instances.\n");
+
+PyDoc_STRVAR(
+    has_traits__class_traits_doc,
+    "_instance_traits()\n"
+    "\n"
+    "Return this object's class traits dictionary.\n"
+    "\n"
+    "Returns\n"
+    "-------\n"
+    "class_traits : dict\n"
+    "    Dictionary mapping trait names to corresponding CTrait instances.\n");
+
+PyDoc_STRVAR(
+    has_traits__notifiers_doc,
+    "_notifiers(force_create)\n"
+    "\n"
+    "Return (and optionally create) the list of notifiers for this object.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "force_create : bool\n"
+    "    Whether to automatically create the list of notifiers, if it\n"
+    "    doesn't exist yet.\n"
+    "\n"
+    "Returns\n"
+    "-------\n"
+    "notifiers : list of callables, or None\n"
+    "    If the trait has no notifiers and *force_create* is false, return\n"
+    "    None. Otherwise, return the list of notifiers for this object,\n"
+    "    creating it first if necessary. Each notifier is a callable\n"
+    "    accepting four arguments (object, trait_name, old, new).\n");
+
 static PyMethodDef has_traits_methods[] = {
     {
         "trait_property_changed",
@@ -1510,40 +1636,68 @@ static PyMethodDef has_traits_methods[] = {
         "trait_items_event",
         (PyCFunction)_has_traits_items_event,
         METH_VARARGS,
-        PyDoc_STR("trait_items_event(event_trait,name,items_event)")
+        has_traits_trait_items_event_doc
     },
-    {"_trait_change_notify",
-    (PyCFunction)_has_traits_change_notify,
-     METH_VARARGS,
-     PyDoc_STR("_trait_change_notify(boolean)")},
+    {
+        "_trait_change_notify",
+        (PyCFunction)_has_traits_change_notify,
+        METH_VARARGS,
+        has_traits__trait_change_notify_doc
+    },
     {
         "_trait_notifications_enabled",
         (PyCFunction)_has_traits_notifications_enabled,
         METH_NOARGS,
         _trait_notifications_enabled_doc,
     },
-    {"_trait_veto_notify",
-     (PyCFunction)_has_traits_veto_notify,
-     METH_VARARGS,
-     PyDoc_STR("_trait_veto_notify(boolean)")},
+    {
+        "_trait_veto_notify",
+        (PyCFunction)_has_traits_veto_notify,
+        METH_VARARGS,
+        has_traits__trait_veto_notify_doc
+    },
     {
         "_trait_notifications_vetoed",
         (PyCFunction)_has_traits_notifications_vetoed,
         METH_NOARGS,
         _trait_notifications_vetoed_doc,
     },
-    {"traits_init", (PyCFunction)_has_traits_init, METH_NOARGS,
-     PyDoc_STR("traits_init()")},
-    {"traits_inited", (PyCFunction)_has_traits_inited, METH_VARARGS,
-     PyDoc_STR("traits_inited([True])")},
-    {"_trait", (PyCFunction)_has_traits_trait, METH_VARARGS,
-     PyDoc_STR("_trait(name,instance) -> trait")},
-    {"_instance_traits", (PyCFunction)_has_traits_instance_traits, METH_NOARGS,
-     PyDoc_STR("_instance_traits() -> dict")},
-    {"_class_traits", (PyCFunction)_has_traits_class_traits, METH_NOARGS,
-     PyDoc_STR("_class_traits() -> dict")},
-    {"_notifiers", (PyCFunction)_has_traits_notifiers, METH_VARARGS,
-     PyDoc_STR("_notifiers(force_create) -> list")},
+    {
+        "traits_init",
+        (PyCFunction)_has_traits_init,
+        METH_NOARGS,
+        has_traits_traits_init_doc
+    },
+    {
+        "traits_inited",
+        (PyCFunction)_has_traits_inited,
+        METH_VARARGS,
+        has_traits_traits_inited_doc
+    },
+    {
+        "_trait",
+        (PyCFunction)_has_traits_trait,
+        METH_VARARGS,
+        has_traits__trait_doc
+    },
+    {
+        "_instance_traits",
+        (PyCFunction)_has_traits_instance_traits,
+        METH_NOARGS,
+        has_traits__instance_traits_doc
+    },
+    {
+        "_class_traits",
+        (PyCFunction)_has_traits_class_traits,
+        METH_NOARGS,
+        has_traits__class_traits_doc
+    },
+    {
+        "_notifiers",
+        (PyCFunction)_has_traits_notifiers,
+        METH_VARARGS,
+        has_traits__notifiers_doc
+    },
     {NULL, NULL},
 };
 
