@@ -1254,7 +1254,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             self._post_init_trait_listeners()
             self.traits_init()
 
-        self.traits_inited(True)
+        self.set_traits_inited()
 
     # ---------------------------------------------------------------------------
     #  Shortcut for retrieving the value of a list of traits:
@@ -1624,7 +1624,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         new.copy_traits(self, traits, memo, copy, **metadata)
         new._post_init_trait_listeners()
         new.traits_init()
-        new.traits_inited(True)
+        new.set_traits_inited()
 
         return new
 

@@ -1307,28 +1307,33 @@ _has_traits_init(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
 }
 
 /*-----------------------------------------------------------------------------
-|  Returns whether or not the object has finished being initialized:
+|  Returns whether or not the object has finished being initialized.
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_has_traits_inited(has_traits_object *obj, PyObject *args)
+_has_traits_inited(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
 {
-    int traits_inited = -1;
-
-    if (!PyArg_ParseTuple(args, "|p", &traits_inited)) {
-        return NULL;
-    }
-
-    if (traits_inited > 0) {
-        obj->flags |= HASTRAITS_INITED;
-    }
-
     if (obj->flags & HASTRAITS_INITED) {
         Py_INCREF(Py_True);
         return Py_True;
     }
+
     Py_INCREF(Py_False);
     return Py_False;
+}
+
+
+/*-----------------------------------------------------------------------------
+|  Declare whether the has traits object has been initialized.
++----------------------------------------------------------------------------*/
+
+static PyObject * 
+_has_traits_set_inited(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
+{
+    obj->flags |= HASTRAITS_INITED;
+
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 /*-----------------------------------------------------------------------------
@@ -1467,6 +1472,18 @@ PyDoc_STRVAR(
     "    True if notifications are currently vetoed for this object, else "
     "False.\n");
 
+PyDoc_STRVAR(
+    traits_inited_doc,
+    "traits_inited()\n"
+    "\n"
+    "Report whether this object has been initialized.");
+
+PyDoc_STRVAR(
+    set_traits_inited_doc,
+    "set_traits_inited()\n"
+    "\n"
+    "Declare that this object has finished being initialized.");
+
 static PyMethodDef has_traits_methods[] = {
     {"trait_property_changed", (PyCFunction)_has_traits_property_changed,
      METH_VARARGS,
@@ -1491,8 +1508,18 @@ static PyMethodDef has_traits_methods[] = {
     },
     {"traits_init", (PyCFunction)_has_traits_init, METH_NOARGS,
      PyDoc_STR("traits_init()")},
-    {"traits_inited", (PyCFunction)_has_traits_inited, METH_VARARGS,
-     PyDoc_STR("traits_inited([True])")},
+    {
+        "traits_inited",
+        (PyCFunction)_has_traits_inited,
+        METH_NOARGS,
+        traits_inited_doc
+    },
+    {
+        "set_traits_inited",
+        (PyCFunction)_has_traits_set_inited,
+        METH_NOARGS,
+        set_traits_inited_doc
+    },
     {"_trait", (PyCFunction)_has_traits_trait, METH_VARARGS,
      PyDoc_STR("_trait(name,instance) -> trait")},
     {"_instance_traits", (PyCFunction)_has_traits_instance_traits, METH_NOARGS,
