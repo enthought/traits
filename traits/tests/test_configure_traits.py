@@ -67,7 +67,8 @@ class TestConfigureTraits(unittest.TestCase):
         self.assertFalse(os.path.exists(filename))
 
         with mock.patch.object(self.toolkit, "view_application"):
-            model.configure_traits(filename=filename)
+            with self.assertWarns(DeprecationWarning):
+                model.configure_traits(filename=filename)
 
         self.assertTrue(os.path.exists(filename))
         with open(filename, "rb") as pickled_object_file:
