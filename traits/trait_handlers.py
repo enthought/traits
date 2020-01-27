@@ -73,11 +73,6 @@ def _undefined_set(object, name, value):
     _undefined_get(object, name)
 
 
-# -------------------------------------------------------------------------------
-#  'TraitCoerceType' class:
-# -------------------------------------------------------------------------------
-
-
 class TraitCoerceType(TraitHandler):
     """Ensures that a value assigned to a trait attribute is of a specified
     Python type, or can be coerced to the specified type.
@@ -118,23 +113,21 @@ class TraitCoerceType(TraitHandler):
     complex      float, int
     float        int
     ============ =================
-    """
+
+    Parameters
+    ----------
+    aType : type or object
+        Either a Python type or a Python value.  If this is an object, it is
+        mapped to its corresponding type. For example, the string 'cat' is
+        automatically mapped to ``str``.
+
+    Attributes
+    ----------
+    aType : type
+        A Python type to coerce values to.
+   """
 
     def __init__(self, aType):
-        """ Creates a TraitCoerceType handler.
-
-        Parameters
-        ----------
-        aType : type
-            Either a Python type (e.g., ``str`` or types.StringType) or a
-            Python value (e.g., 'cat').
-
-        Description
-        -----------
-        If *aType* is a value, it is mapped to its corresponding type. For
-        example, the string 'cat' is automatically mapped to ``str`` (i.e.,
-        types.StringType).
-        """
         if not isinstance(aType, type):
             aType = type(aType)
         self.aType = aType
@@ -188,11 +181,6 @@ class TraitCoerceType(TraitHandler):
         )
 
 
-# -------------------------------------------------------------------------------
-#  'TraitCastType' class:
-# -------------------------------------------------------------------------------
-
-
 class TraitCastType(TraitCoerceType):
     """Ensures that a value assigned to a trait attribute is of a specified
     Python type, or can be cast to the specified type.
@@ -230,31 +218,27 @@ class TraitCastType(TraitCoerceType):
         >>>bill.cweight = 180   # OK, cast to 180.0
         >>>bill.weight = '180'  # Error, invalid coercion
         >>>bill.cweight = '180' # OK, cast to float('180')
+
+    Parameters
+    ----------
+    aType : type
+        Either a Python type or a Python value.  If this is an object, it is
+        mapped to its corresponding type. For example, the string 'cat' is
+        automatically mapped to ``str``.
+
+    Attributes
+    ----------
+    aType : type
+        A Python type to cast values to.
     """
 
     def __init__(self, aType):
-        """ Creates a TraitCastType handler.
-
-        Parameters
-        ----------
-        aType : type
-            Either a Python type (e.g., ``str`` or types.StringType) or a
-            Python value (e.g., ``'cat``).
-
-        Description
-        -----------
-        If *aType* is a Python value, it is automatically mapped to its
-        corresponding Python type. For example, the string 'cat' is
-        automatically mapped to ``str`` (i.e., types.StringType).
-
-        """
         if not isinstance(aType, type):
             aType = type(aType)
         self.aType = aType
         self.fast_validate = (ValidateTrait.cast, aType)
 
     def validate(self, object, name, value):
-
         # If the value is already the desired type, then return it:
         if type(value) is self.aType:
             return value
@@ -266,17 +250,8 @@ class TraitCastType(TraitCoerceType):
             self.error(object, name, value)
 
 
-# -------------------------------------------------------------------------------
-#  'TraitInstance' class:
-# -------------------------------------------------------------------------------
-
-
 class TraitInstance(TraitHandler):
-    """Ensures that trait attribute values belong to a specified Python class
-    or type.
-
-    TraitInstance is the underlying handler for the predefined trait
-    **Instance** and the elements of List( Instance ).
+    """Ensures that trait attribute values belong to a specified Python type.
 
     Any trait that uses a TraitInstance handler ensures that its values belong
     to the specified type or class (or one of its subclasses). For example::
@@ -290,26 +265,38 @@ class TraitInstance(TraitHandler):
 
     TraitInstance ensures that assigned values are exactly of the type specified
     (i.e., no coercion is performed).
+
+    Parameters
+    ----------
+    aClass : type, object or str
+        A Python type or a string that identifies the type, or an object.
+        If this is an object, it is mapped to the class it is an instance of.
+        If this is a str, it is either the name  of a class in the module
+        identified by the module parameter, or an identifier of the form
+        "*module_name*[.*module_name*....].*class_name*".
+    allow_none : bool
+        Flag indicating whether None is accepted as a valid value.
+    module : str
+        The name of the module that the class belongs to.  This is ignored if
+        the type is provided directly, or the str value is an identifier with
+        '.'s in it.
+
+    Attributes
+    ----------
+    aClass : type or str
+        A Python type, or a string which identifies the type.  If this is a
+        str, it is either the name of a class in the module identified by the
+        module attribute, or an identifier of the form
+        "*module_name*[.*module_name*....].*class_name*".  A string value will
+        be replaced by the actual type object the first time the trait is used
+        to validate an object.
+    module : str
+        The name of the module that the class belongs to.  This is ignored if
+        the type is provided directly, or the str value is an identifier with
+        '.'s in it.
     """
 
     def __init__(self, aClass, allow_none=True, module=""):
-        """Creates a TraitInstance handler.
-
-        Parameters
-        ----------
-        aClass : class or type
-            A Python class, an instance of a Python class, or a Python type.
-        allow_none : bool
-            Flag indicating whether None is accepted as a valid value.
-            (True or non-zero) or not (False or 0)
-        module : module
-            The module that the class belongs to.
-
-        Description
-        -----------
-        If *aClass* is an instance, it is mapped to the class it is an instance
-        of.
-        """
         self._allow_none = allow_none
         self.module = module
         if isinstance(aClass, str):
@@ -321,6 +308,13 @@ class TraitInstance(TraitHandler):
             self.set_fast_validate()
 
     def allow_none(self):
+        """ Whether or not None is permitted as a valid value.
+
+        Returns
+        -------
+        bool
+            Whether or not None is a valid value.
+        """
         self._allow_none = True
         if hasattr(self, "fast_validate"):
             self.set_fast_validate()
@@ -334,7 +328,6 @@ class TraitInstance(TraitHandler):
         self.fast_validate = tuple(fast_validate)
 
     def validate(self, object, name, value):
-
         if value is None:
             if self._allow_none:
                 return value
@@ -423,11 +416,6 @@ class TraitInstance(TraitHandler):
         return self.editor
 
 
-# -------------------------------------------------------------------------------
-#  'TraitFunction' class:
-# -------------------------------------------------------------------------------
-
-
 class TraitFunction(TraitHandler):
     """Ensures that assigned trait attribute values are acceptable to a
     specified validator function.
@@ -435,25 +423,25 @@ class TraitFunction(TraitHandler):
     TraitFunction is the underlying handler for the predefined trait
     **Function**, and for the use of function references as arguments to the
     Trait() function.
+
+    The signature of the function must be of the form *function*(*object*,
+    *name*, *value*). The function must verify that *value* is a legal value
+    for the *name* trait attribute of *object*.  If it is, the value returned
+    by the function is the actual value assigned to the trait attribute. If it
+    is not, the function must raise a TraitError exception.
+
+    Parameters
+    ----------
+    aFunc : function
+        A function to validate trait attribute values.
+
+    Attributes
+    ----------
+    aFunc : function
+        A function to validate trait attribute values.
     """
 
     def __init__(self, aFunc):
-        """ Creates a TraitFunction handler.
-
-        Parameters
-        ----------
-        aFunc : function
-            A function to validate trait attribute values.
-
-        Description
-        -----------
-        The signature of the function passed as an argument must be of the
-        form *function* ( *object*, *name*, *value* ). The function must
-        verify that *value* is a legal value for the *name* trait attribute
-        of *object*. If it is, the value returned by the function is the
-        actual value assigned to the trait attribute. If it is not, the
-        function must raise a TraitError exception.
-        """
         if not isinstance(aFunc, CallableTypes):
             raise TraitError("Argument must be callable.")
         self.aFunc = aFunc
@@ -474,51 +462,48 @@ class TraitFunction(TraitHandler):
             return "a legal value"
 
 
-# -------------------------------------------------------------------------------
-#  'TraitEnum' class:
-# -------------------------------------------------------------------------------
-
-
 class TraitEnum(TraitHandler):
     """ Ensures that a value assigned to a trait attribute is a member of a
     specified list of values.
 
     TraitEnum is the underlying handler for the forms of the Trait() function
     that take a list of possible values
+
+    The list of legal values can be provided as a list or tuple of values.
+    That is, ``TraitEnum([1, 2, 3])``, ``TraitEnum((1, 2, 3))`` and
+    ``TraitEnum(1, 2, 3)`` are equivalent. For example::
+
+        class Flower(HasTraits):
+            color = Trait('white', TraitEnum(['white', 'yellow', 'red']))
+            kind  = Trait('annual', TraitEnum('annual', 'perennial'))
+
+    This example defines a Flower class, which has a **color** trait
+    attribute, which can have as its value, one of the three strings,
+    'white', 'yellow', or 'red', and a **kind** trait attribute, which can
+    have as its value, either of the strings 'annual' or 'perennial'. This
+    is equivalent to the following class definition::
+
+        class Flower(HasTraits):
+            color = Trait(['white', 'yellow', 'red'])
+            kind  = Trait('annual', 'perennial')
+
+    The Trait() function automatically maps traits of the form shown in
+    this example to the form shown in the preceding example whenever it
+    encounters them in a trait definition.
+
+    Parameters
+    ----------
+    *values
+        Either all legal values for the enumeration, or a single list or tuple
+        of the legal values.
+
+    Attributes
+    ----------
+    values : tuple
+        Enumeration of all legal values for a trait.
     """
 
     def __init__(self, *values):
-        """ Creates a TraitEnum handler.
-
-        Parameters
-        ----------
-        values : list or tuple
-            Enumeration of all legal values for a trait.
-
-        Description
-        -----------
-        The list of legal values can be provided as a list of values. That is,
-        ``TraitEnum([1, 2, 3])`` and ``TraitEnum(1, 2, 3)`` are equivalent. For
-        example::
-
-            class Flower(HasTraits):
-                color = Trait('white', TraitEnum(['white', 'yellow', 'red']))
-                kind  = Trait('annual', TraitEnum('annual', 'perennial'))
-
-        This example defines a Flower class, which has a **color** trait
-        attribute, which can have as its value, one of the three strings,
-        'white', 'yellow', or 'red', and a **kind** trait attribute, which can
-        have as its value, either of the strings 'annual' or 'perennial'. This
-        is equivalent to the following class definition::
-
-            class Flower(HasTraits):
-                color = Trait(['white', 'yellow', 'red'])
-                kind  = Trait('annual', 'perennial')
-
-        The Trait() function automatically maps traits of the form shown in
-        this example to the form shown in the preceding example whenever it
-        encounters them in a trait definition.
-        """
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
         self.values = tuple(values)
@@ -543,11 +528,6 @@ class TraitEnum(TraitHandler):
         )
 
 
-# -------------------------------------------------------------------------------
-#  'TraitPrefixList' class:
-# -------------------------------------------------------------------------------
-
-
 class TraitPrefixList(TraitHandler):
     r"""Ensures that a value assigned to a trait attribute is a member of a list
     of specified string values, or is a unique prefix of one of those values.
@@ -562,11 +542,16 @@ class TraitPrefixList(TraitHandler):
     is a valid value, then the actual value assigned to the trait attribute is
     the corresponding *s*\ :sub:`i` value that *v* matched.
 
+    As with TraitEnum, the list of legal values can be provided as a list
+    or tuple of values.  That is, ``TraitPrefixList(['one', 'two', 'three'])``
+    and ``TraitPrefixList('one', 'two', 'three')`` are equivalent.
+
     Example
     -------
+    ::
 
-    class Person(HasTraits):
-        married = Trait('no', TraitPrefixList('yes', 'no')
+        class Person(HasTraits):
+            married = Trait('no', TraitPrefixList('yes', 'no')
 
     The Person class has a **married** trait that accepts any of the
     strings 'y', 'ye', 'yes', 'n', or 'no' as valid values. However, the actual
@@ -578,22 +563,19 @@ class TraitPrefixList(TraitHandler):
     string is a valid value is fairly efficient in terms of both time and space,
     and is not based on a brute force set of comparisons.
 
+    Parameters
+    ----------
+    *values
+        Either all legal string values for the enumeration, or a single list
+        or tuple of legal string values.
+
+    Attributes
+    ----------
+    values : tuple of strings
+        Enumeration of all legal values for a trait.
     """
 
     def __init__(self, *values):
-        """ Creates a TraitPrefixList handler.
-
-        Parameters
-        ----------
-        values : list or tuple of strings
-            Enumeration of all legal values for a trait.
-
-        Description
-        -----------
-        As with TraitEnum, the list of legal values can be provided as a list
-        of values.  That is, ``TraitPrefixList(['one', 'two', 'three'])`` and
-        ``TraitPrefixList('one', 'two', 'three')`` are equivalent.
-        """
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
         self.values = values[:]
@@ -639,13 +621,8 @@ class TraitPrefixList(TraitHandler):
         return result
 
 
-# -------------------------------------------------------------------------------
-#  'TraitMap' class:
-# -------------------------------------------------------------------------------
-
-
 class TraitMap(TraitHandler):
-    """Checks that the value assigned to a trait attribute is a key of a
+    """ Checks that the value assigned to a trait attribute is a key of a
     specified dictionary, and also assigns the dictionary value corresponding
     to that key to a *shadow* attribute.
 
@@ -677,20 +654,25 @@ class TraitMap(TraitHandler):
     TraitPrefixList, instances of Person have another attribute,
     ``married_``, whose default value is 1, the dictionary value corresponding
     to the key 'yes'.
+
+    Parameters
+    ----------
+    map : dict
+        A dictionary whose keys are valid values for the trait attribute,
+        and whose corresponding values are the values for the shadow
+        trait attribute.
+
+    Attributes
+    ----------
+    map : dict
+        A dictionary whose keys are valid values for the trait attribute,
+        and whose corresponding values are the values for the shadow
+        trait attribute.
     """
 
     is_mapped = True
 
     def __init__(self, map):
-        """ Creates a TraitMap handler.
-
-        Parameters
-        ----------
-        map : dict
-            A dictionary whose keys are valid values for the trait attribute,
-            and whose corresponding values are the values for the shadow
-            trait attribute.
-        """
         self.map = map
         self.fast_validate = (ValidateTrait.map, map)
 
@@ -704,6 +686,7 @@ class TraitMap(TraitHandler):
         self.error(object, name, value)
 
     def mapped_value(self, value):
+        """ Get the mapped value for a value. """
         return self.map[value]
 
     def post_setattr(self, object, name, value):
@@ -724,11 +707,6 @@ class TraitMap(TraitHandler):
         return EnumEditor(values=self, cols=trait.cols or 3)
 
 
-# -------------------------------------------------------------------------------
-#  'TraitPrefixMap' class:
-# -------------------------------------------------------------------------------
-
-
 class TraitPrefixMap(TraitMap):
     """A cross between the TraitPrefixList and TraitMap classes.
 
@@ -741,24 +719,30 @@ class TraitPrefixMap(TraitMap):
 
     Example
     -------
+    ::
 
         mapping = {'true': 1, 'yes': 1, 'false': 0, 'no': 0 }
         boolean_map = Trait('true', TraitPrefixMap(mapping))
 
     This example defines a Boolean trait that accepts any prefix of 'true',
     'yes', 'false', or 'no', and maps them to 1 or 0.
+
+    Parameters
+    ----------
+    map : dict
+        A dictionary whose keys are strings that are valid values for the
+        trait attribute, and whose corresponding values are the values for
+        the shadow trait attribute.
+
+    Attributes
+    ----------
+    map : dict
+        A dictionary whose keys are strings that are valid values for the
+        trait attribute, and whose corresponding values are the values for
+        the shadow trait attribute.
     """
 
     def __init__(self, map):
-        """Creates a TraitPrefixMap handler.
-
-        Parameters
-        ----------
-        map : dict
-            A dictionary whose keys are strings that are valid values for the
-            trait attribute, and whose corresponding values are the values for
-            the shadow trait attribute.
-        """
         self.map = map
         self._map = _map = {}
         for key in map.keys():
@@ -787,11 +771,6 @@ class TraitPrefixMap(TraitMap):
         return super(TraitPrefixMap, self).info() + " (or any unique prefix)"
 
 
-# -------------------------------------------------------------------------------
-#  'TraitCompound' class:
-# -------------------------------------------------------------------------------
-
-
 class TraitCompound(TraitHandler):
     """ Provides a logical-OR combination of other trait handlers.
 
@@ -806,17 +785,19 @@ class TraitCompound(TraitHandler):
     TraitPrefixMap instance), then the TraitCompound is also mapped. In this
     case, any non-mapped traits or trait handlers use identity mapping.
 
+    Parameters
+    ----------
+    *handlers
+        Either all TraitHandlers or trait objects to be combined, or a single
+        list or tuple of TraitHandlers or trait objects.
+
+    Attributes
+    ----------
+    handlers : list or tuple
+        A list or tuple of TraitHandler or trait objects to be combined.
     """
 
     def __init__(self, *handlers):
-        """ Creates a TraitCompound handler.
-
-        Parameters
-        ----------
-        *handlers :
-            list or tuple of TraitHandler or trait objects to be combined.
-
-        """
         if (len(handlers) == 1) and (type(handlers[0]) in SequenceTypes):
             handlers = handlers[0]
         self.handlers = handlers
@@ -946,13 +927,8 @@ class TraitCompound(TraitHandler):
         return items_event()
 
 
-# -------------------------------------------------------------------------------
-#  'TraitTuple' class:
-# -------------------------------------------------------------------------------
-
-
 class TraitTuple(TraitHandler):
-    """ Ensures that values assigned to a trait attribute are tuples of a
+    r""" Ensures that values assigned to a trait attribute are tuples of a
     specified length, with elements that are of specified types.
 
     TraitTuple is the underlying handler for the predefined trait **Tuple**,
@@ -972,27 +948,27 @@ class TraitTuple(TraitHandler):
     which must be a tuple of two elments. The first element must be an integer
     in the range from 1 to 13, and the second element must be one of the four
     strings, 'Hearts', 'Diamonds', 'Spades', or 'Clubs'.
+
+    Parameters
+    ----------
+    *args
+        The traits, each *trait*\ :sub:`i` specifies the type that
+        the *i*\ th element of a tuple must be.  Each *trait*\ :sub:`i`
+        must be either a trait, or a value that can be
+        converted to a trait using the trait_from() function. The resulting
+        trait handler accepts values that are tuples of the same length as
+        *args*, and whose *i*\ th element is of the type specified by
+        *trait*\ :sub:`i`.
+
+    Parameters
+    ----------
+    types : tuple of CTrait instances
+        The traits to use for each item in a validated tuple.
     """
 
     @deprecated(_WARNING_FORMAT_STR.format(
         handler="TraitTuple", replacement="Tuple"))
     def __init__(self, *args):
-        r""" Creates a TraitTuple handler.
-
-        Parameters
-        ----------
-        *args :
-            A list of traits, each *trait*\ :sub:`i` specifies the type that
-            the *i*\ th element of a tuple must be.
-
-        Description
-        -----------
-        Each *trait*\ :sub:`i` must be either a trait, or a value that can be
-        converted to a trait using the Trait() function. The resulting
-        trait handler accepts values that are tuples of the same length as
-        *args*, and whose *i*\ th element is of the type specified by
-        *trait*\ :sub:`i`.
-        """
         self.types = tuple([trait_from(arg) for arg in args])
         self.fast_validate = (ValidateTrait.tuple, self.types)
 
@@ -1037,11 +1013,6 @@ class TraitTuple(TraitHandler):
         )
 
 
-# -------------------------------------------------------------------------------
-#  'TraitList' class:
-# -------------------------------------------------------------------------------
-
-
 class TraitList(TraitHandler):
     """ Ensures that a value assigned to a trait attribute is a list containing
     elements of a specified type, and that the length of the list is also
@@ -1054,16 +1025,43 @@ class TraitList(TraitHandler):
 
     Example
     -------
+    ::
 
-    class Card(HasTraits):
-        pass
-    class Hand(HasTraits):
-        cards = Trait([], TraitList(Trait(Card), maxlen=52))
+        class Card(HasTraits):
+            pass
 
+        class Hand(HasTraits):
+            cards = Trait([], TraitList(Trait(Card), maxlen=52))
 
     This example defines a Hand class, which has a **cards** trait attribute,
     which is a list of Card objects and can have from 0 to 52 items in the
     list.
+
+    Parameters
+    ----------
+    trait : Trait
+        The type of items the list can contain. If this is None or omitted,
+        then no type checking is performed on any items in the list;
+        otherwise, this must be either a trait, or a value that can be
+        converted to a trait using the trait_from() function.
+    minlen : int
+        The minimum length of the list.
+    maxlen : int
+        The maximum length of the list.
+    has_items : bool
+        Flag indicating whether the list contains elements.
+
+    Attributes
+    ----------
+    item_trait : CTrait or None
+        The type of items the list can contain.  If None, no type checking is
+        performed on the items of the list.
+    minlen : int
+        The minimum length of the list.
+    maxlen : int
+        The maximum length of the list.
+    has_items : bool
+        Flag indicating whether the list contains elements.
     """
 
     info_trait = None
@@ -1075,26 +1073,6 @@ class TraitList(TraitHandler):
     def __init__(
         self, trait=None, minlen=0, maxlen=sys.maxsize, has_items=True
     ):
-        """ Creates a TraitList handler.
-
-        Parameters
-        ----------
-        trait : Trait
-            The type of items the list can contain.
-        minlen : int
-            The minimum length of the list.
-        maxlen : int
-            The maximum length of the list.
-        has_items : bool
-            Flag indicating whether the list contains elements.
-
-        Description
-        -----------
-        If *trait* is None or omitted, then no type checking is performed
-        on any items in the list; otherwise, *trait* must be either a trait, or
-        a value that can be converted to a trait using the Trait() function.
-
-        """
         self.item_trait = trait_from(trait)
         self.minlen = max(0, minlen)
         self.maxlen = max(minlen, maxlen)
@@ -1168,15 +1146,46 @@ class TraitDict(TraitHandler):
 
     Example
     -------
+    ::
 
-    class WorkoutClass(HasTraits):
-        member_weights = Trait({}, TraitDict(str, float))
+        class WorkoutClass(HasTraits):
+            member_weights = Trait({}, TraitDict(str, float))
 
 
     This example defines a WorkoutClass class containing a *member_weights*
     trait attribute whose value must be a dictionary containing keys that
     are strings (i.e., the members' names) and whose associated values must
     be floats (i.e., their most recently recorded weight).
+
+    Parameters
+    ----------
+    key_trait : trait
+        The type for the dictionary keys.  If this is None or omitted, the
+        keys in the dictionary can be of any type. Otherwise, this
+        must be either a trait, or a value that can be converted to a trait
+        using the trait_from() function. In this case, all dictionary keys are
+        checked to ensure that they are of the type specified.
+    value_trait : trait
+        The type for the dictionary values.  If this is None or omitted, the
+        values in the dictionary can be of any type. Otherwise, this must be
+        either a trait, or a value that can be converted to a trait using the
+        trait_from() function.  In this case, all dictionary values are
+        checked to ensure that they are of the type specified.
+    has_items : bool
+        Flag indicating whether the dictionary contains entries.
+
+    Attributes
+    ----------
+    key_trait : CTrait or TraitHandler or None
+        The type for the dictionary keys.  If this is None then the keys are
+        not validated.
+    value_trait : CTrait or TraitHandler or None
+        The type for the dictionary values.  If this is None then the values
+        are not validated.
+    value_handler : BaseTraitHandler or None
+        The trait handler for the dictionary values.
+    has_items : bool
+        Flag indicating whether the dictionary contains entries.
     """
 
     info_trait = None
@@ -1186,32 +1195,6 @@ class TraitDict(TraitHandler):
     @deprecated(_WARNING_FORMAT_STR.format(
         handler="TraitDict", replacement="Dict"))
     def __init__(self, key_trait=None, value_trait=None, has_items=True):
-        """ Creates a TraitDict handler.
-
-        Parameters
-        ----------
-        key_trait : trait
-            The type for the dictionary keys.
-        value_trait : trait
-            The type for the dictionary values.
-        has_items : bool
-            Flag indicating whether the dictionary contains entries.
-
-        Description
-        -----------
-        If *key_trait* is None or omitted, the keys in the dictionary can
-        be of any type. Otherwise, *key_trait* must be either a trait, or a
-        value that can be converted to a trait using the Trait() function. In
-        this case, all dictionary keys are checked to ensure that they are of
-        the type specified by *key_trait*.
-
-        If *value_trait* is None or omitted, the values in the dictionary
-        can be of any type. Otherwise, *value_trait* must be either a trait, or
-        a value that can be converted to a trait using the Trait() function.
-        In this case, all dictionary values are checked to ensure that they are
-        of the type specified by *value_trait*.
-
-        """
         self.key_trait = trait_from(key_trait)
         self.value_trait = trait_from(value_trait)
         self.has_items = has_items
