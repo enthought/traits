@@ -211,20 +211,27 @@ def safe_contains(value, container):
         return False
 
 
-def collection_default(collection):
-    """ Get the first item of a collection, returning None if empty.
+def enum_default(values):
+    """ Get the first item of an EnumType, returning None if empty.
 
     Parameters
     ----------
-    collection : collection
-        A Python collection, which is presumed to be repeatably iterable.
+    values : EnumType
+        The collection of valid values for an enum trait.
 
     Returns
     -------
     default : any
-        The first item of the collection, or None if the collection is empty.
+        The first valid value, or None if the collection is empty.
     """
-    return next(iter(collection), None)
+    if isinstance(values, enum.EnumMeta):
+        # XXX special-case enum.Enums; generalize to Collections?
+        default = next(iter(values), None)
+    elif len(values) > 0:
+        default = values[0]
+    else:
+        default = None
+    return default
 
 
 # -------------------------------------------------------------------------------
