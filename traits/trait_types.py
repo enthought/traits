@@ -827,24 +827,21 @@ class String(TraitType):
 
 
 class Regex(String):
-    """ Defines a trait whose value is a Python string that matches a specified
-        regular expression.
+    """ A trait whose value is a string that matches a regular expression.
+
+    This is a special case of the String trait.
+
+    Parameters
+    ----------
+    value : str
+        The default value of the trait.
+    regex : str
+        The regular expression that the trait value must match.
+    **metadata
+        Trait metadata.
     """
 
     def __init__(self, value="", regex=".*", **metadata):
-        """ Creates a Regex trait.
-
-        Parameters
-        ----------
-        value : str
-            The default value of the trait.
-        regex : str
-            The regular expression that the trait value must match.
-
-        Default Value
-        -------------
-        *value* or ''
-        """
         super(Regex, self).__init__(value=value, regex=regex, **metadata)
 
 
@@ -1111,6 +1108,16 @@ Disallow = Disallow()
 
 class Constant(TraitType):
     """  Defines a trait whose value is a constant.
+
+    Traits of this type are very space efficient (and fast) because
+    *value* is not stored in each instance using the trait, but only in
+    the trait object itself. The *value* cannot be a list or dictionary,
+    because those types have mutable values.
+
+    Parameters
+    ----------
+    value : any type other than list or dict
+        The constant value for the trait.
     """
 
     #: Defines the CTrait type to use for this trait:
@@ -1120,24 +1127,6 @@ class Constant(TraitType):
     metadata = {"type": "constant", "transient": True}
 
     def __init__(self, value, **metadata):
-        """ Returns a constant, read-only trait whose value is *value*.
-
-            Parameters
-            ----------
-            value : any type except a list or dictionary
-                The default value for the trait.
-
-            Default Value
-            -------------
-            *value*
-
-            Description
-            -----------
-            Traits of this type are very space efficient (and fast) because
-            *value* is not stored in each instance using the trait, but only in
-            the trait object itself. The *value* cannot be a list or dictionary,
-            because those types have mutable values.
-        """
         if type(value) in MutableTypes:
             raise TraitError(
                 "Cannot define a constant using a mutable list or dictionary"
@@ -1205,52 +1194,49 @@ class Delegate(TraitType):
 
 
 class DelegatesTo(Delegate):
-    """ Defines a trait delegate that matches the standard 'delegate' design
-        pattern.
+    """ A trait delegate that matches the 'delegate' design pattern.
+
+    This defines a trait whose value and definition is "delegated" to
+    another trait on a different object.
+
+    An object containing a delegator trait attribute must contain a
+    second attribute that references the object containing the delegate
+    trait attribute. The name of this second attribute is passed as the
+    *delegate* argument to the DelegatesTo() function.
+
+    The following rules govern the application of the prefix parameter:
+
+    * If *prefix* is empty or omitted, the delegation is to an attribute
+      of the delegate object with the same name as the delegator
+      attribute.
+    * If *prefix* is a valid Python attribute name, then the delegation
+      is to an attribute whose name is the value of *prefix*.
+    * If *prefix* ends with an asterisk ('*') and is longer than one
+      character, then the delegation is to an attribute whose name is
+      the value of *prefix*, minus the trailing asterisk, prepended to
+      the delegator attribute name.
+    * If *prefix* is equal to a single asterisk, the delegation is to an
+      attribute whose name is the value of the delegator object's
+      __prefix__ attribute prepended to delegator attribute name.
+
+    Note that any changes to the delegator attribute are actually
+    applied to the corresponding attribute on the delegate object. The
+    original object containing the delegator trait is not modified.
+
+    Parameters
+    ----------
+    delegate : str
+        Name of the attribute on the current object which references
+        the object that is the trait's delegate.
+    prefix : str
+        A prefix or substitution applied to the original attribute when
+        looking up the delegated attribute.
+    listenable : bool
+        Indicates whether a listener can be attached to this attribute
+        such that changes to the delagate attribute will trigger it.
     """
 
     def __init__(self, delegate, prefix="", listenable=True, **metadata):
-        """ Creates a "delegator" trait, whose definition and default value are
-            delegated to a *delegate* trait attribute on another object.
-
-            Parameters
-            ----------
-            delegate : str
-                Name of the attribute on the current object which references
-                the object that is the trait's delegate.
-            prefix : str
-                A prefix or substitution applied to the original attribute when
-                looking up the delegated attribute.
-            listenable : bool
-                Indicates whether a listener can be attached to this attribute
-                such that changes to the delagate attribute will trigger it.
-
-            Description
-            -----------
-            An object containing a delegator trait attribute must contain a
-            second attribute that references the object containing the delegate
-            trait attribute. The name of this second attribute is passed as the
-            *delegate* argument to the DelegatesTo() function.
-
-            The following rules govern the application of the prefix parameter:
-
-            * If *prefix* is empty or omitted, the delegation is to an attribute
-              of the delegate object with the same name as the delegator
-              attribute.
-            * If *prefix* is a valid Python attribute name, then the delegation
-              is to an attribute whose name is the value of *prefix*.
-            * If *prefix* ends with an asterisk ('*') and is longer than one
-              character, then the delegation is to an attribute whose name is
-              the value of *prefix*, minus the trailing asterisk, prepended to
-              the delegator attribute name.
-            * If *prefix* is equal to a single asterisk, the delegation is to an
-              attribute whose name is the value of the delegator object's
-              __prefix__ attribute prepended to delegator attribute name.
-
-            Note that any changes to the delegator attribute are actually
-            applied to the corresponding attribute on the delegate object. The
-            original object containing the delegator trait is not modified.
-        """
         super(DelegatesTo, self).__init__(
             delegate,
             prefix=prefix,
@@ -1266,55 +1252,51 @@ class DelegatesTo(Delegate):
 
 
 class PrototypedFrom(Delegate):
-    """ Defines a trait delegate that matches the standard 'prototype' design
-        pattern.
+    """ A trait delegate that matches the 'prototype' design pattern.
+
+    This defines a trait whose default value and definition is "prototyped"
+    from another trait on a different object.
+
+    An object containing a prototyped trait attribute must contain a
+    second attribute that references the object containing the prototype
+    trait attribute. The name of this second attribute is passed as the
+    *prototype* argument to the PrototypedFrom() function.
+
+    The following rules govern the application of the prefix parameter:
+
+    * If *prefix* is empty or omitted, the prototype delegation is to an
+      attribute of the prototype object with the same name as the
+      prototyped attribute.
+    * If *prefix* is a valid Python attribute name, then the prototype
+      delegation is to an attribute whose name is the value of *prefix*.
+    * If *prefix* ends with an asterisk ('*') and is longer than one
+      character, then the prototype delegation is to an attribute whose
+      name is the value of *prefix*, minus the trailing asterisk,
+      prepended to the prototyped attribute name.
+    * If *prefix* is equal to a single asterisk, the prototype
+      delegation is to an attribute whose name is the value of the
+      prototype object's __prefix__ attribute prepended to the
+      prototyped attribute name.
+
+    Note that any changes to the prototyped attribute are made to the
+    original object, not the prototype object. The prototype object is
+    only used to define to trait type and default value.
+
+    Parameters
+    ----------
+    prototype : str
+        Name of the attribute on the current object which references the
+        object that is the trait's prototype.
+    prefix : str
+        A prefix or substitution applied to the original attribute when
+        looking up the prototyped attribute.
+    listenable : bool
+        Indicates whether a listener can be attached to this attribute
+        such that changes to the corresponding attribute on the
+        prototype object will trigger it.
     """
 
     def __init__(self, prototype, prefix="", listenable=True, **metadata):
-        """ Creates a "prototyped" trait, whose definition and default value are
-            obtained from a trait attribute on another object.
-
-            Parameters
-            ----------
-            prototype : str
-                Name of the attribute on the current object which references the
-                object that is the trait's prototype.
-            prefix : str
-                A prefix or substitution applied to the original attribute when
-                looking up the prototyped attribute.
-            listenable : bool
-                Indicates whether a listener can be attached to this attribute
-                such that changes to the corresponding attribute on the
-                prototype object will trigger it.
-
-            Description
-            -----------
-            An object containing a prototyped trait attribute must contain a
-            second attribute that references the object containing the prototype
-            trait attribute. The name of this second attribute is passed as the
-            *prototype* argument to the PrototypedFrom() function.
-
-            The following rules govern the application of the prefix parameter:
-
-            * If *prefix* is empty or omitted, the prototype delegation is to an
-              attribute of the prototype object with the same name as the
-              prototyped attribute.
-            * If *prefix* is a valid Python attribute name, then the prototype
-              delegation is to an attribute whose name is the value of *prefix*.
-            * If *prefix* ends with an asterisk ('*') and is longer than one
-              character, then the prototype delegation is to an attribute whose
-              name is the value of *prefix*, minus the trailing asterisk,
-              prepended to the prototyped attribute name.
-            * If *prefix* is equal to a single asterisk, the prototype
-              delegation is to an attribute whose name is the value of the
-              prototype object's __prefix__ attribute prepended to the
-              prototyped attribute name.
-
-            Note that any changes to the prototyped attribute are made to the
-            original object, not the prototype object. The prototype object is
-            only used to define to trait type and default value.
-
-        """
         super(PrototypedFrom, self).__init__(
             prototype,
             prefix=prefix,
@@ -1955,23 +1937,23 @@ class Range(BaseRange):
 
 class BaseEnum(TraitType):
     """ Defines a trait whose value must be one of a specified set of values.
+
+    Parameters
+    ----------
+    *args
+        The enumeration of all legal values for the trait, either as
+        positional arguments or a list, enum.Enum or tuple.  The default
+        value is the first positional argument, or the first item of
+        the sequence.
+    values : str, list, tuple or enum.Enum
+        If a sting, the name of a trait holding the values, in which
+        case there must be at most one positional argument holding the
+        default value.  If there is no default value, then the default value
+        is the first item of the value stored in the trait.
     """
 
-    def __init__(self, *args, **metadata):
+    def __init__(self, *args, values=None, **metadata):
         """ Returns an Enum trait.
-
-        Parameters
-        ----------
-        *args : *values or (default, values) or values
-            The enumeration of all legal values for the trait, either as
-            positional arguments or a list, enum.Enum or tuple.  The default
-            value is the first positional argument, or the first item of
-            the sequence.
-        values : str
-            The name of a trait holding the values, in which case there
-            must be at most one positional argument holding the default
-            value.  If there is no default value, then the default value
-            is the first item of the value stored in the trait.
 
         Default Value
         -------------
