@@ -59,9 +59,14 @@ static PyTypeObject has_traits_type;
 
 PyDoc_STRVAR(
     ctraits__doc__,
-    "The ctraits module defines the CHasTraits and CTrait C extension types "
-    "that\n"
-    "define the core performance oriented portions of the Traits package.");
+    "Fast base classes for HasTraits and CTrait.\n"
+    "\n"
+    "The ctraits module defines the CHasTraits and cTrait extension types\n"
+    "that define the core performance-oriented portions of the Traits\n"
+    "package. Users will rarely need to use this module directly. Instead,\n"
+    "they should use the API-complete HasTraits and CTrait subclasses of \n"
+    "CHasTraits and cTrait (respectively).\n"
+);
 
 /*-----------------------------------------------------------------------------
 |  HasTraits behavior modification flags:
@@ -4833,6 +4838,119 @@ PyDoc_STRVAR(
     "    If the given value is invalid for this trait.\n");
 
 PyDoc_STRVAR(
+    delegate_doc,
+    "delegate(delegate_name, prefix, prefix_type, modify_delegate)\n"
+    "\n"
+    "Set another trait as the delegate of this trait.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "delegate_name : str\n"
+    "    Name of an attribute on the current object with references the\n"
+    "    object that is the trait's delegate.\n"
+    "delegate_prefix : str\n"
+    "    A prefix or substitution applied to the original attribute when\n"
+    "    looking up the delegated attribute.\n"
+    "prefix_type : int\n"
+    "    An integer between 0 and 3, inclusive. This controls how the\n"
+    "    delegator attribute name is mapped to an attribute name on the\n"
+    "    delegate object. The meanings of the values are as follows:\n"
+    "\n"
+    "    0\n"
+    "        The delegation is to an attribute on the delegate object with\n"
+    "        the same name as the delegator attribute. *delegate_prefix*\n"
+    "        is unused.\n"
+    "    1\n"
+    "        The delegation is to an attribute with name given directly by\n"
+    "        *delegate_prefix*.\n"
+    "    2\n"
+    "        The delegation is to an attribute whose name is the value of\n"
+    "        *delegate_prefix*, prepended to the delegator attribute name.\n"
+    "    3\n"
+    "        The delegation is to an attribute whose name is the value of\n"
+    "        the delegator object's ``__prefix__`` attribute, prepended to\n"
+    "        the delegator attribute name.\n"
+    "modify_delegate : bool\n"
+    "    Whether to modify the delegate when the value of this trait\n"
+    "    is modified.\n");
+
+PyDoc_STRVAR(
+    property_doc,
+    "property()\n"
+    "property(get, get_n, set, set_n, validate, validate_n)\n"
+    "\n"
+    "Get or set property fields for this trait.\n"
+    "\n"
+    "When called with no arguments on a property trait, this method returns a\n"
+    "tuple (get, set, validate) of length 3 containing the getter, setter and\n"
+    "validator for this property trait.\n"
+    "\n"
+    "When called with no arguments on a non-property trait, this method\n"
+    "returns *None*.\n"
+    "\n"
+    "Otherwise, the *property* method expects six arguments, and uses these\n"
+    "arguments to set the get, set and validation for the trait. It also\n"
+    "sets the property flag on the trait.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "get : callable\n"
+    "    Function called when getting the value of this property trait.\n"
+    "    This function will be called with one of the following argument\n"
+    "    combinations, depending on the value of *get_n*.\n"
+    "\n"
+    "    - no arguments\n"
+    "    - a single argument ``obj``\n"
+    "    - a pair of arguments ``obj, name``\n"
+    "    - a triple of arguments ``obj, name, trait``\n"
+    "\n"
+    "get_n : int\n"
+    "    Number of arguments to supply to the getter. This should be\n"
+    "    between 0 and 3, inclusive.\n"
+    "set : callable\n"
+    "    Function called when setting the value of this property trait.\n"
+    "    This function will be called with one of the following argument\n"
+    "    combinations, depending on the value of *set_n*.\n"
+    "\n"
+    "    - no arguments\n"
+    "    - a single argument ``value``\n"
+    "    - a pair of arguments ``obj, value``\n"
+    "    - a triple of arguments ``obj, name, value``\n"
+    "\n"
+    "set_n : int\n"
+    "    Number of arguments to supply to the setter. This should be\n"
+    "    between 0 and 3, inclusive.\n"
+    "validate : callable or None\n"
+    "    Function called for validation. This function will be called\n"
+    "    with one of the following argument combinations, depending on\n"
+    "    the value of *validate_n*.\n"
+    "\n"
+    "    - no arguments\n"
+    "    - a single argument ``value``\n"
+    "    - a pair of arguments ``obj, value``\n"
+    "    - a triple of arguments ``obj, name, value``\n"
+    "\n"
+    "validate_n : int\n"
+    "    Number of arguments to supply to the validator. This should be\n"
+    "    between 0 and 3, inclusive.\n");
+
+PyDoc_STRVAR(
+    clone_doc,
+    "clone(source)\n"
+    "\n"
+    "Clone state of another trait into this one.\n"
+    "\n"
+    "This method copies all of the state of the *source* trait into\n"
+    "this trait. The copy is a simple shallow copy: for example, after\n"
+    "the copy, the handler for this trait will be the same object as\n"
+    "the handler for the *source* trait.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "source : CTrait\n"
+    "    The source trait.\n");
+
+PyDoc_STRVAR(
     _notifiers_doc,
     "_notifiers(force_create)\n"
     "\n"
@@ -4871,11 +4989,11 @@ static PyMethodDef trait_methods[] = {
      get_validate_doc},
     {"validate", (PyCFunction)_trait_validate, METH_VARARGS, validate_doc},
     {"delegate", (PyCFunction)_trait_delegate, METH_VARARGS,
-     PyDoc_STR("delegate(delegate_name,prefix,prefix_type,modify_delegate)")},
+     delegate_doc},
     {"property", (PyCFunction)_trait_property, METH_VARARGS,
-     PyDoc_STR("property([get,set,validate])")},
+     property_doc},
     {"clone", (PyCFunction)_trait_clone, METH_VARARGS,
-     PyDoc_STR("clone(trait)")},
+     clone_doc},
     {"_notifiers", (PyCFunction)_trait_notifiers, METH_VARARGS,
      _notifiers_doc},
     {NULL, NULL},
@@ -4921,6 +5039,21 @@ static PyGetSetDef trait_properties[] = {
 |  'CTrait' type definition:
 +----------------------------------------------------------------------------*/
 
+PyDoc_STRVAR(
+    ctrait_doc,
+    "Base class for CTrait.\n"
+    "\n"
+    "The cTrait class is not intended to be instantiated directly.\n"
+    "Instead, it serves as a base class for CTrait.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "kind : int\n"
+    "    Integer between 0 and 8 representing the kind of this trait. The\n"
+    "    kind determines how attribute get and set operations behave for\n"
+    "    attributes using this trait. The values for *kind* correspond\n"
+    "    to the members of the ``TraitKind`` enumeration type.\n");
+
 static PyTypeObject trait_type = {
     PyVarObject_HEAD_INIT(NULL, 0) "traits.ctraits.cTrait",
     sizeof(trait_object),
@@ -4942,7 +5075,7 @@ static PyTypeObject trait_type = {
     0,                            /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE
         | Py_TPFLAGS_HAVE_GC,                  /* tp_flags */
-    0,                                         /* tp_doc */
+    ctrait_doc,                                /* tp_doc */
     (traverseproc)trait_traverse,              /* tp_traverse */
     (inquiry)trait_clear,                      /* tp_clear */
     0,                                         /* tp_richcompare */
