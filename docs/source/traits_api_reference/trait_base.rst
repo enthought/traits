@@ -1,5 +1,5 @@
-:mod:`trait_base` Module
-========================
+:mod:`traits.trait_base` Module
+===============================
 
 .. automodule:: traits.trait_base
     :no-members:
@@ -49,6 +49,3 @@ Functions
 .. autofunction:: not_event
 
 .. autofunction:: is_str
-
-
-

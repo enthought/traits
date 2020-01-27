@@ -1,14 +1,8 @@
-:mod:`etsconfig` Package
-========================
+:mod:`traits.etsconfig` Package
+===============================
 
-:mod:`etsconfig` Package
-------------------------
-
-.. automodule:: traits.etsconfig
-    :no-members:
-
-:mod:`etsconfig` Module
------------------------
+:mod:`traits.etsconfig.etsconfig` Module
+----------------------------------------
 
 .. automodule:: traits.etsconfig.etsconfig
     :no-members:
