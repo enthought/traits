@@ -105,7 +105,7 @@ class TestCopyableTraitNameQueries(unittest.TestCase):
 
     def test_property_query(self):
         names = self.foo.copyable_trait_names(
-            **{"property": lambda p: p() and p()[1].__name__ == "_set_p"}
+            **{"get_property": lambda p: p() and p()[1].__name__ == "_set_p"}
         )
 
         self.assertEqual(["p"], names)

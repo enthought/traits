@@ -4283,6 +4283,85 @@ _get_trait_comparison_mode_int(trait_object *trait, void *closure)
     return PyLong_FromLong(i_comparison_mode);
 }
 
+
+/*-----------------------------------------------------------------------------
+|  Gets the 'property' value fields of a CTrait instance:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_trait_get_property(trait_object *trait, PyObject *args)
+{
+    PyObject *result, *temp;
+    if (trait->flags & TRAIT_PROPERTY) {
+        result = PyTuple_New(3);
+        if (result != NULL) {
+            PyTuple_SET_ITEM(result, 0, temp = trait->delegate_name);
+            Py_INCREF(temp);
+            PyTuple_SET_ITEM(result, 1, temp = trait->delegate_prefix);
+            Py_INCREF(temp);
+            PyTuple_SET_ITEM(result, 2, temp = trait->py_validate);
+            Py_INCREF(temp);
+            return result;
+        }
+        return NULL;
+    }
+    else {
+        Py_INCREF(Py_None);
+        return Py_None;
+    }
+}
+
+int _get_callable_argument_count(PyObject *callable){
+
+    if(PyMethod_Check(callable)){
+
+        PyFunctionObject *function_object =
+        (PyFunctionObject*)PyMethod_GET_FUNCTION(callable);
+
+        if(function_object){
+
+            PyCodeObject *code_object =
+            (PyCodeObject*)function_object->func_code;
+
+            if(code_object){
+                 return code_object->co_argcount -1;
+            }
+        }
+    }
+
+    else if(PyFunction_Check(callable)){
+        PyCodeObject* code_object =
+        (PyCodeObject*)PyFunction_GET_CODE(callable);
+
+        if(code_object){
+             return code_object->co_argcount;
+        }
+    }
+
+    else if(PyCallable_Check(callable)){
+        int arg_count = -1;
+
+        PyObject* func_code = PyObject_GetAttrString(callable, "func_code");
+
+        if(func_code) {
+
+            PyObject* arg_count_str =
+            PyObject_GetAttrString(func_code, "co_argcount");
+
+            if(arg_count_str) {
+               arg_count = PyLong_AsLong(arg_count_str);
+               Py_DECREF(arg_count_str);
+            }
+
+            Py_DECREF(func_code);
+        }
+
+        return arg_count;
+    }
+
+    return -1;
+}
+
 /*-----------------------------------------------------------------------------
 |  Sets the 'property' value fields of a CTrait instance:
 +----------------------------------------------------------------------------*/
@@ -4293,39 +4372,37 @@ static trait_setattr setattr_property_handlers[] = {
     (trait_setattr)post_setattr_trait_python, NULL};
 
 static PyObject *
-_trait_property(trait_object *trait, PyObject *args)
+_trait_set_property(trait_object *trait, PyObject *args)
 {
-    PyObject *get, *set, *validate, *result, *temp;
+    PyObject *get, *set, *validate;
     int get_n, set_n, validate_n;
 
     if (PyTuple_GET_SIZE(args) == 0) {
-        if (trait->flags & TRAIT_PROPERTY) {
-            result = PyTuple_New(3);
-            if (result != NULL) {
-                PyTuple_SET_ITEM(result, 0, temp = trait->delegate_name);
-                Py_INCREF(temp);
-                PyTuple_SET_ITEM(result, 1, temp = trait->delegate_prefix);
-                Py_INCREF(temp);
-                PyTuple_SET_ITEM(result, 2, temp = trait->py_validate);
-                Py_INCREF(temp);
-                return result;
-            }
-            return NULL;
-        }
-        else {
-            Py_INCREF(Py_None);
-            return Py_None;
-        }
-    }
-
-    if (!PyArg_ParseTuple(
-            args, "OiOiOi", &get, &get_n, &set, &set_n, &validate,
-            &validate_n)) {
+        PyErr_SetString(PyExc_ValueError, "Invalid arguments.");
         return NULL;
     }
+
+    if (!PyArg_ParseTuple(args, "OOO", &get, &set, &validate)) {
+        return NULL;
+    }
+
     if (!PyCallable_Check(get) || !PyCallable_Check(set)
-        || ((validate != Py_None) && !PyCallable_Check(validate))
-        || (get_n < 0) || (get_n > 3) || (set_n < 0) || (set_n > 3)
+        || ((validate != Py_None) && !PyCallable_Check(validate))){
+        PyErr_SetString(PyExc_ValueError, "Invalid arguments.");
+        return NULL;
+    }
+
+    get_n = _get_callable_argument_count(get);
+    set_n = _get_callable_argument_count(set);
+
+    if (validate == Py_None){
+        validate_n = 0;
+    }
+    else{
+        validate_n = _get_callable_argument_count(validate);
+    }
+
+    if ((get_n < 0) || (get_n > 3) || (set_n < 0) || (set_n > 3)
         || (validate_n < 0) || (validate_n > 3)) {
         PyErr_SetString(PyExc_ValueError, "Invalid arguments.");
         return NULL;
@@ -4872,8 +4949,10 @@ static PyMethodDef trait_methods[] = {
     {"validate", (PyCFunction)_trait_validate, METH_VARARGS, validate_doc},
     {"delegate", (PyCFunction)_trait_delegate, METH_VARARGS,
      PyDoc_STR("delegate(delegate_name,prefix,prefix_type,modify_delegate)")},
-    {"property", (PyCFunction)_trait_property, METH_VARARGS,
-     PyDoc_STR("property([get,set,validate])")},
+    {"set_property", (PyCFunction)_trait_set_property, METH_VARARGS,
+     PyDoc_STR("set_property(get,set,validate)")},
+    {"get_property", (PyCFunction)_trait_get_property, METH_VARARGS,
+     PyDoc_STR("get_property()")},
     {"clone", (PyCFunction)_trait_clone, METH_VARARGS,
      PyDoc_STR("clone(trait)")},
     {"_notifiers", (PyCFunction)_trait_notifiers, METH_VARARGS,

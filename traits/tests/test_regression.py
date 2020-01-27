@@ -170,7 +170,7 @@ class TestRegression(unittest.TestCase):
             prop = Property()
 
         a = A()
-        self.assertEqual(sys.getrefcount(a.trait("prop").property()), 1)
+        self.assertEqual(sys.getrefcount(a.trait("prop").get_property()), 1)
 
     def test_delegate_initializer(self):
         mess = DelegateMess()

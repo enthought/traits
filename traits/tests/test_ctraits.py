@@ -80,7 +80,7 @@ class TestCTrait(unittest.TestCase):
 
         self.assertFalse(trait.is_property)
 
-        trait.property(getter, 0, setter, 1, validator, 1)
+        trait.set_property(getter, setter, validator)
 
         self.assertTrue(trait.is_property)
 
@@ -188,3 +188,28 @@ class TestCTrait(unittest.TestCase):
 
         self.assertIsInstance(trait.comparison_mode, ComparisonMode)
         self.assertEqual(trait.comparison_mode, ComparisonMode.equality)
+
+    def test_set_property(self):
+        trait = CTrait(TraitKind.trait)
+
+        def __value_get(self):
+            return self.__dict__.get("_value", 0)
+
+        def __value_set(self, value):
+            old_value = self.__dict__.get("_value", 0)
+            if value != old_value:
+                self._value = value
+                self.trait_property_changed("value", old_value, value)
+
+        trait.set_property(__value_get, __value_set, None)
+
+    def test_set_invalid_property(self):
+        trait = CTrait(TraitKind.trait)
+
+        with self.assertRaises(ValueError):
+            trait.set_property()
+
+    def test_get_property(self):
+        trait = CTrait(TraitKind.trait)
+
+        self.assertIsNone(trait.get_property())

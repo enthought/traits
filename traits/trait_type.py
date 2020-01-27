@@ -381,17 +381,11 @@ class TraitType(BaseTraitHandler):
                 setter = _read_only
                 metadata.setdefault("transient", True)
             trait = CTrait(TraitKind.property)
-            n = 0
             validate = getattr(self, "validate", None)
-            if validate is not None:
-                n = _arg_count(validate)
-            trait.property(
+            trait.set_property(
                 getter,
-                _arg_count(getter),
                 setter,
-                _arg_count(setter),
                 validate,
-                n,
             )
             metadata.setdefault("type", "property")
         else:
