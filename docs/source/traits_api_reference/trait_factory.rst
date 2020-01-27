@@ -1,5 +1,5 @@
-:mod:`trait_factory` Module
-===========================
+:mod:`traits.trait_factory` Module
+==================================
 
 .. automodule:: traits.trait_factory
     :no-members:

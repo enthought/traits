@@ -1,5 +1,5 @@
-:mod:`trait_numeric` Module
-===========================
+:mod:`traits.trait_numeric` Module
+==================================
 
 .. automodule:: traits.trait_numeric
     :no-members:
@@ -19,4 +19,3 @@ Function
 --------
 
 .. autofunction:: dtype2trait
-

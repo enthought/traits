@@ -1,5 +1,5 @@
-:mod:`editor_factories` Module
-==============================
+:mod:`traits.editor_factories` Module
+=====================================
 
 .. automodule:: traits.editor_factories
     :no-members:

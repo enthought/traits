@@ -1,5 +1,5 @@
-:mod:`trait_handlers` Module
-============================
+:mod:`traits.trait_handlers` Module
+===================================
 
 .. automodule:: traits.trait_handlers
     :no-members:
