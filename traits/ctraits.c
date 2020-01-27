@@ -210,7 +210,7 @@ typedef struct _trait_object {
     trait_getattr getattr;           /* Get trait value handler */
     trait_setattr setattr;           /* Set trait value handler */
     trait_post_setattr post_setattr; /* Optional post 'setattr' handler */
-    PyObject *py_post_setattr;       /* Python-based post 'setattr' hndlr */
+    PyObject *py_post_setattr;       /* Python-based post 'setattr' handler */
     trait_validate validate;         /* Validate trait value handler */
     PyObject *py_validate;           /* Python-based validate value handler */
     int default_value_type;          /* Type of default value: see the
@@ -4885,37 +4885,124 @@ static PyMethodDef trait_methods[] = {
 |  'CTrait' property definitions:
 +----------------------------------------------------------------------------*/
 
+PyDoc_STRVAR(
+    ctrait_handler_doc,
+    "The trait handler underlying this trait.\n"
+    "\n"
+    "The value of this property should be an instance of\n"
+    "``BaseTraitHandler``.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_post_setattr_doc,
+    "Callable called after a successful value assignment to this trait.\n"
+    "\n"
+    "The value of this property is either a callable or *None*.\n"
+    "If the value is a callable, this callable allows the trait to do\n"
+    "additional processing after a value has successfully been assigned.\n"
+    "The callable is called with arguments (object, name, value), and the\n"
+    "return value of the callable is ignored.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_is_property_doc,
+    "True if this trait is a property trait, else False.\n"
+    "\n"
+    "This property is read-only.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_modify_delegate_doc,
+    "Indicate whether modifications affect the delegate.\n"
+    "\n"
+    "For delegated traits, this is a boolean indicating whether\n"
+    "modifications to this trait also modify the delegated trait.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_setattr_original_value_doc,
+    "Whether setattr stores the original or the validated value.\n"
+    "\n"
+    "If true, setattr will store the original, unvalidated, value set on\n"
+    "the trait to the object's dictionary. If false, the value returned\n"
+    "from the validator will be stored.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_post_setattr_original_value_doc,
+    "Whether post_setattr receives the original or the validated value.\n"
+    "\n"
+    "If true, the post_setattr callable for this trait (if defined)\n"
+    "receives the original, unvalidated value assigned to the trait.\n"
+    "If false, the validated value is provided to post_setattr.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_is_mapped_doc,
+    "True if this is a mapped trait, else False.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_comparison_mode_doc,
+    "Integer constant indicating when notifiers are executed.\n"
+    "\n"
+    "Valid values for this constant are 0, 1 and 2. If 0, notifiers\n"
+    "are executed on every assignment. If 1, notifiers are executed\n"
+    "if and only if the new value is a different object (that is,\n"
+    "has a different id()) from the old value. If 2, notifiers are\n"
+    "executed if the new value is both not identical to the old\n"
+    "value, and also not equal to the old value. These constants\n"
+    "correspond to the traits.constants.ComparisonMode enumeration\n"
+    "members.\n"
+);
+
+
 static PyGetSetDef trait_properties[] = {
-    {"__dict__", (getter)get_trait_dict, (setter)set_trait_dict},
-    {"handler", (getter)get_trait_handler, (setter)set_trait_handler},
-    {"post_setattr", (getter)get_trait_post_setattr,
-     (setter)set_trait_post_setattr},
-    {"is_property", (getter)get_trait_property_flag, NULL,
-     "Whether the trait is a property trait.", NULL},
-    {"modify_delegate", (getter)get_trait_modify_delegate_flag,
+    {"__dict__",
+     (getter)get_trait_dict,
+     (setter)set_trait_dict,
+     NULL, NULL},
+    {"handler",
+     (getter)get_trait_handler,
+     (setter)set_trait_handler,
+     ctrait_handler_doc,
+     NULL},
+    {"post_setattr",
+     (getter)get_trait_post_setattr,
+     (setter)set_trait_post_setattr,
+     ctrait_post_setattr_doc,
+     NULL},
+    {"is_property",
+     (getter)get_trait_property_flag,
+     NULL,
+     ctrait_is_property_doc,
+     NULL},
+    {"modify_delegate",
+     (getter)get_trait_modify_delegate_flag,
      (setter)set_trait_modify_delegate_flag,
-     "Whether changes to the trait modify the delegate as well", NULL},
-    {"setattr_original_value", (getter)get_trait_setattr_original_value_flag,
+     ctrait_modify_delegate_doc,
+     NULL},
+    {"setattr_original_value",
+     (getter)get_trait_setattr_original_value_flag,
      (setter)set_trait_setattr_original_value_flag,
-     "Whether setattr gets the original value set on the trait or the "
-     "stored value,",
+     ctrait_setattr_original_value_doc,
      NULL},
     {"post_setattr_original_value",
      (getter)get_trait_post_setattr_original_value_flag,
      (setter)set_trait_post_setattr_original_value_flag,
-     "Whether post_setattr gets the original value set on the trait or "
-     "the stored value,",
+     ctrait_post_setattr_original_value_doc,
      NULL},
-    {"is_mapped", (getter)get_trait_is_mapped_flag,
-     (setter)set_trait_is_mapped_flag, "Whether the trait is a mapped trait.",
+    {"is_mapped",
+     (getter)get_trait_is_mapped_flag,
+     (setter)set_trait_is_mapped_flag,
+     ctrait_is_mapped_doc,
      NULL},
     {"comparison_mode",
      (getter)_get_trait_comparison_mode_int,
      (setter)_set_trait_comparison_mode,
-     "Whether to use no compare(0) or object identity(1) compare or equality "
-     "compare(2) to determine a trait change.",
+     ctrait_comparison_mode_doc,
      NULL},
-    {0}};
+    {NULL}};
 
 /*-----------------------------------------------------------------------------
 |  'CTrait' type definition:
