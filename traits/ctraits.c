@@ -1511,6 +1511,19 @@ static PyGetSetDef has_traits_properties[] = {
 |  'CHasTraits' type definition:
 +----------------------------------------------------------------------------*/
 
+PyDoc_STRVAR(
+    c_has_traits_doc,
+    "Base class for HasTraits.\n"
+    "\n"
+    "The CHasTraits class is not intended to be instantiated directly.\n"
+    "Instead, it serves as a base class for the HasTraits class.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "**traits : dict\n"
+    "    Dictionary mapping trait names to trait values.\n"
+);
+
 static PyTypeObject has_traits_type = {
     PyVarObject_HEAD_INIT(NULL, 0) "traits.ctraits.CHasTraits",
     sizeof(has_traits_object),
@@ -1532,7 +1545,7 @@ static PyTypeObject has_traits_type = {
     0,                                 /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE
         | Py_TPFLAGS_HAVE_GC,                       /* tp_flags */
-    0,                                              /* tp_doc */
+    c_has_traits_doc,                               /* tp_doc */
     (traverseproc)has_traits_traverse,              /* tp_traverse */
     (inquiry)has_traits_clear,                      /* tp_clear */
     0,                                              /* tp_richcompare */
