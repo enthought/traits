@@ -127,9 +127,7 @@ class TestCTrait(unittest.TestCase):
         trait = CTrait(TraitKind.trait)
 
         self.assertIsInstance(trait.comparison_mode, ComparisonMode)
-        self.assertEqual(
-            trait.comparison_mode, ComparisonMode.equality_compare
-        )
+        self.assertEqual(trait.comparison_mode, ComparisonMode.equality)
 
     def test_invalid_comparison_mode(self):
         trait = CTrait(TraitKind.trait)
@@ -146,18 +144,14 @@ class TestCTrait(unittest.TestCase):
         trait = CTrait(TraitKind.trait)
         default_comparison_mode = trait.comparison_mode
 
-        self.assertNotEqual(
-            default_comparison_mode, ComparisonMode.no_compare
-        )
+        self.assertNotEqual(default_comparison_mode, ComparisonMode.none)
 
-        trait.comparison_mode = ComparisonMode.no_compare
+        trait.comparison_mode = ComparisonMode.none
 
         with self.assertRaises(ValueError):
             trait.comparison_mode = -1
 
-        self.assertEqual(
-            trait.comparison_mode, ComparisonMode.no_compare
-        )
+        self.assertEqual(trait.comparison_mode, ComparisonMode.none)
 
     def test_comparison_mode_int(self):
         trait = CTrait(TraitKind.trait)
@@ -165,44 +159,32 @@ class TestCTrait(unittest.TestCase):
         trait.comparison_mode = 0
 
         self.assertIsInstance(trait.comparison_mode, ComparisonMode)
-        self.assertEqual(
-            trait.comparison_mode, ComparisonMode.no_compare
-        )
+        self.assertEqual(trait.comparison_mode, ComparisonMode.none)
 
         trait.comparison_mode = 1
 
         self.assertIsInstance(trait.comparison_mode, ComparisonMode)
-        self.assertEqual(
-            trait.comparison_mode, ComparisonMode.object_id_compare
-        )
+        self.assertEqual(trait.comparison_mode, ComparisonMode.identity)
 
         trait.comparison_mode = 2
 
         self.assertIsInstance(trait.comparison_mode, ComparisonMode)
-        self.assertEqual(
-            trait.comparison_mode, ComparisonMode.equality_compare
-        )
+        self.assertEqual(trait.comparison_mode, ComparisonMode.equality)
 
     def test_comparison_mode_enum(self):
         trait = CTrait(TraitKind.trait)
 
-        trait.comparison_mode = ComparisonMode.no_compare
+        trait.comparison_mode = ComparisonMode.none
 
         self.assertIsInstance(trait.comparison_mode, ComparisonMode)
-        self.assertEqual(
-            trait.comparison_mode, ComparisonMode.no_compare
-        )
+        self.assertEqual(trait.comparison_mode, ComparisonMode.none)
 
-        trait.comparison_mode = ComparisonMode.object_id_compare
+        trait.comparison_mode = ComparisonMode.identity
 
         self.assertIsInstance(trait.comparison_mode, ComparisonMode)
-        self.assertEqual(
-            trait.comparison_mode, ComparisonMode.object_id_compare
-        )
+        self.assertEqual(trait.comparison_mode, ComparisonMode.identity)
 
-        trait.comparison_mode = ComparisonMode.equality_compare
+        trait.comparison_mode = ComparisonMode.equality
 
         self.assertIsInstance(trait.comparison_mode, ComparisonMode)
-        self.assertEqual(
-            trait.comparison_mode, ComparisonMode.equality_compare
-        )
+        self.assertEqual(trait.comparison_mode, ComparisonMode.equality)

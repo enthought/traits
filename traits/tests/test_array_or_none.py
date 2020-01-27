@@ -33,7 +33,7 @@ if numpy is not None:
         maybe_array_with_default = ArrayOrNone(value=[1, 2, 3])
 
         maybe_array_no_compare = ArrayOrNone(
-            comparison_mode=ComparisonMode.no_compare)
+            comparison_mode=ComparisonMode.none)
 
 
 @requires_numpy

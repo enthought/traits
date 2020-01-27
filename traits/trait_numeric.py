@@ -90,9 +90,7 @@ class AbstractArray(TraitType):
         metadata["array"] = True
 
         # Normally use object identity to detect array values changing:
-        metadata.setdefault(
-            "comparison_mode", ComparisonMode.object_id_compare
-        )
+        metadata.setdefault("comparison_mode", ComparisonMode.identity)
 
         if typecode is not None:
             warnings.warn(
@@ -413,9 +411,7 @@ class ArrayOrNone(CArray):
 
     def __init__(self, *args, **metadata):
         # Normally use object identity to detect array values changing:
-        metadata.setdefault(
-            "comparison_mode", ComparisonMode.object_id_compare
-        )
+        metadata.setdefault("comparison_mode", ComparisonMode.identity)
         super(ArrayOrNone, self).__init__(*args, **metadata)
 
     def validate(self, object, name, value):

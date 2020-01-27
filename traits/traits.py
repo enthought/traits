@@ -252,11 +252,11 @@ def Trait(*value_type, **metadata):
         the result of comparing the old and new values of a trait assignment.
         Possible values come from the ``ComparisonMode`` enum:
 
-        * 0 (no_compare): The values are not compared and a trait change
+        * 0 (none): The values are not compared and a trait change
           notification is generated on each assignment.
-        * 1 (object_id_compare): A trait change notification is
+        * 1 (identity): A trait change notification is
           generated if the old and new values are not the same object.
-        * 2 (equality_compare): A trait change notification is generated if the
+        * 2 (equality): A trait change notification is generated if the
           old and new values are not equal using Python's standard equality
           testing. This is the default.
 
@@ -510,9 +510,9 @@ class _TraitMaker(object):
                 stacklevel=4,
             )
             if rich_compare:
-                trait.comparison_mode = ComparisonMode.equality_compare
+                trait.comparison_mode = ComparisonMode.equality
             else:
-                trait.comparison_mode = ComparisonMode.object_id_compare
+                trait.comparison_mode = ComparisonMode.identity
 
         comparison_mode = metadata.pop("comparison_mode", None)
         if comparison_mode is not None:
