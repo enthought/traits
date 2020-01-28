@@ -4946,14 +4946,8 @@ PyDoc_STRVAR(
     ctrait_comparison_mode_doc,
     "Integer constant indicating when notifiers are executed.\n"
     "\n"
-    "Valid values for this constant are 0, 1 and 2. If 0, notifiers\n"
-    "are executed on every assignment. If 1, notifiers are executed\n"
-    "if and only if the new value is a different object (that is,\n"
-    "has a different id()) from the old value. If 2, notifiers are\n"
-    "executed if the new value is both not identical to the old\n"
-    "value, and also not equal to the old value. These constants\n"
-    "correspond to the traits.constants.ComparisonMode enumeration\n"
-    "members.\n"
+    "The value of this constant is the integer corresponding to a member\n"
+    "of the :data:`~traits.constants.ComparisonMode` enumeration.\n"
 );
 
 
