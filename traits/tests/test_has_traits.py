@@ -312,12 +312,3 @@ class TestHasTraits(unittest.TestCase):
         foo = HasTraits()
 
         self.assertTrue(foo.traits_inited())
-
-    def test_set_traits_inited(self):
-        foo = HasTraits().__new__(HasTraits)
-
-        self.assertFalse(foo.traits_inited())
-
-        foo.set_traits_inited()
-
-        self.assertTrue(foo.traits_inited())
