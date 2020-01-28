@@ -5063,7 +5063,7 @@ static PyMethodDef trait_methods[] = {
      get_validate_doc},
     {"validate", (PyCFunction)_trait_validate, METH_VARARGS, validate_doc},
     {"delegate", (PyCFunction)_trait_delegate, METH_VARARGS,
-     PyDoc_STR("delegate(delegate_name,prefix,prefix_type,modify_delegate)")},
+     delegate_doc},
     {"set_property", (PyCFunction)_trait_set_property, METH_VARARGS,
      set_property_doc},
     {"get_property", (PyCFunction)_trait_get_property, METH_VARARGS,
