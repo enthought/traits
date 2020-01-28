@@ -292,6 +292,7 @@ Documentation
 
 Build and continuous integration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 * Enable C asserts in Travis CI runs. (#791)
 * Abort CI on compiler warnings in Travis CI runs. (#769)
 * Run a ``flake8`` check in both Travis CI and Appveyor runs. (#753, #762)
@@ -315,7 +316,7 @@ of the more significant changes.
   modules. (#730)
 * The codebase is now mostly ``flake8`` clean. (#786, #753, #747, #748, #746,
   #595)
-* Copyright headers have been made consistent for all Python files.
+* Copyright headers have been made consistent for all Python files. (#754)
 * ``ctraits.c`` has been run through ``clang-tidy`` and ``clang-format`` in
   order to bring it closer to PEP 7 style. (#715)
 * Editor factories have been moved into a new ``traits.editor_factories``
