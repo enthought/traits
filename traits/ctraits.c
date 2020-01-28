@@ -3850,6 +3850,7 @@ validate_trait_complex(
                 break;
 
             default: /* Should never happen...indicates an internal error: */
+                assert(0);  /* invalid validation type */
                 goto error;
         }
     }
