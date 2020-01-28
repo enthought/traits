@@ -128,7 +128,7 @@ Features
   provide an zero-argument ``as_ctrait`` method that returns a new ``CTrait``.
   Types can provide an ``instantiate_and_get_ctrait`` method, which when
   called with no arguments provides a new ``CTrait`` for that type.
- (#783, #794)
+  (#783, #794)
 * Add a new ``HasTraits._class_traits`` method for introspection of an
   object's class traits. This parallels the existing
   ``HasTraits._instance_traits`` method. This method is intended for use in
@@ -269,7 +269,7 @@ Test suite
 ~~~~~~~~~~
 
 * Fix various tests to be repeatable. (#802, #729)
-* Fix ``DeprecationWarning``s from the test suite. (#820, #804, #716)
+* Fix deprecation warnings in the test suite output. (#820, #804, #716)
 * Add machinery for testing unpickling of historical pickles. (#787)
 * Remove print statements from test suite. (#752, #768)
 * Fix a test to clean up the threads it creates. (#731)
