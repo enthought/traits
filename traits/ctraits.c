@@ -3838,11 +3838,11 @@ validate_trait_complex(
                 }
                 return result;
 
-            case 22: /* Callable check: */
-                if (value == Py_None || PyCallable_Check(value)) {
-                    goto done;
-                }
-                break;
+            // case 22: /* Callable check: */
+                // if (value == Py_None || PyCallable_Check(value)) {
+                    // goto done;
+                // }
+                // break;
 
             default: /* Should never happen...indicates an internal error: */
                 assert(0);  /* invalid validation type */
