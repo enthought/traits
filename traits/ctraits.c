@@ -4106,6 +4106,10 @@ post_setattr_trait_python(
     trait_object *trait, has_traits_object *obj, PyObject *name,
     PyObject *value)
 {
+    if (trait->py_post_setattr == Py_None) {
+        return 0;
+    }
+
     PyObject *result;
 
     PyObject *args = PyTuple_New(3);
