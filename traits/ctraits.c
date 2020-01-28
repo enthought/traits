@@ -1475,13 +1475,23 @@ PyDoc_STRVAR(
     traits_inited_doc,
     "traits_inited()\n"
     "\n"
-    "Report whether this object has been initialized.");
+    "Report whether this object has been initialized.\n"
+    "\n"
+    "Returns\n"
+    "-------\n"
+    "bool\n"
+    "    True if this object has been initialized, else False.");
 
 PyDoc_STRVAR(
     set_traits_inited_doc,
     "set_traits_inited()\n"
     "\n"
-    "Declare that this object has finished being initialized.");
+    "Indicate whether this object has been initialized.\n"
+    "\n"
+    "Returns\n"
+    "-------\n"
+    "NoneType\n"
+    "    returns None.");
 
 static PyMethodDef has_traits_methods[] = {
     {"trait_property_changed", (PyCFunction)_has_traits_property_changed,
