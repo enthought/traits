@@ -4951,7 +4951,8 @@ PyDoc_STRVAR(
     "    Whether to modify the delegate when the value of this trait\n"
     "    is modified.\n");
 
-PyDoc_STVAR(set_property_doc,
+PyDoc_STRVAR(
+    set_property_doc,
     "set_property(get, set, validate)\n"
     "\n"
     "Set property fields for this trait.\n"
@@ -4993,7 +4994,8 @@ PyDoc_STVAR(set_property_doc,
     "    - a triple of arguments ``obj, name, value``\n"
     "\n");
 
-PyDoc_STVAR(get_property_doc,
+PyDoc_STRVAR(
+    get_property_doc,
     "get_property()\n"
     "\n"
     "Get the property fields for this trait.\n"
