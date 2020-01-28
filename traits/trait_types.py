@@ -1940,7 +1940,7 @@ class BaseEnum(TraitType):
         unused.
     """
 
-    def __init__(self, *args, values=None, **metadata):
+    def __init__(self, *args, **metadata):
         values = metadata.pop("values", None)
         if isinstance(values, str):
             self.name = values
@@ -3649,6 +3649,7 @@ class WeakRef(Instance):
             self.validate_failed(object, name, value)
 
         self.klass = klass
+
 
 #: Trait type for datetime.date instances.
 Date = BaseInstance(datetime.date, editor=date_editor)
