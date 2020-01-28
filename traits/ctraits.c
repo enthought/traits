@@ -215,7 +215,7 @@ typedef struct _trait_object {
     trait_getattr getattr;           /* Get trait value handler */
     trait_setattr setattr;           /* Set trait value handler */
     trait_post_setattr post_setattr; /* Optional post 'setattr' handler */
-    PyObject *py_post_setattr;       /* Python-based post 'setattr' hndlr */
+    PyObject *py_post_setattr;       /* Python-based post 'setattr' handler */
     trait_validate validate;         /* Validate trait value handler */
     PyObject *py_validate;           /* Python-based validate value handler */
     int default_value_type;          /* Type of default value: see the
@@ -1437,6 +1437,66 @@ set_has_traits_dict(has_traits_object *obj, PyObject *value, void *closure)
 +----------------------------------------------------------------------------*/
 
 PyDoc_STRVAR(
+    has_traits_trait_property_changed_doc,
+    "trait_property_changed(name, old_value[, new_value])\n"
+    "\n"
+    "Call notifiers when a trait property value is explicitly changed.\n"
+    "\n"
+    "Calls trait and object notifiers for a property value change.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "name : str\n"
+    "    Name of the trait whose value has changed\n"
+    "old_value : any\n"
+    "    Old value for this trait.\n"
+    "new_value : any, optional\n"
+    "    New value for this trait. If the new value is not provided,\n"
+    "    it's looked up on the object.\n");
+
+PyDoc_STRVAR(
+    has_traits_trait_items_event_doc,
+    "trait_items_event(name, event_object, event_trait)\n"
+    "\n"
+    "Fire an items event for changes to a Traits collection.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "name : str\n"
+    "    Name of the item trait for which an event is being fired. (The name\n"
+    "    will usually end in '_items'.)\n"
+    "event_object : object\n"
+    "    Object of type ``TraitListEvent``, ``TraitDictEvent`` or ``TraitSetEvent``\n"
+    "    describing the changes to the underlying collection trait value.\n"
+    "event_trait : CTrait\n"
+    "    The items trait, of trait type ``Event``.\n");
+
+PyDoc_STRVAR(
+    has_traits__trait_change_notify_doc,
+    "_trait_change_notify(enabled)\n"
+    "\n"
+    "Enable or disable trait change notifications for this object.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "enabled : bool\n"
+    "    If true, enable trait change notifications for this object.\n"
+    "    If false, disable trait change notifications for this object.\n");
+
+PyDoc_STRVAR(
+    has_traits__trait_veto_notify_doc,
+    "_trait_veto_notify(vetoed)\n"
+    "\n"
+    "Enable or disable vetoing of trait change notifications by this object.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "vetoed : bool\n"
+    "    If true, veto trait change notifications for this object: no\n"
+    "    notifications will be issued when this object is assigned to\n"
+    "    a trait. If false, notifications will be issued as usual.\n");
+
+PyDoc_STRVAR(
     _trait_notifications_enabled_doc,
     "_trait_notifications_enabled()\n"
     "\n"
@@ -1472,18 +1532,27 @@ PyDoc_STRVAR(
     "False.\n");
 
 PyDoc_STRVAR(
-    traits_inited_doc,
-    "traits_inited()\n"
+    has_traits_traits_init_doc,
+    "traits_init()\n"
     "\n"
-    "Report whether this object has been initialized.\n"
+    "Perform any final object initialization needed.\n"
+    "\n"
+    "For the CHasTraits base class, this method currently does nothing.\n");
+
+PyDoc_STRVAR(
+    has_traits_traits_inited_doc,
+    "traits_inited()\n"
+    "traits_inited(value)\n"
+    "\n"
+    "Get the initialization state of this object.\n"
     "\n"
     "Returns\n"
     "-------\n"
-    "bool\n"
-    "    True if this object has been initialized, else False.");
+    "initialized : bool\n"
+    "    True if the object is initialized, else False.\n");
 
 PyDoc_STRVAR(
-    set_traits_inited_doc,
+    has_traits__set_traits_inited_doc,
     "_set_traits_inited()\n"
     "\n"
     "Indicate whether this object has been initialized.\n"
@@ -1493,50 +1562,157 @@ PyDoc_STRVAR(
     "NoneType\n"
     "    returns None.");
 
+PyDoc_STRVAR(
+    has_traits__trait_doc,
+    "_trait(name, instance)\n"
+    "\n"
+    "Return and optionally create a specified instance or class trait.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "name : str\n"
+    "    Name of the trait to be retrieved or created.\n"
+    "instance : int\n"
+    "    An integer determining the action to be taken. One of\n"
+    "    {-2, -1, 0, 1, 2}. The meaning of the values is as follows:\n"
+    "\n"
+    "    2\n"
+    "        Return an instance trait, creating a new trait if none exists.\n"
+    "    1\n"
+    "        Return an existing instance trait. Do not create a new trait.\n"
+    "    0\n"
+    "        Return an existing instance or class trait. Do not create a\n"
+    "        new trait.\n"
+    "    -1\n"
+    "        Return an instance trait, or create a new class trait if no\n"
+    "        instance trait exists.\n"
+    "    -2\n"
+    "        Return the base trait after resolving delegation.\n");
+
+PyDoc_STRVAR(
+    has_traits__instance_traits_doc,
+    "_instance_traits()\n"
+    "\n"
+    "Return this object's instance traits dictionary.\n"
+    "\n"
+    "The object's instance traits dictionary is created if it doesn't\n"
+    "already exist.\n"
+    "\n"
+    "Returns\n"
+    "-------\n"
+    "instance_traits : dict\n"
+    "    Dictionary mapping trait names to corresponding CTrait instances.\n");
+
+PyDoc_STRVAR(
+    has_traits__class_traits_doc,
+    "_instance_traits()\n"
+    "\n"
+    "Return this object's class traits dictionary.\n"
+    "\n"
+    "Returns\n"
+    "-------\n"
+    "class_traits : dict\n"
+    "    Dictionary mapping trait names to corresponding CTrait instances.\n");
+
+PyDoc_STRVAR(
+    has_traits__notifiers_doc,
+    "_notifiers(force_create)\n"
+    "\n"
+    "Return (and optionally create) the list of notifiers for this object.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "force_create : bool\n"
+    "    Whether to automatically create the list of notifiers, if it\n"
+    "    doesn't exist yet.\n"
+    "\n"
+    "Returns\n"
+    "-------\n"
+    "notifiers : list of callables, or None\n"
+    "    If the trait has no notifiers and *force_create* is false, return\n"
+    "    None. Otherwise, return the list of notifiers for this object,\n"
+    "    creating it first if necessary. Each notifier is a callable\n"
+    "    accepting four arguments (object, trait_name, old, new).\n");
+
 static PyMethodDef has_traits_methods[] = {
-    {"trait_property_changed", (PyCFunction)_has_traits_property_changed,
-     METH_VARARGS,
-     PyDoc_STR("trait_property_changed(name,old_value[,new_value])")},
-    {"trait_items_event", (PyCFunction)_has_traits_items_event, METH_VARARGS,
-     PyDoc_STR("trait_items_event(event_trait,name,items_event)")},
-    {"_trait_change_notify", (PyCFunction)_has_traits_change_notify,
-     METH_VARARGS, PyDoc_STR("_trait_change_notify(boolean)")},
+    {
+        "trait_property_changed",
+        (PyCFunction)_has_traits_property_changed,
+        METH_VARARGS,
+        has_traits_trait_property_changed_doc
+    },
+    {
+        "trait_items_event",
+        (PyCFunction)_has_traits_items_event,
+        METH_VARARGS,
+        has_traits_trait_items_event_doc
+    },
+    {
+        "_trait_change_notify",
+        (PyCFunction)_has_traits_change_notify,
+        METH_VARARGS,
+        has_traits__trait_change_notify_doc
+    },
     {
         "_trait_notifications_enabled",
         (PyCFunction)_has_traits_notifications_enabled,
         METH_NOARGS,
         _trait_notifications_enabled_doc,
     },
-    {"_trait_veto_notify", (PyCFunction)_has_traits_veto_notify, METH_VARARGS,
-     PyDoc_STR("_trait_veto_notify(boolean)")},
+    {
+        "_trait_veto_notify",
+        (PyCFunction)_has_traits_veto_notify,
+        METH_VARARGS,
+        has_traits__trait_veto_notify_doc
+    },
     {
         "_trait_notifications_vetoed",
         (PyCFunction)_has_traits_notifications_vetoed,
         METH_NOARGS,
         _trait_notifications_vetoed_doc,
     },
-    {"traits_init", (PyCFunction)_has_traits_init, METH_NOARGS,
-     PyDoc_STR("traits_init()")},
+    {
+        "traits_init",
+        (PyCFunction)_has_traits_init,
+        METH_NOARGS,
+        has_traits_traits_init_doc
+    },
     {
         "traits_inited",
         (PyCFunction)_has_traits_inited,
-        METH_NOARGS,
-        traits_inited_doc
+        METH_VARARGS,
+        has_traits_traits_inited_doc
     },
     {
         "_set_traits_inited",
         (PyCFunction)_has_traits_set_inited,
         METH_NOARGS,
-        set_traits_inited_doc
+        has_traits__set_traits_inited_doc
     },
-    {"_trait", (PyCFunction)_has_traits_trait, METH_VARARGS,
-     PyDoc_STR("_trait(name,instance) -> trait")},
-    {"_instance_traits", (PyCFunction)_has_traits_instance_traits, METH_NOARGS,
-     PyDoc_STR("_instance_traits() -> dict")},
-    {"_class_traits", (PyCFunction)_has_traits_class_traits, METH_NOARGS,
-     PyDoc_STR("_class_traits() -> dict")},
-    {"_notifiers", (PyCFunction)_has_traits_notifiers, METH_VARARGS,
-     PyDoc_STR("_notifiers(force_create) -> list")},
+    {
+        "_trait",
+        (PyCFunction)_has_traits_trait,
+        METH_VARARGS,
+        has_traits__trait_doc
+    },
+    {
+        "_instance_traits",
+        (PyCFunction)_has_traits_instance_traits,
+        METH_NOARGS,
+        has_traits__instance_traits_doc
+    },
+    {
+        "_class_traits",
+        (PyCFunction)_has_traits_class_traits,
+        METH_NOARGS,
+        has_traits__class_traits_doc
+    },
+    {
+        "_notifiers",
+        (PyCFunction)_has_traits_notifiers,
+        METH_VARARGS,
+        has_traits__notifiers_doc
+    },
     {NULL, NULL},
 };
 
@@ -1551,6 +1727,19 @@ static PyGetSetDef has_traits_properties[] = {
 /*-----------------------------------------------------------------------------
 |  'CHasTraits' type definition:
 +----------------------------------------------------------------------------*/
+
+PyDoc_STRVAR(
+    c_has_traits_doc,
+    "Base class for HasTraits.\n"
+    "\n"
+    "The CHasTraits class is not intended to be instantiated directly.\n"
+    "Instead, it serves as a base class for the HasTraits class.\n"
+    "\n"
+    "Parameters\n"
+    "----------\n"
+    "**traits : dict\n"
+    "    Dictionary mapping trait names to trait values.\n"
+);
 
 static PyTypeObject has_traits_type = {
     PyVarObject_HEAD_INIT(NULL, 0) "traits.ctraits.CHasTraits",
@@ -1573,7 +1762,7 @@ static PyTypeObject has_traits_type = {
     0,                                 /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE
         | Py_TPFLAGS_HAVE_GC,                       /* tp_flags */
-    0,                                              /* tp_doc */
+    c_has_traits_doc,                               /* tp_doc */
     (traverseproc)has_traits_traverse,              /* tp_traverse */
     (inquiry)has_traits_clear,                      /* tp_clear */
     0,                                              /* tp_richcompare */
@@ -3886,6 +4075,7 @@ validate_trait_complex(
                 break;
 
             default: /* Should never happen...indicates an internal error: */
+                assert(0);  /* invalid validation type */
                 goto error;
         }
     }
@@ -5040,37 +5230,118 @@ static PyMethodDef trait_methods[] = {
 |  'CTrait' property definitions:
 +----------------------------------------------------------------------------*/
 
+PyDoc_STRVAR(
+    ctrait_handler_doc,
+    "The trait handler underlying this trait.\n"
+    "\n"
+    "The value of this property should be an instance of\n"
+    "``BaseTraitHandler``.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_post_setattr_doc,
+    "Callable called after a successful value assignment to this trait.\n"
+    "\n"
+    "The value of this property is either a callable or *None*.\n"
+    "If the value is a callable, this callable allows the trait to do\n"
+    "additional processing after a value has successfully been assigned.\n"
+    "The callable is called with arguments (object, name, value), and the\n"
+    "return value of the callable is ignored.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_is_property_doc,
+    "True if this trait is a property trait, else False.\n"
+    "\n"
+    "This property is read-only.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_modify_delegate_doc,
+    "Indicate whether modifications affect the delegate.\n"
+    "\n"
+    "For delegated traits, this is a boolean indicating whether\n"
+    "modifications to this trait also modify the delegated trait.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_setattr_original_value_doc,
+    "Whether setattr stores the original or the validated value.\n"
+    "\n"
+    "If true, setattr will store the original, unvalidated, value set on\n"
+    "the trait to the object's dictionary. If false, the value returned\n"
+    "from the validator will be stored.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_post_setattr_original_value_doc,
+    "Whether post_setattr receives the original or the validated value.\n"
+    "\n"
+    "If true, the post_setattr callable for this trait (if defined)\n"
+    "receives the original, unvalidated value assigned to the trait.\n"
+    "If false, the validated value is provided to post_setattr.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_is_mapped_doc,
+    "True if this is a mapped trait, else False.\n"
+);
+
+PyDoc_STRVAR(
+    ctrait_comparison_mode_doc,
+    "Integer constant indicating when notifiers are executed.\n"
+    "\n"
+    "The value of this constant is the integer corresponding to a member\n"
+    "of the :data:`~traits.constants.ComparisonMode` enumeration.\n"
+);
+
+
 static PyGetSetDef trait_properties[] = {
-    {"__dict__", (getter)get_trait_dict, (setter)set_trait_dict},
-    {"handler", (getter)get_trait_handler, (setter)set_trait_handler},
-    {"post_setattr", (getter)get_trait_post_setattr,
-     (setter)set_trait_post_setattr},
-    {"is_property", (getter)get_trait_property_flag, NULL,
-     "Whether the trait is a property trait.", NULL},
-    {"modify_delegate", (getter)get_trait_modify_delegate_flag,
+    {"__dict__",
+     (getter)get_trait_dict,
+     (setter)set_trait_dict,
+     NULL, NULL},
+    {"handler",
+     (getter)get_trait_handler,
+     (setter)set_trait_handler,
+     ctrait_handler_doc,
+     NULL},
+    {"post_setattr",
+     (getter)get_trait_post_setattr,
+     (setter)set_trait_post_setattr,
+     ctrait_post_setattr_doc,
+     NULL},
+    {"is_property",
+     (getter)get_trait_property_flag,
+     NULL,
+     ctrait_is_property_doc,
+     NULL},
+    {"modify_delegate",
+     (getter)get_trait_modify_delegate_flag,
      (setter)set_trait_modify_delegate_flag,
-     "Whether changes to the trait modify the delegate as well", NULL},
-    {"setattr_original_value", (getter)get_trait_setattr_original_value_flag,
+     ctrait_modify_delegate_doc,
+     NULL},
+    {"setattr_original_value",
+     (getter)get_trait_setattr_original_value_flag,
      (setter)set_trait_setattr_original_value_flag,
-     "Whether setattr gets the original value set on the trait or the "
-     "stored value,",
+     ctrait_setattr_original_value_doc,
      NULL},
     {"post_setattr_original_value",
      (getter)get_trait_post_setattr_original_value_flag,
      (setter)set_trait_post_setattr_original_value_flag,
-     "Whether post_setattr gets the original value set on the trait or "
-     "the stored value,",
+     ctrait_post_setattr_original_value_doc,
      NULL},
-    {"is_mapped", (getter)get_trait_is_mapped_flag,
-     (setter)set_trait_is_mapped_flag, "Whether the trait is a mapped trait.",
+    {"is_mapped",
+     (getter)get_trait_is_mapped_flag,
+     (setter)set_trait_is_mapped_flag,
+     ctrait_is_mapped_doc,
      NULL},
     {"comparison_mode",
      (getter)_get_trait_comparison_mode_int,
      (setter)_set_trait_comparison_mode,
-     "Whether to use no compare(0) or object identity(1) compare or equality "
-     "compare(2) to determine a trait change.",
+     ctrait_comparison_mode_doc,
      NULL},
-    {0}};
+    {NULL}};
 
 /*-----------------------------------------------------------------------------
 |  'CTrait' type definition:
