@@ -4,9 +4,6 @@ Traits CHANGELOG
 Release 6.0.0rc0
 ----------------
 
-XXX reST markup for mentioned objects, to give links into docs?
-XXX Double check that all PRs are mentioned
-
 Released: XXXX-XX-XX
 
 Release notes
