@@ -133,7 +133,7 @@ def default_text_editor(trait, type=None):
     ----------
     trait : TraitType
         The trait we are constructing the editor for.
-    type : callable or None
+    type : callable, optional
         A callable (usually a Python type) to use to evaluate the text content
         of the editor and return the correct type of value for the trait.
 
@@ -3275,7 +3275,7 @@ class Button(Event):
     height_padding : integer between 0 and 31
         Extra padding (in pixels) added to the top and bottom of the
         button.
-    view : traitsui View or None
+    view : traitsui View, optional
         An optional View to display when the button is clicked.
     **metadata
         Trait metadata for the trait.
@@ -3300,7 +3300,7 @@ class Button(Event):
     height_padding : integer between 0 and 31
         Extra padding (in pixels) added to the top and bottom of the
         button.
-    view : traitsui View or None
+    view : traitsui View, optional
         An optional View to display when the button is clicked.
     """
 
@@ -3387,7 +3387,7 @@ class ToolbarButton(Button):
     height_padding : integer between 0 and 31
         Extra padding (in pixels) added to the top and bottom of the
         button.
-    view : traitsui View or None
+    view : traitsui View, optional
         An optional View to display when the button is clicked.
     """
 
