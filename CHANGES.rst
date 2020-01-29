@@ -102,7 +102,7 @@ Here's a guide to dealing with some of the potentially breaking changes.
 Features
 ~~~~~~~~
 
-* Add new ``Datetime`` trait type. (#737, #814, #813, #815)
+* Add new ``Datetime`` trait type. (#737, #814, #813, #815, #848)
 * Support Python Enums as value sets for the ``Enum`` trait. (#685, #828)
 * Add ``Subclass`` alias for the ``Type`` trait type. (#739)
 * Add path-like support for the ``File`` trait. (#736)
