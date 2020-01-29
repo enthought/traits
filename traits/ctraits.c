@@ -1542,7 +1542,6 @@ PyDoc_STRVAR(
 PyDoc_STRVAR(
     has_traits_traits_inited_doc,
     "traits_inited()\n"
-    "traits_inited(value)\n"
     "\n"
     "Get the initialization state of this object.\n"
     "\n"
@@ -1552,8 +1551,8 @@ PyDoc_STRVAR(
     "    True if the object is initialized, else False.\n");
 
 PyDoc_STRVAR(
-    has_traits__set_traits_inited_doc,
-    "_set_traits_inited()\n"
+    has_traits__trait_set_inited_doc,
+    "_trait_set_inited()\n"
     "\n"
     "Indicate whether this object has been initialized.\n"
     "\n"
@@ -1684,10 +1683,10 @@ static PyMethodDef has_traits_methods[] = {
         has_traits_traits_inited_doc
     },
     {
-        "_set_traits_inited",
+        "_trait_set_inited",
         (PyCFunction)_has_traits_set_inited,
         METH_NOARGS,
-        has_traits__set_traits_inited_doc
+        has_traits__trait_set_inited_doc
     },
     {
         "_trait",
