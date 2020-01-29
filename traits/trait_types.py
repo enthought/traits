@@ -231,7 +231,7 @@ class BaseInt(TraitType):
 class Int(BaseInt):
     """ A fast-validating trait type whose value must be an integer.
 
-    Values which support the Python index protocol will validated and will be
+    Values which support the Python index protocol will validate and will be
     converted to the corresponding int value.
     """
 
