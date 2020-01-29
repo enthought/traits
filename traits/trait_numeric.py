@@ -355,12 +355,6 @@ class CArray(AbstractArray):
         second dimension must be at least 2.)
     value : numpy array
         A default value for the array.
-
-    Default Value
-    -------------
-    *value* or ``zeros(min(shape))``, where ``min(shape)`` refers to the
-    minimum shape allowed by the array. If *shape* is not specified, the
-    minimum shape is (0,).
     """
 
     def __init__(
