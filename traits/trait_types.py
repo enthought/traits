@@ -199,7 +199,10 @@ class Any(TraitType):
 
 
 class BaseInt(TraitType):
-    """ A trait type whose value must be an integer.
+    """ A trait type whose value must be an int.
+
+    Values which support the Python index protocol will validated and will be
+    converted to the corresponding int value.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -227,6 +230,9 @@ class BaseInt(TraitType):
 
 class Int(BaseInt):
     """ A fast-validating trait type whose value must be an integer.
+
+    Values which support the Python index protocol will validated and will be
+    converted to the corresponding int value.
     """
 
     #: The C-level fast validator to use:
@@ -236,8 +242,9 @@ class Int(BaseInt):
 class BaseFloat(TraitType):
     """ A trait type whose value must be a float.
 
-    Integers assigned to the trait will be converted to the corresponding
-    float.
+    Values which support automatic conversion to floats via the Python
+    __float__ method will validate and will be converted to the corresponding
+    float value.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -268,8 +275,9 @@ class BaseFloat(TraitType):
 class Float(BaseFloat):
     """ A fast-validating trait type whose value must be a float.
 
-    Integers assigned to the trait will be converted to the corresponding
-    float.
+    Values which support automatic conversion to floats via the Python
+    __float__ method will validate and will be converted to the corresponding
+    float value.
     """
 
     #: The C-level fast validator to use:
@@ -1298,8 +1306,8 @@ class PythonValue(Any):
 class BaseFile(BaseStr):
     """ A trait type whose value must be a file path string.
 
-    For Python 3.6 this will accept os.pathlib Path objects, converting them
-    to the corresponding string value.
+    For Python 3.6 and later this will accept os.pathlib Path objects,
+    converting them to the corresponding string value.
 
     Parameters
     ----------
@@ -1391,8 +1399,8 @@ class BaseFile(BaseStr):
 class File(BaseFile):
     """ A fast-validating trait type whose value must be a file path string.
 
-    For Python 3.6 this will accept os.pathlib Path objects, converting them
-    to the corresponding string value.
+    For Python 3.6 and later this will accept os.pathlib Path objects,
+    converting them to the corresponding string value.
 
     Parameters
     ----------
