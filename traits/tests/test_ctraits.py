@@ -8,14 +8,17 @@
 #
 # Thanks for using Enthought open source!
 
+import sys
 import unittest
 import warnings
+import weakref
 
+from traits.api import HasTraits
 from traits.constants import (
     ComparisonMode, DefaultValue, TraitKind, MAXIMUM_DEFAULT_VALUE_TYPE
 )
 from traits.ctrait import CTrait
-from traits.api import HasTraits
+from traits.trait_types import Any
 
 
 def getter():
@@ -220,3 +223,24 @@ class TestCTrait(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             trait.post_setattr = "Invalid"
+
+    def test_unsafe_set_value(self):
+        # Regression test for enthought/traits#832. The test below causes
+        # a segfault (on at least some systems) before the fix.
+
+        def get_handler_refcount():
+            sys.getrefcount(tr.handler)
+
+        # Anything that we can create a weakref to works here.
+        weakrefable_object = {1, 2, 3}
+
+        tr = CTrait(0)
+        tr.handler = Any(weakrefable_object)
+        finalizer = weakref.finalize(weakrefable_object, get_handler_refcount)
+        del weakrefable_object
+
+        # Reassigning the handler should trigger the finaliser.
+        self.assertTrue(finalizer.alive)
+        tr.handler = None
+        self.assertFalse(finalizer.alive)
+        self.assertIsNone(tr.handler)

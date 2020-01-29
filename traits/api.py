@@ -16,6 +16,9 @@ Use this module for importing Traits names into your namespace. For example::
 
 from .constants import (  # noqa: F401
     ComparisonMode,
+    DefaultValue,
+    TraitKind,
+    ValidateTrait,
     NO_COMPARE,
     OBJECT_IDENTITY_COMPARE,
     RICH_COMPARE,
