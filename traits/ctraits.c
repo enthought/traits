@@ -539,7 +539,7 @@ set_value(PyObject **field, PyObject *value)
     old_value = *field;
     Py_INCREF(value);
     *field = value;
-    Py_XDECREF(*old_value);
+    Py_XDECREF(old_value);
     return 0;
 }
 
