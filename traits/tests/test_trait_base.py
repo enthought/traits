@@ -55,5 +55,5 @@ class TestTraitBase(unittest.TestCase):
 
         unfriendly_container = RaisingContainer()
         self.assertFalse(safe_contains(1, unfriendly_container))
+        self.assertTrue(safe_contains(1729, unfriendly_container))
         self.assertFalse(safe_contains(Lights.green, unfriendly_container))
-        self.assertFalse(safe_contains(1729, unfriendly_container))
