@@ -217,3 +217,6 @@ class TestCTrait(unittest.TestCase):
         trait.post_setattr = post_setattr_func
         obj.atr = old_value
         self.assertEqual(old_value, obj.output_variable)
+
+        with self.assertRaises(ValueError):
+            trait.post_setattr = "Invalid"

@@ -526,7 +526,7 @@ get_value(PyObject *value)
 static int
 set_value(PyObject **field, PyObject *value)
 {
-    Py_INCREF(value);
+    Py_XINCREF(value);
     Py_XDECREF(*field);
     *field = value;
     return 0;
@@ -4106,7 +4106,7 @@ post_setattr_trait_python(
     trait_object *trait, has_traits_object *obj, PyObject *name,
     PyObject *value)
 {
-    if (trait->py_post_setattr == Py_None) {
+    if (trait->py_post_setattr == NULL) {
         return 0;
     }
 
@@ -4618,7 +4618,11 @@ get_trait_post_setattr(trait_object *trait, void *closure)
 static int
 set_trait_post_setattr(trait_object *trait, PyObject *value, void *closure)
 {
-    if (value != Py_None && !PyCallable_Check(value)) {
+    if(value == Py_None){
+        value = NULL;
+    }
+
+    if (value != NULL && !PyCallable_Check(value)) {
         PyErr_SetString(
             PyExc_ValueError, "The assigned value must be callable or None.");
         return -1;
