@@ -287,7 +287,7 @@ class Float(BaseFloat):
 class BaseComplex(TraitType):
     """ A trait type whose value must be a complex number.
 
-    Integers and floating point numbers will be converted to the
+    Integers and floating-point numbers will be converted to the
     corresponding complex value.
     """
 
@@ -322,7 +322,7 @@ class BaseComplex(TraitType):
 class Complex(BaseComplex):
     """ A fast-validating trait type whose value must be a complex number.
 
-    Integers and floating point numbers will be converted to the
+    Integers and floating-point numbers will be converted to the
     corresponding complex value.
     """
 
@@ -364,7 +364,7 @@ class BaseStr(TraitType):
 
 
 class Str(BaseStr):
-    """ A fast-validating trait type whose value must be a complex number..
+    """ A fast-validating trait type whose value must be a complex number.
     """
 
     #: The C-level fast validator to use:
@@ -945,7 +945,7 @@ class Module(TraitType):
 
 
 class Python(TraitType):
-    """ A trait type that behaves as to a standard Python attribute.
+    """ A trait type that behaves as a standard Python attribute.
 
     This trait type allows any value to be assigned, and raises an
     ValueError if an attempt is made to get the value before one has been
@@ -3036,7 +3036,7 @@ class Instance(BaseInstance):
 
 
 class Supports(Instance):
-    """ A trait type whose value is adatped to a specified protocol.
+    """ A trait type whose value is adapted to a specified protocol.
 
     In other words, the value of the trait directly provide, or can be adapted
     to, the given protocol (Interface or type).
@@ -3211,7 +3211,7 @@ Subclass = Type
 
 
 class Event(TraitType):
-    """ A trait type that holds no value but can be set and listend to.
+    """ A trait type that holds no value but can be set and listened to.
 
     Event traits are write-only traits.  They do not hold any value, but
     they can be assigned to, and listeners to the trait will be notified
