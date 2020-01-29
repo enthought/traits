@@ -29,13 +29,11 @@ from traits.editor_factories import (
 from traits.testing.optional_dependencies import requires_traitsui, traitsui
 
 
-# The DatetimeEditor is not yet in a released version of TraitsUI.
-if traitsui is not None:
-    try:
-        DatetimeEditor = traitsui.api.DatetimeEditor
-    except AttributeError:
-        DatetimeEditor = None
-else:
+# The DatetimeEditor is not yet in a released version of TraitsUI. It
+# will be available in TraitsUI >= 6.2.0.
+try:
+    DatetimeEditor = traitsui.api.DatetimeEditor
+except AttributeError:
     DatetimeEditor = None
 
 
