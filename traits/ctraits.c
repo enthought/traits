@@ -531,9 +531,15 @@ get_value(PyObject *value)
 static int
 set_value(PyObject **field, PyObject *value)
 {
+    PyObject *old_value;
+
+    /* Caution: don't DECREF the old field contents until *after* the new
+       contents are assigned, else there's a possibility for external code
+       (triggered by the DECREF) to see an invalid field value. */
+    old_value = *field;
     Py_INCREF(value);
-    Py_XDECREF(*field);
     *field = value;
+    Py_XDECREF(old_value);
     return 0;
 }
 
