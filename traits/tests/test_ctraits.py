@@ -196,23 +196,19 @@ class TestCTrait(unittest.TestCase):
         # Regression test for enthought/traits#832. The test below causes
         # a segfault (on at least some systems) before the fix.
 
-        collected = False
-
         def get_handler_refcount():
-            nonlocal collected
             sys.getrefcount(tr.handler)
-            collected = True
+
+        # Anything that we can create a weakref to works here.
+        weakrefable_object = {1, 2, 3}
 
         tr = CTrait(0)
-
-        weakrefable_object = {1, 2, 3}
         tr.handler = Any(weakrefable_object)
-        weakref.finalize(weakrefable_object, get_handler_refcount)
+        finalizer = weakref.finalize(weakrefable_object, get_handler_refcount)
         del weakrefable_object
 
-        # This line should trigger the finaliser.
+        # Reassigning the handler should trigger the finaliser.
+        self.assertTrue(finalizer.alive)
         tr.handler = None
+        self.assertFalse(finalizer.alive)
         self.assertIsNone(tr.handler)
-
-        # Check that the original handler has been garbage collected.
-        self.assertTrue(collected)
