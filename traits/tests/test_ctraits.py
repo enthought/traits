@@ -17,7 +17,7 @@ from traits.constants import (
     ComparisonMode, DefaultValue, TraitKind, MAXIMUM_DEFAULT_VALUE_TYPE
 )
 from traits.ctrait import CTrait
-from traits.trait_type import TraitType
+from traits.trait_types import Any
 
 
 def getter():
@@ -201,10 +201,10 @@ class TestCTrait(unittest.TestCase):
 
         tr = CTrait(0)
 
-        some_object = {1, 2, 3}
-        tr.handler = TraitType(value=some_object)
-        weakref.finalize(some_object, get_handler_refcount)
-        del some_object
+        weakrefable_object = {1, 2, 3}
+        tr.handler = Any(weakrefable_object)
+        weakref.finalize(weakrefable_object, get_handler_refcount)
+        del weakrefable_object
 
         # This line should trigger the finaliser.
         tr.handler = None
