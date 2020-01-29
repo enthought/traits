@@ -29,6 +29,16 @@ from traits.editor_factories import (
 from traits.testing.optional_dependencies import requires_traitsui, traitsui
 
 
+# The DatetimeEditor is not yet in a released version of TraitsUI.
+if traitsui is not None:
+    try:
+        DatetimeEditor = traitsui.api.DatetimeEditor
+    except AttributeError:
+        DatetimeEditor = None
+else:
+    DatetimeEditor = None
+
+
 class SimpleEditorTestMixin:
 
     def setUp(self):
@@ -65,9 +75,7 @@ class TestDateEditor(SimpleEditorWithCachingTestMixin, unittest.TestCase):
     factory_name = "date_editor"
 
 
-@requires_traitsui
-@unittest.skipIf(getattr(traitsui.api, 'DatetimeEditor', None) is None,
-                 "DatetimeEditor is not in traitsui.api")
+@unittest.skipIf(DatetimeEditor is None, "DatetimeEditor not available")
 class TestDatetimeEditor(SimpleEditorTestMixin, unittest.TestCase):
     traitsui_name = "DatetimeEditor"
     factory_name = "datetime_editor"
