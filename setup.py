@@ -22,8 +22,8 @@ import setuptools
 MAJOR = 6
 MINOR = 0
 MICRO = 0
-PRERELEASE = ""
-IS_RELEASED = False
+PRERELEASE = "rc0"
+IS_RELEASED = True
 
 # If this file is part of a Git export (for example created with "git archive",
 # or downloaded from GitHub), ARCHIVE_COMMIT_HASH gives the full hash of the
