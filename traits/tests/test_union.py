@@ -73,6 +73,11 @@ class TestCaseEnumTrait(unittest.TestCase):
 
         TestClass(int_or_none=None)
 
+    def test_union_unspecified_arguments(self):
+        class TestClass(HasTraits):
+            none = Union()
+        TestClass(none=None)
+
     def test_default_value(self):
         class TestClass(HasTraits):
             atr = Union(Int(3), Float(4.1), Str("Something"))

@@ -3380,6 +3380,7 @@ class Union(TraitType):
 
     def __init__(self, *traits, **metadata):
         self.list_ctrait_instances = []
+        traits = traits or [NoneTrait]
         for trait in traits:
             if trait is None:
                 trait = NoneTrait
