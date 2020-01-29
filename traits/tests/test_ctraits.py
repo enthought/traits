@@ -196,8 +196,12 @@ class TestCTrait(unittest.TestCase):
         # Regression test for enthought/traits#832. The test below causes
         # a segfault (on at least some systems) before the fix.
 
+        collected = False
+
         def get_handler_refcount():
+            nonlocal collected
             sys.getrefcount(tr.handler)
+            collected = True
 
         tr = CTrait(0)
 
@@ -209,3 +213,6 @@ class TestCTrait(unittest.TestCase):
         # This line should trigger the finaliser.
         tr.handler = None
         self.assertIsNone(tr.handler)
+
+        # Check that the original handler has been garbage collected.
+        self.assertTrue(collected)
