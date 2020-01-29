@@ -206,6 +206,8 @@ Fixes
 * Fix floating-point ``Range`` to accept float-like values. (#579)
 * Fix a missing import in the adaptation benchmark script. (#575)
 * Fix issues with the ``filename`` argument to ``configure_traits``. (#572)
+* Fix a possible segfault from careless field re-assignments in
+  ``ctraits.c``. (#844)
 
 Deprecations
 ~~~~~~~~~~~~
