@@ -8,13 +8,16 @@
 #
 # Thanks for using Enthought open source!
 
+import sys
 import unittest
 import warnings
+import weakref
 
 from traits.constants import (
     ComparisonMode, DefaultValue, TraitKind, MAXIMUM_DEFAULT_VALUE_TYPE
 )
 from traits.ctrait import CTrait
+from traits.trait_type import TraitType
 
 
 def getter():
@@ -188,3 +191,21 @@ class TestCTrait(unittest.TestCase):
 
         self.assertIsInstance(trait.comparison_mode, ComparisonMode)
         self.assertEqual(trait.comparison_mode, ComparisonMode.equality)
+
+    def test_unsafe_set_value(self):
+        # Regression test for enthought/traits#832. The test below causes
+        # a segfault (on at least some systems) before the fix.
+
+        def printrefcount(arg):
+            sys.getrefcount(tr.handler)
+
+        tr = CTrait(0)
+
+        some_object = {1, 2, 3}
+        tr.handler = TraitType(value=some_object)
+        ref = weakref.ref(some_object, printrefcount)
+        del some_object
+
+        tr.handler = None
+        self.assertIsNone(ref())
+        self.assertIsNone(tr.handler)
