@@ -201,7 +201,7 @@ class Any(TraitType):
 class BaseInt(TraitType):
     """ A trait type whose value must be an int.
 
-    Values which support the Python index protocol will validated and will be
+    Values which support the Python index protocol will validate and will be
     converted to the corresponding int value.
     """
 
