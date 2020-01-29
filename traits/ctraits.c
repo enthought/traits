@@ -1330,9 +1330,7 @@ static PyObject *
 _has_traits_set_inited(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
 {
     obj->flags |= HASTRAITS_INITED;
-
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_RETURN_NONE;
 }
 
 /*-----------------------------------------------------------------------------
