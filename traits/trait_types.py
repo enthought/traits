@@ -188,7 +188,7 @@ def _validate_float(value):
 # -------------------------------------------------------------------------------
 
 class Any(TraitType):
-    """ Defines a trait whose value can be anything.
+    """ A trait type whose value can be anything.
     """
 
     #: The default value for the trait:
@@ -199,7 +199,7 @@ class Any(TraitType):
 
 
 class BaseInt(TraitType):
-    """ Defines a trait whose type must be an integer.
+    """ A trait type whose value must be an integer.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -226,7 +226,7 @@ class BaseInt(TraitType):
 
 
 class Int(BaseInt):
-    """ Defines trait that holds an int and uses a C-level fast validator.
+    """ A fast-validating trait type whose value must be an integer.
     """
 
     #: The C-level fast validator to use:
@@ -234,7 +234,10 @@ class Int(BaseInt):
 
 
 class BaseFloat(TraitType):
-    """ Defines a trait whose value must be a Python float.
+    """ A trait type whose value must be a float.
+
+    Integers assigned to the trait will be converted to the corresponding
+    float.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -263,7 +266,10 @@ class BaseFloat(TraitType):
 
 
 class Float(BaseFloat):
-    """ Defines a trait that holds a float and uses a C-level fast validator.
+    """ A fast-validating trait type whose value must be a float.
+
+    Integers assigned to the trait will be converted to the corresponding
+    float.
     """
 
     #: The C-level fast validator to use:
@@ -271,7 +277,10 @@ class Float(BaseFloat):
 
 
 class BaseComplex(TraitType):
-    """ Defines a trait whose value must be a Python complex.
+    """ A trait type whose value must be a complex number.
+
+    Integers and floating point numbers will be converted to the
+    corresponding complex value.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -303,7 +312,10 @@ class BaseComplex(TraitType):
 
 
 class Complex(BaseComplex):
-    """ Defines a trait that holds a complex and uses a C-level fast validator.
+    """ A fast-validating trait type whose value must be a complex number.
+
+    Integers and floating point numbers will be converted to the
+    corresponding complex value.
     """
 
     #: The C-level fast validator to use:
@@ -311,7 +323,7 @@ class Complex(BaseComplex):
 
 
 class BaseStr(TraitType):
-    """ Defines a trait whose value must be a Python string.
+    """ A trait type whose value must be a string.
     """
 
     #: The default value for the trait:
@@ -344,7 +356,7 @@ class BaseStr(TraitType):
 
 
 class Str(BaseStr):
-    """ Defines a trait that holds a str and uses a C-level fast validator.
+    """ A fast-validating trait type whose value must be a complex number..
     """
 
     #: The C-level fast validator to use:
@@ -367,7 +379,7 @@ class Title(Str):
 
 
 class BaseBytes(TraitType):
-    """ Defines a trait whose value must be a Python bytes string.
+    """ A trait type whose value must be a bytestring.
     """
 
     #: The default value for the trait:
@@ -403,20 +415,15 @@ class BaseBytes(TraitType):
 
 
 class Bytes(BaseBytes):
-    """ Defines a trait that holds a bytes and uses a C-level fast validator.
+    """ A fast-validating trait type whose value must be a bytestring.
     """
 
     #: The C-level fast validator to use:
     fast_validate = (ValidateTrait.coerce, bytes)
 
 
-# -------------------------------------------------------------------------------
-#  'BaseBool' and 'Bool' traits:
-# -------------------------------------------------------------------------------
-
-
 class BaseBool(TraitType):
-    """ Defines a trait whose value must be a Python boolean.
+    """ A trait type whose value must be a bool.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -447,7 +454,7 @@ class BaseBool(TraitType):
 
 
 class Bool(BaseBool):
-    """ Defines a trait that holds a bool and uses a C-level fast validator.
+    """ A fast-validating trait type whose value must be a bool.
     """
 
     #: The C-level fast validator to use:
@@ -455,8 +462,7 @@ class Bool(BaseBool):
 
 
 class BaseCInt(BaseInt):
-    """ Defines a trait whose value must be a Python int and which supports
-    coercions of non-int values to int.
+    """ A coercing trait type whose value is an integer.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -474,8 +480,7 @@ class BaseCInt(BaseInt):
 
 
 class CInt(BaseCInt):
-    """ Defines a trait whose value must be a Python int and which supports
-    coercions of non-int values to int using a C-level fast validator.
+    """ A fast-validating, coercing trait type whose value is an int.
     """
 
     #: The C-level fast validator to use:
@@ -483,8 +488,7 @@ class CInt(BaseCInt):
 
 
 class BaseCFloat(BaseFloat):
-    """ Defines a trait whose value must be a Python float and which supports
-    coercions of non-float values to float.
+    """ A coercing trait type whose value is a float.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -502,22 +506,15 @@ class BaseCFloat(BaseFloat):
 
 
 class CFloat(BaseCFloat):
-    """ Defines a trait whose value must be a Python float and which supports
-    coercions of non-float values to float using a C-level fast validator.
+    """ A fast-validating, coercing trait type whose value is a float.
     """
 
     #: The C-level fast validator to use:
     fast_validate = (ValidateTrait.cast, float)
 
 
-# -------------------------------------------------------------------------------
-#  'BaseCComplex' and 'CComplex' traits:
-# -------------------------------------------------------------------------------
-
-
 class BaseCComplex(BaseComplex):
-    """ Defines a trait whose value must be a Python complex and which supports
-    coercions of non-complex values to complex.
+    """ A coercing trait type whose value is a complex number.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -535,23 +532,15 @@ class BaseCComplex(BaseComplex):
 
 
 class CComplex(BaseCComplex):
-    """ Defines a trait whose value must be a Python complex and which supports
-    coercions of non-complex values to complex using a C-level fast
-    validator.
+    """ A fast-validating, coercing trait type whose value is a complex number.
     """
 
     #: The C-level fast validator to use:
     fast_validate = (ValidateTrait.cast, complex)
 
 
-# -------------------------------------------------------------------------------
-#  'BaseCStr' and 'CStr' traits:
-# -------------------------------------------------------------------------------
-
-
 class BaseCStr(BaseStr):
-    """ Defines a trait whose value must be a Python string and which supports
-    coercions of non-string values to string.
+    """ A coercing trait type whose value is a string.
     """
 
     def validate(self, object, name, value):
@@ -566,9 +555,7 @@ class BaseCStr(BaseStr):
 
 
 class CStr(BaseCStr):
-    """ Defines a trait whose value must be a Python string and which supports
-    coercions of non-string values to string using a C-level fast
-    validator.
+    """ A fast-validating, coercing trait type whose value is a string.
     """
 
     #: The C-level fast validator to use:
@@ -576,8 +563,7 @@ class CStr(BaseCStr):
 
 
 class BaseCBytes(BaseBytes):
-    """ Defines a trait whose value must be a Python bytes object and which
-    supports coercions of non-bytes values to bytes.
+    """ A coercing trait type whose value is a bytestring.
     """
 
     def validate(self, object, name, value):
@@ -592,9 +578,7 @@ class BaseCBytes(BaseBytes):
 
 
 class CBytes(BaseCBytes):
-    """ Defines a trait whose value must be a Python bytes and which
-    supports coercions of non-bytes values bytes using a C-level
-    fast validator.
+    """ A fast-validating, coercing trait type whose value is a bytestring.
     """
 
     #: The C-level fast validator to use:
@@ -602,8 +586,7 @@ class CBytes(BaseCBytes):
 
 
 class BaseCBool(BaseBool):
-    """ Defines a trait whose value must be a Python boolean and which supports
-    coercions of non-boolean values to boolean.
+    """ A coercing trait type whose value is a bool.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -621,9 +604,7 @@ class BaseCBool(BaseBool):
 
 
 class CBool(BaseCBool):
-    """ Defines a trait whose value must be a Python boolean and which supports
-    coercions of non-boolean values to boolean using a C-level fast
-    validator.
+    """ A fast-validating, coercing trait type whose value is a bool.
     """
 
     #: The C-level fast validator to use:
@@ -631,9 +612,10 @@ class CBool(BaseCBool):
 
 
 class String(TraitType):
-    """ Defines a trait whose value must be a Python string whose length is
-    optionally in a specified range, and which optionally matches a specified
-    regular expression.
+    """ A trait type whose value must be a string with optional constraints.
+
+    The value is a string whose length is in a specified range, and which
+    optionally matches a specified regular expression.
 
     Parameters
     ----------
@@ -779,9 +761,7 @@ class String(TraitType):
 
 
 class Regex(String):
-    """ A trait whose value is a string that matches a regular expression.
-
-    This is a special case of the String trait.
+    """ A trait type whose value must match a regular expression.
 
     Parameters
     ----------
@@ -798,8 +778,10 @@ class Regex(String):
 
 
 class Code(String):
-    """ Defines a trait whose value is a Python string that represents source
-    code in some language.
+    """ A trait type whose value holds a string of source code.
+
+    Validation does not perform any sort of syntax checking. The default
+    TraitsUI editor is a CodeEditor.
     """
 
     #: The standard metadata for the trait:
@@ -807,9 +789,10 @@ class Code(String):
 
 
 class HTML(String):
-    """ Defines a trait whose value must be a string that is interpreted as
-    being HTML. By default the value is parsed and displayed as HTML in
-    TraitsUI views. The validation of the value does not enforce HTML syntax.
+    """ A trait type whose value holds an HTML string.
+
+    The validation of the value does not enforce HTML syntax.  The default
+    TraitsUI editor is an HTMLEditor.
     """
 
     #: The standard metadata for the trait:
@@ -817,11 +800,10 @@ class HTML(String):
 
 
 class Password(String):
-    """ Defines a trait whose value must be a string, optionally of constrained
-    length or matching a regular expression.
+    """ A trait type whose value holds a password string.
 
-    The trait is identical to a String trait except that by default it uses a
-    PasswordEditor in TraitsUI views, which obscures text entered by the user.
+    The default TraitsUI editor is an PasswordEditor, which obscures text
+    entered by the user.
     """
 
     #: The standard metadata for the trait:
@@ -829,10 +811,7 @@ class Password(String):
 
 
 class BaseCallable(TraitType):
-    """ Defines a trait whose value must be a Python callable.
-
-    This class can be subclassed to define new callable trait types; for
-    example, by overriding the validate method.
+    """ A trait type whose value must be a Python callable.
     """
 
     #: The standard metadata for the trait:
@@ -854,10 +833,7 @@ class BaseCallable(TraitType):
 
 
 class Callable(BaseCallable):
-    """ Defines a trait whose value must be a Python callable using a
-    C level validator.
-
-    Subclass :class:`~.BaseCallable` to define new callable trait types.
+    """ A fast-validating trait type whose value must be a Python callable.
     """
 
     #: The C-level fast validator to use
@@ -865,7 +841,9 @@ class Callable(BaseCallable):
 
 
 class BaseType(TraitType):
-    """ Defines a trait whose value must be an instance of a simple Python type.
+    """ A trait type whose value must be an instance of a Python type.
+
+    This is an abstract class and should not be directly instantiated.
     """
 
     def validate(self, object, name, value):
@@ -878,7 +856,7 @@ class BaseType(TraitType):
 
 
 class This(BaseType):
-    """ Defines a trait whose value must be an instance of the defining class.
+    """ A trait type whose value must be an instance of the defining class.
     """
 
     #: The C-level fast validator to use:
@@ -915,8 +893,10 @@ class This(BaseType):
 
 
 class self(This):
-    """ Defines a trait whose value must be an instance of the defining class
-    and whose default value is the object containing the trait.
+    """ A trait type whose default value is the object containing the trait.
+
+    The trait can be assigned to, but any new value must be an instance of
+    the defining class.
     """
 
     #: The default value type to use (i.e. 'self'):
@@ -924,7 +904,7 @@ class self(This):
 
 
 class Function(TraitType):
-    """ Defines a trait whose value must be a Python function.
+    """ A trait type whose value must be a function.
     """
 
     #: The C-level fast validator to use:
@@ -935,7 +915,7 @@ class Function(TraitType):
 
 
 class Method(TraitType):
-    """ Defines a trait whose value must be a Python method.
+    """ A trait type whose value must be a method.
     """
 
     #: The C-level fast validator to use:
@@ -946,7 +926,7 @@ class Method(TraitType):
 
 
 class Module(TraitType):
-    """ Defines a trait whose value must be a Python module.
+    """ A trait type whose value must be a module.
     """
 
     #: The C-level fast validator to use:
@@ -957,9 +937,9 @@ class Module(TraitType):
 
 
 class Python(TraitType):
-    """ Defines a trait that behaves as to a standard Python attribute.
+    """ A trait type that behaves as to a standard Python attribute.
 
-    That is, it allows any value to be assigned, and raises an
+    This trait type allows any value to be assigned, and raises an
     ValueError if an attempt is made to get the value before one has been
     assigned. It has no default value. This trait is most often used in
     conjunction with wildcard naming. See the *Traits User Manual* for
@@ -974,7 +954,7 @@ class Python(TraitType):
 
 
 class ReadOnly(TraitType):
-    """ Defines a trait that is write-once, and then read-only.
+    """ A trait type that is write-once, and then read-only.
 
     The initial value of the attribute is the special, singleton object
     Undefined. The trait allows any value to be assigned to the attribute
@@ -982,8 +962,8 @@ class ReadOnly(TraitType):
     assigned, no further assignment is allowed. Normally, the initial
     assignment to the attribute is performed in the class constructor,
     based on information passed to the constructor. If the read-only value
-    is known in advance of run time, use the Constant() function instead of
-    ReadOnly to define the trait.
+    is known in advance of run time, use Constant instead of ReadOnly to
+    define the trait.
     """
 
     # Defines the CTrait type to use for this trait:
@@ -998,12 +978,13 @@ ReadOnly = ReadOnly()
 
 
 class Disallow(TraitType):
-    """ Defines a trait that prevents any value from being assigned or read.
+    """ A trait that prevents any value from being assigned or read.
 
-    That is, any attempt to get or set the value of the trait attribute
-    raises an exception. This trait is most often used in conjunction with
-    wildcard naming, for example, to catch spelling mistakes in attribute
-    names. See the *Traits User Manual* for details on wildcards.
+    Any attempt to get or set the value of the trait attribute raises an
+    exception. This trait is most often used in conjunction with wildcard
+    naming, for example, to catch spelling mistakes in attribute names.
+
+    See the *Traits User Manual* for details on wildcards.
     """
 
     #: Defines the CTrait type to use for this trait:
@@ -1015,7 +996,7 @@ Disallow = Disallow()
 
 
 class Constant(TraitType):
-    """ Defines a trait whose value is a constant.
+    """ A trait type whose value is a constant.
 
     Traits of this type are very space efficient (and fast) because
     *value* is not stored in each instance using the trait, but only in
@@ -1046,7 +1027,7 @@ class Constant(TraitType):
 
 
 class Delegate(TraitType):
-    """ A trait whose value is delegated to a trait on another object.
+    """ A trait type whose value is delegated to a trait on another object.
 
     This is a base class that shouldn't be used directly, rather use one of
     the subclasses DelegatesTo or PrototypesFrom, depending on desired
@@ -1149,7 +1130,7 @@ class Delegate(TraitType):
 
 
 class DelegatesTo(Delegate):
-    """ A trait delegate that matches the 'delegate' design pattern.
+    """ A trait type that matches the 'delegate' design pattern.
 
     This defines a trait whose value and definition is "delegated" to
     another trait on a different object.
@@ -1204,7 +1185,7 @@ class DelegatesTo(Delegate):
 
 
 class PrototypedFrom(Delegate):
-    """ A trait delegate that matches the 'prototype' design pattern.
+    """ A trait type that matches the 'prototype' design pattern.
 
     This defines a trait whose default value and definition is "prototyped"
     from another trait on a different object.
@@ -1261,7 +1242,7 @@ class PrototypedFrom(Delegate):
 
 
 class Expression(TraitType):
-    """ Defines a trait whose value must be a valid Python expression.
+    """ A trait type whose value must be a valid Python expression.
 
     The compiled form of a valid expression is stored as the mapped value of
     the trait.
@@ -1305,8 +1286,9 @@ class Expression(TraitType):
 
 
 class PythonValue(Any):
-    """ Defines a trait whose value can be of any type, and whose default
-    editor is a Python shell.
+    """ A trait type whose value can be of any type.
+
+    The default editor is a ShellEditor.
     """
 
     #: The standard metadata for the trait:
@@ -1314,7 +1296,7 @@ class PythonValue(Any):
 
 
 class BaseFile(BaseStr):
-    """ Defines a trait whose value must be the name of a file.
+    """ A trait type whose value must be a file path string.
 
     For Python 3.6 this will accept os.pathlib Path objects, converting them
     to the corresponding string value.
@@ -1407,9 +1389,7 @@ class BaseFile(BaseStr):
 
 
 class File(BaseFile):
-    """ Defines a trait whose value must be the name of a file.
-
-    When possible, this uses a C-level fast validator.
+    """ A fast-validating trait type whose value must be a file path string.
 
     For Python 3.6 this will accept os.pathlib Path objects, converting them
     to the corresponding string value.
@@ -1462,7 +1442,7 @@ class File(BaseFile):
 
 
 class BaseDirectory(BaseStr):
-    """ Defines a trait whose value must be the name of a directory.
+    """ A trait type whose value is a directory path string.
 
     Parameters
     ----------
@@ -1526,9 +1506,7 @@ class BaseDirectory(BaseStr):
 
 
 class Directory(BaseDirectory):
-    """ Defines a trait whose value must be the name of a directory.
-
-    When possible, this uses a C-level fast validator.
+    """ A fast-validating trait type whose value is a directory path string.
 
     Parameters
     ----------
@@ -1570,7 +1548,11 @@ class Directory(BaseDirectory):
 
 
 class BaseRange(TraitType):
-    """ Defines a trait whose numeric value must be in a specified range.
+    """ A trait type whose numeric value lies inside a range.
+
+    The value held will be either an integer or a float, which type is
+    determined by whether the *low*, *high* and *value* arguments are
+    integers or floats.
 
     The *low*, *high*, and *value* arguments must be of the same type
     (integer or float), except in the case where either *low* or *high* is
@@ -1894,8 +1876,7 @@ class BaseRange(TraitType):
 
 
 class Range(BaseRange):
-    """ Defines a trait whose numeric value must be in a specified range using
-    a C-level fast validator.
+    """ A fast-validating trait type whose numeric value lies inside a range.
     """
 
     def init_fast_validate(self, *args):
@@ -1905,7 +1886,7 @@ class Range(BaseRange):
 
 
 class BaseEnum(TraitType):
-    """ Defines a trait whose value must be one of a specified set of values.
+    """ A trait type whose value is one of a set of values.
 
     The default value is the first positional argument, or the first item of
     the list, tuple or enum.Enum if that is the only argument or if the valid
@@ -2036,7 +2017,7 @@ class BaseEnum(TraitType):
 
 
 class Enum(BaseEnum):
-    """ Defines an Enum trait which uses C-level validation.
+    """ A fast-validating trait type whose value is one of a set of values.
 
     The default value is the first positional argument, or the first item of
     the list, tuple or enum.Enum if that is the only argument or if the valid
@@ -2078,7 +2059,7 @@ class Enum(BaseEnum):
 
 
 class BaseTuple(TraitType):
-    """ Defines a trait whose value must be a tuple of specified trait types.
+    """ A trait type holding a tuple with typed elements.
 
     The default value is determined as follows:
 
@@ -2219,8 +2200,7 @@ class BaseTuple(TraitType):
 
 
 class Tuple(BaseTuple):
-    """ Defines a trait whose value must be a tuple of specified trait types
-        using a C-level fast validator.
+    """ A fast-validating trait type holding a tuple with typed elements.
     """
 
     def init_fast_validate(self, *args):
@@ -2232,7 +2212,7 @@ class Tuple(BaseTuple):
 
 
 class ValidatedTuple(BaseTuple):
-    """ A Tuple trait that supports custom validation.
+    """ A trait type holding a tuple with customized validation.
 
     Parameters
     ----------
@@ -2416,9 +2396,7 @@ class List(TraitType):
 
 
 class CList(List):
-    """ Defines a trait whose values must be a list whose items are of the
-    specified trait type or which can be coerced to a list whose values are
-    of the specified trait type.
+    """ A coercing trait type for a list of values of the specified type.
     """
 
     def validate(self, object, name, value):
@@ -2531,9 +2509,7 @@ class Set(TraitType):
 
 
 class CSet(Set):
-    """ Defines a trait whose values must be a set whose items are of the
-        specified trait type or which can be coerced to a set whose values are
-        of the specified trait type.
+    """ A coercing trait type for a set of values of the specified type.
     """
 
     def validate(self, object, name, value):
@@ -2559,8 +2535,7 @@ class CSet(Set):
 
 
 class Dict(TraitType):
-    """ Defines a trait whose value must be a dictionary, optionally with
-    specified types for keys and values.
+    """ A trait type for a dictionary with specified key and value types.
 
 
     Parameters
@@ -2679,7 +2654,7 @@ AdaptMap = {"no": 0, "yes": 1, "default": 2}
 
 
 class BaseClass(TraitType):
-    """ Base class for types which have an associated class.
+    """ A base trait type for trait types which have an associated class.
 
     Traits sometimes need to be able to access classes which have not
     yet been defined, or which are from a module that we want to defer
@@ -2746,14 +2721,13 @@ class BaseClass(TraitType):
 
 
 class BaseInstance(BaseClass):
-    """ Defines a trait whose value must be an instance of a specified class,
-    or one of its subclasses.
+    """ A trait type whose value is an instance of a class or its subclasses.
 
-    **None** if *klass* is an instance or if it is a class and *args* and
-    *kw* are not specified. Otherwise, the default value is the instance
-    obtained by calling ``klass(*args, **kw)``. Note that the constructor
-    call is performed each time a default value is assigned, so each
-    default value assigned is a unique instance.
+    The default value is **None** if *klass* is an instance or if it is a
+    class and *args* and *kw* are not specified. Otherwise, the default value
+    is the instance obtained by calling ``klass(*args, **kw)``. Note that the
+    constructor call is performed each time a default value is assigned, so
+    each default value assigned is a unique instance.
 
     Parameters
     ----------
@@ -2806,6 +2780,7 @@ class BaseInstance(BaseClass):
           default value for the trait should be used.
     """
 
+    #: Default adaptation behavior.
     adapt_default = "no"
 
     def __init__(
@@ -3031,8 +3006,7 @@ class BaseInstance(BaseClass):
 
 
 class Instance(BaseInstance):
-    """ Defines a trait whose value must be an instance of a specified class,
-    or one of its subclasses using a C-level fast validator.
+    """ A fast-validated trait type whose value is an instance of a class.
     """
 
     def init_fast_validate(self):
@@ -3054,7 +3028,7 @@ class Instance(BaseInstance):
 
 
 class Supports(Instance):
-    """ A traits whose value must support a specified protocol.
+    """ A trait type whose value is adatped to a specified protocol.
 
     In other words, the value of the trait directly provide, or can be adapted
     to, the given protocol (Interface or type).
@@ -3089,7 +3063,7 @@ class Supports(Instance):
 
 
 class AdaptsTo(Supports):
-    """ A traits whose value must support a specified protocol.
+    """ A trait type whose value must support a specified protocol.
 
     In other words, the value of the trait directly provide, or can be adapted
     to, the given protocol (Interface or type).
@@ -3108,7 +3082,7 @@ class AdaptsTo(Supports):
 
 
 class Type(BaseClass):
-    """ Defines a trait whose value must be a subclass of a specified class.
+    """ A trait type whose value must be a subclass of a specified class.
 
     Parameters
     ----------
@@ -3229,6 +3203,24 @@ Subclass = Type
 
 
 class Event(TraitType):
+    """ A trait type that holds no value but can be set and listend to.
+
+    Event traits are write-only traits.  They do not hold any value, but
+    they can be assigned to, and listeners to the trait will be notified
+    of the assignment.  Since no value is held, trait change functions that
+    ask for the ``old`` value of the trait will be given the Undefined
+    special value.
+
+    Event traits can be given an optional trait type that is used to validate
+    values assigned to the trait.  If the assigned value does not validate,
+    then a TraitError will occur.
+
+    Parameters
+    ----------
+    trait : a trait
+        The type of value that can be assigned to the event.
+    """
+
     def __init__(self, trait=None, **metadata):
         metadata["type"] = "event"
         metadata["transient"] = True
@@ -3253,7 +3245,7 @@ class Event(TraitType):
 
 
 class Button(Event):
-    """ Defines an Event trait whose UI editor is a button.
+    """ An Event trait type whose UI editor is a button.
 
     Parameters
     ----------
@@ -3343,7 +3335,7 @@ class Button(Event):
 
 
 class ToolbarButton(Button):
-    """ Defines a trait whose UI editor is a toolbar button.
+    """ A Button trait type whose UI editor is a toolbar button.
 
     This is just a Button trait with different defaults to style it like
     a toolbar button.
@@ -3413,7 +3405,7 @@ class ToolbarButton(Button):
 
 
 class Either(TraitType):
-    """ Defines a trait whose value can be any of of a specified list of traits.
+    """ A trait type whose value can be any of of a specified list of traits.
 
     Parameters
     ----------
@@ -3440,7 +3432,7 @@ class Either(TraitType):
 
 
 class Symbol(TraitType):
-    """ A property trait type that refers to a Python object.
+    """ A property trait type that refers to a Python object by name.
 
     The value set to the trait must be a value of the form
     ``'[package.package...package.]module[:symbol[([arg1,...,argn])]]'``
@@ -3502,7 +3494,7 @@ class Symbol(TraitType):
 
 
 class UUID(TraitType):
-    """ Defines a read-only trait whose value is a globally unique UUID (type 4).
+    """ A read-only trait type whose value is a globally unique UUID (type 4).
 
     Parameters
     ----------
@@ -3582,7 +3574,7 @@ class UUID(TraitType):
 
 
 class WeakRef(Instance):
-    """ A trait holding a weak reference to an instance of a class.
+    """ A trait type holding a weak reference to an instance of a class.
 
     Only a weak reference is maintained to any object assigned to a WeakRef
     trait. If no other references exist to the assigned value, the value
@@ -3651,15 +3643,15 @@ class WeakRef(Instance):
         self.klass = klass
 
 
-#: Trait type for datetime.date instances.
+#: A trait type for datetime.date instances.
 Date = BaseInstance(datetime.date, editor=date_editor)
 
 
-#: Trait type for datetime.datetime instances.
+#: A trait type for datetime.datetime instances.
 Datetime = BaseInstance(datetime.datetime, editor=datetime_editor)
 
 
-#: Trait type for datetime.time instances.
+#: A trait type for datetime.time instances.
 Time = BaseInstance(datetime.time, editor=time_editor)
 
 
