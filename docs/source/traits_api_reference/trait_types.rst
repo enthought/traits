@@ -8,163 +8,238 @@ Traits
 ------
 
 .. autoclass:: Any
+   :show-inheritance:
 
 .. autoclass:: BaseInt
+   :show-inheritance:
 
 .. autoclass:: Int
+   :show-inheritance:
 
 .. autoclass:: BaseFloat
+   :show-inheritance:
 
 .. autoclass:: Float
+   :show-inheritance:
 
 .. autoclass:: BaseComplex
+   :show-inheritance:
 
 .. autoclass:: Complex
+   :show-inheritance:
 
 .. autoclass:: BaseStr
+   :show-inheritance:
 
 .. autoclass:: Str
+   :show-inheritance:
 
 .. autoclass:: Title
+   :show-inheritance:
 
 .. autoclass:: BaseBytes
+   :show-inheritance:
 
 .. autoclass:: Bytes
+   :show-inheritance:
 
 .. autoclass:: BaseBool
+   :show-inheritance:
 
 .. autoclass:: Bool
+   :show-inheritance:
 
 .. autoclass:: BaseCInt
+   :show-inheritance:
 
 .. autoclass:: CInt
+   :show-inheritance:
 
 .. autoclass:: BaseCFloat
+   :show-inheritance:
 
 .. autoclass:: CFloat
+   :show-inheritance:
 
 .. autoclass:: BaseCComplex
+   :show-inheritance:
 
 .. autoclass:: CComplex
+   :show-inheritance:
 
 .. autoclass:: BaseCStr
+   :show-inheritance:
 
 .. autoclass:: CStr
+   :show-inheritance:
 
 .. autoclass:: BaseCBytes
+   :show-inheritance:
 
 .. autoclass:: CBytes
+   :show-inheritance:
 
 .. autoclass:: BaseCBool
+   :show-inheritance:
 
 .. autoclass:: CBool
+   :show-inheritance:
 
 .. autoclass:: String
+   :show-inheritance:
 
 .. autoclass:: Regex
+   :show-inheritance:
 
 .. autoclass:: Code
+   :show-inheritance:
 
 .. autoclass:: HTML
+   :show-inheritance:
 
 .. autoclass:: Password
+   :show-inheritance:
 
 .. autoclass:: BaseCallable
+   :show-inheritance:
 
 .. autoclass:: Callable
+   :show-inheritance:
 
 .. autoclass:: BaseType
+   :show-inheritance:
 
 .. autoclass:: This
+   :show-inheritance:
 
 .. autoclass:: self
+   :show-inheritance:
 
 .. autoclass:: Function
+   :show-inheritance:
 
 .. autoclass:: Method
+   :show-inheritance:
 
 .. autoclass:: Module
+   :show-inheritance:
 
 .. autoclass:: Python
+   :show-inheritance:
 
 .. autoclass:: ReadOnly
+   :show-inheritance:
 
 .. autoclass:: Disallow
+   :show-inheritance:
 
 .. autoclass:: Constant
+   :show-inheritance:
 
 .. autoclass:: Delegate
+   :show-inheritance:
 
 .. autoclass:: DelegatesTo
+   :show-inheritance:
 
 .. autoclass:: PrototypedFrom
+   :show-inheritance:
 
 .. autoclass:: Expression
+   :show-inheritance:
 
 .. autoclass:: PythonValue
+   :show-inheritance:
 
 .. autoclass:: BaseFile
+   :show-inheritance:
 
 .. autoclass:: File
+   :show-inheritance:
 
 .. autoclass:: BaseDirectory
+   :show-inheritance:
 
 .. autoclass:: Directory
+   :show-inheritance:
 
 .. autoclass:: BaseRange
+   :show-inheritance:
 
 .. autoclass:: Range
+   :show-inheritance:
 
 .. autoclass:: BaseEnum
+   :show-inheritance:
 
 .. autoclass:: Enum
+   :show-inheritance:
 
 .. autoclass:: BaseTuple
-   :special-members: __init__
+   :show-inheritance:
 
 .. autoclass:: Tuple
+   :show-inheritance:
 
 .. autoclass:: ValidatedTuple
-   :special-members: __init__
+   :show-inheritance:
 
 .. autoclass:: List
+   :show-inheritance:
 
 .. autoclass:: CList
+   :show-inheritance:
 
 .. autoclass:: Set
+   :show-inheritance:
 
 .. autoclass:: CSet
+   :show-inheritance:
 
 .. autoclass:: Dict
+   :show-inheritance:
 
 .. autoclass:: BaseClass
+   :show-inheritance:
 
 .. autoclass:: BaseInstance
+   :show-inheritance:
 
 .. autoclass:: Instance
+   :show-inheritance:
 
 .. autoclass:: Supports
+   :show-inheritance:
 
 .. autoclass:: AdaptsTo
+   :show-inheritance:
 
 .. autoclass:: Type
+   :show-inheritance:
 
 .. autoclass:: Subclass
+   :show-inheritance:
 
 .. autoclass:: Event
+   :show-inheritance:
 
 .. autoclass:: Button
+   :show-inheritance:
 
 .. autoclass:: ToolbarButton
+   :show-inheritance:
 
 .. autoclass:: Either
+   :show-inheritance:
 
 .. autoclass:: Symbol
+   :show-inheritance:
 
 .. autoclass:: UUID
+   :show-inheritance:
 
 .. autoclass:: WeakRef
-    :members: __init__
+   :show-inheritance:
 
 .. autodata:: Date
 
