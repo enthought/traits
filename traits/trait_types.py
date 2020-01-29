@@ -127,7 +127,7 @@ except ImportError:
 
 
 def default_text_editor(trait, type=None):
-    """ Returns a default text editor for a trait.
+    """ Return a default text editor for a trait.
 
     Parameters
     ----------
