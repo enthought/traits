@@ -1552,12 +1552,7 @@ PyDoc_STRVAR(
     has_traits__trait_set_inited_doc,
     "_trait_set_inited()\n"
     "\n"
-    "Indicate whether this object has been initialized.\n"
-    "\n"
-    "Returns\n"
-    "-------\n"
-    "NoneType\n"
-    "    returns None.");
+    "Declare that this object has been initialized.\n");
 
 PyDoc_STRVAR(
     has_traits__trait_doc,
