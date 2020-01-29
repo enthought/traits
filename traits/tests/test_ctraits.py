@@ -196,16 +196,16 @@ class TestCTrait(unittest.TestCase):
         # Regression test for enthought/traits#832. The test below causes
         # a segfault (on at least some systems) before the fix.
 
-        def printrefcount(arg):
+        def get_handler_refcount():
             sys.getrefcount(tr.handler)
 
         tr = CTrait(0)
 
         some_object = {1, 2, 3}
         tr.handler = TraitType(value=some_object)
-        ref = weakref.ref(some_object, printrefcount)
+        weakref.finalize(some_object, get_handler_refcount)
         del some_object
 
+        # This line should trigger the finaliser.
         tr.handler = None
-        self.assertIsNone(ref())
         self.assertIsNone(tr.handler)
