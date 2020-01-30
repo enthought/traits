@@ -284,7 +284,7 @@ class AbstractArray(TraitType):
 
 
 class Array(AbstractArray):
-    """ A trait type whose value must be a Numpy array.
+    """ A trait type whose value must be a NumPy array.
 
     An Array trait allows only upcasting of assigned values that are
     already numpy arrays. It automatically casts tuples and lists of the
@@ -325,7 +325,7 @@ class Array(AbstractArray):
 
 
 class CArray(AbstractArray):
-    """ A coercing trait type whose value is a numpy array.
+    """ A coercing trait type whose value is a NumPy array.
 
     The trait returned by CArray() is similar to that returned by Array(),
     except that it allows both upcasting and downcasting of assigned values
