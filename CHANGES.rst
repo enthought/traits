@@ -102,7 +102,7 @@ Here's a guide to dealing with some of the potentially breaking changes.
 Features
 ~~~~~~~~
 
-* Add new ``Datetime`` trait type. (#737, #814, #813, #815)
+* Add new ``Datetime`` trait type. (#737, #814, #813, #815, #848)
 * Support Python Enums as value sets for the ``Enum`` trait. (#685, #828)
 * Add ``Subclass`` alias for the ``Type`` trait type. (#739)
 * Add path-like support for the ``File`` trait. (#736)
@@ -206,6 +206,8 @@ Fixes
 * Fix floating-point ``Range`` to accept float-like values. (#579)
 * Fix a missing import in the adaptation benchmark script. (#575)
 * Fix issues with the ``filename`` argument to ``configure_traits``. (#572)
+* Fix a possible segfault from careless field re-assignments in
+  ``ctraits.c``. (#844)
 
 Deprecations
 ~~~~~~~~~~~~
