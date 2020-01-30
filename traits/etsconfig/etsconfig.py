@@ -58,13 +58,8 @@ class ETSConfig(object):
     #### operator methods #####################################################
 
     def __init__(self):
-        """
-        Constructor.
-
-        Note that this constructor can only ever be called from within this
-        module, since we don't expose the class.
-
-        """
+        # Note that this constructor can only ever be called from within this
+        # module, since we don't expose the class.
 
         # Shadow attributes for properties.
         self._application_data = None

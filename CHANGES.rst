@@ -284,6 +284,7 @@ Documentation
 * Fix badly formatted ``TraitHandler`` documentation. (#817)
 * Fix and improve badly formatted trait types documentation. (#843)
 * Fix broken module links in section titles in API documentation. (#823)
+* Additional class docstring fixes. (#854)
 * Add changelog to built documentation, and absorb old changelog into
   the new one. (#800, #799)
 * Remove deprecated traits from the user manual. (#656)
