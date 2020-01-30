@@ -1210,7 +1210,13 @@ class ListenerParser(HasPrivateTraits):
         """
         items = []
         while True:
-            items.append(self.parse_item(terminator))
+            itm = self.parse_item(terminator)
+            if isinstance(itm, ListenerGroup):
+                items.append(itm)
+
+            else:  # itm is a ListenerItem
+                if itm.name != '':
+                    items.append(itm)
 
             c = self.skip_ws
             if c == terminator:
