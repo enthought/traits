@@ -72,10 +72,10 @@ class DirectoryTestCase(unittest.TestCase):
         self.assertIsInstance(example_model.path, str)
 
     def test_fast_rejects_bytes(self):
-        example_model = FastExampleModel(path=b"REJECT_BYTES")
+        example_model = FastExampleModel()
 
         with self.assertRaises(TraitError):
-            self.assertIsInstance(example_model.path, str)
+            example_model.path = b"REJECT_BYTES"
 
 
 class TestBaseDirectory(unittest.TestCase):
