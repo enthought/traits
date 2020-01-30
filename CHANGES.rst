@@ -1,6 +1,336 @@
 Traits CHANGELOG
 ================
 
+Release 6.0.0rc0
+----------------
+
+Released: 2020-01-30
+
+Release notes
+~~~~~~~~~~~~~
+
+Traits 6.0 is a major update to the Traits package, with a number of
+backward incompatible changes from its predecessor. Notable changes:
+
+* Python 2.7 is no longer supported; Traits 6.0 requires Python 3.5 or later.
+* Trait types related to Python 2 (for example ``Unicode`` and ``Long``) have
+  been deprecated in favour of their Python 3 equivalents (for example ``Str``
+  and ``Int``).
+* Many little-used historical features of Traits have been deprecated, and
+  are scheduled for removal in Traits 7.0.
+* Some historical features of Traits that had no evidence of external usage
+  were removed in Traits 6.0.
+* Introspection of ``CTrait`` and ``HasTraits`` objects is greatly improved.
+  All of the internal state that was previously hidden within the C extension
+  is now accessible from Python.
+* The Traits codebase has undergone some significant reorganizations,
+  reformattings and style cleanups to make it easier to work with, and
+  to improve the separation between Traits and TraitsUI.
+* This release was focused mainly on cleanup and bugfixing. Nevertheless,
+  it contains a sprinkling of new features. There's a new ``Datetime``
+  trait type. The ``Enum`` trait type now supports Python enumerations.
+  The ``File`` trait type supports path-like objects.
+
+More than 150 PRs went into this release. The following people contributed
+code changes for this release:
+
+* Kit Yan Choi
+* Mark Dickinson
+* Kevin Duff
+* Robert Kern
+* Midhun Madhusoodanan
+* Shoeb Mohammed
+* Sai Rahul Poruri
+* Corran Webster
+* John Wiggins
+
+Porting guide
+~~~~~~~~~~~~~
+
+For the most part, existing code that works with Traits 5.2.0 should
+continue to work with Traits 6.0.0 without changes. However, there
+are some potentially breaking changes in Traits 6.0.0, and we recommend
+applying caution when upgrading.
+
+Here's a guide to dealing with some of the potentially breaking changes.
+
+* The ``Unicode`` and ``CUnicode`` trait types are now simply synonyms for
+  ``Str`` and ``CStr``. ``Unicode`` and ``CUnicode`` are considered deprecated.
+  For now, no deprecation warning is issued on use of these deprecated trait
+  types, but in Traits 6.1.0 and later, warnings may be issued, and in Traits
+  7.0.0 these trait types may be removed. It's recommended that users update
+  all uses of ``Unicode`` to ``Str`` and ``CUnicode`` to ``CStr`` to avoid
+  warnings or errors in the future.
+
+* Similarly, ``Long`` and ``CLong`` are now synonyms for ``Int`` and ``CInt``.
+  The same recommendations apply as for the ``Unicode`` / ``Str`` trait types.
+
+* Uses of ``NO_COMPARE``, ``OBJECT_IDENTITY_COMPARE`` and ``RICH_COMPARE``
+  should be replaced with the appropriate ``ComparisonMode`` enumeration
+  members.
+
+* The validation for a ``Instance(ISomeInterface)`` trait type has changed,
+  where ``ISomeInterface`` is a subclass of ``Interface``. Previously, an
+  assignment to such a trait validated the type of the assigned value against
+  the interface, method by method. Now an ``isinstance`` check is performed
+  against the interface instead. Make sure that classes implementing a given
+  interface have the appropriate ``provides`` decorator.
+
+  One notable side-effect of the above change is that plain ``mock.Mock``
+  instances can no longer be assigned to ``Instance(ISomeInterface)`` traits.
+  To get around this, use ``spec=ISomeInterface`` when creating your mock
+  object.
+
+  This change does not affect ``Instance`` traits for non-interface classes.
+
+* The format of ``TraitListEvents`` has changed: for list events generated from
+  a slice set or slice delete operation where that slice had a step other
+  than ``1``, the ``added`` and ``removed`` fields of the event had an extra
+  level of list wrapping (for example, ``added`` might be ``[[1, 2, 3]]``
+  instead of ``[1, 2, 3]``). In Traits 6.0, this extra wrapping has been
+  removed. There may be existing code that special-cased the extra wrapping.
+
+* Many classes and functions have moved around within the Traits codebase.
+  If you have code that imports directly from Traits modules and subpackages
+  instead of from ``traits.api`` or the other subpackage ``api`` modules, some
+  of those imports may fail. To avoid potential for ``ImportError``s, you
+  should import from ``traits.api`` whenever possible. If you find yourself
+  needing some piece of Traits functionality that isn't exposed in
+  ``traits.api``, and you think it should be, please open an issue on the
+  Traits bug tracker.
+
+Features
+~~~~~~~~
+
+* Add new ``Datetime`` trait type. (#737, #814, #813, #815, #848)
+* Support Python Enums as value sets for the ``Enum`` trait. (#685, #828, #855)
+* Add ``Subclass`` alias for the ``Type`` trait type. (#739)
+* Add path-like support for the ``File`` trait. (#736)
+* Add new ``ComparisonMode`` enumeration type to replace the old
+  ``NO_COMPARE``, ``OBJECT_IDENTITY_COMPARE`` and ``RICH_COMPARE``
+  constants. The old constants are deprecated. (#830, #719, #680)
+* Add fast validation for ``Callable`` trait type; introduce
+  new ``BaseCallable`` trait type for subclassing purposes.
+  (#798, #795, #767)
+* Add ``CTrait.comparison_mode`` property to allow inspection and
+  modification of a trait's comparison mode. (#758, #735)
+* Add ``as_ctrait`` converter function to ``traits.api``. This function
+  converts a trait-like object or type to a ``CTrait``, raising ``TypeError``
+  for objects that can't be interpreted as a ``CTrait``. It's intended
+  for use by users who want to create their own parameterised trait
+  types.
+
+  The ``as_ctrait`` feature comes with, and relies upon, a new informal
+  interface: objects that can be converted to something of type ``CTrait`` can
+  provide an zero-argument ``as_ctrait`` method that returns a new ``CTrait``.
+  Types can provide an ``instantiate_and_get_ctrait`` method, which when
+  called with no arguments provides a new ``CTrait`` for that type.
+  (#783, #794)
+* Add a new ``HasTraits._class_traits`` method for introspection of an
+  object's class traits. This parallels the existing
+  ``HasTraits._instance_traits`` method. This method is intended for use in
+  debugging. It's not recommended for users to modify the returned dictionary.
+  (#702)
+* Add ``CTrait.set_default_value`` method for setting information about the
+  default of a ``CTrait``. This provides an alternative to the previous method
+  of using ``CTrait.default_value``. The use of ``CTrait.default_value`` to set
+  (rather than get) default information is deprecated. (#620)
+* Add new methods ``HasTraits._trait_notifications_enabled``,
+  ``HasTraits._trait_notifications_vetoed`` to allow introspection of the
+  notifications states set by the existing methods
+  ``HasTraits._trait_change_notify`` and ``HasTraits._trait_veto_notify``.
+  (#704)
+* Add ``TraitKind``, ``ValidateTrait`` and ``DefaultValue`` Python enumeration
+  types to replace previous uses of magic integers within the Traits codebase.
+  (#680, #857)
+* The various ``CTrait`` internal flags are now exposed to Python as
+  properties: ``CTrait.is_property`` (read-only), ``CTrait.modify_delegate``,
+  ``CTrait.setattr_original_value``, ``CTrait.post_setattr_original_value``,
+  ``CTrait.is_mapped``, and ``CTrait.comparison_mode``. (#666, #693)
+
+Changes
+~~~~~~~
+
+* When pickling a ``CTrait``, the ``py_post_setattr`` and ``py_validate``
+  fields are pickled directly. Previously, callables for those fields were
+  replaced with a ``-1`` sentinel on pickling. (#780)
+* A ``TraitListEvent`` is no longer emitted for a slice deletion which
+  doesn't change the contents of the list. (For example, `del obj.mylist[2:]`
+  on a list that only has 2 elements.) (#740)
+* The ``added`` and ``removed`` attributes on a ``TraitListEvent`` are now
+  always lists containing the added or removed elements. Previously, those
+  lists were nested inside another list in some cases. (#771)
+* Change ``Instance(ISomeInterface)`` to use an ``isinstance`` check on
+  trait set instead of using the dynamic interface checker. (#630)
+* Create an new ``AbstractViewElement`` abstract base class, and register
+  the TraitsUI ``ViewElement`` as implementing it. This paves the way for
+  removal of Traits UI imports from Traits. (#617)
+* ``ViewElements`` are now computed lazily, instead of at ``HasTraits``
+  subclass creation time. This removes a ``traitsui`` import from
+  the ``trait.has_traits`` module. (#614)
+* The ``traits.util.clean_filename`` utility now uses a different algorithm,
+  and should do a better job with accented and Unicode text. (#589)
+* Floating-point and integer checks are now more consistent between classes.
+  In particular, ``BaseInt`` validation now matches ``Int`` validation, and
+  ``Range`` type checks now match those used in ``Int`` and ``Float``. (#588)
+* An exception other than ``TraitError`` raised during validation of a
+  compound trait will now be propagated. Previously, that exception would
+  be swallowed. (#581)
+* Traits no longer has a runtime dependency on the ``six`` package. (#638)
+* Use pickle protocol 3 instead of pickle protocol 1 when writing pickled
+  object state to a file in ``configure_traits``. (#796)
+* In ``traits.testing.optional_dependencies``, make sure ``traitsui.api`` is
+  available whenever ``traitsui`` is. (#616)
+* ``TraitInstance`` now inherits directly from ``TraitHandler`` instead of
+  (the now removed) ``ThisClass``. (#761)
+
+Fixes
+~~~~~
+
+* Fix a use of the unsupported ``ValidateTrait.int_range``. (#805)
+* Remove unnecessary ``copy`` method override from ``TraitSetObject``. (#759)
+* Fix ``TraitListObject.clear`` to issue the appropriate items event. (#732)
+* Fix confusing error message when ``[None]`` passed into
+  ``List(This(allow_none=False))``. (#734)
+* Fix name-mangling of double-underscore private methods in classes whose
+  name begins with an underscore. (#724)
+* Fix ``bytes_editor`` and ``password_editor`` bugs, and add tests for
+  all editor factories. (#660)
+* Fix coercion fast validation type to do an exact type check instead of
+  an instance check. This ensures that instances of subclasses of the
+  target type are properly converted to the target type. For example,
+  if ``True`` is assigned to a trait of type ``CInt``, the resulting
+  value is now ``1``. Previously, it was ``True``. (#647)
+* Fix ``BaseRange`` to accept the same values as ``Range``. (#583)
+* Fix integer ``Range`` to accept integer-like objects. (#582)
+* Fix floating-point ``Range`` to accept float-like values. (#579)
+* Fix a missing import in the adaptation benchmark script. (#575)
+* Fix issues with the ``filename`` argument to ``configure_traits``. (#572)
+* Fix a possible segfault from careless field re-assignments in
+  ``ctraits.c``. (#844)
+
+Deprecations
+~~~~~~~~~~~~
+
+* The ``NO_COMPARE``, ``OBJECT_IDENTITY_COMPARE`` and ``RICH_COMPARE``
+  constants are deprecated. Use the corresponding members of the
+  ``ComparisonMode`` enumeration instead. (#719)
+* The ``Unicode``, ``CUnicode``, ``BaseUnicode`` and ``BaseCUnicode`` trait
+  types are deprecated. Use ``Str``, ``CStr``, ``BaseStr`` and ``BaseCStr``
+  instead. (#648)
+* The ``Long``, ``CLong``, ``BaseLong`` and ``BaseCLong`` trait types are
+  deprecated. Use ``Int``, ``CInt``, ``BaseInt`` and ``BaseCInt`` instead.
+  (#645, #573)
+* The ``AdaptedTo`` trait type is deprecated. Use ``Supports`` instead. (#760)
+* The following trait type aliases are deprecated. See the documentation for
+  recommended replacments. ``false``, ``true``, ``undefined``, ``ListInt``,
+  ``ListFloat``, ``ListStr``, ``ListUnicode``, ``ListComplex``, ``ListBool``,
+  ``ListFunction``, ``ListMethod``, ``ListThis``, ``DictStrAny``,
+  ``DictStrStr``, ``DictStrInt``, ``DictStrFloat``, ``DictStrBool``,
+  ``DictStrList``. (#627)
+* Use of the ``filename`` argument to ``configure_traits`` (for storing
+  state to or restoring state from pickle files) is deprecated. (#792)
+* The ``TraitTuple``, ``TraitList`` and ``TraitDict`` trait handlers
+  are deprecated. Use the ``Tuple``, ``List`` and ``Dict`` trait types instead.
+  (#770)
+* Use of ``CTrait.default_value`` for setting default value information is
+  deprecated. Use ``CTrait.set_default_value`` instead. (#620)
+* Use of the ``rich_compare`` trait metadata is deprecated. Use the
+  ``comparison_mode`` metadata instead. (#598)
+
+Removals
+~~~~~~~~
+
+* Python 2 compatibility support code has been removed. (#638, #644)
+* Traits categories have been removed. (#568)
+* The following trait handlers have been removed: ``ThisClass``,
+  ``TraitClass``, ``TraitExpression``, ``TraitCallable``, ``TraitString``,
+  ``TraitRange``, ``TraitWeakRef``. (#782, #711, #699, #698, #625, #593, #587,
+  #640)
+* ``CTrait.rich_compare`` has been removed. (#598)
+* The ``cTrait.cast`` method has been removed. (#663)
+* The magical ``TraitValue`` and associated machinery have been removed. (#658)
+* The ``Generic`` trait type has been removed. (#657)
+* The ``UStr`` trait type and ``HasUniqueStrings`` class have been removed.
+  (#654)
+* The ``str_find`` and ``str_rfind`` helper functions have been removed. (#633)
+* The global ``_trait_notification_handler`` has been removed. (#619)
+* ``BaseTraitHandler.repr`` has been removed. (#599)
+* ``HasTraits.trait_monitor`` was undocumented, untested, and broken, and
+  has been removed. (#570)
+* The ``TraitInstance`` trait handler (not to be confused
+  with the ``Instance`` trait type) no longer supports adaptation. (#641)
+* The ``DynamicView`` and ``HasDynamicViews`` classes have been removed
+  from Traits and moved to TraitsUI instead. (#609)
+* ``DictStrLong`` has been removed. (#573)
+
+Test suite
+~~~~~~~~~~
+
+* Fix various tests to be repeatable. (#802, #729)
+* Fix deprecation warnings in the test suite output. (#820, #804, #716)
+* Add machinery for testing unpickling of historical pickles. (#787)
+* Remove print statements from test suite. (#752, #768)
+* Fix a test to clean up the threads it creates. (#731)
+* Add tests for extended trait change issues #537 and #538 (#543)
+* Other minor test fixes. (#700, #821)
+
+Documentation
+~~~~~~~~~~~~~
+
+* Improve documentation of trait container objects. (#810)
+* Improve documentation for the ``traits.ctraits`` module. (#826, #824,
+  #659, #653, #829, #836)
+* Fix badly formatted ``TraitHandler`` documentation. (#817)
+* Fix and improve badly formatted trait types documentation. (#843)
+* Fix broken module links in section titles in API documentation. (#823)
+* Additional class docstring fixes. (#854)
+* Add changelog to built documentation, and absorb old changelog into
+  the new one. (#800, #799)
+* Remove deprecated traits from the user manual. (#656)
+* Fix various Sphinx warnings (#717)
+* Use SVG badges in README (#567)
+
+Build and continuous integration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Enable C asserts in Travis CI runs. (#791)
+* Abort CI on compiler warnings in Travis CI runs. (#769)
+* Run a ``flake8`` check in both Travis CI and Appveyor runs. (#753, #762)
+* Checking copyright statements in Python files as part of CI runs. (#749)
+* Turn warnings into errors when building documentation in CI. (#744)
+* Add ``gnureadline`` as a development dependency on macOS and Linux. (#607)
+* Add an ``etstool.py`` option to run tests quietly. (#606)
+* Enable the coverage extension for the documentation build. (#807)
+* Remove mocking in documentation configuration, and fix a deprecated
+  configuration option. (#696)
+
+Maintenance and code organization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This release includes a lot of refactoring and many minor improvements
+that will primarily benefit those working with the Traits codebase. These
+changes should not affect user-visible functionality. Here's a summary
+of the more significant changes.
+
+* A major refactor has removed most of the circular dependencies between
+  modules. (#730)
+* The codebase is now mostly ``flake8`` clean. (#786, #753, #747, #748, #746,
+  #595)
+* Copyright headers have been made consistent for all Python files. (#754)
+* ``ctraits.c`` has been run through ``clang-tidy`` and ``clang-format`` in
+  order to bring it closer to PEP 7 style. (#715)
+* Editor factories have been moved into a new ``traits.editor_factories``
+  module, to help compartmentalize code dependencies on TraitsUI. (#661)
+* Trait container object classes (``TraitDictObject``, ``TraitListObject``,
+  ``TraitSetObject``) have each been moved into their own module, along
+  with their associated event type. (#677)
+* Miscellaneous other minor fixes, refactorings and cleanups.
+  (#785, #777, #750, #726, #714, #712, #708, #701, #682, #665, #651,
+  #652, #639, #636, #634, #626, #632, #611, #613, #612, #605, #603,
+  #600, #597, #586, #585, #584, #580, #577, #578, #564, #806)
+
+
 Release 5.2.0
 -------------
 
