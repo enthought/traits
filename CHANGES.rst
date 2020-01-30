@@ -103,7 +103,7 @@ Features
 ~~~~~~~~
 
 * Add new ``Datetime`` trait type. (#737, #814, #813, #815, #848)
-* Support Python Enums as value sets for the ``Enum`` trait. (#685, #828)
+* Support Python Enums as value sets for the ``Enum`` trait. (#685, #828, #855)
 * Add ``Subclass`` alias for the ``Type`` trait type. (#739)
 * Add path-like support for the ``File`` trait. (#736)
 * Add new ``ComparisonMode`` enumeration type to replace the old
