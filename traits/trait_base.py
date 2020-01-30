@@ -205,6 +205,11 @@ def safe_contains(value, container):
     TypeError.  In these cases we make the (reasonable) assumption that the
     value is _not_ contained in the container.
     """
+    # Do a LBYL check for Enums, to avoid the DeprecationWarning issued
+    # by Python 3.7. Ref: enthought/traits#853.
+    if isinstance(container, enum.EnumMeta) and not isinstance(value, enum.Enum):
+        return False
+
     try:
         return value in container
     except TypeError:
