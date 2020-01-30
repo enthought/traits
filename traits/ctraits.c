@@ -4333,9 +4333,6 @@ post_setattr_trait_python(
     trait_object *trait, has_traits_object *obj, PyObject *name,
     PyObject *value)
 {
-    if (trait->py_post_setattr == NULL) {
-        return 0;
-    }
 
     PyObject *result;
 
@@ -4845,16 +4842,21 @@ get_trait_post_setattr(trait_object *trait, void *closure)
 static int
 set_trait_post_setattr(trait_object *trait, PyObject *value, void *closure)
 {
-    if(value == Py_None){
-        value = NULL;
-    }
 
-    if (value != NULL && !PyCallable_Check(value)) {
+    if (value != Py_None && !PyCallable_Check(value)) {
         PyErr_SetString(
             PyExc_ValueError, "The assigned value must be callable or None.");
         return -1;
     }
-    trait->post_setattr = post_setattr_trait_python;
+
+    if(value == Py_None) {
+        value = NULL;
+        trait->post_setattr = NULL;
+    }
+    else{
+        trait->post_setattr = post_setattr_trait_python;
+    }
+
     return set_value(&trait->py_post_setattr, value);
 }
 
