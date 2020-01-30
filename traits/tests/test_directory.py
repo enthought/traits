@@ -61,9 +61,21 @@ class DirectoryTestCase(unittest.TestCase):
 
         self.assertRaises(TraitError, assign_invalid)
 
-    def test_fast(self):
+    def test_fast_accepts_str(self):
         example_model = FastExampleModel(path=gettempdir())
         example_model.path = "."
+
+    def test_fast_accepts_pathlib_dir(self):
+        example_model = FastExampleModel()
+        example_model.path = pathlib.Path(gettempdir())
+
+        self.assertIsInstance(example_model.path, str)
+
+    def test_fast_rejects_bytes(self):
+        example_model = FastExampleModel(path=b"REJECT_BYTES")
+
+        with self.assertRaises(TraitError):
+            self.assertIsInstance(example_model.path, str)
 
 
 class TestBaseDirectory(unittest.TestCase):
@@ -107,16 +119,25 @@ class TestBaseDirectory(unittest.TestCase):
             foo.path = pathlib.Path(__file__)
 
     def test_rejects_invalid_type(self):
+        """ Rejects instances that are not `str` or `os.PathLike`.
+        """
         foo = ExistsBaseDirectory()
 
         with self.assertRaises(TraitError):
             foo.path = 1
 
+        with self.assertRaises(TraitError):
+            foo.path = b"!!!"
+
     def test_simple_accepts_any_name(self):
+        """ BaseDirectory with no existence check accepts any path name.
+        """
         foo = SimpleBaseDirectory()
         foo.path = "!!!"
 
     def test_simple_accepts_any_pathlib(self):
+        """ BaseDirectory with no existence check accepts any pathlib path.
+        """
         foo = SimpleBaseDirectory()
         foo.path = pathlib.Path("!!!")
 
