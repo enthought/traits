@@ -25,22 +25,14 @@ class PurePythonAdapter(object):
     """ Base class for pure Python adapters. """
 
     def __init__(self, adaptee):
-        """ Constructor. """
-
         self.adaptee = adaptee
-
-        return
 
 
 class Adapter(HasTraits):
     """ Base class for adapters with traits. """
 
     def __init__(self, adaptee, **traits):
-        """ Constructor. """
-
         traits["adaptee"] = adaptee
         super(Adapter, self).__init__(**traits)
-
-        return
 
     adaptee = Any

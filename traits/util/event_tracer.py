@@ -206,17 +206,20 @@ class MultiThreadRecordContainer(object):
 class ChangeEventRecorder(object):
     """ A single thread trait change event recorder.
 
+    Parameters
+    ----------
+    container : MultiThreadRecordContainer
+        A container to store the records for each trait change.
+
+    Attributes
+    ----------
+    container : MultiThreadRecordContainer
+        A container to store the records for each trait change.
+    indent : int
+        Indentation level when reporting chained events.
     """
 
     def __init__(self, container):
-        """ Class constructor
-
-        Parameters
-        ----------
-        container : MultiThreadRecordContainer
-           An container to store the records for each trait change.
-
-        """
         self.indent = 1
         self.container = container
 
@@ -281,18 +284,22 @@ class MultiThreadChangeEventRecorder(object):
     The class manages multiple ChangeEventRecorders which record trait change
     events for each thread in a separate file.
 
+    Parameters
+    ----------
+    container : MultiThreadChangeEventRecorder
+        The container of RecordContainers to keep the trait change records
+        for each thread.
+
+    Attributes
+    ----------
+    container : MultiThreadChangeEventRecorder
+        The container of RecordContainers to keep the trait change records
+        for each thread.
+    tracers : dict
+        Mapping from threads to ChangeEventRecorder instances.
     """
 
     def __init__(self, container):
-        """ Object constructor
-
-        Parameters
-        ----------
-        container : MultiThreadChangeEventRecorder
-            The container of RecordContainers to keep the trait change records
-            for each thread.
-
-        """
         self.tracers = {}
         self._tracer_lock = threading.Lock()
         self.container = container
