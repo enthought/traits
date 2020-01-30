@@ -142,7 +142,7 @@ Features
   (#704)
 * Add ``TraitKind``, ``ValidateTrait`` and ``DefaultValue`` Python enumeration
   types to replace previous uses of magic integers within the Traits codebase.
-  (#680)
+  (#680, #857)
 * The various ``CTrait`` internal flags are now exposed to Python as
   properties: ``CTrait.is_property`` (read-only), ``CTrait.modify_delegate``,
   ``CTrait.setattr_original_value``, ``CTrait.post_setattr_original_value``,
