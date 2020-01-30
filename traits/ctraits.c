@@ -1313,28 +1313,30 @@ _has_traits_init(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
 }
 
 /*-----------------------------------------------------------------------------
-|  Returns whether or not the object has finished being initialized:
+|  Returns whether or not the object has finished being initialized.
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_has_traits_inited(has_traits_object *obj, PyObject *args)
+_has_traits_inited(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
 {
-    int traits_inited = -1;
-
-    if (!PyArg_ParseTuple(args, "|p", &traits_inited)) {
-        return NULL;
-    }
-
-    if (traits_inited > 0) {
-        obj->flags |= HASTRAITS_INITED;
-    }
-
     if (obj->flags & HASTRAITS_INITED) {
-        Py_INCREF(Py_True);
-        return Py_True;
+        Py_RETURN_TRUE;
     }
-    Py_INCREF(Py_False);
-    return Py_False;
+    else {
+        Py_RETURN_FALSE;
+    }
+}
+
+
+/*-----------------------------------------------------------------------------
+|  Declare whether the has traits object has been initialized.
++----------------------------------------------------------------------------*/
+
+static PyObject * 
+_has_traits_set_inited(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
+{
+    obj->flags |= HASTRAITS_INITED;
+    Py_RETURN_NONE;
 }
 
 /*-----------------------------------------------------------------------------
@@ -1544,25 +1546,19 @@ PyDoc_STRVAR(
 PyDoc_STRVAR(
     has_traits_traits_inited_doc,
     "traits_inited()\n"
-    "traits_inited(value)\n"
     "\n"
-    "Get or set the initialization state of this object.\n"
-    "\n"
-    "With zero arguments, get the state: return True if the object has\n"
-    "already been initialized, and False otherwise.\n"
-    "\n"
-    "With a single argument, if that argument is true, mark the object\n"
-    "as initialized. If the argument is false, the state is unchanged.\n"
-    "\n"
-    "Parameters\n"
-    "----------\n"
-    "value : bool\n"
-    "    Only the value True (or another truthy value) should be passed.\n"
+    "Get the initialization state of this object.\n"
     "\n"
     "Returns\n"
     "-------\n"
     "initialized : bool\n"
     "    True if the object is initialized, else False.\n");
+
+PyDoc_STRVAR(
+    has_traits__trait_set_inited_doc,
+    "_trait_set_inited()\n"
+    "\n"
+    "Declare that this object has been initialized.\n");
 
 PyDoc_STRVAR(
     has_traits__trait_doc,
@@ -1684,6 +1680,12 @@ static PyMethodDef has_traits_methods[] = {
         (PyCFunction)_has_traits_inited,
         METH_VARARGS,
         has_traits_traits_inited_doc
+    },
+    {
+        "_trait_set_inited",
+        (PyCFunction)_has_traits_set_inited,
+        METH_NOARGS,
+        has_traits__trait_set_inited_doc
     },
     {
         "_trait",
