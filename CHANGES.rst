@@ -282,6 +282,7 @@ Documentation
 * Improve documentation for the ``traits.ctraits`` module. (#826, #824,
   #659, #653, #829, #836)
 * Fix badly formatted ``TraitHandler`` documentation. (#817)
+* Fix and improve badly formatted trait types documentation. (#843)
 * Fix broken module links in section titles in API documentation. (#823)
 * Add changelog to built documentation, and absorb old changelog into
   the new one. (#800, #799)
