@@ -8,12 +8,16 @@ Classes
 -------
 
 .. autoclass:: AbstractArray
+   :show-inheritance:
 
 .. autoclass:: Array
+   :show-inheritance:
 
 .. autoclass:: ArrayOrNone
+   :show-inheritance:
 
 .. autoclass:: CArray
+   :show-inheritance:
 
 Function
 --------
