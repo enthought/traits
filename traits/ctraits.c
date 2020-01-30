@@ -3681,6 +3681,46 @@ validate_trait_callable(
     return raise_trait_error(trait, obj, name, value);
 }
 
+
+static PyObject *
+validate_trait_pathlike(
+    trait_object *trait, has_traits_object *obj, PyObject *name,
+    PyObject *value)
+{
+    PyObject *validated_value;
+
+    if (PyUnicode_Check(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+
+    /* This conditional directive exists to support Python 3.5 which
+       does not define PyOS_FSPath */
+
+    #if PY_MAJOR_VERSION == 3 && PY_MINOR_VERSION > 5
+
+    if (PyBytes_Check(value)) {
+        return raise_trait_error(trait, obj, name, value);
+    }
+
+    if((validated_value = PyOS_FSPath(value)) != NULL) {
+        return validated_value;
+    }
+
+    if(PyErr_ExceptionMatches(PyExc_TypeError)) {
+        PyErr_Clear();
+        return raise_trait_error(trait, obj, name, value);
+    }
+    else {
+        return NULL;
+    }
+
+    #endif
+
+    return raise_trait_error(trait, obj, name, value);
+}
+
+
 /*-----------------------------------------------------------------------------
 |  Attempts to 'adapt' an object to a specified interface:
 |
@@ -4070,6 +4110,15 @@ validate_trait_complex(
                 }
                 break;
 
+            case 23: /* Str or os.PathLike check: */
+                result = validate_trait_pathlike(trait, obj, name, value);
+                if (result == NULL) {
+                    return NULL;
+                }
+                else {
+                    return result;
+                }
+
             default: /* Should never happen...indicates an internal error: */
                 assert(0);  /* invalid validation type */
                 goto error;
@@ -4109,6 +4158,7 @@ static trait_validate validate_handlers[] = {
     validate_trait_integer, /* case 20: Integer check */
     validate_trait_float,   /* case 21: Float check */
     validate_trait_callable,   /* case 22: Callable check */
+    validate_trait_pathlike    /* case 23: Str or os.PathLike check */
 };
 
 static PyObject *
@@ -4264,6 +4314,11 @@ _trait_set_validate(trait_object *trait, PyObject *args)
                     break;
 
                 case 22: /* Callable check: */
+                    if (n == 1) {
+                        goto done;
+                    }
+                    break;
+                case 23: /* Str or os.PathLike check: */
                     if (n == 1) {
                         goto done;
                     }

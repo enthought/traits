@@ -106,6 +106,9 @@ class ValidateTrait(IntEnum):
     #: A callable check.
     callable = 22
 
+    #: A os.PathLike type check.
+    os_path_like = 23
+
 
 class ComparisonMode(IntEnum):
     """ Comparison mode.

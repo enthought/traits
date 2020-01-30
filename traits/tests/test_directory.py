@@ -13,7 +13,9 @@ from tempfile import gettempdir
 
 import unittest
 
-from traits.api import BaseDirectory, Directory, HasTraits, TraitError
+from traits.api import (
+    BaseDirectory, Directory, Either, HasTraits, Int, TraitError
+)
 
 
 class ExampleModel(HasTraits):
@@ -24,8 +26,12 @@ class FastExampleModel(HasTraits):
     path = Directory()
 
 
+class IntOrDirectory(HasTraits):
+    path = Either(Int, Directory)
+
+
 class ExistsBaseDirectory(HasTraits):
-    path = BaseDirectory(value=pathlib.Path(gettempdir()), exists=True)
+    path = BaseDirectory(exists=True)
 
 
 class SimpleBaseDirectory(HasTraits):
@@ -142,3 +148,18 @@ class TestBaseDirectory(unittest.TestCase):
         foo.path = pathlib.Path("!!!")
 
         self.assertIsInstance(foo.path, str)
+
+
+class TestEitherWithDirectory(unittest.TestCase):
+
+    def test_accepts_int(self):
+        foo = IntOrDirectory()
+        foo.path = 1
+
+    def test_accepts_str(self):
+        foo = IntOrDirectory()
+        foo.path = "!!!"
+
+    def test_accepts_pathlib(self):
+        foo = IntOrDirectory()
+        foo.path = pathlib.Path("!!!")
