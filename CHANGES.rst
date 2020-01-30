@@ -142,7 +142,7 @@ Features
   (#704)
 * Add ``TraitKind``, ``ValidateTrait`` and ``DefaultValue`` Python enumeration
   types to replace previous uses of magic integers within the Traits codebase.
-  (#680)
+  (#680, #857)
 * The various ``CTrait`` internal flags are now exposed to Python as
   properties: ``CTrait.is_property`` (read-only), ``CTrait.modify_delegate``,
   ``CTrait.setattr_original_value``, ``CTrait.post_setattr_original_value``,
@@ -282,6 +282,7 @@ Documentation
 * Improve documentation for the ``traits.ctraits`` module. (#826, #824,
   #659, #653, #829, #836)
 * Fix badly formatted ``TraitHandler`` documentation. (#817)
+* Fix and improve badly formatted trait types documentation. (#843)
 * Fix broken module links in section titles in API documentation. (#823)
 * Additional class docstring fixes. (#854)
 * Add changelog to built documentation, and absorb old changelog into
