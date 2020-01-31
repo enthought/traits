@@ -2461,7 +2461,7 @@ class PrefixList(TraitType):
 
     Note that the algorithm used by TraitPrefixList in determining whether
     a string is a valid value is fairly efficient in terms of both time and
-     space, and is not based on a brute force set of comparisons.
+    space, and is not based on a brute force set of comparisons.
 
     Parameters
     ----------
