@@ -2429,7 +2429,7 @@ class CList(List):
         )
 
 
-class PrefixList(TraitType):
+class PrefixList(BaseStr):
     r"""Ensures that a value assigned to the attribute is a member of a list of
      specified string values, or is a unique prefix of one of those values.
 
