@@ -1559,10 +1559,7 @@ class Directory(BaseDirectory):
         # Define the C-level fast validator to use if the directory existence
         #: test is not required:
         if not exists:
-            if fspath is None:
-                self.fast_validate = (ValidateTrait.coerce, str)
-            else:
-                self.fast_validate = (ValidateTrait.os_path_like, )
+            self.fast_validate = (ValidateTrait.coerce, str)
         super(Directory, self).__init__(
             value, auto_set, entries, exists, **metadata
         )
