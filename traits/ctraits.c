@@ -2908,22 +2908,26 @@ static trait_setattr setattr_handlers[] = {
     /*  End of __setstate__ method entries */
     NULL};
 
-static int
-trait_init(trait_object *trait, PyObject *args, PyObject *kwds)
+
+trait_object *
+trait_new (PyTypeObject *trait_type, PyObject *args, PyObject *kw)
 {
     int kind;
+    trait_object *trait;
 
     if (!PyArg_ParseTuple(args, "i", &kind)) {
-        return -1;
+        return NULL;
     }
 
     if ((kind >= 0) && (kind <= 8)) {
+        trait = (trait_object*) PyType_GenericNew(trait_type, args, kw);
         trait->getattr = getattr_handlers[kind];
         trait->setattr = setattr_handlers[kind];
-        return 0;
+        return trait;
     }
 
-    return bad_trait_error();
+    PyErr_SetString(TraitError, "Invalid argument to trait constructor.");
+    return NULL;
 }
 
 /*-----------------------------------------------------------------------------
@@ -2979,7 +2983,7 @@ trait_traverse(trait_object *trait, visitproc visit, void *arg)
 }
 
 /*-----------------------------------------------------------------------------
-|  Handles the 'getattr' operation on a 'CHasTraits' instance:
+|  Handles the 'getattr' operation on a 'CTrait' instance:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
@@ -5399,9 +5403,9 @@ static PyTypeObject trait_type = {
     0,                                         /* tp_descr_get */
     0,                                         /* tp_descr_set */
     sizeof(trait_object) - sizeof(PyObject *), /* tp_dictoffset */
-    (initproc)trait_init,                      /* tp_init */
+    0,                                         /* tp_init */
     0,                                         /* tp_alloc */
-    0                                          /* tp_new */
+    (newfunc)trait_new                         /* tp_new */
 };
 
 /*-----------------------------------------------------------------------------
@@ -5511,7 +5515,6 @@ PyInit_ctraits(void)
     /* Create the 'CTrait' type: */
     trait_type.tp_base = &PyBaseObject_Type;
     trait_type.tp_alloc = PyType_GenericAlloc;
-    trait_type.tp_new = PyType_GenericNew;
     if (PyType_Ready(&trait_type) < 0) {
         return NULL;
     }
