@@ -21,6 +21,7 @@ from traits.api import (
 TESTS_SKIPPED_MESSAGE = (
     "Directory trait PathLib tests skipped for Python < 3.6")
 
+
 class ExampleModel(HasTraits):
     path = Directory(exists=True)
 
