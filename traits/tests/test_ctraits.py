@@ -17,6 +17,7 @@ from traits.constants import (
     ComparisonMode, DefaultValue, TraitKind, MAXIMUM_DEFAULT_VALUE_TYPE
 )
 from traits.ctrait import CTrait
+from traits.trait_errors import TraitError
 from traits.trait_types import Any
 
 
@@ -212,3 +213,9 @@ class TestCTrait(unittest.TestCase):
         tr.handler = None
         self.assertFalse(finalizer.alive)
         self.assertIsNone(tr.handler)
+
+    def test_invalid_trait_initialization(self):
+        self.assertNotIn(9, TraitKind)
+
+        with self.assertRaises(TraitError):
+            CTrait(9)
