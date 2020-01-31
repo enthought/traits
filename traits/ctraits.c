@@ -2912,10 +2912,15 @@ static trait_setattr setattr_handlers[] = {
 trait_object *
 trait_new (PyTypeObject *trait_type, PyObject *args, PyObject *kw)
 {
-    int kind;
+    int kind, n;
     trait_object *trait;
 
-    if (!PyArg_ParseTuple(args, "i", &kind)) {
+    n = PyTuple_GET_SIZE(args);
+
+    if (n == 0){
+        kind = 0;
+    }
+    else if (!PyArg_ParseTuple(args, "i", &kind)) {
         return NULL;
     }
 

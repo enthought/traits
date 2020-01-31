@@ -17,8 +17,10 @@ from traits.constants import (
     ComparisonMode, DefaultValue, TraitKind, MAXIMUM_DEFAULT_VALUE_TYPE
 )
 from traits.ctrait import CTrait
+from traits.has_traits import HasTraits
 from traits.trait_errors import TraitError
-from traits.trait_types import Any
+from traits.trait_type import TraitType
+from traits.trait_types import Any, List
 
 
 def getter():
@@ -219,3 +221,28 @@ class TestCTrait(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             CTrait(9)
+
+    def test_default_trait_initialization(self):
+        ctrait = CTrait()
+
+        handler = TraitType()
+        handler.validate = unittest.mock.MagicMock(return_value="baz")
+        ctrait.set_validate(handler.validate)
+
+        class Foo(HasTraits):
+            bar = ctrait
+
+            bar_changed_events = List
+
+            def _bar_changed(self, event):
+                self.bar_changed_events.append(event)
+
+        foo = Foo()
+
+        self.assertEqual(len(foo.bar_changed_events), 0)
+
+        foo.bar = 1
+
+        handler.validate.assert_called_once_with(foo, "bar", 1)
+        self.assertEqual(foo.bar, "baz")
+        self.assertEqual(len(foo.bar_changed_events), 1)
