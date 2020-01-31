@@ -119,9 +119,6 @@ call_notifiers(
 /* Should the delegate be modified (or the original object)? */
 #define TRAIT_MODIFY_DELEGATE 0x00000002U
 
-/* Should a simple object identity test be performed (or a rich compare)? */
-#define TRAIT_OBJECT_ID_TEST 0x00000004U
-
 /* Make 'setattr' store the original unvalidated value */
 #define TRAIT_SETATTR_ORIGINAL_VALUE 0x00000008U
 
@@ -131,15 +128,20 @@ call_notifiers(
 /* Does this trait have an associated 'mapped' trait? */
 #define TRAIT_IS_MAPPED 0x00000080U
 
-/* Should any old/new value test be performed before generating
-   notifications? */
-#define TRAIT_NO_VALUE_TEST 0x00000100U
+/* Mask for the comparison mode bits, which determine when
+   notifications are emitted on trait assignment. */
+#define TRAIT_COMPARISON_MODE_MASK 0x00000104U
 
-/* Should old/new values be performed using equality */
-#define TRAIT_EQUALITY_COMPARE 0x00000000U
+/* Notify on every assignment. Corresponds to ComparisonMode.none. */
+#define TRAIT_COMPARISON_MODE_NONE 0x00000100U
 
-/* Mask to read the trait comparison flag bits */
-#define TRAIT_COMPARE_MASK 0x00000104U
+/* Notify if the new object "is not" the old one. Corresponds to
+  ComparisonMode.identity. */
+#define TRAIT_COMPARISON_MODE_IDENTITY 0x00000004U
+
+/* Notify if the new object is not the old one, and is not equal to the old
+   one. Corresponds to ComparisonMode.equality. */
+#define TRAIT_COMPARISON_MODE_EQUALITY 0x00000000U
 
 /*-----------------------------------------------------------------------------
 | Default value type constants (see `default_value_for` method)
@@ -1332,7 +1334,7 @@ _has_traits_inited(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
 |  Declare whether the has traits object has been initialized.
 +----------------------------------------------------------------------------*/
 
-static PyObject * 
+static PyObject *
 _has_traits_set_inited(has_traits_object *obj, PyObject *Py_UNUSED(ignored))
 {
     obj->flags |= HASTRAITS_INITED;
@@ -2348,7 +2350,7 @@ setattr_trait(
 
     PyObject *dict = obj->obj_dict;
 
-    changed = (traitd->flags & TRAIT_NO_VALUE_TEST);
+    changed = (traitd->flags & TRAIT_COMPARISON_MODE_NONE);
 
     if (value == NULL) {
         if (dict == NULL) {
@@ -2383,7 +2385,8 @@ setattr_trait(
 
                 if (!changed) {
                     changed = (old_value != value);
-                    if (changed && !(traitd->flags & TRAIT_OBJECT_ID_TEST)) {
+                    if (changed
+                        && !(traitd->flags & TRAIT_COMPARISON_MODE_IDENTITY)) {
                         changed =
                             PyObject_RichCompareBool(old_value, value, Py_NE);
                         if (changed == -1) {
@@ -2466,7 +2469,7 @@ setattr_trait(
 
         if (!changed) {
             changed = (old_value != value);
-            if (changed && !(traitd->flags & TRAIT_OBJECT_ID_TEST)) {
+            if (changed && !(traitd->flags & TRAIT_COMPARISON_MODE_IDENTITY)) {
                 changed = PyObject_RichCompareBool(old_value, value, Py_NE);
                 if (changed == -1) {
                     PyErr_Clear();
@@ -4465,16 +4468,16 @@ _set_trait_comparison_mode(trait_object *trait, PyObject *value, void *closure)
 
     switch (comparison_mode) {
         case 0:
-            trait->flags &= ~TRAIT_COMPARE_MASK;
-            trait->flags |= TRAIT_NO_VALUE_TEST;
+            trait->flags &= ~TRAIT_COMPARISON_MODE_MASK;
+            trait->flags |= TRAIT_COMPARISON_MODE_NONE;
             break;
         case 1:
-            trait->flags &= ~TRAIT_COMPARE_MASK;
-            trait->flags |= TRAIT_OBJECT_ID_TEST;
+            trait->flags &= ~TRAIT_COMPARISON_MODE_MASK;
+            trait->flags |= TRAIT_COMPARISON_MODE_IDENTITY;
             break;
         case 2:
-            trait->flags &= ~TRAIT_COMPARE_MASK;
-            trait->flags |= TRAIT_EQUALITY_COMPARE;
+            trait->flags &= ~TRAIT_COMPARISON_MODE_MASK;
+            trait->flags |= TRAIT_COMPARISON_MODE_EQUALITY;
             break;
         default:
             PyErr_Format(
@@ -4496,16 +4499,16 @@ _get_trait_comparison_mode_int(trait_object *trait, void *closure)
 {
     int i_comparison_mode;
 
-    unsigned int compare_flag = trait->flags & TRAIT_COMPARE_MASK;
+    unsigned int compare_flag = trait->flags & TRAIT_COMPARISON_MODE_MASK;
 
-    if (compare_flag == TRAIT_NO_VALUE_TEST) {
+    if (compare_flag == TRAIT_COMPARISON_MODE_NONE) {
         i_comparison_mode = 0;
     }
-    else if (compare_flag == TRAIT_OBJECT_ID_TEST) {
+    else if (compare_flag == TRAIT_COMPARISON_MODE_IDENTITY) {
         i_comparison_mode = 1;
     }
     else {
-        assert(compare_flag == TRAIT_EQUALITY_COMPARE);
+        assert(compare_flag == TRAIT_COMPARISON_MODE_EQUALITY);
         i_comparison_mode = 2;
     }
 
