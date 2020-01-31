@@ -190,6 +190,9 @@ Traits
 .. autoclass:: CList
    :show-inheritance:
 
+.. autoclass:: PrefixList
+   :show-inheritance:
+
 .. autoclass:: Set
    :show-inheritance:
 

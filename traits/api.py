@@ -92,6 +92,7 @@ from .trait_types import (  # noqa: F401
     Tuple,
     List,
     CList,
+    PrefixList,
     Set,
     CSet,
     Dict,
