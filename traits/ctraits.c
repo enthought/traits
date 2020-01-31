@@ -4333,7 +4333,6 @@ post_setattr_trait_python(
     trait_object *trait, has_traits_object *obj, PyObject *name,
     PyObject *value)
 {
-
     PyObject *result;
 
     PyObject *args = PyTuple_New(3);
