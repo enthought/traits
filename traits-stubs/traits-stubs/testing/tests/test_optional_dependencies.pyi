@@ -1,0 +1,6 @@
+import unittest
+from traits.testing.optional_dependencies import optional_import as optional_import
+
+class TestImportHandler(unittest.TestCase):
+    def test_import_succeeds(self) -> None: ...
+    def test_import_fails(self) -> None: ...

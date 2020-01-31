@@ -1,0 +1,3 @@
+from typing import Any, Optional
+
+def wait_for_condition(condition: Any, obj: Any, trait: Any, timeout: Optional[Any] = ...) -> None: ...
