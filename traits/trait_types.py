@@ -1526,6 +1526,9 @@ class BaseDirectory(BaseStr):
 class Directory(BaseDirectory):
     """ A fast-validating trait type whose value is a directory path string.
 
+    For Python 3.6 and greater, it also accepts objects implementing
+    the `os.PathLike` interface; converting them to corresponding string.
+
     Parameters
     ----------
     value : str
@@ -1556,10 +1559,6 @@ class Directory(BaseDirectory):
     def __init__(
         self, value="", auto_set=False, entries=0, exists=False, **metadata
     ):
-        # Define the C-level fast validator to use if the directory existence
-        #: test is not required:
-        if not exists:
-            self.fast_validate = (ValidateTrait.coerce, str)
         super(Directory, self).__init__(
             value, auto_set, entries, exists, **metadata
         )

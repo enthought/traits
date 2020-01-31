@@ -25,10 +25,6 @@ class ExampleModel(HasTraits):
     path = Directory(exists=True)
 
 
-class FastExampleModel(HasTraits):
-    path = Directory()
-
-
 class ExistsBaseDirectory(HasTraits):
     path = BaseDirectory(value=pathlib.Path(gettempdir()), exists=True)
 
@@ -65,23 +61,6 @@ class DirectoryTestCase(unittest.TestCase):
             example_model.path = 11
 
         self.assertRaises(TraitError, assign_invalid)
-
-    def test_fast_accepts_str(self):
-        example_model = FastExampleModel(path=gettempdir())
-        example_model.path = "."
-
-    @unittest.skipIf(sys.version_info < (3, 6), TESTS_SKIPPED_MESSAGE)
-    def test_fast_accepts_pathlib_dir(self):
-        example_model = FastExampleModel()
-        example_model.path = pathlib.Path(gettempdir())
-
-        self.assertIsInstance(example_model.path, str)
-
-    def test_fast_rejects_bytes(self):
-        example_model = FastExampleModel()
-
-        with self.assertRaises(TraitError):
-            example_model.path = b"REJECT_BYTES"
 
 
 class TestBaseDirectory(unittest.TestCase):
