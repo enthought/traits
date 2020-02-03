@@ -17,8 +17,9 @@ import unittest
 from traits.api import BaseDirectory, Directory, HasTraits, TraitError
 
 
-TESTS_SKIPPED_MESSAGE = (
-    "Directory trait PathLib tests skipped for Python < 3.6")
+requires_fspath = unittest.skipIf(
+    sys.version_info < (3, 6),
+    "Test requires os.fspath, which is unavailable before Python 3.6")
 
 
 class ExampleModel(HasTraits):
@@ -85,21 +86,21 @@ class TestBaseDirectory(unittest.TestCase):
         with self.assertRaises(TraitError):
             foo.path = __file__
 
-    @unittest.skipIf(sys.version_info < (3, 6), TESTS_SKIPPED_MESSAGE)
+    @requires_fspath
     def test_accepts_valid_pathlib_dir(self):
         foo = ExistsBaseDirectory()
         foo.path = pathlib.Path(gettempdir())
 
         self.assertIsInstance(foo.path, str)
 
-    @unittest.skipIf(sys.version_info < (3, 6), TESTS_SKIPPED_MESSAGE)
+    @requires_fspath
     def test_rejects_invalid_pathlib_dir(self):
         foo = ExistsBaseDirectory()
 
         with self.assertRaises(TraitError):
             foo.path = pathlib.Path("!!!invalid_directory")
 
-    @unittest.skipIf(sys.version_info < (3, 6), TESTS_SKIPPED_MESSAGE)
+    @requires_fspath
     def test_rejects_valid_pathlib_file(self):
         foo = ExistsBaseDirectory()
 
@@ -123,7 +124,7 @@ class TestBaseDirectory(unittest.TestCase):
         foo = SimpleBaseDirectory()
         foo.path = "!!!invalid_directory"
 
-    @unittest.skipIf(sys.version_info < (3, 6), TESTS_SKIPPED_MESSAGE)
+    @requires_fspath
     def test_simple_accepts_any_pathlib(self):
         """ BaseDirectory with no existence check accepts any pathlib path.
         """
