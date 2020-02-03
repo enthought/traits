@@ -8,6 +8,10 @@ env:
     - PYTHONUNBUFFERED="1"
       CFLAGS="-Werror -UNDEBUG"
 
+os:
+  - linux
+  - osx
+
 python:
   - 3.5
   - 3.6
@@ -15,12 +19,12 @@ python:
   - 3.8
 
 before_install:
-  - sudo apt-get install -y qt5-default
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -y qt5-default; fi
 
 install:
-  - pip install copyright_header/
-  - pip install -e ".[test]"
+  - python -m pip install copyright_header/
+  - python -m pip install -e ".[test]"
 
 script:
-  - flake8
+  - python -m flake8
   - python -m unittest discover -v
