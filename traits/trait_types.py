@@ -2475,8 +2475,10 @@ class PrefixList(BaseStr):
         Enumeration of all legal values for a trait.
     """
 
+    #: The default value for the trait:
     default_value = None
 
+    #: The default value type to use (i.e. 'constant'):
     default_value_type = DefaultValue.constant
 
     def __init__(self, *values, **metadata):
@@ -2491,9 +2493,13 @@ class PrefixList(BaseStr):
         default = self.default_value
         if 'default_value' in metadata:
             default = metadata.pop('default_value')
-            if default not in self.values:
+            try:
+                default = self.validate(None, None, default)
+            except TraitError:
                 raise ValueError("Default value for PrefixTrait must be "
-                                 "present in the prefix list")
+                                 "a unique prefix present in the prefix list")
+        elif self.values:
+            default = self.values[0]
 
         super().__init__(default, **metadata)
 
