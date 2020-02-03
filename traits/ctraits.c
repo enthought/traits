@@ -312,17 +312,6 @@ invalid_attribute_error(PyObject *name)
     return -1;
 }
 
-/*-----------------------------------------------------------------------------
-|  Raise an "invalid trait definition" error:
-+----------------------------------------------------------------------------*/
-
-static int
-bad_trait_error(void)
-{
-    PyErr_SetString(TraitError, "Invalid argument to trait constructor.");
-
-    return -1;
-}
 
 /*-----------------------------------------------------------------------------
 |  Raise an "cant set items error" error:
