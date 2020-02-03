@@ -237,7 +237,7 @@ class AbstractArray(TraitType):
             )
         return editor
 
-    # -- Private Methods --------------------------------------------------------
+    # -- Private Methods ------------------------------------------------------
 
     def get_default_value(self):
         """ Returns the default value constructor for the type (called from the
@@ -365,16 +365,16 @@ class CArray(AbstractArray):
         )
 
 
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  'ArrayOrNone' trait
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 class ArrayOrNone(CArray):
     """ A coercing trait whose value may be either a NumPy array or None.
 
-    This trait is designed to avoid the comparison issues with numpy arrays that
-    can arise from the use of constructs like Either(None, Array).
+    This trait is designed to avoid the comparison issues with numpy arrays
+    that can arise from the use of constructs like Either(None, Array).
 
     The default value is None.
     """

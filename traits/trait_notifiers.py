@@ -58,21 +58,11 @@ def ui_dispatch(handler, *args, **kw):
         ui_handler(handler, *args, **kw)
 
 
-# -------------------------------------------------------------------------------
-#  'NotificationExceptionHandlerState' class:
-# -------------------------------------------------------------------------------
-
-
 class NotificationExceptionHandlerState(object):
     def __init__(self, handler, reraise_exceptions, locked):
         self.handler = handler
         self.reraise_exceptions = reraise_exceptions
         self.locked = locked
-
-
-# -------------------------------------------------------------------------------
-#  'NotificationExceptionHandler' class:
-# -------------------------------------------------------------------------------
 
 
 class NotificationExceptionHandler(object):
@@ -81,7 +71,7 @@ class NotificationExceptionHandler(object):
         self.main_thread = None
         self.thread_local = thread_local()
 
-    # -- Private Methods ------------------------------------------------------------
+    # -- Private Methods ------------------------------------------------------
 
     def _push_handler(
         self, handler=None, reraise_exceptions=False, main=False, locked=False
@@ -353,9 +343,9 @@ class AbstractStaticChangeNotifyWrapper(object):
         if arg_count > 4:
             raise TraitNotificationError(
                 (
-                    "Invalid number of arguments for the static anytrait change "
-                    "notification handler: %s. A maximum of 4 arguments is "
-                    "allowed, but %s were specified."
+                    "Invalid number of arguments for the static anytrait "
+                    "change notification handler: %s. A maximum of 4 "
+                    "arguments is allowed, but %s were specified."
                 )
                 % (handler.__name__, arg_count)
             )
@@ -479,9 +469,9 @@ class TraitChangeNotifyWrapper(object):
                 if arg_count > 4:
                     raise TraitNotificationError(
                         (
-                            "Invalid number of arguments for the dynamic trait "
-                            "change notification handler: %s. A maximum of 4 "
-                            "arguments is allowed, but %s were specified."
+                            "Invalid number of arguments for the dynamic "
+                            "trait change notification handler: %s. A maximum "
+                            "of 4 arguments is allowed, but %s were specified."
                         )
                         % (func.__name__, arg_count)
                     )

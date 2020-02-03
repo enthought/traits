@@ -20,7 +20,7 @@ from traits.adaptation.api import Adapter
 class TestAdapter(unittest.TestCase):
     """ Test the Adapter class. """
 
-    #### Tests #################################################################
+    #### Tests ################################################################
 
     def test_initializing_adaptee(self):
         # Regression test: The `adaptee` trait used to be initialized after

@@ -72,7 +72,7 @@ class AdaptationOffer(HasTraits):
     def _get_to_protocol_name(self):
         return self._get_type_name(self._to_protocol)
 
-    #### Private protocol ######################################################
+    #### Private protocol #####################################################
 
     #: Shadow trait for the corresponding property.
     _factory = Any

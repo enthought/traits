@@ -58,7 +58,7 @@ from .trait_errors import TraitError
 from .util.deprecated import deprecated
 from .trait_converters import check_trait, mapped_trait_for, trait_for
 
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  Set CHECK_INTERFACES to one of the following values:
 #
 #  - 0: Does not check to see if classes implement their declared interfaces.
@@ -66,25 +66,26 @@ from .trait_converters import check_trait, mapped_trait_for, trait_for
 #       logs a warning if they don't.
 #  - 2: Ensures that classes implement the interfaces they say they do, and
 #       raises an InterfaceError if they don't.
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 CHECK_INTERFACES = 0
 
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  This ABC is a placeholder for the TraitsUI ViewElement class, which should
 #  inherit from or register as implementing the API.  This has to be done here
-#  so that the metaclass machinery has something to check against when filtering
-#  out TraitsUI elements that are declared as part of a HasTraits class.
-# -------------------------------------------------------------------------------
+#  so that the metaclass machinery has something to check against when
+#  filtering out TraitsUI elements that are declared as part of a HasTraits
+#  class.
+# -----------------------------------------------------------------------------
 
 
 class AbstractViewElement(abc.ABC):
     pass
 
 
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  Constants:
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 WrapperTypes = (
     StaticAnyTraitChangeNotifyWrapper,
@@ -96,8 +97,8 @@ BoundMethodTypes = (MethodType,)
 UnboundMethodTypes = (FunctionType,)
 FunctionTypes = (FunctionType,)
 
-# Class dictionary entries used to save trait, listener and view information and
-# definitions:
+# Class dictionary entries used to save trait, listener and view information
+# and definitions:
 
 BaseTraits = "__base_traits__"
 ClassTraits = "__class_traits__"
@@ -345,21 +346,12 @@ def _add_event_handlers(trait, cls, handlers):
             handlers.append(_get_method(cls, "_%s_fired" % event))
 
 
-# -------------------------------------------------------------------------------
-#  Returns the method associated with a particular class property getter/setter:
-# -------------------------------------------------------------------------------
-
-
 def _property_method(class_dict, name):
     """ Returns the method associated with a particular class property
     getter/setter.
     """
     return class_dict.get(name)
 
-
-# -------------------------------------------------------------------------------
-#  'MetaHasTraits' class:
-# -------------------------------------------------------------------------------
 
 # This really should be 'HasTraits', but it's not defined yet:
 _HasTraits = None
@@ -751,8 +743,8 @@ def on_trait_change(name, post_init=False, dispatch="same"):
         A handler defined using this decorator is normally effective
         immediately. However, if *post_init* is **True**, then the handler only
         becomes effective after all object constructor arguments have been
-        processed. That is, trait values assigned as part of object construction
-        will not cause the handler to be invoked.
+        processed. That is, trait values assigned as part of object
+        construction will not cause the handler to be invoked.
     """
 
     def decorator(function):
@@ -793,9 +785,10 @@ def cached_property(function):
         code, is returned.
 
         Note the use, in the example, of the **depends_on** metadata attribute
-        to specify that the value of **file_contents** depends on **file_name**,
-        so that _get_file_contents() is called only when **file_name** changes.
-        For details, see the traits.traits.Property() function.
+        to specify that the value of **file_contents** depends on
+        **file_name**, so that _get_file_contents() is called only when
+        **file_name** changes. For details, see the traits.traits.Property()
+        function.
     """
     name = TraitsCache + function.__name__[5:]
 
@@ -814,14 +807,14 @@ def cached_property(function):
 def property_depends_on(dependency, settable=False, flushable=False):
     """ Marks the following method definition as being a "cached property"
         that depends on the specified extended trait names. That is, it is a
-        property getter which, for performance reasons, caches its most recently
-        computed result in an attribute whose name is of the form:
-        *_traits_cache_name*, where *name* is the name of the property. A method
-        marked as being a cached property needs only to compute and return its
-        result. The @property_depends_on decorator automatically wraps the
-        decorated method in cache management code that will cache the most
-        recently computed value and flush the cache when any of the specified
-        dependencies are modified, thus eliminating the need to write
+        property getter which, for performance reasons, caches its most
+        recently computed result in an attribute whose name is of the form:
+        *_traits_cache_name*, where *name* is the name of the property. A
+        method marked as being a cached property needs only to compute and
+        return its result. The @property_depends_on decorator automatically
+        wraps the decorated method in cache management code that will cache the
+        most recently computed value and flush the cache when any of the
+        specified dependencies are modified, thus eliminating the need to write
         boilerplate cache management code explicitly. For example::
 
             file_name = File
@@ -950,12 +943,12 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     attribute *favorite_sport* are not listed.
     """
 
-    # -- Trait Prefix Rules -----------------------------------------------------
+    # -- Trait Prefix Rules ---------------------------------------------------
 
     #: Make traits 'property cache' values private with no type checking:
     _traits_cache__ = Any(private=True, transient=True)
 
-    # -- Class Variables --------------------------------------------------------
+    # -- Class Variables ------------------------------------------------------
 
     #: Mapping from dispatch type to notification wrapper class type
     wrappers = {
@@ -966,7 +959,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         "ui": FastUITraitChangeNotifyWrapper,
     }
 
-    # -- Trait Definitions ------------------------------------------------------
+    # -- Trait Definitions ----------------------------------------------------
 
     #: An event fired when a new trait is dynamically added to the object
     trait_added = Event(str)
@@ -974,10 +967,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     #: An event that can be fired to indicate that the state of the object has
     #: been modified
     trait_modified = Event
-
-    # ---------------------------------------------------------------------------
-    #  Handles a 'trait_added' event being fired:
-    # ---------------------------------------------------------------------------
 
     def _trait_added_changed(self, name):
         """ Handles a 'trait_added' event being fired.
@@ -1397,10 +1386,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         """
         return self.trait_set(trait_change_notify=False, **traits)
 
-    # ---------------------------------------------------------------------------
-    #  Resets some or all of an object's traits to their default values:
-    # ---------------------------------------------------------------------------
-
     def reset_traits(self, traits=None, **metadata):
         """ Resets some or all of an object's trait attributes to their default
         values.
@@ -1439,10 +1424,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         return unresetable
 
-    # ---------------------------------------------------------------------------
-    #  Returns the list of trait names to copy/clone by default:
-    # ---------------------------------------------------------------------------
-
     def copyable_trait_names(self, **metadata):
         """ Returns the list of trait names to copy or clone by default.
         """
@@ -1450,21 +1431,11 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         metadata.setdefault("transient", lambda t: t is not True)
         return self.trait_names(**metadata)
 
-    # ---------------------------------------------------------------------------
-    #  Returns the list of all trait names, including implicitly defined
-    #  traits:
-    # ---------------------------------------------------------------------------
-
     def all_trait_names(self):
         """ Returns the list of all trait names, including implicitly defined
             traits.
         """
         return list(self.__class_traits__.keys())
-
-    # --------------------------------------------------------------------------
-    #  Returns the list of trait names when calling the dir() builtin on the
-    #  object. This enables tab-completion in IPython.
-    # --------------------------------------------------------------------------
 
     def __dir__(self):
         """ Returns the list of trait names when calling the dir() builtin on
@@ -1474,10 +1445,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         method_names = [method for method in self._each_trait_method(self)]
         class_attrs = list(vars(self.__class__).keys())
         return trait_names + method_names + class_attrs
-
-    # ---------------------------------------------------------------------------
-    #  Copies another object's traits into this one:
-    # ---------------------------------------------------------------------------
 
     def copy_traits(
         self, other, traits=None, memo=None, copy=None, **metadata
@@ -1570,11 +1537,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         return unassignable
 
-    # ---------------------------------------------------------------------------
-    #  Clones a new object from this one, optionally copying only a specified
-    #  set of traits:
-    # ---------------------------------------------------------------------------
-
     def clone_traits(self, traits=None, memo=None, copy=None, **metadata):
         """ Clones a new object from this one, optionally copying only a
         specified set of traits.
@@ -1624,10 +1586,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         return new
 
-    # ---------------------------------------------------------------------------
-    #  Creates a deep copy of the object:
-    # ---------------------------------------------------------------------------
-
     def __deepcopy__(self, memo):
         """ Creates a deep copy of the object.
         """
@@ -1642,10 +1600,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         )
 
         return result
-
-    # ---------------------------------------------------------------------------
-    #  Edits the object's traits:
-    # ---------------------------------------------------------------------------
 
     def edit_traits(
         self,
@@ -1664,10 +1618,11 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         ----------
         view : View or string
             A View object (or its name) that defines a user interface for
-            editing trait attribute values of the current object. If the view is
-            defined as an attribute on this class, use the name of the attribute.
-            Otherwise, use a reference to the view object. If this attribute is
-            not specified, the View object returned by trait_view() is used.
+            editing trait attribute values of the current object. If the view
+            is defined as an attribute on this class, use the name of the
+            attribute. Otherwise, use a reference to the view object. If this
+            attribute is not specified, the View object returned by
+            trait_view() is used.
         parent : toolkit control
             The reference to a user interface component to use as the parent
             window for the object's UI window.
@@ -1678,8 +1633,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             attribute of the View object is used.
         context : object or dictionary
             A single object or a dictionary of string/object pairs, whose trait
-            attributes are to be edited. If not specified, the current object is
-            used.
+            attributes are to be edited. If not specified, the current object
+            is used.
         handler : Handler
             A handler object used for event handling in the dialog box. If
             None, the default handler for Traits UI is used.
@@ -1689,8 +1644,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             are saved.
         scrollable : bool
             Indicates whether the dialog box should be scrollable. When set to
-            True, scroll bars appear on the dialog box if it is not large enough
-            to display all of the items in the view at one time.
+            True, scroll bars appear on the dialog box if it is not large
+            enough to display all of the items in the view at one time.
 
         Returns
         -------
@@ -1712,19 +1667,11 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             args,
         )
 
-    # ---------------------------------------------------------------------------
-    #  Returns the default context to use for editing/configuring traits:
-    # ---------------------------------------------------------------------------
-
     def trait_context(self):
         """ Returns the default context to use for editing or configuring
             traits.
         """
         return {"object": self}
-
-    # ---------------------------------------------------------------------------
-    #  Gets or sets a ViewElement associated with an object's class:
-    # ---------------------------------------------------------------------------
 
     def trait_view(self, name=None, view_element=None):
         """ Gets or sets a ViewElement associated with an object's class.
@@ -1973,10 +1920,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         setattr(cls, ViewTraits, view_elements)
         return view_elements
 
-    # ---------------------------------------------------------------------------
-    #  Configure the object's traits:
-    # ---------------------------------------------------------------------------
-
     def configure_traits(
         self,
         filename=None,
@@ -2001,17 +1944,18 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             The name (including path) of a file that contains a pickled
             representation of the current object. When this parameter is
             specified, the method reads the corresponding file (if it exists)
-            to restore the saved values of the object's traits before displaying
-            them. If the user confirms the dialog box (by clicking **OK**),
-            the new values are written to the file. If this parameter is not
-            specified, the values are loaded from the in-memory object, and are
-            not persisted when the dialog box is closed.
+            to restore the saved values of the object's traits before
+            displaying them. If the user confirms the dialog box (by clicking
+            **OK**), the new values are written to the file. If this parameter
+            is not specified, the values are loaded from the in-memory object,
+            and are not persisted when the dialog box is closed.
         view : View or str
             A View object (or its name) that defines a user interface for
-            editing trait attribute values of the current object. If the view is
-            defined as an attribute on this class, use the name of the attribute.
-            Otherwise, use a reference to the view object. If this attribute is
-            not specified, the View object returned by trait_view() is used.
+            editing trait attribute values of the current object. If the view
+            is defined as an attribute on this class, use the name of the
+            attribute. Otherwise, use a reference to the view object. If this
+            attribute is not specified, the View object returned by
+            trait_view() is used.
         kind : str
             The type of user interface window to create. See the
             **traitsui.view.kind_trait** trait for values and
@@ -2024,8 +1968,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             user interaction.
         context : object or dictionary
             A single object or a dictionary of string/object pairs, whose trait
-            attributes are to be edited. If not specified, the current object is
-            used
+            attributes are to be edited. If not specified, the current object
+            is used
         handler : Handler
             A handler object used for event handling in the dialog box. If
             None, the default handler for Traits UI is used.
@@ -2035,8 +1979,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             are saved.
         scrollable : bool
             Indicates whether the dialog box should be scrollable. When set to
-            True, scroll bars appear on the dialog box if it is not large enough
-            to display all of the items in the view at one time.
+            True, scroll bars appear on the dialog box if it is not large
+            enough to display all of the items in the view at one time.
 
         Returns
         -------
@@ -2050,10 +1994,10 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         The method attempts to open and unpickle the contents of *filename*
         before displaying the dialog box. When editing is complete, the method
-        attempts to pickle the updated contents of the object back to *filename*.
-        If the file referenced by *filename* does not exist, the object is not
-        modified before displaying the dialog box. If *filename* is unspecified
-        or None, no pickling or unpickling occurs.
+        attempts to pickle the updated contents of the object back to
+        *filename*. If the file referenced by *filename* does not exist, the
+        object is not modified before displaying the dialog box. If *filename*
+        is unspecified or None, no pickling or unpickling occurs.
 
         If *edit* is True (the default), a dialog box for editing the
         current object is displayed. If *edit* is False or None, no
@@ -2090,10 +2034,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         return True
 
-    # ---------------------------------------------------------------------------
-    #  Return the list of editable traits:
-    # ---------------------------------------------------------------------------
-
     def editable_traits(self):
         """Returns an alphabetically sorted list of the names of non-event
         trait attributes associated with the current object.
@@ -2113,20 +2053,18 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
     def visible_traits(self):
         """Returns an alphabetically sorted list of the names of non-event
-        trait attributes associated with the current object, that should be GUI visible
+        trait attributes associated with the current object, that should be GUI
+        visible
         """
         return self.trait_names(type=not_event, visible=not_false)
 
     @classmethod
     def class_visible_traits(cls):
         """Returns an alphabetically sorted list of the names of non-event
-        trait attributes associated with the current class, that should be GUI visible
+        trait attributes associated with the current class, that should be GUI
+        visible
         """
         return cls.class_trait_names(type=not_event, visible=not_false)
-
-    # ---------------------------------------------------------------------------
-    #  Pretty print the traits of an object:
-    # ---------------------------------------------------------------------------
 
     def print_traits(self, show_help=False, **metadata):
         """Prints the values of all explicitly-defined, non-event trait
@@ -2173,13 +2111,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         print("\n".join(result))
 
-    # ---------------------------------------------------------------------------
-    #  Add/Remove a handler for a specified trait being changed:
-    #
-    #  If no name is specified, the handler will be invoked for any trait
-    #  change.
-    # ---------------------------------------------------------------------------
-
     def _on_trait_change(
         self,
         handler,
@@ -2195,7 +2126,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         Parameters
         ----------
         handler : function
-            A trait notification function for the attribute specified by *name*.
+            A trait notification function for the attribute specified by
+            *name*.
         name : str
             Specifies the trait attribute whose value changes trigger the
             notification.
@@ -2255,14 +2187,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 notifiers.insert(0, wrapper)
             else:
                 notifiers.append(wrapper)
-
-    # ---------------------------------------------------------------------------
-    #  Add/Remove handlers for an extended set of one or more traits being
-    #  changed:
-    #
-    #  If no name is specified, the handler will be invoked for any trait
-    #  change.
-    # ---------------------------------------------------------------------------
 
     def on_trait_change(
         self,
@@ -2555,10 +2479,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     # A synonym for 'on_trait_change'
     on_trait_event = on_trait_change
 
-    # ---------------------------------------------------------------------------
-    #  Synchronize the value of two traits:
-    # ---------------------------------------------------------------------------
-
     def sync_trait(
         self, trait_name, object, alias=None, mutual=True, remove=False
     ):
@@ -2703,10 +2623,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             handler.default_value_type == DefaultValue.trait_list_object
         )
 
-    # ---------------------------------------------------------------------------
-    #  Add a new trait:
-    # ---------------------------------------------------------------------------
-
     def add_trait(self, name, *trait):
         """Adds a trait attribute to this object.
 
@@ -2780,10 +2696,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         if old_trait is None:
             self.trait_added = name
 
-    # ---------------------------------------------------------------------------
-    #  Remove an existing trait:
-    # ---------------------------------------------------------------------------
-
     def remove_trait(self, name):
         """Removes a trait attribute from this object.
 
@@ -2823,10 +2735,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         return False
 
-    # ---------------------------------------------------------------------------
-    #  Returns the trait definition of a specified trait:
-    # ---------------------------------------------------------------------------
-
     def trait(self, name, force=False, copy=False):
         """Returns the trait definition for the *name* trait attribute.
 
@@ -2862,10 +2770,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         return _clone_trait(result)
 
-    # ---------------------------------------------------------------------------
-    #  Returns the base trait definition of a specified trait:
-    # ---------------------------------------------------------------------------
-
     def base_trait(self, name):
         """Returns the base trait definition for a trait attribute.
 
@@ -2884,21 +2788,12 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         """
         return self._trait(name, -2)
 
-    # ---------------------------------------------------------------------------
-    #  Validates whether or not a specified value is legal for a specified
-    # trait and returns the validated value if valid:
-    # ---------------------------------------------------------------------------
-
     def validate_trait(self, name, value):
         """ Validates whether a value is legal for a trait.
 
         Returns the validated value if it is valid.
         """
         return self.base_trait(name).validate(self, name, value)
-
-    # ---------------------------------------------------------------------------
-    #  Return a dictionary of all traits which match a set of metadata:
-    # ---------------------------------------------------------------------------
 
     def traits(self, **metadata):
         """Returns a dictionary containing the definitions of all of the trait
@@ -2924,13 +2819,13 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         metadata attribute must have in order to be included in the search
         results.
 
-        The *metadata* values either may be simple Python values like strings or
-        integers, or may be lambda expressions or functions that return True
+        The *metadata* values either may be simple Python values like strings
+        or integers, or may be lambda expressions or functions that return True
         if the trait attribute is to be included in the result. A lambda
         expression or function must receive a single argument, which is the
         value of the trait metadata attribute being tested. If more than one
-        metadata keyword is specified, a trait attribute must match the metadata
-        values of all keywords to be included in the result.
+        metadata keyword is specified, a trait attribute must match the
+        metadata values of all keywords to be included in the result.
         """
         traits = self.__base_traits__.copy()
 
@@ -2962,10 +2857,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         return result
 
-    # ---------------------------------------------------------------------------
-    #  Return a dictionary of all traits which match a set of metadata:
-    # ---------------------------------------------------------------------------
-
     @classmethod
     def class_traits(cls, **metadata):
         """Returns a dictionary containing the definitions of all of the trait
@@ -2991,13 +2882,13 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         metadata attribute must have in order to be included in the search
         results.
 
-        The *metadata* values either may be simple Python values like strings or
-        integers, or may be lambda expressions or functions that return **True**
-        if the trait attribute is to be included in the result. A lambda
-        expression or function must receive a single argument, which is the
-        value of the trait metadata attribute being tested. If more than one
-        metadata keyword is specified, a trait attribute must match the metadata
-        values of all keywords to be included in the result.
+        The *metadata* values either may be simple Python values like strings
+        or integers, or may be lambda expressions or functions that return
+        **True** if the trait attribute is to be included in the result. A
+        lambda expression or function must receive a single argument, which is
+        the value of the trait metadata attribute being tested. If more than
+        one metadata keyword is specified, a trait attribute must match the
+        metadata values of all keywords to be included in the result.
         """
         if len(metadata) == 0:
             return cls.__base_traits__.copy()
@@ -3017,13 +2908,9 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         return result
 
-    # ---------------------------------------------------------------------------
-    #  Return a list of all trait names which match a set of metadata:
-    # ---------------------------------------------------------------------------
-
     def trait_names(self, **metadata):
-        """Returns a list of the names of all trait attributes whose definitions
-        match the set of *metadata* criteria specified.
+        """Returns a list of the names of all trait attributes whose
+        definitions match the set of *metadata* criteria specified.
 
         Parameters
         ----------
@@ -3054,10 +2941,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         """
         return list(cls.class_traits(**metadata).keys())
 
-    # ---------------------------------------------------------------------------
-    #  Explicitly sets the value of a cached property:
-    # ---------------------------------------------------------------------------
-
     def _set_traits_cache(self, name, value):
         """ Explicitly sets the value of a cached property.
         """
@@ -3067,10 +2950,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         if old_value != value:
             self.trait_property_changed(name, old_value, value)
 
-    # ---------------------------------------------------------------------------
-    #  Explicitly flushes the value of a cached property:
-    # ---------------------------------------------------------------------------
-
     def _flush_traits_cache(self, name, value):
         """ Explicitly flushes the value of a cached property.
         """
@@ -3078,12 +2957,10 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             name, self.__dict__.pop(TraitsCache + name, Undefined)
         )
 
-    # ---------------------------------------------------------------------------
-    #  Returns the trait definition for a specified name when there is no
-    #  explicit definition in the class:
-    # ---------------------------------------------------------------------------
-
     def __prefix_trait__(self, name, is_set):
+        """ Return the trait definition for a specified name when there is
+        no explicit definition in the class.
+        """
         # Check to see if the name is of the form '__xxx__':
         if (name[:2] == "__") and (name[-2:] == "__"):
             if name == "__class__":
@@ -3145,14 +3022,12 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             "for an object of type '%s'" % (name, self.__class__.__name__)
         )
 
-    # ---------------------------------------------------------------------------
-    #  Adds/Removes (Java-style) event listeners to an object:
-    # ---------------------------------------------------------------------------
-
     def add_trait_listener(self, object, prefix=""):
+        """ Add (Java-style) event listener to an object. """
         self._trait_listener(object, prefix, False)
 
     def remove_trait_listener(self, object, prefix=""):
+        """ Remove (Java-style) event listener to an object. """
         self._trait_listener(object, prefix, True)
 
     def _trait_listener(self, object, prefix, remove):
@@ -3183,10 +3058,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                             getattr(object, name), remove=remove
                         )
 
-    # ---------------------------------------------------------------------------
-    #  Generates each (name, method) pair for a specified object:
-    # ---------------------------------------------------------------------------
-
     def _each_trait_method(self, object):
         """ Generates each (name, method) pair for a specified object.
         """
@@ -3196,10 +3067,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 if (type(method) is FunctionType) and (name not in dic):
                     dic[name] = True
                     yield name
-
-    # ---------------------------------------------------------------------------
-    #  Handles adding/removing listeners for a generic 'Instance' trait:
-    # ---------------------------------------------------------------------------
 
     def _instance_changed_handler(self, name, old, new):
         """ Handles adding/removing listeners for a generic 'Instance' trait.
@@ -3213,10 +3080,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         if new is not None:
             for args in arg_lists:
                 new.on_trait_change(*args)
-
-    # ---------------------------------------------------------------------------
-    #  Handles adding/removing listeners for a generic 'List( Instance )' trait:
-    # ---------------------------------------------------------------------------
 
     def _list_changed_handler(self, name, old, new):
         """ Handles adding/removing listeners for a generic 'List( Instance )'
@@ -3491,8 +3354,9 @@ class HasPrivateTraits(HasTraits):
 
     This feature is useful in cases where a class needs private attributes to
     keep track of its internal object state, which are not part of the class's
-    public API. Such attributes do not need to be type-checked, because they are
-    manipulated only by the (presumably correct) methods of the class itself.
+    public API. Such attributes do not need to be type-checked, because they
+    are manipulated only by the (presumably correct) methods of the class
+    itself.
     """
 
     # Make 'private' traits (leading '_') have no type checking:
@@ -3502,9 +3366,9 @@ class HasPrivateTraits(HasTraits):
     _ = Disallow
 
 
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # ABC classes with traits:
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
