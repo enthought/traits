@@ -23,10 +23,8 @@ import sys
 from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 import uuid
-import warnings
 
-from .constants import ComparisonMode, DefaultValue, TraitKind, ValidateTrait
-from .ctrait import CTrait
+from .constants import DefaultValue, TraitKind, ValidateTrait
 from .trait_base import (
     strx,
     get_module_name,
