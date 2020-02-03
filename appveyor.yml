@@ -1,31 +1,24 @@
-build: false
 environment:
-
   global:
     PYTHONUNBUFFERED: "1"
-    INSTALL_EDM_VERSION: "2.0.0"
 
+environment:
   matrix:
-    - RUNTIME: '3.5'
-    - RUNTIME: '3.6'
-
-cache:
-  - C:\Users\appveyor\.cache -> appveyor-clean-cache.txt
-  - C:\Users\appveyor\AppData\Local\pip\Cache -> appveyor-clean-cache.txt
-
-init:
-  - ps: $Env:path = "C:/Enthought/edm;" + $Env:path
-  - ps: md C:/Users/appveyor/.cache -Force
+    - PYTHON: "C:\\Python35"
+    - PYTHON: "C:\\Python36"
+    - PYTHON: "C:\\Python37"
+    - PYTHON: "C:\\Python38"
+    - PYTHON: "C:\\Python35-x64"
+    - PYTHON: "C:\\Python36-x64"
+    - PYTHON: "C:\\Python37-x64"
+    - PYTHON: "C:\\Python38-x64"
 
 install:
-  - install-edm-windows.cmd
-  - edm install -y wheel click coverage
-  - edm run -- python etstool.py install --runtime=%runtime%
+  - pip install copyright_header/
+  - pip install -e ".[test]"
+
+build: off
+
 test_script:
-  - edm run -- python etstool.py flake8 --runtime=%runtime%
-  - edm run -- python etstool.py test --runtime=%runtime%
-  - edm run -- python etstool.py docs --runtime=%runtime%
-on_success:
-  - edm run -- coverage combine
-  - edm run -- pip install codecov
-  - edm run -- codecov
+  - flake8
+  - python -m unittest discover -v
