@@ -1484,7 +1484,7 @@ class BaseDirectory(BaseStr):
 
     #: A description of the type of value this trait accepts:
     info_text = ("a directory name or an object implementing "
-                 "the os.PathLike interface.")
+                 "the os.PathLike interface")
 
     def __init__(
         self, value="", auto_set=False, entries=0, exists=False, **metadata
