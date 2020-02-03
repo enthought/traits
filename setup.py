@@ -121,7 +121,7 @@ def write_version_file(version, git_revision):
     git_revision : str
         The full commit hash for the current Git revision.
     """
-    with open(VERSION_FILE, "w", encoding="ascii") as version_file:
+    with open(VERSION_FILE, "w", encoding="utf-8") as version_file:
         version_file.write(
             VERSION_FILE_TEMPLATE.format(
                 version=version, git_revision=git_revision, company="Enthought"
