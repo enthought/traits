@@ -33,10 +33,6 @@ Visualization:
     feature.
 """
 
-# -------------------------------------------------------------------------------
-#  Imports:
-# -------------------------------------------------------------------------------
-
 from types import FunctionType, MethodType
 import warnings
 
@@ -72,7 +68,6 @@ from .trait_handlers import (
     TraitEnum,
     TraitCompound,
     TraitMap,
-    ThisClass,
     _undefined_get,
     _undefined_set,
 )
@@ -80,9 +75,9 @@ from .trait_factory import (
     TraitFactory,
 )
 
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  Constants:
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 NoneType = type(None)  # Python 3's types does not include NoneType
 
@@ -118,7 +113,18 @@ DefaultValues = {
 }
 
 
-# --- 'instance' traits ---------------------------------------------------------
+# This function is needed when unpickling historical pickles (pickles
+# created on versions of Traits prior to 6.0). It can be removed when
+# there's no longer any need to support pickles generated on older
+# versions of Traits.
+
+def __newobj__(cls, *args):
+    """ Unpickles new-style objects.
+    """
+    return cls.__new__(cls, *args)
+
+
+# --- 'instance' traits -------------------------------------------------------
 
 
 class _InstanceArgs(object):
@@ -127,7 +133,7 @@ class _InstanceArgs(object):
         self.kw = kw
 
 
-# --- 'creates a run-time default value' ----------------------------------------
+# --- 'creates a run-time default value' --------------------------------------
 
 
 class Default(object):
@@ -238,15 +244,15 @@ def Trait(*value_type, **metadata):
         interface editor for the trait. See the "Traits UI User Guide" for
         more information on trait editors.
     comparison_mode : int
-        Indicates when trait change notifications should be generated based upon
-        the result of comparing the old and new values of a trait assignment.
-        Possible values come from the ``ComparisonMode`` enum:
+        Indicates when trait change notifications should be generated based
+        upon the result of comparing the old and new values of a trait
+        assignment. Possible values come from the ``ComparisonMode`` enum:
 
-        * 0 (no_compare): The values are not compared and a trait change
+        * 0 (none): The values are not compared and a trait change
           notification is generated on each assignment.
-        * 1 (object_id_compare): A trait change notification is
+        * 1 (identity): A trait change notification is
           generated if the old and new values are not the same object.
-        * 2 (equality_compare): A trait change notification is generated if the
+        * 2 (equality): A trait change notification is generated if the
           old and new values are not equal using Python's standard equality
           testing. This is the default.
 
@@ -302,10 +308,6 @@ class _TraitMaker(object):
 
                 elif isinstance(default_value, TraitHandler):
                     handler = default_value
-                    default_value = None
-
-                elif default_value is ThisClass:
-                    handler = ThisClass()
                     default_value = None
 
                 else:
@@ -459,9 +461,6 @@ class _TraitMaker(object):
                 elif typeItem in CallableTypes:
                     other.append(TraitFunction(item))
 
-                elif item is ThisClass:
-                    other.append(ThisClass())
-
                 elif isinstance(item, TraitTypes):
                     other.append(item)
 
@@ -474,7 +473,8 @@ class _TraitMaker(object):
 
     def as_ctrait(self):
         metadata = self.metadata
-        trait = CTrait(self.type_map.get(metadata.get("type"), TraitKind.trait))
+        trait = CTrait(
+            self.type_map.get(metadata.get("type"), TraitKind.trait))
         clone = self.clone
         if clone is not None:
             trait.clone(clone)
@@ -504,17 +504,16 @@ class _TraitMaker(object):
                 "use the 'comparison_mode' metadata instead. In a future "
                 "release, rich_compare will have no effect.",
                 DeprecationWarning,
-                stacklevel=3,
+                stacklevel=4,
             )
-            trait.comparison_mode(
-                ComparisonMode.equality_compare
-                if rich_compare
-                else ComparisonMode.object_id_compare
-            )
+            if rich_compare:
+                trait.comparison_mode = ComparisonMode.equality
+            else:
+                trait.comparison_mode = ComparisonMode.identity
 
-        comparison_mode = metadata.get("comparison_mode")
+        comparison_mode = metadata.pop("comparison_mode", None)
         if comparison_mode is not None:
-            trait.comparison_mode(comparison_mode)
+            trait.comparison_mode = comparison_mode
 
         if len(metadata) > 0:
             if trait.__dict__ is None:
@@ -595,8 +594,8 @@ def Property(
             axle     = Instanced( Axle )
             position = Property( depends_on = 'axle.chassis.position' )
 
-    For details of the extended trait name syntax, refer to the on_trait_change()
-    method of the HasTraits class.
+    For details of the extended trait name syntax, refer to the
+    on_trait_change() method of the HasTraits class.
     """
     metadata["type"] = "property"
 
@@ -680,30 +679,6 @@ class ForwardProperty(object):
         self.metadata = metadata.copy()
         self.validate = validate
         self.handler = handler
-
-
-# -------------------------------------------------------------------------------
-#  Dictionary used to handle return type mapping special cases:
-# -------------------------------------------------------------------------------
-
-SpecialNames = {
-    ###   'int':     trait_factory( Int ),
-    ###   'float':   trait_factory( Float ),
-    ###   'complex': trait_factory( Complex ),
-    ###   'str':     trait_factory( Str ),
-    ###   'bool':    trait_factory( Bool ),
-    ###   'list':    trait_factory( List ),
-    ###   'tuple':   trait_factory( Tuple ),
-    ###   'dict':    trait_factory( Dict )
-}
-
-
-# -- Date Trait definition ----------------------------------------------------
-# Date = Instance(datetime.date, metadata = { 'editor': date_editor })
-
-
-# -- Time Trait definition ----------------------------------------------------
-# Time = Instance(datetime.time, metadata = { 'editor': time_editor })
 
 
 # -------------------------------------------------------------------------------

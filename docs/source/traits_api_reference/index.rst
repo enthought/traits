@@ -13,6 +13,7 @@ Traits core
     base_trait_handler
     constants
     ctrait
+    ctraits
     editor_factories
     interface_checker
     trait_base
@@ -39,7 +40,6 @@ Subpackages
 
     traits.adaptation
     traits.etsconfig
-    traits.protocols
     traits.testing
     traits.util
 

@@ -10,6 +10,7 @@
 
 import os
 import pickle
+import pickletools
 import shutil
 import tempfile
 import unittest
@@ -47,7 +48,8 @@ class TestConfigureTraits(unittest.TestCase):
         self.assertFalse(os.path.exists(filename))
 
         with mock.patch.object(self.toolkit, "view_application"):
-            model.configure_traits(filename=filename)
+            with self.assertWarns(DeprecationWarning):
+                model.configure_traits(filename=filename)
 
         self.assertTrue(os.path.exists(filename))
         with open(filename, "rb") as pickled_object:
@@ -55,6 +57,27 @@ class TestConfigureTraits(unittest.TestCase):
 
         self.assertIsInstance(unpickled, Model)
         self.assertEqual(unpickled.count, model.count)
+
+    def test_pickle_protocol(self):
+        # Pickled files should use protocol 3 (a compromise between
+        # efficiency and wide applicability).
+
+        model = Model(count=37)
+        filename = os.path.join(self.tmpdir, "nonexistent.pkl")
+        self.assertFalse(os.path.exists(filename))
+
+        with mock.patch.object(self.toolkit, "view_application"):
+            with self.assertWarns(DeprecationWarning):
+                model.configure_traits(filename=filename)
+
+        self.assertTrue(os.path.exists(filename))
+        with open(filename, "rb") as pickled_object_file:
+            pickled_object = pickled_object_file.read()
+
+        # Get and check the first opcode
+        opcode, arg, _ = next(pickletools.genops(pickled_object))
+        self.assertEqual(opcode.name, "PROTO")
+        self.assertEqual(arg, 3)
 
     def test_filename_with_existing_file(self):
         # Create pre-existing pickle file.
@@ -65,7 +88,8 @@ class TestConfigureTraits(unittest.TestCase):
 
         model = Model(count=19)
         with mock.patch.object(self.toolkit, "view_application"):
-            model.configure_traits(filename=filename)
+            with self.assertWarns(DeprecationWarning):
+                model.configure_traits(filename=filename)
         self.assertEqual(model.count, 52)
 
     def test_filename_with_invalid_existing_file(self):
@@ -77,7 +101,8 @@ class TestConfigureTraits(unittest.TestCase):
         model = Model(count=19)
         with mock.patch.object(self.toolkit, "view_application"):
             with self.assertRaises(pickle.PickleError):
-                model.configure_traits(filename=filename)
+                with self.assertWarns(DeprecationWarning):
+                    model.configure_traits(filename=filename)
 
     def test_filename_with_existing_file_stores_updated_model(self):
         stored_model = Model(count=52)
@@ -92,7 +117,8 @@ class TestConfigureTraits(unittest.TestCase):
         model = Model(count=19)
         with mock.patch.object(self.toolkit, "view_application") as mock_view:
             mock_view.side_effect = modify_model
-            model.configure_traits(filename=filename)
+            with self.assertWarns(DeprecationWarning):
+                model.configure_traits(filename=filename)
         self.assertEqual(model.count, 23)
 
         with open(filename, "rb") as pickled_object:

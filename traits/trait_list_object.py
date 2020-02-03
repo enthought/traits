@@ -17,19 +17,31 @@ from .trait_errors import TraitError
 
 class TraitListEvent(object):
     """ An object reporting in-place changes to a traits list.
+
+    Parameters
+    ----------
+    index : int or slice
+        An index or slice indicating the location of the changes to the list.
+    added : list or None
+        The list of values added to the list, or optionally None if nothing
+        is added.
+    removed : list or None
+        The list of values removed from the list, or optionally None if
+        nothing is removed.
+
+    Attributes
+    ----------
+    index : int or slice
+        An index or slice indicating the location of the changes to the list.
+    added : list
+        The list of values added to the list.  If nothing was added this is
+        an empty list.
+    removed : list
+        The list of values removed from the list.  If nothing was removed
+        this is an empty list.
     """
 
     def __init__(self, index=0, removed=None, added=None):
-        """
-        Parameters
-        ----------
-        index : int
-            The location of the first change in the list.
-        added : list
-            The list of values added to the list.
-        removed : list
-            The list of values removed from the list.
-        """
         self.index = index
 
         if removed is None:
@@ -42,7 +54,46 @@ class TraitListEvent(object):
 
 
 class TraitListObject(list):
-    """ A subclass of list that fires trait events when mutated. """
+    """ A subclass of list that fires trait events when mutated.
+
+    This is used by the List trait type, and all values set into a List
+    trait will be copied into a new TraitListObject instance.
+
+    Mutation of the TraitListObject will fire a "name_items" event with
+    appropriate index, added and removed values.  In the case of setting
+    or deleting items with a slice, the index will hold either:
+
+    - the location of the first element changed, if the step is 1.  In
+      this case the last element changed can be inferred from the
+      length of the removed values.
+    - the slice that was used, otherwise.
+
+    Parameters
+    ----------
+    trait : CTrait instance
+        The CTrait instance associated with the attribute that this list
+        has been set to.
+    object : HasTraits instance
+        The HasTraits instance that the list has been set as an attribute for.
+    name : str
+        The name of the attribute on the object.
+    value : list
+        The list of values to initialize the TraitListObject with.
+
+    Attributes
+    ----------
+    trait : CTrait instance
+        The CTrait instance associated with the attribute that this list
+        has been set to.
+    object : weak reference to a HasTraits instance
+        A weak reference to a HasTraits instance that the list has been set
+        as an attribute for.
+    name : str
+        The name of the attribute on the object.
+    name_items : str
+        The name of the items event trait that the trait list will fire when
+        mutated.
+    """
 
     def __init__(self, trait, object, name, value):
         self.trait = trait
@@ -114,7 +165,8 @@ class TraitListObject(list):
                 step = 1 if key.step is None else key.step
                 if step != 1 and delta != 0:
                     raise ValueError(
-                        "attempt to assign sequence of size %d to extended slice of size %d"
+                        "attempt to assign sequence of size %d to extended "
+                        "slice of size %d"
                         % (len(values), slice_len)
                     )
                 newlen = len(self) + delta
@@ -128,8 +180,8 @@ class TraitListObject(list):
                     ]
                 value = values
                 if step == 1:
-                    # FIXME: Bug-for-bug compatibility with old __setslice__ code.
-                    # In this case, we return a TraitListEvent with an
+                    # FIXME: Bug-for-bug compatibility with old __setslice__
+                    # code. In this case, we return a TraitListEvent with an
                     # index=key.start and the removed and added lists as they
                     # are.
                     index = 0 if key.start is None else key.start
@@ -193,7 +245,7 @@ class TraitListObject(list):
 
         list.__delitem__(self, key)
 
-        if self.name_items is not None:
+        if self.name_items is not None and removed:
             self._send_trait_items_event(
                 self.name_items, TraitListEvent(index, removed)
             )
@@ -270,8 +322,8 @@ class TraitListObject(list):
                     # Length before the insertion.
                     original_len = len(self) - 1
 
-                    # Indices outside [-original_len, original_len] are clipped.
-                    # This matches the behaviour of insert on the
+                    # Indices outside [-original_len, original_len] are
+                    # clipped. This matches the behaviour of insert on the
                     # underlying list.
                     if index < 0:
                         index += original_len
@@ -350,7 +402,8 @@ class TraitListObject(list):
                     self.name_items, TraitListEvent(index, removed)
                 )
         elif len(self) == 0:
-            # Let whatever system error (ValueError) should be raised be raised.
+            # Let whatever system error (ValueError) should be raised be
+            # raised.
             list.remove(self, value)
         else:
             self.len_error(len(self) - 1)
@@ -427,6 +480,7 @@ class TraitListObject(list):
             )
 
     def len_error(self, len):
+        """ Utility method that raises an error if length is incorrect. """
         raise TraitError(
             "The '%s' trait of %s instance must be %s, "
             "but you attempted to change its length to %d element%s."
@@ -435,7 +489,7 @@ class TraitListObject(list):
                 class_of(self.object()),
                 self.trait.full_info(self.object(), self.name, Undefined),
                 len,
-                "s"[len == 1 :],
+                "s"[len == 1:],
             )
         )
 

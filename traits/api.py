@@ -16,12 +16,16 @@ Use this module for importing Traits names into your namespace. For example::
 
 from .constants import (  # noqa: F401
     ComparisonMode,
+    DefaultValue,
+    TraitKind,
+    ValidateTrait,
     NO_COMPARE,
     OBJECT_IDENTITY_COMPARE,
     RICH_COMPARE,
 )
 
 from .trait_base import Uninitialized, Undefined, Missing, Self  # noqa: F401
+from .trait_converters import as_ctrait  # noqa: F401
 
 from .trait_errors import (  # noqa: F401
     TraitError,
@@ -104,7 +108,7 @@ from .trait_types import (  # noqa: F401
     Symbol,
     WeakRef,
     Date,
-    DateTime,
+    Datetime,
     Time,
     Supports,
 )
@@ -141,6 +145,7 @@ from .trait_types import (  # noqa: F401
 )
 
 from .trait_types import (  # noqa: F401
+    BaseCallable,
     BaseInt,
     BaseFloat,
     BaseComplex,
@@ -193,7 +198,6 @@ from .trait_handlers import (  # noqa: F401
     TraitCoerceType,
     TraitCastType,
     TraitInstance,
-    ThisClass,
     TraitFunction,
     TraitEnum,
     TraitPrefixList,

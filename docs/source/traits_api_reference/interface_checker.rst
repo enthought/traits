@@ -1,5 +1,5 @@
-:mod:`interface_checker` Module
-===============================
+:mod:`traits.interface_checker` Module
+======================================
 
 .. automodule:: traits.interface_checker
     :no-members:

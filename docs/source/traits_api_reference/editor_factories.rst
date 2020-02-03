@@ -1,5 +1,5 @@
-:mod:`editor_factories` Module
-==============================
+:mod:`traits.editor_factories` Module
+=====================================
 
 .. automodule:: traits.editor_factories
     :no-members:
@@ -14,6 +14,8 @@ Functions
 .. autofunction:: code_editor
 
 .. autofunction:: date_editor
+
+.. autofunction:: datetime_editor
 
 .. autofunction:: html_editor
 

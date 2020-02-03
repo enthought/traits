@@ -429,17 +429,17 @@ class TraitType(BaseTraitHandler):
                     "use the 'comparison_mode' metadata instead. In a future "
                     "release, rich_compare will have no effect.",
                     DeprecationWarning,
-                    stacklevel=5,
-                )
-                trait.comparison_mode(
-                    ComparisonMode.equality_compare
-                    if rich_compare
-                    else ComparisonMode.object_id_compare
+                    stacklevel=6,
                 )
 
-            comparison_mode = metadata.get("comparison_mode")
+                if rich_compare:
+                    trait.comparison_mode = ComparisonMode.equality
+                else:
+                    trait.comparison_mode = ComparisonMode.identity
+
+            comparison_mode = metadata.pop("comparison_mode", None)
             if comparison_mode is not None:
-                trait.comparison_mode(comparison_mode)
+                trait.comparison_mode = comparison_mode
 
             metadata.setdefault("type", "trait")
 

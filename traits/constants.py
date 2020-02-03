@@ -12,7 +12,8 @@ from enum import IntEnum
 
 
 class TraitKind(IntEnum):
-    """ These determine the getters and setters used by the cTrait instance. """
+    """ These determine the getters and setters used by the cTrait instance.
+    """
 
     #: A standard trait (validates and notifies).
     trait = 0
@@ -115,38 +116,38 @@ class ComparisonMode(IntEnum):
 
     Enumeration members:
 
-    no_compare
+    none
         The values are not compared and a trait change notification is
         generated on each assignment.
-    object_id_compare
+    identity
         A trait change notification is generated if the old and new values are
         not the same object.
-    equality_compare
+    equality
         A trait change notification is generated if the old and new values are
         not the same object, and not equal using Python's standard equality
         testing. This is the default.
     """
 
     #: Do not compare values (always fire trait change)
-    no_compare = 0
+    none = 0
 
     #: Compare values by object identity.
-    object_id_compare = 1
+    identity = 1
 
     #: Compare values by equality.
-    equality_compare = 2
+    equality = 2
 
 
 # Backward compatibility for comparison mode constants.
 
-#: Deprecated alias for ``ComparisonMode.no_compare``.
-NO_COMPARE = ComparisonMode.no_compare
+#: Deprecated alias for ``ComparisonMode.none``.
+NO_COMPARE = ComparisonMode.none
 
-#: Deprecated alias for ``ComparisonMode.object_id_compare``.
-OBJECT_IDENTITY_COMPARE = ComparisonMode.object_id_compare
+#: Deprecated alias for ``ComparisonMode.identity``.
+OBJECT_IDENTITY_COMPARE = ComparisonMode.identity
 
-#: Deprecated alias for ``ComparisonMode.equality_compare``.
-RICH_COMPARE = ComparisonMode.equality_compare
+#: Deprecated alias for ``ComparisonMode.equality``.
+RICH_COMPARE = ComparisonMode.equality
 
 
 class DefaultValue(IntEnum):
@@ -170,12 +171,12 @@ class DefaultValue(IntEnum):
     #: A new copy of the dict specified by default_value is the default value.
     dict_copy = 4
 
-    #: A new instance of TraitListObject constructed using the default_value list
-    #: is the default value.
+    #: A new instance of TraitListObject constructed using the default_value
+    #: list is the default value.
     trait_list_object = 5
 
-    #: A new instance of TraitDictObject constructed using the default_value dict
-    #: is the default value.
+    #: A new instance of TraitDictObject constructed using the default_value
+    #: dict is the default value.
     trait_dict_object = 6
 
     #: The default_value is a tuple of the form: (*callable*, *args*, *kw*),
@@ -184,10 +185,10 @@ class DefaultValue(IntEnum):
     #: ``callable(\*args, \*\*kw)``.
     callable_and_args = 7
 
-    #: The default_value is a callable. The default value is the result obtained
-    #: by invoking *default_value*(*object*), where *object* is the object
-    #: containing the trait. If the trait has a validate() method, the validate()
-    #: method is also called to validate the result.
+    #: The default_value is a callable. The default value is the result
+    #: obtained by invoking *default_value*(*object*), where *object* is the
+    #: object containing the trait. If the trait has a validate() method, the
+    #: validate() method is also called to validate the result.
     callable = 8
 
     #: A new instance of TraitSetObject constructed using the default_value set

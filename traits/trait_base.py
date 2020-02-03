@@ -15,6 +15,7 @@
 #  Imports:
 # -------------------------------------------------------------------------------
 
+import enum
 import os
 import sys
 from os import getcwd
@@ -32,6 +33,8 @@ enumerate = enumerate
 # -------------------------------------------------------------------------------
 
 SequenceTypes = (list, tuple)
+
+EnumTypes = (list, tuple, enum.EnumMeta)
 
 ComplexTypes = (float, int)
 
@@ -80,8 +83,8 @@ class _Uninitialized(object):
         return (_Uninitialized, ())
 
 
-#: When the first reference to a trait is a 'get' reference, the default value of
-#: the trait is implicitly assigned and returned as the value of the trait.
+#: When the first reference to a trait is a 'get' reference, the default value
+#: of the trait is implicitly assigned and returned as the value of the trait.
 #: Because of this implicit assignment, a trait change notification is
 #: generated with the Uninitialized object as the 'old' value of the trait, and
 #: the default trait value as the 'new' value. This allows other parts of the
@@ -193,6 +196,48 @@ CoercableTypes = {
     float: (ValidateTrait.coerce, float, int),
     complex: (ValidateTrait.coerce, complex, float, int),
 }
+
+
+def safe_contains(value, container):
+    """ Perform "in" containment check, allowing for TypeErrors.
+
+    This is required because in some circumstances ``x in y`` can raise a
+    TypeError.  In these cases we make the (reasonable) assumption that the
+    value is _not_ contained in the container.
+    """
+    # Do a LBYL check for Enums, to avoid the DeprecationWarning issued
+    # by Python 3.7. Ref: enthought/traits#853.
+    if isinstance(container, enum.EnumMeta):
+        if not isinstance(value, enum.Enum):
+            return False
+
+    try:
+        return value in container
+    except TypeError:
+        return False
+
+
+def enum_default(values):
+    """ Get a default value from the valid values of an Enum trait.
+
+    Parameters
+    ----------
+    values : tuple, list or enum.Enum
+        The collection of valid values for an enum trait.
+
+    Returns
+    -------
+    default : any
+        The first valid value, or None if the collection is empty.
+    """
+    if isinstance(values, enum.EnumMeta):
+        default = next(iter(values), None)
+    elif len(values) > 0:
+        default = values[0]
+    else:
+        default = None
+    return default
+
 
 # -------------------------------------------------------------------------------
 #  Return a string containing the class name of an object with the correct
@@ -389,6 +434,7 @@ def xsetattr(object, xname, value):
 
     setattr(object, names[-1], value)
 
+
 # -------------------------------------------------------------------------------
 # Helpers for weak references
 # -------------------------------------------------------------------------------
@@ -411,11 +457,9 @@ class HandleWeakRef(object):
         self.value = ref(value, _value_freed)
 
 
-
 # -------------------------------------------------------------------------------
 #  Traits metadata selection functions:
 # -------------------------------------------------------------------------------
-
 
 def is_none(value):
     return value is None

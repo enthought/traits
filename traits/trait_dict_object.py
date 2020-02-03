@@ -20,19 +20,32 @@ logger = logging.getLogger(__name__)
 
 
 class TraitDictEvent(object):
-    """ An object reporting in-place changes to a traits dicts. """
+    """ An object reporting in-place changes to a traits dict.
+
+    Parameters
+    ----------
+    added : dict or None
+        New keys and values, or optionally None if nothing was added.
+    changed : dict or None
+        Updated keys and their previous values, or optionally None if nothing
+        was changed.
+    removed : dict or None
+        Old keys and values that were just removed, or optionally None if
+        nothing was removed.
+
+    Attributes
+    ----------
+    added : dict
+        New keys and values.  If nothing was added this is an empty dict.
+    changed : dict
+        Updated keys and their previous values.  If nothing was changed this
+        is an empty dict.
+    removed : dict
+        Old keys and values that were just removed.  If nothing was removed
+        this is an empty dict.
+    """
 
     def __init__(self, added=None, changed=None, removed=None):
-        """
-        Parameters
-        ----------
-        added : dict
-            New keys and values.
-        changed : dict
-            Updated keys and their previous values.
-        removed : dict
-            Old keys and values that were just removed.
-        """
         # Construct new empty dicts every time instead of using a default value
         # in the method argument, just in case someone gets the bright idea of
         # modifying the dict they get in-place.
@@ -50,7 +63,40 @@ class TraitDictEvent(object):
 
 
 class TraitDictObject(dict):
-    """ A subclass of dict that fires trait events when mutated. """
+    """ A subclass of dict that fires trait events when mutated.
+
+    This is used by the Dict trait type, and all values set into a Dict
+    trait will be copied into a new TraitDictObject instance.
+
+    Mutation of the TraitDictObject will fire a "name_items" event with
+    appropriate added, changed and removed values.
+
+    Parameters
+    ----------
+    trait : CTrait instance
+        The CTrait instance associated with the attribute that this dict
+        has been set to.
+    object : HasTraits instance
+        The HasTraits instance that the dict has been set as an attribute for.
+    name : str
+        The name of the attribute on the object.
+    value : dict
+        The dict of values to initialize the TraitDictObject with.
+
+    Attributes
+    ----------
+    trait : CTrait instance
+        The CTrait instance associated with the attribute that this dict
+        has been set to.
+    object : weak reference to a HasTraits instance
+        A weak reference to a HasTraits instance that the dict has been set
+        as an attribute for.
+    name : str
+        The name of the attribute on the object.
+    name_items : str
+        The name of the items event trait that the trait dict will fire when
+        mutated.
+    """
 
     def __init__(self, trait, object, name, value):
         self.trait = trait
@@ -250,7 +296,7 @@ class TraitDictObject(dict):
 
         self.__dict__.update(state)
 
-    # -- Private Methods ------------------------------------------------------------
+    # -- Private Methods ------------------------------------------------------
 
     def _validate_dic(self, dic):
         name = self.name

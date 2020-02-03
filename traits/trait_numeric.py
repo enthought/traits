@@ -23,16 +23,10 @@ from .trait_errors import TraitError
 from .trait_type import TraitType
 from .trait_types import Str, Any, Int as TInt, Float as TFloat
 
-# -------------------------------------------------------------------------------
-#  Deferred imports from numpy:
-# -------------------------------------------------------------------------------
 
+# Deferred imports from numpy:
 ndarray = None
 asarray = None
-
-# -------------------------------------------------------------------------------
-#  numpy dtype mapping:
-# -------------------------------------------------------------------------------
 
 
 def dtype2trait(dtype):
@@ -54,11 +48,6 @@ def dtype2trait(dtype):
         return Any
 
 
-# -------------------------------------------------------------------------------
-#  'AbstractArray' trait base class:
-# -------------------------------------------------------------------------------
-
-
 class AbstractArray(TraitType):
     """ Abstract base class for defining numpy-based arrays.
     """
@@ -72,8 +61,6 @@ class AbstractArray(TraitType):
         typecode=None,
         **metadata
     ):
-        """ Returns an AbstractArray trait.
-        """
         global ndarray, asarray
 
         try:
@@ -90,9 +77,7 @@ class AbstractArray(TraitType):
         metadata["array"] = True
 
         # Normally use object identity to detect array values changing:
-        metadata.setdefault(
-            "comparison_mode", ComparisonMode.object_id_compare
-        )
+        metadata.setdefault("comparison_mode", ComparisonMode.identity)
 
         if typecode is not None:
             warnings.warn(
@@ -252,7 +237,7 @@ class AbstractArray(TraitType):
             )
         return editor
 
-    # -- Private Methods --------------------------------------------------------
+    # -- Private Methods ------------------------------------------------------
 
     def get_default_value(self):
         """ Returns the default value constructor for the type (called from the
@@ -298,124 +283,105 @@ class AbstractArray(TraitType):
         return value
 
 
-# -------------------------------------------------------------------------------
-#  'Array' trait:
-# -------------------------------------------------------------------------------
-
-
 class Array(AbstractArray):
-    """ Defines a trait whose value must be a numpy array.
+    """ A trait type whose value must be a NumPy array.
+
+    An Array trait allows only upcasting of assigned values that are
+    already numpy arrays. It automatically casts tuples and lists of the
+    right shape to the specified *dtype* (just like numpy's **array**
+    does).
+
+    The default value is either the *value* argument or
+    ``zeros(min(shape))``, where ``min(shape)`` refers to the minimum
+    shape allowed by the array. If *shape* is not specified, the minimum
+    shape is (0,).
+
+    Parameters
+    ----------
+    dtype : a numpy dtype (e.g., int32)
+        The type of elements in the array; if omitted, no type-checking is
+        performed on assigned values.
+    shape : a tuple
+        Describes the required shape of any assigned value. Wildcards and
+        ranges are allowed. The value None within the *shape* tuple means
+        that the corresponding dimension is not checked. (For example,
+        ``shape=(None,3)`` means that the first dimension can be any size,
+        but the second must be 3.) A two-element tuple within the *shape*
+        tuple means that the dimension must be in the specified range. The
+        second element can be None to indicate that there is no upper
+        bound. (For example, ``shape=((3,5),(2,None))`` means that the
+        first dimension must be in the range 3 to 5 (inclusive), and the
+        second dimension must be at least 2.)
+    value : numpy array
+        A default value for the array.
     """
 
     def __init__(
         self, dtype=None, shape=None, value=None, typecode=None, **metadata
     ):
-        """ Returns an Array trait.
-
-        Parameters
-        ----------
-        dtype : a numpy dtype (e.g., int32)
-            The type of elements in the array; if omitted, no type-checking is
-            performed on assigned values.
-        shape : a tuple
-            Describes the required shape of any assigned value. Wildcards and
-            ranges are allowed. The value None within the *shape* tuple means
-            that the corresponding dimension is not checked. (For example,
-            ``shape=(None,3)`` means that the first dimension can be any size,
-            but the second must be 3.) A two-element tuple within the *shape*
-            tuple means that the dimension must be in the specified range. The
-            second element can be None to indicate that there is no upper
-            bound. (For example, ``shape=((3,5),(2,None))`` means that the
-            first dimension must be in the range 3 to 5 (inclusive), and the
-            second dimension must be at least 2.)
-        value : numpy array
-            A default value for the array.
-
-        Default Value
-        -------------
-        *value* or ``zeros(min(shape))``, where ``min(shape)`` refers to the
-        minimum shape allowed by the array. If *shape* is not specified, the
-        minimum shape is (0,).
-
-        Description
-        -----------
-        An Array trait allows only upcasting of assigned values that are
-        already numpy arrays. It automatically casts tuples and lists of the
-        right shape to the specified *dtype* (just like numpy's **array**
-        does).
-        """
         super(Array, self).__init__(
             dtype, shape, value, False, typecode=typecode, **metadata
         )
 
 
-# -------------------------------------------------------------------------------
-#  'CArray' trait:
-# -------------------------------------------------------------------------------
-
-
 class CArray(AbstractArray):
-    """ Defines a trait whose value must be a numpy array, with casting
-        allowed.
+    """ A coercing trait type whose value is a NumPy array.
+
+    The trait returned by CArray() is similar to that returned by Array(),
+    except that it allows both upcasting and downcasting of assigned values
+    that are already numpy arrays. It automatically casts tuples and
+    lists of the right shape to the specified *dtype* (just like
+    numpy's **array** does).
+
+    The default value is either the *value* argument or
+    ``zeros(min(shape))``, where ``min(shape)`` refers to the minimum
+    shape allowed by the array. If *shape* is not specified, the minimum
+    shape is (0,).
+
+    Parameters
+    ----------
+    dtype : a numpy dtype (e.g., int32)
+        The type of elements in the array.
+    shape : a tuple
+        Describes the required shape of any assigned value. Wildcards and
+        ranges are allowed. The value None within the *shape* tuple means
+        that the corresponding dimension is not checked. (For example,
+        ``shape=(None,3)`` means that the first dimension can be any size,
+        but the second must be 3.) A two-element tuple within the *shape*
+        tuple means that the dimension must be in the specified range. The
+        second element can be None to indicate that there is no upper
+        bound. (For example, ``shape=((3,5),(2,None))`` means that the
+        first dimension must be in the range 3 to 5 (inclusive), and the
+        second dimension must be at least 2.)
+    value : numpy array
+        A default value for the array.
     """
 
     def __init__(
         self, dtype=None, shape=None, value=None, typecode=None, **metadata
     ):
-        """ Returns a CArray trait.
-
-        Parameters
-        ----------
-        dtype : a numpy dtype (e.g., int32)
-            The type of elements in the array.
-        shape : a tuple
-            Describes the required shape of any assigned value. Wildcards and
-            ranges are allowed. The value None within the *shape* tuple means
-            that the corresponding dimension is not checked. (For example,
-            ``shape=(None,3)`` means that the first dimension can be any size,
-            but the second must be 3.) A two-element tuple within the *shape*
-            tuple means that the dimension must be in the specified range. The
-            second element can be None to indicate that there is no upper
-            bound. (For example, ``shape=((3,5),(2,None))`` means that the
-            first dimension must be in the range 3 to 5 (inclusive), and the
-            second dimension must be at least 2.)
-        value : numpy array
-            A default value for the array.
-
-        Default Value
-        -------------
-        *value* or ``zeros(min(shape))``, where ``min(shape)`` refers to the
-        minimum shape allowed by the array. If *shape* is not specified, the
-        minimum shape is (0,).
-
-        Description
-        -----------
-        The trait returned by CArray() is similar to that returned by Array(),
-        except that it allows both upcasting and downcasting of assigned values
-        that are already numpy arrays. It automatically casts tuples and
-        lists of the right shape to the specified *dtype* (just like
-        numpy's **array** does).
-        """
         super(CArray, self).__init__(
             dtype, shape, value, True, typecode=typecode, **metadata
         )
 
 
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  'ArrayOrNone' trait
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 class ArrayOrNone(CArray):
-    """ A trait whose value may be either a NumPy array or None, with
-        casting allowed.  The default is None.
+    """ A coercing trait whose value may be either a NumPy array or None.
+
+    This trait is designed to avoid the comparison issues with numpy arrays
+    that can arise from the use of constructs like Either(None, Array).
+
+    The default value is None.
     """
 
     def __init__(self, *args, **metadata):
         # Normally use object identity to detect array values changing:
-        metadata.setdefault(
-            "comparison_mode", ComparisonMode.object_id_compare
-        )
+        metadata.setdefault("comparison_mode", ComparisonMode.identity)
         super(ArrayOrNone, self).__init__(*args, **metadata)
 
     def validate(self, object, name, value):

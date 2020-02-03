@@ -53,7 +53,7 @@ class TraitTypesTest(unittest.TestCase):
         tmpdir = tempfile.mkdtemp()
         try:
             tmpfile = os.path.join(tmpdir, "test_script.py")
-            with open(tmpfile, "w") as f:
+            with open(tmpfile, "w", encoding="utf-8") as f:
                 f.write(test_script)
             cmd = [this_python, tmpfile]
             output = subprocess.check_output(cmd).decode("utf-8")

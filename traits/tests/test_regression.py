@@ -223,7 +223,7 @@ class TestRegression(unittest.TestCase):
             counts.append(len(gc.get_objects()))
 
         # All the counts beyond the warmup period should be the same.
-        self.assertEqual(counts[warmup:-1], counts[warmup + 1 :])
+        self.assertEqual(counts[warmup:-1], counts[warmup + 1:])
 
     def test_delegation_refleak(self):
         warmup = 5
@@ -236,7 +236,7 @@ class TestRegression(unittest.TestCase):
             counts.append(len(gc.get_objects()))
 
         # All the counts should be the same.
-        self.assertEqual(counts[warmup:-1], counts[warmup + 1 :])
+        self.assertEqual(counts[warmup:-1], counts[warmup + 1:])
 
     @requires_numpy
     def test_exception_from_numpy_comparison_ignored(self):

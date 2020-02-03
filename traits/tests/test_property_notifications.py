@@ -8,15 +8,15 @@
 #
 # Thanks for using Enthought open source!
 
+import io
 import unittest
-from io import StringIO
 
-from traits.api import HasTraits, Property
-
-output_buffer = StringIO()
+from traits.api import Any, HasTraits, Property
 
 
 class Test(HasTraits):
+
+    output_buffer = Any()
 
     def __value_get(self):
         return self.__dict__.get("_value", 0)
@@ -32,12 +32,14 @@ class Test(HasTraits):
 
 class Test_1(Test):
     def _value_changed(self, value):
-        output_buffer.write(value)
+        self.output_buffer.write(value)
 
 
 class TestPropertyNotifications(unittest.TestCase):
     def test_property_notifications(self):
-        test_obj = Test_1()
+        output_buffer = io.StringIO()
+
+        test_obj = Test_1(output_buffer=output_buffer)
         test_obj.value = "value_1"
         self.assertEqual(output_buffer.getvalue(), "value_1")
 

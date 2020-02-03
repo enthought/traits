@@ -1,5 +1,5 @@
-:mod:`trait_converters` Module
-==============================
+:mod:`traits.trait_converters` Module
+=====================================
 
 .. automodule:: traits.trait_converters
     :no-members:
@@ -9,6 +9,8 @@
 
 Functions
 ---------
+
+.. autofunction:: as_ctrait
 
 .. autofunction:: check_trait
 

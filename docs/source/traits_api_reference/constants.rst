@@ -1,5 +1,5 @@
-:mod:`constants` Module
-========================
+:mod:`traits.constants` Module
+==============================
 
 .. automodule:: traits.constants
     :no-members:

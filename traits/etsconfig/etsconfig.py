@@ -58,13 +58,8 @@ class ETSConfig(object):
     #### operator methods #####################################################
 
     def __init__(self):
-        """
-        Constructor.
-
-        Note that this constructor can only ever be called from within this
-        module, since we don't expose the class.
-
-        """
+        # Note that this constructor can only ever be called from within this
+        # module, since we don't expose the class.
 
         # Shadow attributes for properties.
         self._application_data = None
@@ -279,9 +274,10 @@ class ETSConfig(object):
         """
         Deprecated: This property is no longer used.
 
-        Property getter for the Enable backend.  The value returned is, in order
-        of preference: the value set by the application; the value specified by
-        the 'ENABLE_TOOLKIT' environment variable; otherwise the empty string.
+        Property getter for the Enable backend.  The value returned is, in
+        order of preference: the value set by the application; the value
+        specified by the 'ENABLE_TOOLKIT' environment variable; otherwise the
+        empty string.
         """
         from warnings import warn
 
@@ -293,10 +289,10 @@ class ETSConfig(object):
         """
         Deprecated.
 
-        Property setter for the Enable toolkit.  The toolkit can be set more than
-        once, but only if it is the same one each time.  An application that is
-        written for a particular toolkit can explicitly set it before any other
-        module that gets the value is imported.
+        Property setter for the Enable toolkit.  The toolkit can be set more
+        than once, but only if it is the same one each time.  An application
+        that is written for a particular toolkit can explicitly set it before
+        any other module that gets the value is imported.
         """
         from warnings import warn
 
@@ -309,14 +305,16 @@ class ETSConfig(object):
     def _get_kiva_backend(self):
         """
         Property getter for the Kiva backend. The value returned is dependent
-        on the value of the toolkit property. If toolkit specifies a kiva backend
-        using the extended syntax: <enable toolkit>[.<kiva backend>] then the
-        value of the property will be whatever was specified. Otherwise the
-        value will be a reasonable default for the given enable backend.
+        on the value of the toolkit property. If toolkit specifies a kiva
+        backend using the extended syntax: <enable toolkit>[.<kiva backend>]
+        then the value of the property will be whatever was specified.
+        Otherwise the value will be a reasonable default for the given enable
+        backend.
         """
         if self._toolkit is None:
             raise AttributeError(
-                "The kiva_backend attribute is dependent on toolkit, which has not been set."
+                "The kiva_backend attribute is dependent on toolkit, "
+                "which has not been set."
             )
 
         if self._kiva_backend is None:
@@ -426,7 +424,8 @@ class ETSConfig(object):
             if user is not None:
                 directory_name += "_%s" % user
             warn(
-                'Environment variable "%s" not set, setting home directory to %s'
+                'Environment variable "%s" not set, '
+                'setting home directory to %s'
                 % (environment_variable, parent_directory)
             )
 
@@ -491,9 +490,10 @@ class ETSConfig(object):
                 # naive way...
 
                 # Check if the usr_dir is C:\\John Doe\\Documents and Settings.
-                # If yes, then we should modify the usr_dir to be 'My Documents'.
-                # If no, then the user must have modified the os.environ
-                # variables and the directory chosen is a desirable one.
+                # If yes, then we should modify the usr_dir to be
+                # 'My Documents'. If no, then the user must have modified the
+                # os.environ variables and the directory chosen is a desirable
+                # one.
                 desired_dir = os.path.join(parent_directory, "My Documents")
 
                 if os.path.exists(desired_dir):
