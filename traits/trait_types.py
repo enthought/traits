@@ -1458,7 +1458,11 @@ class File(BaseFile):
 
 
 class BaseDirectory(BaseStr):
-    """ A trait type whose value is a directory path string.
+    """ A trait type whose value must be a directory path string.
+
+    For Python 3.6 and greater, it also accepts objects implementing
+    the :class:`os.PathLike` interface, converting them to the corresponding
+    string.
 
     Parameters
     ----------
@@ -1488,7 +1492,8 @@ class BaseDirectory(BaseStr):
     """
 
     #: A description of the type of value this trait accepts:
-    info_text = "a directory name"
+    info_text = ("a directory name or an object implementing "
+                 "the os.PathLike interface")
 
     def __init__(
         self, value="", auto_set=False, entries=0, exists=False, **metadata
@@ -1504,6 +1509,13 @@ class BaseDirectory(BaseStr):
 
         Note: The 'fast validator' version performs this check in C.
         """
+        if fspath is not None:
+            # Python 3.5 does not implement __fspath__
+            try:
+                value = fspath(value)
+            except TypeError:
+                pass
+
         validated_value = super(BaseDirectory, self).validate(
             object, name, value
         )
@@ -1523,6 +1535,10 @@ class BaseDirectory(BaseStr):
 
 class Directory(BaseDirectory):
     """ A fast-validating trait type whose value is a directory path string.
+
+    For Python 3.6 and greater, it also accepts objects implementing
+    the :class:`os.PathLike` interface, converting them to the corresponding
+    string.
 
     Parameters
     ----------
@@ -1554,10 +1570,7 @@ class Directory(BaseDirectory):
     def __init__(
         self, value="", auto_set=False, entries=0, exists=False, **metadata
     ):
-        # Define the C-level fast validator to use if the directory existence
-        #: test is not required:
-        if not exists:
-            self.fast_validate = (ValidateTrait.coerce, str)
+        # Fast validation is disabled (Github issue #877).
         super(Directory, self).__init__(
             value, auto_set, entries, exists, **metadata
         )
