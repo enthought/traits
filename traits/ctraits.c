@@ -4851,7 +4851,6 @@ set_trait_post_setattr(trait_object *trait, PyObject *value, void *closure)
     if (value == Py_None) {
         value = NULL;
         trait->post_setattr = NULL;
-        Py_DECREF(Py_None);
     }
     else{
         trait->post_setattr = post_setattr_trait_python;
