@@ -14,10 +14,11 @@ environment:
 
 install:
   - "%PYTHON%/python.exe -m pip install copyright_header/"
-  - "%PYTHON%/python.exe -m pip install -e .[test]"
+  - "%PYTHON%/python.exe -m pip install -e .[docs,test]"
 
 build: off
 
 test_script:
   - "%PYTHON%/python.exe -m flake8"
   - "%PYTHON%/python.exe -m unittest discover -v"
+  - "%PYTHON%/python.exe -m sphinx -b html -W docs/source docs/build"
