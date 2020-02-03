@@ -3338,10 +3338,6 @@ class Either(TraitType):
         """
         return self.trait_maker.as_ctrait()
 
-# -------------------------------------------------------------------------------
-#  'None' trait:
-# -------------------------------------------------------------------------------
-
 
 class NoneTrait(TraitType):
     """ Defines a trait that only accepts the None value
@@ -3365,10 +3361,6 @@ class NoneTrait(TraitType):
             return value
 
         self.error(obj, name, value)
-
-# -------------------------------------------------------------------------------
-#  'Union' trait:
-# -------------------------------------------------------------------------------
 
 
 class Union(TraitType):
