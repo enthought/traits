@@ -1453,7 +1453,7 @@ class BaseDirectory(BaseStr):
     """ A trait type whose value must be a directory path string.
 
     For Python 3.6 and greater, it also accepts objects implementing
-    the :class: `os.PathLike` interface, converting them to the corresponding
+    the :class:`os.PathLike` interface, converting them to the corresponding
     string.
 
     Parameters
