@@ -13,11 +13,11 @@ environment:
     - PYTHON: "C:\\Python38-x64"
 
 install:
-  - pip install copyright_header/
-  - pip install -e ".[test]"
+  - python -m pip install copyright_header/
+  - python -m pip install -e ".[test]"
 
 build: off
 
 test_script:
-  - flake8
+  - python -m flake8
   - python -m unittest discover -v
