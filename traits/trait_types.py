@@ -1453,7 +1453,8 @@ class BaseDirectory(BaseStr):
     """ A trait type whose value must be a directory path string.
 
     For Python 3.6 and greater, it also accepts objects implementing
-    the `os.PathLike` interface; converting them to corresponding string.
+    the :class: `os.PathLike` interface, converting them to the corresponding
+    string.
 
     Parameters
     ----------
@@ -1501,6 +1502,7 @@ class BaseDirectory(BaseStr):
         Note: The 'fast validator' version performs this check in C.
         """
         if fspath is not None:
+            # Python 3.5 does not implement __fspath__
             try:
                 value = fspath(value)
             except TypeError:
@@ -1527,7 +1529,8 @@ class Directory(BaseDirectory):
     """ A fast-validating trait type whose value is a directory path string.
 
     For Python 3.6 and greater, it also accepts objects implementing
-    the :class: `os.PathLike` interface; converting them to corresponding string.
+    the :class: `os.PathLike` interface, converting them to the corresponding
+    string.
 
     Parameters
     ----------
@@ -1559,6 +1562,7 @@ class Directory(BaseDirectory):
     def __init__(
         self, value="", auto_set=False, entries=0, exists=False, **metadata
     ):
+        # Fast validation is disabled (Github issue #877).
         super(Directory, self).__init__(
             value, auto_set, entries, exists, **metadata
         )
