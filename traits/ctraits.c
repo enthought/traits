@@ -4852,7 +4852,7 @@ set_trait_post_setattr(trait_object *trait, PyObject *value, void *closure)
         value = NULL;
         trait->post_setattr = NULL;
     }
-    else{
+    else {
         trait->post_setattr = post_setattr_trait_python;
     }
 
