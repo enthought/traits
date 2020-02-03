@@ -135,7 +135,8 @@ class TestListeners(unittest.TestCase):
         self.assertEqual(events, {})
 
     def test_trait_exception_handler_can_access_exception(self):
-        """ Tests if trait exception handlers can access the traceback of the exception.
+        """ Tests if trait exception handlers can access the traceback of the
+        exception.
         """
         from traits import trait_notifiers
 

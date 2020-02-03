@@ -296,7 +296,7 @@ class TraitDictObject(dict):
 
         self.__dict__.update(state)
 
-    # -- Private Methods ------------------------------------------------------------
+    # -- Private Methods ------------------------------------------------------
 
     def _validate_dic(self, dic):
         name = self.name

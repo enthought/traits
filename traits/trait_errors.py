@@ -31,22 +31,22 @@ def repr_type(obj):
     return msg
 
 
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  'TraitError' class:
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 class TraitError(Exception):
     def __init__(self, args=None, name=None, info=None, value=None):
         if name is None:
-            # If the given args is not a tuple then assume that the user intended
-            # it to be the single item in a one-element tuple.
+            # If the given args is not a tuple then assume that the user
+            # intended it to be the single item in a one-element tuple.
             if not isinstance(args, tuple):
                 args = (args,)
             self.args = args
         else:
-            # Save the information, in case the 'args' object is not the correct
-            # one, and we need to regenerate the message later:
+            # Save the information, in case the 'args' object is not the
+            # correct one, and we need to regenerate the message later:
             self.name = name
             self.info = info
             self.value = value

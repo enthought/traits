@@ -69,9 +69,9 @@ class BaseTraitHandler(object):
         Description
         -----------
         This method is called by the validate() method when an assigned value
-        is not valid. Raising a TraitError exception either notifies the user of
-        the problem, or, in the case of compound traits, provides a chance for
-        another trait handler to handle to validate the value.
+        is not valid. Raising a TraitError exception either notifies the user
+        of the problem, or, in the case of compound traits, provides a chance
+        for another trait handler to handle to validate the value.
         """
         raise TraitError(
             object, name, self.full_info(object, name, value), value
@@ -93,13 +93,13 @@ class BaseTraitHandler(object):
         Description
         -----------
         The string should be a phrase describing the type defined by the
-        TraitHandler subclass, rather than a complete sentence. For example, use
-        the phrase, "a square sprocket" instead of the sentence, "The value must
-        be a square sprocket." The value returned by full_info() is combined
-        with other information whenever an error occurs and therefore makes more
-        sense to the user if the result is a phrase. The full_info() method is
-        similar in purpose and use to the **info** attribute of a validator
-        function.
+        TraitHandler subclass, rather than a complete sentence. For example,
+        use the phrase, "a square sprocket" instead of the sentence, "The value
+        must be a square sprocket." The value returned by full_info() is
+        combined with other information whenever an error occurs and therefore
+        makes more sense to the user if the result is a phrase. The full_info()
+        method is similar in purpose and use to the **info** attribute of a
+        validator function.
 
         Note that the result can include information specific to the particular
         trait handler instance. If the full_info() method is not overridden,
@@ -112,11 +112,11 @@ class BaseTraitHandler(object):
         trait handler.
 
         The string should be a phrase describing the type defined by the
-        TraitHandler subclass, rather than a complete sentence. For example, use
-        the phrase, "a square sprocket" instead of the sentence, "The value must
-        be a square sprocket." The value returned by info() is combined with
-        other information whenever an error occurs and therefore makes more
-        sense to the user if the result is a phrase. The info() method is
+        TraitHandler subclass, rather than a complete sentence. For example,
+        use the phrase, "a square sprocket" instead of the sentence, "The value
+        must be a square sprocket." The value returned by info() is combined
+        with other information whenever an error occurs and therefore makes
+        more sense to the user if the result is a phrase. The info() method is
         similar in purpose and use to the **info** attribute of a validator
         function.
 
