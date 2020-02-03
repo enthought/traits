@@ -19,7 +19,6 @@ from traits.constants import (
 from traits.ctrait import CTrait
 from traits.has_traits import HasTraits
 from traits.trait_errors import TraitError
-from traits.trait_type import TraitType
 from traits.trait_types import Any, List
 
 
@@ -225,9 +224,8 @@ class TestCTrait(unittest.TestCase):
     def test_default_trait_initialization(self):
         ctrait = CTrait()
 
-        handler = TraitType()
-        handler.validate = unittest.mock.MagicMock(return_value="baz")
-        ctrait.set_validate(handler.validate)
+        validate = unittest.mock.MagicMock(return_value="baz")
+        ctrait.set_validate(validate)
 
         class Foo(HasTraits):
             bar = ctrait
@@ -243,6 +241,6 @@ class TestCTrait(unittest.TestCase):
 
         foo.bar = 1
 
-        handler.validate.assert_called_once_with(foo, "bar", 1)
+        validate.assert_called_once_with(foo, "bar", 1)
         self.assertEqual(foo.bar, "baz")
         self.assertEqual(len(foo.bar_changed_events), 1)
