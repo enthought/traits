@@ -154,7 +154,7 @@ class RecordContainer(object):
         """ Save the records into a file.
 
         """
-        with open(filename, "w") as fh:
+        with open(filename, "w", encoding="utf-8") as fh:
             for record in self._records:
                 fh.write(str(record))
 

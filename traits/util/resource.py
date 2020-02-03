@@ -188,8 +188,7 @@ def store_resource(project, resource_path, filename):
             % (project, resource_path)
         )
 
-    fo = open(filename, "wb")
-    fo.write(fi.read())
-    fo.close()
+    with open(filename, "wb") as fo:
+        fo.write(fi.read())
 
     fi.close()

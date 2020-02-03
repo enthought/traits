@@ -60,7 +60,7 @@ class TestRecordEvents(unittest.TestCase):
 
         filename = os.path.join(self.directory, "MainThread.trace")
         container.save_to_file(filename)
-        with open(filename, "r") as handle:
+        with open(filename, "r", encoding="utf-8") as handle:
             lines = handle.readlines()
             self.assertEqual(len(lines), 4)
             # very basic checking
@@ -93,7 +93,7 @@ class TestRecordEvents(unittest.TestCase):
         container.save_to_directory(self.directory)
         for name in container._record_containers:
             filename = os.path.join(self.directory, "{0}.trace".format(name))
-            with open(filename, "r") as handle:
+            with open(filename, "r", encoding="utf-8") as handle:
                 lines = handle.readlines()
             self.assertEqual(len(lines), 4)
             # very basic checking
@@ -124,7 +124,7 @@ class TestRecordEvents(unittest.TestCase):
         container.save_to_directory(self.directory)
         for name in container._record_containers:
             filename = os.path.join(self.directory, "{0}.trace".format(name))
-            with open(filename, "r") as handle:
+            with open(filename, "r", encoding="utf-8") as handle:
                 lines = handle.readlines()
             self.assertEqual(len(lines), 4)
             # very basic checking

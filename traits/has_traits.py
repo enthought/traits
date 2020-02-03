@@ -783,10 +783,8 @@ def cached_property(function):
 
             @cached_property
             def _get_file_contents(self):
-                fh = open(self.file_name, 'rb')
-                result = fh.read()
-                fh.close()
-                return result
+                with open(self.file_name, 'rb') as fh:
+                    return fh.read()
 
         In this example, accessing the *file_contents* trait calls the
         _get_file_contents() method only once each time after the **file_name**
@@ -831,10 +829,8 @@ def property_depends_on(dependency, settable=False, flushable=False):
 
             @property_depends_on( 'file_name' )
             def _get_file_contents(self):
-                fh = open(self.file_name, 'rb')
-                result = fh.read()
-                fh.close()
-                return result
+                with open(self.file_name, 'rb') as fh:
+                    return fh.read()
 
         In this example, accessing the *file_contents* trait calls the
         _get_file_contents() method only once each time after the **file_name**
