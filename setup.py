@@ -295,15 +295,18 @@ setuptools.setup(
     download_url="https://github.com/enthought/traits",
     install_requires=[],
     extras_require={
+        "docs": [
+            "enthought-sphinx-theme",
+            "Sphinx",
+        ],
         "test": [
-            "coverage",
             "Cython",
             "flake8",
             "numpy",
             "pyside2",
             "Sphinx",
             "traitsui",
-        ]
+        ],
     },
     ext_modules=[setuptools.Extension("traits.ctraits", ["traits/ctraits.c"])],
     package_data={
