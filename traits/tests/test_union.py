@@ -140,14 +140,14 @@ class TestCaseEnumTrait(unittest.TestCase):
         self.assertEqual(obj.shadow_union_trait, 1)
 
     def test_extending_union_trait(self):
-        class UnionAllowSrt(Union):
+        class UnionAllowStr(Union):
             def validate(self, obj, name, value):
                 if isinstance(value, str):
                     return value
-                return super(UnionAllowSrt, self).validate(obj, name, value)
+                return super(UnionAllowStr, self).validate(obj, name, value)
 
         class TestClass(HasTraits):
-            s = UnionAllowSrt(Int, Float)
+            s = UnionAllowStr(Int, Float)
 
         TestClass(s="sdf")
 
