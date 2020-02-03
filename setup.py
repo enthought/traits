@@ -300,7 +300,7 @@ setuptools.setup(
             "Cython",
             "flake8",
             "numpy",
-            "pyqt5",
+            "pyside2",
             "Sphinx",
             "traitsui",
         ]
