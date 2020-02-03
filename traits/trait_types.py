@@ -3380,7 +3380,10 @@ class Union(TraitType):
 
     def __init__(self, *traits, **metadata):
         self.list_ctrait_instances = []
-        traits = traits or [NoneTrait]
+
+        if not traits:
+            traits = (NoneTrait,)
+
         for trait in traits:
             if trait is None:
                 trait = NoneTrait
@@ -3419,46 +3422,6 @@ class Union(TraitType):
 
     def inner_traits(self):
         return tuple(self.list_ctrait_instances)
-
-    def as_ctrait(self):
-        """ Returns a CTrait corresponding to the trait defined by this class.
-        """
-        metadata = self.metadata
-        ctrait = CTrait(self.type_map.get(metadata.get("type"), TraitKind.trait))
-        ctrait.set_validate(self.validate)
-
-        # Set this instance as the handler so that CTrait redirects calls here.
-        # Avoids refactoring CTrait
-        ctrait.handler = self
-        ctrait.set_default_value(self.default_value_type, self.default_value)
-
-        rich_compare = metadata.get("rich_compare")
-        if rich_compare is not None:
-            # Ref: enthought/traits#602
-            warnings.warn(
-                "The 'rich_compare' metadata has been deprecated. Please "
-                "use the 'comparison_mode' metadata instead. In a future "
-                "release, rich_compare will have no effect.",
-                DeprecationWarning,
-                stacklevel=3,
-            )
-            ctrait.comparison_mode(
-                ComparisonMode.equality_compare
-                if rich_compare
-                else ComparisonMode.object_id_compare
-            )
-
-        comparison_mode = metadata.get("comparison_mode")
-        if comparison_mode is not None:
-            ctrait.comparison_mode(comparison_mode)
-
-        if len(metadata) > 0:
-            if ctrait.__dict__ is None:
-                ctrait.__dict__ = metadata
-            else:
-                ctrait.__dict__.update(metadata)
-
-        return ctrait
 
     def get_editor(self, trait):
         from traitsui.api import TextEditor, CompoundEditor
