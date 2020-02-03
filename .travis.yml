@@ -1,41 +1,21 @@
-language: generic
 dist: xenial
-services:
-  - xvfb
+language: python
 
 env:
   global:
-    - INSTALL_EDM_VERSION=2.0.0
-      PYTHONUNBUFFERED="1"
+    - PYTHONUNBUFFERED="1"
       CFLAGS="-Werror -UNDEBUG"
 
-matrix:
-  include:
-    - env: RUNTIME=3.5
-    - env: RUNTIME=3.6
-    - os: osx
-      env: RUNTIME=3.5
-    - os: osx
-      env: RUNTIME=3.6
+python:
+  - 3.5
+  - 3.6
+  - 3.7
+  - 3.8
 
-cache:
-  directories:
-    - "~/.cache"
-
-before_install:
-  - mkdir -p "${HOME}/.cache/download"
-  - if [[ ${TRAVIS_OS_NAME} == 'linux' ]]; then ./install-edm-linux.sh; export PATH="${HOME}/edm/bin:${PATH}"; fi
-  - if [[ ${TRAVIS_OS_NAME} == 'osx' ]]; then ./install-edm-osx.sh; export PATH="${PATH}:/usr/local/bin"; fi
-  - edm install -y wheel click coverage
 install:
-  - edm run -- python etstool.py install --runtime=${RUNTIME} || exit
-  - if [[ ${TRAVIS_EVENT_TYPE} == 'cron' ]]; then edm run -- python etstool.py install --runtime=${RUNTIME} --source || exit; fi
-script:
-  - edm run -- python etstool.py flake8 --runtime=${RUNTIME} || exit
-  - edm run -- python etstool.py test --runtime=${RUNTIME} || exit
-  - edm run -- python etstool.py docs --runtime=${RUNTIME} || exit
+  - pip install copyright_header/
+  - pip install -e ".[test]"
 
-after_success:
-  - edm run -- coverage combine
-  - edm run -- pip install codecov
-  - edm run -- codecov
+script:
+  - flake8
+  - python -m unittest discover -v
