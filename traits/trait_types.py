@@ -41,12 +41,12 @@ from .trait_base import (
     TraitsCache,
     xgetattr,
 )
-from .trait_converters import trait_from
+from .trait_converters import trait_from, trait_cast
 from .trait_dict_object import TraitDictEvent, TraitDictObject
 from .trait_errors import TraitError
 from .trait_list_object import TraitListEvent, TraitListObject
 from .trait_set_object import TraitSetEvent, TraitSetObject
-from .trait_type import TraitType
+from .trait_type import TraitType, _infer_default_value_type
 from .traits import (
     Trait,
     _TraitMaker,
@@ -3553,6 +3553,100 @@ class Either(TraitType):
         return self.trait_maker.as_ctrait()
 
 
+class NoneTrait(TraitType):
+    """ Defines a trait that only accepts the None value
+    """
+
+    info_text = "None"
+
+    default_value = None
+
+    default_value_type = DefaultValue.constant
+
+    def __init__(self, **metadata):
+        default_value = metadata.pop("default", None)
+        if default_value is not None:
+            raise ValueError("Cannot set default value {} "
+                             "for NoneTrait".format(default_value))
+        super(NoneTrait, self).__init__(**metadata)
+
+    def validate(self, obj, name, value):
+        if value is None:
+            return value
+
+        self.error(obj, name, value)
+
+
+class Union(TraitType):
+    """ Defines a trait whose value can be any of of a specified list of
+    trait types or list of trait type instances or None
+    """
+
+    def __init__(self, *traits, **metadata):
+        self.list_ctrait_instances = []
+
+        if not traits:
+            traits = (NoneTrait,)
+
+        for trait in traits:
+            if trait is None:
+                trait = NoneTrait
+            ctrait_instance = trait_cast(trait)
+            if ctrait_instance is None:
+                raise ValueError("Union trait declaration expects a trait "
+                                 "type or an instance of trait type or None,"
+                                 " but got {} instead".format(trait))
+
+            self.list_ctrait_instances.append(ctrait_instance)
+
+        default_value = None
+        if 'default' in metadata:
+            default_value = metadata.pop("default")
+        elif self.list_ctrait_instances:
+            default_value = self.list_ctrait_instances[0].default
+
+        self.default_value_type = _infer_default_value_type(default_value)
+        super().__init__(default_value, **metadata)
+
+    def validate(self, obj, name, value):
+        """ Return the value by the first trait in the list that can
+        validate the assigned value, raise an error if none of them can.
+        """
+        for trait_type_instance in self.list_ctrait_instances:
+            try:
+                return trait_type_instance.validate(obj, name, value)
+            except TraitError:
+                pass
+
+        self.error(obj, name, value)
+
+    def info(self):
+        return " or ".join([ctrait.info() for ctrait in
+                            self.list_ctrait_instances])
+
+    def inner_traits(self):
+        return tuple(self.list_ctrait_instances)
+
+    def get_editor(self, trait):
+        from traitsui.api import TextEditor, CompoundEditor
+
+        the_editors = [x.get_editor() for x in self.list_ctrait_instances]
+        text_editor = TextEditor()
+        count = 0
+        editors = []
+        for editor in the_editors:
+            if isinstance(text_editor, editor.__class__):
+                count += 1
+                if count > 1:
+                    continue
+            editors.append(editor)
+
+        return CompoundEditor(editors=editors)
+
+
+# -------------------------------------------------------------------------------
+#  'Symbol' trait:
+# -------------------------------------------------------------------------------
 class Symbol(TraitType):
     """ A property trait type that refers to a Python object by name.
 

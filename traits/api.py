@@ -103,6 +103,7 @@ from .trait_types import (  # noqa: F401
     Button,
     ToolbarButton,
     Either,
+    Union,
     Type,
     Subclass,
     Symbol,
