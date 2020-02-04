@@ -3490,8 +3490,6 @@ class Union(TraitType):
     """ Defines a trait whose value can be any of of a specified list of
     trait types or list of trait type instances or None
     """
-    # CTrait type map for special trait types:
-    type_map = {"event": TraitKind.event, "constant": TraitKind.constant}
 
     def __init__(self, *traits, **metadata):
         self.list_ctrait_instances = []
