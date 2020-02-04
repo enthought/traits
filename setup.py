@@ -294,6 +294,17 @@ setuptools.setup(
     long_description_content_type="text/x-rst",
     download_url="https://github.com/enthought/traits",
     install_requires=[],
+    extras_require={
+        "test": [
+            "Cython",
+            "numpy",
+            "pyface",
+            "PySide2",
+            "setuptools",
+            "Sphinx",
+            "traitsui",
+        ],
+    },
     ext_modules=[setuptools.Extension("traits.ctraits", ["traits/ctraits.c"])],
     package_data={
         "traits.tests": [
