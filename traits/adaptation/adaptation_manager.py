@@ -256,50 +256,39 @@ class AdaptationManager(HasTraits):
             # Get the most specific candidate path for adaptation.
             weight, path, current_protocol = heappop(offer_queue)
 
+            if self.provides_protocol(current_protocol, to_protocol):
+                # Walk path and create adapters
+                adapter = adaptee
+                for offer in path:
+                    adapter = offer.factory(adapter)
+                    if adapter is None:
+                        # This adaptation attempt failed (e.g. because of
+                        # conditional adaptation).
+                        # Discard this path and continue.
+                        break
+
+                else:
+                    # We're done!
+                    return adapter
+
+                if adapter is None:
+                    continue
+
             edges = self._get_applicable_offers(current_protocol, path)
-
-            # Sort by weight first, then by from_protocol type.
-            edges.sort(
-                key=functools.cmp_to_key(
-                    _by_weight_then_from_protocol_specificity
-                )
-            )
-
-            # At this point, the first edges are the shortest ones. Within
-            # edges with the same distance, interfaces which are subclasses
-            # of other interfaces in that group come first. The rest of
-            # the order is unspecified.
 
             for mro_distance, offer in edges:
                 new_path = path + [offer]
 
-                # Check if we arrived at the target protocol.
-                if self.provides_protocol(offer.to_protocol, to_protocol):
-                    # Walk path and create adapters
-                    adapter = adaptee
-                    for offer in new_path:
-                        adapter = offer.factory(adapter)
-                        if adapter is None:
-                            # This adaptation attempt failed (e.g. because of
-                            # conditional adaptation).
-                            # Discard this path and continue.
-                            break
-
-                    else:
-                        # We're done!
-                        return adapter
-
-                else:
-                    # Push the new path on the priority queue.
-                    adapter_weight, mro_weight, _ = weight
-                    new_weight = (
-                        adapter_weight + 1,
-                        mro_weight + mro_distance,
-                        next(counter),
-                    )
-                    heappush(
-                        offer_queue, (new_weight, new_path, offer.to_protocol)
-                    )
+                # Push the new path on the priority queue.
+                adapter_weight, mro_weight, _ = weight
+                new_weight = (
+                    adapter_weight + 1,
+                    mro_weight + mro_distance,
+                    next(counter),
+                )
+                heappush(
+                    offer_queue, (new_weight, new_path, offer.to_protocol)
+                )
 
         return None
 
