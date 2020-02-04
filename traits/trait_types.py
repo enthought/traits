@@ -2443,6 +2443,105 @@ class CList(List):
         )
 
 
+class PrefixList(BaseStr):
+    r"""Ensures that a value assigned to the attribute is a member of a list of
+     specified string values, or is a unique prefix of one of those values.
+
+    The values that can be assigned to a trait attribute of type PrefixList
+    type is the set of all strings supplied to the PrefixList constructor,
+    as well as any unique prefix of those strings. That is, if the set of
+    strings supplied to the constructor is described by
+    [*s*\ :sub:`1`\ , *s*\ :sub:`2`\ , ..., *s*\ :sub:`n`\ ], then the
+    string *v* is a valid value for the trait if *v* == *s*\ :sub:`i[:j]`
+    for one and only one pair of values (i, j). If *v* is a valid value,
+    then the actual value assigned to the trait attribute is the
+    corresponding *s*\ :sub:`i` value that *v* matched.
+
+    The list of legal values can be provided as a list or tuple of values.
+    That is, ``PrefixList(['one', 'two', 'three'])`` and
+    ``PrefixList('one', 'two', 'three')`` are equivalent.
+
+    Example
+    -------
+    ::
+        class Person(HasTraits):
+            married = PrefixList('yes', 'no')
+
+    The Person class has a **married** trait that accepts any of the
+    strings 'y', 'ye', 'yes', 'n', or 'no' as valid values. However, the
+    actual values assigned as the value of the trait attribute are limited
+    to either 'yes' or 'no'. That is, if the value 'y' is assigned to the
+    **married** attribute, the actual value assigned will be 'yes'.
+
+    Note that the algorithm used by TraitPrefixList in determining whether
+    a string is a valid value is fairly efficient in terms of both time and
+    space, and is not based on a brute force set of comparisons.
+
+    Parameters
+    ----------
+    *values
+        Either all legal string values for the enumeration, or a single list
+        or tuple of legal string values.
+
+    Attributes
+    ----------
+    values : tuple of strings
+        Enumeration of all legal values for a trait.
+    """
+
+    #: The default value for the trait:
+    default_value = None
+
+    #: The default value type to use (i.e. 'constant'):
+    default_value_type = DefaultValue.constant
+
+    def __init__(self, *values, **metadata):
+
+        if (len(values) == 1) and (type(values[0]) in SequenceTypes):
+            values = values[0]
+        self.values = values[:]
+        self.values_ = values_ = {}
+        for key in values:
+            values_[key] = key
+
+        default = self.default_value
+        if 'default_value' in metadata:
+            default = metadata.pop('default_value')
+            try:
+                default = self.validate(None, None, default)
+            except TraitError:
+                raise ValueError("Default value for PrefixTrait must be "
+                                 "a unique prefix present in the prefix list")
+        elif self.values:
+            default = self.values[0]
+
+        super().__init__(default, **metadata)
+
+    def validate(self, object, name, value):
+        try:
+            if value not in self.values_:
+                match = None
+                n = len(value)
+                for key in self.values:
+                    if value == key[:n]:
+                        if match is not None:
+                            match = None
+                            break
+                        match = key
+                if match is None:
+                    self.error(object, name, value)
+                self.values_[value] = match
+            return self.values_[value]
+        except:
+            self.error(object, name, value)
+
+    def info(self):
+        return (
+            " or ".join([repr(x) for x in self.values])
+            + " (or any unique prefix)"
+        )
+
+
 class Set(TraitType):
     """ A trait type for a set of values of the specified type.
 
