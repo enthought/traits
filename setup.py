@@ -8,7 +8,6 @@
 #
 # Thanks for using Enthought open source!
 
-import io
 import os
 import runpy
 import subprocess
@@ -122,7 +121,7 @@ def write_version_file(version, git_revision):
     git_revision : str
         The full commit hash for the current Git revision.
     """
-    with io.open(VERSION_FILE, "w", encoding="ascii") as version_file:
+    with open(VERSION_FILE, "w", encoding="utf-8") as version_file:
         version_file.write(
             VERSION_FILE_TEMPLATE.format(
                 version=version, git_revision=git_revision, company="Enthought"
@@ -253,7 +252,7 @@ def resolve_version():
 
 def get_long_description():
     """ Read long description from README.txt. """
-    with io.open("README.rst", "r", encoding="utf-8") as readme:
+    with open("README.rst", "r", encoding="utf-8") as readme:
         return readme.read()
 
 
@@ -295,6 +294,17 @@ setuptools.setup(
     long_description_content_type="text/x-rst",
     download_url="https://github.com/enthought/traits",
     install_requires=[],
+    extras_require={
+        "test": [
+            "Cython",
+            "numpy",
+            "pyface",
+            "PySide2",
+            "setuptools",
+            "Sphinx",
+            "traitsui",
+        ],
+    },
     ext_modules=[setuptools.Extension("traits.ctraits", ["traits/ctraits.c"])],
     package_data={
         "traits.tests": [

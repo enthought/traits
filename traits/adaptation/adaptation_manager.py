@@ -91,7 +91,7 @@ class AdaptationManager(HasTraits):
         """
         return issubclass(type_, protocol)
 
-    #### 'AdaptationManager' protocol ##########################################
+    #### 'AdaptationManager' protocol #########################################
 
     def adapt(self, adaptee, to_protocol, default=AdaptationError):
         """ Attempt to adapt an object to a given protocol.

@@ -21,7 +21,6 @@
 # All configuration values have a default value; values that are commented out
 # serve to show the default value.
 import datetime
-import io
 import os
 import sys
 
@@ -60,13 +59,14 @@ master_doc = "index"
 
 # General substitutions.
 project = "traits"
-copyright = "2008-{date.year}, Enthought Inc".format(date=datetime.date.today())
+copyright = "2008-{date.year}, Enthought Inc".format(
+    date=datetime.date.today())
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
 version_info = {}
 traits_init_path = os.path.join("..", "..", "traits", "__init__.py")
-with io.open(traits_init_path, "r", encoding="utf-8") as version_module:
+with open(traits_init_path, "r", encoding="utf-8") as version_module:
     version_code = compile(version_module.read(), "__init__.py", "exec")
     exec(version_code, version_info)
 version = release = version_info["__version__"]

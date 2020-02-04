@@ -174,15 +174,13 @@ class ETSConfigTestCase(unittest.TestCase):
         path = os.path.join(dirname, "dummy.txt")
         data = str(time.time())
 
-        f = open(path, "w")
-        f.write(data)
-        f.close()
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(data)
 
         self.assertEqual(os.path.exists(path), True)
 
-        f = open(path)
-        result = f.read()
-        f.close()
+        with open(path, "r", encoding="utf-8") as f:
+            result = f.read()
 
         os.remove(path)
 
@@ -360,15 +358,13 @@ class ETSConfigTestCase(unittest.TestCase):
         path = os.path.join(dirname, "dummy.txt")
         data = str(time.time())
 
-        f = open(path, "w")
-        f.write(data)
-        f.close()
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(data)
 
         self.assertEqual(os.path.exists(path), True)
 
-        f = open(path)
-        result = f.read()
-        f.close()
+        with open(path, "r", encoding="utf-8") as f:
+            result = f.read()
 
         os.remove(path)
 

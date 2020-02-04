@@ -165,7 +165,8 @@ class TraitListObject(list):
                 step = 1 if key.step is None else key.step
                 if step != 1 and delta != 0:
                     raise ValueError(
-                        "attempt to assign sequence of size %d to extended slice of size %d"
+                        "attempt to assign sequence of size %d to extended "
+                        "slice of size %d"
                         % (len(values), slice_len)
                     )
                 newlen = len(self) + delta
@@ -179,8 +180,8 @@ class TraitListObject(list):
                     ]
                 value = values
                 if step == 1:
-                    # FIXME: Bug-for-bug compatibility with old __setslice__ code.
-                    # In this case, we return a TraitListEvent with an
+                    # FIXME: Bug-for-bug compatibility with old __setslice__
+                    # code. In this case, we return a TraitListEvent with an
                     # index=key.start and the removed and added lists as they
                     # are.
                     index = 0 if key.start is None else key.start
@@ -321,8 +322,8 @@ class TraitListObject(list):
                     # Length before the insertion.
                     original_len = len(self) - 1
 
-                    # Indices outside [-original_len, original_len] are clipped.
-                    # This matches the behaviour of insert on the
+                    # Indices outside [-original_len, original_len] are
+                    # clipped. This matches the behaviour of insert on the
                     # underlying list.
                     if index < 0:
                         index += original_len
@@ -401,7 +402,8 @@ class TraitListObject(list):
                     self.name_items, TraitListEvent(index, removed)
                 )
         elif len(self) == 0:
-            # Let whatever system error (ValueError) should be raised be raised.
+            # Let whatever system error (ValueError) should be raised be
+            # raised.
             list.remove(self, value)
         else:
             self.len_error(len(self) - 1)

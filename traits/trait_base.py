@@ -83,8 +83,8 @@ class _Uninitialized(object):
         return (_Uninitialized, ())
 
 
-#: When the first reference to a trait is a 'get' reference, the default value of
-#: the trait is implicitly assigned and returned as the value of the trait.
+#: When the first reference to a trait is a 'get' reference, the default value
+#: of the trait is implicitly assigned and returned as the value of the trait.
 #: Because of this implicit assignment, a trait change notification is
 #: generated with the Uninitialized object as the 'old' value of the trait, and
 #: the default trait value as the 'new' value. This allows other parts of the
@@ -207,8 +207,9 @@ def safe_contains(value, container):
     """
     # Do a LBYL check for Enums, to avoid the DeprecationWarning issued
     # by Python 3.7. Ref: enthought/traits#853.
-    if isinstance(container, enum.EnumMeta) and not isinstance(value, enum.Enum):
-        return False
+    if isinstance(container, enum.EnumMeta):
+        if not isinstance(value, enum.Enum):
+            return False
 
     try:
         return value in container

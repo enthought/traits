@@ -528,7 +528,7 @@ set_value(PyObject **field, PyObject *value)
        contents are assigned, else there's a possibility for external code
        (triggered by the DECREF) to see an invalid field value. */
     old_value = *field;
-    Py_INCREF(value);
+    Py_XINCREF(value);
     *field = value;
     Py_XDECREF(old_value);
     return 0;
@@ -4844,12 +4844,21 @@ get_trait_post_setattr(trait_object *trait, void *closure)
 static int
 set_trait_post_setattr(trait_object *trait, PyObject *value, void *closure)
 {
-    if (!PyCallable_Check(value)) {
+
+    if (value != Py_None && !PyCallable_Check(value)) {
         PyErr_SetString(
-            PyExc_ValueError, "The assigned value must be callable.");
+            PyExc_ValueError, "The assigned value must be callable or None.");
         return -1;
     }
-    trait->post_setattr = post_setattr_trait_python;
+
+    if (value == Py_None) {
+        value = NULL;
+        trait->post_setattr = NULL;
+    }
+    else {
+        trait->post_setattr = post_setattr_trait_python;
+    }
+
     return set_value(&trait->py_post_setattr, value);
 }
 

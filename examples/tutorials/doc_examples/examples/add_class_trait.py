@@ -12,11 +12,11 @@
 #                        using add_class_trait()
 
 
-# --[Imports]-------------------------------------------------------------------
+# --[Imports]------------------------------------------------------------------
 from traits.api import HasTraits, Instance
 
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 # Defining mutually-referring classes using add_class_trait()
 class Chicken(HasTraits):
     pass

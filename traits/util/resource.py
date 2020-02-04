@@ -8,20 +8,20 @@
 #
 # Thanks for using Enthought open source!
 
-""" Utility functions for managing and finding resources (ie. images/files etc).
+""" Utility functions for managing and finding resources (e.g. images, files).
 
     get_path :           Returns the absolute path of a class or instance
 
     create_unique_name : Creates a name with a given prefix that is not in a
-                         given list of existing names. The separator between the
-                         prefix and the rest of the name can also be specified
-                         (default is a '_')
+                         given list of existing names. The separator between
+                         the prefix and the rest of the name can also be
+                         specified (default is a '_')
 
     find_resource:       Given a setuptools project specification string
                          ('MyProject>=2.1') and a partial path leading from the
                          projects base directory to the desired resource, will
-                         return either an opened file object or, if specified, a
-                         full path to the resource.
+                         return either an opened file object or, if specified,
+                         a full path to the resource.
 """
 
 
@@ -87,7 +87,8 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
     ----------
     project : str
         The name of the project to look for the resource in. Can be the name or
-        a requirement string. Ex: 'MyProject', 'MyProject>1.0', 'MyProject==1.1'
+        a requirement string. Ex: 'MyProject', 'MyProject>1.0',
+        'MyProject==1.1'
     resource_path : str
         The path to the file from inside the package. If the file desired is
         MyProject/data/image.jpg, resource_path would be 'data/image.jpg'.
@@ -121,9 +122,9 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
 
     try:
         # Get the image using the pkg_resources resource_stream module, which
-        # will find the file by getting the Chaco install path and appending the
-        # image path. This method works in all cases as long as setuptools is
-        # installed. If setuptools isn't installed, the backup sys.path[0]
+        # will find the file by getting the Chaco install path and appending
+        # the image path. This method works in all cases as long as setuptools
+        # is installed. If setuptools isn't installed, the backup sys.path[0]
         # method is used.
         from pkg_resources import resource_stream, working_set, Requirement
 
@@ -188,8 +189,7 @@ def store_resource(project, resource_path, filename):
             % (project, resource_path)
         )
 
-    fo = open(filename, "wb")
-    fo.write(fi.read())
-    fo.close()
+    with open(filename, "wb") as fo:
+        fo.write(fi.read())
 
     fi.close()

@@ -84,7 +84,8 @@ SetTypes = SequenceTypes + (set,)
 # (see validate_trait_coerce_type in ctraits.c).
 #
 # The tuples below are of the form
-# (ValidateTrait.coerce, type1, [type2, type3, ...], [None, ctype1, [ctype2, ...]])
+# (ValidateTrait.coerce, type1, [type2, type3, ...],
+#     [None, ctype1, [ctype2, ...]])
 #
 # 'type1' corresponds to the main type for the trait
 # 'None' acts as the separator between 'types' and 'ctypes' (coercible types)
@@ -102,7 +103,14 @@ try:
     from numpy import integer, floating, complexfloating, bool_
 
     int_fast_validate = (ValidateTrait.coerce, int, integer)
-    float_fast_validate = (ValidateTrait.coerce, float, floating, None, int, integer)
+    float_fast_validate = (
+        ValidateTrait.coerce,
+        float,
+        floating,
+        None,
+        int,
+        integer,
+    )
     complex_fast_validate = (
         ValidateTrait.coerce,
         complex,
@@ -183,9 +191,9 @@ def _validate_float(value):
     return nb_float(value)
 
 
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Trait Types
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 class Any(TraitType):
     """ A trait type whose value can be anything.
@@ -1450,7 +1458,11 @@ class File(BaseFile):
 
 
 class BaseDirectory(BaseStr):
-    """ A trait type whose value is a directory path string.
+    """ A trait type whose value must be a directory path string.
+
+    For Python 3.6 and greater, it also accepts objects implementing
+    the :class:`os.PathLike` interface, converting them to the corresponding
+    string.
 
     Parameters
     ----------
@@ -1480,7 +1492,8 @@ class BaseDirectory(BaseStr):
     """
 
     #: A description of the type of value this trait accepts:
-    info_text = "a directory name"
+    info_text = ("a directory name or an object implementing "
+                 "the os.PathLike interface")
 
     def __init__(
         self, value="", auto_set=False, entries=0, exists=False, **metadata
@@ -1496,6 +1509,13 @@ class BaseDirectory(BaseStr):
 
         Note: The 'fast validator' version performs this check in C.
         """
+        if fspath is not None:
+            # Python 3.5 does not implement __fspath__
+            try:
+                value = fspath(value)
+            except TypeError:
+                pass
+
         validated_value = super(BaseDirectory, self).validate(
             object, name, value
         )
@@ -1515,6 +1535,10 @@ class BaseDirectory(BaseStr):
 
 class Directory(BaseDirectory):
     """ A fast-validating trait type whose value is a directory path string.
+
+    For Python 3.6 and greater, it also accepts objects implementing
+    the :class:`os.PathLike` interface, converting them to the corresponding
+    string.
 
     Parameters
     ----------
@@ -1546,10 +1570,7 @@ class Directory(BaseDirectory):
     def __init__(
         self, value="", auto_set=False, entries=0, exists=False, **metadata
     ):
-        # Define the C-level fast validator to use if the directory existence
-        #: test is not required:
-        if not exists:
-            self.fast_validate = (ValidateTrait.coerce, str)
+        # Fast validation is disabled (Github issue #877).
         super(Directory, self).__init__(
             value, auto_set, entries, exists, **metadata
         )
@@ -2241,7 +2262,8 @@ class ValidatedTuple(BaseTuple):
     -------
     The definition::
 
-        value_range = ValidatedTuple(Int(0), Int(1), fvalidate=lambda x: x[0] < x[1])
+        value_range = ValidatedTuple(
+            Int(0), Int(1), fvalidate=lambda x: x[0] < x[1])
 
     will accept only tuples ``(a, b)`` containing two integers that
     satisfy ``a < b``.
@@ -2391,7 +2413,7 @@ class List(TraitType):
         """
         return (self.item_trait,)
 
-    # -- Private Methods --------------------------------------------------------
+    # -- Private Methods ------------------------------------------------------
 
     def items_event(self):
         cls = self.__class__
@@ -2446,7 +2468,7 @@ class Set(TraitType):
 
     Attributes
     ----------
-    item_trait : a trait or value that can be converted to a trait using Trait()
+    item_trait : a trait or value that can be converted to a trait
         The type of item that the list contains. If not specified, the list
         can contain items of any type.
     has_items : bool
@@ -2505,7 +2527,7 @@ class Set(TraitType):
         """
         return (self.item_trait,)
 
-    # -- Private Methods --------------------------------------------------------
+    # -- Private Methods ------------------------------------------------------
 
     def items_event(self):
         if self.__class__._items_event is None:
@@ -2641,7 +2663,7 @@ class Dict(TraitType):
         """
         return (self.key_trait, self.value_trait)
 
-    # -- Private Methods --------------------------------------------------------
+    # -- Private Methods ------------------------------------------------------
 
     def items_event(self):
         cls = self.__class__
@@ -2956,7 +2978,7 @@ class BaseInstance(BaseClass):
             kind=self.kind or "live",
         )
 
-    # -- Private Methods --------------------------------------------------------
+    # -- Private Methods ------------------------------------------------------
 
     def create_default_value(self, *args, **kw):
         klass = args[0]
@@ -2982,9 +3004,9 @@ class BaseInstance(BaseClass):
     def resolve_class(self, object, name, value):
         super(BaseInstance, self).resolve_class(object, name, value)
 
-        #: fixme: The following is quite ugly, because it wants to try and fix
-        #: the trait referencing this handler to use the 'fast path' now that the
-        #: actual class has been resolved. The problem is finding the trait,
+        # fixme: The following is quite ugly, because it wants to try and fix
+        # the trait referencing this handler to use the 'fast path' now that
+        # the actual class has been resolved. The problem is finding the trait,
         # especially in the case of List(Instance('foo')), where the
         # object.base_trait(...) value is the List trait, not the Instance
         # trait, so we need to check for this and pull out the List
@@ -2998,8 +3020,8 @@ class BaseInstance(BaseClass):
             if set_validate is not None:
                 # The outer trait is a TraitCompound. Recompute its
                 # fast_validate table now that we have updated ours.
-                # FIXME: there are probably still issues if the TraitCompound is
-                # further nested.
+                # FIXME: there are probably still issues if the TraitCompound
+                # is further nested.
                 set_validate()
             else:
                 item_trait = getattr(handler, "item_trait", None)
@@ -3032,7 +3054,8 @@ class Instance(BaseInstance):
 
             self.fast_validate = tuple(fast_validate)
         else:
-            self.fast_validate = (ValidateTrait.adapt, self.klass, self.adapt, self._allow_none)
+            self.fast_validate = (
+                ValidateTrait.adapt, self.klass, self.adapt, self._allow_none)
 
 
 class Supports(Instance):
@@ -3155,8 +3178,8 @@ class Type(BaseClass):
 
     def resolve(self, object, name, value):
         """ Resolves a class originally specified as a string into an actual
-            class, then resets the trait so that future calls will be handled by
-            the normal validate method.
+            class, then resets the trait so that future calls will be handled
+            by the normal validate method.
         """
         if isinstance(self.klass, str):
             self.resolve_class(object, name, value)

@@ -262,11 +262,10 @@ class UnittestTools(object):
         Returns
         -------
         context : context manager or None
-            If ``callableObj`` is None, an assertion context manager is returned,
-            inside of which a trait-change trigger can be invoked. Otherwise,
-            the context is used internally with ``callableObj`` as the trigger,
-            in which case None is returned.
-
+            If ``callableObj`` is None, an assertion context manager is
+            returned, inside of which a trait-change trigger can be invoked.
+            Otherwise, the context is used internally with ``callableObj`` as
+            the trigger, in which case None is returned.
 
         Notes
         -----
@@ -313,11 +312,10 @@ class UnittestTools(object):
         Returns
         -------
         context : context manager or None
-            If ``callableObj`` is None, an assertion context manager is returned,
-            inside of which a trait-change trigger can be invoked. Otherwise,
-            the context is used internally with ``callableObj`` as the trigger,
-            in which case None is returned.
-
+            If ``callableObj`` is None, an assertion context manager is
+            returned, inside of which a trait-change trigger can be invoked.
+            Otherwise, the context is used internally with ``callableObj`` as
+            the trigger, in which case None is returned.
 
         """
         msg = "A change event was fired for: {0}".format(trait)

@@ -33,10 +33,6 @@ Visualization:
     feature.
 """
 
-# -------------------------------------------------------------------------------
-#  Imports:
-# -------------------------------------------------------------------------------
-
 from types import FunctionType, MethodType
 import warnings
 
@@ -79,9 +75,9 @@ from .trait_factory import (
     TraitFactory,
 )
 
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  Constants:
-# -------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 NoneType = type(None)  # Python 3's types does not include NoneType
 
@@ -128,7 +124,7 @@ def __newobj__(cls, *args):
     return cls.__new__(cls, *args)
 
 
-# --- 'instance' traits ---------------------------------------------------------
+# --- 'instance' traits -------------------------------------------------------
 
 
 class _InstanceArgs(object):
@@ -137,7 +133,7 @@ class _InstanceArgs(object):
         self.kw = kw
 
 
-# --- 'creates a run-time default value' ----------------------------------------
+# --- 'creates a run-time default value' --------------------------------------
 
 
 class Default(object):
@@ -248,9 +244,9 @@ def Trait(*value_type, **metadata):
         interface editor for the trait. See the "Traits UI User Guide" for
         more information on trait editors.
     comparison_mode : int
-        Indicates when trait change notifications should be generated based upon
-        the result of comparing the old and new values of a trait assignment.
-        Possible values come from the ``ComparisonMode`` enum:
+        Indicates when trait change notifications should be generated based
+        upon the result of comparing the old and new values of a trait
+        assignment. Possible values come from the ``ComparisonMode`` enum:
 
         * 0 (none): The values are not compared and a trait change
           notification is generated on each assignment.
@@ -477,7 +473,8 @@ class _TraitMaker(object):
 
     def as_ctrait(self):
         metadata = self.metadata
-        trait = CTrait(self.type_map.get(metadata.get("type"), TraitKind.trait))
+        trait = CTrait(
+            self.type_map.get(metadata.get("type"), TraitKind.trait))
         clone = self.clone
         if clone is not None:
             trait.clone(clone)
@@ -597,8 +594,8 @@ def Property(
             axle     = Instanced( Axle )
             position = Property( depends_on = 'axle.chassis.position' )
 
-    For details of the extended trait name syntax, refer to the on_trait_change()
-    method of the HasTraits class.
+    For details of the extended trait name syntax, refer to the
+    on_trait_change() method of the HasTraits class.
     """
     metadata["type"] = "property"
 

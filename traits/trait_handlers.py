@@ -263,8 +263,8 @@ class TraitInstance(TraitHandler):
     attribute, which accepts either None or an instance of Employee
     as its value.
 
-    TraitInstance ensures that assigned values are exactly of the type specified
-    (i.e., no coercion is performed).
+    TraitInstance ensures that assigned values are exactly of the type
+    specified (i.e., no coercion is performed).
 
     Parameters
     ----------
@@ -361,8 +361,8 @@ class TraitInstance(TraitHandler):
         self.aClass = aClass
 
         # fixme: The following is quite ugly, because it wants to try and fix
-        # the trait referencing this handler to use the 'fast path' now that the
-        # actual class has been resolved. The problem is finding the trait,
+        # the trait referencing this handler to use the 'fast path' now that
+        # the actual class has been resolved. The problem is finding the trait,
         # especially in the case of List(Instance('foo')), where the
         # object.base_trait(...) value is the List trait, not the Instance
         # trait, so we need to check for this and pull out the List
@@ -529,18 +529,20 @@ class TraitEnum(TraitHandler):
 
 
 class TraitPrefixList(TraitHandler):
-    r"""Ensures that a value assigned to a trait attribute is a member of a list
-    of specified string values, or is a unique prefix of one of those values.
+    r"""Ensures that a value assigned to a trait attribute is a member of a
+    list of specified string values, or is a unique prefix of one of those
+    values.
 
     TraitPrefixList is a variation on TraitEnum. The values that can be
-    assigned to a trait attribute defined using a TraitPrefixList handler is the
-    set of all strings supplied to the TraitPrefixList constructor, as well as
-    any unique prefix of those strings. That is, if the set of strings supplied
-    to the constructor is described by [*s*\ :sub:`1`\ , *s*\ :sub:`2`\ , ...,
-    *s*\ :sub:`n`\ ], then the string *v* is a valid value for the trait if
-    *v* == *s*\ :sub:`i[:j]` for one and only one pair of values (i, j). If *v*
-    is a valid value, then the actual value assigned to the trait attribute is
-    the corresponding *s*\ :sub:`i` value that *v* matched.
+    assigned to a trait attribute defined using a TraitPrefixList handler is
+    the set of all strings supplied to the TraitPrefixList constructor, as well
+    as any unique prefix of those strings. That is, if the set of strings
+    supplied to the constructor is described by
+    [*s*\ :sub:`1`\ , *s*\ :sub:`2`\ , ..., *s*\ :sub:`n`\ ], then the string
+    *v* is a valid value for the trait if *v* == *s*\ :sub:`i[:j]` for one and
+    only one pair of values (i, j). If *v* is a valid value, then the actual
+    value assigned to the trait attribute is the corresponding *s*\ :sub:`i`
+    value that *v* matched.
 
     As with TraitEnum, the list of legal values can be provided as a list
     or tuple of values.  That is, ``TraitPrefixList(['one', 'two', 'three'])``
@@ -560,8 +562,8 @@ class TraitPrefixList(TraitHandler):
     attribute, the actual value assigned will be 'yes'.
 
     Note that the algorithm used by TraitPrefixList in determining whether a
-    string is a valid value is fairly efficient in terms of both time and space,
-    and is not based on a brute force set of comparisons.
+    string is a valid value is fairly efficient in terms of both time and
+    space, and is not based on a brute force set of comparisons.
 
     Parameters
     ----------
@@ -775,8 +777,8 @@ class TraitCompound(TraitHandler):
     """ Provides a logical-OR combination of other trait handlers.
 
     This class provides a means of creating complex trait definitions by
-    combining several simpler trait definitions. TraitCompound is the underlying
-    handler for the general forms of the Trait() function.
+    combining several simpler trait definitions. TraitCompound is the
+    underlying handler for the general forms of the Trait() function.
 
     A value is a valid value for a trait attribute based on a TraitCompound
     instance if the value is valid for at least one of the TraitHandler or
