@@ -10,10 +10,10 @@
 
 # traitprefixmap.py --- Example of using the TraitPrefixMap handler
 
-# --[Imports]-------------------------------------------------------------------
+^.{70}---------
 from traits.api import Trait, TraitPrefixMap
 
-# --[Code]----------------------------------------------------------------------
+^.{70}---------
 boolean_map = Trait(
     "true", TraitPrefixMap({"true": 1, "yes": 1, "false": 0, "no": 0})
 )

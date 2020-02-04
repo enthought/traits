@@ -10,11 +10,11 @@
 
 # prototype_prefix.py --- Examples of PrototypedFrom() prefix parameter
 
-# --[Imports]-------------------------------------------------------------------
+^.{70}---------
 from traits.api import PrototypedFrom, Float, HasTraits, Instance, Str
 
 
-# --[Code]----------------------------------------------------------------------
+^.{70}---------
 class Parent(HasTraits):
     first_name = Str
     family_name = ""
@@ -31,7 +31,7 @@ class Child(HasTraits):
     mother = Instance(Parent)
 
 
-# --[Example*]------------------------------------------------------------------
+^.{70}---------
 fred = Parent(
     first_name="Fred",
     family_name="Lopez",

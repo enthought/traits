@@ -10,11 +10,11 @@
 
 # wildcard_rules.py --- Example of trait attribute wildcard rules
 
-# --[Imports]-------------------------------------------------------------------
+^.{70}---------
 from traits.api import Any, HasTraits, Int, Python
 
 
-# --[Code]----------------------------------------------------------------------
+^.{70}---------
 class Person(HasTraits):
     temp_count = Int(-1)
     temp_ = Any

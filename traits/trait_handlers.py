@@ -17,10 +17,6 @@ with the object trait, and generates a TraitError exception if it is not
 consistent.
 """
 
-# -------------------------------------------------------------------------------
-#  Imports:
-# -------------------------------------------------------------------------------
-
 from importlib import import_module
 import sys
 from types import FunctionType, MethodType
@@ -45,9 +41,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# -------------------------------------------------------------------------------
-#  Constants:
-# -------------------------------------------------------------------------------
+# Constants
 
 CallableTypes = (FunctionType, MethodType)
 
@@ -55,9 +49,7 @@ _WARNING_FORMAT_STR = ("'{handler}' trait handler has been deprecated. "
                        "Use {replacement} instead.")
 
 
-# -------------------------------------------------------------------------------
-#  Private functions:
-# -------------------------------------------------------------------------------
+# Private functions
 
 def _undefined_get(object, name):
     raise TraitError(
@@ -1132,14 +1124,9 @@ def items_event():
     return TraitList._items_event
 
 
-# -------------------------------------------------------------------------------
-#  'TraitDict' class:
-# -------------------------------------------------------------------------------
-
-
 class TraitDict(TraitHandler):
-    """ Ensures that values assigned to a trait attribute are dictionaries whose
-    keys and values are of specified types.
+    """ Ensures that values assigned to a trait attribute are dictionaries
+    whose keys and values are of specified types.
 
     TraitDict also makes sure that any changes to keys or values made that are
     made after the dictionary is assigned to the trait attribute satisfy the

@@ -10,13 +10,13 @@
 
 # simple_adapter.py - Example of adaptation using Adapter
 
-# --[Imports]-------------------------------------------------------------------
+^.{70}---------
 from traits.api import Adapter, Instance, implements
 from interface_definition import IName
 from interface_implementation import Person
 
 
-# --[Code]----------------------------------------------------------------------
+^.{70}---------
 class PersonINameAdapter(Adapter):
 
     # Declare what interfaces this adapter implements for its

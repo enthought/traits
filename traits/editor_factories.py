@@ -8,13 +8,13 @@
 #
 # Thanks for using Enthought open source!
 
+"""
+Editor factory functions.
+"""
+
 import datetime
 from functools import partial
 import logging
-
-# -------------------------------------------------------------------------------
-#  Editor factory functions:
-# -------------------------------------------------------------------------------
 
 PasswordEditors = {}
 MultilineTextEditors = {}
@@ -24,10 +24,6 @@ HTMLTextEditor = None
 PythonShellEditor = None
 DateEditor = None
 TimeEditor = None
-
-# -------------------------------------------------------------------------------
-#  Logging:
-# -------------------------------------------------------------------------------
 
 logger = logging.getLogger(__name__)
 

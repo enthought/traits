@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-# --(Delegation Fixes and Improvements)-----------------------------------------
+^.{70}---------
 """
 Delegation Fixes and Improvements
 =================================
@@ -102,14 +102,14 @@ notification handler.
 from traits.api import *
 
 
-# --[Parent Class]--------------------------------------------------------------
+^.{70}---------
 class Parent(HasTraits):
 
     first_name = Str
     last_name = Str
 
 
-# --[Child Class]---------------------------------------------------------------
+^.{70}---------
 class Child(HasTraits):
 
     mother = Instance(Parent)
@@ -119,7 +119,7 @@ class Child(HasTraits):
     last_name = Delegate("father")
 
 
-# --[Example*]------------------------------------------------------------------
+^.{70}---------
 
 mom = Parent(first_name="Julia", last_name="Wilson")
 dad = Parent(first_name="William", last_name="Chase")

@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-# --(on_trait_change Method Enhancements)---------------------------------------
+^.{70}---------
 r"""
 on_trait_change Method Enhancements
 ===================================
@@ -255,7 +255,7 @@ change notification handler using *on_trait_change*.
 from traits.api import *
 
 
-# --[Employee Class]------------------------------------------------------------
+^.{70}---------
 class Employee(HasTraits):
 
     # The name of the employee:
@@ -265,7 +265,7 @@ class Employee(HasTraits):
     sick_days = Int
 
 
-# --[Department Class]----------------------------------------------------------
+^.{70}---------
 class Department(HasTraits):
 
     # The name of the department:
@@ -275,7 +275,7 @@ class Department(HasTraits):
     employees = List(Employee)
 
 
-# --[Corporation Class]---------------------------------------------------------
+^.{70}---------
 class Corporation(HasTraits):
 
     # The name of the corporation:
@@ -285,7 +285,7 @@ class Corporation(HasTraits):
     departments = List(Department)
 
 
-# --[Example*]------------------------------------------------------------------
+^.{70}---------
 # Create some sample employees:
 millie = Employee(name="Millie", sick_days=2)
 ralph = Employee(name="Ralph", sick_days=3)

@@ -67,16 +67,12 @@ from .editor_factories import (
 )
 
 
-# -------------------------------------------------------------------------------
-#  Constants:
-# -------------------------------------------------------------------------------
+# Constants
 
 MutableTypes = (list, dict)
 SetTypes = SequenceTypes + (set,)
 
-# -------------------------------------------------------------------------------
-#  Numeric type fast validator definitions:
-# -------------------------------------------------------------------------------
+# Numeric type fast validator definitions
 
 # A few words about the next block of code:
 
@@ -164,9 +160,7 @@ def default_text_editor(trait, type=None):
     return TextEditor(auto_set=auto_set, enter_set=enter_set, evaluate=type)
 
 
-# -------------------------------------------------------------------------------
 # Generic validators
-# -------------------------------------------------------------------------------
 
 def _validate_int(value):
     """ Convert an integer-like Python object to an int, or raise TypeError.
@@ -191,9 +185,7 @@ def _validate_float(value):
     return nb_float(value)
 
 
-# -----------------------------------------------------------------------------
 # Trait Types
-# -----------------------------------------------------------------------------
 
 class Any(TraitType):
     """ A trait type whose value can be anything.
@@ -3686,9 +3678,7 @@ Datetime = BaseInstance(datetime.datetime, editor=datetime_editor)
 Time = BaseInstance(datetime.time, editor=time_editor)
 
 
-# -----------------------------------------------------------------------------
-#  Create predefined, reusable trait instances:
-# -----------------------------------------------------------------------------
+# Predefined, reusable trait instances
 
 # Everything from this point onwards is deprecated, and has a simple
 # drop-in replacement.

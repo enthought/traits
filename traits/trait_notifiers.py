@@ -11,10 +11,6 @@
 """ Classes that implement and support the Traits change notification mechanism
 """
 
-# -------------------------------------------------------------------------------
-#  Imports:
-# -------------------------------------------------------------------------------
-
 import contextlib
 import threading
 from threading import local as thread_local
@@ -27,19 +23,13 @@ import sys
 from .trait_base import Uninitialized
 from .trait_errors import TraitNotificationError
 
-# -------------------------------------------------------------------------------
-#  Global Data:
-# -------------------------------------------------------------------------------
+# Global Data
 
 # The thread ID for the user interface thread
 ui_thread = -1
 
 # The handler for notifications that must be run on the UI thread
 ui_handler = None
-
-# -------------------------------------------------------------------------------
-#  Sets up the user interface thread handler:
-# -------------------------------------------------------------------------------
 
 
 def set_ui_handler(handler):
@@ -191,16 +181,12 @@ class NotificationExceptionHandler(object):
                 "No changes are allowed."
             )
 
-    # ---------------------------------------------------------------------------
-    #  This method defines the default notification exception handling
-    #  behavior of traits. However, it can be completely overridden by pushing
-    #  a new handler using the '_push_handler' method.
-    #
-    #  It logs any exceptions generated in a trait notification handler.
-    # ---------------------------------------------------------------------------
-
     def _log_exception(self, object, trait_name, old, new):
         """ Logs any exceptions generated in a trait notification handler.
+
+        This method defines the default notification exception handling
+        behavior of traits. However, it can be completely overridden by pushing
+        a new handler using the '_push_handler' method.
         """
         # When the stack depth is too great, the logger can't always log the
         # message. Make sure that it goes to the console at a minimum:
@@ -247,9 +233,7 @@ class NotificationExceptionHandler(object):
             pass
 
 
-# -------------------------------------------------------------------------------
-#  Traits global notification exception handler:
-# -------------------------------------------------------------------------------
+# Traits global notification exception handler
 
 notification_exception_handler = NotificationExceptionHandler()
 
@@ -257,9 +241,7 @@ push_exception_handler = notification_exception_handler._push_handler
 pop_exception_handler = notification_exception_handler._pop_handler
 handle_exception = notification_exception_handler._handle_exception
 
-# -------------------------------------------------------------------------------
-#  Traits global notification event tracer:
-# -------------------------------------------------------------------------------
+# Traits global notification event tracer
 
 _pre_change_event_tracer = None
 _post_change_event_tracer = None
@@ -321,11 +303,6 @@ def change_event_tracers(pre_tracer, post_tracer):
         yield
     finally:
         set_change_event_tracers(old_pre_tracer, old_post_tracer)
-
-
-# -------------------------------------------------------------------------------
-#  'AbstractStaticChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
 
 
 class AbstractStaticChangeNotifyWrapper(object):
@@ -390,11 +367,6 @@ class AbstractStaticChangeNotifyWrapper(object):
         return False
 
 
-# -------------------------------------------------------------------------------
-#  'StaticAnyTraitChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
-
-
 class StaticAnyTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
 
     # The wrapper is called with the full set of argument, and we need to
@@ -409,11 +381,6 @@ class StaticAnyTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
     }
 
 
-# -------------------------------------------------------------------------------
-#  'StaticTraitChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
-
-
 class StaticTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
 
     # The wrapper is called with the full set of argument, and we need to
@@ -426,11 +393,6 @@ class StaticTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
         3: lambda obj, name, old, new: (obj, old, new),
         4: lambda obj, name, old, new: (obj, name, old, new),
     }
-
-
-# -------------------------------------------------------------------------------
-#  'TraitChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
 
 
 class TraitChangeNotifyWrapper(object):
@@ -605,11 +567,6 @@ class TraitChangeNotifyWrapper(object):
             )
 
 
-# -------------------------------------------------------------------------------
-#  'ExtendedTraitChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
-
-
 class ExtendedTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
     """ Change notify wrapper for "extended" trait change events..
 
@@ -654,11 +611,6 @@ class ExtendedTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
         self._dispatch_change_event(object, trait_name, old, new, self.handler)
 
 
-# -------------------------------------------------------------------------------
-#  'FastUITraitChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
-
-
 class FastUITraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
     """ Dynamic change notify wrapper, dispatching on the UI thread.
 
@@ -672,11 +624,6 @@ class FastUITraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
             handler(*args)
         else:
             ui_handler(handler, *args)
-
-
-# -------------------------------------------------------------------------------
-#  'NewTraitChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
 
 
 class NewTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):

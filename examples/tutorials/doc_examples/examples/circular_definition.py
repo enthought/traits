@@ -8,11 +8,11 @@
 #
 # Thanks for using Enthought open source!
 
-# --[Imports]-------------------------------------------------------------------
+# --[Imports]------------------------------------------------------------------
 from traits.api import HasTraits, Instance
 
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 # Shows the incorrect way of defining mutually-referring classes.
 try:
 

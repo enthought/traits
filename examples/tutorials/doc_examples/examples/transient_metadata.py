@@ -10,11 +10,11 @@
 
 # transient_metadata.py - Example of using 'transient' metadata
 
-# --[Imports]-------------------------------------------------------------------
+^.{70}---------
 from traits.api import HasTraits, File, Any
 
 
-# --[Code]----------------------------------------------------------------------
+^.{70}---------
 class DataBase(HasTraits):
 
     # The name of the data base file:

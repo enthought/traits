@@ -10,11 +10,11 @@
 
 # disallow.py --- Example of using Disallow with wildcards
 
-# --[Imports]-------------------------------------------------------------------
+# --[Imports]------------------------------------------------------------------
 from traits.api import Disallow, Float, HasTraits, Int, Str
 
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 class Person(HasTraits):
     name = Str
     age = Int

@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-# --(Adaptation)----------------------------------------------------------------
+^.{70}---------
 """
 Adaptation
 ==========
@@ -233,26 +233,26 @@ the **IName** interface, otherwise an exception is raised. Try modifying and
 re-running the example code to verify that this is indeed the case.
 """
 
-# --<Imports>-------------------------------------------------------------------
+^.{70}---------
 
 from traits.api import *
 
 
-# --[IName Interface]-----------------------------------------------------------
+^.{70}---------
 # Define the 'IName' interface:
 class IName(Interface):
     def get_name(self):
         """ Returns the name of an object. """
 
 
-# --[Person Class]--------------------------------------------------------------
+^.{70}---------
 class Person(HasTraits):
 
     first_name = Str("John")
     last_name = Str("Doe")
 
 
-# --[PersonINameAdapter Class]--------------------------------------------------
+^.{70}---------
 class PersonINameAdapter(Adapter):
 
     # Declare what interfaces this adapter implements for its client:
@@ -267,14 +267,14 @@ class PersonINameAdapter(Adapter):
         return "%s %s" % (self.adaptee.first_name, self.adaptee.last_name)
 
 
-# --[Apartment Class]-----------------------------------------------------------
+^.{70}---------
 # Define a class using an object that implements the 'IName' interface:
 class Apartment(HasTraits):
 
     renter = Supports(IName)
 
 
-# --[Example*]------------------------------------------------------------------
+^.{70}---------
 # Create an object implementing the 'IName' interface:
 william = Person(first_name="William", last_name="Adams")
 

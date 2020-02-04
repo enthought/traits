@@ -11,25 +11,16 @@
 """ An attempt at type-safe casting.
 """
 
-# -------------------------------------------------------------------------------
-#  Imports:
-# -------------------------------------------------------------------------------
-
 from inspect import getfullargspec, getmro
 import logging
 from types import FunctionType
 
 from .has_traits import HasTraits
 
-# -------------------------------------------------------------------------------
-#  Logging:
-# -------------------------------------------------------------------------------
-
 logger = logging.getLogger(__name__)
 
-# -------------------------------------------------------------------------------
-#  Constants:
-# -------------------------------------------------------------------------------
+
+# Constants:
 
 # Message templates for interface errors.
 BAD_SIGNATURE = (
@@ -45,10 +36,6 @@ MISSING_TRAIT = (
     "'%s' interface."
 )
 
-# -------------------------------------------------------------------------------
-#  'InterfaceError' class:
-# -------------------------------------------------------------------------------
-
 
 class InterfaceError(Exception):
     """ The exception raised if a class does not really implement an interface.
@@ -57,18 +44,9 @@ class InterfaceError(Exception):
     pass
 
 
-# -------------------------------------------------------------------------------
-#  'InterfaceChecker' class:
-# -------------------------------------------------------------------------------
-
-
 class InterfaceChecker(HasTraits):
     """ Checks that interfaces are actually implemented.
     """
-
-    # ---------------------------------------------------------------------------
-    #  'InterfaceChecker' interface:
-    # ---------------------------------------------------------------------------
 
     def check_implements(self, cls, interfaces, error_mode):
         """ Checks that the class implements the specified interfaces.
@@ -100,10 +78,6 @@ class InterfaceChecker(HasTraits):
                     return False
 
         return True
-
-    # ---------------------------------------------------------------------------
-    #  Private interface:
-    # ---------------------------------------------------------------------------
 
     def _check_has_traits_class(self, cls, interface, error_mode):
         """ Checks that a 'HasTraits' class implements an interface.

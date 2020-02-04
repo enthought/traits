@@ -10,16 +10,16 @@
 
 # minimal.py --- Minimal example of using traits.
 
-# --[Imports]-------------------------------------------------------------------
+^.{70}---------
 from traits.api import HasTraits, Float, TraitError
 
 
-# --[Code]----------------------------------------------------------------------
+^.{70}---------
 class Person(HasTraits):
     weight = Float(150.0)
 
 
-# --[Example*]------------------------------------------------------------------
+^.{70}---------
 # instantiate the class
 joe = Person()
 

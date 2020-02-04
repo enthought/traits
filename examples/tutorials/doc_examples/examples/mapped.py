@@ -10,10 +10,10 @@
 
 # mapped.py --- Example of a mapped trait
 
-# --[Imports]-------------------------------------------------------------------
+^.{70}---------
 from traits.api import HasTraits, Trait
 
-# --[Code]----------------------------------------------------------------------
+^.{70}---------
 standard_color = Trait(
     "black",
     {
@@ -40,7 +40,7 @@ class GraphicShape(HasTraits):
     fill_color = red_color
 
 
-# --[Example*]------------------------------------------------------------------
+^.{70}---------
 
 my_shape1 = GraphicShape()
 

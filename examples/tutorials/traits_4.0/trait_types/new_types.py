@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-# --(Creating New Trait Types)--------------------------------------------------
+^.{70}---------
 """
 Creating New Trait Types
 ========================
@@ -143,11 +143,11 @@ to the preceding section on defining a trait type for additional information
 that applies to properties as well.
 """
 
-# --<Imports>-------------------------------------------------------------------
+^.{70}---------
 from traits.api import *
 
 
-# --[DiceRoll Type]-------------------------------------------------------------
+^.{70}---------
 # Define a type whose value represents the roll of a pair of dice:
 class DiceRoll(TraitType):
 
@@ -175,7 +175,7 @@ class DiceRoll(TraitType):
         self.error(object, name, value)
 
 
-# --[RandInt Property]----------------------------------------------------------
+^.{70}---------
 
 from random import randint
 
@@ -202,7 +202,7 @@ class RandInt(TraitType):
         )
 
 
-# --[Craps Class]---------------------------------------------------------------
+^.{70}---------
 
 
 # Define a test class containing both new trait types/properties:
@@ -212,7 +212,7 @@ class Craps(HasTraits):
     die = RandInt(1, 6)
 
 
-# --[Example*]------------------------------------------------------------------
+^.{70}---------
 
 # Create a test object:
 craps = Craps()

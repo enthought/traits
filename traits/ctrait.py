@@ -34,10 +34,6 @@ class CTrait(ctraits.cTrait):
     """ Extends the underlying C-based cTrait type.
     """
 
-    # ---------------------------------------------------------------------------
-    #  Callable interface
-    # ---------------------------------------------------------------------------
-
     def __call__(self, *args, **metadata):
         """ Allows a derivative trait to be defined from this one. """
         from .trait_type import TraitType
@@ -52,10 +48,6 @@ class CTrait(ctraits.cTrait):
 
         metadata.setdefault("parent", self)
         return Trait(*(args + (self,)), **metadata)
-
-    # ---------------------------------------------------------------------------
-    #  (Python) property definitions:
-    # ---------------------------------------------------------------------------
 
     @property
     def default(self):
@@ -106,10 +98,6 @@ class CTrait(ctraits.cTrait):
             return handler.inner_traits()
 
         return ()
-
-    # ---------------------------------------------------------------------------
-    #  CTrait interface methods
-    # ---------------------------------------------------------------------------
 
     @property
     def comparison_mode(self):
@@ -226,10 +214,6 @@ class CTrait(ctraits.cTrait):
     def as_ctrait(self):
         """ Method that returns self for trait converters. """
         return self
-
-    # ---------------------------------------------------------------------------
-    #  Private methods
-    # ---------------------------------------------------------------------------
 
     def __reduce_ex__(self, protocol):
         """ Returns the pickleable form of a CTrait object. """

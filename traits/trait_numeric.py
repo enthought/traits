@@ -11,10 +11,6 @@
 """ Trait definitions related to the numpy library.
 """
 
-# -------------------------------------------------------------------------------
-#  Imports:
-# -------------------------------------------------------------------------------
-
 import warnings
 
 from .constants import ComparisonMode, DefaultValue
@@ -363,11 +359,6 @@ class CArray(AbstractArray):
         super(CArray, self).__init__(
             dtype, shape, value, True, typecode=typecode, **metadata
         )
-
-
-# -----------------------------------------------------------------------------
-#  'ArrayOrNone' trait
-# -----------------------------------------------------------------------------
 
 
 class ArrayOrNone(CArray):

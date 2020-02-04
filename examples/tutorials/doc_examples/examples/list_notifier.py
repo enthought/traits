@@ -11,11 +11,11 @@
 # list_notifier.py -- Example of zero-parameter handlers for an object
 #                     containing a list
 
-# --[Imports]-------------------------------------------------------------------
+^.{70}---------
 from traits.api import HasTraits, List
 
 
-# --[Code]----------------------------------------------------------------------
+^.{70}---------
 class Employee:
     pass
 
@@ -24,7 +24,7 @@ class Department(HasTraits):
     employees = List(Employee)
 
 
-# --[Example*]------------------------------------------------------------------
+^.{70}---------
 def a_handler():
     print("A handler")
 
