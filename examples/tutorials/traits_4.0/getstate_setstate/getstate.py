@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-# --(__getstate__/__setstate__ Changes and Improvements)------------------------
+# --(__getstate__/__setstate__ Changes and Improvements)-----------------------
 """
 __getstate__/__setstate__ Changes and Improvements
 ==================================================
@@ -140,7 +140,7 @@ from traits.api import *
 from time import time, sleep
 
 
-# --[Session Class]-------------------------------------------------------------
+# --[Session Class]------------------------------------------------------------
 class Session(HasTraits):
 
     # The name of the session:
@@ -153,7 +153,7 @@ class Session(HasTraits):
         self.created = time()
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 
 # The following shows an example of pickling and unpickling a Session object.
 # Unfortunately, it is not possible to successfully pickle objects created as

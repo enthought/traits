@@ -9,11 +9,11 @@
 # Thanks for using Enthought open source!
 
 # cached_prop.py - Example of @cached_property decorator
-# --[Imports]-------------------------------------------------------------------
+# --[Imports]------------------------------------------------------------------
 from traits.api import HasPrivateTraits, List, Int, Property, cached_property
 
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 class TestScores(HasPrivateTraits):
 
     scores = List(Int)
