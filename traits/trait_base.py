@@ -142,7 +142,6 @@ class Missing(object):
 Missing = Missing()
 
 
-# Singleton 'Self' object (used as object reference to current 'object'):
 
 class Self(object):
     """ Singleton 'Self' object (used as object reference to current 'object').
