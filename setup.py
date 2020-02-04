@@ -298,6 +298,7 @@ setuptools.setup(
         "test": [
             "Cython",
             "numpy",
+            "pyface",
             "PySide2",
             "setuptools",
             "Sphinx",
