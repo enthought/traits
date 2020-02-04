@@ -75,9 +75,7 @@ from .trait_factory import (
     TraitFactory,
 )
 
-# -----------------------------------------------------------------------------
-#  Constants:
-# -----------------------------------------------------------------------------
+# Constants
 
 NoneType = type(None)  # Python 3's types does not include NoneType
 
@@ -145,11 +143,6 @@ class Default(object):
 
     def __init__(self, func=None, args=(), kw=None):
         self.default_value = (func, args, kw)
-
-
-# -------------------------------------------------------------------------------
-#  Factory function for creating C-based traits:
-# -------------------------------------------------------------------------------
 
 
 def Trait(*value_type, **metadata):
@@ -259,29 +252,18 @@ def Trait(*value_type, **metadata):
     """
     return _TraitMaker(*value_type, **metadata).as_ctrait()
 
-# -------------------------------------------------------------------------------
-#  '_TraitMaker' class:
-# -------------------------------------------------------------------------------
-
 
 class _TraitMaker(object):
 
     # Ctrait type map for special trait types:
     type_map = {"event": TraitKind.event, "constant": TraitKind.constant}
 
-    # ---------------------------------------------------------------------------
-    #  Initialize the object:
-    # ---------------------------------------------------------------------------
-
     def __init__(self, *value_type, **metadata):
         metadata.setdefault("type", "trait")
         self.define(*value_type, **metadata)
 
-    # ---------------------------------------------------------------------------
-    #  Define the trait:
-    # ---------------------------------------------------------------------------
-
     def define(self, *value_type, **metadata):
+        """ Define the trait. """
         default_value_type = DefaultValue.unspecified
         default_value = handler = clone = None
 
@@ -437,11 +419,8 @@ class _TraitMaker(object):
         self.default_value = default_value
         self.metadata = metadata.copy()
 
-    # ---------------------------------------------------------------------------
-    #  Determine the correct TraitHandler for each item in a list:
-    # ---------------------------------------------------------------------------
-
     def do_list(self, list, enum, map, other):
+        """ Determine the correct TraitHandler for each item in a list. """
         for item in list:
             if item in PythonTypes:
                 other.append(TraitCoerceType(item))
@@ -467,11 +446,8 @@ class _TraitMaker(object):
                 else:
                     other.append(TraitInstance(item))
 
-    # ---------------------------------------------------------------------------
-    #  Returns a properly initialized 'CTrait' instance:
-    # ---------------------------------------------------------------------------
-
     def as_ctrait(self):
+        """ Return a properly initialized 'CTrait' instance. """
         metadata = self.metadata
         trait = CTrait(
             self.type_map.get(metadata.get("type"), TraitKind.trait))
@@ -522,11 +498,6 @@ class _TraitMaker(object):
                 trait.__dict__.update(metadata)
 
         return trait
-
-
-# -------------------------------------------------------------------------------
-#  Factory function for creating C-based trait properties:
-# -------------------------------------------------------------------------------
 
 
 def Property(
@@ -681,17 +652,13 @@ class ForwardProperty(object):
         self.handler = handler
 
 
-# -------------------------------------------------------------------------------
-#  Create predefined, reusable trait instances:
-# -------------------------------------------------------------------------------
+# Predefined, reusable trait instances
 
 # Generic trait with 'object' behavior:
 generic_trait = CTrait(TraitKind.generic)
 
-# -------------------------------------------------------------------------------
-#  User interface related color and font traits:
-# -------------------------------------------------------------------------------
 
+# User interface related color and font traits
 
 def Color(*args, **metadata):
     """ Returns a trait whose value must be a GUI toolkit-specific color.
