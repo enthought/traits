@@ -14,7 +14,7 @@
 from traits.api import HasTraits, Range, Str
 
 
-^.{70}---------
+# --[Code]----------------------------------------------------------------------
 # Example of overriding a default value for a trait in a subclass:
 
 
@@ -32,7 +32,7 @@ class Manager(Employee):
     salary_grade = 5
 
 
-^.{70}---------
+# --[Example*]------------------------------------------------------------------
 # Create an employee and display its initial contents:
 joe = Employee(name="Joe")
 joe.print_traits()

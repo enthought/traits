@@ -11,11 +11,11 @@
 # all_traits_features.py --- Shows primary features of the Traits
 #                            package
 
-# --[Imports]------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import Delegate, HasTraits, Instance, Int, Str
 
 
-# --[Code]---------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 # Shows the five primary features of the Traits package.
 class Parent(HasTraits):
 
@@ -38,7 +38,7 @@ class Child(HasTraits):
         print("Age changed from %s to %s " % (old, new))
 
 
-# --[Example*]-----------------------------------------------------------------
+# --[Example*]------------------------------------------------------------------
 
 # Set up the example:
 joe = Parent()

@@ -10,11 +10,11 @@
 
 # object_trait_attrs.py --- Example of per-object trait attributes
 
-^.{70}---------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Range
 
 
-^.{70}---------
+# --[Code]----------------------------------------------------------------------
 class GUISlider(HasTraits):
     def __init__(
         self,

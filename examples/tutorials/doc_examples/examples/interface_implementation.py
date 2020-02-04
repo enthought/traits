@@ -10,12 +10,12 @@
 
 # interface_implementation.py - Example of implementing an interface
 
-# --[Imports]------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, implements, Str, Instance
 from interface_definition import IName
 
 
-# --[Code]---------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 class Person(HasTraits):
     implements(IName)
 
@@ -28,7 +28,7 @@ class Person(HasTraits):
         return "%s %s" % (self.first_name, self.last_name)
 
 
-# --[Example*]-----------------------------------------------------------------
+# --[Example*]------------------------------------------------------------------
 class Apartment(HasTraits):
     renter = Instance(IName)
 

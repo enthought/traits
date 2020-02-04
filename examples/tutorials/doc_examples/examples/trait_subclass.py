@@ -13,7 +13,7 @@
 from traits.api import BaseInt
 
 
-^.{70}---------
+# --[Code]----------------------------------------------------------------------
 class OddInt(BaseInt):
 
     # Define the default value

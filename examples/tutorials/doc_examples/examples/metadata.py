@@ -10,11 +10,11 @@
 
 # metadata.py --- Example of accessing trait metadata attributes
 
-^.{70}---------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Int, List, Float, Instance, Any, TraitType
 
 
-^.{70}---------
+# --[Code]----------------------------------------------------------------------
 class Foo(HasTraits):
     pass
 
@@ -26,7 +26,7 @@ class Test(HasTraits):
     any = Any([1, 2, 3])
 
 
-^.{70}---------
+# --[Example*]------------------------------------------------------------------
 t = Test()
 
 # Prints values of various metadata attributes for each of the traits.

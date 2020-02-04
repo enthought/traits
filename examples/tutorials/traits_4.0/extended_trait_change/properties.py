@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-^.{70}---------
+# --(Extended Property depends_on References)-----------------------------------
 """
 Extended Property *depends_on* References
 =========================================
@@ -69,7 +69,7 @@ from traitsui.api import *
 from traitsui.table_column import *
 
 
-^.{70}---------
+# --[Player Class]--------------------------------------------------------------
 # Define a baseball player:
 class Player(HasTraits):
 
@@ -80,7 +80,7 @@ class Player(HasTraits):
     hits = Int
 
 
-^.{70}---------
+# --[Team Class]----------------------------------------------------------------
 # Define a baseball team:
 class Team(HasTraits):
 
@@ -99,7 +99,7 @@ class Team(HasTraits):
         return len(self.players)
 
 
-^.{70}---------
+# --[League Class]--------------------------------------------------------------
 # Define a baseball league model:
 class League(HasTraits):
 
@@ -110,7 +110,7 @@ class League(HasTraits):
     teams = List(Team)
 
 
-^.{70}---------
+# --[LeagueModelView Class]-----------------------------------------------------
 # Define a ModelView for a League model:
 class LeagueModelView(ModelView):
 
@@ -224,7 +224,7 @@ class LeagueModelView(ModelView):
 # Function to add two numbers (used with 'reduce'):
 add = lambda a, b: a + b
 
-^.{70}---------
+# --[Example*]------------------------------------------------------------------
 
 # Define some sample teams and players:
 blue_birds = Team(

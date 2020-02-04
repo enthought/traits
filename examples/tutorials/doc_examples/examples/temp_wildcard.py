@@ -11,10 +11,10 @@
 # temp_wildcard.py --- Example of using a wildcard with a trait
 #                 attribute name
 
-^.{70}---------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import Any, HasTraits
 
 
-^.{70}---------
+# --[Code]----------------------------------------------------------------------
 class Person(HasTraits):
     temp_ = Any

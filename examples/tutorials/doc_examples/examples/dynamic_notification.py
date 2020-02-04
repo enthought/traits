@@ -10,11 +10,11 @@
 
 # dynamic_notification.py --- Example of dynamic notification
 
-# --[Imports]------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import Float, HasTraits, Instance
 
 
-# --[Code]---------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 class Part(HasTraits):
     cost = Float(0.0)
 
@@ -34,7 +34,7 @@ class Widget(HasTraits):
         self.cost = self.part1.cost + self.part2.cost
 
 
-# --[Example*]-----------------------------------------------------------------
+# --[Example*]------------------------------------------------------------------
 w = Widget()
 w.part1.cost = 2.25
 w.part2.cost = 5.31

@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-^.{70}---------
+# --(Interfaces)----------------------------------------------------------------
 """
 Interfaces
 ==========
@@ -100,18 +100,18 @@ interfaces, such as::
 In this case, the value of the trait must be an object which is an instance of
 the specified class or one of its subclasses.
 """
-^.{70}---------
+# --<Imports>-------------------------------------------------------------------
 from traits.api import *
 
 
-^.{70}---------
+# --[IName Interface]-----------------------------------------------------------
 # Define the 'IName' interface:
 class IName(Interface):
     def get_name(self):
         """ Returns the name of an object. """
 
 
-^.{70}---------
+# --[Person Class]--------------------------------------------------------------
 class Person(HasTraits):
 
     implements(IName)
@@ -125,14 +125,14 @@ class Person(HasTraits):
         return "%s %s" % (self.first_name, self.last_name)
 
 
-^.{70}---------
+# --[Apartment Class]-----------------------------------------------------------
 # Define a class using an object that implements the 'IName' interface:
 class Apartment(HasTraits):
 
     renter = Instance(IName)
 
 
-^.{70}---------
+# --[Example*]------------------------------------------------------------------
 # Create an object implementing the 'IName' interface:
 william = Person(first_name="William", last_name="Adams")
 

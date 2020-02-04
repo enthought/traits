@@ -10,11 +10,11 @@
 
 # static_notification.py --- Example of static attribute notification
 
-^.{70}---------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Float
 
 
-^.{70}---------
+# --[Code]----------------------------------------------------------------------
 class Person(HasTraits):
     weight_kg = Float(0.0)
     height_m = Float(1.0)
@@ -29,7 +29,7 @@ class Person(HasTraits):
         print("The %s trait changed from %s to %s " % (name, old, new))
 
 
-^.{70}---------
+# --[Example*]------------------------------------------------------------------
 bob = Person()
 bob.height_m = 1.75
 # Output: The height_m trait changed from 1.0 to 1.75

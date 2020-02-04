@@ -10,11 +10,11 @@
 
 # keywords.py --- Example of trait keywords
 
-^.{70}---------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Str
 
 
-^.{70}---------
+# --[Code]----------------------------------------------------------------------
 class Person(HasTraits):
     # 'label' is used for Traits UI field labels;
     # 'desc' can be used for tooltips.

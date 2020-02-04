@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-^.{70}---------
+# --(cached_property Decorator)-------------------------------------------------
 """
 cached_property Decorator
 =========================
@@ -77,7 +77,7 @@ from traits.api import *
 from traitsui.api import *
 
 
-^.{70}---------
+# --[TestScores Class]----------------------------------------------------------
 class TestScores(HasPrivateTraits):
 
     scores = List(Int)
@@ -90,7 +90,7 @@ class TestScores(HasPrivateTraits):
         return sum(s) / len(s)
 
 
-^.{70}---------
+# --[Example*]------------------------------------------------------------------
 # Create a sample TestScores object with some sample scores:
 test_scores = TestScores(scores=[89, 93, 76, 84, 62, 96, 75, 81, 69, 90])
 

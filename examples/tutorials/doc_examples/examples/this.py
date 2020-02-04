@@ -10,10 +10,10 @@
 
 # this.py --- Example of This predefined trait
 
-^.{70}---------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, This
 
 
-^.{70}---------
+# --[Code]----------------------------------------------------------------------
 class Employee(HasTraits):
     manager = This

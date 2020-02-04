@@ -10,10 +10,10 @@
 
 # bad_self_ref.py -- Non-working example with self-referencing class definition
 
-# --[Imports]------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Instance
 
-# --[Code]---------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 # Shows the incorrect way of defining a self-referencing class.
 try:
 

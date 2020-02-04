@@ -10,13 +10,13 @@
 
 # scratch_adapter.py - Example of writing an adapter from scratch
 
-^.{70}---------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Instance, adapts
 from interface_definition import IName
 from interface_implementation import Person
 
 
-^.{70}---------
+# --[Code]----------------------------------------------------------------------
 class PersonINameAdapter(HasTraits):
 
     # Declare what interfaces this adapter implements,

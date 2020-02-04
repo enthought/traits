@@ -10,11 +10,11 @@
 
 # all_wildcard.py --- Example of trait attribute wildcard rules
 
-# --[Imports]------------------------------------------------------------------
+# --[Imports]-------------------------------------------------------------------
 from traits.api import Any, Str, Int, HasTraits, TraitError
 
 
-# --[Code]---------------------------------------------------------------------
+# --[Code]----------------------------------------------------------------------
 class Person(HasTraits):
 
     # Normal, explicitly defined trait:
@@ -27,7 +27,7 @@ class Person(HasTraits):
     age = Int
 
 
-# --[Example*]-----------------------------------------------------------------
+# --[Example*]------------------------------------------------------------------
 # Create a sample Person:
 bill = Person()
 

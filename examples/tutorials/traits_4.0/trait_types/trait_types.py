@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-^.{70}---------
+# --(New Trait Definition Style)------------------------------------------------
 """
 New Trait Definition Style
 ==========================
@@ -98,11 +98,11 @@ This provides the exact same functionality as the previous definition of
   creating a new trait type a little more understandable to a wider group of
   developers.
 """
-^.{70}---------
+# --<Imports>-------------------------------------------------------------------
 from traits.api import *
 
 
-^.{70}---------
+# --[OddInt Definition]---------------------------------------------------------
 class OddInt(Int):
 
     # Define the default value:
@@ -119,14 +119,14 @@ class OddInt(Int):
         self.error(object, name, value)
 
 
-^.{70}---------
+# --[Test Class]----------------------------------------------------------------
 class Test(HasTraits):
 
     any_int = Int
     odd_int = OddInt
 
 
-^.{70}---------
+# --[Example*]------------------------------------------------------------------
 
 # Create a test object:
 t = Test()

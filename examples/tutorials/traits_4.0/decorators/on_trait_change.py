@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-^.{70}---------
+# --(on_trait_change Decorator)-------------------------------------------------
 """
 on_trait_change Decorator
 =========================
@@ -122,11 +122,11 @@ Refer to the code tabs of this lesson for a complete example using the
 *sick_again* method in the **Corporation Class** tab.
 """
 
-^.{70}---------
+# --<Imports>-------------------------------------------------------------------
 from traits.api import *
 
 
-^.{70}---------
+# --[Employee Class]------------------------------------------------------------
 class Employee(HasTraits):
 
     # The name of the employee:
@@ -136,7 +136,7 @@ class Employee(HasTraits):
     sick_days = Int
 
 
-^.{70}---------
+# --[Department Class]----------------------------------------------------------
 class Department(HasTraits):
 
     # The name of the department:
@@ -146,7 +146,7 @@ class Department(HasTraits):
     employees = List(Employee)
 
 
-^.{70}---------
+# --[Corporation Class]---------------------------------------------------------
 class Corporation(HasTraits):
 
     # The name of the corporation:
@@ -164,7 +164,7 @@ class Corporation(HasTraits):
         )
 
 
-^.{70}---------
+# --[Example*]------------------------------------------------------------------
 # Create some sample employees:
 millie = Employee(name="Millie", sick_days=2)
 ralph = Employee(name="Ralph", sick_days=3)
