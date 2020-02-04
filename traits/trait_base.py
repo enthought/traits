@@ -85,8 +85,6 @@ class _Uninitialized(object):
 Uninitialized = _Uninitialized()
 
 
-# Singleton 'Undefined' object (used as undefined trait name and/or value):
-
 Undefined = None
 
 
@@ -127,8 +125,6 @@ class _Undefined(object):
 Undefined = _Undefined()
 
 
-# Singleton 'Missing' object (used as missing method argument marker)
-
 class Missing(object):
     """ Singleton 'Missing' object (used as missing method argument marker).
     """
@@ -140,7 +136,6 @@ class Missing(object):
 #: Singleton object that indicates that a method argument is missing from a
 #: type-checked method signature.
 Missing = Missing()
-
 
 
 class Self(object):
