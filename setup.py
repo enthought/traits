@@ -299,6 +299,7 @@ setuptools.setup(
             "Cython",
             "numpy",
             "PySide2",
+            "setuptools",
             "Sphinx",
             "traitsui",
         ],
