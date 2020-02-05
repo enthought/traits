@@ -2473,7 +2473,7 @@ class PrefixList(BaseStr):
     to either 'yes' or 'no'. That is, if the value 'y' is assigned to the
     **married** attribute, the actual value assigned will be 'yes'.
 
-    Note that the algorithm used by TraitPrefixList in determining whether
+    Note that the algorithm used by PrefixList in determining whether
     a string is a valid value is fairly efficient in terms of both time and
     space, and is not based on a brute force set of comparisons.
 
@@ -2772,6 +2772,178 @@ class Dict(TraitType):
 #: - 'default': Adaptation is allowed. If adaptation fails, the
 #:   default value for the trait should be used.
 AdaptMap = {"no": 0, "yes": 1, "default": 2}
+
+
+class Map(TraitType):
+    """ Checks that the value assigned to a trait attribute is a key of a
+        specified dictionary, and also assigns the dictionary value
+        corresponding to that key to a *shadow* attribute.
+
+        A trait attribute of type Map is called a *mapped* trait
+        attribute. In practice, this means that the resulting object actually
+        contains two attributes: one whose value is a key of the Map
+        dictionary, and the other whose value is the corresponding value of the
+        Map dictionary. The name of the shadow attribute is simply the base
+        attribute name with an underscore ('_') appended. Mapped trait
+        attributes can be used to allow a variety of user-friendly input values
+        to be mapped to a set of internal, program-friendly values.
+
+        Example
+        -------
+
+        The following example defines a ``Person`` class::
+
+            >>>class Person(HasTraits):
+            ...    married = Map({'yes': 1, 'no': 0 })
+            >>>
+            >>>bob = Person()
+            >>>print bob.married
+            yes
+            >>>print bob.married_
+            1
+
+        In this example, the default value of the ``married`` attribute of the
+        Person class is 'yes'. Because this attribute is defined using
+        PrefixList, instances of Person have another attribute,
+        ``married_``, whose default value is 1, the dictionary value
+        corresponding to the key 'yes'.
+
+        Parameters
+        ----------
+        map : dict
+            A dictionary whose keys are valid values for the trait attribute,
+            and whose corresponding values are the values for the shadow
+            trait attribute.
+
+        Attributes
+        ----------
+        map : dict
+            A dictionary whose keys are valid values for the trait attribute,
+            and whose corresponding values are the values for the shadow
+            trait attribute.
+    """
+
+    is_mapped = True
+
+    def __init__(self, map, **metadata):
+
+        self.map = map
+        self.fast_validate = (ValidateTrait.map, map)
+
+        default_value = metadata.pop("default_value", None)
+
+        if default_value is not None:
+            try:
+                default_value = self.validate(None, None, default_value)
+            except TraitError:
+                raise ValueError("The default value for Map trait must be key"
+                                 " in the map.")
+
+        super().__init__(default_value, **metadata)
+
+    def validate(self, object, name, value):
+        try:
+            if value in self.map:
+                return value
+        except:
+            pass
+
+        self.error(object, name, value)
+
+    def mapped_value(self, value):
+        """ Get the mapped value for a value. """
+        return self.map[value]
+
+    def post_setattr(self, object, name, value):
+        try:
+            setattr(object, name + "_", self.mapped_value(value))
+        except:
+            # We don't need a fancy error message, because this exception
+            # should always be caught by a TraitCompound handler:
+            raise TraitError("Unmappable")
+
+    def info(self):
+        keys = sorted(repr(x) for x in self.map.keys())
+        return " or ".join(keys)
+
+    def get_editor(self, trait):
+        from traitsui.api import EnumEditor
+
+        return EnumEditor(values=self, cols=trait.cols or 3)
+
+
+class PrefixMap(Map):
+    """ A cross between the PrefixList and Map classes.
+
+    Like Map, PrefixMap is created using a dictionary, but in this
+    case, the keys of the dictionary must be strings. Like PrefixList,
+    a string *v* is a valid value for the trait attribute if it is a prefix of
+    one and only one key *k* in the dictionary. The actual values assigned to
+    the trait attribute is *k*, and its corresponding mapped attribute is
+    *map*[*k*].
+
+    Example
+    -------
+    ::
+
+        mapping = {'true': 1, 'yes': 1, 'false': 0, 'no': 0 }
+        boolean_map = PrefixMap(mapping)
+
+    This example defines a Boolean trait that accepts any prefix of 'true',
+    'yes', 'false', or 'no', and maps them to 1 or 0.
+
+    Parameters
+    ----------
+    map : dict
+        A dictionary whose keys are strings that are valid values for the
+        trait attribute, and whose corresponding values are the values for
+        the shadow trait attribute.
+
+    Attributes
+    ----------
+    map : dict
+        A dictionary whose keys are strings that are valid values for the
+        trait attribute, and whose corresponding values are the values for
+        the shadow trait attribute.
+    """
+
+    def __init__(self, map, **metadata):
+        self.map = map
+        self._map = _map = {}
+        for key in map.keys():
+            _map[key] = key
+        self.fast_validate = (ValidateTrait.prefix_map, _map, self.validate)
+
+        default_value = metadata.pop("default_value", None)
+
+        if default_value is not None:
+            try:
+                default_value = self.validate(None, None, default_value)
+            except TraitError:
+                raise ValueError("The default value for PrefixMap trait must "
+                                 "be a unique prefix of a key in the map.")
+        super(Map, self).__init__(default_value, **metadata)
+
+    def validate(self, object, name, value):
+        try:
+            if value not in self._map:
+                match = None
+                n = len(value)
+                for key in self.map.keys():
+                    if value == key[:n]:
+                        if match is not None:
+                            match = None
+                            break
+                        match = key
+                if match is None:
+                    self.error(object, name, value)
+                self._map[value] = match
+            return self._map[value]
+        except:
+            self.error(object, name, value)
+
+    def info(self):
+        return super().info() + " (or any unique prefix)"
 
 
 class BaseClass(TraitType):
