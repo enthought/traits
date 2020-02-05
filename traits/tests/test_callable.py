@@ -90,6 +90,32 @@ class TestCallable(unittest.TestCase):
                 a.callable_or_str = value
             self.assertEqual(a.callable_or_str, old_value)
 
+    def test_disallow_none(self):
+
+        def func():
+            return "Success"
+
+        class MyNewCallable(HasTraits):
+            value = Callable(default_value=func, allow_none=False)
+
+        obj = MyNewCallable()
+
+        self.assertIsNotNone(obj.value)
+
+        with self.assertRaises(TraitError):
+            obj.value = None
+
+        self.assertEqual("Success", obj.value())
+
+        class MyNewCallable2(HasTraits):
+            value = Callable(func, allow_none=True)
+
+        obj = MyNewCallable2()
+        self.assertIsNotNone(obj.value)
+
+        obj.value = None
+        self.assertIsNone(obj.value)
+
 
 class TestBaseCallable(unittest.TestCase):
 

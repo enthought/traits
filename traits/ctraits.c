@@ -3677,8 +3677,9 @@ validate_trait_callable(
     trait_object *trait, has_traits_object *obj, PyObject *name,
     PyObject *value)
 {
+    int allow_none = PyObject_IsTrue(PyTuple_GetItem(trait->py_validate, 1));
 
-    if ((value == Py_None) || PyCallable_Check(value)) {
+    if ((allow_none && value == Py_None) || PyCallable_Check(value)) {
         Py_INCREF(value);
         return value;
     }
@@ -4269,7 +4270,7 @@ _trait_set_validate(trait_object *trait, PyObject *args)
                     break;
 
                 case 22: /* Callable check: */
-                    if (n == 1) {
+                    if (n == 2) {
                         goto done;
                     }
                     break;

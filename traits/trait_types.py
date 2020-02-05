@@ -843,9 +843,13 @@ class BaseCallable(TraitType):
 class Callable(BaseCallable):
     """ A fast-validating trait type whose value must be a Python callable.
     """
+    def __init__(self, value=None, allow_none=True, **metadata):
 
-    #: The C-level fast validator to use
-    fast_validate = (ValidateTrait.callable,)
+        self.fast_validate = (ValidateTrait.callable, allow_none)
+
+        default_value = metadata.pop("default_value", value)
+
+        super().__init__(default_value, **metadata)
 
 
 class BaseType(TraitType):
