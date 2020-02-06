@@ -12,6 +12,7 @@
 """
 
 import unittest
+from unittest import mock
 
 from traits.api import (
     Any,
@@ -1109,3 +1110,26 @@ class OnTraitChangeTest(unittest.TestCase):
         )
         cur.next = link
         return link
+
+    def test_post_init_notifications_ok(self):
+        # regression test for enthought/traits#275
+        handler = mock.MagicMock()
+
+        class Child(HasTraits):
+            value = Any
+
+        class Parent(HasTraits):
+            children = List(Child)
+
+            @on_trait_change('children:value', post_init=True)
+            def _children_handler(self):
+                handler()
+
+        p = Parent(children=[Child(value=1)])
+        child = p.children[0]
+
+        handler.assert_not_called()
+
+        child.value = 2
+
+        handler.assert_called_once()
