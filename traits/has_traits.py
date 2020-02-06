@@ -3023,7 +3023,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                     self.on_trait_change(
                         getattr(self, name),
                         config["pattern"],
-                        deferred=True,
+                        deferred=False,
                         dispatch=config["dispatch"],
                     )
 
