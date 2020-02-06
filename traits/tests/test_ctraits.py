@@ -247,10 +247,8 @@ class TestCTrait(unittest.TestCase):
         self.assertIsNone(tr.handler)
 
     def test_invalid_trait_initialization(self):
-        self.assertNotIn(9, TraitKind)
-
         with self.assertRaises(TraitError):
-            CTrait(9)
+            CTrait(max(TraitKind) + 1)
 
     def test_default_trait_initialization(self):
         ctrait = CTrait()
@@ -261,17 +259,18 @@ class TestCTrait(unittest.TestCase):
         class Foo(HasTraits):
             bar = ctrait
 
-            bar_changed_events = List
+            bar_changed = List
 
-            def _bar_changed(self, event):
-                self.bar_changed_events.append(event)
+            def _bar_changed(self, new):
+                self.bar_changed.append(new)
 
         foo = Foo()
 
-        self.assertEqual(len(foo.bar_changed_events), 0)
+        self.assertEqual(len(foo.bar_changed), 0)
 
         foo.bar = 1
 
         validate.assert_called_once_with(foo, "bar", 1)
         self.assertEqual(foo.bar, "baz")
-        self.assertEqual(len(foo.bar_changed_events), 1)
+        self.assertEqual(len(foo.bar_changed), 1)
+        self.assertEqual(foo.bar_changed[0], "baz")
