@@ -35,12 +35,6 @@ Classes
 
 .. autoclass:: HasPrivateTraits
 
-.. autoclass:: SingletonHasTraits
-
-.. autoclass:: SingletonHasStrictTraits
-
-.. autoclass:: SingletonHasPrivateTraits
-
 .. autoclass:: Vetoable
 
 .. autoclass:: Interface
@@ -74,3 +68,16 @@ Functions
 .. autofunction:: provides
 
 .. autofunction:: weak_arg
+
+Deprecated Classes
+------------------
+
+The following :class:`~.HasTraits` classes and instances are deprecated,
+and may be removed in a future version of Traits.
+
+.. autoclass:: SingletonHasTraits
+
+.. autoclass:: SingletonHasStrictTraits
+
+.. autoclass:: SingletonHasPrivateTraits
+
