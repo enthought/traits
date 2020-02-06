@@ -1128,8 +1128,8 @@ class OnTraitChangeTest(unittest.TestCase):
         p = Parent(children=[Child(value=1)])
         child = p.children[0]
 
-        handler.assert_not_called()
+        self.assertEqual(handler.call_count, 0)
 
         child.value = 2
 
-        handler.assert_called_once()
+        self.assertEqual(handler.call_count, 1)
