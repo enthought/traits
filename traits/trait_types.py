@@ -41,12 +41,12 @@ from .trait_base import (
     TraitsCache,
     xgetattr,
 )
-from .trait_converters import trait_from
+from .trait_converters import trait_from, trait_cast
 from .trait_dict_object import TraitDictEvent, TraitDictObject
 from .trait_errors import TraitError
 from .trait_list_object import TraitListEvent, TraitListObject
 from .trait_set_object import TraitSetEvent, TraitSetObject
-from .trait_type import TraitType
+from .trait_type import TraitType, _infer_default_value_type
 from .traits import (
     Trait,
     _TraitMaker,
@@ -67,16 +67,12 @@ from .editor_factories import (
 )
 
 
-# -------------------------------------------------------------------------------
-#  Constants:
-# -------------------------------------------------------------------------------
+# Constants
 
 MutableTypes = (list, dict)
 SetTypes = SequenceTypes + (set,)
 
-# -------------------------------------------------------------------------------
-#  Numeric type fast validator definitions:
-# -------------------------------------------------------------------------------
+# Numeric type fast validator definitions
 
 # A few words about the next block of code:
 
@@ -164,9 +160,7 @@ def default_text_editor(trait, type=None):
     return TextEditor(auto_set=auto_set, enter_set=enter_set, evaluate=type)
 
 
-# -------------------------------------------------------------------------------
 # Generic validators
-# -------------------------------------------------------------------------------
 
 def _validate_int(value):
     """ Convert an integer-like Python object to an int, or raise TypeError.
@@ -191,9 +185,7 @@ def _validate_float(value):
     return nb_float(value)
 
 
-# -----------------------------------------------------------------------------
 # Trait Types
-# -----------------------------------------------------------------------------
 
 class Any(TraitType):
     """ A trait type whose value can be anything.
@@ -2451,6 +2443,105 @@ class CList(List):
         )
 
 
+class PrefixList(BaseStr):
+    r"""Ensures that a value assigned to the attribute is a member of a list of
+     specified string values, or is a unique prefix of one of those values.
+
+    The values that can be assigned to a trait attribute of type PrefixList
+    type is the set of all strings supplied to the PrefixList constructor,
+    as well as any unique prefix of those strings. That is, if the set of
+    strings supplied to the constructor is described by
+    [*s*\ :sub:`1`\ , *s*\ :sub:`2`\ , ..., *s*\ :sub:`n`\ ], then the
+    string *v* is a valid value for the trait if *v* == *s*\ :sub:`i[:j]`
+    for one and only one pair of values (i, j). If *v* is a valid value,
+    then the actual value assigned to the trait attribute is the
+    corresponding *s*\ :sub:`i` value that *v* matched.
+
+    The list of legal values can be provided as a list or tuple of values.
+    That is, ``PrefixList(['one', 'two', 'three'])`` and
+    ``PrefixList('one', 'two', 'three')`` are equivalent.
+
+    Example
+    -------
+    ::
+        class Person(HasTraits):
+            married = PrefixList('yes', 'no')
+
+    The Person class has a **married** trait that accepts any of the
+    strings 'y', 'ye', 'yes', 'n', or 'no' as valid values. However, the
+    actual values assigned as the value of the trait attribute are limited
+    to either 'yes' or 'no'. That is, if the value 'y' is assigned to the
+    **married** attribute, the actual value assigned will be 'yes'.
+
+    Note that the algorithm used by TraitPrefixList in determining whether
+    a string is a valid value is fairly efficient in terms of both time and
+    space, and is not based on a brute force set of comparisons.
+
+    Parameters
+    ----------
+    *values
+        Either all legal string values for the enumeration, or a single list
+        or tuple of legal string values.
+
+    Attributes
+    ----------
+    values : tuple of strings
+        Enumeration of all legal values for a trait.
+    """
+
+    #: The default value for the trait:
+    default_value = None
+
+    #: The default value type to use (i.e. 'constant'):
+    default_value_type = DefaultValue.constant
+
+    def __init__(self, *values, **metadata):
+
+        if (len(values) == 1) and (type(values[0]) in SequenceTypes):
+            values = values[0]
+        self.values = values[:]
+        self.values_ = values_ = {}
+        for key in values:
+            values_[key] = key
+
+        default = self.default_value
+        if 'default_value' in metadata:
+            default = metadata.pop('default_value')
+            try:
+                default = self.validate(None, None, default)
+            except TraitError:
+                raise ValueError("Default value for PrefixTrait must be "
+                                 "a unique prefix present in the prefix list")
+        elif self.values:
+            default = self.values[0]
+
+        super().__init__(default, **metadata)
+
+    def validate(self, object, name, value):
+        try:
+            if value not in self.values_:
+                match = None
+                n = len(value)
+                for key in self.values:
+                    if value == key[:n]:
+                        if match is not None:
+                            match = None
+                            break
+                        match = key
+                if match is None:
+                    self.error(object, name, value)
+                self.values_[value] = match
+            return self.values_[value]
+        except:
+            self.error(object, name, value)
+
+    def info(self):
+        return (
+            " or ".join([repr(x) for x in self.values])
+            + " (or any unique prefix)"
+        )
+
+
 class Set(TraitType):
     """ A trait type for a set of values of the specified type.
 
@@ -3462,6 +3553,100 @@ class Either(TraitType):
         return self.trait_maker.as_ctrait()
 
 
+class NoneTrait(TraitType):
+    """ Defines a trait that only accepts the None value
+    """
+
+    info_text = "None"
+
+    default_value = None
+
+    default_value_type = DefaultValue.constant
+
+    def __init__(self, **metadata):
+        default_value = metadata.pop("default", None)
+        if default_value is not None:
+            raise ValueError("Cannot set default value {} "
+                             "for NoneTrait".format(default_value))
+        super(NoneTrait, self).__init__(**metadata)
+
+    def validate(self, obj, name, value):
+        if value is None:
+            return value
+
+        self.error(obj, name, value)
+
+
+class Union(TraitType):
+    """ Defines a trait whose value can be any of of a specified list of
+    trait types or list of trait type instances or None
+    """
+
+    def __init__(self, *traits, **metadata):
+        self.list_ctrait_instances = []
+
+        if not traits:
+            traits = (NoneTrait,)
+
+        for trait in traits:
+            if trait is None:
+                trait = NoneTrait
+            ctrait_instance = trait_cast(trait)
+            if ctrait_instance is None:
+                raise ValueError("Union trait declaration expects a trait "
+                                 "type or an instance of trait type or None,"
+                                 " but got {} instead".format(trait))
+
+            self.list_ctrait_instances.append(ctrait_instance)
+
+        default_value = None
+        if 'default' in metadata:
+            default_value = metadata.pop("default")
+        elif self.list_ctrait_instances:
+            default_value = self.list_ctrait_instances[0].default
+
+        self.default_value_type = _infer_default_value_type(default_value)
+        super().__init__(default_value, **metadata)
+
+    def validate(self, obj, name, value):
+        """ Return the value by the first trait in the list that can
+        validate the assigned value, raise an error if none of them can.
+        """
+        for trait_type_instance in self.list_ctrait_instances:
+            try:
+                return trait_type_instance.validate(obj, name, value)
+            except TraitError:
+                pass
+
+        self.error(obj, name, value)
+
+    def info(self):
+        return " or ".join([ctrait.info() for ctrait in
+                            self.list_ctrait_instances])
+
+    def inner_traits(self):
+        return tuple(self.list_ctrait_instances)
+
+    def get_editor(self, trait):
+        from traitsui.api import TextEditor, CompoundEditor
+
+        the_editors = [x.get_editor() for x in self.list_ctrait_instances]
+        text_editor = TextEditor()
+        count = 0
+        editors = []
+        for editor in the_editors:
+            if isinstance(text_editor, editor.__class__):
+                count += 1
+                if count > 1:
+                    continue
+            editors.append(editor)
+
+        return CompoundEditor(editors=editors)
+
+
+# -------------------------------------------------------------------------------
+#  'Symbol' trait:
+# -------------------------------------------------------------------------------
 class Symbol(TraitType):
     """ A property trait type that refers to a Python object by name.
 
@@ -3686,9 +3871,7 @@ Datetime = BaseInstance(datetime.datetime, editor=datetime_editor)
 Time = BaseInstance(datetime.time, editor=time_editor)
 
 
-# -----------------------------------------------------------------------------
-#  Create predefined, reusable trait instances:
-# -----------------------------------------------------------------------------
+# Predefined, reusable trait instances
 
 # Everything from this point onwards is deprecated, and has a simple
 # drop-in replacement.

@@ -396,10 +396,7 @@ def test_all(edm):
         sys.exit(1)
 
 
-# ----------------------------------------------------------------------------
 # Utility routines
-# ----------------------------------------------------------------------------
-
 
 def get_parameters(edm, runtime, environment):
     """ Set up parameters dictionary for format() substitution. """

@@ -11,10 +11,6 @@
 """ Defines common, low-level capabilities needed by the Traits package.
 """
 
-# -------------------------------------------------------------------------------
-#  Imports:
-# -------------------------------------------------------------------------------
-
 import enum
 import os
 import sys
@@ -28,9 +24,7 @@ from .constants import ValidateTrait
 # backwards compatibility: trait_base used to provide a patched enumerate
 enumerate = enumerate
 
-# -------------------------------------------------------------------------------
-#  Constants:
-# -------------------------------------------------------------------------------
+# Constants
 
 SequenceTypes = (list, tuple)
 
@@ -56,9 +50,7 @@ TraitNotifier = "__trait_notifier__"
 # The standard Traits property cache prefix:
 TraitsCache = "_traits_cache_"
 
-# -------------------------------------------------------------------------------
-#  Singleton 'Uninitialized' object:
-# -------------------------------------------------------------------------------
+# Singleton 'Uninitialized' object:
 Uninitialized = None
 
 
@@ -92,15 +84,13 @@ class _Uninitialized(object):
 #: assignment, and treat it specially.
 Uninitialized = _Uninitialized()
 
-# -------------------------------------------------------------------------------
-#  Singleton 'Undefined' object (used as undefined trait name and/or value):
-# -------------------------------------------------------------------------------
 
 Undefined = None
 
 
 class _Undefined(object):
-    """ Singleton 'Undefined' object (used as undefined trait name and/or value)
+    """ Singleton 'Undefined' object (used as undefined trait name and/or
+    value).
     """
 
     def __new__(cls):
@@ -134,10 +124,6 @@ class _Undefined(object):
 #: parameter, to indicate that the attribute previously had no value.
 Undefined = _Undefined()
 
-# -------------------------------------------------------------------------------
-#  Singleton 'Missing' object (used as missing method argument marker):
-# -------------------------------------------------------------------------------
-
 
 class Missing(object):
     """ Singleton 'Missing' object (used as missing method argument marker).
@@ -151,10 +137,6 @@ class Missing(object):
 #: type-checked method signature.
 Missing = Missing()
 
-# -------------------------------------------------------------------------------
-#  Singleton 'Self' object (used as object reference to current 'object'):
-# -------------------------------------------------------------------------------
-
 
 class Self(object):
     """ Singleton 'Self' object (used as object reference to current 'object').
@@ -167,10 +149,6 @@ class Self(object):
 #: Singleton object that references the current 'object'.
 Self = Self()
 
-# -------------------------------------------------------------------------------
-#  Define a special 'string' coercion function:
-# -------------------------------------------------------------------------------
-
 
 def strx(arg):
     """ Wraps the built-in str() function to raise a TypeError if the
@@ -181,15 +159,9 @@ def strx(arg):
     raise TypeError
 
 
-# -------------------------------------------------------------------------------
-#  Constants:
-# -------------------------------------------------------------------------------
+# Constants
 
 StringTypes = (str, int, float, complex)
-
-# -------------------------------------------------------------------------------
-#  Define a mapping of coercable types:
-# -------------------------------------------------------------------------------
 
 # Mapping of coercable types.
 CoercableTypes = {
@@ -239,12 +211,6 @@ def enum_default(values):
     return default
 
 
-# -------------------------------------------------------------------------------
-#  Return a string containing the class name of an object with the correct
-#  article (a or an) preceding it (e.g. 'an Image', 'a PlotValue'):
-# -------------------------------------------------------------------------------
-
-
 def class_of(object):
     """ Returns a string containing the class name of an object with the
     correct indefinite article ('a' or 'an') preceding it (e.g., 'an Image',
@@ -256,25 +222,14 @@ def class_of(object):
     return add_article(object.__class__.__name__)
 
 
-# -------------------------------------------------------------------------------
-#  Return a string containing the right article (i.e. 'a' or 'an') prefixed to
-#  a specified string:
-# -------------------------------------------------------------------------------
-
-
 def add_article(name):
-    """ Returns a string containing the correct indefinite article ('a' or 'an')
-    prefixed to the specified string.
+    """ Returns a string containing the correct indefinite article ('a' or
+    'an') prefixed to the specified string.
     """
     if name[:1].lower() in "aeiou":
         return "an " + name
 
     return "a " + name
-
-
-# ----------------------------------------------------------------------------
-#  Return a 'user-friendly' name for a specified trait:
-# ----------------------------------------------------------------------------
 
 
 def user_name_for(name):
@@ -295,10 +250,6 @@ def user_name_for(name):
     return result.capitalize()
 
 
-# -------------------------------------------------------------------------------
-#  Gets the path to the traits home directory:
-# -------------------------------------------------------------------------------
-
 _traits_home = None
 
 
@@ -311,11 +262,6 @@ def traits_home():
         _traits_home = verify_path(join(ETSConfig.application_data, "traits"))
 
     return _traits_home
-
-
-# -------------------------------------------------------------------------------
-#  Verify that a specified path exists, and try to create it if it doesn't:
-# -------------------------------------------------------------------------------
 
 
 def verify_path(path):
@@ -331,20 +277,10 @@ def verify_path(path):
     return path
 
 
-# -------------------------------------------------------------------------------
-#  Returns the name of the module the caller's caller is located in:
-# -------------------------------------------------------------------------------
-
-
 def get_module_name(level=2):
     """ Returns the name of the module that the caller's caller is located in.
     """
     return sys._getframe(level).f_globals.get("__name__", "__main__")
-
-
-# -------------------------------------------------------------------------------
-#  Returns a resource path calculated from the caller's stack:
-# -------------------------------------------------------------------------------
 
 
 def get_resource_path(level=2):
@@ -393,12 +329,6 @@ def get_resource_path(level=2):
     return path
 
 
-# -------------------------------------------------------------------------------
-#  Returns the value of an extended object attribute name of the form:
-#  name[.name2[.name3...]]:
-# -------------------------------------------------------------------------------
-
-
 def xgetattr(object, xname, default=Undefined):
     """ Returns the value of an extended object attribute name of the form:
         name[.name2[.name3...]].
@@ -418,12 +348,6 @@ def xgetattr(object, xname, default=Undefined):
     return getattr(object, names[-1], default)
 
 
-# -------------------------------------------------------------------------------
-#  Sets the value of an extended object attribute name of the form:
-#  name[.name2[.name3...]]:
-# -------------------------------------------------------------------------------
-
-
 def xsetattr(object, xname, value):
     """ Sets the value of an extended object attribute name of the form:
         name[.name2[.name3...]].
@@ -435,9 +359,7 @@ def xsetattr(object, xname, value):
     setattr(object, names[-1], value)
 
 
-# -------------------------------------------------------------------------------
-# Helpers for weak references
-# -------------------------------------------------------------------------------
+# Helpers for weak references.
 
 def _make_value_freed_callback(object_ref, name):
     def _value_freed(value_ref):
@@ -456,10 +378,6 @@ class HandleWeakRef(object):
         self.name = name
         self.value = ref(value, _value_freed)
 
-
-# -------------------------------------------------------------------------------
-#  Traits metadata selection functions:
-# -------------------------------------------------------------------------------
 
 def is_none(value):
     return value is None

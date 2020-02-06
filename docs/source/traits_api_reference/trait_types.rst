@@ -190,6 +190,9 @@ Traits
 .. autoclass:: CList
    :show-inheritance:
 
+.. autoclass:: PrefixList
+   :show-inheritance:
+
 .. autoclass:: Set
    :show-inheritance:
 
@@ -231,6 +234,8 @@ Traits
 
 .. autoclass:: Either
    :show-inheritance:
+
+.. autoclass:: Union
 
 .. autoclass:: Symbol
    :show-inheritance:
