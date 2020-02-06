@@ -204,6 +204,8 @@ def enum_default(values):
     """
     if isinstance(values, enum.EnumMeta):
         default = next(iter(values), None)
+    elif is_collection(values):
+        default = next(iter(values))
     elif len(values) > 0:
         default = values[0]
     else:
@@ -397,3 +399,11 @@ def not_event(value):
 
 def is_str(value):
     return isinstance(value, str)
+
+
+def is_collection(value):
+    try:
+        iter(value)
+        return True
+    except TypeError:
+        return False

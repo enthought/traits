@@ -40,6 +40,7 @@ from .trait_base import (
     Undefined,
     TraitsCache,
     xgetattr,
+    is_collection,
 )
 from .trait_converters import trait_from, trait_cast
 from .trait_dict_object import TraitDictEvent, TraitDictObject
@@ -1960,18 +1961,27 @@ class BaseEnum(TraitType):
                 )
         else:
             default_value = args[0]
-            if (len(args) == 1) and isinstance(default_value, EnumTypes):
-                args = default_value
-                default_value = enum_default(args)
-            elif (len(args) == 2) and isinstance(args[1], EnumTypes):
-                args = args[1]
+            if len(args) == 1:
+                self.values = args[0]
+                default_value = enum_default(self.values)
+
+                # If values is not a Collection
+                if isinstance(self.values, (EnumTypes, str)):
+                    self.values = tuple(self.values)
+
+            elif len(args) == 2:
+                if isinstance(args[1], str):
+                    self.values = tuple(args[1])
+                elif is_collection(args[1]):
+                    self.values = args[1]
+            else:
+                self.values = tuple(args)
 
             if isinstance(args, enum.EnumMeta):
                 metadata.setdefault('format_func', operator.attrgetter('name'))
                 metadata.setdefault('evaluate', args)
 
             self.name = ""
-            self.values = tuple(args)
             self.init_fast_validate(ValidateTrait.enum, self.values)
 
             super(BaseEnum, self).__init__(default_value, **metadata)

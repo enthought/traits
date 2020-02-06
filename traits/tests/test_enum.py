@@ -8,6 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
+from collections import Collection
 import enum
 import unittest
 
@@ -32,6 +33,21 @@ class ExampleModel(HasTraits):
 
     def _get_valid_models(self):
         return ["model1", "model2", "model3"]
+
+
+class CustomCollection(Collection):
+
+    def __init__(self, *data):
+        self.data = tuple(data)
+
+    def __len__(self):
+        return len(self.data)
+
+    def __iter__(self):
+        return iter(self.data)
+
+    def __contains__(self, __x: object):
+        return __x in self.data
 
 
 class EnumListExample(HasTraits):
@@ -71,6 +87,19 @@ class EnumEnumExample(HasTraits):
     value_name = Enum(values='values')
 
     value_name_default = Enum(FooEnum.bar, values='values')
+
+
+class EnumCollectionExample(HasTraits):
+
+    rgb = Enum("red", CustomCollection("red", "green", "blue"))
+
+    rgb_char = Enum("r", "rgb")
+
+    numbers = Enum(CustomCollection("one", "two", "three"))
+
+    letters = Enum("abcdefg")
+
+    months = Enum("jan", "feb", "mar")
 
 
 class EnumTestCase(unittest.TestCase):
@@ -154,3 +183,23 @@ class EnumTestCase(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             example.value_name = FooEnum.bar
+
+    def test_enum_collection(self):
+
+        collection_enum = EnumCollectionExample()
+        self.assertEqual("red", collection_enum.rgb)
+        self.assertEqual("r", collection_enum.rgb_char)
+        self.assertEqual("one", collection_enum.numbers)
+        self.assertEqual("a", collection_enum.letters)
+        self.assertEqual("jan", collection_enum.months)
+
+        collection_enum.rgb_char = 'g'
+        self.assertEqual("g", collection_enum.rgb_char)
+
+        collection_enum.months = "feb"
+
+        with self.assertRaises(TraitError):
+            collection_enum.rgb = "two"
+
+        with self.assertRaises(TraitError):
+            collection_enum.rgb_char = "rgb"
