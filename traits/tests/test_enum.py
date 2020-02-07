@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-from collections import Collection
+from collections.abc import Collection
 import enum
 import unittest
 
