@@ -99,7 +99,7 @@ class EnumCollectionExample(HasTraits):
 
     letters = Enum("abcdefg")
 
-    months = Enum("jan", "feb", "mar")
+    months = Enum("january", "february")
 
 
 class EnumTestCase(unittest.TestCase):
@@ -191,15 +191,12 @@ class EnumTestCase(unittest.TestCase):
         self.assertEqual("r", collection_enum.rgb_char)
         self.assertEqual("one", collection_enum.numbers)
         self.assertEqual("a", collection_enum.letters)
-        self.assertEqual("jan", collection_enum.months)
+        self.assertEqual("january", collection_enum.months)
 
-        collection_enum.rgb_char = 'g'
-        self.assertEqual("g", collection_enum.rgb_char)
+        collection_enum.rgb_char = 'rgb'
+        self.assertEqual("rgb", collection_enum.rgb_char)
 
-        collection_enum.months = "feb"
+        collection_enum.months = "february"
 
         with self.assertRaises(TraitError):
             collection_enum.rgb = "two"
-
-        with self.assertRaises(TraitError):
-            collection_enum.rgb_char = "rgb"

@@ -204,7 +204,7 @@ def enum_default(values):
     """
     if isinstance(values, enum.EnumMeta):
         default = next(iter(values), None)
-    elif is_collection(values):
+    elif is_collection(values) and not isinstance(values, str):
         default = next(iter(values))
     elif len(values) > 0:
         default = values[0]
