@@ -3677,7 +3677,7 @@ validate_trait_callable(
     trait_object *trait, has_traits_object *obj, PyObject *name,
     PyObject *value)
 {
-    int allow_none = PyObject_IsTrue(PyTuple_GetItem(trait->py_validate, 1));
+    int allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
 
     if ((allow_none && value == Py_None) || PyCallable_Check(value)) {
         Py_INCREF(value);
@@ -4071,10 +4071,13 @@ validate_trait_complex(
                 return result;
 
             case 22: /* Callable check: */
-                if (value == Py_None || PyCallable_Check(value)) {
-                    goto done;
+                {
+                    int allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(type_info, 1));
+                    if ((allow_none && value == Py_None) || PyCallable_Check(value)) {
+                        goto done;
+                    }
+                    break;
                 }
-                break;
 
             default: /* Should never happen...indicates an internal error: */
                 assert(0);  /* invalid validation type */
