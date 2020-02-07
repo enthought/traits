@@ -2899,7 +2899,7 @@ static trait_setattr setattr_handlers[] = {
 
 
 trait_object *
-trait_new (PyTypeObject *trait_type, PyObject *args, PyObject *kw)
+trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
 {
     int kind, n;
     trait_object *trait;
