@@ -2920,7 +2920,7 @@ trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
         return trait;
     }
 
-    PyErr_SetString(TraitError, "Invalid argument to trait constructor.");
+    PyErr_SetString(TraitError, "invalid argument to trait constructor");
     return NULL;
 }
 
