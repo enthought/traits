@@ -5365,7 +5365,7 @@ PyDoc_STRVAR(
     "Parameters\n"
     "----------\n"
     "kind : int, optional\n"
-    "    Integer between 0 and 8 representing the kind of this trait; with\n"
+    "    Integer between 0 and 8 representing the kind of this trait, with\n"
     "    the default value being 0. The kind determines how attribute get\n"
     "    and set operations behave for attributes using this trait. The\n"
     "    values for *kind* correspond to the members of the ``TraitKind``\n"
