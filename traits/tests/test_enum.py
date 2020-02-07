@@ -8,7 +8,11 @@
 #
 # Thanks for using Enthought open source!
 
-from collections.abc import Collection
+try:
+    from collections.abc import Collection
+except ImportError:
+    # Python3.5 and below does not have Collection
+    from collections import Container as Collection
 import enum
 import unittest
 
@@ -51,7 +55,6 @@ class CustomCollection(Collection):
 
 
 class EnumListExample(HasTraits):
-
     values = Any(['foo', 'bar', 'baz'])
 
     value = Enum(['foo', 'bar', 'baz'])
@@ -64,7 +67,6 @@ class EnumListExample(HasTraits):
 
 
 class EnumTupleExample(HasTraits):
-
     values = Any(('foo', 'bar', 'baz'))
 
     value = Enum(('foo', 'bar', 'baz'))
@@ -77,7 +79,6 @@ class EnumTupleExample(HasTraits):
 
 
 class EnumEnumExample(HasTraits):
-
     values = Any(FooEnum)
 
     value = Enum(FooEnum)
@@ -90,7 +91,6 @@ class EnumEnumExample(HasTraits):
 
 
 class EnumCollectionExample(HasTraits):
-
     rgb = Enum("red", CustomCollection("red", "green", "blue"))
 
     rgb_char = Enum("r", "rgb")
@@ -185,7 +185,6 @@ class EnumTestCase(unittest.TestCase):
             example.value_name = FooEnum.bar
 
     def test_enum_collection(self):
-
         collection_enum = EnumCollectionExample()
         self.assertEqual("red", collection_enum.rgb)
         self.assertEqual("r", collection_enum.rgb_char)
