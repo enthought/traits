@@ -1968,8 +1968,6 @@ class BaseEnum(TraitType):
                 # If values is not a Collection
                 if isinstance(self.values, EnumTypes):
                     self.values = tuple(self.values)
-                elif isinstance(self.values, str):
-                    self.values = self.values
 
             elif len(args) == 2:
                 if isinstance(args[1], str):

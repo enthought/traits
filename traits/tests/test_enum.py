@@ -189,7 +189,7 @@ class EnumTestCase(unittest.TestCase):
         self.assertEqual("red", collection_enum.rgb)
         self.assertEqual("r", collection_enum.rgb_char)
         self.assertEqual("one", collection_enum.numbers)
-        self.assertEqual("a", collection_enum.letters)
+        self.assertEqual("abcdefg", collection_enum.letters)
         self.assertEqual("january", collection_enum.months)
 
         collection_enum.rgb_char = 'rgb'
