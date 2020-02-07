@@ -2901,15 +2901,10 @@ static trait_setattr setattr_handlers[] = {
 trait_object *
 trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
 {
-    int kind, n;
+    int kind = 0;
     trait_object *trait;
 
-    n = PyTuple_GET_SIZE(args);
-
-    if (n == 0){
-        kind = 0;
-    }
-    else if (!PyArg_ParseTuple(args, "i", &kind)) {
+    if (!PyArg_ParseTuple(args, "|i", &kind)) {
         return NULL;
     }
 
@@ -2924,7 +2919,7 @@ trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
         TraitError, 
         "Invalid argument to trait constructor. The argument `kind` "
         "must be an integer between 0 and 8 but a value of %d was provided.",
-        kind)
+        kind);
     return NULL;
 }
 
