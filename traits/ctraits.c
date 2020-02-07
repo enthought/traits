@@ -2914,7 +2914,7 @@ trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
     }
 
     if ((kind >= 0) && (kind <= 8)) {
-        trait = (trait_object*) PyType_GenericNew(trait_type, args, kw);
+        trait = (trait_object *)PyType_GenericNew(trait_type, args, kw);
         trait->getattr = getattr_handlers[kind];
         trait->setattr = setattr_handlers[kind];
         return trait;
