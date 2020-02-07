@@ -4074,7 +4074,7 @@ validate_trait_complex(
                 {
                     int allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(type_info, 1));
                     if ((allow_none && value == Py_None) || PyCallable_Check(value)) {
-                        goto done;
+                        return value;
                     }
                     break;
                 }

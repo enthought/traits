@@ -16,8 +16,10 @@ from traits.api import (
     Callable,
     Either,
     HasTraits,
+    Int,
     Str,
     TraitError,
+    Union,
 )
 
 
@@ -32,14 +34,12 @@ class Dummy(object):
 
 
 class MyCallable(HasTraits):
-
     value = Callable()
 
-    callable_or_str = Either(Callable(), Str())
+    callable_or_str = Either(Callable(), Str)
 
 
 class MyBaseCallable(HasTraits):
-
     value = BaseCallable
 
 
@@ -50,7 +50,7 @@ class TestCallable(unittest.TestCase):
         self.assertIsNone(a.value)
 
     def test_accepts_lambda(self):
-        func = lambda v: v + 1    # noqa: E731
+        func = lambda v: v + 1  # noqa: E731
         a = MyCallable(value=func)
         self.assertIs(a.value, func)
 
@@ -92,11 +92,8 @@ class TestCallable(unittest.TestCase):
 
     def test_disallow_none(self):
 
-        def func():
-            return "Success"
-
         class MyNewCallable(HasTraits):
-            value = Callable(default_value=func, allow_none=False)
+            value = Callable(default_value=pow, allow_none=False)
 
         obj = MyNewCallable()
 
@@ -105,10 +102,14 @@ class TestCallable(unittest.TestCase):
         with self.assertRaises(TraitError):
             obj.value = None
 
-        self.assertEqual("Success", obj.value())
+        self.assertEqual(8, obj.value(2, 3))
+
+    def test_disallow_none_compound(self):
 
         class MyNewCallable2(HasTraits):
-            value = Callable(func, allow_none=True)
+            value = Callable(pow, allow_none=True)
+            a_non_none_union = Union(Callable(allow_none=False), Int)
+            a_allow_none_union = Union(Callable(allow_none=True), Int)
 
         obj = MyNewCallable2()
         self.assertIsNotNone(obj.value)
@@ -116,12 +117,20 @@ class TestCallable(unittest.TestCase):
         obj.value = None
         self.assertIsNone(obj.value)
 
+        obj.a_non_none_union = 5
+        obj.a_allow_none_union = 5
+
+        with self.assertRaises(TraitError):
+            obj.a_non_none_union = None
+        obj.a_allow_none_union = None
+
 
 class TestBaseCallable(unittest.TestCase):
 
     def test_override_validate(self):
         """ Verify `BaseCallable` can be subclassed to create new traits.
         """
+
         class ZeroArgsCallable(BaseCallable):
 
             def validate(self, object, name, value):
