@@ -4096,7 +4096,13 @@ validate_trait_complex(
                     }
                     else if (value == Py_None) {
 
+                        int tuple_size = PyTuple_GET_SIZE(trait->py_validate);
 
+                        //Handle callables without allow_none, default to allow None
+                        if(tuple_size < 2){
+                            Py_INCREF(value);
+                            return value;
+                        }
 
                         int allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
 
