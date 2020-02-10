@@ -3677,11 +3677,22 @@ validate_trait_callable(
     trait_object *trait, has_traits_object *obj, PyObject *name,
     PyObject *value)
 {
-    int allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
-
-    if ((allow_none && value == Py_None) || PyCallable_Check(value)) {
+    if (PyCallable_Check(value)) {
         Py_INCREF(value);
         return value;
+    }
+    else if (value == Py_None) {
+
+        int allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
+
+        if (allow_none == -1) {
+            return NULL;
+        }
+
+        else if(allow_none) {
+            Py_INCREF(value);
+            return value;
+        }
     }
 
     return raise_trait_error(trait, obj, name, value);
@@ -4072,9 +4083,20 @@ validate_trait_complex(
 
             case 22: /* Callable check: */
                 {
-                    int allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(type_info, 1));
-                    if ((allow_none && value == Py_None) || PyCallable_Check(value)) {
+                    if (PyCallable_Check(value)) {
                         return value;
+                    }
+                    else if (value == Py_None) {
+
+                        int allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
+
+                        if (allow_none == -1) {
+                            return NULL;
+                        }
+
+                        else if(allow_none) {
+                            return value;
+                        }
                     }
                     break;
                 }
