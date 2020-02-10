@@ -20,6 +20,7 @@ from traits.api import (
     Str,
     TraitError,
     Union,
+    ValidateTrait
 )
 
 
@@ -127,6 +128,20 @@ class TestCallable(unittest.TestCase):
         with self.assertRaises(TraitError):
             obj.a_non_none_union = None
         obj.a_allow_none_union = None
+
+    def test_old_style_callable(self):
+        class OldCallable(Callable):
+            def __init__(self, value=None, **metadata):
+                self.fast_validate = (ValidateTrait.callable,)
+                super(BaseCallable, self).__init__(value, **metadata)
+
+        class MyCallable(HasTraits):
+            # allow_none flag should be ineffective
+            value = OldCallable()
+
+        obj = MyCallable()
+        obj.value = None
+        self.assertIsNone(obj.value)
 
 
 class TestBaseCallable(unittest.TestCase):
