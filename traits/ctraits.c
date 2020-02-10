@@ -312,17 +312,6 @@ invalid_attribute_error(PyObject *name)
     return -1;
 }
 
-/*-----------------------------------------------------------------------------
-|  Raise an "invalid trait definition" error:
-+----------------------------------------------------------------------------*/
-
-static int
-bad_trait_error(void)
-{
-    PyErr_SetString(TraitError, "Invalid argument to trait constructor.");
-
-    return -1;
-}
 
 /*-----------------------------------------------------------------------------
 |  Raise an "cant set items error" error:
@@ -2908,22 +2897,35 @@ static trait_setattr setattr_handlers[] = {
     /*  End of __setstate__ method entries */
     NULL};
 
-static int
-trait_init(trait_object *trait, PyObject *args, PyObject *kwds)
-{
-    int kind;
 
-    if (!PyArg_ParseTuple(args, "i", &kind)) {
-        return -1;
+trait_object *
+trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
+{
+    int kind = 0;
+    trait_object *trait;
+
+    if (kw != NULL && PyDict_Size(kw) != (Py_ssize_t) 0) {
+        PyErr_SetString(TraitError, "CTrait takes no keyword arguments");
+        return NULL;
+    }
+
+    if (!PyArg_ParseTuple(args, "|i", &kind)) {
+        return NULL;
     }
 
     if ((kind >= 0) && (kind <= 8)) {
+        trait = (trait_object *)PyType_GenericNew(trait_type, args, kw);
         trait->getattr = getattr_handlers[kind];
         trait->setattr = setattr_handlers[kind];
-        return 0;
+        return trait;
     }
 
-    return bad_trait_error();
+    PyErr_Format(
+        TraitError, 
+        "Invalid argument to trait constructor. The argument `kind` "
+        "must be an integer between 0 and 8 but a value of %d was provided.",
+        kind);
+    return NULL;
 }
 
 /*-----------------------------------------------------------------------------
@@ -2979,7 +2981,7 @@ trait_traverse(trait_object *trait, visitproc visit, void *arg)
 }
 
 /*-----------------------------------------------------------------------------
-|  Handles the 'getattr' operation on a 'CHasTraits' instance:
+|  Handles the 'getattr' operation on a 'CTrait' instance:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
@@ -5366,11 +5368,12 @@ PyDoc_STRVAR(
     "\n"
     "Parameters\n"
     "----------\n"
-    "kind : int\n"
-    "    Integer between 0 and 8 representing the kind of this trait. The\n"
-    "    kind determines how attribute get and set operations behave for\n"
-    "    attributes using this trait. The values for *kind* correspond\n"
-    "    to the members of the ``TraitKind`` enumeration type.\n");
+    "kind : int, optional\n"
+    "    Integer between 0 and 8 representing the kind of this trait, with\n"
+    "    the default value being 0. The kind determines how attribute get\n"
+    "    and set operations behave for attributes using this trait. The\n"
+    "    values for *kind* correspond to the members of the ``TraitKind``\n"
+    "    enumeration type.\n");
 
 static PyTypeObject trait_type = {
     PyVarObject_HEAD_INIT(NULL, 0) "traits.ctraits.cTrait",
@@ -5408,9 +5411,9 @@ static PyTypeObject trait_type = {
     0,                                         /* tp_descr_get */
     0,                                         /* tp_descr_set */
     sizeof(trait_object) - sizeof(PyObject *), /* tp_dictoffset */
-    (initproc)trait_init,                      /* tp_init */
+    0,                                         /* tp_init */
     0,                                         /* tp_alloc */
-    0                                          /* tp_new */
+    (newfunc)trait_new                         /* tp_new */
 };
 
 /*-----------------------------------------------------------------------------
@@ -5520,7 +5523,6 @@ PyInit_ctraits(void)
     /* Create the 'CTrait' type: */
     trait_type.tp_base = &PyBaseObject_Type;
     trait_type.tp_alloc = PyType_GenericAlloc;
-    trait_type.tp_new = PyType_GenericNew;
     if (PyType_Ready(&trait_type) < 0) {
         return NULL;
     }
