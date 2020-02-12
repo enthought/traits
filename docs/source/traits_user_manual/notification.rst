@@ -258,7 +258,7 @@ is a list, a handler set for ``'children.name'`` listens for changes to the
 **name** trait for each item in the **self.children** list.
 
 .. note::
-    In the case of List and Dict with nested patterns (e.g.,
+    In the case of Dict, List, and Set with nested patterns (e.g.,
     ``'children.name'``), not all handler signatures (see
     :ref:`notification-handler-signatures`) are supported; see section
     :ref:`dynamic-handler-special-cases` for more details.
