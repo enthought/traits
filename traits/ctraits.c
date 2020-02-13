@@ -3682,22 +3682,22 @@ validate_trait_callable(
         return value;
     }
     else if (value == Py_None) {
-
+        int allow_none;
         int tuple_size = PyTuple_GET_SIZE(trait->py_validate);
 
         //Handle callables without allow_none, default to allow None
-        if(tuple_size < 2){
+        if (tuple_size < 2) {
             Py_INCREF(value);
             return value;
         }
 
-        int allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
+        allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
 
         if (allow_none == -1) {
             return NULL;
         }
 
-        else if(allow_none) {
+        else if (allow_none) {
             Py_INCREF(value);
             return value;
         }
@@ -4095,22 +4095,22 @@ validate_trait_complex(
                         return value;
                     }
                     else if (value == Py_None) {
-
+                        int allow_none;
                         int tuple_size = PyTuple_GET_SIZE(trait->py_validate);
 
                         //Handle callables without allow_none, default to allow None
-                        if(tuple_size < 2){
+                        if (tuple_size < 2) {
                             Py_INCREF(value);
                             return value;
                         }
 
-                        int allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
+                        allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
 
                         if (allow_none == -1) {
                             return NULL;
                         }
 
-                        else if(allow_none) {
+                        else if (allow_none) {
                             return value;
                         }
                     }
