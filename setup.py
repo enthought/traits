@@ -22,7 +22,7 @@ import setuptools
 MAJOR = 6
 MINOR = 0
 MICRO = 0
-PRERELEASE = "rc0"
+PRERELEASE = ""
 IS_RELEASED = True
 
 # If this file is part of a Git export (for example created with "git archive",
