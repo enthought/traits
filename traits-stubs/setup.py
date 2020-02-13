@@ -17,8 +17,8 @@ if __name__ == "__main__":
         version="0.1.0",
         description="type annotation integration stubs for traits",
         install_requires=["mypy", "traits"],
-        py_modules=["traits-stubs"],
+        packages=["traits-stubs"],
         package_data={
-            'foopkg': ['py.typed'],
+            'traits-stubs': ['./*.pyi', './**/*.pyi'],
         },
     )
