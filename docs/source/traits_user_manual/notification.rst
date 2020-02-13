@@ -256,6 +256,13 @@ List or Dict traits, the subsequent portion of the pattern is applied to each
 item in the list or value in the dictionary. For example, if **self.children**
 is a list, a handler set for ``'children.name'`` listens for changes to the
 **name** trait for each item in the **self.children** list.
+
+.. note::
+    In the case of Dict, List, and Set with nested patterns (e.g.,
+    ``'children.name'``), not all handler signatures (see
+    :ref:`notification-handler-signatures`) are supported; see section
+    :ref:`dynamic-handler-special-cases` for more details.
+
 The handler routine is also invoked when items are added or removed from a list
 or dictionary, because this is treated as an implied change to the item's trait
 being monitored.
