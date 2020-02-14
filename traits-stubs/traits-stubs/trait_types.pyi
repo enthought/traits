@@ -1,3 +1,4 @@
+from uuid import UUID as _UUIDType
 from .constants import DefaultValue as DefaultValue, TraitKind as TraitKind, \
     ValidateTrait as ValidateTrait
 from .editor_factories import code_editor as code_editor, \
@@ -33,10 +34,11 @@ from typing import (
     List as _List,
     Optional,
     Sequence as _Sequence,
+    Set as _Set,
     Tuple as _Tuple,
     Type as _Type,
     TypeVar,
-    Union,
+    Union as _Union,
 )
 
 MutableTypes: _Any
@@ -54,7 +56,7 @@ def default_text_editor(trait: _Any, type: Optional[_Any] = ...):
 _T = TypeVar("_T")
 _S = TypeVar("_S")
 
-_Trait = Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]]
+_Trait = _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]]
 
 
 class Any(TraitType):
@@ -67,14 +69,10 @@ class _BaseInt(_TraitType[_T, int]):
 
 
 class BaseInt(_BaseInt[int]):
-    ...
-
-
-class Int(BaseInt):
     default_value: int = ...
 
 
-class CInt(BaseInt):
+class Int(BaseInt):
     default_value: int = ...
 
 
@@ -84,11 +82,24 @@ class _BaseFloat(_TraitType[_T, float]):
 
 
 class BaseFloat(_BaseFloat[float]):
-    ...
+    default_value: float = ...
 
 
 class Float(BaseFloat):
     default_value: float = ...
+
+
+# -----------------Complex--------------------
+class _BaseComplex(_TraitType[_T, complex]):
+    ...
+
+
+class BaseComplex(_BaseComplex[complex]):
+    default_value: complex = ...
+
+
+class Complex(BaseComplex):
+    default_value: complex = ...
 
 
 # -----------------Str--------------------
@@ -111,26 +122,13 @@ class Title(Str):
     default_value: str = ...
 
 
-# -----------------Complex--------------------
-class _BaseComplex(_TraitType[_T, complex]):
-    ...
-
-
-class BaseComplex(_BaseComplex[complex]):
-    ...
-
-
-class Complex(BaseComplex):
-    default_value: complex = ...
-
-
 # -----------------Bytes--------------------
 class _BaseBytes(_TraitType[_T, bytes]):
     ...
 
 
 class BaseBytes(_BaseBytes[bytes]):
-    ...
+    default_value: bytes = ...
 
 
 class Bytes(BaseBytes):
@@ -150,17 +148,76 @@ class Bool(BaseBool):
     default_value: bool = ...
 
 
+# -----------------BaseCInt--------------------
+
+class BaseCInt(BaseInt):
+    ...
+
+
+class CInt(BaseCInt):
+    ...
+
+
+# -----------------BaseCFloat--------------------
+
+class BaseCFloat(BaseFloat):
+    ...
+
+
+class CFloat(BaseCFloat):
+    ...
+
+
+# -----------------BaseCComplex--------------------
+
+class BaseCComplex(BaseComplex):
+    ...
+
+
+class CComplex(BaseCComplex):
+    ...
+
+
+# -----------------BaseCStr--------------------
+
+class BaseCStr(BaseStr):
+    ...
+
+
+class CStr(BaseCStr):
+    ...
+
+
+# -----------------BaseCBytes--------------------
+
+class BaseCBytes(BaseBytes):
+    ...
+
+
+class CBytes(BaseCBytes):
+    ...
+
+
+# -----------------BaseCBool--------------------
+
+class BaseCBool(BaseBool):
+    ...
+
+
+class CBool(BaseCBool):
+    ...
+
+
 # -----------------String--------------------
 
-class _String(_TraitType[_T, bool]):
+class _String(_TraitType[_T, str]):
     ...
 
 
 class String(_String[str]):
-    value: str = ...
-    minlen: int = ...
-    maxlen: int = ...
-    regex: str = ...
+    def __init__(self, value: str = ..., minlen: int = ..., maxlen: int = ...,
+                 regex: str = ...):
+        ...
 
 
 # -----------------Regex--------------------
@@ -212,30 +269,35 @@ class Type(BaseType):
     ...
 
 
-# -----------------Function--------------------
+# -----------------This--------------------
+class This(BaseType):
+    ...
 
-# TODO
-class Function(_Any):
+
+# -----------------self--------------------
+class self(This):
+    ...
+
+
+# -----------------Function--------------------
+class Function(_TraitType):
     ...
 
 
 # -----------------Method--------------------
 
-# TODO
-class Method(_Any):
+class Method(_TraitType):
     ...
 
 
 # -----------------Module--------------------
 
-# TODO
-class Module(_Any):
+class Module(_TraitType):
     ...
 
 
 # -----------------Python--------------------
-# TODO
-class Python(_Any):
+class Python(_TraitType):
     ...
 
 
@@ -252,72 +314,138 @@ class Disallow(_Any):
 
 
 # -----------------Constant--------------------
-# TODO
-class Constant(_Any):
+class Constant(_TraitType):
     ...
 
 
 # -----------------Delegate--------------------
-# TODO
-class Delegate(_Any):
+class Delegate(_TraitType):
     ...
 
 
 # -----------------DelegatesTo--------------------
-# TODO
 class DelegaatesTo(Delegate):
     ...
 
 
 # -----------------PrototypedFrom--------------------
-# TODO
 class PrototypedFrom(Delegate):
     ...
 
 
 # -----------------Expression--------------------
-# TODO
-class Expression(Any):
+class Expression(_TraitType):
     ...
 
 
 # ---------------------PythonValue----------------
-# TODO
-class PythonValue(Any):
+class PythonValue(_Any):
     ...
 
 
 # ----------------BaseFile---------------------
-# TODO
-class BaseFile(BaseStr):
+class _BaseFile(_BaseStr):
+    ...
+
+
+class BaseFile(_BaseFile):
     ...
 
 
 # ----------------File---------------------
-# TODO
-class File(BaseFile):
+class _File(_BaseFile):
+    ...
+
+
+class File(_File):
     ...
 
 
 # ----------------BaseDirectory---------------------
-# TODO
-class BaseDirectory(BaseFile):
+class _BaseDirectory(_BaseStr):
+    ...
+
+
+class BaseDirectory(_BaseDirectory):
     ...
 
 
 # ----------------Directory---------------------
-# TODO
-class Directory(BaseDirectory):
+class Directory(_BaseDirectory):
+    ...
+
+
+# ----------------BaseRange---------------------
+class _BaseRange(_TraitType):
+    ...
+
+
+class BaseRange(_BaseRange):
+    ...
+
+
+# ----------------Range---------------------
+class _Range(_BaseRange):
+    ...
+
+
+class Range(_Range):
+    ...
+
+
+# ----------------BaseEnum---------------------
+class _BaseEnum(_TraitType[_T, _Any]):
+    ...
+
+
+class BaseEnum(_BaseEnum):
+    ...
+
+
+class Enum(_BaseEnum):
+    ...
+
+
+# ----------------Tuple---------------------
+class _BaseTuple(_TraitType[_T, tuple]):
+    ...
+
+
+class BaseTuple(_BaseTuple[tuple]):
+    ...
+
+
+class Tuple(BaseTuple):
+    ...
+
+
+# ----------------UUID---------------------
+class _UUID(_TraitType[_T, _UUIDType]):
+    ...
+
+
+class UUID(_UUID[_Union[str, _UUIDType]]):
     ...
 
 
 class List(_TraitType[_Sequence[_S], _List[_T]]):
     def __init__(
             self,
-            trait: Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]],
+            trait: _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]],
             value: _Sequence[_S] = [],
             minlen: int = ...,
             maxlen: int = ...,
+            items: bool = ...,
+            **metadata: _Dict[str, _Any]
+    ) -> None:
+        ...
+
+
+class Set(_TraitType[_Sequence[_S], _Set[_T]]):
+    def __init__(
+            self,
+            trait: _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]],
+            value: _Sequence[_S] = ...,
             items: bool = ...,
             **metadata: _Dict[str, _Any]
     ) -> None:
