@@ -4,7 +4,7 @@ Traits CHANGELOG
 Release 6.0.0
 -------------
 
-Released: 2020-02-13
+Released: 2020-02-14
 
 No changes since the 6.0.0rc0 release candidate.
 
