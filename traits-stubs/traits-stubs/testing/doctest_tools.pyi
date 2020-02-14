@@ -1,3 +1,0 @@
-from typing import Any
-
-def doctest_for_module(module: Any): ...
