@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>traits.trait_type &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '6.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../genindex.html" >
+    <link rel="search" title="Search" href="../../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../../index.html" >
+    <link rel="up" title="Module code" href="../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for traits.trait_type</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines the TraitType class.</span>
+
+<span class="sd">The ``TraitType`` class a trait handler that is the base class for modern</span>
+<span class="sd">traits, and provides a richer API than the old-style traits derived from</span>
+<span class="sd">``TraitHandler``.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">MethodType</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">.base_trait_handler</span> <span class="k">import</span> <span class="n">BaseTraitHandler</span>
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="k">import</span> <span class="n">ComparisonMode</span><span class="p">,</span> <span class="n">DefaultValue</span><span class="p">,</span> <span class="n">TraitKind</span>
+<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="n">Missing</span><span class="p">,</span> <span class="n">Self</span><span class="p">,</span> <span class="n">TraitsCache</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">class_of</span>
+<span class="kn">from</span> <span class="nn">.trait_dict_object</span> <span class="k">import</span> <span class="n">TraitDictObject</span>
+<span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
+<span class="kn">from</span> <span class="nn">.trait_list_object</span> <span class="k">import</span> <span class="n">TraitListObject</span>
+<span class="kn">from</span> <span class="nn">.trait_set_object</span> <span class="k">import</span> <span class="n">TraitSetObject</span>
+
+
+<span class="c1">#: Mapping from trait metadata &#39;type&#39; to CTrait &#39;type&#39;:</span>
+<span class="n">trait_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;python&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="_infer_default_value_type"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type._infer_default_value_type">[docs]</a><span class="k">def</span> <span class="nf">_infer_default_value_type</span><span class="p">(</span><span class="n">default_value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Figure out the default value type given a default value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">default_value</span> <span class="ow">is</span> <span class="n">Missing</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DefaultValue</span><span class="o">.</span><span class="n">missing</span>
+    <span class="k">elif</span> <span class="n">default_value</span> <span class="ow">is</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DefaultValue</span><span class="o">.</span><span class="n">object</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_value</span><span class="p">,</span> <span class="n">TraitListObject</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DefaultValue</span><span class="o">.</span><span class="n">trait_list_object</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_value</span><span class="p">,</span> <span class="n">TraitDictObject</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DefaultValue</span><span class="o">.</span><span class="n">trait_dict_object</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_value</span><span class="p">,</span> <span class="n">TraitSetObject</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DefaultValue</span><span class="o">.</span><span class="n">trait_set_object</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DefaultValue</span><span class="o">.</span><span class="n">list_copy</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default_value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DefaultValue</span><span class="o">.</span><span class="n">dict_copy</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DefaultValue</span><span class="o">.</span><span class="n">constant</span></div>
+
+
+<div class="viewcode-block" id="_write_only"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type._write_only">[docs]</a><span class="k">def</span> <span class="nf">_write_only</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Raise a trait error for a write-only trait. &quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
+        <span class="s2">&quot;The &#39;</span><span class="si">%s</span><span class="s2">&#39; trait of </span><span class="si">%s</span><span class="s2"> instance is &#39;write only&#39;.&quot;</span>
+        <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">class_of</span><span class="p">(</span><span class="nb">object</span><span class="p">))</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_read_only"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type._read_only">[docs]</a><span class="k">def</span> <span class="nf">_read_only</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Raise a trait error for a read-only trait. &quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
+        <span class="s2">&quot;The &#39;</span><span class="si">%s</span><span class="s2">&#39; trait of </span><span class="si">%s</span><span class="s2"> instance is &#39;read only&#39;.&quot;</span>
+        <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">class_of</span><span class="p">(</span><span class="nb">object</span><span class="p">))</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_arg_count"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type._arg_count">[docs]</a><span class="k">def</span> <span class="nf">_arg_count</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Returns the correct argument count for a specified function or method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="ow">is</span> <span class="n">MethodType</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__self__</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">func</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">func</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span></div>
+
+
+<span class="c1"># Create a singleton object for use in the TraitType constructor:</span>
+<div class="viewcode-block" id="NoDefaultSpecified"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type.NoDefaultSpecified">[docs]</a><span class="k">class</span> <span class="nc">NoDefaultSpecified</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<span class="n">NoDefaultSpecified</span> <span class="o">=</span> <span class="n">NoDefaultSpecified</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="TraitType"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type.TraitType">[docs]</a><span class="k">class</span> <span class="nc">TraitType</span><span class="p">(</span><span class="n">BaseTraitHandler</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Base class for new trait types.</span>
+
+<span class="sd">    This class enables you to define new traits using a class-based</span>
+<span class="sd">    approach, instead of by calling the Trait() factory function with an</span>
+<span class="sd">    instance of a TraitHandler derived object.</span>
+
+<span class="sd">    When subclassing this class, you can implement one or more of the</span>
+<span class="sd">    method signatures below. Note that these methods are defined only as</span>
+<span class="sd">    comments, because the absence of method definitions in the subclass</span>
+<span class="sd">    definition implicitly provides information about how the trait should</span>
+<span class="sd">    operate.</span>
+
+<span class="sd">    The optional methods are as follows:</span>
+
+<span class="sd">    ``get(self, object, name)``</span>
+
+<span class="sd">        This is the getter method of a trait that behaves like a property.</span>
+
+<span class="sd">        If neither this method nor the ``set()`` method is defined, the value</span>
+<span class="sd">        of the trait is handled like a normal object attribute. If this</span>
+<span class="sd">        method is not defined, but the ``set()`` method is defined, the trait</span>
+<span class="sd">        behaves like a write-only property. This method should return the</span>
+<span class="sd">        value of the ``name`` property for the ``object`` object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">            object : any</span>
+<span class="sd">                The object that the property applies to.</span>
+<span class="sd">            name : str</span>
+<span class="sd">                The name of the property on ``object``.</span>
+
+<span class="sd">    ``set(self, object, name, value)``</span>
+
+<span class="sd">        This is the setter method of a trait that behaves like a property.</span>
+
+<span class="sd">        If neither this method nor the ``get()`` method is implemented, the</span>
+<span class="sd">        trait behaves like a normal trait attribute. If this method is not</span>
+<span class="sd">        defined, but the ``get()`` method is defined, the trait behaves like a</span>
+<span class="sd">        read-only property. This method does not need to return a value,</span>
+<span class="sd">        but it should raise a ``TraitError`` exception if the specified</span>
+<span class="sd">        ``value`` is not valid and cannot be coerced or adapted to a valid</span>
+<span class="sd">        value.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">            object : any</span>
+<span class="sd">                The object that the property applies to.</span>
+<span class="sd">            name : str</span>
+<span class="sd">                The name of the property on ``object``.</span>
+<span class="sd">            value : any</span>
+<span class="sd">                The value being assigned as the value of the property.</span>
+
+<span class="sd">    ``validate(self, object, name, value)``</span>
+
+<span class="sd">        This method validates, coerces, or adapts the specified ``value`` as</span>
+<span class="sd">        the value of the ``name`` trait of the ``object`` object. This method</span>
+<span class="sd">        is called when a value is assigned to an object trait that is</span>
+<span class="sd">        based on this subclass of ``TraitType`` and the class does not</span>
+<span class="sd">        contain a definition for either the get() or set() methods. This</span>
+<span class="sd">        method must return the original ``value`` or any suitably coerced or</span>
+<span class="sd">        adapted value that is a legal value for the trait. If ``value`` is</span>
+<span class="sd">        not a legal value for the trait, and cannot be coerced or adapted</span>
+<span class="sd">        to a legal value, the method should either raise a ``TraitError`` or</span>
+<span class="sd">        call the ``error`` method to raise the ``TraitError`` on its behalf.</span>
+
+<span class="sd">    ``is_valid_for(self, value)``</span>
+
+<span class="sd">        As an alternative to implementing the ``validate`` method, you can</span>
+<span class="sd">        instead implement the ``is_valid_for`` method, which receives only</span>
+<span class="sd">        the ``value`` being assigned. It should return ``True`` if the value is</span>
+<span class="sd">        valid, and ``False`` otherwise.</span>
+
+<span class="sd">    ``value_for ( self, value )``</span>
+
+<span class="sd">        As another alternative to implementing the ``validate`` method, you</span>
+<span class="sd">        can instead implement the ``value_for`` method, which receives only</span>
+<span class="sd">        the ``value`` being assigned. It should return the validated form of</span>
+<span class="sd">        ``value`` if it is valid, or raise a ``TraitError`` if the value is not</span>
+<span class="sd">        valid.</span>
+
+<span class="sd">    ``post_setattr(self, object, name, value)``</span>
+
+<span class="sd">        This method allows the trait to do additional processing after</span>
+<span class="sd">        ``value`` has been successfully assigned to the ``name`` trait of the</span>
+<span class="sd">        ``object`` object. For most traits there is no additional processing</span>
+<span class="sd">        that needs to be done, and this method need not be defined. It is</span>
+<span class="sd">        normally used for creating &quot;shadow&quot; (i.e., &quot;mapped&quot; traits), but</span>
+<span class="sd">        other uses may arise as well. This method does not need to return</span>
+<span class="sd">        a value, and should normally not raise any exceptions.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#: The default value for the trait type.</span>
+    <span class="n">default_value</span> <span class="o">=</span> <span class="n">Undefined</span>
+
+    <span class="c1">#: The metadata for the trait.</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">NoDefaultSpecified</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; TraitType initializer</span>
+
+<span class="sd">        This is the only method normally called directly by client code.</span>
+<span class="sd">        It defines the trait. The default implementation accepts an optional,</span>
+<span class="sd">        unvalidated default value, and caller-supplied trait metadata.</span>
+
+<span class="sd">        Override this method whenever a different method signature or a</span>
+<span class="sd">        validated default value is needed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">default_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">NoDefaultSpecified</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">default_value</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+            <span class="c1"># By default, private traits are not visible.</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;private&quot;</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;visible&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="p">[</span><span class="s2">&quot;visible&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<div class="viewcode-block" id="TraitType.init"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type.TraitType.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Allows the trait to perform any additional initialization needed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="TraitType.get_default_value"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type.TraitType.get_default_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Get information about the default value.</span>
+
+<span class="sd">        The default implementation analyzes the value of the trait&#39;s</span>
+<span class="sd">        ``default_value`` attribute and determines an appropriate</span>
+<span class="sd">        ``default_value_type`` for the ``default_value``. If you need to</span>
+<span class="sd">        override this method to provide a different result tuple, the</span>
+<span class="sd">        following values are valid values for ``default_value_type``:</span>
+
+<span class="sd">        - 0, 1: The ``default_value`` item of the tuple is the default</span>
+<span class="sd">          value.</span>
+<span class="sd">        - 2: The object containing the trait is the default value.</span>
+<span class="sd">        - 3: A new copy of the list specified by ``default_value`` is</span>
+<span class="sd">          the default value.</span>
+<span class="sd">        - 4: A new copy of the dictionary specified by ``default_value``</span>
+<span class="sd">          is the default value.</span>
+<span class="sd">        - 5: A new instance of TraitListObject constructed using the</span>
+<span class="sd">          ``default_value`` list is the default value.</span>
+<span class="sd">        - 6: A new instance of TraitDictObject constructed using the</span>
+<span class="sd">          ``default_value`` dictionary is the default value.</span>
+<span class="sd">        - 7: ``default_value`` is a tuple of the form:</span>
+<span class="sd">          ``(callable, args, kw)``, where ``callable`` is a callable,</span>
+<span class="sd">          ``args`` is a tuple, and ``kw`` is either a dictionary or None.</span>
+<span class="sd">          The default value is the result obtained by invoking</span>
+<span class="sd">          ``callable(\*args, \*\*kw)``.</span>
+<span class="sd">        - 8: ``default_value`` is a callable. The default value is the</span>
+<span class="sd">          result obtained by invoking ``default_value(object)``, where</span>
+<span class="sd">          ``object`` is the object containing the trait. If the trait has</span>
+<span class="sd">          a ``validate()`` method, the ``validate()`` method is also called</span>
+<span class="sd">          to validate the result.</span>
+<span class="sd">        - 9: A new instance of ``TraitSetObject`` constructed using the</span>
+<span class="sd">          ``default_value`` set is the default value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        default_value_type, default_value : int, any</span>
+<span class="sd">            The default value information, consisting of an integer, giving</span>
+<span class="sd">            the type of default value, and the corresponding default value</span>
+<span class="sd">            as described above.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span>
+        <span class="n">dvt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value_type</span>
+        <span class="k">if</span> <span class="n">dvt</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">dvt</span> <span class="o">=</span> <span class="n">_infer_default_value_type</span><span class="p">(</span><span class="n">dv</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">default_value_type</span> <span class="o">=</span> <span class="n">dvt</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">dvt</span><span class="p">,</span> <span class="n">dv</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TraitType.clone"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type.TraitType.clone">[docs]</a>    <span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">NoDefaultSpecified</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Copy, optionally modifying default value and metadata.</span>
+
+<span class="sd">        Clones the contents of this object into a new instance of the same</span>
+<span class="sd">        class, and then modifies the cloned copy using the specified</span>
+<span class="sd">        ``default_value`` and ``metadata``. Returns the cloned object as the</span>
+<span class="sd">        result.</span>
+
+<span class="sd">        Note that subclasses can change the signature of this method if</span>
+<span class="sd">        needed, but should always call the &#39;super&#39; method if possible.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        default_value : any</span>
+<span class="sd">            The new default value for the trait.</span>
+<span class="sd">        **metadata : dict</span>
+<span class="sd">            A dictionary of metadata names and corresponding values as</span>
+<span class="sd">            arbitrary keyword arguments.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;parent&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">:</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;parent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
+
+        <span class="n">new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+        <span class="n">new_dict</span> <span class="o">=</span> <span class="n">new</span><span class="o">.</span><span class="vm">__dict__</span>
+        <span class="n">new_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;editor&quot;</span> <span class="ow">in</span> <span class="n">new_dict</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">new_dict</span><span class="p">[</span><span class="s2">&quot;editor&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="s2">&quot;_metadata&quot;</span> <span class="ow">in</span> <span class="n">new_dict</span><span class="p">:</span>
+            <span class="n">new</span><span class="o">.</span><span class="n">_metadata</span> <span class="o">=</span> <span class="n">new</span><span class="o">.</span><span class="n">_metadata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new</span><span class="o">.</span><span class="n">_metadata</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">new</span><span class="o">.</span><span class="n">_metadata</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">default_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">NoDefaultSpecified</span><span class="p">:</span>
+            <span class="n">new</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">default_value</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">new</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span>
+                        <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">default_value</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">new</span></div>
+
+<div class="viewcode-block" id="TraitType.get_value"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type.TraitType.get_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">trait</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the current value of a property-based trait.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cname</span> <span class="o">=</span> <span class="n">TraitsCache</span> <span class="o">+</span> <span class="n">name</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cname</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">Undefined</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">trait</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">trait</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="nb">object</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">cname</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">default_value_for</span><span class="p">(</span>
+                <span class="nb">object</span><span class="p">,</span> <span class="n">name</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="TraitType.set_value"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type.TraitType.set_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the cached value of a property-based trait and fires the</span>
+<span class="sd">            appropriate trait change event.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cname</span> <span class="o">=</span> <span class="n">TraitsCache</span> <span class="o">+</span> <span class="n">name</span>
+        <span class="n">old</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cname</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="n">old</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">cname</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="nb">object</span><span class="o">.</span><span class="n">trait_property_changed</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+    <span class="c1"># -- Private Methods ------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Allows a derivative trait to be defined from this one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_is_valid_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Handles a simplified validator that only returns whether or not the</span>
+<span class="sd">            original value is valid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_valid_for</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_value_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Handles a simplified validator that only receives the value</span>
+<span class="sd">            argument.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_for</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">TraitError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TraitType.as_ctrait"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type.TraitType.as_ctrait">[docs]</a>    <span class="k">def</span> <span class="nf">as_ctrait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a CTrait corresponding to the trait defined by this class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">.traits</span> <span class="k">import</span> <span class="n">CTrait</span>
+
+        <span class="n">metadata</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_metadata&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">getter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">setter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;set&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">getter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">setter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">getter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">getter</span> <span class="o">=</span> <span class="n">_write_only</span>
+                <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;transient&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">setter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">setter</span> <span class="o">=</span> <span class="n">_read_only</span>
+                <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;transient&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">trait</span> <span class="o">=</span> <span class="n">CTrait</span><span class="p">(</span><span class="n">TraitKind</span><span class="o">.</span><span class="n">property</span><span class="p">)</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">validate</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;validate&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="n">_arg_count</span><span class="p">(</span><span class="n">validate</span><span class="p">)</span>
+            <span class="n">trait</span><span class="o">.</span><span class="n">property</span><span class="p">(</span>
+                <span class="n">getter</span><span class="p">,</span>
+                <span class="n">_arg_count</span><span class="p">(</span><span class="n">getter</span><span class="p">),</span>
+                <span class="n">setter</span><span class="p">,</span>
+                <span class="n">_arg_count</span><span class="p">(</span><span class="n">setter</span><span class="p">),</span>
+                <span class="n">validate</span><span class="p">,</span>
+                <span class="n">n</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;property&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">type</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;ctrait_type&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">type</span> <span class="o">=</span> <span class="n">trait_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">trait</span> <span class="o">=</span> <span class="n">CTrait</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
+
+            <span class="n">validate</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;fast_validate&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">validate</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;validate&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">validate</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;is_valid_for&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_valid_for</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">validate</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;value_for&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_for</span>
+
+            <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">trait</span><span class="o">.</span><span class="n">set_validate</span><span class="p">(</span><span class="n">validate</span><span class="p">)</span>
+
+            <span class="n">post_setattr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;post_setattr&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">post_setattr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">trait</span><span class="o">.</span><span class="n">post_setattr</span> <span class="o">=</span> <span class="n">post_setattr</span>
+                <span class="n">trait</span><span class="o">.</span><span class="n">is_mapped</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_mapped</span>
+
+            <span class="c1"># Note: The use of &#39;rich_compare&#39; metadata is deprecated; use</span>
+            <span class="c1"># &#39;comparison_mode&#39; metadata instead. Ref: enthought/traits#602.</span>
+            <span class="n">rich_compare</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rich_compare&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rich_compare</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;The &#39;rich_compare&#39; metadata has been deprecated. Please &quot;</span>
+                    <span class="s2">&quot;use the &#39;comparison_mode&#39; metadata instead. In a future &quot;</span>
+                    <span class="s2">&quot;release, rich_compare will have no effect.&quot;</span><span class="p">,</span>
+                    <span class="ne">DeprecationWarning</span><span class="p">,</span>
+                    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">rich_compare</span><span class="p">:</span>
+                    <span class="n">trait</span><span class="o">.</span><span class="n">comparison_mode</span> <span class="o">=</span> <span class="n">ComparisonMode</span><span class="o">.</span><span class="n">equality</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">trait</span><span class="o">.</span><span class="n">comparison_mode</span> <span class="o">=</span> <span class="n">ComparisonMode</span><span class="o">.</span><span class="n">identity</span>
+
+            <span class="n">comparison_mode</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;comparison_mode&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">comparison_mode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">trait</span><span class="o">.</span><span class="n">comparison_mode</span> <span class="o">=</span> <span class="n">comparison_mode</span>
+
+            <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;trait&quot;</span><span class="p">)</span>
+
+        <span class="n">trait</span><span class="o">.</span><span class="n">set_default_value</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">get_default_value</span><span class="p">())</span>
+
+        <span class="n">trait</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="bp">self</span>
+
+        <span class="n">trait</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">trait</span></div>
+
+<div class="viewcode-block" id="TraitType.instantiate_and_get_ctrait"><a class="viewcode-back" href="../../traits_api_reference/trait_type.html#traits.trait_type.TraitType.instantiate_and_get_ctrait">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">instantiate_and_get_ctrait</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Instantiate the class an return a CTrait instance</span>
+
+<span class="sd">        This is primarily to allow traits to be defined within</span>
+<span class="sd">        classes without having to explicitly call them.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">()</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;__&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; object has no attribute &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_metadata&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought Inc
+      </li>
+      <li>
+      Last updated on Feb 14, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

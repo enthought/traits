@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>traits.base_trait_handler Module &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '6.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="traits.constants Module" href="constants.html" >
+    <link rel="prev" title="traits.has_traits Module" href="has_traits.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="constants.html" title="traits.constants Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="has_traits.html" title="traits.has_traits Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="module-traits.base_trait_handler">
+<span id="traits-base-trait-handler-module"></span><h1><a class="reference internal" href="#module-traits.base_trait_handler" title="traits.base_trait_handler"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.base_trait_handler</span></code></a> Module<a class="headerlink" href="#module-traits.base_trait_handler" title="Permalink to this headline">¶</a></h1>
+<p>Defines the Abstract BaseTraitHandler class.</p>
+<p>A trait handler mediates the assignment of values to object traits. It
+verifies (via its validate() method) that a specified value is consistent
+with the object trait, and generates a TraitError exception if it is not
+consistent.</p>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="traits.base_trait_handler.BaseTraitHandler">
+<em class="property">class </em><code class="sig-prename descclassname">traits.base_trait_handler.</code><code class="sig-name descname">BaseTraitHandler</code><a class="reference internal" href="../_modules/traits/base_trait_handler.html#BaseTraitHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.base_trait_handler.BaseTraitHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>The task of this class and its subclasses is to verify the correctness
+of values assigned to object trait attributes.</p>
+<p>This class is an alternative to trait validator functions. A trait handler
+has several advantages over a trait validator function, due to being an
+object:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Trait handlers have constructors and state. Therefore, you can use
+them to create <em>parametrized types</em>.</p></li>
+<li><p>Trait handlers can have multiple methods, whereas validator functions
+can have only one callable interface. This feature allows more
+flexibility in their implementation, and allows them to handle a
+wider range of cases, such as interactions with other components.</p></li>
+</ul>
+</div></blockquote>
+<dl class="method">
+<dt id="traits.base_trait_handler.BaseTraitHandler.error">
+<code class="sig-name descname">error</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/base_trait_handler.html#BaseTraitHandler.error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.base_trait_handler.BaseTraitHandler.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises a TraitError exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<em>object</em>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>value</strong> (<em>object</em>) – The proposed new value for the attribute.</p></li>
+<li><p><strong>Description</strong> – </p></li>
+<li><p><strong>-----------</strong> – </p></li>
+<li><p><strong>method is called by the validate</strong><strong>(</strong><strong>) </strong><strong>method when an assigned value</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </p></li>
+<li><p><strong>not valid. Raising a TraitError exception either notifies the user of</strong> (<em>is</em>) – </p></li>
+<li><p><strong>problem</strong><strong>, </strong><strong>or</strong><strong>, </strong><strong>in the case of compound traits</strong><strong>, </strong><strong>provides a chance for</strong> (<em>the</em>) – </p></li>
+<li><p><strong>trait handler to handle to validate the value.</strong> (<em>another</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.base_trait_handler.BaseTraitHandler.full_info">
+<code class="sig-name descname">full_info</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/base_trait_handler.html#BaseTraitHandler.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.base_trait_handler.BaseTraitHandler.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string describing the type of value accepted by the
+trait handler.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<em>object</em>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>value</strong> – The proposed new value for the attribute.</p></li>
+<li><p><strong>Description</strong> – </p></li>
+<li><p><strong>-----------</strong> – </p></li>
+<li><p><strong>string should be a phrase describing the type defined by the</strong> (<em>The</em>) – </p></li>
+<li><p><strong>subclass</strong><strong>, </strong><strong>rather than a complete sentence. For example</strong><strong>, </strong><strong>use</strong> (<a class="reference internal" href="trait_handler.html#traits.trait_handler.TraitHandler" title="traits.trait_handler.TraitHandler"><em>TraitHandler</em></a>) – </p></li>
+<li><p><strong>phrase</strong><strong>, </strong><strong>&quot;a square sprocket&quot; instead of the sentence</strong><strong>, </strong><strong>&quot;The value must</strong> (<em>the</em>) – </p></li>
+<li><p><strong>a square sprocket.&quot; The value returned by full_info</strong><strong>(</strong><strong>) </strong><strong>is combined</strong> (<em>be</em>) – </p></li>
+<li><p><strong>other information whenever an error occurs and therefore makes more</strong> (<em>with</em>) – </p></li>
+<li><p><strong>to the user if the result is a phrase. The full_info</strong><strong>(</strong><strong>) </strong><strong>method is</strong> (<em>sense</em>) – </p></li>
+<li><p><strong>in purpose and use to the info attribute of a validator</strong> (<em>similar</em>) – </p></li>
+<li><p><strong>function.</strong> – </p></li>
+<li><p><strong>that the result can include information specific to the particular</strong> (<em>Note</em>) – </p></li>
+<li><p><strong>handler instance. If the full_info</strong><strong>(</strong><strong>) </strong><strong>method is not overridden</strong><strong>,</strong> (<em>trait</em>) – </p></li>
+<li><p><strong>default method returns the value of calling the info</strong><strong>(</strong><strong>) </strong><strong>method.</strong> (<em>the</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.base_trait_handler.BaseTraitHandler.info">
+<code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/base_trait_handler.html#BaseTraitHandler.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.base_trait_handler.BaseTraitHandler.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must return a string describing the type of value accepted by the
+trait handler.</p>
+<p>The string should be a phrase describing the type defined by the
+TraitHandler subclass, rather than a complete sentence. For example, use
+the phrase, “a square sprocket” instead of the sentence, “The value must
+be a square sprocket.” The value returned by info() is combined with
+other information whenever an error occurs and therefore makes more
+sense to the user if the result is a phrase. The info() method is
+similar in purpose and use to the <strong>info</strong> attribute of a validator
+function.</p>
+<p>Note that the result can include information specific to the particular
+trait handler instance. If the info() method is not overridden, the
+default method returns the value of the ‘info_text’ attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.base_trait_handler.BaseTraitHandler.get_editor">
+<code class="sig-name descname">get_editor</code><span class="sig-paren">(</span><em class="sig-param">trait=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/base_trait_handler.html#BaseTraitHandler.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.base_trait_handler.BaseTraitHandler.get_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a trait editor that allows the user to modify the <em>trait</em>
+trait.
+This method only needs to be specified if traits defined using this
+trait handler require a non-default trait editor in trait user
+interfaces. The default implementation of this method returns a trait
+editor that allows the user to type an arbitrary string as the value.</p>
+<p>For more information on trait user interfaces, refer to the <em>Traits UI
+User Guide</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.base_trait_handler.BaseTraitHandler.create_editor">
+<code class="sig-name descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/base_trait_handler.html#BaseTraitHandler.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.base_trait_handler.BaseTraitHandler.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor to use for a trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.base_trait_handler.BaseTraitHandler.inner_traits">
+<code class="sig-name descname">inner_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/base_trait_handler.html#BaseTraitHandler.inner_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.base_trait_handler.BaseTraitHandler.inner_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tuple containing the <em>inner traits</em> for this trait. Most
+trait handlers do not have any inner traits, and so will return an
+empty tuple. The exceptions are <strong>List</strong> and <strong>Dict</strong> trait types,
+which have inner traits used to validate the values assigned to the
+trait. For example, in <em>List( Int )</em>, the <em>inner traits</em> for
+<strong>List</strong> are ( <strong>Int</strong>, ).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.base_trait_handler</span></code> Module</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="has_traits.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.has_traits</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="constants.html"
+                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.constants</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/base_trait_handler.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought Inc
+      </li>
+      <li>
+      Last updated on Feb 14, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

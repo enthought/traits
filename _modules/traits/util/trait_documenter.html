@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '5.2.0',
+        VERSION:     '6.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
     <link rel="top" title="Traits 5 User Manual" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
@@ -53,6 +54,10 @@
               
     <ul class="nav nav-pills pull-right">
       <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
         <a href="../../../py-modindex.html" title="Python Module Index"
            >modules</a>
       </li>
@@ -70,26 +75,31 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for traits.util.trait_documenter</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A Trait Documenter</span>
 <span class="sd">    (Subclassed from the autodoc ClassLevelDocumenter)</span>
 
-<span class="sd">    :copyright: Copyright 2012 by Enthought, Inc</span>
-
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="k">import</span> <span class="n">import_module</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">token</span>
 <span class="kn">import</span> <span class="nn">tokenize</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 
-<span class="kn">import</span> <span class="nn">six</span>
-
-
 <span class="kn">from</span> <span class="nn">sphinx.ext.autodoc</span> <span class="k">import</span> <span class="n">ClassLevelDocumenter</span>
 
-<span class="kn">from</span> <span class="nn">..trait_handlers</span> <span class="k">import</span> <span class="n">TraitType</span>
+<span class="kn">from</span> <span class="nn">..trait_type</span> <span class="k">import</span> <span class="n">TraitType</span>
 <span class="kn">from</span> <span class="nn">..has_traits</span> <span class="k">import</span> <span class="n">MetaHasTraits</span>
 
 
@@ -152,8 +162,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="nb">__import__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modname</span><span class="p">)</span>
-            <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">modname</span><span class="p">]</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modname</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objpath</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attr</span><span class="p">(</span><span class="n">current</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span>
             <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objpath</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -188,9 +197,9 @@
         <span class="c1"># Workaround for enthought/traits#493: if the definition is multiline,</span>
         <span class="c1"># throw away all lines after the first.</span>
         <span class="k">if</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">definition</span><span class="p">:</span>
-            <span class="n">definition</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="sa">u</span><span class="s2">&quot; …&quot;</span>
+            <span class="n">definition</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; …&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;   :annotation: = </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">definition</span><span class="p">),</span> <span class="s2">&quot;&lt;autodoc&gt;&quot;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="s2">&quot;   :annotation: = </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">definition</span><span class="p">),</span> <span class="s2">&quot;&lt;autodoc&gt;&quot;</span><span class="p">)</span></div>
 
     <span class="c1"># Private Interface #####################################################</span>
 
@@ -200,7 +209,7 @@
 
         <span class="c1"># Get the class source and tokenize it.</span>
         <span class="n">source</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
-        <span class="n">string_io</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">string_io</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
         <span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenize</span><span class="o">.</span><span class="n">generate_tokens</span><span class="p">(</span><span class="n">string_io</span><span class="o">.</span><span class="n">readline</span><span class="p">)</span>
 
         <span class="c1"># find the trait definition start</span>
@@ -217,9 +226,6 @@
         <span class="c1"># Retrieve the trait definition.</span>
         <span class="n">definition_tokens</span> <span class="o">=</span> <span class="n">_get_definition_tokens</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
         <span class="n">definition</span> <span class="o">=</span> <span class="n">tokenize</span><span class="o">.</span><span class="n">untokenize</span><span class="p">(</span><span class="n">definition_tokens</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
-            <span class="n">definition</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="n">definition</span></div>
 
 
@@ -273,13 +279,11 @@
               <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
             </a></p>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -300,13 +304,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2019, Enthought Inc
+        &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on Nov 18, 2019.
+      Last updated on Feb 14, 2020.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
       </li>
     </ul>
     </div>

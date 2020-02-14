@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>Testing &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="Traits 5 User Manual" href="index.html" >
+    <link rel="next" title="Tips for debugging Traits" href="debugging.html" >
+    <link rel="prev" title="Advanced Topics" href="advanced.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">Traits 5 User Manual</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="debugging.html" title="Tips for debugging Traits"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="advanced.html" title="Advanced Topics"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="testing">
+<span id="index-0"></span><h1>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="testing-traits-classes">
+<span id="testing-trait-classes"></span><h2>Testing Traits Classes<a class="headerlink" href="#testing-traits-classes" title="Permalink to this headline">¶</a></h2>
+<p>A mixin class is provided to facilitate writing tests for HasTraits classes.
+The following methods are available when <a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools" title="traits.testing.unittest_tools.UnittestTools"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnittestTools</span></code></a> is added as a
+mixin class in the developer’s test cases.</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChanges" title="traits.testing.unittest_tools.UnittestTools.assertTraitChanges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assertTraitChanges</span></code></a></td>
+<td>Assert an object trait changes a given number of times.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange" title="traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assertTraitDoesNotChange</span></code></a></td>
+<td>Assert an object trait does not change.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges" title="traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assertMultiTraitChanges</span></code></a></td>
+<td>Assert that traits on multiple objects do or do not change.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync" title="traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assertTraitChangesAsync</span></code></a></td>
+<td>Assert an object trait eventually changes.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue" title="traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assertEventuallyTrue</span></code></a></td>
+<td>Assert that the given condition is eventually true.</td>
+</tr>
+</tbody>
+</table>
+<p>The above assert methods, except <a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue" title="traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue"><code class="xref py py-func docutils literal notranslate"><span class="pre">assertEventuallyTrue()</span></code></a>, can be used as
+context managers, which at entry, hook a trait listeners on the class for the
+desired events and record the arguments passed to the change handler at every
+fired event. This way the developer can easily assert that specific events
+have been fired. Further analysis and checking can be performed by inspecting
+the list of recorded events. Both normal and extended trait names are
+supported. However, no check is performed regarding the validity of the trait
+name, thus care is required to safeguard against spelling mistakes in the
+names of the traits that we need to assert the behaviour.</p>
+<p>The following example demonstrates the basic usage of the mixin class in a
+TestCase:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">on_trait_change</span>
+<span class="kn">from</span> <span class="nn">traits.testing.api</span> <span class="k">import</span> <span class="n">UnittestTools</span>
+
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+
+    <span class="n">number</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">list_of_numbers</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Float</span><span class="p">)</span>
+    <span class="n">flag</span> <span class="o">=</span> <span class="n">Bool</span>
+
+    <span class="nd">@on_trait_change</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_add_number_to_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Append the value to the list of numbers. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">list_of_numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_to_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add the value to `number`. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">+=</span> <span class="n">value</span>
+
+
+<span class="k">class</span> <span class="nc">MyTestCase</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">,</span> <span class="n">UnittestTools</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">my_class</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">test_when_using_with</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Check normal use cases as a context manager.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">my_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">my_class</span>
+
+        <span class="c1"># Checking for change events</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">5.0</span>
+
+        <span class="c1"># Inspecting the last recorded event</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertSequenceEqual</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">events</span><span class="p">,</span> <span class="p">[</span><span class="n">expected</span><span class="p">])</span>
+
+        <span class="c1"># Checking for specific number of events</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">add_to_number</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">add_to_number</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">add_to_number</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
+
+        <span class="n">expected</span> <span class="o">=</span> <span class="p">[(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">),</span>
+                    <span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">),</span>
+                    <span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertSequenceEqual</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">events</span><span class="p">,</span> <span class="n">expected</span><span class="p">)</span>
+
+        <span class="c1"># Check using extended names</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;list_of_numbers[]&#39;</span><span class="p">):</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="o">-</span><span class="mf">3.0</span>
+
+        <span class="c1"># Check that event is not fired</span>
+        <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">2.0</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitDoesNotChange</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># The value is the same as the original</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-mocks">
+<h2>Using Mocks<a class="headerlink" href="#using-mocks" title="Permalink to this headline">¶</a></h2>
+<p>Trying to mock a method in a <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasStrictTraits</span></code></a> instance will raise an error
+because the <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasStrictTraits</span></code></a> machinery does not allow any modification of
+the methods and attributes of a <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasStrictTraits</span></code></a> instance. To circumvent the
+<a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasStrictTraits</span></code></a> machinery, and mock methods using <code class="docutils literal notranslate"><span class="pre">unittest.mock</span></code> or
+<a class="reference external" href="https://pypi.python.org/pypi/mock">the mock library</a>, please follow the logic in the example below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasStrictTraits</span><span class="p">,</span> <span class="n">Float</span>
+<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="k">import</span> <span class="n">Mock</span>
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
+
+    <span class="n">number</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_to_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add the value to `number`. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">+=</span> <span class="n">value</span>
+
+<span class="n">my_class</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+
+<span class="c1"># Using my_class.add_to_number = Mock() will fail.</span>
+<span class="c1"># But setting the mock on the instance `__dict__` works.</span>
+<span class="n">my_class</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;add_to_number&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+
+<span class="c1"># We can now use the mock in our tests.</span>
+<span class="n">my_class</span><span class="o">.</span><span class="n">add_number</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_class</span><span class="o">.</span><span class="n">add_to_number</span><span class="o">.</span><span class="n">call_args_list</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The above method will not work for mocking <a class="reference internal" href="../traits_api_reference/traits.html#traits.traits.Property" title="traits.traits.Property"><code class="xref py py-func docutils literal notranslate"><span class="pre">Property()</span></code></a> setters,
+getters and validators.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Testing</a><ul>
+<li><a class="reference internal" href="#testing-traits-classes">Testing Traits Classes</a></li>
+<li><a class="reference internal" href="#using-mocks">Using Mocks</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="advanced.html"
+                        title="previous chapter">Advanced Topics</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="debugging.html"
+                        title="next chapter">Tips for debugging Traits</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_user_manual/testing.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2019, Enthought Inc
+      </li>
+      <li>
+      Last updated on Nov 18, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

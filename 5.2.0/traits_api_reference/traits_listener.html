@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>traits_listener Module &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="trait_notifiers Module" href="trait_notifiers.html" >
+    <link rel="prev" title="trait_value Module" href="trait_value.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="trait_notifiers.html" title="trait_notifiers Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="trait_value.html" title="trait_value Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="module-traits.traits_listener">
+<span id="traits-listener-module"></span><h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits_listener</span></code> Module<a class="headerlink" href="#module-traits.traits_listener" title="Permalink to this headline">¶</a></h1>
+<p>Defines classes used to implement and manage various trait listener
+patterns.</p>
+<dl class="function">
+<dt id="traits.traits_listener.indent">
+<code class="descclassname">traits.traits_listener.</code><code class="descname">indent</code><span class="sig-paren">(</span><em>text</em>, <em>first_line=True</em>, <em>n=1</em>, <em>width=4</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#indent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.indent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indent lines of text.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> (<em>str</em>) – The text to indent.</li>
+<li><strong>first_line</strong> (<em>bool</em><em>, </em><em>optional</em>) – If False, then the first line will not be indented (default: True).</li>
+<li><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – The level of indentation (default: 1).</li>
+<li><strong>width</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of spaces in each level of indentation (default: 4).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>indented</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.traits_listener.is_not_none">
+<code class="descclassname">traits.traits_listener.</code><code class="descname">is_not_none</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#is_not_none"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.is_not_none" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="traits.traits_listener.is_none">
+<code class="descclassname">traits.traits_listener.</code><code class="descname">is_none</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#is_none"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.is_none" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="traits.traits_listener.not_event">
+<code class="descclassname">traits.traits_listener.</code><code class="descname">not_event</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#not_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.not_event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.traits_listener.ListenerBase">
+<em class="property">class </em><code class="descclassname">traits.traits_listener.</code><code class="descname">ListenerBase</code><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="has_traits.html#traits.has_traits.HasPrivateTraits" title="traits.has_traits.HasPrivateTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasPrivateTraits</span></code></a></p>
+<dl class="method">
+<dt id="traits.traits_listener.ListenerBase.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerBase.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerBase.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers new listeners.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerBase.unregister">
+<code class="descname">unregister</code><span class="sig-paren">(</span><em>old</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerBase.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerBase.unregister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters any existing listeners.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerBase.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerBase.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerBase.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a trait change for a simple trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerBase.handle_list">
+<code class="descname">handle_list</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerBase.handle_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerBase.handle_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a trait change for a list trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerBase.handle_list_items">
+<code class="descname">handle_list_items</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerBase.handle_list_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerBase.handle_list_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a trait change for a list traits items.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerBase.handle_dict">
+<code class="descname">handle_dict</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerBase.handle_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerBase.handle_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a trait change for a dictionary trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerBase.handle_dict_items">
+<code class="descname">handle_dict_items</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerBase.handle_dict_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerBase.handle_dict_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a trait change for a dictionary traits items.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.traits_listener.ListenerItem">
+<em class="property">class </em><code class="descclassname">traits.traits_listener.</code><code class="descname">ListenerItem</code><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#traits.traits_listener.ListenerBase" title="traits.traits_listener.ListenerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.traits_listener.ListenerBase</span></code></a></p>
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.name">
+<code class="descname">name</code><em class="property"> = Str</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the trait to listen to:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.metadata_name">
+<code class="descname">metadata_name</code><em class="property"> = Str</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.metadata_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of any metadata that must be present (or not present):</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.metadata_defined">
+<code class="descname">metadata_defined</code><em class="property"> = Bool(True)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.metadata_defined" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does the specified metadata need to be defined (True) or not defined
+(False)?</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.handler">
+<code class="descname">handler</code><em class="property"> = Any</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>The handler to be called when any listened-to trait is changed:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.wrapped_handler_ref">
+<code class="descname">wrapped_handler_ref</code><em class="property"> = Any</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.wrapped_handler_ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>A weakref ‘wrapped’ version of ‘handler’:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.dispatch">
+<code class="descname">dispatch</code><em class="property"> = Str</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>The dispatch mechanism to use when invoking the handler:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.priority">
+<code class="descname">priority</code><em class="property"> = Bool(False)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.priority" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does the handler go at the beginning (True) or end (False) of the
+notification handlers list?</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.next">
+<code class="descname">next</code><em class="property"> = Instance(ListenerBase)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.next" title="Permalink to this definition">¶</a></dt>
+<dd><p>The next level (if any) of ListenerBase object to be called when any of
+this object’s listened-to traits is changed:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.type">
+<code class="descname">type</code><em class="property"> = Enum(ANY_LISTENER, SRC_LISTENER, DST_LISTENER)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of handler being used:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.notify">
+<code class="descname">notify</code><em class="property"> = Bool(True)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.notify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should changes to this item generate a notification to the handler?</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.deferred">
+<code class="descname">deferred</code><em class="property"> = Bool(False)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.deferred" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should registering listeners for items reachable from this listener item
+be deferred until the associated trait is first read or set?</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.is_any_trait">
+<code class="descname">is_any_trait</code><em class="property"> = Bool(False)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.is_any_trait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is this an ‘any_trait’ change listener, or does it create explicit
+listeners for each individual trait?</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.is_list_handler">
+<code class="descname">is_list_handler</code><em class="property"> = Bool(False)</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.is_list_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is the associated handler a special list handler that handles both
+‘foo’ and ‘foo_items’ events by receiving a list of ‘deleted’ and ‘added’
+items as the ‘old’ and ‘new’ arguments?</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerItem.active">
+<code class="descname">active</code><em class="property"> = Instance(WeakIDKeyDict, ())</em><a class="headerlink" href="#traits.traits_listener.ListenerItem.active" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary mapping objects to a list of all current active
+(<em>name</em>, <em>type</em>) listener pairs, where <em>type</em> defines the type of
+listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerItem.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerItem.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerItem.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers new listeners.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerItem.unregister">
+<code class="descname">unregister</code><span class="sig-paren">(</span><em>old</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerItem.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerItem.unregister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters any existing listeners.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerItem.handle_simple">
+<code class="descname">handle_simple</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerItem.handle_simple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerItem.handle_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a trait change for an intermediate link trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerItem.handle_dst">
+<code class="descname">handle_dst</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerItem.handle_dst"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerItem.handle_dst" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a trait change for an intermediate link trait when the
+notification is for the final destination trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerItem.handle_list">
+<code class="descname">handle_list</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerItem.handle_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerItem.handle_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a trait change for a list (or set) trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerItem.handle_list_items">
+<code class="descname">handle_list_items</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerItem.handle_list_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerItem.handle_list_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a trait change for items of a list (or set) trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerItem.handle_list_items_special">
+<code class="descname">handle_list_items_special</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerItem.handle_list_items_special"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerItem.handle_list_items_special" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a trait change for items of a list (or set) trait with
+notification.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerItem.handle_dict">
+<code class="descname">handle_dict</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerItem.handle_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerItem.handle_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a trait change for a dictionary trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerItem.handle_dict_items">
+<code class="descname">handle_dict_items</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerItem.handle_dict_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerItem.handle_dict_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a trait change for items of a dictionary trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerItem.handle_error">
+<code class="descname">handle_error</code><span class="sig-paren">(</span><em>obj</em>, <em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerItem.handle_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerItem.handle_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles an invalid intermediate trait change to a handler that must
+be applied to the final destination object.trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.traits_listener.ListenerGroup">
+<em class="property">class </em><code class="descclassname">traits.traits_listener.</code><code class="descname">ListenerGroup</code><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#traits.traits_listener.ListenerBase" title="traits.traits_listener.ListenerBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.traits_listener.ListenerBase</span></code></a></p>
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerGroup.handler">
+<code class="descname">handler</code><em class="property"> = Property</em><a class="headerlink" href="#traits.traits_listener.ListenerGroup.handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>The handler to be called when any listened-to trait is changed</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerGroup.wrapped_handler_ref">
+<code class="descname">wrapped_handler_ref</code><em class="property"> = Property</em><a class="headerlink" href="#traits.traits_listener.ListenerGroup.wrapped_handler_ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>A weakref ‘wrapped’ version of ‘handler’:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerGroup.dispatch">
+<code class="descname">dispatch</code><em class="property"> = Property</em><a class="headerlink" href="#traits.traits_listener.ListenerGroup.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>The dispatch mechanism to use when invoking the handler:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerGroup.priority">
+<code class="descname">priority</code><em class="property"> = ListProperty</em><a class="headerlink" href="#traits.traits_listener.ListenerGroup.priority" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does the handler go at the beginning (True) or end (False) of the
+notification handlers list?</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerGroup.next">
+<code class="descname">next</code><em class="property"> = ListProperty</em><a class="headerlink" href="#traits.traits_listener.ListenerGroup.next" title="Permalink to this definition">¶</a></dt>
+<dd><p>The next level (if any) of ListenerBase object to be called when any of
+this object’s listened-to traits is changed</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerGroup.type">
+<code class="descname">type</code><em class="property"> = ListProperty</em><a class="headerlink" href="#traits.traits_listener.ListenerGroup.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of handler being used:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerGroup.notify">
+<code class="descname">notify</code><em class="property"> = ListProperty</em><a class="headerlink" href="#traits.traits_listener.ListenerGroup.notify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should changes to this item generate a notification to the handler?</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerGroup.deferred">
+<code class="descname">deferred</code><em class="property"> = ListProperty</em><a class="headerlink" href="#traits.traits_listener.ListenerGroup.deferred" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should registering listeners for items reachable from this listener item
+be deferred until the associated trait is first read or set?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerGroup.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>new</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerGroup.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerGroup.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers new listeners.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerGroup.unregister">
+<code class="descname">unregister</code><span class="sig-paren">(</span><em>old</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerGroup.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerGroup.unregister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters any existing listeners.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.traits_listener.ListenerParser">
+<em class="property">class </em><code class="descclassname">traits.traits_listener.</code><code class="descname">ListenerParser</code><span class="sig-paren">(</span><em>text=''</em>, <em>**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="has_traits.html#traits.has_traits.HasPrivateTraits" title="traits.has_traits.HasPrivateTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasPrivateTraits</span></code></a></p>
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerParser.len_text">
+<code class="descname">len_text</code><em class="property"> = Int</em><a class="headerlink" href="#traits.traits_listener.ListenerParser.len_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>The length of the string being parsed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerParser.index">
+<code class="descname">index</code><em class="property"> = Int</em><a class="headerlink" href="#traits.traits_listener.ListenerParser.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current parse index within the string</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerParser.next">
+<code class="descname">next</code><em class="property"> = Property</em><a class="headerlink" href="#traits.traits_listener.ListenerParser.next" title="Permalink to this definition">¶</a></dt>
+<dd><p>The next character from the string being parsed</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerParser.name">
+<code class="descname">name</code><em class="property"> = Property</em><a class="headerlink" href="#traits.traits_listener.ListenerParser.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The next Python attribute name within the string:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerParser.skip_ws">
+<code class="descname">skip_ws</code><em class="property"> = Property</em><a class="headerlink" href="#traits.traits_listener.ListenerParser.skip_ws" title="Permalink to this definition">¶</a></dt>
+<dd><p>The next non-whitespace character</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerParser.backspace">
+<code class="descname">backspace</code><em class="property"> = Property</em><a class="headerlink" href="#traits.traits_listener.ListenerParser.backspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Backspaces to the last character processed</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerParser.listener">
+<code class="descname">listener</code><em class="property"> = Instance(ListenerBase)</em><a class="headerlink" href="#traits.traits_listener.ListenerParser.listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ListenerBase object resulting from parsing <strong>text</strong></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits_listener.ListenerParser.text">
+<code class="descname">text</code><em class="property"> = Str</em><a class="headerlink" href="#traits.traits_listener.ListenerParser.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>The string being parsed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerParser.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerParser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the text and returns the appropriate collection of
+ListenerBase objects described by the text.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerParser.parse_group">
+<code class="descname">parse_group</code><span class="sig-paren">(</span><em>terminator=']'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerParser.parse_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerParser.parse_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the contents of a group.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerParser.parse_item">
+<code class="descname">parse_item</code><span class="sig-paren">(</span><em>terminator</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerParser.parse_item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerParser.parse_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a single, complete listener item or group string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerParser.parse_metadata">
+<code class="descname">parse_metadata</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerParser.parse_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerParser.parse_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the metadata portion of a listener item.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerParser.error">
+<code class="descname">error</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerParser.error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerParser.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises a syntax error.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.traits_listener.ListenerNotifyWrapper">
+<em class="property">class </em><code class="descclassname">traits.traits_listener.</code><code class="descname">ListenerNotifyWrapper</code><span class="sig-paren">(</span><em>handler</em>, <em>owner</em>, <em>id</em>, <em>listener</em>, <em>target=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trait_notifiers.html#traits.trait_notifiers.TraitChangeNotifyWrapper" title="traits.trait_notifiers.TraitChangeNotifyWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">traits.trait_notifiers.TraitChangeNotifyWrapper</span></code></a></p>
+<dl class="method">
+<dt id="traits.traits_listener.ListenerNotifyWrapper.listener_deleted">
+<code class="descname">listener_deleted</code><span class="sig-paren">(</span><em>ref</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerNotifyWrapper.listener_deleted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerNotifyWrapper.listener_deleted" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="traits.traits_listener.ListenerNotifyWrapper.owner_deleted">
+<code class="descname">owner_deleted</code><span class="sig-paren">(</span><em>ref</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerNotifyWrapper.owner_deleted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerNotifyWrapper.owner_deleted" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.traits_listener.ListenerHandler">
+<em class="property">class </em><code class="descclassname">traits.traits_listener.</code><code class="descname">ListenerHandler</code><span class="sig-paren">(</span><em>handler</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="traits.traits_listener.ListenerHandler.listener_deleted">
+<code class="descname">listener_deleted</code><span class="sig-paren">(</span><em>ref</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits_listener.html#ListenerHandler.listener_deleted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits_listener.ListenerHandler.listener_deleted" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trait_value.html"
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">trait_value</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trait_notifiers.html"
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">trait_notifiers</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/traits_listener.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2019, Enthought Inc
+      </li>
+      <li>
+      Last updated on Nov 18, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

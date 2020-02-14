@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>util Package &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="prev" title="testing Package" href="traits.testing.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="traits.testing.html" title="testing Package"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="util-package">
+<h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">util</span></code> Package<a class="headerlink" href="#util-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">util</span></code> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-traits.util"></span><p>Utility functions, part of the Traits project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Copyright:</th><td class="field-body">2003-2013 Enthought, Inc.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="module-traits.util.async_trait_wait">
+<span id="async-trait-wait-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">async_trait_wait</span></code> Module<a class="headerlink" href="#module-traits.util.async_trait_wait" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="traits.util.async_trait_wait.wait_for_condition">
+<code class="descclassname">traits.util.async_trait_wait.</code><code class="descname">wait_for_condition</code><span class="sig-paren">(</span><em>condition</em>, <em>obj</em>, <em>trait</em>, <em>timeout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/async_trait_wait.html#wait_for_condition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.async_trait_wait.wait_for_condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait until the given condition is true, re-evaluating on trait change.</p>
+<p>This is intended for use in multithreading situations where traits can be
+modified from a different thread than the calling thread.</p>
+<p>Wait until <cite>condition</cite> is satisfied.  Raise a RuntimeError if
+<cite>condition</cite> is not satisfied within the given timeout.</p>
+<p><cite>condition</cite> is a callback function that will be called with <cite>obj</cite>
+as its single argument.  It should return a boolean indicating
+whether the condition is satisfied or not.</p>
+<p><cite>timeout</cite> gives the maximum time in seconds to wait for the
+condition to become true.  The default value of <cite>None</cite> indicates
+no timeout.</p>
+<p>(obj, trait) give an object and trait to listen to for indication
+of a possible change: whenever the trait changes, the condition is
+re-evaluated.  The condition will also be evaluated on entering
+this function.</p>
+<p>Note that in cases of unusual timing it’s possible for the condition to be
+evaluated one more time <em>after</em> the <code class="docutils literal notranslate"><span class="pre">wait_for_condition</span></code> call has
+returned.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.camel_case">
+<span id="camel-case-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">camel_case</span></code> Module<a class="headerlink" href="#module-traits.util.camel_case" title="Permalink to this headline">¶</a></h2>
+<p>Defines utility functions for operating on camel case names.</p>
+<dl class="class">
+<dt id="traits.util.camel_case.CamelCaseToPython">
+<em class="property">class </em><code class="descclassname">traits.util.camel_case.</code><code class="descname">CamelCaseToPython</code><a class="reference internal" href="../_modules/traits/util/camel_case.html#CamelCaseToPython"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.camel_case.CamelCaseToPython" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Simple functor class to convert names from camel case to idiomatic
+Python variable names.</p>
+<dl class="docutils">
+<dt>For example::</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">camel2python</span> <span class="o">=</span> <span class="n">CamelCaseToPython</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">camel2python</span><span class="p">(</span><span class="s1">&#39;XMLActor2DToSGML&#39;</span><span class="p">)</span>
+<span class="go">&#39;xml_actor2d_to_sgml&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.camel_case.camel_case_to_words">
+<code class="descclassname">traits.util.camel_case.</code><code class="descname">camel_case_to_words</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/camel_case.html#camel_case_to_words"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.camel_case.camel_case_to_words" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a camel case string into words separated by spaces.</p>
+<dl class="docutils">
+<dt>For example::</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">camel_case_to_words</span><span class="p">(</span><span class="s1">&#39;CamelCase&#39;</span><span class="p">)</span>
+<span class="go">&#39;Camel Case&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.clean_strings">
+<span id="clean-strings-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">clean_strings</span></code> Module<a class="headerlink" href="#module-traits.util.clean_strings" title="Permalink to this headline">¶</a></h2>
+<p>Provides functions that mange strings to avoid characters that would be
+problematic in certain situations.</p>
+<dl class="function">
+<dt id="traits.util.clean_strings.clean_filename">
+<code class="descclassname">traits.util.clean_strings.</code><code class="descname">clean_filename</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/clean_strings.html#clean_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.clean_strings.clean_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Munge a string to avoid characters that might be problematic as
+a filename in some filesystems.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.clean_strings.clean_timestamp">
+<code class="descclassname">traits.util.clean_strings.</code><code class="descname">clean_timestamp</code><span class="sig-paren">(</span><em>dt=None</em>, <em>microseconds=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/clean_strings.html#clean_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.clean_strings.clean_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a timestamp that has been cleansed of characters that might
+cause problems in filenames, namely colons.  If no datetime object
+is provided, then uses the current time.</p>
+<p>The timestamp is in ISO-8601 format with the following exceptions:</p>
+<ul class="simple">
+<li>Colons ‘:’ are replaced by underscores ‘_’.</li>
+<li>Microseconds are not displayed if the ‘microseconds’ parameter is
+False.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dt</strong> (<em>None</em><em> or </em><em>datetime.datetime</em>) – If None, then the current time is used.</li>
+<li><strong>microseconds</strong> (<em>bool</em>) – Display microseconds or not.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A string timestamp.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.clean_strings.python_name">
+<code class="descclassname">traits.util.clean_strings.</code><code class="descname">python_name</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/clean_strings.html#python_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.clean_strings.python_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempt to make a valid Python identifier out of a name.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.deprecated">
+<span id="deprecated-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">deprecated</span></code> Module<a class="headerlink" href="#module-traits.util.deprecated" title="Permalink to this headline">¶</a></h2>
+<p>A decorator for marking methods/functions as deprecated.</p>
+<dl class="function">
+<dt id="traits.util.deprecated.deprecated">
+<code class="descclassname">traits.util.deprecated.</code><code class="descname">deprecated</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/deprecated.html#deprecated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.deprecated.deprecated" title="Permalink to this definition">¶</a></dt>
+<dd><p>A factory for decorators for marking methods/functions as deprecated.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.home_directory">
+<span id="home-directory-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">home_directory</span></code> Module<a class="headerlink" href="#module-traits.util.home_directory" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="traits.util.home_directory.get_home_directory">
+<code class="descclassname">traits.util.home_directory.</code><code class="descname">get_home_directory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/home_directory.html#get_home_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.home_directory.get_home_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the user’s home directory.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.resource">
+<span id="resource-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">resource</span></code> Module<a class="headerlink" href="#module-traits.util.resource" title="Permalink to this headline">¶</a></h2>
+<p>Utility functions for managing and finding resources (ie. images/files etc).</p>
+<p>get_path :           Returns the absolute path of a class or instance</p>
+<dl class="docutils">
+<dt>create_unique_name <span class="classifier-delimiter">:</span> <span class="classifier">Creates a name with a given prefix that is not in a</span></dt>
+<dd>given list of existing names. The separator between the
+prefix and the rest of the name can also be specified
+(default is a ‘_’)</dd>
+<dt>find_resource:       Given a setuptools project specification string</dt>
+<dd>(‘MyProject&gt;=2.1’) and a partial path leading from the
+projects base directory to the desired resource, will
+return either an opened file object or, if specified, a
+full path to the resource.</dd>
+</dl>
+<dl class="function">
+<dt id="traits.util.resource.get_path">
+<code class="descclassname">traits.util.resource.</code><code class="descname">get_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/resource.html#get_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.get_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an absolute path for the specified path.</p>
+<p>‘path’ can be a string, class or instance.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.resource.create_unique_name">
+<code class="descclassname">traits.util.resource.</code><code class="descname">create_unique_name</code><span class="sig-paren">(</span><em>prefix</em>, <em>names</em>, <em>separator='_'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/resource.html#create_unique_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.create_unique_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a name starting with ‘prefix’ that is not in ‘names’.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.resource.find_resource">
+<code class="descclassname">traits.util.resource.</code><code class="descname">find_resource</code><span class="sig-paren">(</span><em>project</em>, <em>resource_path</em>, <em>alt_path=None</em>, <em>return_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/resource.html#find_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.find_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a file object or file path pointing to the desired resource.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>project</strong> (<em>str</em>) – The name of the project to look for the resource in. Can be the name or
+a requirement string. Ex: ‘MyProject’, ‘MyProject&gt;1.0’, ‘MyProject==1.1’</li>
+<li><strong>resource_path</strong> (<em>str</em>) – The path to the file from inside the package. If the file desired is
+MyProject/data/image.jpg, resource_path would be ‘data/image.jpg’.</li>
+<li><strong>alt_path</strong> (<em>str</em>) – The path to the resource relative to the location of the application’s
+top-level script (the one with __main__). If this function is called in
+code/scripts/myscript.py and the resource is code/data/image.jpg, the
+alt_path would be ‘../data/image.jpg’. This path is only used if the
+resource cannot be found using setuptools.</li>
+<li><strong>return_path</strong> (<em>bool</em>) – Determines whether the function should return a file object or a full
+path to the resource.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>file</strong> (<em>file object or file path</em>) – A file object containing the resource. If return_path is True, ‘file’
+will be the full path to the resource. If the file is not found or
+cannot be opened, None is returned.</li>
+<li><em>Description</em></li>
+<li><em>———–</em></li>
+<li><em>This function will find a desired resource file and return an opened file</em></li>
+<li><em>object. The main method of finding the resource uses the pkg_resources</em></li>
+<li><em>resource_stream method, which searches your working set for the installed</em></li>
+<li><em>project specified and appends the resource_path given to the project</em></li>
+<li><em>path, leading it to the file. If setuptools is not installed or it cannot</em></li>
+<li><em>find/open the resource, find_resource will use the sys.path[0] to find the</em></li>
+<li><em>resource if alt_path is defined.</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.resource.store_resource">
+<code class="descclassname">traits.util.resource.</code><code class="descname">store_resource</code><span class="sig-paren">(</span><em>project</em>, <em>resource_path</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/resource.html#store_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.store_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store the content of a resource, given by the name of the project
+and the path (relative to the root of the project), into a newly
+created file.</p>
+<p>The first two arguments (project and resource_path) are the same
+as for the function find_resource in this module.  The third
+argument (filename) is the name of the file which will be created,
+or overwritten if it already exists.
+The return value in always None.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.import_symbol">
+<span id="import-symbol-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">import_symbol</span></code> Module<a class="headerlink" href="#module-traits.util.import_symbol" title="Permalink to this headline">¶</a></h2>
+<p>A function to import symbols.</p>
+<dl class="function">
+<dt id="traits.util.import_symbol.import_symbol">
+<code class="descclassname">traits.util.import_symbol.</code><code class="descname">import_symbol</code><span class="sig-paren">(</span><em>symbol_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/import_symbol.html#import_symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.import_symbol.import_symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import the symbol defined by the specified symbol path.</p>
+<p class="rubric">Examples</p>
+<p>import_symbol(‘tarfile:TarFile’) -&gt; TarFile
+import_symbol(‘tarfile:TarFile.open’) -&gt; TarFile.open</p>
+<p>To allow compatibility with old-school traits symbol names we also allow
+all-dotted paths, but in this case you can only import top-level names
+from the module.</p>
+<p>import_symbol(‘tarfile.TarFile’) -&gt; TarFile</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.toposort">
+<span id="toposort-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">toposort</span></code> Module<a class="headerlink" href="#module-traits.util.toposort" title="Permalink to this headline">¶</a></h2>
+<p>A simple topological sort on a dictionary graph.</p>
+<dl class="exception">
+<dt id="traits.util.toposort.CyclicGraph">
+<em class="property">exception </em><code class="descclassname">traits.util.toposort.</code><code class="descname">CyclicGraph</code><a class="reference internal" href="../_modules/traits/util/toposort.html#CyclicGraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.toposort.CyclicGraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception for cyclic graphs.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.toposort.topological_sort">
+<code class="descclassname">traits.util.toposort.</code><code class="descname">topological_sort</code><span class="sig-paren">(</span><em>graph</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/toposort.html#topological_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.toposort.topological_sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the nodes in the graph in topological order.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.trait_documenter">
+<span id="trait-documenter-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">trait_documenter</span></code> Module<a class="headerlink" href="#module-traits.util.trait_documenter" title="Permalink to this headline">¶</a></h2>
+<p>A Trait Documenter
+(Subclassed from the autodoc ClassLevelDocumenter)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">Copyright 2012 by Enthought, Inc</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="traits.util.trait_documenter.TraitDocumenter">
+<em class="property">class </em><code class="descclassname">traits.util.trait_documenter.</code><code class="descname">TraitDocumenter</code><span class="sig-paren">(</span><em>directive</em>, <em>name</em>, <em>indent=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx.ext.autodoc.ClassLevelDocumenter</span></code></p>
+<p>Specialized Documenter subclass for trait attributes.</p>
+<p>The class defines a new documenter that recovers the trait definition
+signature of module level and class level traits.</p>
+<p>To use the documenter, append the module path in the extension
+attribute of the <cite>conf.py</cite>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Using the TraitDocumenter in conjunction with TraitsDoc is not
+advised.</p>
+</div>
+<dl class="attribute">
+<dt id="traits.util.trait_documenter.TraitDocumenter.objtype">
+<code class="descname">objtype</code><em class="property"> = 'traitattribute'</em><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.objtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.trait_documenter.TraitDocumenter.directivetype">
+<code class="descname">directivetype</code><em class="property"> = 'attribute'</em><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.directivetype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.trait_documenter.TraitDocumenter.member_order">
+<code class="descname">member_order</code><em class="property"> = 60</em><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.member_order" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.trait_documenter.TraitDocumenter.priority">
+<code class="descname">priority</code><em class="property"> = 12</em><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.priority" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="traits.util.trait_documenter.TraitDocumenter.can_document_member">
+<em class="property">classmethod </em><code class="descname">can_document_member</code><span class="sig-paren">(</span><em>member</em>, <em>membername</em>, <em>isattr</em>, <em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter.can_document_member"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.can_document_member" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that the documented member is a trait instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.util.trait_documenter.TraitDocumenter.document_members">
+<code class="descname">document_members</code><span class="sig-paren">(</span><em>all_members=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter.document_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.document_members" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trait attributes have no members</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.util.trait_documenter.TraitDocumenter.add_content">
+<code class="descname">add_content</code><span class="sig-paren">(</span><em>more_content</em>, <em>no_docstring=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter.add_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.add_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Never try to get a docstring from the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.util.trait_documenter.TraitDocumenter.import_object">
+<code class="descname">import_object</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter.import_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.import_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Trait object.</p>
+<p class="rubric">Notes</p>
+<p>Code adapted from autodoc.Documenter.import_object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.util.trait_documenter.TraitDocumenter.add_directive_header">
+<code class="descname">add_directive_header</code><span class="sig-paren">(</span><em>sig</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter.add_directive_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.add_directive_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the directive header ‘attribute’ with the annotation
+option set to the trait definition.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.trait_documenter.setup">
+<code class="descclassname">traits.util.trait_documenter.</code><code class="descname">setup</code><span class="sig-paren">(</span><em>app</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the TraitDocumenter in the current sphinx autodoc instance.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.event_tracer">
+<span id="event-tracer-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">event_tracer</span></code> Module<a class="headerlink" href="#module-traits.util.event_tracer" title="Permalink to this headline">¶</a></h2>
+<p>Record trait change events in single and multi-threaded environments.</p>
+<dl class="class">
+<dt id="traits.util.event_tracer.SentinelRecord">
+<em class="property">class </em><code class="descclassname">traits.util.event_tracer.</code><code class="descname">SentinelRecord</code><a class="reference internal" href="../_modules/traits/util/event_tracer.html#SentinelRecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.SentinelRecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sentinel record to separate groups of chained change event dispatches.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.util.event_tracer.ChangeMessageRecord">
+<em class="property">class </em><code class="descclassname">traits.util.event_tracer.</code><code class="descname">ChangeMessageRecord</code><span class="sig-paren">(</span><em>time</em>, <em>indent</em>, <em>name</em>, <em>old</em>, <em>new</em>, <em>class_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#ChangeMessageRecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.ChangeMessageRecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Message record for a change event dispatch.</p>
+<dl class="attribute">
+<dt id="traits.util.event_tracer.ChangeMessageRecord.time">
+<code class="descname">time</code><a class="headerlink" href="#traits.util.event_tracer.ChangeMessageRecord.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time stamp in UTC.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.event_tracer.ChangeMessageRecord.indent">
+<code class="descname">indent</code><a class="headerlink" href="#traits.util.event_tracer.ChangeMessageRecord.indent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depth level in a chain of trait change dispatches.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.event_tracer.ChangeMessageRecord.name">
+<code class="descname">name</code><a class="headerlink" href="#traits.util.event_tracer.ChangeMessageRecord.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the trait that changed</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.event_tracer.ChangeMessageRecord.old">
+<code class="descname">old</code><a class="headerlink" href="#traits.util.event_tracer.ChangeMessageRecord.old" title="Permalink to this definition">¶</a></dt>
+<dd><p>The old value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.event_tracer.ChangeMessageRecord.new">
+<code class="descname">new</code><a class="headerlink" href="#traits.util.event_tracer.ChangeMessageRecord.new" title="Permalink to this definition">¶</a></dt>
+<dd><p>The new value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.event_tracer.ChangeMessageRecord.class_name">
+<code class="descname">class_name</code><a class="headerlink" href="#traits.util.event_tracer.ChangeMessageRecord.class_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the class that the trait change took place.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.util.event_tracer.CallingMessageRecord">
+<em class="property">class </em><code class="descclassname">traits.util.event_tracer.</code><code class="descname">CallingMessageRecord</code><span class="sig-paren">(</span><em>time</em>, <em>indent</em>, <em>handler</em>, <em>source</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#CallingMessageRecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.CallingMessageRecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Message record for a change handler call.</p>
+<dl class="attribute">
+<dt id="traits.util.event_tracer.CallingMessageRecord.time">
+<code class="descname">time</code><a class="headerlink" href="#traits.util.event_tracer.CallingMessageRecord.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time stamp in UTC.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.event_tracer.CallingMessageRecord.indent">
+<code class="descname">indent</code><a class="headerlink" href="#traits.util.event_tracer.CallingMessageRecord.indent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depth level of the call in a chain of trait change dispatches.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.event_tracer.CallingMessageRecord.handler">
+<code class="descname">handler</code><a class="headerlink" href="#traits.util.event_tracer.CallingMessageRecord.handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>The traits change handler that is called.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.event_tracer.CallingMessageRecord.source">
+<code class="descname">source</code><a class="headerlink" href="#traits.util.event_tracer.CallingMessageRecord.source" title="Permalink to this definition">¶</a></dt>
+<dd><p>The source file where the handler was defined.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.util.event_tracer.ExitMessageRecord">
+<em class="property">class </em><code class="descclassname">traits.util.event_tracer.</code><code class="descname">ExitMessageRecord</code><span class="sig-paren">(</span><em>time</em>, <em>indent</em>, <em>handler</em>, <em>exception</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#ExitMessageRecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.ExitMessageRecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Message record for returning from a change event dispatch.</p>
+<dl class="attribute">
+<dt id="traits.util.event_tracer.ExitMessageRecord.time">
+<code class="descname">time</code><a class="headerlink" href="#traits.util.event_tracer.ExitMessageRecord.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time stamp in UTC.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.event_tracer.ExitMessageRecord.indent">
+<code class="descname">indent</code><a class="headerlink" href="#traits.util.event_tracer.ExitMessageRecord.indent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depth level of the exit in a chain of trait change dispatch.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.event_tracer.ExitMessageRecord.handler">
+<code class="descname">handler</code><a class="headerlink" href="#traits.util.event_tracer.ExitMessageRecord.handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>The traits change handler that is called.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.event_tracer.ExitMessageRecord.exception">
+<code class="descname">exception</code><a class="headerlink" href="#traits.util.event_tracer.ExitMessageRecord.exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>The exception type (if one took place)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.util.event_tracer.RecordContainer">
+<em class="property">class </em><code class="descclassname">traits.util.event_tracer.</code><code class="descname">RecordContainer</code><a class="reference internal" href="../_modules/traits/util/event_tracer.html#RecordContainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.RecordContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple record container.</p>
+<p>This class is commonly used to hold records from a single thread.</p>
+<dl class="method">
+<dt id="traits.util.event_tracer.RecordContainer.record">
+<code class="descname">record</code><span class="sig-paren">(</span><em>record</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#RecordContainer.record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.RecordContainer.record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the record into the container.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.util.event_tracer.RecordContainer.save_to_file">
+<code class="descname">save_to_file</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#RecordContainer.save_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.RecordContainer.save_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the records into a file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.util.event_tracer.MultiThreadRecordContainer">
+<em class="property">class </em><code class="descclassname">traits.util.event_tracer.</code><code class="descname">MultiThreadRecordContainer</code><a class="reference internal" href="../_modules/traits/util/event_tracer.html#MultiThreadRecordContainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.MultiThreadRecordContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A container of record containers that are used by separate threads.</p>
+<p>Each record container is mapped to a thread name id. When a RecordContainer
+does not exist for a specific thread a new empty RecordContainer will be
+created on request.</p>
+<dl class="method">
+<dt id="traits.util.event_tracer.MultiThreadRecordContainer.get_change_event_collector">
+<code class="descname">get_change_event_collector</code><span class="sig-paren">(</span><em>thread_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#MultiThreadRecordContainer.get_change_event_collector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.MultiThreadRecordContainer.get_change_event_collector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dedicated RecordContainer for the thread.</p>
+<p>If no RecordContainer is found for <cite>thread_name</cite> then a new
+RecordContainer is created.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.util.event_tracer.MultiThreadRecordContainer.save_to_directory">
+<code class="descname">save_to_directory</code><span class="sig-paren">(</span><em>directory_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#MultiThreadRecordContainer.save_to_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.MultiThreadRecordContainer.save_to_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save records files into the directory.</p>
+<p>Each RecordContainer will dump its records on a separate file named
+&lt;thread_name&gt;.trace.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.util.event_tracer.ChangeEventRecorder">
+<em class="property">class </em><code class="descclassname">traits.util.event_tracer.</code><code class="descname">ChangeEventRecorder</code><span class="sig-paren">(</span><em>container</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#ChangeEventRecorder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.ChangeEventRecorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>A single thread trait change event recorder.</p>
+<dl class="method">
+<dt id="traits.util.event_tracer.ChangeEventRecorder.pre_tracer">
+<code class="descname">pre_tracer</code><span class="sig-paren">(</span><em>obj</em>, <em>name</em>, <em>old</em>, <em>new</em>, <em>handler</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#ChangeEventRecorder.pre_tracer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.ChangeEventRecorder.pre_tracer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Record a string representation of the trait change dispatch</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.util.event_tracer.ChangeEventRecorder.post_tracer">
+<code class="descname">post_tracer</code><span class="sig-paren">(</span><em>obj</em>, <em>name</em>, <em>old</em>, <em>new</em>, <em>handler</em>, <em>exception=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#ChangeEventRecorder.post_tracer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.ChangeEventRecorder.post_tracer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Record a string representation of the trait change return</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.util.event_tracer.MultiThreadChangeEventRecorder">
+<em class="property">class </em><code class="descclassname">traits.util.event_tracer.</code><code class="descname">MultiThreadChangeEventRecorder</code><span class="sig-paren">(</span><em>container</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#MultiThreadChangeEventRecorder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.MultiThreadChangeEventRecorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>A thread aware trait change recorder.</p>
+<p>The class manages multiple ChangeEventRecorders which record trait change
+events for each thread in a separate file.</p>
+<dl class="method">
+<dt id="traits.util.event_tracer.MultiThreadChangeEventRecorder.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#MultiThreadChangeEventRecorder.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.MultiThreadChangeEventRecorder.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close and stop all logging.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.util.event_tracer.MultiThreadChangeEventRecorder.pre_tracer">
+<code class="descname">pre_tracer</code><span class="sig-paren">(</span><em>obj</em>, <em>name</em>, <em>old</em>, <em>new</em>, <em>handler</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#MultiThreadChangeEventRecorder.pre_tracer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.MultiThreadChangeEventRecorder.pre_tracer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The traits pre event tracer.</p>
+<p>This method should be set as the global pre event tracer for traits.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.util.event_tracer.MultiThreadChangeEventRecorder.post_tracer">
+<code class="descname">post_tracer</code><span class="sig-paren">(</span><em>obj</em>, <em>name</em>, <em>old</em>, <em>new</em>, <em>handler</em>, <em>exception=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#MultiThreadChangeEventRecorder.post_tracer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.MultiThreadChangeEventRecorder.post_tracer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The traits post event tracer.</p>
+<p>This method should be set as the global post event tracer for traits.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.event_tracer.record_events">
+<code class="descclassname">traits.util.event_tracer.</code><code class="descname">record_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/event_tracer.html#record_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.event_tracer.record_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multi-threaded trait change event tracer.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">trace_recorder</span> <span class="k">import</span> <span class="n">record_events</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">record_events</span><span class="p">()</span> <span class="k">as</span> <span class="n">change_event_container</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">my_model</span><span class="o">.</span><span class="n">some_trait</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">change_event_container</span><span class="o">.</span><span class="n">save_to_directory</span><span class="p">(</span><span class="s1">&#39;C:\dev</span><span class="se">\t</span><span class="s1">race&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will install a tracer that will record all events that occur from
+setting of some_trait on the my_model instance.</p>
+<p>The results will be stored in one file per running thread in the
+directory ‘C:devtrace’.  The files are named after the thread being
+traced.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">util</span></code> Package</a><ul>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">util</span></code> Package</a></li>
+<li><a class="reference internal" href="#module-traits.util.async_trait_wait"><code class="docutils literal notranslate"><span class="pre">async_trait_wait</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.camel_case"><code class="docutils literal notranslate"><span class="pre">camel_case</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.clean_strings"><code class="docutils literal notranslate"><span class="pre">clean_strings</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.deprecated"><code class="docutils literal notranslate"><span class="pre">deprecated</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.home_directory"><code class="docutils literal notranslate"><span class="pre">home_directory</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.resource"><code class="docutils literal notranslate"><span class="pre">resource</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.import_symbol"><code class="docutils literal notranslate"><span class="pre">import_symbol</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.toposort"><code class="docutils literal notranslate"><span class="pre">toposort</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.trait_documenter"><code class="docutils literal notranslate"><span class="pre">trait_documenter</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.event_tracer"><code class="docutils literal notranslate"><span class="pre">event_tracer</span></code> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="traits.testing.html"
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">testing</span></code> Package</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/traits.util.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2019, Enthought Inc
+      </li>
+      <li>
+      Last updated on Nov 18, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

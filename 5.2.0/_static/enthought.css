@@ -1,0 +1,412 @@
+/* -*- css -*-
+ *
+ * sphinxdoc.css_t
+ * ~~~~~~~~~~~~~~~
+ *
+ * Sphinx stylesheet -- sphinxdoc theme.  Originally created by
+ * Armin Ronacher for Werkzeug.
+ *
+ * :copyright: Copyright 2007-2011 by the Sphinx team, see AUTHORS.
+ * :license: BSD, see LICENSE for details.
+ *
+ */
+
+@import url("basic.css");
+
+/* @import url("css/scipy-central.css"); */
+
+@font-face {
+  font-family: 'Source Code Pro';
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+  src: local('Source Code Pro'), local('SourceCodePro-Regular'), url('fonts/SourceCodePro-Regular.otf.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  src: local('Source Code Pro Semibold'), local('SourceCodePro-Semibold'), url('fonts/SourceCodePro-Semibold.otf.woff') format('woff');
+}
+
+@font-face{
+  font-family: 'Source Sans Pro';
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url('fonts/SourceSansPro-Regular.otf.woff') format('woff');
+}
+
+@font-face{
+  font-family: 'Source Sans Pro';
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  src: local('Source Sans Pro Semibold'), local('SourceSansPro-Semibold'), url('fonts/SourceSansPro-Semibold.otf.woff') format('woff');
+}
+
+@font-face{
+  font-family: 'Source Sans Pro';
+  font-weight: 400;
+  font-style: italic;
+  font-stretch: normal;
+  src: local('Source Sans Pro Italic'), local('SourceSansPro-It'), url('fonts/SourceSansPro-It.otf.woff') format('woff');
+}
+
+@font-face{
+  font-family: 'Source Sans Pro';
+  font-weight: 600;
+  font-style: italic;
+  font-stretch: normal;
+  src: local('Source Sans Pro Semibold Italic'), local('SourceSansPro-SemiboldIt'), url('fonts/SourceSansPro-SemiboldIt.otf.woff') format('woff');
+}
+
+/*
+ * General tweaks
+ */
+
+div.container-navbar-bottom {
+    margin-top: 0;
+}
+
+div.container-navbar-bottom div.spc-navbar {
+    margin-top: 0;
+}
+
+div.spc-navbar {
+    margin: 0;
+}
+
+tt {
+    color: inherit;
+    font: inherit;
+}
+
+tt.literal {
+    font-family: 'Source Code Pro', monospace;
+    padding-left: 2px;
+    background-color: rgb(242, 242, 242);
+}
+
+a tt.literal {
+    border-bottom: none;
+    background-color: inherit;
+}
+
+tt.xref {
+    border-bottom: none;
+    background-color: inherit;
+    font-weight: inherit;
+    padding-left: 0px;
+}
+
+tt.descclassname {
+    font-family: 'Source Code Pro', monospace;
+}
+
+tt.descname {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 20px;
+}
+
+code {
+    color: inherit;
+    font: inherit;
+    padding: 2px 0px;
+    border: inherit;
+}
+
+code.literal {
+    font-family: monospace;
+    padding-left: 2px;
+    background-color: rgb(242, 242, 242);
+}
+
+a code.literal {
+    border: none;
+    background-color: inherit;
+}
+
+code.xref {
+    font-family: inherit;
+    border-bottom: none;
+    background-color: inherit;
+    padding-left: 0px;
+}
+
+code.descname {
+    font-size: 16px;
+}
+
+dl.class,
+dl.function,
+dl.data
+{
+    border-top: 2px solid #888;
+    padding-top: 1px;
+}
+
+dl.attribute,
+dl.classmethod,
+dl.staticmethod,
+dl.method
+{
+    border-top: 1px solid #aaa;
+    padding-top: 1px;
+}
+
+dl.attribute > dt > tt.descname,
+dl.classmethod > dt > tt.descname,
+dl.staticmethod > dt > tt.descname,
+dl.method > dt > tt.descname
+{
+    font-size: inherit;
+}
+
+dl.class > dt,
+dl.attribute > dt,
+dl.data > dt,
+dl.function > dt,
+dl.exception > dt,
+dl.classmethod > dt,
+dl.staticmethod > dt,
+dl.method > dt
+{
+    font-weight: normal;
+    /* Fake a hanging indent. If the text has to linewrap, it will indent more
+     * than the following <dd>.
+     */
+    text-indent: -60px;
+    padding-left: 60px;
+}
+
+pre {
+    border-radius: 0;
+    border: none;
+    font-family: 'Source Code Pro', monospace;
+}
+
+.nav-pills > .active > a,
+.nav-pills > .active > a:hover,
+.nav-pills > .active > a:focus {
+  color: #ffffff;
+  background-color: #253370;
+}
+
+.nav-pills.pull-right > li {
+    float: right;
+}
+
+a {
+  color: #253370;
+  text-decoration: none;
+}
+
+/*
+ * Field lists
+ */
+
+table.field-list {
+    border-collapse: collapse;
+    border-spacing: 5px;
+    margin-left: 1px;
+    border-left: 5px solid #DFDFDF !important;
+}
+
+table.field-list th.field-name {
+    display: block;
+    text-align: left;
+    padding: 1px 8px 1px 5px;
+    white-space: nowrap;
+    background-color: #DFDFDF;
+}
+
+table.field-list td.field-body {
+    display: block;
+    border-left: none !important;
+    padding-left: 1em;
+}
+
+table.field-list td.field-body > ul {
+    padding-left: 1em;
+}
+
+table.field-list td.field-body > p,
+table.field-list td.field-body > ul > li > p
+{
+    display: inline;
+}
+
+table.field-list td.field-body > p > strong {
+    font-style: normal;
+}
+
+td.field-body blockquote {
+    border-left: none;
+    margin: 0;
+    padding-left: 30px;
+}
+
+td.field-body blockquote p,
+dl.class blockquote p,
+dl.function blockquote p,
+dl.classmethod blockquote p,
+dl.staticmethod blockquote p,
+dl.method blockquote p
+{
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+
+/*
+ * Sidebars and top logo
+ */
+
+div.sphinxsidebarwrapper {
+    overflow: hidden;
+}
+
+div.sphinxsidebarwrapper p.logo {
+    text-align: center;
+}
+
+div.spc-rightsidebar h3 {
+    font-size: 120%;
+    line-height: inherit;
+    border-bottom: 1px solid #656565;
+}
+
+div.spc-rightsidebar h4 {
+    font-size: 110%;
+    line-height: inherit;
+    border-bottom: 1px solid #656565;
+}
+
+form.search > input[type="text"] {
+    width: auto;
+}
+
+/*
+ * Headers
+ */
+
+h1 a { color: #333333; }
+h2 a { color: #333333; }
+h3 a { color: #333333; }
+h4 a { color: #333333; }
+h5 a { color: #333333; }
+h6 a { color: #333333; }
+
+h1 tt { font: inherit; border-bottom: none; }
+h2 tt { font: inherit; border-bottom: none; }
+h3 tt { font: inherit; border-bottom: none; }
+h4 tt { font: inherit; border-bottom: none; }
+h5 tt { font: inherit; border-bottom: none; }
+h6 tt { font: inherit; border-bottom: none; }
+
+div#spc-section-body h1, h2, h3, h4, h5, h6{
+    color: #444444;
+    font-weight: normal;
+    border-bottom: 0px solid #656565;
+    margin-bottom: 0.5em;
+}
+div#spc-section-body h1 { font-size: 200%; font-weight: bold; color: #333333; }
+div#spc-section-body h2 { font-size: 160%; font-weight: bold; }
+div#spc-section-body h3 { font-size: 140%; }
+div#spc-section-body h4 { font-size: 120%; border-bottom: none; }
+div#spc-section-body h5 { font-size: 110%; border-bottom: none; }
+div#spc-section-body h6 { font-size: 100%; border-bottom: none; }
+
+/* Styling for hyperlinks */
+div#spc-section-body a{
+        text-decoration: none;
+}
+div#spc-section-body a:hover{
+        text-decoration: underline;
+}
+
+/* Styling for images and figures: images are inline, figures are centered */
+div#spc-section-body .align-center{
+    text-align: center;
+}
+
+p.rubric {
+    color: #333333;
+    font-size: 120%;
+    font-weight: normal;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+.highlight-python pre {
+    border-top: 1px solid #656565;
+    border-bottom: 1px solid #656565;
+}
+
+/* Docutils uses this tag for footnote backrefs. By coincidence, Bootstrap also
+ * uses this class and assigns an obnoxious color to it. Use a less obnoxious
+ * color.
+ */
+td.label {
+    background-color: rgb(242, 242, 242);
+}
+
+/*
+ * Tables
+ */
+
+table.citation {
+    border: none;
+}
+
+table.docutils td, table.docutils th {
+    border: none;
+}
+
+table.docutils {
+    margin-bottom: 9.5px;
+}
+
+
+/*
+ * Admonitions
+ */
+
+p.admonition-title {
+    display: inline;
+}
+
+p.admonition-title:after {
+    content: ":";
+}
+
+div.seealso {
+    background-color: #ffc;
+    border: 1px solid #ff6;
+}
+
+div.seealso dt {
+    float: left;
+    clear: left;
+    min-width: 4em;
+    padding-right: 1em;
+}
+
+div.seealso dd {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+div.warning {
+    background-color: #ffe4e4;
+    border: 1px solid #f66;
+}
+
+div.note {
+    background-color: #eee;
+    border: 1px solid #ccc;
+}

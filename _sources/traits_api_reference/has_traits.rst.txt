@@ -1,5 +1,5 @@
-:mod:`has_traits` Module
-========================
+:mod:`traits.has_traits` Module
+===============================
 
 .. automodule:: traits.has_traits
     :no-members:

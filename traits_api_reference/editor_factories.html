@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>traits.editor_factories Module &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '6.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="traits.interface_checker Module" href="interface_checker.html" >
+    <link rel="prev" title="traits.ctraits Module" href="ctraits.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="interface_checker.html" title="traits.interface_checker Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="ctraits.html" title="traits.ctraits Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="module-traits.editor_factories">
+<span id="traits-editor-factories-module"></span><h1><a class="reference internal" href="#module-traits.editor_factories" title="traits.editor_factories"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.editor_factories</span></code></a> Module<a class="headerlink" href="#module-traits.editor_factories" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="traits.editor_factories.bytes_editor">
+<code class="sig-prename descclassname">traits.editor_factories.</code><code class="sig-name descname">bytes_editor</code><span class="sig-paren">(</span><em class="sig-param">auto_set=True</em>, <em class="sig-param">enter_set=False</em>, <em class="sig-param">encoding=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/editor_factories.html#bytes_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.editor_factories.bytes_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory function that returns a text editor for bytes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.editor_factories.code_editor">
+<code class="sig-prename descclassname">traits.editor_factories.</code><code class="sig-name descname">code_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/editor_factories.html#code_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.editor_factories.code_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory function that returns an editor that treats a multi-line string
+as source code.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.editor_factories.date_editor">
+<code class="sig-prename descclassname">traits.editor_factories.</code><code class="sig-name descname">date_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/editor_factories.html#date_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.editor_factories.date_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory function that returns a Date editor for editing Date values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.editor_factories.datetime_editor">
+<code class="sig-prename descclassname">traits.editor_factories.</code><code class="sig-name descname">datetime_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/editor_factories.html#datetime_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.editor_factories.datetime_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory function that returns an editor with date &amp; time for
+editing Datetime values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.editor_factories.html_editor">
+<code class="sig-prename descclassname">traits.editor_factories.</code><code class="sig-name descname">html_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/editor_factories.html#html_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.editor_factories.html_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory function for an “editor” that displays a multi-line string as
+interpreted HTML.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.editor_factories.list_editor">
+<code class="sig-prename descclassname">traits.editor_factories.</code><code class="sig-name descname">list_editor</code><span class="sig-paren">(</span><em class="sig-param">trait</em>, <em class="sig-param">handler</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/editor_factories.html#list_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.editor_factories.list_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory that constructs an appropriate editor for a list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.editor_factories.multi_line_text_editor">
+<code class="sig-prename descclassname">traits.editor_factories.</code><code class="sig-name descname">multi_line_text_editor</code><span class="sig-paren">(</span><em class="sig-param">auto_set=True</em>, <em class="sig-param">enter_set=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/editor_factories.html#multi_line_text_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.editor_factories.multi_line_text_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory function that returns a text editor for multi-line strings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.editor_factories.password_editor">
+<code class="sig-prename descclassname">traits.editor_factories.</code><code class="sig-name descname">password_editor</code><span class="sig-paren">(</span><em class="sig-param">auto_set=True</em>, <em class="sig-param">enter_set=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/editor_factories.html#password_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.editor_factories.password_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory function that returns an editor for passwords.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.editor_factories.shell_editor">
+<code class="sig-prename descclassname">traits.editor_factories.</code><code class="sig-name descname">shell_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/editor_factories.html#shell_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.editor_factories.shell_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory function that returns a Python shell for editing Python values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.editor_factories.time_editor">
+<code class="sig-prename descclassname">traits.editor_factories.</code><code class="sig-name descname">time_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/editor_factories.html#time_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.editor_factories.time_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory function that returns a Time editor for editing Time values.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.editor_factories</span></code> Module</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ctraits.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.ctraits</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="interface_checker.html"
+                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.interface_checker</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/editor_factories.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought Inc
+      </li>
+      <li>
+      Last updated on Feb 14, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

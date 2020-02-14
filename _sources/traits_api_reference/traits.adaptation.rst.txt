@@ -1,24 +1,21 @@
-:mod:`adaptation` Package
-=========================
-
-:mod:`adaptation` Package
--------------------------
+:mod:`traits.adaptation` Package
+================================
 
 .. automodule:: traits.adaptation
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`adaptation_error` Module
-------------------------------
+:mod:`traits.adaptation.adaptation_error` Module
+------------------------------------------------
 
 .. automodule:: traits.adaptation.adaptation_error
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`adaptation_manager` Module
---------------------------------
+:mod:`traits.adaptation.adaptation_manager` Module
+--------------------------------------------------
 
 .. automodule:: traits.adaptation.adaptation_manager
     :members:
@@ -26,16 +23,16 @@
     :show-inheritance:
 
 
-:mod:`adaptation_offer` Module
-------------------------------
+:mod:`traits.adaptation.adaptation_offer` Module
+------------------------------------------------
 
 .. automodule:: traits.adaptation.adaptation_offer
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`adapter` Module
----------------------
+:mod:`traits.adaptation.adapter` Module
+---------------------------------------
 
 .. automodule:: traits.adaptation.adapter
     :members:

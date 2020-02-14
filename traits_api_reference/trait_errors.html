@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>trait_errors Module &mdash; Traits 5 User Manual</title>
+    <title>traits.trait_errors Module &mdash; Traits 5 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.2.0',
+        VERSION:     '6.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,11 +26,12 @@
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
     <link rel="top" title="Traits 5 User Manual" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
-    <link rel="next" title="trait_handlers Module" href="trait_handlers.html" >
-    <link rel="prev" title="trait_base Module" href="trait_base.html" > 
+    <link rel="next" title="traits.trait_factory Module" href="trait_factory.html" >
+    <link rel="prev" title="traits.trait_dict_object Module" href="trait_dict_object.html" > 
   </head>
   <body>
   <div class="container">
@@ -55,15 +56,19 @@
               
     <ul class="nav nav-pills pull-right">
       <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
         <a href="../py-modindex.html" title="Python Module Index"
            >modules</a>
       </li>
       <li class="active">
-        <a href="trait_handlers.html" title="trait_handlers Module"
+        <a href="trait_factory.html" title="traits.trait_factory Module"
            accesskey="N">next</a>
       </li>
       <li class="active">
-        <a href="trait_base.html" title="trait_base Module"
+        <a href="trait_dict_object.html" title="traits.trait_dict_object Module"
            accesskey="P">previous</a>
       </li>
     </ul>
@@ -80,13 +85,13 @@
           <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.trait_errors">
-<span id="trait-errors-module"></span><h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">trait_errors</span></code> Module<a class="headerlink" href="#module-traits.trait_errors" title="Permalink to this headline">¶</a></h1>
+<span id="traits-trait-errors-module"></span><h1><a class="reference internal" href="#module-traits.trait_errors" title="traits.trait_errors"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_errors</span></code></a> Module<a class="headerlink" href="#module-traits.trait_errors" title="Permalink to this headline">¶</a></h1>
 <p>Defines the standard exceptions raised by the Traits package.</p>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="traits.trait_errors.repr_type">
-<code class="descclassname">traits.trait_errors.</code><code class="descname">repr_type</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_errors.html#repr_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_errors.repr_type" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">traits.trait_errors.</code><code class="sig-name descname">repr_type</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_errors.html#repr_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_errors.repr_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a string representation of a value and its type for readable
 error messages.</p>
 </dd></dl>
@@ -96,17 +101,17 @@ error messages.</p>
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="traits.trait_errors.TraitError">
-<em class="property">class </em><code class="descclassname">traits.trait_errors.</code><code class="descname">TraitError</code><span class="sig-paren">(</span><em>args=None</em>, <em>name=None</em>, <em>info=None</em>, <em>value=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_errors.html#TraitError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_errors.TraitError" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_errors.</code><code class="sig-name descname">TraitError</code><span class="sig-paren">(</span><em class="sig-param">args=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">info=None</em>, <em class="sig-param">value=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_errors.html#TraitError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_errors.TraitError" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_errors.TraitNotificationError">
-<em class="property">class </em><code class="descclassname">traits.trait_errors.</code><code class="descname">TraitNotificationError</code><a class="reference internal" href="../_modules/traits/trait_errors.html#TraitNotificationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_errors.TraitNotificationError" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_errors.</code><code class="sig-name descname">TraitNotificationError</code><a class="reference internal" href="../_modules/traits/trait_errors.html#TraitNotificationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_errors.TraitNotificationError" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_errors.DelegationError">
-<em class="property">class </em><code class="descclassname">traits.trait_errors.</code><code class="descname">DelegationError</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_errors.html#DelegationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_errors.DelegationError" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_errors.</code><code class="sig-name descname">DelegationError</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_errors.html#DelegationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_errors.DelegationError" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -123,7 +128,7 @@ error messages.</p>
             </a></p>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">trait_errors</span></code> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_errors</span></code> Module</a><ul>
 <li><a class="reference internal" href="#functions">Functions</a></li>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 </ul>
@@ -131,24 +136,22 @@ error messages.</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="trait_base.html"
-                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">trait_base</span></code> Module</a></p>
+  <p class="topless"><a href="trait_dict_object.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_dict_object</span></code> Module</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="trait_handlers.html"
-                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">trait_handlers</span></code> Module</a></p>
+  <p class="topless"><a href="trait_factory.html"
+                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_factory</span></code> Module</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/trait_errors.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -169,13 +172,13 @@ error messages.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2019, Enthought Inc
+        &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on Nov 18, 2019.
+      Last updated on Feb 14, 2020.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
       </li>
     </ul>
     </div>

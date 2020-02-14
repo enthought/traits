@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>Traits CHANGELOG &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="_static/css/spc-extend.css">
+    <link rel="stylesheet" href="_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '6.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="_static/img/favicon.ico">
+    <link rel="index" title="Index" href="genindex.html" >
+    <link rel="search" title="Search" href="search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="index.html" >
+    <link rel="prev" title="traits.util Package" href="traits_api_reference/traits.util.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="index.html">Traits 5 User Manual</a></li>
+	 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="traits_api_reference/traits.util.html" title="traits.util Package"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="traits-changelog">
+<h1>Traits CHANGELOG<a class="headerlink" href="#traits-changelog" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="release-6-0-0">
+<h2>Release 6.0.0<a class="headerlink" href="#release-6-0-0" title="Permalink to this headline">¶</a></h2>
+<p>Released: 2020-02-14</p>
+<p>No changes since the 6.0.0rc0 release candidate.</p>
+</div>
+<div class="section" id="release-6-0-0rc0">
+<h2>Release 6.0.0rc0<a class="headerlink" href="#release-6-0-0rc0" title="Permalink to this headline">¶</a></h2>
+<p>Released: 2020-01-30</p>
+<div class="section" id="release-notes">
+<h3>Release notes<a class="headerlink" href="#release-notes" title="Permalink to this headline">¶</a></h3>
+<p>Traits 6.0 is a major update to the Traits package, with a number of
+backward incompatible changes from its predecessor. Notable changes:</p>
+<ul class="simple">
+<li><p>Python 2.7 is no longer supported; Traits 6.0 requires Python 3.5 or later.</p></li>
+<li><p>Trait types related to Python 2 (for example <code class="docutils literal notranslate"><span class="pre">Unicode</span></code> and <code class="docutils literal notranslate"><span class="pre">Long</span></code>) have
+been deprecated in favour of their Python 3 equivalents (for example <code class="docutils literal notranslate"><span class="pre">Str</span></code>
+and <code class="docutils literal notranslate"><span class="pre">Int</span></code>).</p></li>
+<li><p>Many little-used historical features of Traits have been deprecated, and
+are scheduled for removal in Traits 7.0.</p></li>
+<li><p>Some historical features of Traits that had no evidence of external usage
+were removed in Traits 6.0.</p></li>
+<li><p>Introspection of <code class="docutils literal notranslate"><span class="pre">CTrait</span></code> and <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> objects is greatly improved.
+All of the internal state that was previously hidden within the C extension
+is now accessible from Python.</p></li>
+<li><p>The Traits codebase has undergone some significant reorganizations,
+reformattings and style cleanups to make it easier to work with, and
+to improve the separation between Traits and TraitsUI.</p></li>
+<li><p>This release was focused mainly on cleanup and bugfixing. Nevertheless,
+it contains a sprinkling of new features. There’s a new <code class="docutils literal notranslate"><span class="pre">Datetime</span></code>
+trait type. The <code class="docutils literal notranslate"><span class="pre">Enum</span></code> trait type now supports Python enumerations.
+The <code class="docutils literal notranslate"><span class="pre">File</span></code> trait type supports path-like objects.</p></li>
+</ul>
+<p>More than 150 PRs went into this release. The following people contributed
+code changes for this release:</p>
+<ul class="simple">
+<li><p>Kit Yan Choi</p></li>
+<li><p>Mark Dickinson</p></li>
+<li><p>Kevin Duff</p></li>
+<li><p>Robert Kern</p></li>
+<li><p>Midhun Madhusoodanan</p></li>
+<li><p>Shoeb Mohammed</p></li>
+<li><p>Sai Rahul Poruri</p></li>
+<li><p>Corran Webster</p></li>
+<li><p>John Wiggins</p></li>
+</ul>
+</div>
+<div class="section" id="porting-guide">
+<h3>Porting guide<a class="headerlink" href="#porting-guide" title="Permalink to this headline">¶</a></h3>
+<p>For the most part, existing code that works with Traits 5.2.0 should
+continue to work with Traits 6.0.0 without changes. However, there
+are some potentially breaking changes in Traits 6.0.0, and we recommend
+applying caution when upgrading.</p>
+<p>Here’s a guide to dealing with some of the potentially breaking changes.</p>
+<ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Unicode</span></code> and <code class="docutils literal notranslate"><span class="pre">CUnicode</span></code> trait types are now simply synonyms for
+<code class="docutils literal notranslate"><span class="pre">Str</span></code> and <code class="docutils literal notranslate"><span class="pre">CStr</span></code>. <code class="docutils literal notranslate"><span class="pre">Unicode</span></code> and <code class="docutils literal notranslate"><span class="pre">CUnicode</span></code> are considered deprecated.
+For now, no deprecation warning is issued on use of these deprecated trait
+types, but in Traits 6.1.0 and later, warnings may be issued, and in Traits
+7.0.0 these trait types may be removed. It’s recommended that users update
+all uses of <code class="docutils literal notranslate"><span class="pre">Unicode</span></code> to <code class="docutils literal notranslate"><span class="pre">Str</span></code> and <code class="docutils literal notranslate"><span class="pre">CUnicode</span></code> to <code class="docutils literal notranslate"><span class="pre">CStr</span></code> to avoid
+warnings or errors in the future.</p></li>
+<li><p>Similarly, <code class="docutils literal notranslate"><span class="pre">Long</span></code> and <code class="docutils literal notranslate"><span class="pre">CLong</span></code> are now synonyms for <code class="docutils literal notranslate"><span class="pre">Int</span></code> and <code class="docutils literal notranslate"><span class="pre">CInt</span></code>.
+The same recommendations apply as for the <code class="docutils literal notranslate"><span class="pre">Unicode</span></code> / <code class="docutils literal notranslate"><span class="pre">Str</span></code> trait types.</p></li>
+<li><p>Uses of <code class="docutils literal notranslate"><span class="pre">NO_COMPARE</span></code>, <code class="docutils literal notranslate"><span class="pre">OBJECT_IDENTITY_COMPARE</span></code> and <code class="docutils literal notranslate"><span class="pre">RICH_COMPARE</span></code>
+should be replaced with the appropriate <code class="docutils literal notranslate"><span class="pre">ComparisonMode</span></code> enumeration
+members.</p></li>
+<li><p>The validation for a <code class="docutils literal notranslate"><span class="pre">Instance(ISomeInterface)</span></code> trait type has changed,
+where <code class="docutils literal notranslate"><span class="pre">ISomeInterface</span></code> is a subclass of <code class="docutils literal notranslate"><span class="pre">Interface</span></code>. Previously, an
+assignment to such a trait validated the type of the assigned value against
+the interface, method by method. Now an <code class="docutils literal notranslate"><span class="pre">isinstance</span></code> check is performed
+against the interface instead. Make sure that classes implementing a given
+interface have the appropriate <code class="docutils literal notranslate"><span class="pre">provides</span></code> decorator.</p>
+<p>One notable side-effect of the above change is that plain <code class="docutils literal notranslate"><span class="pre">mock.Mock</span></code>
+instances can no longer be assigned to <code class="docutils literal notranslate"><span class="pre">Instance(ISomeInterface)</span></code> traits.
+To get around this, use <code class="docutils literal notranslate"><span class="pre">spec=ISomeInterface</span></code> when creating your mock
+object.</p>
+<p>This change does not affect <code class="docutils literal notranslate"><span class="pre">Instance</span></code> traits for non-interface classes.</p>
+</li>
+<li><p>The format of <code class="docutils literal notranslate"><span class="pre">TraitListEvents</span></code> has changed: for list events generated from
+a slice set or slice delete operation where that slice had a step other
+than <code class="docutils literal notranslate"><span class="pre">1</span></code>, the <code class="docutils literal notranslate"><span class="pre">added</span></code> and <code class="docutils literal notranslate"><span class="pre">removed</span></code> fields of the event had an extra
+level of list wrapping (for example, <code class="docutils literal notranslate"><span class="pre">added</span></code> might be <code class="docutils literal notranslate"><span class="pre">[[1,</span> <span class="pre">2,</span> <span class="pre">3]]</span></code>
+instead of <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3]</span></code>). In Traits 6.0, this extra wrapping has been
+removed. There may be existing code that special-cased the extra wrapping.</p></li>
+<li><p>Many classes and functions have moved around within the Traits codebase.
+If you have code that imports directly from Traits modules and subpackages
+instead of from <code class="docutils literal notranslate"><span class="pre">traits.api</span></code> or the other subpackage <code class="docutils literal notranslate"><span class="pre">api</span></code> modules, some
+of those imports may fail. To avoid potential for <code class="docutils literal notranslate"><span class="pre">ImportError``s,</span> <span class="pre">you</span>
+<span class="pre">should</span> <span class="pre">import</span> <span class="pre">from</span> <span class="pre">``traits.api</span></code> whenever possible. If you find yourself
+needing some piece of Traits functionality that isn’t exposed in
+<code class="docutils literal notranslate"><span class="pre">traits.api</span></code>, and you think it should be, please open an issue on the
+Traits bug tracker.</p></li>
+</ul>
+</div>
+<div class="section" id="features">
+<h3>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p>Add new <code class="docutils literal notranslate"><span class="pre">Datetime</span></code> trait type. (#737, #814, #813, #815, #848)</p></li>
+<li><p>Support Python Enums as value sets for the <code class="docutils literal notranslate"><span class="pre">Enum</span></code> trait. (#685, #828, #855)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">Subclass</span></code> alias for the <code class="docutils literal notranslate"><span class="pre">Type</span></code> trait type. (#739)</p></li>
+<li><p>Add path-like support for the <code class="docutils literal notranslate"><span class="pre">File</span></code> trait. (#736)</p></li>
+<li><p>Add new <code class="docutils literal notranslate"><span class="pre">ComparisonMode</span></code> enumeration type to replace the old
+<code class="docutils literal notranslate"><span class="pre">NO_COMPARE</span></code>, <code class="docutils literal notranslate"><span class="pre">OBJECT_IDENTITY_COMPARE</span></code> and <code class="docutils literal notranslate"><span class="pre">RICH_COMPARE</span></code>
+constants. The old constants are deprecated. (#830, #719, #680)</p></li>
+<li><p>Add fast validation for <code class="docutils literal notranslate"><span class="pre">Callable</span></code> trait type; introduce
+new <code class="docutils literal notranslate"><span class="pre">BaseCallable</span></code> trait type for subclassing purposes.
+(#798, #795, #767)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">CTrait.comparison_mode</span></code> property to allow inspection and
+modification of a trait’s comparison mode. (#758, #735)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">as_ctrait</span></code> converter function to <code class="docutils literal notranslate"><span class="pre">traits.api</span></code>. This function
+converts a trait-like object or type to a <code class="docutils literal notranslate"><span class="pre">CTrait</span></code>, raising <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>
+for objects that can’t be interpreted as a <code class="docutils literal notranslate"><span class="pre">CTrait</span></code>. It’s intended
+for use by users who want to create their own parameterised trait
+types.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">as_ctrait</span></code> feature comes with, and relies upon, a new informal
+interface: objects that can be converted to something of type <code class="docutils literal notranslate"><span class="pre">CTrait</span></code> can
+provide an zero-argument <code class="docutils literal notranslate"><span class="pre">as_ctrait</span></code> method that returns a new <code class="docutils literal notranslate"><span class="pre">CTrait</span></code>.
+Types can provide an <code class="docutils literal notranslate"><span class="pre">instantiate_and_get_ctrait</span></code> method, which when
+called with no arguments provides a new <code class="docutils literal notranslate"><span class="pre">CTrait</span></code> for that type.
+(#783, #794)</p>
+</li>
+<li><p>Add a new <code class="docutils literal notranslate"><span class="pre">HasTraits._class_traits</span></code> method for introspection of an
+object’s class traits. This parallels the existing
+<code class="docutils literal notranslate"><span class="pre">HasTraits._instance_traits</span></code> method. This method is intended for use in
+debugging. It’s not recommended for users to modify the returned dictionary.
+(#702)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">CTrait.set_default_value</span></code> method for setting information about the
+default of a <code class="docutils literal notranslate"><span class="pre">CTrait</span></code>. This provides an alternative to the previous method
+of using <code class="docutils literal notranslate"><span class="pre">CTrait.default_value</span></code>. The use of <code class="docutils literal notranslate"><span class="pre">CTrait.default_value</span></code> to set
+(rather than get) default information is deprecated. (#620)</p></li>
+<li><p>Add new methods <code class="docutils literal notranslate"><span class="pre">HasTraits._trait_notifications_enabled</span></code>,
+<code class="docutils literal notranslate"><span class="pre">HasTraits._trait_notifications_vetoed</span></code> to allow introspection of the
+notifications states set by the existing methods
+<code class="docutils literal notranslate"><span class="pre">HasTraits._trait_change_notify</span></code> and <code class="docutils literal notranslate"><span class="pre">HasTraits._trait_veto_notify</span></code>.
+(#704)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">TraitKind</span></code>, <code class="docutils literal notranslate"><span class="pre">ValidateTrait</span></code> and <code class="docutils literal notranslate"><span class="pre">DefaultValue</span></code> Python enumeration
+types to replace previous uses of magic integers within the Traits codebase.
+(#680, #857)</p></li>
+<li><p>The various <code class="docutils literal notranslate"><span class="pre">CTrait</span></code> internal flags are now exposed to Python as
+properties: <code class="docutils literal notranslate"><span class="pre">CTrait.is_property</span></code> (read-only), <code class="docutils literal notranslate"><span class="pre">CTrait.modify_delegate</span></code>,
+<code class="docutils literal notranslate"><span class="pre">CTrait.setattr_original_value</span></code>, <code class="docutils literal notranslate"><span class="pre">CTrait.post_setattr_original_value</span></code>,
+<code class="docutils literal notranslate"><span class="pre">CTrait.is_mapped</span></code>, and <code class="docutils literal notranslate"><span class="pre">CTrait.comparison_mode</span></code>. (#666, #693)</p></li>
+</ul>
+</div>
+<div class="section" id="changes">
+<h3>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>When pickling a <code class="docutils literal notranslate"><span class="pre">CTrait</span></code>, the <code class="docutils literal notranslate"><span class="pre">py_post_setattr</span></code> and <code class="docutils literal notranslate"><span class="pre">py_validate</span></code>
+fields are pickled directly. Previously, callables for those fields were
+replaced with a <code class="docutils literal notranslate"><span class="pre">-1</span></code> sentinel on pickling. (#780)</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">TraitListEvent</span></code> is no longer emitted for a slice deletion which
+doesn’t change the contents of the list. (For example, <cite>del obj.mylist[2:]</cite>
+on a list that only has 2 elements.) (#740)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">added</span></code> and <code class="docutils literal notranslate"><span class="pre">removed</span></code> attributes on a <code class="docutils literal notranslate"><span class="pre">TraitListEvent</span></code> are now
+always lists containing the added or removed elements. Previously, those
+lists were nested inside another list in some cases. (#771)</p></li>
+<li><p>Change <code class="docutils literal notranslate"><span class="pre">Instance(ISomeInterface)</span></code> to use an <code class="docutils literal notranslate"><span class="pre">isinstance</span></code> check on
+trait set instead of using the dynamic interface checker. (#630)</p></li>
+<li><p>Create an new <code class="docutils literal notranslate"><span class="pre">AbstractViewElement</span></code> abstract base class, and register
+the TraitsUI <code class="docutils literal notranslate"><span class="pre">ViewElement</span></code> as implementing it. This paves the way for
+removal of Traits UI imports from Traits. (#617)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ViewElements</span></code> are now computed lazily, instead of at <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code>
+subclass creation time. This removes a <code class="docutils literal notranslate"><span class="pre">traitsui</span></code> import from
+the <code class="docutils literal notranslate"><span class="pre">trait.has_traits</span></code> module. (#614)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">traits.util.clean_filename</span></code> utility now uses a different algorithm,
+and should do a better job with accented and Unicode text. (#589)</p></li>
+<li><p>Floating-point and integer checks are now more consistent between classes.
+In particular, <code class="docutils literal notranslate"><span class="pre">BaseInt</span></code> validation now matches <code class="docutils literal notranslate"><span class="pre">Int</span></code> validation, and
+<code class="docutils literal notranslate"><span class="pre">Range</span></code> type checks now match those used in <code class="docutils literal notranslate"><span class="pre">Int</span></code> and <code class="docutils literal notranslate"><span class="pre">Float</span></code>. (#588)</p></li>
+<li><p>An exception other than <code class="docutils literal notranslate"><span class="pre">TraitError</span></code> raised during validation of a
+compound trait will now be propagated. Previously, that exception would
+be swallowed. (#581)</p></li>
+<li><p>Traits no longer has a runtime dependency on the <code class="docutils literal notranslate"><span class="pre">six</span></code> package. (#638)</p></li>
+<li><p>Use pickle protocol 3 instead of pickle protocol 1 when writing pickled
+object state to a file in <code class="docutils literal notranslate"><span class="pre">configure_traits</span></code>. (#796)</p></li>
+<li><p>In <code class="docutils literal notranslate"><span class="pre">traits.testing.optional_dependencies</span></code>, make sure <code class="docutils literal notranslate"><span class="pre">traitsui.api</span></code> is
+available whenever <code class="docutils literal notranslate"><span class="pre">traitsui</span></code> is. (#616)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TraitInstance</span></code> now inherits directly from <code class="docutils literal notranslate"><span class="pre">TraitHandler</span></code> instead of
+(the now removed) <code class="docutils literal notranslate"><span class="pre">ThisClass</span></code>. (#761)</p></li>
+</ul>
+</div>
+<div class="section" id="fixes">
+<h3>Fixes<a class="headerlink" href="#fixes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Fix a use of the unsupported <code class="docutils literal notranslate"><span class="pre">ValidateTrait.int_range</span></code>. (#805)</p></li>
+<li><p>Remove unnecessary <code class="docutils literal notranslate"><span class="pre">copy</span></code> method override from <code class="docutils literal notranslate"><span class="pre">TraitSetObject</span></code>. (#759)</p></li>
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">TraitListObject.clear</span></code> to issue the appropriate items event. (#732)</p></li>
+<li><p>Fix confusing error message when <code class="docutils literal notranslate"><span class="pre">[None]</span></code> passed into
+<code class="docutils literal notranslate"><span class="pre">List(This(allow_none=False))</span></code>. (#734)</p></li>
+<li><p>Fix name-mangling of double-underscore private methods in classes whose
+name begins with an underscore. (#724)</p></li>
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">bytes_editor</span></code> and <code class="docutils literal notranslate"><span class="pre">password_editor</span></code> bugs, and add tests for
+all editor factories. (#660)</p></li>
+<li><p>Fix coercion fast validation type to do an exact type check instead of
+an instance check. This ensures that instances of subclasses of the
+target type are properly converted to the target type. For example,
+if <code class="docutils literal notranslate"><span class="pre">True</span></code> is assigned to a trait of type <code class="docutils literal notranslate"><span class="pre">CInt</span></code>, the resulting
+value is now <code class="docutils literal notranslate"><span class="pre">1</span></code>. Previously, it was <code class="docutils literal notranslate"><span class="pre">True</span></code>. (#647)</p></li>
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">BaseRange</span></code> to accept the same values as <code class="docutils literal notranslate"><span class="pre">Range</span></code>. (#583)</p></li>
+<li><p>Fix integer <code class="docutils literal notranslate"><span class="pre">Range</span></code> to accept integer-like objects. (#582)</p></li>
+<li><p>Fix floating-point <code class="docutils literal notranslate"><span class="pre">Range</span></code> to accept float-like values. (#579)</p></li>
+<li><p>Fix a missing import in the adaptation benchmark script. (#575)</p></li>
+<li><p>Fix issues with the <code class="docutils literal notranslate"><span class="pre">filename</span></code> argument to <code class="docutils literal notranslate"><span class="pre">configure_traits</span></code>. (#572)</p></li>
+<li><p>Fix a possible segfault from careless field re-assignments in
+<code class="docutils literal notranslate"><span class="pre">ctraits.c</span></code>. (#844)</p></li>
+</ul>
+</div>
+<div class="section" id="deprecations">
+<h3>Deprecations<a class="headerlink" href="#deprecations" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">NO_COMPARE</span></code>, <code class="docutils literal notranslate"><span class="pre">OBJECT_IDENTITY_COMPARE</span></code> and <code class="docutils literal notranslate"><span class="pre">RICH_COMPARE</span></code>
+constants are deprecated. Use the corresponding members of the
+<code class="docutils literal notranslate"><span class="pre">ComparisonMode</span></code> enumeration instead. (#719)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Unicode</span></code>, <code class="docutils literal notranslate"><span class="pre">CUnicode</span></code>, <code class="docutils literal notranslate"><span class="pre">BaseUnicode</span></code> and <code class="docutils literal notranslate"><span class="pre">BaseCUnicode</span></code> trait
+types are deprecated. Use <code class="docutils literal notranslate"><span class="pre">Str</span></code>, <code class="docutils literal notranslate"><span class="pre">CStr</span></code>, <code class="docutils literal notranslate"><span class="pre">BaseStr</span></code> and <code class="docutils literal notranslate"><span class="pre">BaseCStr</span></code>
+instead. (#648)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Long</span></code>, <code class="docutils literal notranslate"><span class="pre">CLong</span></code>, <code class="docutils literal notranslate"><span class="pre">BaseLong</span></code> and <code class="docutils literal notranslate"><span class="pre">BaseCLong</span></code> trait types are
+deprecated. Use <code class="docutils literal notranslate"><span class="pre">Int</span></code>, <code class="docutils literal notranslate"><span class="pre">CInt</span></code>, <code class="docutils literal notranslate"><span class="pre">BaseInt</span></code> and <code class="docutils literal notranslate"><span class="pre">BaseCInt</span></code> instead.
+(#645, #573)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">AdaptedTo</span></code> trait type is deprecated. Use <code class="docutils literal notranslate"><span class="pre">Supports</span></code> instead. (#760)</p></li>
+<li><p>The following trait type aliases are deprecated. See the documentation for
+recommended replacments. <code class="docutils literal notranslate"><span class="pre">false</span></code>, <code class="docutils literal notranslate"><span class="pre">true</span></code>, <code class="docutils literal notranslate"><span class="pre">undefined</span></code>, <code class="docutils literal notranslate"><span class="pre">ListInt</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ListFloat</span></code>, <code class="docutils literal notranslate"><span class="pre">ListStr</span></code>, <code class="docutils literal notranslate"><span class="pre">ListUnicode</span></code>, <code class="docutils literal notranslate"><span class="pre">ListComplex</span></code>, <code class="docutils literal notranslate"><span class="pre">ListBool</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ListFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">ListMethod</span></code>, <code class="docutils literal notranslate"><span class="pre">ListThis</span></code>, <code class="docutils literal notranslate"><span class="pre">DictStrAny</span></code>,
+<code class="docutils literal notranslate"><span class="pre">DictStrStr</span></code>, <code class="docutils literal notranslate"><span class="pre">DictStrInt</span></code>, <code class="docutils literal notranslate"><span class="pre">DictStrFloat</span></code>, <code class="docutils literal notranslate"><span class="pre">DictStrBool</span></code>,
+<code class="docutils literal notranslate"><span class="pre">DictStrList</span></code>. (#627)</p></li>
+<li><p>Use of the <code class="docutils literal notranslate"><span class="pre">filename</span></code> argument to <code class="docutils literal notranslate"><span class="pre">configure_traits</span></code> (for storing
+state to or restoring state from pickle files) is deprecated. (#792)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">TraitTuple</span></code>, <code class="docutils literal notranslate"><span class="pre">TraitList</span></code> and <code class="docutils literal notranslate"><span class="pre">TraitDict</span></code> trait handlers
+are deprecated. Use the <code class="docutils literal notranslate"><span class="pre">Tuple</span></code>, <code class="docutils literal notranslate"><span class="pre">List</span></code> and <code class="docutils literal notranslate"><span class="pre">Dict</span></code> trait types instead.
+(#770)</p></li>
+<li><p>Use of <code class="docutils literal notranslate"><span class="pre">CTrait.default_value</span></code> for setting default value information is
+deprecated. Use <code class="docutils literal notranslate"><span class="pre">CTrait.set_default_value</span></code> instead. (#620)</p></li>
+<li><p>Use of the <code class="docutils literal notranslate"><span class="pre">rich_compare</span></code> trait metadata is deprecated. Use the
+<code class="docutils literal notranslate"><span class="pre">comparison_mode</span></code> metadata instead. (#598)</p></li>
+</ul>
+</div>
+<div class="section" id="removals">
+<h3>Removals<a class="headerlink" href="#removals" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Python 2 compatibility support code has been removed. (#638, #644)</p></li>
+<li><p>Traits categories have been removed. (#568)</p></li>
+<li><p>The following trait handlers have been removed: <code class="docutils literal notranslate"><span class="pre">ThisClass</span></code>,
+<code class="docutils literal notranslate"><span class="pre">TraitClass</span></code>, <code class="docutils literal notranslate"><span class="pre">TraitExpression</span></code>, <code class="docutils literal notranslate"><span class="pre">TraitCallable</span></code>, <code class="docutils literal notranslate"><span class="pre">TraitString</span></code>,
+<code class="docutils literal notranslate"><span class="pre">TraitRange</span></code>, <code class="docutils literal notranslate"><span class="pre">TraitWeakRef</span></code>. (#782, #711, #699, #698, #625, #593, #587,
+#640)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CTrait.rich_compare</span></code> has been removed. (#598)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">cTrait.cast</span></code> method has been removed. (#663)</p></li>
+<li><p>The magical <code class="docutils literal notranslate"><span class="pre">TraitValue</span></code> and associated machinery have been removed. (#658)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Generic</span></code> trait type has been removed. (#657)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">UStr</span></code> trait type and <code class="docutils literal notranslate"><span class="pre">HasUniqueStrings</span></code> class have been removed.
+(#654)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">str_find</span></code> and <code class="docutils literal notranslate"><span class="pre">str_rfind</span></code> helper functions have been removed. (#633)</p></li>
+<li><p>The global <code class="docutils literal notranslate"><span class="pre">_trait_notification_handler</span></code> has been removed. (#619)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BaseTraitHandler.repr</span></code> has been removed. (#599)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HasTraits.trait_monitor</span></code> was undocumented, untested, and broken, and
+has been removed. (#570)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">TraitInstance</span></code> trait handler (not to be confused
+with the <code class="docutils literal notranslate"><span class="pre">Instance</span></code> trait type) no longer supports adaptation. (#641)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">DynamicView</span></code> and <code class="docutils literal notranslate"><span class="pre">HasDynamicViews</span></code> classes have been removed
+from Traits and moved to TraitsUI instead. (#609)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DictStrLong</span></code> has been removed. (#573)</p></li>
+</ul>
+</div>
+<div class="section" id="test-suite">
+<h3>Test suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Fix various tests to be repeatable. (#802, #729)</p></li>
+<li><p>Fix deprecation warnings in the test suite output. (#820, #804, #716)</p></li>
+<li><p>Add machinery for testing unpickling of historical pickles. (#787)</p></li>
+<li><p>Remove print statements from test suite. (#752, #768)</p></li>
+<li><p>Fix a test to clean up the threads it creates. (#731)</p></li>
+<li><p>Add tests for extended trait change issues #537 and #538 (#543)</p></li>
+<li><p>Other minor test fixes. (#700, #821)</p></li>
+</ul>
+</div>
+<div class="section" id="documentation">
+<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Improve documentation of trait container objects. (#810)</p></li>
+<li><p>Improve documentation for the <code class="docutils literal notranslate"><span class="pre">traits.ctraits</span></code> module. (#826, #824,
+#659, #653, #829, #836)</p></li>
+<li><p>Fix badly formatted <code class="docutils literal notranslate"><span class="pre">TraitHandler</span></code> documentation. (#817)</p></li>
+<li><p>Fix and improve badly formatted trait types documentation. (#843)</p></li>
+<li><p>Fix broken module links in section titles in API documentation. (#823)</p></li>
+<li><p>Additional class docstring fixes. (#854)</p></li>
+<li><p>Add changelog to built documentation, and absorb old changelog into
+the new one. (#800, #799)</p></li>
+<li><p>Remove deprecated traits from the user manual. (#656)</p></li>
+<li><p>Fix various Sphinx warnings (#717)</p></li>
+<li><p>Use SVG badges in README (#567)</p></li>
+</ul>
+</div>
+<div class="section" id="build-and-continuous-integration">
+<h3>Build and continuous integration<a class="headerlink" href="#build-and-continuous-integration" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Enable C asserts in Travis CI runs. (#791)</p></li>
+<li><p>Abort CI on compiler warnings in Travis CI runs. (#769)</p></li>
+<li><p>Run a <code class="docutils literal notranslate"><span class="pre">flake8</span></code> check in both Travis CI and Appveyor runs. (#753, #762)</p></li>
+<li><p>Checking copyright statements in Python files as part of CI runs. (#749)</p></li>
+<li><p>Turn warnings into errors when building documentation in CI. (#744)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">gnureadline</span></code> as a development dependency on macOS and Linux. (#607)</p></li>
+<li><p>Add an <code class="docutils literal notranslate"><span class="pre">etstool.py</span></code> option to run tests quietly. (#606)</p></li>
+<li><p>Enable the coverage extension for the documentation build. (#807)</p></li>
+<li><p>Remove mocking in documentation configuration, and fix a deprecated
+configuration option. (#696)</p></li>
+</ul>
+</div>
+<div class="section" id="maintenance-and-code-organization">
+<h3>Maintenance and code organization<a class="headerlink" href="#maintenance-and-code-organization" title="Permalink to this headline">¶</a></h3>
+<p>This release includes a lot of refactoring and many minor improvements
+that will primarily benefit those working with the Traits codebase. These
+changes should not affect user-visible functionality. Here’s a summary
+of the more significant changes.</p>
+<ul class="simple">
+<li><p>A major refactor has removed most of the circular dependencies between
+modules. (#730)</p></li>
+<li><p>The codebase is now mostly <code class="docutils literal notranslate"><span class="pre">flake8</span></code> clean. (#786, #753, #747, #748, #746,
+#595)</p></li>
+<li><p>Copyright headers have been made consistent for all Python files. (#754)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ctraits.c</span></code> has been run through <code class="docutils literal notranslate"><span class="pre">clang-tidy</span></code> and <code class="docutils literal notranslate"><span class="pre">clang-format</span></code> in
+order to bring it closer to PEP 7 style. (#715)</p></li>
+<li><p>Editor factories have been moved into a new <code class="docutils literal notranslate"><span class="pre">traits.editor_factories</span></code>
+module, to help compartmentalize code dependencies on TraitsUI. (#661)</p></li>
+<li><p>Trait container object classes (<code class="docutils literal notranslate"><span class="pre">TraitDictObject</span></code>, <code class="docutils literal notranslate"><span class="pre">TraitListObject</span></code>,
+<code class="docutils literal notranslate"><span class="pre">TraitSetObject</span></code>) have each been moved into their own module, along
+with their associated event type. (#677)</p></li>
+<li><p>Miscellaneous other minor fixes, refactorings and cleanups.
+(#785, #777, #750, #726, #714, #712, #708, #701, #682, #665, #651,
+#652, #639, #636, #634, #626, #632, #611, #613, #612, #605, #603,
+#600, #597, #586, #585, #584, #580, #577, #578, #564, #806)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="release-5-2-0">
+<h2>Release 5.2.0<a class="headerlink" href="#release-5-2-0" title="Permalink to this headline">¶</a></h2>
+<p>Released: 2019-11-18</p>
+<p>Enhancements</p>
+<ul class="simple">
+<li><p>Support installation from source archives. (#528)</p></li>
+</ul>
+<p>Fixes</p>
+<ul class="simple">
+<li><p>Ensure <code class="docutils literal notranslate"><span class="pre">TraitListEvent.index</span></code> is always an integer. (#548)</p></li>
+<li><p>Update the deprecated <code class="docutils literal notranslate"><span class="pre">collections.MutableMapping</span></code> import. (#530)</p></li>
+<li><p>Fix inadvertent modification of the <code class="docutils literal notranslate"><span class="pre">Category</span></code> base class. (#509)</p></li>
+<li><p>Rework version handling in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>. (#515)</p></li>
+<li><p>Don’t autogenerate documentation for <code class="docutils literal notranslate"><span class="pre">ViewElement</span></code>. (#559)</p></li>
+<li><p>Ensure that all tests are <code class="docutils literal notranslate"><span class="pre">unittest</span></code> compatible. (#551)</p></li>
+</ul>
+<p>Changes</p>
+<ul class="simple">
+<li><p>Replace occurences of deprecated <code class="docutils literal notranslate"><span class="pre">AdaptsTo</span></code> with <code class="docutils literal notranslate"><span class="pre">Supports</span></code>. (#532)</p></li>
+<li><p>Remove <code class="docutils literal notranslate"><span class="pre">Class</span></code> trait. (#520)</p></li>
+<li><p>Deprecate <code class="docutils literal notranslate"><span class="pre">Category</span></code> trait. (#510)</p></li>
+<li><p>Fix typos in docstrings. (#502)</p></li>
+<li><p>Use decorator form of <code class="docutils literal notranslate"><span class="pre">classmethod</span></code>. (#500)</p></li>
+<li><p>Remove redefinition of <code class="docutils literal notranslate"><span class="pre">NullHandler</span></code>. (#518)</p></li>
+<li><p>Add an import check helper. (#521)</p></li>
+<li><p>Clean up Cython tests. (#555)</p></li>
+<li><p>Clean up test output. (#553)</p></li>
+</ul>
+<p>Miscellaneous</p>
+<ul class="simple">
+<li><p>Update EDM version on CI to version 2.0.0. (#560)</p></li>
+<li><p>Don’t finish fast on CI. (#556)</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">unittest</span></code> to run tests in CI. (#552)</p></li>
+<li><p>Low-level fixes and style cleanup in <code class="docutils literal notranslate"><span class="pre">etstool.py</span></code>. (#550)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">--editable</span></code> option for <code class="docutils literal notranslate"><span class="pre">install</span></code>, <code class="docutils literal notranslate"><span class="pre">update</span></code> CI commands. (#546)</p></li>
+<li><p>Make git commit hash available to archives. (#526)</p></li>
+<li><p>Fix use of non-edm envs as bootstrap envs on Windows. (#512)</p></li>
+<li><p>Remove edm installed package before installing from source. (#516)</p></li>
+<li><p>Add help text to click options. (#514)</p></li>
+<li><p>Various cleanups, fixes and enhancements in <code class="docutils literal notranslate"><span class="pre">etstool.py</span></code>. (#511)</p></li>
+</ul>
+</div>
+<div class="section" id="release-5-1-2">
+<h2>Release 5.1.2<a class="headerlink" href="#release-5-1-2" title="Permalink to this headline">¶</a></h2>
+<p>Released: 2019-07-08</p>
+<p>Fixes</p>
+<ul class="simple">
+<li><p>Traits documenter no longer generates bad reST for traits whose definition
+spans multiple source lines. (#494)</p></li>
+</ul>
+</div>
+<div class="section" id="release-5-1-1">
+<h2>Release 5.1.1<a class="headerlink" href="#release-5-1-1" title="Permalink to this headline">¶</a></h2>
+<p>Released: 2019-04-18</p>
+<p>Fixes</p>
+<ul class="simple">
+<li><p>Revert a change (#449) which accidentally broke external uses of
+<code class="docutils literal notranslate"><span class="pre">_py2to3.str_find</span></code> and <code class="docutils literal notranslate"><span class="pre">_py2to3.str_rfind</span></code>. (#472)</p></li>
+</ul>
+</div>
+<div class="section" id="release-5-1-0">
+<h2>Release 5.1.0<a class="headerlink" href="#release-5-1-0" title="Permalink to this headline">¶</a></h2>
+<p>Released: 2019-04-15</p>
+<p>Enhancements</p>
+<ul class="simple">
+<li><p>Make UUID trait initializable. (#459)</p></li>
+<li><p>Change default <code class="docutils literal notranslate"><span class="pre">FileEditor</span></code> behavior for a <code class="docutils literal notranslate"><span class="pre">File</span></code> trait based on
+whether <code class="docutils literal notranslate"><span class="pre">exists=True</span></code> is specified for that trait. (#451, #467)</p></li>
+</ul>
+<p>Changes</p>
+<ul class="simple">
+<li><p>The changes made in #373 to make dynamically-added traits pickleable have
+been reverted. (#462)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">traits.api.python_version</span></code> has been removed. Internals have been
+refactored to use <code class="docutils literal notranslate"><span class="pre">six.PY2</span></code> in preference to <code class="docutils literal notranslate"><span class="pre">sys.version_info</span></code>.
+(#449)</p></li>
+<li><p>Don’t depend on the 3rd party <code class="docutils literal notranslate"><span class="pre">mock</span></code> library on Python 3; use
+<code class="docutils literal notranslate"><span class="pre">unittest.mock</span></code> instead. (#446)</p></li>
+</ul>
+<p>Fixes</p>
+<ul class="simple">
+<li><p>Fix a fragile NumPy-related test that failed (<code class="docutils literal notranslate"><span class="pre">RuntimeError:</span> <span class="pre">empty_like</span>
+<span class="pre">method</span> <span class="pre">already</span> <span class="pre">has</span> <span class="pre">a</span> <span class="pre">docstring</span></code>) with the newest version of NumPy.
+(#443)</p></li>
+</ul>
+<p>Miscellaneous</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">traits._version.git_revision</span></code> now gives the full commit hash (for local
+builds) instead of an abbreviated 7 hex-digit version. (#453)</p></li>
+<li><p>Fix copyright years in documentation build. (#445)</p></li>
+<li><p>Rename <code class="docutils literal notranslate"><span class="pre">README.txt</span></code> to <code class="docutils literal notranslate"><span class="pre">README.rst</span></code>, so that GitHub renders it nicely.</p></li>
+<li><p>Code cleanups: remove “EOF” markers from code. Remove <code class="docutils literal notranslate"><span class="pre">__main__</span></code> blocks
+for unit tests. Remove imports of <code class="docutils literal notranslate"><span class="pre">unittest</span></code> from <code class="docutils literal notranslate"><span class="pre">unittest_tools</span></code>.
+(#448, #446)</p></li>
+<li><p>Update Travis CI and Appveyor configurations to run tests against
+all PR branches, not just PRs against master. (#466)</p></li>
+</ul>
+</div>
+<div class="section" id="release-5-0-0">
+<h2>Release 5.0.0<a class="headerlink" href="#release-5-0-0" title="Permalink to this headline">¶</a></h2>
+<p>Released : 30 January 2019</p>
+<p>This major release accumulates more than an year’s worth of improvements,
+changes and bug fixes to the code base.</p>
+<p>A few highlights of this release are :</p>
+<ul class="simple">
+<li><p>Removal of 2to3 fixers and the use of six to provide Python 2/3 compatibility</p></li>
+<li><p>Removal of deprecated <code class="docutils literal notranslate"><span class="pre">traits.protocols</span></code> submodule and related utils.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">HasRequiredTraits</span></code> class</p></li>
+<li><p>Better IPython tab completion for <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> subclasses</p></li>
+</ul>
+<div class="section" id="changes-summary-since-4-6-0">
+<h3>Changes summary since 4.6.0<a class="headerlink" href="#changes-summary-since-4-6-0" title="Permalink to this headline">¶</a></h3>
+<p>Enhancements</p>
+<ul class="simple">
+<li><p>CI for documentation (#431)</p></li>
+<li><p>Remove 2to3 fixers (#430)</p></li>
+<li><p>Enthought Sphinx Theme for docs (#427)</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">HasRequiredTraits</span></code> class (#419)</p></li>
+<li><p>Free <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> subclasses from hashing/comparing by identity (#410)</p></li>
+<li><p>Unify and fix default list editors (#396)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">__dir__</span></code> method to <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code> for IPython tab completion (#382)</p></li>
+<li><p>Python 3 compatibility fixes (#374)</p></li>
+<li><p>New context manager for setting trait-change-event tracer (#365)</p></li>
+<li><p>Default trait type constants (#354)</p></li>
+</ul>
+<p>Changes</p>
+<ul class="simple">
+<li><p>Remove deprecated <code class="docutils literal notranslate"><span class="pre">traits.protocols</span></code> submodule and related utils (#435)</p></li>
+<li><p>Fix invalid string escapes (#429)</p></li>
+<li><p>Apply the “black” code reformatting utility on the Traits codebase (#432)</p></li>
+<li><p>Update CI to use edm and etstool module (#420)</p></li>
+<li><p>Clean up <code class="docutils literal notranslate"><span class="pre">Float</span></code> and <code class="docutils literal notranslate"><span class="pre">BaseFloat</span></code> validation (#393)</p></li>
+<li><p>Merge master into Cython port (#370)</p></li>
+<li><p>Docs and minor refactoring of <code class="docutils literal notranslate"><span class="pre">MetaHasTraits</span></code> class (#366)</p></li>
+<li><p>Remove ridiculous premature optimization (#362)</p></li>
+<li><p>Add support for PyInstaller app bundler (#361)</p></li>
+<li><p>Add description and example for <code class="docutils literal notranslate"><span class="pre">Either</span></code> trait type (#360)</p></li>
+<li><p>Drop support for Python 2.6 and Python &lt; 3.4 (#345)</p></li>
+<li><p>Add make target for docset to be used with Dash/Zeal (#180)</p></li>
+</ul>
+<p>Fixes</p>
+<ul class="simple">
+<li><p>Fix odd error message and wrong exception type (#426)</p></li>
+<li><p>Fix Color and RGBColor doc strings (#417)</p></li>
+<li><p>Fix use of deprecared <code class="docutils literal notranslate"><span class="pre">inspect.getargspec</span></code> function (#408)</p></li>
+<li><p>Fix extended names in <code class="docutils literal notranslate"><span class="pre">on_trait_change</span></code> lists (#404)</p></li>
+<li><p>Support Unicode on trait documenter on Python 2.7 (#386)</p></li>
+<li><p>Clear exception from Numpy properly (#377)</p></li>
+<li><p>Fix pickling and deepcopying bug with dynamically added traits (#373)</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">auto_set/enter_set</span></code> default once (#371)</p></li>
+<li><p>Fix validation of <code class="docutils literal notranslate"><span class="pre">This</span></code> trait (#353)</p></li>
+<li><p>Make <code class="docutils literal notranslate"><span class="pre">cTrait.default_value_for</span></code> raise a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> instead of
+seg faulting when asked for the default value of a trait that doesn’t
+have one. (#350)</p></li>
+<li><p>Fix misuse of <code class="docutils literal notranslate"><span class="pre">unittest.expectedFailure</span></code> decorator (#346)</p></li>
+<li><p>Fix issue with overridden <code class="docutils literal notranslate"><span class="pre">HasTraits.trait</span></code> function (#343)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="release-4-6-0">
+<h2>Release 4.6.0<a class="headerlink" href="#release-4-6-0" title="Permalink to this headline">¶</a></h2>
+<p>This is an incremental release over 4.5, accumulating over a year’s worth of
+bugfixes and small improvements to the code.</p>
+<p>Highlights of this release include:</p>
+<ul class="simple">
+<li><p>support for Python 3.4 and 3.5.</p></li>
+<li><p>new Bytes and ValidatedTuple traits.</p></li>
+<li><p>a new ArrayOrNone trait which correctly handles None comparisons with Numpy
+arrays.</p></li>
+<li><p>clean-up of the ETSConfig code for TraitsUI toolkit selection.</p></li>
+<li><p>better compatibility with NumPy scalar types.</p></li>
+<li><p>many other bugfixes and improvements.</p></li>
+</ul>
+<div class="section" id="change-summary-since-4-5-0">
+<h3>Change summary since 4.5.0<a class="headerlink" href="#change-summary-since-4-5-0" title="Permalink to this headline">¶</a></h3>
+<p>Enhancements</p>
+<ul class="simple">
+<li><p>Added a <code class="docutils literal notranslate"><span class="pre">Bytes</span></code> Trait and related traits (#329)</p></li>
+<li><p>Added support for finding resources from zipped Python source code (#316)</p></li>
+<li><p>Added in-place set arithmetic operations for <code class="docutils literal notranslate"><span class="pre">TraitSetObject``s</span> <span class="pre">and</span> <span class="pre">accept</span>
+<span class="pre">match</span> <span class="pre">behaviour</span> <span class="pre">of</span> <span class="pre">``TraitSetObject</span></code> with regular Python sets when
+performing operations with non-set types (eg. lists, dictionaries) (#289)</p></li>
+<li><p>Added a context manager to allow provisional selection of a toolkit to
+<code class="docutils literal notranslate"><span class="pre">ETSConfig</span></code> (this generally improves reliability of toolkit selection
+for Pyface and TraitsUI). (#276)</p></li>
+<li><p>Added Trait change recorder to aid in debugging event-driven code. (#139)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__iadd__</span></code> and <code class="docutils literal notranslate"><span class="pre">__imul__</span></code> implemented on TraitListObjects. (#165)</p></li>
+<li><p>Added new <code class="docutils literal notranslate"><span class="pre">ArrayOrNone</span></code> trait type to replace the
+<code class="docutils literal notranslate"><span class="pre">Either(None,</span> <span class="pre">Array)</span></code> idiom.  The old idiom results in warnings
+on NumPy &gt;= 1.9. (#219)</p></li>
+<li><p>Added a new <code class="docutils literal notranslate"><span class="pre">ValidatedTuple</span></code> trait that supports custom validation. (#205)</p></li>
+</ul>
+<p>Changes</p>
+<ul class="simple">
+<li><p>Removed redundant, internal <code class="docutils literal notranslate"><span class="pre">ETSConfig</span></code> from Traits codebase. (#327)</p></li>
+<li><p>Better error reporting for failed attribute access. (#243)</p></li>
+<li><p>Removed buggy <code class="docutils literal notranslate"><span class="pre">-toolkit</span></code> commandline option <code class="docutils literal notranslate"><span class="pre">ETSConfig</span></code>. (#326)</p></li>
+<li><p>Removed buggy <code class="docutils literal notranslate"><span class="pre">*names</span></code> positional arguments from <code class="docutils literal notranslate"><span class="pre">on_trait_change</span></code>
+decorator in improved argument passing (#207).</p></li>
+<li><p>Allow <code class="docutils literal notranslate"><span class="pre">Float</span></code> and <code class="docutils literal notranslate"><span class="pre">BaseFloat</span></code> traits to accept Python longs. (#272)</p></li>
+<li><p>Clean-up and fixes to example code. (#126)</p></li>
+<li><p>Remove outdated <code class="docutils literal notranslate"><span class="pre">ImportSpy</span></code> and <code class="docutils literal notranslate"><span class="pre">ImportManager</span></code> utilities. (#188)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">deprecated</span></code> decorator now issues a DeprecationWarning (using
+the Python <code class="docutils literal notranslate"><span class="pre">warnings</span></code> module) rather than logging a warning via
+the <code class="docutils literal notranslate"><span class="pre">logging</span></code> machinery.  It no longer tries to remember when
+a warning has been previously issued. (#220)</p></li>
+<li><p>Deprecated <code class="docutils literal notranslate"><span class="pre">HasTraits.get()</span></code> and <code class="docutils literal notranslate"><span class="pre">HasTraits.set()</span></code> (#190).</p></li>
+<li><p>The default <code class="docutils literal notranslate"><span class="pre">View</span></code> shows all (non-event) traits whose <code class="docutils literal notranslate"><span class="pre">visible</span></code> property
+is not <code class="docutils literal notranslate"><span class="pre">False</span></code>. Private traits are set <code class="docutils literal notranslate"><span class="pre">visible=False</span></code> by default. (#234)</p></li>
+</ul>
+<p>Fixes</p>
+<ul class="simple">
+<li><p>Fix Bool traits so that value stored is always a Python <code class="docutils literal notranslate"><span class="pre">bool</span></code> (and in
+particular, not a NumPy <code class="docutils literal notranslate"><span class="pre">np.bool_</span></code>). (#318)</p></li>
+<li><p>Fix Bool traits so that regular validator accepts NumpPy’s <code class="docutils literal notranslate"><span class="pre">np.bool_</span></code>
+boolean values (bringing it in agreement with the fast validator). (#302)</p></li>
+<li><p>Fix use of <code class="docutils literal notranslate"><span class="pre">next</span></code> in <code class="docutils literal notranslate"><span class="pre">TraitDocumenter</span></code> for Python 3 compatibility. (#293)</p></li>
+<li><p>Fix off-by-one error when <code class="docutils literal notranslate"><span class="pre">TraitListObject</span></code> is setting or deleting slices.
+(#283)</p></li>
+<li><p>Fix reference cycles caused by <code class="docutils literal notranslate"><span class="pre">sync_traits</span></code>. (#135)</p></li>
+<li><p>Fix so that <code class="docutils literal notranslate"><span class="pre">sys.exc_info()</span></code> works as expected in exception handlers in
+Python 3 (#266)</p></li>
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">String</span></code> trait to accept <code class="docutils literal notranslate"><span class="pre">str</span></code> subclasses (like <code class="docutils literal notranslate"><span class="pre">numpy.str_</span></code>).
+(#267)</p></li>
+<li><p>Fixed incorrect in list events for <code class="docutils literal notranslate"><span class="pre">insert</span></code> operations with an index
+outside the range [<code class="docutils literal notranslate"><span class="pre">-len(target_list)</span></code>, <code class="docutils literal notranslate"><span class="pre">len(target_list)</span></code>]. (#165)</p></li>
+<li><p>Fix incorrect behaviour of <code class="docutils literal notranslate"><span class="pre">check_implements</span></code> for overridden methods.
+(#192)</p></li>
+<li><p>Fix error when trying to listen to traits using list bracket notation. (#195)</p></li>
+<li><p>Fix reference leak in <code class="docutils literal notranslate"><span class="pre">CHasTraits._notifiers</span></code>. (#248)</p></li>
+<li><p>Fix reference leak from use of <code class="docutils literal notranslate"><span class="pre">DelegatesTo</span></code>. (#260)</p></li>
+<li><p>Instance traits weren’t included in the result of <code class="docutils literal notranslate"><span class="pre">traits()</span></code>. (#234)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="release-4-5-0">
+<h2>Release 4.5.0<a class="headerlink" href="#release-4-5-0" title="Permalink to this headline">¶</a></h2>
+<p>Traits is now compatible with Python 3! The library now supports
+Python 3.2 and 3.3.</p>
+<p>The release also includes increased code coverage and automatic
+coverage report through coveralls.io.</p>
+<div class="section" id="change-summary-since-4-4-0">
+<h3>Change summary since 4.4.0<a class="headerlink" href="#change-summary-since-4-4-0" title="Permalink to this headline">¶</a></h3>
+<p>Enhancements</p>
+<ul class="simple">
+<li><p>Test files cleanups (#108, #111, #121)</p></li>
+<li><p>Add automatic coverage reports (#110, #122)</p></li>
+<li><p>Removed obsolete code (#109, #112, #113)</p></li>
+<li><p>Increased test coverage (#114, #118)</p></li>
+<li><p>Python 3 support (#115).  Thanks Yves Delley.</p></li>
+<li><p>Allow setting and resetting the global adaptation manager (#145)</p></li>
+<li><p>Various documentation improvements (#132, #133, #148, #154).</p></li>
+</ul>
+<p>Changes</p>
+<ul class="simple">
+<li><p>The Int trait type now accepts Python ints <em>and</em> Python longs, as well as
+instances of any Python type that implements the <code class="docutils literal notranslate"><span class="pre">__index__</span></code> method.
+Previously, long instances were not accepted. (#104, #123).</p></li>
+</ul>
+<p>Fixes</p>
+<ul class="simple">
+<li><p>Fix crash when trying to validate a property that has been deleted. (#138)</p></li>
+<li><p>Fix clearing exception when raising a TraitError (#119)</p></li>
+<li><p>Fix automatic adaptation when assigning to List trait (#147)</p></li>
+<li><p>Fix some ctraits refcounting and exception clearing bugs (#48).  Thanks Yves
+Delley.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="release-4-4-0">
+<h2>Release 4.4.0<a class="headerlink" href="#release-4-4-0" title="Permalink to this headline">¶</a></h2>
+<p>The major new feature in this release is a new adaptation mechanism in the
+<code class="docutils literal notranslate"><span class="pre">traits.adaptation</span></code> package.  The new mechanism is intended to replace the
+older traits.protocols package.  Code written against <code class="docutils literal notranslate"><span class="pre">traits.protocols</span></code> will
+continue to work, although the <code class="docutils literal notranslate"><span class="pre">traits.protocols</span></code> API has been deprecated,
+and a warning will be logged on first use of <code class="docutils literal notranslate"><span class="pre">traits.protocols</span></code>.  See the
+‘Advanced Topics’ section of the user manual for more details.</p>
+<p>The release also includes improved support for using Cython with <code class="docutils literal notranslate"><span class="pre">HasTraits</span></code>
+classes, some new helper utilities for writing unit tests for Traits events,
+and a variety of bug fixes, stability enhancements, and internal code
+improvements.</p>
+<div class="section" id="change-summary-since-4-3-0">
+<h3>Change summary since 4.3.0<a class="headerlink" href="#change-summary-since-4-3-0" title="Permalink to this headline">¶</a></h3>
+<p>New features</p>
+<ul class="simple">
+<li><p>The adaptation mechanism in Traits, formerly based on the ‘traits.protocols’
+package, has been replaced with the more robust ‘traits.adaptation’
+package. (#51)</p></li>
+<li><p>Added utility function for importing symbols (name, classes, functions)
+by name: ‘traits.util.api.import_symbol’. (#51)</p></li>
+<li><p>Users can set a global tracer, which receives all traits change events:
+<code class="docutils literal notranslate"><span class="pre">traits.trait_notifiers.set_change_event_tracers</span></code>. (#79)</p></li>
+</ul>
+<p>Enhancements</p>
+<ul class="simple">
+<li><p>Update benchmark script. (#54)</p></li>
+<li><p>traits.util.deprecated: use module logger instead of root logger. (#59)</p></li>
+<li><p>Provide an informative message in AdaptationError. (#62)</p></li>
+<li><p>Allow HasTraits classes to be cythonized. (#73)</p></li>
+<li><p>Improve tests for cythonization support. (#75)</p></li>
+<li><p>Extending various trait testing helpers (#53)</p></li>
+</ul>
+<p>Refactoring</p>
+<ul class="simple">
+<li><p>The Traits notification code has been reworked to remove code duplication,
+and test coverage of that code has been significantly improved. (#79)</p></li>
+</ul>
+<p>Fixes</p>
+<ul class="simple">
+<li><p>Fix race condition when removing a traits listener. (#57)</p></li>
+<li><p>Fix ugly interaction between DelegatesTo change handlers, dynamic change
+handlers and two levels of dynamic intialization. (#63)</p></li>
+<li><p>Use a NullHandler for all ‘traits’ loggers. (#64)</p></li>
+<li><p>Fix race condition in TraitChangeNotifyWrapper.listener_deleted (#66)</p></li>
+<li><p>Fix leaking notifiers. (#68)</p></li>
+<li><p>Fix failing special instance trait events. (#78)</p></li>
+<li><p>Fix hiding KeyError exception inside trait default initialize method.
+(#81)</p></li>
+<li><p>Fix Adapter object initialization. (#93)</p></li>
+<li><p>Fix cyclic garbage arising from use of the WeakRef trait type. (#95)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TraitSetObject.copy</span></code> now returns a plain rather than an
+uninitialized <code class="docutils literal notranslate"><span class="pre">TraitSetObject</span></code> instance. (#97)</p></li>
+<li><p>Fix cyclic garbage arising from dynamic trait change handlers. (#101)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="releases-4-3-0-3-6-0">
+<h2>Releases 4.3.0 - 3.6.0<a class="headerlink" href="#releases-4-3-0-3-6-0" title="Permalink to this headline">¶</a></h2>
+<p>Changelogs unavailable.</p>
+</div>
+<div class="section" id="release-3-5-0">
+<h2>Release 3.5.0<a class="headerlink" href="#release-3-5-0" title="Permalink to this headline">¶</a></h2>
+<p>Released: 2010-10-15</p>
+<p>Enhancements</p>
+<ul class="simple">
+<li><p>adding support for drop-down menu in Button traits, but only for qt backend</p></li>
+<li><p>adding ‘show_notebook_menu’ option to ListEditor so that the user can
+right-click and show or hide the context menu (Qt)</p></li>
+<li><p>added selection range traits to make it possible for users to replace
+selected text</p></li>
+</ul>
+<p>Fixes</p>
+<ul class="simple">
+<li><p>fixed null color editor to work with tuples</p></li>
+<li><p>bug when opening a view with the ToolbarButton</p></li>
+</ul>
+</div>
+<div class="section" id="release-3-4-0">
+<h2>Release 3.4.0<a class="headerlink" href="#release-3-4-0" title="Permalink to this headline">¶</a></h2>
+<p>Released: 2010-05-26</p>
+<p>Enhancements</p>
+<ul class="simple">
+<li><p>adding new example to make testing rgb color editor easier</p></li>
+</ul>
+<p>Fixes</p>
+<ul class="simple">
+<li><p>fixed NumericColumn to not expect object to have model_selection attribute,
+and removed more dead theming code</p></li>
+<li><p>fixed API bugs with the NumericColumn where its function signatures
+differed from its base class, but the calling code expected them to all
+be the same</p></li>
+<li><p>fixed bug which was related to type name errors caused when running Sphinx</p></li>
+<li><p>when using File(exists=True), be sure to validate the type of the value
+first before using os.path.isfile()</p></li>
+</ul>
+</div>
+<div class="section" id="release-3-3-0">
+<h2>Release 3.3.0<a class="headerlink" href="#release-3-3-0" title="Permalink to this headline">¶</a></h2>
+<p>Released: 2010-02-24</p>
+<p>Enhancements</p>
+<p>The major enhancement this release is that the entire Traits package has been
+changed to use relative imports so that it can be installed as a sub-package
+inside another larger library or package.  This was not previously possible,
+since the various modules inside Traits would import each other directly
+through “traits.[module]”.  Many thanks to Darren Dale for the
+patch.</p>
+<p>Fixes</p>
+<p>There have been numerous minor bugfixes since the last release.  The most notable
+ones are:</p>
+<ul class="simple">
+<li><p>Many fixes involve making Traits UI more robust if wxPython is not installed
+on a system.  In the past, we have been able to use Qt if it was also
+installed, but removing Wx would lead to a variety of little bugs in various
+places.  We’ve squashed a number of these.  We’ve also added better checks
+to make sure we’re selecting the right toolkit at import and at runtime.</p></li>
+<li><p>A nasty cyclic reference was discovered and eliminated in DelegatesTo traits.</p></li>
+<li><p>The Undefined and Uninitialized Traits were made into true singletons.</p></li>
+<li><p>Much of the inconsistent formatting across the entire Traits source has
+been eliminated and normalized (tabs/spaces, line endings).</p></li>
+</ul>
+</div>
+<div class="section" id="release-3-2-0">
+<h2>Release 3.2.0<a class="headerlink" href="#release-3-2-0" title="Permalink to this headline">¶</a></h2>
+<p>Released: 2009-07-15</p>
+<p>Enhancements</p>
+<ul class="simple">
+<li><p>Implemented editable_labels attribute in the TabularEditor for enabling editing of the labels (i.e. the first column)</p></li>
+<li><p>Saving/restoring window positions works with multiple displays of different sizes</p></li>
+<li><p>New ProgressEditor</p></li>
+<li><p>Changed default colors for TableEditor</p></li>
+<li><p>Added support for HTMLEditor for QT backend using QtWebKit</p></li>
+<li><p>Improved support for opening links in external browser from HTMLEditor</p></li>
+<li><p>Added support for TabularEditor for QT backend</p></li>
+<li><p>Added support for marking up the CodeEditor, including adding squiggles and dimming lines</p></li>
+<li><p>Added SearchEditor</p></li>
+<li><p>Improved unicode support</p></li>
+<li><p>Changed behavior of RangeEditor text box to not auto-set</p></li>
+<li><p>Added support in RangeEditor for specifying the method to evaluate new values.</p></li>
+<li><p>Add DefaultOverride editor factory courtesy Stéfan van der Walt</p></li>
+<li><p>Removed sys.exit() call from SaveHandler.exit()</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Traits CHANGELOG</a><ul>
+<li><a class="reference internal" href="#release-6-0-0">Release 6.0.0</a></li>
+<li><a class="reference internal" href="#release-6-0-0rc0">Release 6.0.0rc0</a><ul>
+<li><a class="reference internal" href="#release-notes">Release notes</a></li>
+<li><a class="reference internal" href="#porting-guide">Porting guide</a></li>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#changes">Changes</a></li>
+<li><a class="reference internal" href="#fixes">Fixes</a></li>
+<li><a class="reference internal" href="#deprecations">Deprecations</a></li>
+<li><a class="reference internal" href="#removals">Removals</a></li>
+<li><a class="reference internal" href="#test-suite">Test suite</a></li>
+<li><a class="reference internal" href="#documentation">Documentation</a></li>
+<li><a class="reference internal" href="#build-and-continuous-integration">Build and continuous integration</a></li>
+<li><a class="reference internal" href="#maintenance-and-code-organization">Maintenance and code organization</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#release-5-2-0">Release 5.2.0</a></li>
+<li><a class="reference internal" href="#release-5-1-2">Release 5.1.2</a></li>
+<li><a class="reference internal" href="#release-5-1-1">Release 5.1.1</a></li>
+<li><a class="reference internal" href="#release-5-1-0">Release 5.1.0</a></li>
+<li><a class="reference internal" href="#release-5-0-0">Release 5.0.0</a><ul>
+<li><a class="reference internal" href="#changes-summary-since-4-6-0">Changes summary since 4.6.0</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#release-4-6-0">Release 4.6.0</a><ul>
+<li><a class="reference internal" href="#change-summary-since-4-5-0">Change summary since 4.5.0</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#release-4-5-0">Release 4.5.0</a><ul>
+<li><a class="reference internal" href="#change-summary-since-4-4-0">Change summary since 4.4.0</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#release-4-4-0">Release 4.4.0</a><ul>
+<li><a class="reference internal" href="#change-summary-since-4-3-0">Change summary since 4.3.0</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#releases-4-3-0-3-6-0">Releases 4.3.0 - 3.6.0</a></li>
+<li><a class="reference internal" href="#release-3-5-0">Release 3.5.0</a></li>
+<li><a class="reference internal" href="#release-3-4-0">Release 3.4.0</a></li>
+<li><a class="reference internal" href="#release-3-3-0">Release 3.3.0</a></li>
+<li><a class="reference internal" href="#release-3-2-0">Release 3.2.0</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="traits_api_reference/traits.util.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util</span></code> Package</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="_sources/changelog.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought Inc
+      </li>
+      <li>
+      Last updated on Feb 14, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

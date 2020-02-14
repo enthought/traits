@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.2.0',
+        VERSION:     '6.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
     <link rel="top" title="Traits 5 User Manual" href="../index.html" >
     <link rel="up" title="Traits 5 User Manual" href="index.html" >
@@ -54,6 +55,10 @@
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
       <li class="active">
         <a href="../py-modindex.html" title="Python Module Index"
            >modules</a>
@@ -99,12 +104,12 @@ attribute still uses the prototype’s validation, the link between the values i
 broken, and the two attributes can change independently. This is essentially a
 “copy on write” scheme.</p>
 <p>The concepts of delegation and prototyping are implemented in the Traits package
-by two classes derived from TraitType: DelegatesTo and PrototypedFrom. <a class="footnote-reference" href="#id8" id="id1">[5]</a></p>
+by two classes derived from TraitType: DelegatesTo and PrototypedFrom. <a class="footnote-reference brackets" href="#id8" id="id1">5</a></p>
 <div class="section" id="delegatesto">
 <span id="id2"></span><h2>DelegatesTo<a class="headerlink" href="#delegatesto" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="DelegatesTo">
-<em class="property">class </em><code class="descname">DelegatesTo</code><span class="sig-paren">(</span><em>delegate</em><span class="optional">[</span>, <em>prefix=''</em>, <em>listenable=True</em>, <em>**metadata</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#DelegatesTo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">DelegatesTo</code><span class="sig-paren">(</span><em class="sig-param">delegate</em><span class="optional">[</span>, <em class="sig-param">prefix=''</em>, <em class="sig-param">listenable=True</em>, <em class="sig-param">**metadata</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#DelegatesTo" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p id="index-2">The <em>delegate</em> parameter is a string that specifies the name of an attribute
@@ -112,9 +117,9 @@ on the same object, which refers to the object whose attribute is deferred to;
 it is usually an Instance trait. The value of the delegating attribute changes
 whenever:</p>
 <ul class="simple">
-<li>The value of the appropriate attribute on the delegate object changes.</li>
-<li>The object referenced by the trait named in the <em>delegate</em> parameter changes.</li>
-<li>The delegating attribute is explicitly changed.</li>
+<li><p>The value of the appropriate attribute on the delegate object changes.</p></li>
+<li><p>The object referenced by the trait named in the <em>delegate</em> parameter changes.</p></li>
+<li><p>The delegating attribute is explicitly changed.</p></li>
 </ul>
 <p>Changes to the delegating attribute are propagated to the delegate object’s
 attribute.</p>
@@ -170,7 +175,7 @@ reflect the new value.</p>
 <span id="id3"></span><h2>PrototypedFrom<a class="headerlink" href="#prototypedfrom" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="PrototypedFrom">
-<em class="property">class </em><code class="descname">PrototypedFrom</code><span class="sig-paren">(</span><em>prototype</em><span class="optional">[</span>, <em>prefix=''</em>, <em>listenable=True</em>, <em>**metadata</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#PrototypedFrom" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">PrototypedFrom</code><span class="sig-paren">(</span><em class="sig-param">prototype</em><span class="optional">[</span>, <em class="sig-param">prefix=''</em>, <em class="sig-param">listenable=True</em>, <em class="sig-param">**metadata</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#PrototypedFrom" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p id="index-4">The <em>prototype</em> parameter is a string that specifies the name of an attribute on
@@ -191,14 +196,14 @@ initializer functions behave similarly for both classes.</p>
 attribute look-up in the deferred-to object is modified, with the modification
 depending on the format of the prefix string:</p>
 <ul class="simple">
-<li>If <em>prefix</em> is a valid Python attribute name, then the original attribute
-name is replaced by prefix when looking up the deferred-to attribute.</li>
-<li>If <em>prefix</em> ends with an asterisk (‘*’), and is longer than one character,
+<li><p>If <em>prefix</em> is a valid Python attribute name, then the original attribute
+name is replaced by prefix when looking up the deferred-to attribute.</p></li>
+<li><p>If <em>prefix</em> ends with an asterisk (‘*’), and is longer than one character,
 then <em>prefix</em>, minus the trailing asterisk, is added to the front of the
-original attribute name when looking up the object attribute.</li>
-<li>If <em>prefix</em> is equal to a single asterisk (‘*’), the value of the object
+original attribute name when looking up the object attribute.</p></li>
+<li><p>If <em>prefix</em> is equal to a single asterisk (‘*’), the value of the object
 class’s <strong>__prefix__</strong> attribute is added to the front of the original
-attribute name when looking up the object attribute.</li>
+attribute name when looking up the object attribute.</p></li>
 </ul>
 <p id="index-6">Each of these three possibilities is illustrated in the following example, using
 PrototypedFrom:</p>
@@ -234,12 +239,12 @@ PrototypedFrom:</p>
 <p>In this example, instances of the Child class have three prototyped trait
 attributes:</p>
 <ul class="simple">
-<li><strong>first_name</strong>, which prototypes from the <strong>favorite_first_name</strong> attribute
-of its <strong>mother</strong> object.</li>
-<li><strong>last_name</strong>, which prototyped from the <strong>family_name attribute</strong> of its
-<strong>father</strong> object.</li>
-<li><strong>allowance</strong>, which prototypes from the <strong>child_allowance</strong> attribute of its
-<strong>father</strong> object.</li>
+<li><p><strong>first_name</strong>, which prototypes from the <strong>favorite_first_name</strong> attribute
+of its <strong>mother</strong> object.</p></li>
+<li><p><strong>last_name</strong>, which prototyped from the <strong>family_name attribute</strong> of its
+<strong>father</strong> object.</p></li>
+<li><p><strong>allowance</strong>, which prototypes from the <strong>child_allowance</strong> attribute of its
+<strong>father</strong> object.</p></li>
 </ul>
 </div>
 <div class="section" id="listenable-keyword">
@@ -312,14 +317,13 @@ notify the son. When the son reverts to using the father’s last name (by
 deleting the explicit value), changes to the father’s last name again affect and
 notif</p>
 <p class="rubric">Footnotes</p>
-<table class="docutils footnote" frame="void" id="id8" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[5]</a></td><td>Both of these class es inherit from the Delegate class. Explicit use of
+<dl class="footnote brackets">
+<dt class="label" id="id8"><span class="brackets"><a class="fn-backref" href="#id1">5</a></span></dt>
+<dd><p>Both of these class es inherit from the Delegate class. Explicit use of
 Delegate is deprecated, as its name and default behavior (prototyping) are
-incongruous.</td></tr>
-</tbody>
-</table>
+incongruous.</p>
+</dd>
+</dl>
 </div>
 </div>
 
@@ -359,13 +363,11 @@ incongruous.</td></tr>
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -386,13 +388,13 @@ incongruous.</td></tr>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2019, Enthought Inc
+        &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on Nov 18, 2019.
+      Last updated on Feb 14, 2020.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
       </li>
     </ul>
     </div>

@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '5.2.0',
+        VERSION:     '6.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
     <link rel="top" title="Traits 5 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
@@ -53,6 +54,10 @@
               
     <ul class="nav nav-pills pull-right">
       <li class="active">
+        <a href="../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
         <a href="../../py-modindex.html" title="Python Module Index"
            >modules</a>
       </li>
@@ -70,22 +75,15 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for traits.traits_listener</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -------------------------------------------------------------------------------</span>
+<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
-<span class="c1">#  Copyright (c) 2007, Enthought, Inc.</span>
-<span class="c1">#  All rights reserved.</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
 <span class="c1">#</span>
-<span class="c1">#  This software is provided without warranty under the terms of the BSD</span>
-<span class="c1">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
-<span class="c1">#  under the conditions described in the aforementioned license.  The license</span>
-<span class="c1">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
-<span class="c1">#</span>
-<span class="c1">#  Thanks for using Enthought open source!</span>
-<span class="c1">#</span>
-<span class="c1">#  Author: David C. Morrill</span>
-<span class="c1">#  Date:   03/05/2007</span>
-<span class="c1">#</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
 
 <span class="sd">&quot;&quot;&quot; Defines classes used to implement and manage various trait listener</span>
 <span class="sd">    patterns.</span>
@@ -95,22 +93,16 @@
 <span class="c1">#  Imports:</span>
 <span class="c1"># -------------------------------------------------------------------------------</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
-
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">string</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
 <span class="kn">from</span> <span class="nn">string</span> <span class="k">import</span> <span class="n">whitespace</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">MethodType</span>
 
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="k">import</span> <span class="n">DefaultValue</span>
 <span class="kn">from</span> <span class="nn">.has_traits</span> <span class="k">import</span> <span class="n">HasPrivateTraits</span>
 <span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">Uninitialized</span>
 <span class="kn">from</span> <span class="nn">.traits</span> <span class="k">import</span> <span class="n">Property</span>
-<span class="kn">from</span> <span class="nn">.trait_handlers</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">TRAIT_LIST_OBJECT_DEFAULT_VALUE</span><span class="p">,</span>
-    <span class="n">TRAIT_DICT_OBJECT_DEFAULT_VALUE</span><span class="p">,</span>
-    <span class="n">TRAIT_SET_OBJECT_DEFAULT_VALUE</span><span class="p">,</span>
-<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.trait_types</span> <span class="k">import</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
 <span class="kn">from</span> <span class="nn">.trait_notifiers</span> <span class="k">import</span> <span class="n">TraitChangeNotifyWrapper</span>
@@ -136,9 +128,9 @@
 
 <span class="c1"># Mapping from trait default value types to listener types</span>
 <span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">TRAIT_LIST_OBJECT_DEFAULT_VALUE</span><span class="p">:</span> <span class="n">LIST_LISTENER</span><span class="p">,</span>
-    <span class="n">TRAIT_DICT_OBJECT_DEFAULT_VALUE</span><span class="p">:</span> <span class="n">DICT_LISTENER</span><span class="p">,</span>
-    <span class="n">TRAIT_SET_OBJECT_DEFAULT_VALUE</span><span class="p">:</span> <span class="n">SET_LISTENER</span><span class="p">,</span>
+    <span class="n">DefaultValue</span><span class="o">.</span><span class="n">trait_list_object</span><span class="p">:</span> <span class="n">LIST_LISTENER</span><span class="p">,</span>
+    <span class="n">DefaultValue</span><span class="o">.</span><span class="n">trait_dict_object</span><span class="p">:</span> <span class="n">DICT_LISTENER</span><span class="p">,</span>
+    <span class="n">DefaultValue</span><span class="o">.</span><span class="n">trait_set_object</span><span class="p">:</span> <span class="n">SET_LISTENER</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="c1"># Listener types:</span>
@@ -1499,13 +1491,11 @@
               <img class="logo" src="../../_static/img/e-logo.png" alt="Logo">
             </a></p>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -1526,13 +1516,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2019, Enthought Inc
+        &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on Nov 18, 2019.
+      Last updated on Feb 14, 2020.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
       </li>
     </ul>
     </div>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>traits.base_trait_handler &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '6.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../genindex.html" >
+    <link rel="search" title="Search" href="../../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../../index.html" >
+    <link rel="up" title="Module code" href="../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for traits.base_trait_handler</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines the Abstract BaseTraitHandler class.</span>
+
+<span class="sd">A trait handler mediates the assignment of values to object traits. It</span>
+<span class="sd">verifies (via its validate() method) that a specified value is consistent</span>
+<span class="sd">with the object trait, and generates a TraitError exception if it is not</span>
+<span class="sd">consistent.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="k">import</span> <span class="n">DefaultValue</span>
+<span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
+
+
+<div class="viewcode-block" id="BaseTraitHandler"><a class="viewcode-back" href="../../traits_api_reference/base_trait_handler.html#traits.base_trait_handler.BaseTraitHandler">[docs]</a><span class="k">class</span> <span class="nc">BaseTraitHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The task of this class and its subclasses is to verify the correctness</span>
+<span class="sd">    of values assigned to object trait attributes.</span>
+
+<span class="sd">    This class is an alternative to trait validator functions. A trait handler</span>
+<span class="sd">    has several advantages over a trait validator function, due to being an</span>
+<span class="sd">    object:</span>
+
+<span class="sd">        * Trait handlers have constructors and state. Therefore, you can use</span>
+<span class="sd">          them to create *parametrized types*.</span>
+<span class="sd">        * Trait handlers can have multiple methods, whereas validator functions</span>
+<span class="sd">          can have only one callable interface. This feature allows more</span>
+<span class="sd">          flexibility in their implementation, and allows them to handle a</span>
+<span class="sd">          wider range of cases, such as interactions with other components.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">default_value_type</span> <span class="o">=</span> <span class="n">DefaultValue</span><span class="o">.</span><span class="n">unspecified</span>
+    <span class="n">has_items</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">is_mapped</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">editor</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">info_text</span> <span class="o">=</span> <span class="s2">&quot;a legal value&quot;</span>
+
+    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="BaseTraitHandler.error"><a class="viewcode-back" href="../../traits_api_reference/base_trait_handler.html#traits.base_trait_handler.BaseTraitHandler.error">[docs]</a>    <span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Raises a TraitError exception.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        object : object</span>
+<span class="sd">            The object whose attribute is being assigned.</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name of the attribute being assigned.</span>
+<span class="sd">        value : object</span>
+<span class="sd">            The proposed new value for the attribute.</span>
+
+<span class="sd">        Description</span>
+<span class="sd">        -----------</span>
+<span class="sd">        This method is called by the validate() method when an assigned value</span>
+<span class="sd">        is not valid. Raising a TraitError exception either notifies the user of</span>
+<span class="sd">        the problem, or, in the case of compound traits, provides a chance for</span>
+<span class="sd">        another trait handler to handle to validate the value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
+            <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">full_info</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span> <span class="n">value</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseTraitHandler.full_info"><a class="viewcode-back" href="../../traits_api_reference/base_trait_handler.html#traits.base_trait_handler.BaseTraitHandler.full_info">[docs]</a>    <span class="k">def</span> <span class="nf">full_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a string describing the type of value accepted by the</span>
+<span class="sd">        trait handler.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        object : object</span>
+<span class="sd">            The object whose attribute is being assigned.</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name of the attribute being assigned.</span>
+<span class="sd">        value :</span>
+<span class="sd">            The proposed new value for the attribute.</span>
+
+<span class="sd">        Description</span>
+<span class="sd">        -----------</span>
+<span class="sd">        The string should be a phrase describing the type defined by the</span>
+<span class="sd">        TraitHandler subclass, rather than a complete sentence. For example, use</span>
+<span class="sd">        the phrase, &quot;a square sprocket&quot; instead of the sentence, &quot;The value must</span>
+<span class="sd">        be a square sprocket.&quot; The value returned by full_info() is combined</span>
+<span class="sd">        with other information whenever an error occurs and therefore makes more</span>
+<span class="sd">        sense to the user if the result is a phrase. The full_info() method is</span>
+<span class="sd">        similar in purpose and use to the **info** attribute of a validator</span>
+<span class="sd">        function.</span>
+
+<span class="sd">        Note that the result can include information specific to the particular</span>
+<span class="sd">        trait handler instance. If the full_info() method is not overridden,</span>
+<span class="sd">        the default method returns the value of calling the info() method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseTraitHandler.info"><a class="viewcode-back" href="../../traits_api_reference/base_trait_handler.html#traits.base_trait_handler.BaseTraitHandler.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Must return a string describing the type of value accepted by the</span>
+<span class="sd">        trait handler.</span>
+
+<span class="sd">        The string should be a phrase describing the type defined by the</span>
+<span class="sd">        TraitHandler subclass, rather than a complete sentence. For example, use</span>
+<span class="sd">        the phrase, &quot;a square sprocket&quot; instead of the sentence, &quot;The value must</span>
+<span class="sd">        be a square sprocket.&quot; The value returned by info() is combined with</span>
+<span class="sd">        other information whenever an error occurs and therefore makes more</span>
+<span class="sd">        sense to the user if the result is a phrase. The info() method is</span>
+<span class="sd">        similar in purpose and use to the **info** attribute of a validator</span>
+<span class="sd">        function.</span>
+
+<span class="sd">        Note that the result can include information specific to the particular</span>
+<span class="sd">        trait handler instance. If the info() method is not overridden, the</span>
+<span class="sd">        default method returns the value of the &#39;info_text&#39; attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_text</span></div>
+
+<div class="viewcode-block" id="BaseTraitHandler.get_editor"><a class="viewcode-back" href="../../traits_api_reference/base_trait_handler.html#traits.base_trait_handler.BaseTraitHandler.get_editor">[docs]</a>    <span class="k">def</span> <span class="nf">get_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a trait editor that allows the user to modify the *trait*</span>
+<span class="sd">        trait.</span>
+<span class="sd">        This method only needs to be specified if traits defined using this</span>
+<span class="sd">        trait handler require a non-default trait editor in trait user</span>
+<span class="sd">        interfaces. The default implementation of this method returns a trait</span>
+<span class="sd">        editor that allows the user to type an arbitrary string as the value.</span>
+
+<span class="sd">        For more information on trait user interfaces, refer to the *Traits UI</span>
+<span class="sd">        User Guide*.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        trait : Trait</span>
+<span class="sd">            The trait to be edited.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">editor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">editor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_editor</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">editor</span></div>
+
+<div class="viewcode-block" id="BaseTraitHandler.create_editor"><a class="viewcode-back" href="../../traits_api_reference/base_trait_handler.html#traits.base_trait_handler.BaseTraitHandler.create_editor">[docs]</a>    <span class="k">def</span> <span class="nf">create_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the default traits UI editor to use for a trait.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TextEditor</span>
+
+        <span class="k">return</span> <span class="n">TextEditor</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseTraitHandler.inner_traits"><a class="viewcode-back" href="../../traits_api_reference/base_trait_handler.html#traits.base_trait_handler.BaseTraitHandler.inner_traits">[docs]</a>    <span class="k">def</span> <span class="nf">inner_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a tuple containing the *inner traits* for this trait. Most</span>
+<span class="sd">            trait handlers do not have any inner traits, and so will return an</span>
+<span class="sd">            empty tuple. The exceptions are **List** and **Dict** trait types,</span>
+<span class="sd">            which have inner traits used to validate the values assigned to the</span>
+<span class="sd">            trait. For example, in *List( Int )*, the *inner traits* for</span>
+<span class="sd">            **List** are ( **Int**, ).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought Inc
+      </li>
+      <li>
+      Last updated on Feb 14, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

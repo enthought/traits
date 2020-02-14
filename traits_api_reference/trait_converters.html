@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>traits.trait_converters Module &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '6.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="traits.trait_dict_object Module" href="trait_dict_object.html" >
+    <link rel="prev" title="traits.trait_base Module" href="trait_base.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="trait_dict_object.html" title="traits.trait_dict_object Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="trait_base.html" title="traits.trait_base Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="module-traits.trait_converters">
+<span id="traits-trait-converters-module"></span><h1><a class="reference internal" href="#module-traits.trait_converters" title="traits.trait_converters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_converters</span></code></a> Module<a class="headerlink" href="#module-traits.trait_converters" title="Permalink to this headline">¶</a></h1>
+<p>Utility routines that convert objects to CTrait instances</p>
+<p>Most of these functions depend on objects having an informal <code class="docutils literal notranslate"><span class="pre">as_ctrait</span></code>
+interface if they know how to turn themselves into a CTrait instance.</p>
+<p>We need to special-case <code class="docutils literal notranslate"><span class="pre">TraitType</span></code> subclasses so that we can use them
+in trait definitions without needing to call them, eg.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">Float</span>
+</pre></div>
+</div>
+<p>rather than:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">Float</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To handle this, there is another informal interface with the deliberately
+unwieldy classmethod name <code class="docutils literal notranslate"><span class="pre">instantiate_and_get_ctrait</span></code>.</p>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="traits.trait_converters.as_ctrait">
+<code class="sig-prename descclassname">traits.trait_converters.</code><code class="sig-name descname">as_ctrait</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_converters.html#as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_converters.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert to CTrait if the object knows how, else raise TraitError.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – An object that supports conversion to <cite>CTrait</cite>. Refer
+documentation for when the object supports this conversion.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A CTrait object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait">ctrait.CTrait</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If the object does not support conversion to CTrait.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.trait_converters.check_trait">
+<code class="sig-prename descclassname">traits.trait_converters.</code><code class="sig-name descname">check_trait</code><span class="sig-paren">(</span><em class="sig-param">trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_converters.html#check_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_converters.check_trait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns either the original value or a valid CTrait if the value can be
+converted to a CTrait.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.trait_converters.trait_cast">
+<code class="sig-prename descclassname">traits.trait_converters.</code><code class="sig-name descname">trait_cast</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_converters.html#trait_cast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_converters.trait_cast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert to a CTrait if the object knows how, else return None.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.trait_converters.trait_from">
+<code class="sig-prename descclassname">traits.trait_converters.</code><code class="sig-name descname">trait_from</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_converters.html#trait_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_converters.trait_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a trait derived from its input.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.trait_converters.trait_for">
+<code class="sig-prename descclassname">traits.trait_converters.</code><code class="sig-name descname">trait_for</code><span class="sig-paren">(</span><em class="sig-param">trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_converters.html#trait_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_converters.trait_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the trait corresponding to a specified value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.trait_converters.mapped_trait_for">
+<code class="sig-prename descclassname">traits.trait_converters.</code><code class="sig-name descname">mapped_trait_for</code><span class="sig-paren">(</span><em class="sig-param">trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_converters.html#mapped_trait_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_converters.mapped_trait_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ‘mapped trait’ definition for a mapped trait.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_converters</span></code> Module</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trait_base.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_base</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trait_dict_object.html"
+                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_dict_object</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/trait_converters.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought Inc
+      </li>
+      <li>
+      Last updated on Feb 14, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>trait_notifiers Module &mdash; Traits 5 User Manual</title>
+    <title>traits.trait_notifiers Module &mdash; Traits 5 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.2.0',
+        VERSION:     '6.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,11 +26,12 @@
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
     <link rel="top" title="Traits 5 User Manual" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
-    <link rel="next" title="ustr_trait Module" href="ustr_trait.html" >
-    <link rel="prev" title="traits_listener Module" href="traits_listener.html" > 
+    <link rel="next" title="traits.trait_set_object Module" href="trait_set_object.html" >
+    <link rel="prev" title="traits.trait_types Module" href="trait_types.html" > 
   </head>
   <body>
   <div class="container">
@@ -55,15 +56,19 @@
               
     <ul class="nav nav-pills pull-right">
       <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
         <a href="../py-modindex.html" title="Python Module Index"
            >modules</a>
       </li>
       <li class="active">
-        <a href="ustr_trait.html" title="ustr_trait Module"
+        <a href="trait_set_object.html" title="traits.trait_set_object Module"
            accesskey="N">next</a>
       </li>
       <li class="active">
-        <a href="traits_listener.html" title="traits_listener Module"
+        <a href="trait_types.html" title="traits.trait_types Module"
            accesskey="P">previous</a>
       </li>
     </ul>
@@ -80,40 +85,40 @@
           <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.trait_notifiers">
-<span id="trait-notifiers-module"></span><h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">trait_notifiers</span></code> Module<a class="headerlink" href="#module-traits.trait_notifiers" title="Permalink to this headline">¶</a></h1>
+<span id="traits-trait-notifiers-module"></span><h1><a class="reference internal" href="#module-traits.trait_notifiers" title="traits.trait_notifiers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_notifiers</span></code></a> Module<a class="headerlink" href="#module-traits.trait_notifiers" title="Permalink to this headline">¶</a></h1>
 <p>Classes that implement and support the Traits change notification mechanism</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="traits.trait_notifiers.NotificationExceptionHandlerState">
-<em class="property">class </em><code class="descclassname">traits.trait_notifiers.</code><code class="descname">NotificationExceptionHandlerState</code><span class="sig-paren">(</span><em>handler</em>, <em>reraise_exceptions</em>, <em>locked</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#NotificationExceptionHandlerState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.NotificationExceptionHandlerState" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_notifiers.</code><code class="sig-name descname">NotificationExceptionHandlerState</code><span class="sig-paren">(</span><em class="sig-param">handler</em>, <em class="sig-param">reraise_exceptions</em>, <em class="sig-param">locked</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#NotificationExceptionHandlerState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.NotificationExceptionHandlerState" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_notifiers.NotificationExceptionHandler">
-<em class="property">class </em><code class="descclassname">traits.trait_notifiers.</code><code class="descname">NotificationExceptionHandler</code><a class="reference internal" href="../_modules/traits/trait_notifiers.html#NotificationExceptionHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.NotificationExceptionHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_notifiers.</code><code class="sig-name descname">NotificationExceptionHandler</code><a class="reference internal" href="../_modules/traits/trait_notifiers.html#NotificationExceptionHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.NotificationExceptionHandler" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_notifiers.StaticAnyTraitChangeNotifyWrapper">
-<em class="property">class </em><code class="descclassname">traits.trait_notifiers.</code><code class="descname">StaticAnyTraitChangeNotifyWrapper</code><span class="sig-paren">(</span><em>handler</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#StaticAnyTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.StaticAnyTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_notifiers.</code><code class="sig-name descname">StaticAnyTraitChangeNotifyWrapper</code><span class="sig-paren">(</span><em class="sig-param">handler</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#StaticAnyTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.StaticAnyTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_notifiers.StaticTraitChangeNotifyWrapper">
-<em class="property">class </em><code class="descclassname">traits.trait_notifiers.</code><code class="descname">StaticTraitChangeNotifyWrapper</code><span class="sig-paren">(</span><em>handler</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#StaticTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.StaticTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_notifiers.</code><code class="sig-name descname">StaticTraitChangeNotifyWrapper</code><span class="sig-paren">(</span><em class="sig-param">handler</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#StaticTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.StaticTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_notifiers.TraitChangeNotifyWrapper">
-<em class="property">class </em><code class="descclassname">traits.trait_notifiers.</code><code class="descname">TraitChangeNotifyWrapper</code><span class="sig-paren">(</span><em>handler</em>, <em>owner</em>, <em>target=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#TraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.TraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_notifiers.</code><code class="sig-name descname">TraitChangeNotifyWrapper</code><span class="sig-paren">(</span><em class="sig-param">handler</em>, <em class="sig-param">owner</em>, <em class="sig-param">target=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#TraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.TraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dynamic change notify wrapper.</p>
 <p>This class is in charge to dispatch trait change events to dynamic
 listener, typically created using the <cite>on_trait_change</cite> method, or
 the decorator with the same name.</p>
 <dl class="method">
 <dt id="traits.trait_notifiers.TraitChangeNotifyWrapper.dispatch">
-<code class="descname">dispatch</code><span class="sig-paren">(</span><em>handler</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#TraitChangeNotifyWrapper.dispatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.TraitChangeNotifyWrapper.dispatch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">dispatch</code><span class="sig-paren">(</span><em class="sig-param">handler</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#TraitChangeNotifyWrapper.dispatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.TraitChangeNotifyWrapper.dispatch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dispatch the event to the listener.</p>
 <p>This method is normally the only one that needs to be overridden in
 a subclass to implement the subclass’s dispatch mechanism.</p>
@@ -123,7 +128,7 @@ a subclass to implement the subclass’s dispatch mechanism.</p>
 
 <dl class="class">
 <dt id="traits.trait_notifiers.ExtendedTraitChangeNotifyWrapper">
-<em class="property">class </em><code class="descclassname">traits.trait_notifiers.</code><code class="descname">ExtendedTraitChangeNotifyWrapper</code><span class="sig-paren">(</span><em>handler</em>, <em>owner</em>, <em>target=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#ExtendedTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.ExtendedTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_notifiers.</code><code class="sig-name descname">ExtendedTraitChangeNotifyWrapper</code><span class="sig-paren">(</span><em class="sig-param">handler</em>, <em class="sig-param">owner</em>, <em class="sig-param">target=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#ExtendedTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.ExtendedTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change notify wrapper for “extended” trait change events..</p>
 <p>The “extended notifiers” are set up internally when using extended traits,
 to add/remove traits listeners when one of the intermediate traits changes.</p>
@@ -133,14 +138,14 @@ add/remove listeners to <cite>a:b</cite> when <cite>a</cite> changes.</p>
 
 <dl class="class">
 <dt id="traits.trait_notifiers.FastUITraitChangeNotifyWrapper">
-<em class="property">class </em><code class="descclassname">traits.trait_notifiers.</code><code class="descname">FastUITraitChangeNotifyWrapper</code><span class="sig-paren">(</span><em>handler</em>, <em>owner</em>, <em>target=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#FastUITraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.FastUITraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_notifiers.</code><code class="sig-name descname">FastUITraitChangeNotifyWrapper</code><span class="sig-paren">(</span><em class="sig-param">handler</em>, <em class="sig-param">owner</em>, <em class="sig-param">target=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#FastUITraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.FastUITraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dynamic change notify wrapper, dispatching on the UI thread.</p>
 <p>This class is in charge to dispatch trait change events to dynamic
 listener, typically created using the <cite>on_trait_change</cite> method and the
 <cite>dispatch</cite> parameter set to ‘ui’ or ‘fast_ui’.</p>
 <dl class="method">
 <dt id="traits.trait_notifiers.FastUITraitChangeNotifyWrapper.dispatch">
-<code class="descname">dispatch</code><span class="sig-paren">(</span><em>handler</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#FastUITraitChangeNotifyWrapper.dispatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.FastUITraitChangeNotifyWrapper.dispatch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">dispatch</code><span class="sig-paren">(</span><em class="sig-param">handler</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#FastUITraitChangeNotifyWrapper.dispatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.FastUITraitChangeNotifyWrapper.dispatch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dispatch the event to the listener.</p>
 <p>This method is normally the only one that needs to be overridden in
 a subclass to implement the subclass’s dispatch mechanism.</p>
@@ -150,14 +155,14 @@ a subclass to implement the subclass’s dispatch mechanism.</p>
 
 <dl class="class">
 <dt id="traits.trait_notifiers.NewTraitChangeNotifyWrapper">
-<em class="property">class </em><code class="descclassname">traits.trait_notifiers.</code><code class="descname">NewTraitChangeNotifyWrapper</code><span class="sig-paren">(</span><em>handler</em>, <em>owner</em>, <em>target=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#NewTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.NewTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_notifiers.</code><code class="sig-name descname">NewTraitChangeNotifyWrapper</code><span class="sig-paren">(</span><em class="sig-param">handler</em>, <em class="sig-param">owner</em>, <em class="sig-param">target=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#NewTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.NewTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dynamic change notify wrapper, dispatching on a new thread.</p>
 <p>This class is in charge to dispatch trait change events to dynamic
 listener, typically created using the <cite>on_trait_change</cite> method and the
 <cite>dispatch</cite> parameter set to ‘new’.</p>
 <dl class="method">
 <dt id="traits.trait_notifiers.NewTraitChangeNotifyWrapper.dispatch">
-<code class="descname">dispatch</code><span class="sig-paren">(</span><em>handler</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#NewTraitChangeNotifyWrapper.dispatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.NewTraitChangeNotifyWrapper.dispatch" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">dispatch</code><span class="sig-paren">(</span><em class="sig-param">handler</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#NewTraitChangeNotifyWrapper.dispatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.NewTraitChangeNotifyWrapper.dispatch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dispatch the event to the listener.</p>
 <p>This method is normally the only one that needs to be overridden in
 a subclass to implement the subclass’s dispatch mechanism.</p>
@@ -170,7 +175,7 @@ a subclass to implement the subclass’s dispatch mechanism.</p>
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="traits.trait_notifiers.set_ui_handler">
-<code class="descclassname">traits.trait_notifiers.</code><code class="descname">set_ui_handler</code><span class="sig-paren">(</span><em>handler</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#set_ui_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.set_ui_handler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">traits.trait_notifiers.</code><code class="sig-name descname">set_ui_handler</code><span class="sig-paren">(</span><em class="sig-param">handler</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_notifiers.html#set_ui_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.set_ui_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets up the user interface thread handler.</p>
 </dd></dl>
 
@@ -188,7 +193,7 @@ a subclass to implement the subclass’s dispatch mechanism.</p>
             </a></p>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">trait_notifiers</span></code> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_notifiers</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#functions">Functions</a></li>
 </ul>
@@ -196,24 +201,22 @@ a subclass to implement the subclass’s dispatch mechanism.</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="traits_listener.html"
-                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">traits_listener</span></code> Module</a></p>
+  <p class="topless"><a href="trait_types.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_types</span></code> Module</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="ustr_trait.html"
-                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">ustr_trait</span></code> Module</a></p>
+  <p class="topless"><a href="trait_set_object.html"
+                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_set_object</span></code> Module</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/trait_notifiers.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -234,13 +237,13 @@ a subclass to implement the subclass’s dispatch mechanism.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2019, Enthought Inc
+        &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on Nov 18, 2019.
+      Last updated on Feb 14, 2020.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
       </li>
     </ul>
     </div>

@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '5.2.0',
+        VERSION:     '6.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
     <link rel="top" title="Traits 5 User Manual" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
@@ -53,6 +54,10 @@
               
     <ul class="nav nav-pills pull-right">
       <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
         <a href="../../../py-modindex.html" title="Python Module Index"
            >modules</a>
       </li>
@@ -70,12 +75,15 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for traits.util.clean_strings</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -----------------------------------------------------------------------------</span>
+<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
-<span class="c1">#  Copyright (c) 2006 by Enthought, Inc.</span>
-<span class="c1">#  All rights reserved.</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
 <span class="c1">#</span>
-<span class="c1"># -----------------------------------------------------------------------------</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
 
 <span class="sd">&quot;&quot;&quot; Provides functions that mange strings to avoid characters that would be</span>
 <span class="sd">    problematic in certain situations.</span>
@@ -86,48 +94,73 @@
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">keyword</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">unicodedata</span>
 
 
-<div class="viewcode-block" id="clean_filename"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.clean_strings.clean_filename">[docs]</a><span class="k">def</span> <span class="nf">clean_filename</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Munge a string to avoid characters that might be problematic as</span>
-<span class="sd">        a filename in some filesystems.</span>
+<div class="viewcode-block" id="clean_filename"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.clean_strings.clean_filename">[docs]</a><span class="k">def</span> <span class="nf">clean_filename</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">replace_empty</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make a user-supplied string safe for filename use.</span>
+
+<span class="sd">    Returns an ASCII-encodable string based on the input string that&#39;s safe for</span>
+<span class="sd">    use as a component of a filename or URL. The returned value is a string</span>
+<span class="sd">    containing only lowercase ASCII letters, digits, and the characters &#39;-&#39; and</span>
+<span class="sd">    &#39;_&#39;.</span>
+
+<span class="sd">    This does not give a faithful representation of the original string:</span>
+<span class="sd">    different input strings can result in the same output string.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The string to be made safe.</span>
+<span class="sd">    replace_empty : str, optional</span>
+<span class="sd">        The return value to be used in the event that the sanitised</span>
+<span class="sd">        string ends up being empty. No validation is done on this</span>
+<span class="sd">        input - it&#39;s up to the user to ensure that the default is</span>
+<span class="sd">        itself safe. The default is to return the empty string.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    safe_string : str</span>
+<span class="sd">        A filename-safe version of string.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># The only acceptable characters are alphanumeric (in the current locale)</span>
-    <span class="c1"># plus a period and dash.</span>
-    <span class="n">wordparts</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^\w\.\-]+&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-
-    <span class="c1"># Filter out empty strings at the beginning or end of the list.</span>
-    <span class="n">wordparts</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">wordparts</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
-
-    <span class="c1"># Make sure this is an ASCII-encoded string, not a Unicode string.</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wordparts</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">filename</span></div>
+    <span class="c1"># Code is based on Django&#39;s slugify utility.</span>
+    <span class="c1"># https://docs.djangoproject.com/en/1.9/_modules/django/utils/text/#slugify</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s1">&#39;NFKD&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[^\w\s-]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">safe_name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[-\s]+&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">safe_name</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">replace_empty</span>
+    <span class="k">return</span> <span class="n">safe_name</span></div>
 
 
 <div class="viewcode-block" id="clean_timestamp"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.clean_strings.clean_timestamp">[docs]</a><span class="k">def</span> <span class="nf">clean_timestamp</span><span class="p">(</span><span class="n">dt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">microseconds</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Return a timestamp that has been cleansed of characters that might</span>
-<span class="sd">        cause problems in filenames, namely colons.  If no datetime object</span>
-<span class="sd">        is provided, then uses the current time.</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a timestamp that has been cleansed of characters that might</span>
+<span class="sd">    cause problems in filenames, namely colons.  If no datetime object</span>
+<span class="sd">    is provided, then uses the current time.</span>
 
-<span class="sd">        Description</span>
-<span class="sd">        -----------</span>
-<span class="sd">        The timestamp is in ISO-8601 format with the following exceptions:</span>
+<span class="sd">    The timestamp is in ISO-8601 format with the following exceptions:</span>
 
-<span class="sd">        * Colons &#39;:&#39; are replaced by underscores &#39;_&#39;.</span>
-<span class="sd">        * Microseconds are not displayed if the &#39;microseconds&#39; parameter is</span>
-<span class="sd">          False.</span>
+<span class="sd">    * Colons &#39;:&#39; are replaced by underscores &#39;_&#39;.</span>
+<span class="sd">    * Microseconds are not displayed if the &#39;microseconds&#39; parameter is</span>
+<span class="sd">        False.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        dt : None or datetime.datetime</span>
-<span class="sd">            If None, then the current time is used.</span>
-<span class="sd">        microseconds : bool</span>
-<span class="sd">            Display microseconds or not.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dt : None or datetime.datetime</span>
+<span class="sd">        If None, then the current time is used.</span>
+<span class="sd">    microseconds : bool</span>
+<span class="sd">        Display microseconds or not.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        A string timestamp.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A string timestamp.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">dt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
@@ -174,13 +207,11 @@
               <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
             </a></p>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -201,13 +232,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2019, Enthought Inc
+        &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on Nov 18, 2019.
+      Last updated on Feb 14, 2020.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
       </li>
     </ul>
     </div>
