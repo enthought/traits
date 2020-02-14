@@ -3679,10 +3679,30 @@ validate_trait_callable(
     trait_object *trait, has_traits_object *obj, PyObject *name,
     PyObject *value)
 {
-
-    if ((value == Py_None) || PyCallable_Check(value)) {
+    if (PyCallable_Check(value)) {
         Py_INCREF(value);
         return value;
+    }
+    else if (value == Py_None) {
+        int allow_none;
+        int tuple_size = PyTuple_GET_SIZE(trait->py_validate);
+
+        //Handle callables without allow_none, default to allow None
+        if (tuple_size < 2) {
+            Py_INCREF(value);
+            return value;
+        }
+
+        allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
+
+        if (allow_none == -1) {
+            return NULL;
+        }
+
+        else if (allow_none) {
+            Py_INCREF(value);
+            return value;
+        }
     }
 
     return raise_trait_error(trait, obj, name, value);
@@ -4072,10 +4092,32 @@ validate_trait_complex(
                 return result;
 
             case 22: /* Callable check: */
-                if (value == Py_None || PyCallable_Check(value)) {
-                    goto done;
+                {
+                    if (PyCallable_Check(value)) {
+                        return value;
+                    }
+                    else if (value == Py_None) {
+                        int allow_none;
+                        int tuple_size = PyTuple_GET_SIZE(trait->py_validate);
+
+                        //Handle callables without allow_none, default to allow None
+                        if (tuple_size < 2) {
+                            Py_INCREF(value);
+                            return value;
+                        }
+
+                        allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
+
+                        if (allow_none == -1) {
+                            return NULL;
+                        }
+
+                        else if (allow_none) {
+                            return value;
+                        }
+                    }
+                    break;
                 }
-                break;
 
             default: /* Should never happen...indicates an internal error: */
                 assert(0);  /* invalid validation type */
@@ -4271,7 +4313,7 @@ _trait_set_validate(trait_object *trait, PyObject *args)
                     break;
 
                 case 22: /* Callable check: */
-                    if (n == 1) {
+                    if (n == 1 || n == 2) {
                         goto done;
                     }
                     break;
