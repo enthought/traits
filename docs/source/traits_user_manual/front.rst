@@ -1,5 +1,5 @@
 ====================
-Traits 5 User Manual
+Traits 6 User Manual
 ====================
 
 :Authors: David C. Morrill, Janet M. Swisher
@@ -40,4 +40,3 @@ owners.
 | 1.512.536.1059 (fax)
 | http://www.enthought.com
 | info@enthought.com
-
