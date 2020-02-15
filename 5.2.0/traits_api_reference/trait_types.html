@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>trait_types Module &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="trait_value Module" href="trait_value.html" >
+    <link rel="prev" title="trait_numeric Module" href="trait_numeric.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="trait_value.html" title="trait_value Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="trait_numeric.html" title="trait_numeric Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="module-traits.trait_types">
+<span id="trait-types-module"></span><h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">trait_types</span></code> Module<a class="headerlink" href="#module-traits.trait_types" title="Permalink to this headline">¶</a></h1>
+<p>Core Trait definitions.</p>
+<div class="section" id="traits">
+<h2>Traits<a class="headerlink" href="#traits" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="traits.trait_types.Any">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Any</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Any"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Any" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value can be anything.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Any.default_value">
+<code class="descname">default_value</code><em class="property"> = None</em><a class="headerlink" href="#traits.trait_types.Any.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The default value for the trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.Any.info_text">
+<code class="descname">info_text</code><em class="property"> = 'any value'</em><a class="headerlink" href="#traits.trait_types.Any.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Generic">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Generic</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Generic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Generic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value can be anything and whose definition can
+be redefined via assignment using a TraitValue object.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Generic.metadata">
+<code class="descname">metadata</code><em class="property"> = {'trait_value': True}</em><a class="headerlink" href="#traits.trait_types.Generic.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The standard metadata for the trait</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseInt">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseInt</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseInt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose type must be an int or long.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseInt.evaluate">
+<code class="descname">evaluate</code><a class="headerlink" href="#traits.trait_types.BaseInt.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.int</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseInt.default_value">
+<code class="descname">default_value</code><em class="property"> = 0</em><a class="headerlink" href="#traits.trait_types.BaseInt.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The default value for the trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseInt.info_text">
+<code class="descname">info_text</code><em class="property"> = 'an integer (int or long)'</em><a class="headerlink" href="#traits.trait_types.BaseInt.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseInt.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseInt.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseInt.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseInt.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseInt.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseInt.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor for this type of trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Int">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Int</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose type must be an int or long using a C-level fast
+validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Int.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (20,)</em><a class="headerlink" href="#traits.trait_types.Int.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseLong">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseLong</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseLong"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseLong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python long.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseLong.evaluate">
+<code class="descname">evaluate</code><a class="headerlink" href="#traits.trait_types.BaseLong.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.int</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseLong.default_value">
+<code class="descname">default_value</code><em class="property"> = 0</em><a class="headerlink" href="#traits.trait_types.BaseLong.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The default value for the trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseLong.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a long'</em><a class="headerlink" href="#traits.trait_types.BaseLong.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseLong.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseLong.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseLong.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseLong.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseLong.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseLong.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor for this type of trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Long">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Long</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Long"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Long" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python long using a C-level fast
+validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Long.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'int'&gt;, None, &lt;class 'int'&gt;, &lt;class 'numpy.integer'&gt;)</em><a class="headerlink" href="#traits.trait_types.Long.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseFloat">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseFloat</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseFloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseFloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python float.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseFloat.evaluate">
+<code class="descname">evaluate</code><a class="headerlink" href="#traits.trait_types.BaseFloat.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.float</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseFloat.default_value">
+<code class="descname">default_value</code><em class="property"> = 0.0</em><a class="headerlink" href="#traits.trait_types.BaseFloat.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The default value for the trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseFloat.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a float'</em><a class="headerlink" href="#traits.trait_types.BaseFloat.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseFloat.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseFloat.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseFloat.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseFloat.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseFloat.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseFloat.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor for this type of trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Float">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Float</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python float using a C-level fast
+validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Float.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (21,)</em><a class="headerlink" href="#traits.trait_types.Float.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseComplex">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseComplex</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseComplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseComplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python complex.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseComplex.evaluate">
+<code class="descname">evaluate</code><a class="headerlink" href="#traits.trait_types.BaseComplex.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.complex</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseComplex.default_value">
+<code class="descname">default_value</code><em class="property"> = 0j</em><a class="headerlink" href="#traits.trait_types.BaseComplex.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The default value for the trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseComplex.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a complex number'</em><a class="headerlink" href="#traits.trait_types.BaseComplex.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseComplex.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseComplex.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseComplex.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseComplex.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseComplex.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseComplex.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor for this type of trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Complex">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Complex</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Complex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Complex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python complex using a C-level
+fast validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Complex.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'complex'&gt;, &lt;class 'numpy.complexfloating'&gt;, None, &lt;class 'float'&gt;, &lt;class 'numpy.floating'&gt;, &lt;class 'int'&gt;, &lt;class 'numpy.integer'&gt;)</em><a class="headerlink" href="#traits.trait_types.Complex.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseStr">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseStr</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseStr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python string.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseStr.default_value">
+<code class="descname">default_value</code><em class="property"> = ''</em><a class="headerlink" href="#traits.trait_types.BaseStr.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The default value for the trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseStr.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a string'</em><a class="headerlink" href="#traits.trait_types.BaseStr.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseStr.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseStr.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseStr.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseStr.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseStr.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseStr.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor for this type of trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Str">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Str</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python string using a C-level
+fast validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Str.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'str'&gt;)</em><a class="headerlink" href="#traits.trait_types.Str.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Title">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Title</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Title"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Title" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a string type which by default uses the traits ui TitleEditor
+when used in a View.</p>
+<dl class="method">
+<dt id="traits.trait_types.Title.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Title.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Title.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor to use for a trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseUnicode">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseUnicode</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseUnicode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseUnicode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python unicode string.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseUnicode.default_value">
+<code class="descname">default_value</code><em class="property"> = ''</em><a class="headerlink" href="#traits.trait_types.BaseUnicode.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The default value for the trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseUnicode.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a unicode string'</em><a class="headerlink" href="#traits.trait_types.BaseUnicode.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseUnicode.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseUnicode.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseUnicode.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseUnicode.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseUnicode.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseUnicode.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor for this type of trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Unicode">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Unicode</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Unicode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Unicode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python unicode string using a
+C-level fast validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Unicode.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'str'&gt;, None, &lt;class 'str'&gt;)</em><a class="headerlink" href="#traits.trait_types.Unicode.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseBytes">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseBytes</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseBytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseBytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python bytes string.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseBytes.default_value">
+<code class="descname">default_value</code><em class="property"> = b''</em><a class="headerlink" href="#traits.trait_types.BaseBytes.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The default value for the trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseBytes.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a bytes string'</em><a class="headerlink" href="#traits.trait_types.BaseBytes.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseBytes.encoding">
+<code class="descname">encoding</code><em class="property"> = None</em><a class="headerlink" href="#traits.trait_types.BaseBytes.encoding" title="Permalink to this definition">¶</a></dt>
+<dd><p>An encoding to use with TraitsUI editors</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseBytes.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseBytes.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseBytes.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseBytes.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseBytes.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseBytes.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor for this type of trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Bytes">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Bytes</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python bytes string using a
+C-level fast validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Bytes.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'bytes'&gt;)</em><a class="headerlink" href="#traits.trait_types.Bytes.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseBool">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseBool</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseBool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseBool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python boolean.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseBool.evaluate">
+<code class="descname">evaluate</code><a class="headerlink" href="#traits.trait_types.BaseBool.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.bool</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseBool.default_value">
+<code class="descname">default_value</code><em class="property"> = False</em><a class="headerlink" href="#traits.trait_types.BaseBool.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The default value for the trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.BaseBool.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a boolean'</em><a class="headerlink" href="#traits.trait_types.BaseBool.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseBool.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseBool.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseBool.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseBool.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseBool.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseBool.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor for this type of trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Bool">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Bool</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Bool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Bool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python boolean using a C-level
+fast validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Bool.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'bool'&gt;, None, &lt;class 'numpy.bool_'&gt;)</em><a class="headerlink" href="#traits.trait_types.Bool.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseCInt">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseCInt</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCInt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python int and which supports
+coercions of non-int values to int.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseCInt.evaluate">
+<code class="descname">evaluate</code><a class="headerlink" href="#traits.trait_types.BaseCInt.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.int</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseCInt.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCInt.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCInt.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.CInt">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">CInt</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CInt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python int and which supports
+coercions of non-int values to int using a C-level fast validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.CInt.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'int'&gt;)</em><a class="headerlink" href="#traits.trait_types.CInt.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseCLong">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseCLong</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCLong"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCLong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python long and which supports
+coercions of non-long values to long.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseCLong.evaluate">
+<code class="descname">evaluate</code><a class="headerlink" href="#traits.trait_types.BaseCLong.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.int</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseCLong.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCLong.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCLong.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.CLong">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">CLong</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CLong"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CLong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python long and which supports
+coercions of non-long values to long using a C-level fast validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.CLong.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'int'&gt;)</em><a class="headerlink" href="#traits.trait_types.CLong.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseCFloat">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseCFloat</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCFloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCFloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python float and which supports
+coercions of non-float values to float.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseCFloat.evaluate">
+<code class="descname">evaluate</code><a class="headerlink" href="#traits.trait_types.BaseCFloat.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.float</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseCFloat.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCFloat.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCFloat.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.CFloat">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">CFloat</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CFloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CFloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python float and which supports
+coercions of non-float values to float using a C-level fast validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.CFloat.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'float'&gt;)</em><a class="headerlink" href="#traits.trait_types.CFloat.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseCComplex">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseCComplex</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCComplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCComplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python complex and which supports
+coercions of non-complex values to complex.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseCComplex.evaluate">
+<code class="descname">evaluate</code><a class="headerlink" href="#traits.trait_types.BaseCComplex.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.complex</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseCComplex.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCComplex.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCComplex.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.CComplex">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">CComplex</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CComplex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CComplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python complex and which supports
+coercions of non-complex values to complex using a C-level fast
+validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.CComplex.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'complex'&gt;)</em><a class="headerlink" href="#traits.trait_types.CComplex.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseCStr">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseCStr</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCStr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python string and which supports
+coercions of non-string values to string.</p>
+<dl class="method">
+<dt id="traits.trait_types.BaseCStr.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCStr.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCStr.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.CStr">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">CStr</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CStr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python string and which supports
+coercions of non-string values to string using a C-level fast
+validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.CStr.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (7, ((12, &lt;class 'str'&gt;), (12, &lt;class 'str'&gt;)))</em><a class="headerlink" href="#traits.trait_types.CStr.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseCUnicode">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseCUnicode</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCUnicode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCUnicode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python unicode string and which
+supports coercions of non-unicode values to unicode.</p>
+<dl class="method">
+<dt id="traits.trait_types.BaseCUnicode.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCUnicode.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCUnicode.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.CUnicode">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">CUnicode</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CUnicode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CUnicode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python unicode string and which
+supports coercions of non-unicode values to unicode using a C-level
+fast validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.CUnicode.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'str'&gt;)</em><a class="headerlink" href="#traits.trait_types.CUnicode.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseCBytes">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseCBytes</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCBytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCBytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python bytes object and which
+supports coercions of non-bytes values to bytes.</p>
+<dl class="method">
+<dt id="traits.trait_types.BaseCBytes.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCBytes.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCBytes.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.CBytes">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">CBytes</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CBytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CBytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python bytes and which
+supports coercions of non-bytes values bytes using a C-level
+fast validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.CBytes.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'bytes'&gt;)</em><a class="headerlink" href="#traits.trait_types.CBytes.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseCBool">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseCBool</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCBool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCBool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python boolean and which supports
+coercions of non-boolean values to boolean.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseCBool.evaluate">
+<code class="descname">evaluate</code><a class="headerlink" href="#traits.trait_types.BaseCBool.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">builtins.bool</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseCBool.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseCBool.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseCBool.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.CBool">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">CBool</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CBool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CBool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python boolean and which supports
+coercions of non-boolean values to boolean using a C-level fast
+validator.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.CBool.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (12, &lt;class 'bool'&gt;)</em><a class="headerlink" href="#traits.trait_types.CBool.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.String">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">String</code><span class="sig-paren">(</span><em>value=''</em>, <em>minlen=0</em>, <em>maxlen=9223372036854775807</em>, <em>regex=''</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#String"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.String" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python string whose length is
+optionally in a specified range, and which optionally matches a
+specified regular expression.</p>
+<dl class="method">
+<dt id="traits.trait_types.String.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#String.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.String.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a valid string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.String.validate_all">
+<code class="descname">validate_all</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#String.validate_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.String.validate_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a valid string in the specified length
+range which matches the specified regular expression.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.String.validate_str">
+<code class="descname">validate_str</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#String.validate_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.String.validate_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a valid string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.String.validate_len">
+<code class="descname">validate_len</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#String.validate_len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.String.validate_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a valid string in the specified length
+range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.String.validate_regex">
+<code class="descname">validate_regex</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#String.validate_regex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.String.validate_regex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a valid string which matches the
+specified regular expression.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.String.info">
+<code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#String.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.String.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.String.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#String.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.String.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor for this type of trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Regex">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Regex</code><span class="sig-paren">(</span><em>value=''</em>, <em>regex='.*'</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Regex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Regex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value is a Python string that matches a specified
+regular expression.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Code">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Code</code><span class="sig-paren">(</span><em>value=''</em>, <em>minlen=0</em>, <em>maxlen=9223372036854775807</em>, <em>regex=''</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value is a Python string that represents source
+code in some language.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Code.metadata">
+<code class="descname">metadata</code><em class="property"> = {'editor': &lt;function code_editor&gt;}</em><a class="headerlink" href="#traits.trait_types.Code.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The standard metadata for the trait</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.HTML">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">HTML</code><span class="sig-paren">(</span><em>value=''</em>, <em>minlen=0</em>, <em>maxlen=9223372036854775807</em>, <em>regex=''</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#HTML"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.HTML" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a string that is interpreted as
+being HTML. By default the value is parsed and displayed as HTML in
+TraitsUI views. The validation of the value does not enforce HTML syntax.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.HTML.metadata">
+<code class="descname">metadata</code><em class="property"> = {'editor': &lt;function html_editor&gt;}</em><a class="headerlink" href="#traits.trait_types.HTML.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The standard metadata for the trait</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Password">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Password</code><span class="sig-paren">(</span><em>value=''</em>, <em>minlen=0</em>, <em>maxlen=9223372036854775807</em>, <em>regex=''</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a string, optionally of constrained
+length or matching a regular expression.</p>
+<p>The trait is identical to a String trait except that by default it uses a
+PasswordEditor in TraitsUI views, which obscures text entered by the user.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Password.metadata">
+<code class="descname">metadata</code><em class="property"> = {'editor': &lt;function password_editor&gt;}</em><a class="headerlink" href="#traits.trait_types.Password.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The standard metadata for the trait</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Callable">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Callable</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Callable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Callable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python callable.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Callable.metadata">
+<code class="descname">metadata</code><em class="property"> = {'copy': 'ref'}</em><a class="headerlink" href="#traits.trait_types.Callable.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The standard metadata for the trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.Callable.default_value">
+<code class="descname">default_value</code><em class="property"> = None</em><a class="headerlink" href="#traits.trait_types.Callable.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The default value for the trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.Callable.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a callable value'</em><a class="headerlink" href="#traits.trait_types.Callable.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Callable.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Callable.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Callable.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a Python callable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseType">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseType</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be an instance of a simple Python type.</p>
+<dl class="method">
+<dt id="traits.trait_types.BaseType.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseType.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseType.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a Python callable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.This">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">This</code><span class="sig-paren">(</span><em>value=None</em>, <em>allow_none=True</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#This"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.This" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be an instance of the defining class.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.This.info_text">
+<code class="descname">info_text</code><em class="property"> = 'an instance of the same type as the receiver'</em><a class="headerlink" href="#traits.trait_types.This.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.This.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (2,)</em><a class="headerlink" href="#traits.trait_types.This.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.This.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#This.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.This.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a Python callable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.This.info">
+<code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#This.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.This.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must return a string describing the type of value accepted by the
+trait handler.</p>
+<p>The string should be a phrase describing the type defined by the
+TraitHandler subclass, rather than a complete sentence. For example, use
+the phrase, “a square sprocket” instead of the sentence, “The value must
+be a square sprocket.” The value returned by info() is combined with
+other information whenever an error occurs and therefore makes more
+sense to the user if the result is a phrase. The info() method is
+similar in purpose and use to the <strong>info</strong> attribute of a validator
+function.</p>
+<p>Note that the result can include information specific to the particular
+trait handler instance. For example, TraitRange instances return a
+string indicating the range of values acceptable to the handler (e.g.,
+“an integer in the range from 1 to 9”). If the info() method is not
+overridden, the default method returns the value of the ‘info_text’
+attribute.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.self">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">self</code><span class="sig-paren">(</span><em>value=None</em>, <em>allow_none=True</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#self"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.self" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be an instance of the defining class
+and whose default value is the object containing the trait.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.self.default_value_type">
+<code class="descname">default_value_type</code><em class="property"> = 2</em><a class="headerlink" href="#traits.trait_types.self.default_value_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The default value type to use (i.e. ‘self’)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Function">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Function</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python function.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Function.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'function'&gt;)</em><a class="headerlink" href="#traits.trait_types.Function.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.Function.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a function'</em><a class="headerlink" href="#traits.trait_types.Function.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Method">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Method</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python method.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Method.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'method'&gt;)</em><a class="headerlink" href="#traits.trait_types.Method.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.Method.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a method'</em><a class="headerlink" href="#traits.trait_types.Method.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Module">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Module</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a Python module.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Module.fast_validate">
+<code class="descname">fast_validate</code><em class="property"> = (11, &lt;class 'module'&gt;)</em><a class="headerlink" href="#traits.trait_types.Module.fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The C-level fast validator to use</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.Module.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a module'</em><a class="headerlink" href="#traits.trait_types.Module.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Python">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Python</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Python"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Python" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait that provides behavior identical to a standard Python
+attribute. That is, it allows any value to be assigned, and raises an
+ValueError if an attempt is made to get the value before one has been
+assigned. It has no default value. This trait is most often used in
+conjunction with wildcard naming. See the <em>Traits User Manual</em> for
+details on wildcards.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Python.metadata">
+<code class="descname">metadata</code><em class="property"> = {'type': 'python'}</em><a class="headerlink" href="#traits.trait_types.Python.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The standard metadata for the trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.Python.default_value">
+<code class="descname">default_value</code><em class="property"> = &lt;undefined&gt;</em><a class="headerlink" href="#traits.trait_types.Python.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The default value for the trait</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.ReadOnly">
+<code class="descclassname">traits.trait_types.</code><code class="descname">ReadOnly</code><a class="reference internal" href="../_modules/traits/trait_types.html#ReadOnly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.ReadOnly" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.Disallow">
+<code class="descclassname">traits.trait_types.</code><code class="descname">Disallow</code><a class="reference internal" href="../_modules/traits/trait_types.html#Disallow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Disallow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Constant">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Constant</code><span class="sig-paren">(</span><em>value</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Constant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value is a constant.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Constant.ctrait_type">
+<code class="descname">ctrait_type</code><em class="property"> = 7</em><a class="headerlink" href="#traits.trait_types.Constant.ctrait_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: Defines the CTrait type to use for this trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.Constant.metadata">
+<code class="descname">metadata</code><em class="property"> = {'transient': True, 'type': 'constant'}</em><a class="headerlink" href="#traits.trait_types.Constant.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The standard metadata for the trait</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Delegate">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Delegate</code><span class="sig-paren">(</span><em>delegate</em>, <em>prefix=''</em>, <em>modify=False</em>, <em>listenable=True</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Delegate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Delegate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value is delegated to a trait on another object.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Delegate.ctrait_type">
+<code class="descname">ctrait_type</code><em class="property"> = 3</em><a class="headerlink" href="#traits.trait_types.Delegate.ctrait_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: Defines the CTrait type to use for this trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.Delegate.metadata">
+<code class="descname">metadata</code><em class="property"> = {'transient': False, 'type': 'delegate'}</em><a class="headerlink" href="#traits.trait_types.Delegate.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The standard metadata for the trait</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Delegate.as_ctrait">
+<code class="descname">as_ctrait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Delegate.as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Delegate.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a CTrait corresponding to the trait defined by this class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.DelegatesTo">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">DelegatesTo</code><span class="sig-paren">(</span><em>delegate</em>, <em>prefix=''</em>, <em>listenable=True</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#DelegatesTo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.DelegatesTo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait delegate that matches the standard ‘delegate’ design
+pattern.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.PrototypedFrom">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">PrototypedFrom</code><span class="sig-paren">(</span><em>prototype</em>, <em>prefix=''</em>, <em>listenable=True</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#PrototypedFrom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.PrototypedFrom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait delegate that matches the standard ‘prototype’ design
+pattern.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Expression">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Expression</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Expression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Expression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a valid Python expression. The
+compiled form of a valid expression is stored as the mapped value of
+the trait.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.Expression.default_value">
+<code class="descname">default_value</code><em class="property"> = '0'</em><a class="headerlink" href="#traits.trait_types.Expression.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The default value for the trait</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.Expression.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a valid Python expression'</em><a class="headerlink" href="#traits.trait_types.Expression.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_types.Expression.is_mapped">
+<code class="descname">is_mapped</code><em class="property"> = True</em><a class="headerlink" href="#traits.trait_types.Expression.is_mapped" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: Indicate that this is a mapped trait</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Expression.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Expression.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Expression.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Expression.post_setattr">
+<code class="descname">post_setattr</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Expression.post_setattr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Expression.post_setattr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs additional post-assignment processing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Expression.mapped_value">
+<code class="descname">mapped_value</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Expression.mapped_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Expression.mapped_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ‘mapped’ value for the specified <strong>value</strong>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Expression.as_ctrait">
+<code class="descname">as_ctrait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Expression.as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Expression.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a CTrait corresponding to the trait defined by this class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.PythonValue">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">PythonValue</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#PythonValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.PythonValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value can be of any type, and whose default
+editor is a Python shell.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.PythonValue.metadata">
+<code class="descname">metadata</code><em class="property"> = {'editor': &lt;function shell_editor&gt;}</em><a class="headerlink" href="#traits.trait_types.PythonValue.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: The standard metadata for the trait</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseFile">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseFile</code><span class="sig-paren">(</span><em>value=''</em>, <em>filter=None</em>, <em>auto_set=False</em>, <em>entries=0</em>, <em>exists=False</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be the name of a file.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseFile.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a file name'</em><a class="headerlink" href="#traits.trait_types.BaseFile.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseFile.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseFile.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseFile.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseFile.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseFile.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseFile.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor for this type of trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.File">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">File</code><span class="sig-paren">(</span><em>value=''</em>, <em>filter=None</em>, <em>auto_set=False</em>, <em>entries=0</em>, <em>exists=False</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#File"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.File" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be the name of a file using a C-level
+fast validator.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseDirectory">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseDirectory</code><span class="sig-paren">(</span><em>value=''</em>, <em>auto_set=False</em>, <em>entries=0</em>, <em>exists=False</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseDirectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseDirectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be the name of a directory.</p>
+<dl class="attribute">
+<dt id="traits.trait_types.BaseDirectory.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a directory name'</em><a class="headerlink" href="#traits.trait_types.BaseDirectory.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseDirectory.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseDirectory.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseDirectory.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a specified value is valid for this trait.</p>
+<p>Note: The ‘fast validator’ version performs this check in C.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseDirectory.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseDirectory.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseDirectory.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor for this type of trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Directory">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Directory</code><span class="sig-paren">(</span><em>value=''</em>, <em>auto_set=False</em>, <em>entries=0</em>, <em>exists=False</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be the name of a directory using a
+C-level fast validator.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseRange">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseRange</code><span class="sig-paren">(</span><em>low=None</em>, <em>high=None</em>, <em>value=None</em>, <em>exclude_low=False</em>, <em>exclude_high=False</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseRange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseRange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose numeric value must be in a specified range.</p>
+<dl class="method">
+<dt id="traits.trait_types.BaseRange.init_fast_validator">
+<code class="descname">init_fast_validator</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseRange.init_fast_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseRange.init_fast_validator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does nothing for the BaseRange class. Used in the Range class to
+set up the fast validator.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseRange.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseRange.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseRange.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that the value is in the specified range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseRange.float_validate">
+<code class="descname">float_validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseRange.float_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseRange.float_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that the value is a float value in the specified range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseRange.int_validate">
+<code class="descname">int_validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseRange.int_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseRange.int_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that the value is an int value in the specified range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseRange.long_validate">
+<code class="descname">long_validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseRange.long_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseRange.long_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that the value is a long value in the specified range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseRange.full_info">
+<code class="descname">full_info</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseRange.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseRange.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseRange.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseRange.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseRange.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default UI editor for the trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Range">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Range</code><span class="sig-paren">(</span><em>low=None</em>, <em>high=None</em>, <em>value=None</em>, <em>exclude_low=False</em>, <em>exclude_high=False</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose numeric value must be in a specified range using
+a C-level fast validator.</p>
+<dl class="method">
+<dt id="traits.trait_types.Range.init_fast_validator">
+<code class="descname">init_fast_validator</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Range.init_fast_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Range.init_fast_validator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up the C-level fast validator.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseEnum">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseEnum</code><span class="sig-paren">(</span><em>*args</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseEnum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseEnum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be one of a specified set of values.</p>
+<dl class="method">
+<dt id="traits.trait_types.BaseEnum.init_fast_validator">
+<code class="descname">init_fast_validator</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseEnum.init_fast_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseEnum.init_fast_validator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does nothing for the BaseEnum class. Used in the Enum class to set
+up the fast validator.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseEnum.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseEnum.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseEnum.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is one of the enumerated set of valid
+values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseEnum.full_info">
+<code class="descname">full_info</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseEnum.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseEnum.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseEnum.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseEnum.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseEnum.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default UI editor for the trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Enum">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Enum</code><span class="sig-paren">(</span><em>*args</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Enum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Enum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be one of a specified set of values
+using a C-level fast validator.</p>
+<dl class="method">
+<dt id="traits.trait_types.Enum.init_fast_validator">
+<code class="descname">init_fast_validator</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Enum.init_fast_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Enum.init_fast_validator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up the C-level fast validator.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseTuple">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseTuple</code><span class="sig-paren">(</span><em>*types</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseTuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseTuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a tuple of specified trait types.</p>
+<dl class="method">
+<dt id="traits.trait_types.BaseTuple.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*types</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseTuple.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseTuple.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a Tuple trait.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>types</strong> (<em>zero</em><em> or </em><em>more arguments</em>) – Definition of the default and allowed tuples. If the first item of
+<em>types</em> is a tuple, it is used as the default value.
+The remaining argument list is used to form a tuple that constrains
+the  values assigned to the returned trait. The trait’s value must
+be a tuple of the same length as the remaining argument list, whose
+elements must match the types specified by the corresponding items
+of the remaining argument list.</li>
+<li><strong>Value</strong> (<a class="reference internal" href="traits.html#traits.traits.Default" title="traits.traits.Default"><em>Default</em></a>) – </li>
+<li><strong>-------------</strong> – </li>
+<li><strong>If no arguments are specified</strong><strong>, </strong><strong>the default value is</strong><strong> (</strong><strong>)</strong><strong></strong> (<em>1.</em>) – </li>
+<li><strong>If a tuple is specified as the first argument</strong><strong>, </strong><strong>it is the default</strong> (<em>2.</em>) – value.</li>
+<li><strong>If a tuple is not specified as the first argument</strong><strong>, </strong><strong>the default</strong> (<em>3.</em>) – value is a tuple whose length is the length of the argument list,
+and whose values are the default values for the corresponding trait
+types.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:param Example for case #2::: mytuple = Tuple((‘Fred’, ‘Betty’, 5))
+:param The trait’s value must be a 3-element tuple whose first and second:
+:param elements are strings, and whose third element is an integer. The:
+:param default value is <code class="docutils literal notranslate"><span class="pre">('Fred',</span> <span class="pre">'Betty',</span> <span class="pre">5)</span></code>.:
+:param Example for case #3::: mytuple = Tuple(‘Fred’, ‘Betty’, 5)
+:param The trait’s value must be a 3-element tuple whose first and second:
+:param elements are strings, and whose third element is an integer. The:
+:param default value is <code class="docutils literal notranslate"><span class="pre">('','',0)</span></code>.:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseTuple.init_fast_validator">
+<code class="descname">init_fast_validator</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseTuple.init_fast_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseTuple.init_fast_validator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the validation parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseTuple.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseTuple.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseTuple.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a valid tuple.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseTuple.full_info">
+<code class="descname">full_info</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseTuple.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseTuple.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseTuple.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseTuple.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseTuple.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default UI editor for the trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Tuple">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Tuple</code><span class="sig-paren">(</span><em>*types</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Tuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Tuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a tuple of specified trait types
+using a C-level fast validator.</p>
+<dl class="method">
+<dt id="traits.trait_types.Tuple.init_fast_validator">
+<code class="descname">init_fast_validator</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Tuple.init_fast_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Tuple.init_fast_validator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up the C-level fast validator.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.ValidatedTuple">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">ValidatedTuple</code><span class="sig-paren">(</span><em>*types</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#ValidatedTuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.ValidatedTuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Tuple trait that supports custom validation.</p>
+<dl class="method">
+<dt id="traits.trait_types.ValidatedTuple.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>*types</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#ValidatedTuple.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.ValidatedTuple.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a ValidatedTuple trait</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>types</strong> (<em>zero</em><em> or </em><em>more arguments</em>) – Definition of the default and allowed tuples. (see
+<a class="reference internal" href="#traits.trait_types.BaseTuple" title="traits.trait_types.BaseTuple"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseTuple</span></code></a> for more details)</li>
+<li><strong>fvalidate</strong> (<em>callable</em><em>, </em><em>optional</em>) – A callable to provide the additional custom validation for the
+tuple. The callable will be passed the tuple value and should
+return True or False.</li>
+<li><strong>fvalidate_info</strong> (<em>string</em><em>, </em><em>optional</em>) – A string describing the custom validation to use for the error
+messages.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:param For example::: value_range = ValidatedTuple(Int(0), Int(1), fvalidate=lambda x: x[0] &lt; x[1])
+:param This definition will accept only tuples <code class="docutils literal notranslate"><span class="pre">(a,</span> <span class="pre">b)</span></code> containing two integers:
+:param that satisfy <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&lt;</span> <span class="pre">b</span></code>.:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.ValidatedTuple.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#ValidatedTuple.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.ValidatedTuple.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a valid tuple.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.ValidatedTuple.full_info">
+<code class="descname">full_info</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#ValidatedTuple.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.ValidatedTuple.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.List">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">List</code><span class="sig-paren">(</span><em>trait=None</em>, <em>value=None</em>, <em>minlen=0</em>, <em>maxlen=9223372036854775807</em>, <em>items=True</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#List"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.List" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a list whose items are of the
+specified trait type.</p>
+<dl class="method">
+<dt id="traits.trait_types.List.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#List.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.List.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the values is a valid list.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><cite>object</cite> can be None when validating a default value (see e.g.
+<a class="reference internal" href="trait_handlers.html#traits.trait_handlers.TraitType.clone" title="traits.trait_handlers.TraitType.clone"><code class="xref py py-meth docutils literal notranslate"><span class="pre">clone()</span></code></a>)</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.List.full_info">
+<code class="descname">full_info</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#List.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.List.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.List.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#List.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.List.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default UI editor for the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.List.inner_traits">
+<code class="descname">inner_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#List.inner_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.List.inner_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <em>inner trait</em> (or traits) for this trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.CList">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">CList</code><span class="sig-paren">(</span><em>trait=None</em>, <em>value=None</em>, <em>minlen=0</em>, <em>maxlen=9223372036854775807</em>, <em>items=True</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose values must be a list whose items are of the
+specified trait type or which can be coerced to a list whose values are
+of the specified trait type.</p>
+<dl class="method">
+<dt id="traits.trait_types.CList.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CList.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CList.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the values is a valid list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.CList.full_info">
+<code class="descname">full_info</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CList.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CList.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Set">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Set</code><span class="sig-paren">(</span><em>trait=None</em>, <em>value=None</em>, <em>items=True</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a set whose items are of the
+specified trait type.</p>
+<dl class="method">
+<dt id="traits.trait_types.Set.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Set.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Set.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the values is a valid set.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><cite>object</cite> can be None when validating a default value (see e.g.
+<a class="reference internal" href="trait_handlers.html#traits.trait_handlers.TraitType.clone" title="traits.trait_handlers.TraitType.clone"><code class="xref py py-meth docutils literal notranslate"><span class="pre">clone()</span></code></a>)</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Set.full_info">
+<code class="descname">full_info</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Set.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Set.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Set.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Set.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Set.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default UI editor for the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Set.inner_traits">
+<code class="descname">inner_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Set.inner_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Set.inner_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <em>inner trait</em> (or traits) for this trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.CSet">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">CSet</code><span class="sig-paren">(</span><em>trait=None</em>, <em>value=None</em>, <em>items=True</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose values must be a set whose items are of the
+specified trait type or which can be coerced to a set whose values are
+of the specified trait type.</p>
+<dl class="method">
+<dt id="traits.trait_types.CSet.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CSet.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CSet.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the values is a valid list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.CSet.full_info">
+<code class="descname">full_info</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#CSet.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.CSet.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Dict">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Dict</code><span class="sig-paren">(</span><em>key_trait=None</em>, <em>value_trait=None</em>, <em>value=None</em>, <em>items=True</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a dictionary, optionally with
+specified types for keys and values.</p>
+<dl class="method">
+<dt id="traits.trait_types.Dict.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Dict.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Dict.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a valid dictionary.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><cite>object</cite> can be None when validating a default value (see e.g.
+<a class="reference internal" href="trait_handlers.html#traits.trait_handlers.TraitType.clone" title="traits.trait_handlers.TraitType.clone"><code class="xref py py-meth docutils literal notranslate"><span class="pre">clone()</span></code></a>)</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Dict.full_info">
+<code class="descname">full_info</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Dict.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Dict.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Dict.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Dict.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Dict.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default UI editor for the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Dict.inner_traits">
+<code class="descname">inner_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Dict.inner_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Dict.inner_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the <em>inner trait</em> (or traits) for this trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseClass">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseClass</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for types which have an associated class which can be
+determined dynamically by specifying a string name for the class (e.g.
+‘package1.package2.module.class’.</p>
+<p>Any subclass must define instances with ‘klass’ and ‘module’ attributes
+that contain the string name of the class (or actual class object) and
+the module name that contained the original trait definition (used for
+resolving local class names (e.g. ‘LocalClass’)).</p>
+<p>This is an abstract class that only provides helper methods used to
+resolve the class name into an actual class object.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.BaseInstance">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">BaseInstance</code><span class="sig-paren">(</span><em>klass=None</em>, <em>factory=None</em>, <em>args=None</em>, <em>kw=None</em>, <em>allow_none=True</em>, <em>adapt=None</em>, <em>module=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseInstance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be an instance of a specified class,
+or one of its subclasses.</p>
+<dl class="method">
+<dt id="traits.trait_types.BaseInstance.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseInstance.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseInstance.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a valid object instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseInstance.info">
+<code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseInstance.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseInstance.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseInstance.get_default_value">
+<code class="descname">get_default_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseInstance.get_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseInstance.get_default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tuple of the form: ( default_value_type, default_value )
+which describes the default value for this trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseInstance.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseInstance.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseInstance.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor for this type of trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.BaseInstance.init_fast_validate">
+<code class="descname">init_fast_validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#BaseInstance.init_fast_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.BaseInstance.init_fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does nothing for the BaseInstance’ class. Used by the ‘Instance’,
+‘Supports’ and ‘AdaptsTo’ classes to set up the C-level fast
+validator.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Instance">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Instance</code><span class="sig-paren">(</span><em>klass=None</em>, <em>factory=None</em>, <em>args=None</em>, <em>kw=None</em>, <em>allow_none=True</em>, <em>adapt=None</em>, <em>module=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be an instance of a specified class,
+or one of its subclasses using a C-level fast validator.</p>
+<dl class="method">
+<dt id="traits.trait_types.Instance.init_fast_validate">
+<code class="descname">init_fast_validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Instance.init_fast_validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Instance.init_fast_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up the C-level fast validator.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Supports">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Supports</code><span class="sig-paren">(</span><em>klass=None</em>, <em>factory=None</em>, <em>args=None</em>, <em>kw=None</em>, <em>allow_none=True</em>, <em>adapt=None</em>, <em>module=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Supports"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Supports" title="Permalink to this definition">¶</a></dt>
+<dd><p>A traits whose value must support a specified protocol.</p>
+<p>In other words, the value of the trait directly provide, or can be adapted
+to, the given protocol (Interface or type).</p>
+<p>The value of the trait after assignment is the possibly adapted value
+(i.e., it is the original assigned value if that provides the protocol,
+or is an adapter otherwise).</p>
+<p>The original, unadapted value is stored in a “shadow” attribute with
+the same name followed by an underscore (e.g., <code class="docutils literal notranslate"><span class="pre">foo</span></code> and <code class="docutils literal notranslate"><span class="pre">foo_</span></code>).</p>
+<dl class="method">
+<dt id="traits.trait_types.Supports.post_setattr">
+<code class="descname">post_setattr</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Supports.post_setattr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Supports.post_setattr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs additional post-assignment processing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Supports.as_ctrait">
+<code class="descname">as_ctrait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Supports.as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Supports.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a CTrait corresponding to the trait defined by this class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.AdaptsTo">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">AdaptsTo</code><span class="sig-paren">(</span><em>klass=None</em>, <em>factory=None</em>, <em>args=None</em>, <em>kw=None</em>, <em>allow_none=True</em>, <em>adapt=None</em>, <em>module=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#AdaptsTo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.AdaptsTo" title="Permalink to this definition">¶</a></dt>
+<dd><p>A traits whose value must support a specified protocol.</p>
+<p>In other words, the value of the trait directly provide, or can be adapted
+to, the given protocol (Interface or type).</p>
+<p>The value of the trait after assignment is the original, unadapted value.</p>
+<p>A possibly adapted value is stored in a “shadow” attribute with
+the same name followed by an underscore (e.g., <code class="docutils literal notranslate"><span class="pre">foo</span></code> and <code class="docutils literal notranslate"><span class="pre">foo_</span></code>).</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Type">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Type</code><span class="sig-paren">(</span><em>value=None</em>, <em>klass=None</em>, <em>allow_none=True</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a subclass of a specified class.</p>
+<dl class="method">
+<dt id="traits.trait_types.Type.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Type.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Type.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a valid object instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Type.resolve">
+<code class="descname">resolve</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Type.resolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Type.resolve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolves a class originally specified as a string into an actual
+class, then resets the trait so that future calls will be handled by
+the normal validate method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Type.info">
+<code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Type.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Type.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Type.get_default_value">
+<code class="descname">get_default_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Type.get_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Type.get_default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tuple of the form: ( default_value_type, default_value )
+which describes the default value for this trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.Type.resolve_default_value">
+<code class="descname">resolve_default_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Type.resolve_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Type.resolve_default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolves a class name into a class so that it can be used to
+return the class as the default value of the trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Event">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Event</code><span class="sig-paren">(</span><em>trait=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Event" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="traits.trait_types.Event.full_info">
+<code class="descname">full_info</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Event.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Event.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Button">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Button</code><span class="sig-paren">(</span><em>label=''</em>, <em>image=None</em>, <em>values_trait=None</em>, <em>style='button'</em>, <em>orientation='vertical'</em>, <em>width_padding=7</em>, <em>height_padding=5</em>, <em>view=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Button"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Button" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose UI editor is a button.</p>
+<dl class="method">
+<dt id="traits.trait_types.Button.create_editor">
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Button.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Button.create_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default traits UI editor to use for a trait.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.ToolbarButton">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">ToolbarButton</code><span class="sig-paren">(</span><em>label=''</em>, <em>image=None</em>, <em>style='toolbar'</em>, <em>orientation='vertical'</em>, <em>width_padding=2</em>, <em>height_padding=2</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#ToolbarButton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.ToolbarButton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose UI editor is a button that can be used on a
+toolbar.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Either">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Either</code><span class="sig-paren">(</span><em>*traits</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Either"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Either" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value can be any of of a specified list of traits.</p>
+<dl class="method">
+<dt id="traits.trait_types.Either.as_ctrait">
+<code class="descname">as_ctrait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Either.as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Either.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a CTrait corresponding to the trait defined by this class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.Symbol">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">Symbol</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#Symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.Symbol" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="traits.trait_types.Symbol.info_text">
+<code class="descname">info_text</code><em class="property"> = &quot;an object or a string of the form '[package.package...package.]module[:symbol[([arg1,...,argn])]]' specifying where to locate the object&quot;</em><a class="headerlink" href="#traits.trait_types.Symbol.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.UUID">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">UUID</code><span class="sig-paren">(</span><em>can_init=False</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#UUID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.UUID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value is a globally unique UUID (type 4).</p>
+<p>Passing <cite>can_init=True</cite> allows the UUID value to be set during
+object instantiation, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">UUID</span>
+
+<span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="n">can_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># TraitError!</span>
+<span class="n">A</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+
+<span class="c1"># Okay!</span>
+<span class="n">B</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Note however that in both cases, the UUID trait is set automatically
+to a <cite>uuid.UUID</cite> instance (assuming none is provided during initialization
+in the latter case).</p>
+<dl class="attribute">
+<dt id="traits.trait_types.UUID.info_text">
+<code class="descname">info_text</code><em class="property"> = 'a read-only UUID'</em><a class="headerlink" href="#traits.trait_types.UUID.info_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>type: A description of the type of value this trait accepts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.UUID.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#UUID.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.UUID.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises an error, since no values can be assigned to the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_types.UUID.get_default_value">
+<code class="descname">get_default_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#UUID.get_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.UUID.get_default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tuple of the form: (<em>default_value_type</em>, <em>default_value</em>)
+which describes the default value for this trait. The default
+implementation analyzes the value of the trait’s <strong>default_value</strong>
+attribute and determines an appropriate <em>default_value_type</em> for
+<em>default_value</em>. If you need to override this method to provide a
+different result tuple, the following values are valid values for
+<em>default_value_type</em>:</p>
+<blockquote>
+<div><ul class="simple">
+<li>0, 1: The <em>default_value</em> item of the tuple is the default
+value.</li>
+<li>2: The object containing the trait is the default value.</li>
+<li>3: A new copy of the list specified by <em>default_value</em> is
+the default value.</li>
+<li>4: A new copy of the dictionary specified by <em>default_value</em>
+is the default value.</li>
+<li>5: A new instance of TraitListObject constructed using the
+<em>default_value</em> list is the default value.</li>
+<li>6: A new instance of TraitDictObject constructed using the
+<em>default_value</em> dictionary is the default value.</li>
+<li>7: <em>default_value</em> is a tuple of the form: (<em>callable</em>, <em>args</em>,
+<em>kw</em>), where <em>callable</em> is a callable, <em>args</em> is a tuple, and
+<em>kw</em> is either a dictionary or None. The default value is the
+result obtained by invoking callable(*args, **kw).</li>
+<li>8: <em>default_value</em> is a callable. The default value is the
+result obtained by invoking <em>default_value*(*object</em>), where
+<em>object</em> is the object containing the trait. If the trait has
+a validate() method, the validate() method is also called to
+validate the result.</li>
+<li>9: A new instance of TraitSetObject constructed using the
+<em>default_value</em> set is the default value.</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_types.WeakRef">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">WeakRef</code><span class="sig-paren">(</span><em>klass='traits.has_traits.HasTraits'</em>, <em>allow_none=False</em>, <em>adapt='yes'</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#WeakRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.WeakRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a trait whose value must be an instance of the same type
+(or a subclass) of the specified <em>klass</em>, which can be a class or an
+instance. Note that the trait only maintains a weak reference to the
+assigned value.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.Date">
+<code class="descclassname">traits.trait_types.</code><code class="descname">Date</code><em class="property"> = &lt;traits.trait_types.BaseInstance object&gt;</em><a class="headerlink" href="#traits.trait_types.Date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be an instance of a specified class,
+or one of its subclasses.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.Time">
+<code class="descclassname">traits.trait_types.</code><code class="descname">Time</code><em class="property"> = &lt;traits.trait_types.BaseInstance object&gt;</em><a class="headerlink" href="#traits.trait_types.Time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be an instance of a specified class,
+or one of its subclasses.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.ListInt">
+<code class="descclassname">traits.trait_types.</code><code class="descname">ListInt</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#traits.trait_types.ListInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of integer values; default value is [].</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.ListFloat">
+<code class="descclassname">traits.trait_types.</code><code class="descname">ListFloat</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#traits.trait_types.ListFloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of float values; default value is [].</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.ListStr">
+<code class="descclassname">traits.trait_types.</code><code class="descname">ListStr</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#traits.trait_types.ListStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of string values; default value is [].</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.ListUnicode">
+<code class="descclassname">traits.trait_types.</code><code class="descname">ListUnicode</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#traits.trait_types.ListUnicode" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of Unicode string values; default value is [].</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.ListComplex">
+<code class="descclassname">traits.trait_types.</code><code class="descname">ListComplex</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#traits.trait_types.ListComplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of complex values; default value is [].</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.ListBool">
+<code class="descclassname">traits.trait_types.</code><code class="descname">ListBool</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#traits.trait_types.ListBool" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of Boolean values; default value is [].</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.ListFunction">
+<code class="descclassname">traits.trait_types.</code><code class="descname">ListFunction</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#traits.trait_types.ListFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of function values; default value is [].</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.ListMethod">
+<code class="descclassname">traits.trait_types.</code><code class="descname">ListMethod</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#traits.trait_types.ListMethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of method values; default value is [].</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.ListThis">
+<code class="descclassname">traits.trait_types.</code><code class="descname">ListThis</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#traits.trait_types.ListThis" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of container type values; default value is [].</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.DictStrAny">
+<code class="descclassname">traits.trait_types.</code><code class="descname">DictStrAny</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrAny" title="Permalink to this definition">¶</a></dt>
+<dd><p>Any values can be assigned; only string keys can
+be inserted. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.DictStrStr">
+<code class="descclassname">traits.trait_types.</code><code class="descname">DictStrStr</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>string values can be assigned; only string keys
+with string values can be inserted. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.DictStrInt">
+<code class="descclassname">traits.trait_types.</code><code class="descname">DictStrInt</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>integer values can be assigned; only string keys
+with integer values can be inserted. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.DictStrLong">
+<code class="descclassname">traits.trait_types.</code><code class="descname">DictStrLong</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrLong" title="Permalink to this definition">¶</a></dt>
+<dd><p>long-integer values can be assigned; only string
+keys with long-integer values can be inserted. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.DictStrFloat">
+<code class="descclassname">traits.trait_types.</code><code class="descname">DictStrFloat</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrFloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>float values can be assigned; only string keys
+with float values can be inserted. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.DictStrBool">
+<code class="descclassname">traits.trait_types.</code><code class="descname">DictStrBool</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrBool" title="Permalink to this definition">¶</a></dt>
+<dd><p>bool values can be assigned; only string keys
+with boolean values can be inserted. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="data">
+<dt id="traits.trait_types.DictStrList">
+<code class="descclassname">traits.trait_types.</code><code class="descname">DictStrList</code><em class="property"> = &lt;traits.trait_types.Dict object&gt;</em><a class="headerlink" href="#traits.trait_types.DictStrList" title="Permalink to this definition">¶</a></dt>
+<dd><p>list values can be assigned; only string keys
+with list values can be assigned. The default value is {}.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Only a dictionary of string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="private-classes">
+<h2>Private Classes<a class="headerlink" href="#private-classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="traits.trait_types.HandleWeakRef">
+<em class="property">class </em><code class="descclassname">traits.trait_types.</code><code class="descname">HandleWeakRef</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#HandleWeakRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.HandleWeakRef" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="traits.trait_types.default_text_editor">
+<code class="descclassname">traits.trait_types.</code><code class="descname">default_text_editor</code><span class="sig-paren">(</span><em>trait</em>, <em>type=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_types.html#default_text_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_types.default_text_editor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">trait_types</span></code> Module</a><ul>
+<li><a class="reference internal" href="#traits">Traits</a></li>
+<li><a class="reference internal" href="#private-classes">Private Classes</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trait_numeric.html"
+                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">trait_numeric</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trait_value.html"
+                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">trait_value</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/trait_types.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2019, Enthought Inc
+      </li>
+      <li>
+      Last updated on Nov 18, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

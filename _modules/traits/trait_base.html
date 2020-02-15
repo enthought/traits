@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '5.2.0',
+        VERSION:     '6.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
     <link rel="top" title="Traits 5 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
@@ -53,6 +54,10 @@
               
     <ul class="nav nav-pills pull-right">
       <li class="active">
+        <a href="../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
         <a href="../../py-modindex.html" title="Python Module Index"
            >modules</a>
       </li>
@@ -70,24 +75,15 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for traits.trait_base</h1><div class="highlight"><pre>
-<span></span><span class="c1"># ------------------------------------------------------------------------------</span>
+<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
-<span class="c1">#  Copyright (c) 2005, Enthought, Inc.</span>
-<span class="c1">#  All rights reserved.</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
 <span class="c1">#</span>
-<span class="c1">#  This software is provided without warranty under the terms of the BSD</span>
-<span class="c1">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
-<span class="c1">#  under the conditions described in the aforementioned license.  The license</span>
-<span class="c1">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
-<span class="c1">#</span>
-<span class="c1">#  Thanks for using Enthought open source!</span>
-<span class="c1">#</span>
-<span class="c1">#  Author: David C. Morrill</span>
-<span class="c1">#  Date:   06/21/2002</span>
-<span class="c1">#</span>
-<span class="c1">#  Refactored into a separate module: 07/04/2003</span>
-<span class="c1">#</span>
-<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
 
 <span class="sd">&quot;&quot;&quot; Defines common, low-level capabilities needed by the Traits package.</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -96,19 +92,15 @@
 <span class="c1">#  Imports:</span>
 <span class="c1"># -------------------------------------------------------------------------------</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
-
+<span class="kn">import</span> <span class="nn">enum</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">getcwd</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">exists</span><span class="p">,</span> <span class="n">join</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_py2to3</span>
-<span class="kn">from</span> <span class="nn">._py2to3</span> <span class="k">import</span> <span class="n">LONG_TYPE</span>
+<span class="kn">from</span> <span class="nn">weakref</span> <span class="k">import</span> <span class="n">ref</span>
 
 <span class="kn">from</span> <span class="nn">.etsconfig.api</span> <span class="k">import</span> <span class="n">ETSConfig</span>
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="k">import</span> <span class="n">ValidateTrait</span>
 
 <span class="c1"># backwards compatibility: trait_base used to provide a patched enumerate</span>
 <span class="nb">enumerate</span> <span class="o">=</span> <span class="nb">enumerate</span>
@@ -117,17 +109,17 @@
 <span class="c1">#  Constants:</span>
 <span class="c1"># -------------------------------------------------------------------------------</span>
 
-<span class="n">ClassTypes</span> <span class="o">=</span> <span class="n">_py2to3</span><span class="o">.</span><span class="n">ClassTypes</span>
-
 <span class="n">SequenceTypes</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span>
+
+<span class="n">EnumTypes</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">EnumMeta</span><span class="p">)</span>
 
 <span class="n">ComplexTypes</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
 
+<span class="n">RangeTypes</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+
 <span class="n">TypeTypes</span> <span class="o">=</span> <span class="p">(</span>
     <span class="nb">str</span><span class="p">,</span>
-    <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">,</span>
     <span class="nb">int</span><span class="p">,</span>
-    <span class="n">LONG_TYPE</span><span class="p">,</span>
     <span class="nb">float</span><span class="p">,</span>
     <span class="nb">complex</span><span class="p">,</span>
     <span class="nb">list</span><span class="p">,</span>
@@ -219,11 +211,6 @@
 <span class="c1">#: parameter, to indicate that the attribute previously had no value.</span>
 <span class="n">Undefined</span> <span class="o">=</span> <span class="n">_Undefined</span><span class="p">()</span>
 
-<span class="c1"># Tell the C-base code about singleton &#39;Undefined&#39; and &#39;Uninitialized&#39; objects:</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">ctraits</span>
-
-<span class="n">ctraits</span><span class="o">.</span><span class="n">_undefined</span><span class="p">(</span><span class="n">Undefined</span><span class="p">,</span> <span class="n">Uninitialized</span><span class="p">)</span>
-
 <span class="c1"># -------------------------------------------------------------------------------</span>
 <span class="c1">#  Singleton &#39;Missing&#39; object (used as missing method argument marker):</span>
 <span class="c1"># -------------------------------------------------------------------------------</span>
@@ -275,7 +262,7 @@
 <span class="c1">#  Constants:</span>
 <span class="c1"># -------------------------------------------------------------------------------</span>
 
-<span class="n">StringTypes</span> <span class="o">=</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">LONG_TYPE</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">StringTypes</span> <span class="o">=</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">)</span>
 
 <span class="c1"># -------------------------------------------------------------------------------</span>
 <span class="c1">#  Define a mapping of coercable types:</span>
@@ -283,11 +270,50 @@
 
 <span class="c1"># Mapping of coercable types.</span>
 <span class="n">CoercableTypes</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">LONG_TYPE</span><span class="p">:</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="n">LONG_TYPE</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
-    <span class="nb">float</span><span class="p">:</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
-    <span class="nb">complex</span><span class="p">:</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
-    <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">:</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span>
+    <span class="nb">float</span><span class="p">:</span> <span class="p">(</span><span class="n">ValidateTrait</span><span class="o">.</span><span class="n">coerce</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+    <span class="nb">complex</span><span class="p">:</span> <span class="p">(</span><span class="n">ValidateTrait</span><span class="o">.</span><span class="n">coerce</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
 <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">safe_contains</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Perform &quot;in&quot; containment check, allowing for TypeErrors.</span>
+
+<span class="sd">    This is required because in some circumstances ``x in y`` can raise a</span>
+<span class="sd">    TypeError.  In these cases we make the (reasonable) assumption that the</span>
+<span class="sd">    value is _not_ contained in the container.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Do a LBYL check for Enums, to avoid the DeprecationWarning issued</span>
+    <span class="c1"># by Python 3.7. Ref: enthought/traits#853.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">EnumMeta</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">container</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">enum_default</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Get a default value from the valid values of an Enum trait.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    values : tuple, list or enum.Enum</span>
+<span class="sd">        The collection of valid values for an enum trait.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    default : any</span>
+<span class="sd">        The first valid value, or None if the collection is empty.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">EnumMeta</span><span class="p">):</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">default</span>
+
 
 <span class="c1"># -------------------------------------------------------------------------------</span>
 <span class="c1">#  Return a string containing the class name of an object with the correct</span>
@@ -300,7 +326,7 @@
 <span class="sd">    correct indefinite article (&#39;a&#39; or &#39;an&#39;) preceding it (e.g., &#39;an Image&#39;,</span>
 <span class="sd">    &#39;a PlotValue&#39;).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">add_article</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">add_article</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span></div>
@@ -486,9 +512,30 @@
 
 
 <span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Traits metadata selection functions:</span>
+<span class="c1"># Helpers for weak references</span>
 <span class="c1"># -------------------------------------------------------------------------------</span>
 
+<span class="k">def</span> <span class="nf">_make_value_freed_callback</span><span class="p">(</span><span class="n">object_ref</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_value_freed</span><span class="p">(</span><span class="n">value_ref</span><span class="p">):</span>
+        <span class="nb">object</span> <span class="o">=</span> <span class="n">object_ref</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="n">trait_property_changed</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_value_freed</span>
+
+
+<div class="viewcode-block" id="HandleWeakRef"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_base.HandleWeakRef">[docs]</a><span class="k">class</span> <span class="nc">HandleWeakRef</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">object_ref</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+        <span class="n">_value_freed</span> <span class="o">=</span> <span class="n">_make_value_freed_callback</span><span class="p">(</span><span class="n">object_ref</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">object_ref</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">_value_freed</span><span class="p">)</span></div>
+
+
+<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1">#  Traits metadata selection functions:</span>
+<span class="c1"># -------------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="is_none"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.is_none">[docs]</a><span class="k">def</span> <span class="nf">is_none</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span></div>
@@ -507,7 +554,7 @@
 
 
 <div class="viewcode-block" id="is_str"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.is_str">[docs]</a><span class="k">def</span> <span class="nf">is_str</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
@@ -519,13 +566,11 @@
               <img class="logo" src="../../_static/img/e-logo.png" alt="Logo">
             </a></p>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -546,13 +591,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2019, Enthought Inc
+        &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on Nov 18, 2019.
+      Last updated on Feb 14, 2020.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
       </li>
     </ul>
     </div>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>traits.ctrait Module &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '6.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="traits.ctraits Module" href="ctraits.html" >
+    <link rel="prev" title="traits.constants Module" href="constants.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="ctraits.html" title="traits.ctraits Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="constants.html" title="traits.constants Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="module-traits.ctrait">
+<span id="traits-ctrait-module"></span><h1><a class="reference internal" href="#module-traits.ctrait" title="traits.ctrait"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.ctrait</span></code></a> Module<a class="headerlink" href="#module-traits.ctrait" title="Permalink to this headline">¶</a></h1>
+<p>Defines the core CTrait class.</p>
+<p>The CTrait class extends the C-level cTrait type to provide the full CTrait
+API. CTraits are the core objects that are used to generate defaults and
+validate as well as maintining a list of notifiers and calling them when
+values are modified.</p>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="traits.ctrait.CTrait">
+<em class="property">class </em><code class="sig-prename descclassname">traits.ctrait.</code><code class="sig-name descname">CTrait</code><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.ctrait.CTrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extends the underlying C-based cTrait type.</p>
+<dl class="method">
+<dt id="traits.ctrait.CTrait.comparison_mode">
+<em class="property">property </em><code class="sig-name descname">comparison_mode</code><a class="headerlink" href="#traits.ctrait.CTrait.comparison_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get or set the comparison mode on the trait.
+Getter returns a ComparisonMode enum.
+Setter acceps either an int or a ComparisonMode enum.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctrait.CTrait.is_trait_type">
+<code class="sig-name descname">is_trait_type</code><span class="sig-paren">(</span><em class="sig-param">trait_type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.is_trait_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.ctrait.CTrait.is_trait_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether or not this trait is of a specified trait type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctrait.CTrait.get_editor">
+<code class="sig-name descname">get_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.ctrait.CTrait.get_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the user interface editor associated with the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctrait.CTrait.get_help">
+<code class="sig-name descname">get_help</code><span class="sig-paren">(</span><em class="sig-param">full=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.get_help"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.ctrait.CTrait.get_help" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the help text for a trait.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>full</strong> (<em>bool</em>) – Indicates whether to return the value of the <em>help</em> attribute of
+the trait itself.</p></li>
+<li><p><strong>Description</strong> – </p></li>
+<li><p><strong>-----------</strong> – </p></li>
+<li><p><strong>full is False</strong><strong> or </strong><strong>the trait does not have a help string</strong><strong>,</strong> (<em>If</em>) – </p></li>
+<li><p><strong>returned string is constructed from the desc attribute on the</strong> (<em>the</em>) – </p></li>
+<li><p><strong>and the info string on the trait's handler.</strong> (<em>trait</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctrait.CTrait.full_info">
+<code class="sig-name descname">full_info</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.ctrait.CTrait.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctrait.CTrait.info">
+<code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.ctrait.CTrait.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a description of the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctrait.CTrait.as_ctrait">
+<code class="sig-name descname">as_ctrait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.ctrait.CTrait.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that returns self for trait converters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.ctrait</span></code> Module</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="constants.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.constants</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ctraits.html"
+                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.ctraits</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/ctrait.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought Inc
+      </li>
+      <li>
+      Last updated on Feb 14, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>traits.trait_list_object Module &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '6.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="traits.trait_numeric Module" href="trait_numeric.html" >
+    <link rel="prev" title="traits.trait_handlers Module" href="trait_handlers.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="trait_numeric.html" title="traits.trait_numeric Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="trait_handlers.html" title="traits.trait_handlers Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="module-traits.trait_list_object">
+<span id="traits-trait-list-object-module"></span><h1><a class="reference internal" href="#module-traits.trait_list_object" title="traits.trait_list_object"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_list_object</span></code></a> Module<a class="headerlink" href="#module-traits.trait_list_object" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="traits.trait_list_object.TraitListEvent">
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_list_object.</code><code class="sig-name descname">TraitListEvent</code><span class="sig-paren">(</span><em class="sig-param">index=0</em>, <em class="sig-param">removed=None</em>, <em class="sig-param">added=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_list_object.html#TraitListEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_list_object.TraitListEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object reporting in-place changes to a traits list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em><em> or </em><em>slice</em>) – An index or slice indicating the location of the changes to the list.</p></li>
+<li><p><strong>added</strong> (<em>list</em><em> or </em><em>None</em>) – The list of values added to the list, or optionally None if nothing
+is added.</p></li>
+<li><p><strong>removed</strong> (<em>list</em><em> or </em><em>None</em>) – The list of values removed from the list, or optionally None if
+nothing is removed.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="traits.trait_list_object.TraitListEvent.index">
+<code class="sig-name descname">index</code><a class="headerlink" href="#traits.trait_list_object.TraitListEvent.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>An index or slice indicating the location of the changes to the list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int or slice</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_list_object.TraitListEvent.added">
+<code class="sig-name descname">added</code><a class="headerlink" href="#traits.trait_list_object.TraitListEvent.added" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of values added to the list.  If nothing was added this is
+an empty list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_list_object.TraitListEvent.removed">
+<code class="sig-name descname">removed</code><a class="headerlink" href="#traits.trait_list_object.TraitListEvent.removed" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of values removed from the list.  If nothing was removed
+this is an empty list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_list_object.TraitListObject">
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_list_object.</code><code class="sig-name descname">TraitListObject</code><span class="sig-paren">(</span><em class="sig-param">trait</em>, <em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_list_object.html#TraitListObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_list_object.TraitListObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>A subclass of list that fires trait events when mutated.</p>
+<p>This is used by the List trait type, and all values set into a List
+trait will be copied into a new TraitListObject instance.</p>
+<p>Mutation of the TraitListObject will fire a “name_items” event with
+appropriate index, added and removed values.  In the case of setting
+or deleting items with a slice, the index will hold either:</p>
+<ul class="simple">
+<li><p>the location of the first element changed, if the step is 1.  In
+this case the last element changed can be inferred from the
+length of the removed values.</p></li>
+<li><p>the slice that was used, otherwise.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trait</strong> (<em>CTrait instance</em>) – The CTrait instance associated with the attribute that this list
+has been set to.</p></li>
+<li><p><strong>object</strong> (<em>HasTraits instance</em>) – The HasTraits instance that the list has been set as an attribute for.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute on the object.</p></li>
+<li><p><strong>value</strong> (<em>list</em>) – The list of values to initialize the TraitListObject with.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="traits.trait_list_object.TraitListObject.trait">
+<code class="sig-name descname">trait</code><a class="headerlink" href="#traits.trait_list_object.TraitListObject.trait" title="Permalink to this definition">¶</a></dt>
+<dd><p>The CTrait instance associated with the attribute that this list
+has been set to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>CTrait instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_list_object.TraitListObject.object">
+<code class="sig-name descname">object</code><a class="headerlink" href="#traits.trait_list_object.TraitListObject.object" title="Permalink to this definition">¶</a></dt>
+<dd><p>A weak reference to a HasTraits instance that the list has been set
+as an attribute for.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>weak reference to a HasTraits instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_list_object.TraitListObject.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#traits.trait_list_object.TraitListObject.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the attribute on the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_list_object.TraitListObject.name_items">
+<code class="sig-name descname">name_items</code><a class="headerlink" href="#traits.trait_list_object.TraitListObject.name_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the items event trait that the trait list will fire when
+mutated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_list_object.TraitListObject.append">
+<code class="sig-name descname">append</code><span class="sig-paren">(</span><em class="sig-param">object</em><span class="sig-paren">)</span> &#x2192; None -- append object to end<a class="reference internal" href="../_modules/traits/trait_list_object.html#TraitListObject.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_list_object.TraitListObject.append" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_list_object.TraitListObject.insert">
+<code class="sig-name descname">insert</code><span class="sig-paren">(</span><em class="sig-param">index</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_list_object.html#TraitListObject.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_list_object.TraitListObject.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>L.insert(index, object) – insert object before index</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_list_object.TraitListObject.extend">
+<code class="sig-name descname">extend</code><span class="sig-paren">(</span><em class="sig-param">iterable</em><span class="sig-paren">)</span> &#x2192; None -- extend list by appending elements from the iterable<a class="reference internal" href="../_modules/traits/trait_list_object.html#TraitListObject.extend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_list_object.TraitListObject.extend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_list_object.TraitListObject.remove">
+<code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span> &#x2192; None -- remove first occurrence of value.<a class="reference internal" href="../_modules/traits/trait_list_object.html#TraitListObject.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_list_object.TraitListObject.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises ValueError if the value is not present.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_list_object.TraitListObject.sort">
+<code class="sig-name descname">sort</code><span class="sig-paren">(</span><em class="sig-param">key=None</em>, <em class="sig-param">reverse=False</em><span class="sig-paren">)</span> &#x2192; None -- stable sort *IN PLACE*<a class="reference internal" href="../_modules/traits/trait_list_object.html#TraitListObject.sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_list_object.TraitListObject.sort" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_list_object.TraitListObject.reverse">
+<code class="sig-name descname">reverse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_list_object.html#TraitListObject.reverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_list_object.TraitListObject.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>L.reverse() – reverse <em>IN PLACE</em></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_list_object.TraitListObject.pop">
+<code class="sig-name descname">pop</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">index</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; item -- remove and return item at index (default last).<a class="reference internal" href="../_modules/traits/trait_list_object.html#TraitListObject.pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_list_object.TraitListObject.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises IndexError if list is empty or index is out of range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_list_object.TraitListObject.clear">
+<code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None -- remove all items from L<a class="reference internal" href="../_modules/traits/trait_list_object.html#TraitListObject.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_list_object.TraitListObject.clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_list_object.TraitListObject.len_error">
+<code class="sig-name descname">len_error</code><span class="sig-paren">(</span><em class="sig-param">len</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_list_object.html#TraitListObject.len_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_list_object.TraitListObject.len_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility method that raises an error if length is incorrect.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_list_object</span></code> Module</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trait_handlers.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_handlers</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trait_numeric.html"
+                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_numeric</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/trait_list_object.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought Inc
+      </li>
+      <li>
+      Last updated on Feb 14, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

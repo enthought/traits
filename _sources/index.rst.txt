@@ -17,4 +17,12 @@ Developer Reference
 
     traits_api_reference/index
 
+Miscellaneous
+-------------
+
+.. toctree::
+    :maxdepth: 2
+
+    changelog
+
 * :ref:`search`

@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.2.0',
+        VERSION:     '6.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
     <link rel="top" title="Traits 5 User Manual" href="../index.html" >
     <link rel="up" title="Traits 5 User Manual" href="index.html" >
@@ -54,6 +55,10 @@
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
       <li class="active">
         <a href="../py-modindex.html" title="Python Module Index"
            >modules</a>
@@ -89,12 +94,12 @@ interfaces and for other problem domains.</p>
 <p>Requesting trait attribute change notifications can be done in several
 ways:</p>
 <ul class="simple" id="index-0">
-<li>Dynamically, by calling on_trait_change() or on_trait_event() to establish
-(or remove) change notification handlers.</li>
-<li>Statically, by decorating methods on the class with the &#64;on_trait_change
-decorator to indicate that they handle notification for specified attributes.</li>
-<li>Statically, by using a special naming convention for methods on the class to
-indicate that they handle notifications for specific trait attributes.</li>
+<li><p>Dynamically, by calling on_trait_change() or on_trait_event() to establish
+(or remove) change notification handlers.</p></li>
+<li><p>Statically, by decorating methods on the class with the &#64;on_trait_change
+decorator to indicate that they handle notification for specified attributes.</p></li>
+<li><p>Statically, by using a special naming convention for methods on the class to
+indicate that they handle notifications for specific trait attributes.</p></li>
 </ul>
 <div class="section" id="dynamic-notification">
 <span id="index-1"></span><span id="id1"></span><h2>Dynamic Notification<a class="headerlink" href="#dynamic-notification" title="Permalink to this headline">¶</a></h2>
@@ -108,28 +113,28 @@ be defined for the same object, or even for the same trait attribute on the
 same object. The handler registration methods have the following signatures:</p>
 <span class="target" id="index-2"></span><dl class="method">
 <dt id="on_trait_change">
-<code class="descname">on_trait_change</code><span class="sig-paren">(</span><em>handler</em><span class="optional">[</span>, <em>name=None</em>, <em>remove=False</em>, <em>dispatch='same'</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#on_trait_change" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_trait_change</code><span class="sig-paren">(</span><em class="sig-param">handler</em><span class="optional">[</span>, <em class="sig-param">name=None</em>, <em class="sig-param">remove=False</em>, <em class="sig-param">dispatch='same'</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#on_trait_change" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <span class="target" id="index-3"></span><dl class="method">
 <dt id="on_trait_event">
-<code class="descname">on_trait_event</code><span class="sig-paren">(</span><em>handler</em><span class="optional">[</span>, <em>name=None</em>, <em>remove=False</em>, <em>dispatch='same'</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#on_trait_event" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_trait_event</code><span class="sig-paren">(</span><em class="sig-param">handler</em><span class="optional">[</span>, <em class="sig-param">name=None</em>, <em class="sig-param">remove=False</em>, <em class="sig-param">dispatch='same'</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#on_trait_event" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>In these signatures:</p>
 <ul class="simple">
-<li><em>handler</em>: Specifies the function or bound method to be called whenever the
-trait attributes specified by the <em>name</em> parameter are modified.</li>
-<li><em>name</em>: Specifies trait attributes whose changes trigger the handler being
+<li><p><em>handler</em>: Specifies the function or bound method to be called whenever the
+trait attributes specified by the <em>name</em> parameter are modified.</p></li>
+<li><p><em>name</em>: Specifies trait attributes whose changes trigger the handler being
 called. If this parameter is omitted or is None, the handler is called
 whenever <em>any</em> trait attribute of the object is modified. The syntax
-supported by this parameter is discussed in <a class="reference internal" href="#the-name-parameter"><span class="std std-ref">The name Parameter</span></a>.</li>
-<li><em>remove</em>: If True (or non-zero), then handler will no longer be called when
+supported by this parameter is discussed in <a class="reference internal" href="#the-name-parameter"><span class="std std-ref">The name Parameter</span></a>.</p></li>
+<li><p><em>remove</em>: If True (or non-zero), then handler will no longer be called when
 the specified trait attributes are modified. In other words, it causes the
-handler to be “unhooked”.</li>
-<li><em>dispatch</em>: String indicating the thread on which notifications must be run.
+handler to be “unhooked”.</p></li>
+<li><p><em>dispatch</em>: String indicating the thread on which notifications must be run.
 In most cases, it can be omitted. See the <em>Traits API Reference</em> for details
-on non-default values.</li>
+on non-default values.</p></li>
 </ul>
 <div class="section" id="example-of-a-dynamic-notification-handler">
 <span id="index-4"></span><span id="id2"></span><h3>Example of a Dynamic Notification Handler<a class="headerlink" href="#example-of-a-dynamic-notification-handler" title="Permalink to this headline">¶</a></h3>
@@ -177,12 +182,12 @@ names of trait attributes not just directly on the current object, but also
 on sub-objects referenced by the current object.</p>
 <p>The <em>name</em> parameter can take any of the following values:</p>
 <ul class="simple">
-<li>Omitted, None, or ‘anytrait’: The handler applies to any trait attribute on
-the object.</li>
-<li>A name or list of names: The handler applies to each trait attribute on the
-object with the specified names.</li>
-<li>An “extended” name or list of extended names: The handler applies to each
-trait attribute that matches the specified extended names.</li>
+<li><p>Omitted, None, or ‘anytrait’: The handler applies to any trait attribute on
+the object.</p></li>
+<li><p>A name or list of names: The handler applies to each trait attribute on the
+object with the specified names.</p></li>
+<li><p>An “extended” name or list of extended names: The handler applies to each
+trait attribute that matches the specified extended names.</p></li>
 </ul>
 <div class="section" id="syntax">
 <span id="index-6"></span><span id="id4"></span><h4>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h4>
@@ -197,135 +202,135 @@ trait attribute that matches the specified extended names.</li>
 <div class="section" id="semantics">
 <span id="index-7"></span><span id="id5"></span><h4>Semantics<a class="headerlink" href="#semantics" title="Permalink to this headline">¶</a></h4>
 <p class="rubric" id="semantics-of-extended-name-notation-table">Semantics of extended name notation</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="39%" />
-<col width="61%" />
+<col style="width: 39%" />
+<col style="width: 61%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Pattern</th>
-<th class="head">Meaning</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Pattern</p></th>
+<th class="head"><p>Meaning</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><em>item1</em>.<em>item2</em></td>
-<td>A trait named item1 contains an object (or
+<tbody>
+<tr class="row-even"><td><p><em>item1</em>.<em>item2</em></p></td>
+<td><p>A trait named item1 contains an object (or
 objects, if <em>item1</em> is a list or dictionary),
 with a trait named <em>item2</em>. Changes to either
-<em>item1</em> or <em>item2</em> trigger a  notification.</td>
+<em>item1</em> or <em>item2</em> trigger a  notification.</p></td>
 </tr>
-<tr class="row-odd"><td><em>item1</em>:<em>item2</em></td>
-<td>A trait named <strong>item1</strong> contains an object (or
+<tr class="row-odd"><td><p><em>item1</em>:<em>item2</em></p></td>
+<td><p>A trait named <strong>item1</strong> contains an object (or
 objects, if <em>item1</em> is a list or dictionary),
 with a trait named <em>item2</em>. Changes to <em>item2</em>
 trigger a notification, while changes to
 <em>item1</em> do not (i.e., the ‘:’ indicates that
-changes to the link object are not reported.</td>
+changes to the link object are not reported.</p></td>
 </tr>
-<tr class="row-even"><td>[<em>item1</em>, <em>item2</em>, …,
-<em>itemN</em>]</td>
-<td>A list that matches any of the specified
+<tr class="row-even"><td><p>[<em>item1</em>, <em>item2</em>, …,
+<em>itemN</em>]</p></td>
+<td><p>A list that matches any of the specified
 items. Note that at the topmost level, the
-surrounding square brackets are optional.</td>
+surrounding square brackets are optional.</p></td>
 </tr>
-<tr class="row-odd"><td><em>item</em>[]</td>
-<td>A trait named <em>item</em> is a list. Changes to
+<tr class="row-odd"><td><p><em>item</em>[]</p></td>
+<td><p>A trait named <em>item</em> is a list. Changes to
 <em>item</em> or to its members triggers a
-notification.</td>
+notification.</p></td>
 </tr>
-<tr class="row-even"><td><em>name</em>?</td>
-<td>If the current object does not have an
+<tr class="row-even"><td><p><em>name</em>?</p></td>
+<td><p>If the current object does not have an
 attribute called <em>name</em>, the reference can be
 ignored. If the ‘?’ character is omitted, the
 current object must have a trait called
-<em>name</em>; otherwise, an exception is raised.</td>
+<em>name</em>; otherwise, an exception is raised.</p></td>
 </tr>
-<tr class="row-odd"><td><em>prefix</em>+</td>
-<td>Matches any trait attribute on the object
-whose name begins with <em>prefix</em>.</td>
+<tr class="row-odd"><td><p><em>prefix</em>+</p></td>
+<td><p>Matches any trait attribute on the object
+whose name begins with <em>prefix</em>.</p></td>
 </tr>
-<tr class="row-even"><td>+<em>metadata_name</em></td>
-<td>Matches any trait on the object that has a
-metadata attribute called <em>metadata_name</em>.</td>
+<tr class="row-even"><td><p>+<em>metadata_name</em></p></td>
+<td><p>Matches any trait on the object that has a
+metadata attribute called <em>metadata_name</em>.</p></td>
 </tr>
-<tr class="row-odd"><td>-<em>metadata_name</em></td>
-<td>Matches any trait on the current object that
+<tr class="row-odd"><td><p>-<em>metadata_name</em></p></td>
+<td><p>Matches any trait on the current object that
 does <em>not</em> have a metadata attribute called
-<em>metadata_name</em>.</td>
+<em>metadata_name</em>.</p></td>
 </tr>
-<tr class="row-even"><td><em>prefix</em>+<em>metadata_name</em></td>
-<td>Matches any trait on the object whose name
+<tr class="row-even"><td><p><em>prefix</em>+<em>metadata_name</em></p></td>
+<td><p>Matches any trait on the object whose name
 begins with <em>prefix</em> and that has a metadata
-attribute called <em>metadata_name</em>.</td>
+attribute called <em>metadata_name</em>.</p></td>
 </tr>
-<tr class="row-odd"><td><em>prefix</em>-<em>metadata_name</em></td>
-<td>Matches any trait on the object whose name
+<tr class="row-odd"><td><p><em>prefix</em>-<em>metadata_name</em></p></td>
+<td><p>Matches any trait on the object whose name
 begins with <em>prefix</em> and that does <em>not</em> have
-a metadata attribute called <em>metadata_name</em>.</td>
+a metadata attribute called <em>metadata_name</em>.</p></td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">+</span></code></td>
-<td>Matches all traits on the object.</td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">+</span></code></p></td>
+<td><p>Matches all traits on the object.</p></td>
 </tr>
-<tr class="row-odd"><td><em>pattern</em>*</td>
-<td>Matches object graphs where <em>pattern</em> occurs
+<tr class="row-odd"><td><p><em>pattern</em>*</p></td>
+<td><p>Matches object graphs where <em>pattern</em> occurs
 one or more times. This option is useful for
 setting up listeners on recursive data
-structures like trees or linked lists.</td>
+structures like trees or linked lists.</p></td>
 </tr>
 </tbody>
 </table>
 <p class="rubric" id="examples-of-extended-name-notation-table"><span id="index-8"></span>Examples of extended name notation</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="34%" />
-<col width="66%" />
+<col style="width: 34%" />
+<col style="width: 66%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Example</th>
-<th class="head">Meaning</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Example</p></th>
+<th class="head"><p>Meaning</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">'foo,</span> <span class="pre">bar,</span> <span class="pre">baz'</span></code></td>
-<td>Matches <em>object</em>.<strong>foo</strong>, <em>object</em>.<strong>bar</strong>,
-and <em>object</em>.<strong>baz</strong>.</td>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'foo,</span> <span class="pre">bar,</span> <span class="pre">baz'</span></code></p></td>
+<td><p>Matches <em>object</em>.<strong>foo</strong>, <em>object</em>.<strong>bar</strong>,
+and <em>object</em>.<strong>baz</strong>.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">['foo',</span> <span class="pre">'bar',</span> <span class="pre">'baz']</span></code></td>
-<td>Equivalent to <code class="docutils literal notranslate"><span class="pre">'foo,</span> <span class="pre">bar,</span> <span class="pre">baz'</span></code>, but may be
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">['foo',</span> <span class="pre">'bar',</span> <span class="pre">'baz']</span></code></p></td>
+<td><p>Equivalent to <code class="docutils literal notranslate"><span class="pre">'foo,</span> <span class="pre">bar,</span> <span class="pre">baz'</span></code>, but may be
 useful in cases where the individual items are
-computed.</td>
+computed.</p></td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">'foo.bar.baz'</span></code></td>
-<td>Matches <em>object</em>.<strong>foo.bar.baz</strong></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'foo.bar.baz'</span></code></p></td>
+<td><p>Matches <em>object</em>.<strong>foo.bar.baz</strong></p></td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">'foo.[bar,baz]'</span></code></td>
-<td>Matches <em>object</em>.<strong>foo.bar</strong> and
-<em>object</em>.<strong>foo.baz</strong></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'foo.[bar,baz]'</span></code></p></td>
+<td><p>Matches <em>object</em>.<strong>foo.bar</strong> and
+<em>object</em>.<strong>foo.baz</strong></p></td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">'foo[]'</span></code></td>
-<td>Matches a list trait on <em>object</em> named <strong>foo</strong>.</td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'foo[]'</span></code></p></td>
+<td><p>Matches a list trait on <em>object</em> named <strong>foo</strong>.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">'([left,right]).name*'</span></code></td>
-<td>Matches the <strong>name</strong> trait of each tree node
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'([left,right]).name*'</span></code></p></td>
+<td><p>Matches the <strong>name</strong> trait of each tree node
 object that is linked from the <strong>left</strong> or
 <strong>right</strong> traits of a parent node, starting with
 the current object as the root node. This pattern
 also matches the <strong>name</strong> trait of the current
 object, as the <strong>left</strong> and <strong>right</strong> modifiers
-are optional.</td>
+are optional.</p></td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">'+dirty'</span></code></td>
-<td>Matches any trait on the current object that has a
-metadata attribute named <strong>dirty</strong> set.</td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'+dirty'</span></code></p></td>
+<td><p>Matches any trait on the current object that has a
+metadata attribute named <strong>dirty</strong> set.</p></td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">'foo.+dirty'</span></code></td>
-<td>Matches any trait on <em>object</em>.<strong>foo</strong> that has a
-metadata attribute named <strong>dirty</strong> set.</td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">'foo.+dirty'</span></code></p></td>
+<td><p>Matches any trait on <em>object</em>.<strong>foo</strong> that has a
+metadata attribute named <strong>dirty</strong> set.</p></td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">'foo.[bar,-dirty]'</span></code></td>
-<td>Matches <em>object</em>.<strong>foo.bar</strong> or any trait on
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">'foo.[bar,-dirty]'</span></code></p></td>
+<td><p>Matches <em>object</em>.<strong>foo.bar</strong> or any trait on
 <em>object</em>.<strong>foo</strong> that does not have a metadata
-attribute named <strong>dirty</strong> set.</td>
+attribute named <strong>dirty</strong> set.</p></td>
 </tr>
 </tbody>
 </table>
@@ -334,8 +339,8 @@ attribute named <strong>dirty</strong> set.</td>
 List or Dict traits, the subsequent portion of the pattern is applied to each
 item in the list or value in the dictionary. For example, if <strong>self.children</strong>
 is a list, a handler set for <code class="docutils literal notranslate"><span class="pre">'children.name'</span></code> listens for changes to the
-<strong>name</strong> trait for each item in the <strong>self.children</strong> list.</p>
-<p>The handler routine is also invoked when items are added or removed from a list
+<strong>name</strong> trait for each item in the <strong>self.children</strong> list.
+The handler routine is also invoked when items are added or removed from a list
 or dictionary, because this is treated as an implied change to the item’s trait
 being monitored.</p>
 </div>
@@ -345,31 +350,31 @@ being monitored.</p>
 <p>The handler passed to on_trait_change() or on_trait_event() can have any one of
 the following signatures:</p>
 <ul class="simple" id="index-10">
-<li>handler()</li>
-<li>handler(<em>new</em>)</li>
-<li>handler(<em>name</em>, <em>new</em>)</li>
-<li>handler(<em>object</em>, <em>name</em>, <em>new</em>)</li>
-<li>handler(<em>object</em>, <em>name</em>, <em>old</em>, <em>new</em>)</li>
+<li><p>handler()</p></li>
+<li><p>handler(<em>new</em>)</p></li>
+<li><p>handler(<em>name</em>, <em>new</em>)</p></li>
+<li><p>handler(<em>object</em>, <em>name</em>, <em>new</em>)</p></li>
+<li><p>handler(<em>object</em>, <em>name</em>, <em>old</em>, <em>new</em>)</p></li>
 </ul>
 <p>These signatures use the following parameters:</p>
 <ul class="simple" id="index-11">
-<li><em>object</em>: The object whose trait attribute changed.</li>
+<li><p><em>object</em>: The object whose trait attribute changed.</p></li>
 </ul>
 <ul class="simple" id="index-12">
-<li><em>name</em>: The attribute that changed. If one of the objects in a sequence is a
+<li><p><em>name</em>: The attribute that changed. If one of the objects in a sequence is a
 List or Dict, and its membership changes, then this is the name of the trait
 that references it, with ‘_items appended. For example, if the handler is
 monitoring <code class="docutils literal notranslate"><span class="pre">'foo.bar.baz'</span></code>, where <strong>bar</strong> is a List, and an item is added
-to <strong>bar</strong>, then the value of the <em>name</em> parameter is ‘bar_items’.</li>
+to <strong>bar</strong>, then the value of the <em>name</em> parameter is ‘bar_items’.</p></li>
 </ul>
 <ul class="simple" id="index-13">
-<li><em>new</em>: The new value of the trait attribute that changed. For changes to
-List and Dict objects, this is a list of items that were added.</li>
+<li><p><em>new</em>: The new value of the trait attribute that changed. For changes to
+List and Dict objects, this is a list of items that were added.</p></li>
 </ul>
 <ul class="simple" id="index-14">
-<li><em>old</em>: The old value of the trait attribute that changed. For changes to List
+<li><p><em>old</em>: The old value of the trait attribute that changed. For changes to List
 and Dict object, this is a list of items that were deleted. For event traits,
-this is Undefined.</li>
+this is Undefined.</p></li>
 </ul>
 <p>If the handler is a bound method, it also implicitly has <em>self</em> as a first
 argument.</p>
@@ -452,9 +457,9 @@ class has the same notification handlers.</p>
 <p>To indicate that a particular method is a static notification handler for a
 particular trait, you have two options:</p>
 <ul class="simple" id="index-18">
-<li>Apply the &#64;on_trait_change decorator to the method.</li>
-<li>Give the method a special name based on the name of the trait attribute it
-“listens” to.</li>
+<li><p>Apply the &#64;on_trait_change decorator to the method.</p></li>
+<li><p>Give the method a special name based on the name of the trait attribute it
+“listens” to.</p></li>
 </ul>
 <div class="section" id="handler-decorator">
 <span id="id9"></span><h3>Handler Decorator<a class="headerlink" href="#handler-decorator" title="Permalink to this headline">¶</a></h3>
@@ -554,34 +559,32 @@ handler it is.</p>
 are:</p>
 <dl class="method">
 <dt id="_name_changed">
-<code class="descname">_name_changed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_name_changed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_name_changed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_name_changed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt>
-<code class="descname">_name_changed</code><span class="sig-paren">(</span><em>new</em><span class="sig-paren">)</span></dt>
+<code class="sig-name descname">_name_changed</code><span class="sig-paren">(</span><em class="sig-param">new</em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt>
-<code class="descname">_name_changed</code><span class="sig-paren">(</span><em>old</em>, <em>new</em><span class="sig-paren">)</span></dt>
+<code class="sig-name descname">_name_changed</code><span class="sig-paren">(</span><em class="sig-param">old</em>, <em class="sig-param">new</em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt>
-<code class="descname">_name_changed</code><span class="sig-paren">(</span><em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span></dt>
+<code class="sig-name descname">_name_changed</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">old</em>, <em class="sig-param">new</em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <p>The method name can also be _<em>name</em>_fired(), with the same set of
 signatures.</p>
 <p>In these signatures:</p>
 <ul class="simple">
-<li><em>new</em> is the new value assigned to the trait attribute. For List and Dict
-objects, this is a list of the items that were added.</li>
-<li><em>old</em> is the old value assigned to the trait attribute. For  List and Dict
-objects, this is a list of the items that were deleted.</li>
-<li><em>name</em> is the name of the trait attribute.  The extended trait name syntax
-is not supported. <a class="footnote-reference" href="#id18" id="id14">[4]</a></li>
+<li><p><em>new</em> is the new value assigned to the trait attribute.</p></li>
+<li><p><em>old</em> is the old value assigned to the trait attribute.</p></li>
+<li><p><em>name</em> is the name of the trait attribute.  The extended trait name syntax
+is not supported.</p></li>
 </ul>
 <p>Note that these signatures follow a different pattern for argument
 interpretation from dynamic handlers and decorated static handlers. Both of
@@ -597,56 +600,56 @@ the following methods define a handler for an object’s <strong>name</strong> t
 <p>However, the interpretation of arguments to these methods differs, as shown in
 the following table.</p>
 <p class="rubric" id="handler-argument-interpretation-table">Handler argument interpretation</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="19%" />
-<col width="44%" />
-<col width="37%" />
+<col style="width: 19%" />
+<col style="width: 44%" />
+<col style="width: 37%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Argument</th>
-<th class="head">_<em>name</em>_changed</th>
-<th class="head">&#64;on_trait_change</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Argument</p></th>
+<th class="head"><p>_<em>name</em>_changed</p></th>
+<th class="head"><p>&#64;on_trait_change</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><em>arg1</em></td>
-<td><em>name</em></td>
-<td><em>object</em></td>
+<tbody>
+<tr class="row-even"><td><p><em>arg1</em></p></td>
+<td><p><em>name</em></p></td>
+<td><p><em>object</em></p></td>
 </tr>
-<tr class="row-odd"><td><em>arg2</em></td>
-<td><em>old</em></td>
-<td><em>name</em></td>
+<tr class="row-odd"><td><p><em>arg2</em></p></td>
+<td><p><em>old</em></p></td>
+<td><p><em>name</em></p></td>
 </tr>
-<tr class="row-even"><td><em>arg3</em></td>
-<td><em>new</em></td>
-<td><em>new</em></td>
+<tr class="row-even"><td><p><em>arg3</em></p></td>
+<td><p><em>new</em></p></td>
+<td><p><em>new</em></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="general-static-handler-signatures">
-<span id="id15"></span><h3>General Static Handler Signatures<a class="headerlink" href="#general-static-handler-signatures" title="Permalink to this headline">¶</a></h3>
+<span id="id14"></span><h3>General Static Handler Signatures<a class="headerlink" href="#general-static-handler-signatures" title="Permalink to this headline">¶</a></h3>
 <p>In the case of a non-attribute specific handler, the method signatures
 supported are:</p>
 <dl class="method">
 <dt id="_anytrait_changed">
-<code class="descname">_anytrait_changed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_anytrait_changed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_anytrait_changed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_anytrait_changed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt>
-<code class="descname">_anytrait_changed</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span></dt>
+<code class="sig-name descname">_anytrait_changed</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt>
-<code class="descname">_anytrait_changed</code><span class="sig-paren">(</span><em>name</em>, <em>new</em><span class="sig-paren">)</span></dt>
+<code class="sig-name descname">_anytrait_changed</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">new</em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt>
-<code class="descname">_anytrait_changed</code><span class="sig-paren">(</span><em>name</em>, <em>old</em>, <em>new</em><span class="sig-paren">)</span></dt>
+<code class="sig-name descname">_anytrait_changed</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">old</em>, <em class="sig-param">new</em><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <p>The meanings for <em>name</em>, <em>new</em>, and <em>old</em> are the same as for
@@ -654,22 +657,22 @@ attribute-specific notification functions.</p>
 </div>
 </div>
 <div class="section" id="trait-events">
-<span id="id16"></span><h2>Trait Events<a class="headerlink" href="#trait-events" title="Permalink to this headline">¶</a></h2>
+<span id="id15"></span><h2>Trait Events<a class="headerlink" href="#trait-events" title="Permalink to this headline">¶</a></h2>
 <p id="index-24">The Traits package defines a special type of trait called an event. Events are
 instances of (subclasses of) the Event class.</p>
 <p>There are two major differences between a normal trait and an event:</p>
 <ul class="simple">
-<li>All notification handlers associated with an event are called whenever any
+<li><p>All notification handlers associated with an event are called whenever any
 value is assigned to the event. A normal trait attribute only calls its
 associated notification handlers when the previous value of the attribute
-is different from the new value being assigned to it.</li>
-<li>An event does not use any storage, and in fact does not store the values
+is different from the new value being assigned to it.</p></li>
+<li><p>An event does not use any storage, and in fact does not store the values
 assigned to it. Any value assigned to an event is reported as the new value
 to all associated notification handlers, and then immediately discarded.
 Because events do not retain a value, the <em>old</em> argument to a notification
 handler associated with an event is always the special Undefined object (see
 <a class="reference internal" href="#undefined-object"><span class="std std-ref">Undefined Object</span></a>). Similarly, attempting to read the value of an event
-results in a TraitError exception, because an event has no value.</li>
+results in a TraitError exception, because an event has no value.</p></li>
 </ul>
 <p id="index-25">As an example of an event, consider:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># event.py --- Example of trait event</span>
@@ -702,7 +705,7 @@ names are simply synonyms for programmer convenience.</p>
 <p>Similarly, a function named on_trait_event() can be used as a synonym for
 on_trait_change() for dynamic notification.</p>
 <div class="section" id="undefined-object">
-<span id="index-26"></span><span id="id17"></span><h3>Undefined Object<a class="headerlink" href="#undefined-object" title="Permalink to this headline">¶</a></h3>
+<span id="index-26"></span><span id="id16"></span><h3>Undefined Object<a class="headerlink" href="#undefined-object" title="Permalink to this headline">¶</a></h3>
 <p>Python defines a special, singleton object called None. The Traits package
 introduces an additional special, singleton object called Undefined.</p>
 <p>The Undefined object is used to indicate that a trait attribute has not yet
@@ -713,20 +716,34 @@ and its associated trait notification handlers are called, Undefined is passed
 as the value of the old parameter to each handler, to indicate that the
 attribute previously had no value. Similarly, the value of a trait event is
 always Undefined.</p>
-<p class="rubric">Footnotes</p>
-<table class="docutils footnote" frame="void" id="id18" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id14">[4]</a></td><td>For List and Dict trait attributes, you can define a handler with the
-name _<em>name</em>_items_changed(), which receives notifications of changes to
-the contents of the list or dictionary. This feature exists for backward
-compatibility. The preferred approach is to use the &#64;on_trait_change
-decorator with extended name syntax. For a static
-_<em>name</em>_items_changed() handler, the <em>new</em> parameter is a TraitListEvent
-or TraitDictEvent whose <strong>index</strong>, <strong>added</strong>, and <strong>removed</strong> attributes
-indicate the nature of the change, and the <em>old</em> parameter is Undefined.</td></tr>
-</tbody>
-</table>
+</div>
+<div class="section" id="container-items-events">
+<span id="trait-items-handlers"></span><h3>Container Items Events<a class="headerlink" href="#container-items-events" title="Permalink to this headline">¶</a></h3>
+<p id="index-27">For the container traits (List, Dict and Set) both static and dynamic handlers
+for the trait are only called when the entire value of the trait is replaced
+with another value; they do not get fired when the item itself is mutated
+in-place.  To listen to internal changes, you need to either use a dynamic
+handler with the <code class="docutils literal notranslate"><span class="pre">[]</span></code> suffix as noted in the Table
+<a class="reference internal" href="#semantics-of-extended-name-notation-table"><span class="std std-ref">Semantics of extended name notation</span></a>, or you can define an
+<em>name</em>_items event handler.</p>
+<p>For these trait types, an auxilliary <em>name</em>_items Event trait is defined which
+you can listen to either with a static handler _<em>name</em>_items_changed()
+or a dynamic handler which matches <em>name</em>_items, and these handlers will be
+called with notifications of changes to the contents of the list, set or
+dictionary.</p>
+<p id="index-28">For these handlers the <em>new</em> parameter is a <span class="target" id="index-29"></span>TraitListEvent,
+<span class="target" id="index-30"></span>TraitSetEvent or <span class="target" id="index-31"></span>TraitDictEvent object whose attributes
+indicate the nature of the change and, because they are Event handlers, the
+<em>old</em> parameter is Undefined.</p>
+<p>All of these event objects have <strong>added</strong> and <strong>removed</strong> attributes that
+hold a list, set or dictionary of the items that were added and removed,
+respectively.</p>
+<p>The TraitListEvent has an additional <strong>index</strong> attribute that holds either
+the index of the first item changed, or for changes involving slices with
+steps other than 1, <strong>index</strong> holds the _slice_ that was changed.</p>
+<p>The TraitDictEvent has an additional <strong>changed</strong> attribute which holds the
+keys that were modified and the _old_ values that those keys held.  The new
+values can be queried from directly from the trait value, if needed).</p>
 </div>
 </div>
 </div>
@@ -767,6 +784,7 @@ indicate the nature of the change, and the <em>old</em> parameter is Undefined.<
 </li>
 <li><a class="reference internal" href="#trait-events">Trait Events</a><ul>
 <li><a class="reference internal" href="#undefined-object">Undefined Object</a></li>
+<li><a class="reference internal" href="#container-items-events">Container Items Events</a></li>
 </ul>
 </li>
 </ul>
@@ -785,13 +803,11 @@ indicate the nature of the change, and the <em>old</em> parameter is Undefined.<
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -812,13 +828,13 @@ indicate the nature of the change, and the <em>old</em> parameter is Undefined.<
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2019, Enthought Inc
+        &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on Nov 18, 2019.
+      Last updated on Feb 14, 2020.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
       </li>
     </ul>
     </div>

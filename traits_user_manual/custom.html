@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.2.0',
+        VERSION:     '6.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
     <link rel="top" title="Traits 5 User Manual" href="../index.html" >
     <link rel="up" title="Traits 5 User Manual" href="index.html" >
@@ -54,6 +55,10 @@
               
               
     <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
       <li class="active">
         <a href="../py-modindex.html" title="Python Module Index"
            >modules</a>
@@ -85,9 +90,9 @@
 handy shortcuts for commonly used types. However, the Traits package also
 provides facilities for defining complex or customized traits:</p>
 <ul class="simple">
-<li>Subclassing of traits</li>
-<li>The Trait() factory function</li>
-<li>Predefined or custom trait handlers</li>
+<li><p>Subclassing of traits</p></li>
+<li><p>The Trait() factory function</p></li>
+<li><p>Predefined or custom trait handlers</p></li>
 </ul>
 <div class="section" id="trait-subclassing">
 <span id="index-1"></span><span id="id2"></span><h2>Trait Subclassing<a class="headerlink" href="#trait-subclassing" title="Permalink to this headline">¶</a></h2>
@@ -120,7 +125,7 @@ TraitType.</p>
 BaseInt, rather than Int, as you might initially expect. BaseInt and Int are
 exactly the same, except that Int has a <strong>fast_validate attribute</strong>, which
 causes it to quickly check types at the C level, not go through the expense of
-executing the general validate() method. <a class="footnote-reference" href="#id17" id="id3">[6]</a></p>
+executing the general validate() method. <a class="footnote-reference brackets" href="#id17" id="id3">6</a></p>
 <p>As a subclass of BaseInt, OddInt can reuse and change any part of the BaseInt
 class behavior that it needs to. In this case, it reuses the BaseInt class’s
 validate() method, via the call to super() in the OddInt validate() method.
@@ -134,9 +139,9 @@ set() methods.</p>
 <span id="id4"></span><h3>Defining a Trait Type<a class="headerlink" href="#defining-a-trait-type" title="Permalink to this headline">¶</a></h3>
 <p>The members that are specific to a trait type subclass are:</p>
 <ul class="simple" id="index-3">
-<li>validate() method</li>
-<li>post_setattr() method</li>
-<li><strong>default_value</strong> attribute or get_default_value() method</li>
+<li><p>validate() method</p></li>
+<li><p>post_setattr() method</p></li>
+<li><p><strong>default_value</strong> attribute or get_default_value() method</p></li>
 </ul>
 <p>Of these, only the validate() method must be overridden in trait type
 subclasses.</p>
@@ -146,19 +151,19 @@ performs additional processing after a value has been validated and assigned.</p
 <p>The signatures of these methods are:</p>
 <dl class="method">
 <dt id="validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#validate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#validate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="post_setattr">
-<code class="descname">post_setattr</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#post_setattr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">post_setattr</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#post_setattr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>The parameters of these methods are:</p>
 <span class="target" id="index-4"></span><ul class="simple" id="index-5">
-<li><em>object</em>: The object whose trait attribute whose value is being assigned.</li>
-<li><em>name</em>: The name of the trait attribute whose value is being assigned.</li>
-<li><em>value</em>: The value being assigned.</li>
+<li><p><em>object</em>: The object whose trait attribute whose value is being assigned.</p></li>
+<li><p><em>name</em>: The name of the trait attribute whose value is being assigned.</p></li>
+<li><p><em>value</em>: The value being assigned.</p></li>
 </ul>
 <p>The validate() method returns either the original value or any suitably coerced
 or adapted value that is legal for the trait. If the value is not legal, and
@@ -177,19 +182,19 @@ definition it might have for validate() is ignored.</p>
 <p>The signatures of these methods are:</p>
 <dl class="method">
 <dt id="get">
-<code class="descname">get</code><span class="sig-paren">(</span><em>object</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#get" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="set">
-<code class="descname">set</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#set" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>In these signatures, the parameters are:</p>
 <ul class="simple">
-<li><em>object</em>: The object that the property applies to.</li>
-<li><em>name</em>: The name of the trait property attribute on the object.</li>
-<li><em>value</em>: The value being assigned to the property.</li>
+<li><p><em>object</em>: The object that the property applies to.</p></li>
+<li><p><em>name</em>: The name of the trait property attribute on the object.</p></li>
+<li><p><em>value</em>: The value being assigned to the property.</p></li>
 </ul>
 <p>If only a get() method is defined, the property behaves as read-only. If only a
 set() method is defined, the property behaves as write-only.</p>
@@ -203,9 +208,9 @@ value.</p>
 <p>The following members can be specified for either a trait type or a trait
 property:</p>
 <ul class="simple" id="index-8">
-<li><strong>info_text</strong> attribute or info() method</li>
-<li>init() method</li>
-<li>create_editor() method</li>
+<li><p><strong>info_text</strong> attribute or info() method</p></li>
+<li><p>init() method</p></li>
+<li><p>create_editor() method</p></li>
 </ul>
 <p>A trait must have an information string that describes the values accepted by
 the trait type (for example ‘an odd integer’). Similarly to the default value,
@@ -234,7 +239,7 @@ Reference</em>.</p>
 <p>The most general form of the Trait() function is:</p>
 <dl class="function">
 <dt>
-<code class="descclassname">traits.traits.</code><code class="descname">Trait</code><span class="sig-paren">(</span><em>default_value</em>, <em>{type | constant_value | dictionary | class | function | trait_handler | trait }+</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#Trait"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">traits.traits.</code><code class="sig-name descname">Trait</code><span class="sig-paren">(</span><em class="sig-param">default_value</em>, <em class="sig-param">{type | constant_value | dictionary | class | function | trait_handler | trait }+</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#Trait"><span class="viewcode-link">[source]</span></a></dt>
 <dd></dd></dl>
 
 <p id="index-10">The notation <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">|</span> <span class="pre">|</span> <span class="pre">}+</span></code> means a list of one or more of any of the items listed
@@ -257,48 +262,44 @@ in the list.</p>
 <p>The Die class has a <strong>value trait</strong>, which has a default value of 1, and can have
 any of the following values:</p>
 <ul class="simple">
-<li>An integer in the range of 1 to 6</li>
-<li>One of the following strings: ‘one’, ‘two’, ‘three’, ‘four’, ‘five’, ‘six’</li>
+<li><p>An integer in the range of 1 to 6</p></li>
+<li><p>One of the following strings: ‘one’, ‘two’, ‘three’, ‘four’, ‘five’, ‘six’</p></li>
 </ul>
 <div class="section" id="trait-parameters">
 <span id="index-12"></span><span id="id8"></span><h3>Trait () Parameters<a class="headerlink" href="#trait-parameters" title="Permalink to this headline">¶</a></h3>
 <p>The items listed as possible arguments to the Trait() function merit some
 further explanation.</p>
 <span class="target" id="index-13"></span><span class="target" id="index-14"></span><span class="target" id="index-15"></span><ul class="simple" id="index-16">
-<li><em>type</em>: See <a class="reference internal" href="#type"><span class="std std-ref">Type</span></a>.</li>
-<li><em>constant_value</em>: See <a class="reference internal" href="#constant-value"><span class="std std-ref">Constant Value</span></a>.</li>
-<li><em>dictionary</em>: See <a class="reference internal" href="#mapped-traits"><span class="std std-ref">Mapped Traits</span></a>.</li>
-<li><em>class</em>: Specifies that the trait value must be an instance of the specified
-class or one of its subclasses.</li>
-<li><em>function</em>: A “validator” function that determines whether a value being
+<li><p><em>type</em>: See <a class="reference internal" href="#type"><span class="std std-ref">Type</span></a>.</p></li>
+<li><p><em>constant_value</em>: See <a class="reference internal" href="#constant-value"><span class="std std-ref">Constant Value</span></a>.</p></li>
+<li><p><em>dictionary</em>: See <a class="reference internal" href="#mapped-traits"><span class="std std-ref">Mapped Traits</span></a>.</p></li>
+<li><p><em>class</em>: Specifies that the trait value must be an instance of the specified
+class or one of its subclasses.</p></li>
+<li><p><em>function</em>: A “validator” function that determines whether a value being
 assigned to the attribute is a legal value. Traits version 3.0 provides a
 more flexible approach, which is to subclass an existing trait (or TraitType)
-and override the validate() method.</li>
-<li><em>trait_handler</em>: See <a class="reference internal" href="#trait-handlers"><span class="std std-ref">Trait Handlers</span></a>.</li>
-<li><em>trait</em>: Another trait object can be passed as a parameter; any value that is
-valid for the specified trait is also valid for the trait referencing it.</li>
+and override the validate() method.</p></li>
+<li><p><em>trait_handler</em>: See <a class="reference internal" href="#trait-handlers"><span class="std std-ref">Trait Handlers</span></a>.</p></li>
+<li><p><em>trait</em>: Another trait object can be passed as a parameter; any value that is
+valid for the specified trait is also valid for the trait referencing it.</p></li>
 </ul>
 <div class="section" id="type">
 <span id="index-17"></span><span id="id9"></span><h4>Type<a class="headerlink" href="#type" title="Permalink to this headline">¶</a></h4>
 <p>A <em>type</em> parameter to the Trait() function can be any of the following standard
 Python types:</p>
 <ul class="simple">
-<li>str or StringType</li>
-<li>unicode or UnicodeType</li>
-<li>int or IntType</li>
-<li>long or LongType</li>
-<li>float or FloatType</li>
-<li>complex or ComplexType</li>
-<li>bool or BooleanType</li>
-<li>list or ListType</li>
-<li>tuple or TupleType</li>
-<li>dict or DictType</li>
-<li>FunctionType</li>
-<li>MethodType</li>
-<li>ClassType</li>
-<li>InstanceType</li>
-<li>TypeType</li>
-<li>NoneType</li>
+<li><p>str or StringType</p></li>
+<li><p>int or IntType</p></li>
+<li><p>float or FloatType</p></li>
+<li><p>complex or ComplexType</p></li>
+<li><p>bool or BooleanType</p></li>
+<li><p>list or ListType</p></li>
+<li><p>tuple or TupleType</p></li>
+<li><p>dict or DictType</p></li>
+<li><p>FunctionType</p></li>
+<li><p>MethodType</p></li>
+<li><p>type</p></li>
+<li><p>NoneType</p></li>
 </ul>
 <p>Specifying one of these types means that the trait value must be of the
 corresponding Python type.</p>
@@ -308,14 +309,12 @@ corresponding Python type.</p>
 <p>A <em>constant_value</em> parameter to the Trait() function can be any constant
 belonging to one of the following standard Python types:</p>
 <ul class="simple">
-<li>NoneType</li>
-<li>int</li>
-<li>long</li>
-<li>float</li>
-<li>complex</li>
-<li>bool</li>
-<li>str</li>
-<li>unicode</li>
+<li><p>NoneType</p></li>
+<li><p>int</p></li>
+<li><p>float</p></li>
+<li><p>complex</p></li>
+<li><p>bool</p></li>
+<li><p>str</p></li>
 </ul>
 <p>Specifying a constant means that the trait can have the constant as a valid
 value. Passing a list of constants to the Trait() function is equivalent to
@@ -328,10 +327,10 @@ using the Enum predefined trait.</p>
 dictionaries, then the resulting trait is called a “mapped” trait. In practice,
 this means that the resulting object actually contains two attributes:</p>
 <ul class="simple" id="index-20">
-<li>An attribute whose value is a key in the dictionary used to define the trait.</li>
-<li>An attribute containing its corresponding value (i.e., the mapped or
+<li><p>An attribute whose value is a key in the dictionary used to define the trait.</p></li>
+<li><p>An attribute containing its corresponding value (i.e., the mapped or
 “shadow” value). The name of the shadow attribute is simply the base
-attribute name with an underscore appended.</li>
+attribute name with an underscore appended.</p></li>
 </ul>
 <p>Mapped traits can be used to allow a variety of user-friendly input values to be
 mapped to a set of internal, program-friendly values.</p>
@@ -389,11 +388,11 @@ attribute (such as <strong>line_color_</strong>). The shadow attribute is progra
 because it is usually in a form that can be directly used by program logic.</p>
 <p>There are a few other points to keep in mind when creating a mapped trait:</p>
 <ul class="simple">
-<li>If not all values passed to the Trait() function are dictionaries, the
+<li><p>If not all values passed to the Trait() function are dictionaries, the
 non-dictionary values are copied directly to the shadow attribute (i.e.,
-the mapping used is the identity mapping).</li>
-<li>Assigning directly to a shadow attribute (the attribute with the trailing
-underscore in the name) is not allowed, and raises a TraitError.</li>
+the mapping used is the identity mapping).</p></li>
+<li><p>Assigning directly to a shadow attribute (the attribute with the trailing
+underscore in the name) is not allowed, and raises a TraitError.</p></li>
 </ul>
 <p>The concept of a mapped trait extends beyond traits defined via a dictionary.
 Any trait that has a shadow value is a mapped trait. For example, for the
@@ -503,13 +502,12 @@ in <a class="reference internal" href="#defining-a-trait-type"><span class="std 
 <p>An application could use this new trait handler to define traits such as the
 following:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># use_custom_th.py --- Example of using a custom TraitHandler</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span><span class="p">,</span> <span class="n">TraitRange</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Trait</span>
 <span class="kn">from</span> <span class="nn">custom_traithandler</span> <span class="k">import</span> <span class="n">TraitOddInteger</span>
 
 <span class="k">class</span> <span class="nc">AnOddClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">oddball</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">TraitOddInteger</span><span class="p">())</span>
-    <span class="n">very_odd</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">TraitOddInteger</span><span class="p">(),</span>
-                         <span class="n">TraitRange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">very_odd</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">TraitOddInteger</span><span class="p">(),</span> <span class="n">Range</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>The following example demonstrates why the info() method returns a phrase rather
@@ -530,13 +528,12 @@ than a complete sentence:</p>
 <p>Note the emphasized result returned by the info() method, which is embedded in
 the exception generated by the invalid assignment.</p>
 <p class="rubric">Footnotes</p>
-<table class="docutils footnote" frame="void" id="id17" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[6]</a></td><td>All of the basic predefined traits (such as Float and Str) have a
-BaseType version that does not have the <strong>fast_validate</strong> attribute.</td></tr>
-</tbody>
-</table>
+<dl class="footnote brackets">
+<dt class="label" id="id17"><span class="brackets"><a class="fn-backref" href="#id3">6</a></span></dt>
+<dd><p>All of the basic predefined traits (such as Float and Str) have a
+BaseType version that does not have the <strong>fast_validate</strong> attribute.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -593,13 +590,11 @@ BaseType version that does not have the <strong>fast_validate</strong> attribute
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -620,13 +615,13 @@ BaseType version that does not have the <strong>fast_validate</strong> attribute
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2019, Enthought Inc
+        &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on Nov 18, 2019.
+      Last updated on Feb 14, 2020.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
       </li>
     </ul>
     </div>

@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.2.0',
+        VERSION:     '6.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
     <link rel="top" title="Traits 5 User Manual" href="../index.html" >
     <link rel="up" title="Traits 5 User Manual" href="index.html" >
@@ -55,6 +56,10 @@
               
     <ul class="nav nav-pills pull-right">
       <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
         <a href="../py-modindex.html" title="Python Module Index"
            >modules</a>
       </li>
@@ -83,12 +88,12 @@
 <span id="index-0"></span><span id="id1"></span><h1>Defining Traits: Initialization and Validation<a class="headerlink" href="#defining-traits-initialization-and-validation" title="Permalink to this headline">¶</a></h1>
 <p>Using the Traits package in a Python program involves the following steps:</p>
 <ol class="arabic simple" id="index-1">
-<li>Import the names you need from the Traits package traits.api.</li>
-<li>Define the traits you want to use.</li>
+<li><p>Import the names you need from the Traits package traits.api.</p></li>
+<li><p>Define the traits you want to use.</p></li>
 </ol>
 <ol class="arabic simple" id="index-2" start="3">
-<li>Define classes derived from HasTraits (or a subclass of HasTraits), with
-attributes that use the traits you have defined.</li>
+<li><p>Define classes derived from HasTraits (or a subclass of HasTraits), with
+attributes that use the traits you have defined.</p></li>
 </ol>
 <p>In practice, steps 2 and 3 are often combined by defining traits in-line
 in an attribute definition. This strategy is used in many examples in this
@@ -159,7 +164,7 @@ pass it as an argument to the trait:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">account_balance</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Most predefined traits are callable, <a class="footnote-reference" href="#id15" id="id3">[2]</a> and can accept a default value and
+<p>Most predefined traits are callable, <a class="footnote-reference brackets" href="#id15" id="id3">2</a> and can accept a default value and
 possibly other arguments; all that are callable can also accept metadata as
 keyword arguments. (See <a class="reference internal" href="#other-predefined-traits"><span class="std std-ref">Other Predefined Traits</span></a> for information on trait
 signatures, and see <a class="reference internal" href="#trait-metadata"><span class="std std-ref">Trait Metadata</span></a> for information on metadata
@@ -173,60 +178,50 @@ explicitly defined for the trait. However, they are similar in terms of the
 Python types they correspond to, and their built-in default values, as listed
 in the following table.</p>
 <span class="target" id="index-7"></span><span class="target" id="index-8"></span><span class="target" id="index-9"></span><span class="target" id="index-10"></span><p class="rubric" id="predefined-defaults-for-simple-types-table"><span id="index-11"></span>Predefined defaults for simple types</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="20%" />
-<col width="18%" />
-<col width="31%" />
-<col width="31%" />
+<col style="width: 20%" />
+<col style="width: 18%" />
+<col style="width: 31%" />
+<col style="width: 31%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Coercing Trait</th>
-<th class="head">Casting Trait</th>
-<th class="head">Python Type</th>
-<th class="head">Built-in Default Value</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Coercing Trait</p></th>
+<th class="head"><p>Casting Trait</p></th>
+<th class="head"><p>Python Type</p></th>
+<th class="head"><p>Built-in Default Value</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>Bool</td>
-<td>CBool</td>
-<td>Boolean</td>
-<td>False</td>
+<tbody>
+<tr class="row-even"><td><p>Bool</p></td>
+<td><p>CBool</p></td>
+<td><p>Boolean</p></td>
+<td><p>False</p></td>
 </tr>
-<tr class="row-odd"><td>Complex</td>
-<td>CComplex</td>
-<td>Complex number</td>
-<td>0+0j</td>
+<tr class="row-odd"><td><p>Complex</p></td>
+<td><p>CComplex</p></td>
+<td><p>Complex number</p></td>
+<td><p>0+0j</p></td>
 </tr>
-<tr class="row-even"><td>Float</td>
-<td>CFloat</td>
-<td>Floating point number</td>
-<td>0.0</td>
+<tr class="row-even"><td><p>Float</p></td>
+<td><p>CFloat</p></td>
+<td><p>Floating point number</p></td>
+<td><p>0.0</p></td>
 </tr>
-<tr class="row-odd"><td>Int</td>
-<td>CInt</td>
-<td>Plain integer</td>
-<td>0</td>
+<tr class="row-odd"><td><p>Int</p></td>
+<td><p>CInt</p></td>
+<td><p>Integer</p></td>
+<td><p>0</p></td>
 </tr>
-<tr class="row-even"><td>Long</td>
-<td>CLong</td>
-<td>Long integer</td>
-<td>0L</td>
+<tr class="row-even"><td><p>Str</p></td>
+<td><p>CStr</p></td>
+<td><p>String</p></td>
+<td><p>‘’</p></td>
 </tr>
-<tr class="row-odd"><td>Str</td>
-<td>CStr</td>
-<td>String</td>
-<td>‘’</td>
-</tr>
-<tr class="row-even"><td>Unicode</td>
-<td>CUnicode</td>
-<td>Unicode</td>
-<td>u’‘</td>
-</tr>
-<tr class="row-odd"><td>Bytes</td>
-<td>CBytes</td>
-<td>Bytes</td>
-<td>b’‘</td>
+<tr class="row-odd"><td><p>Bytes</p></td>
+<td><p>CBytes</p></td>
+<td><p>Bytes</p></td>
+<td><p>b’’</p></td>
 </tr>
 </tbody>
 </table>
@@ -240,28 +235,22 @@ the required type, a TraitError exception is raised. Only widening coercions
 are allowed, to avoid any possible loss of precision. The following table
 lists traits that coerce values, and the types that each coerces.</p>
 <p class="rubric" id="type-coercions-permitted-for-coercing-traits-table"><span id="index-13"></span>Type coercions permitted for coercing traits</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="23%" />
-<col width="77%" />
+<col style="width: 23%" />
+<col style="width: 77%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Trait</th>
-<th class="head">Coercible Types</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Trait</p></th>
+<th class="head"><p>Coercible Types</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>Complex</td>
-<td>Floating point number, plain integer</td>
+<tbody>
+<tr class="row-even"><td><p>Complex</p></td>
+<td><p>Floating point number, integer</p></td>
 </tr>
-<tr class="row-odd"><td>Float</td>
-<td>Plain integer</td>
-</tr>
-<tr class="row-even"><td>Long</td>
-<td>Plain integer</td>
-</tr>
-<tr class="row-odd"><td>Unicode</td>
-<td>String</td>
+<tr class="row-odd"><td><p>Float</p></td>
+<td><p>Integer</p></td>
 </tr>
 </tbody>
 </table>
@@ -275,13 +264,12 @@ value is assigned to the attribute. If the value cannot be cast to the required
 type, a TraitError exception is raised. Internally, casting is done using the
 Python built-in functions for type conversion:</p>
 <ul class="simple">
-<li>bool()</li>
-<li>complex()</li>
-<li>float()</li>
-<li>int()</li>
-<li>str()</li>
-<li>unicode()</li>
-<li>bytes()</li>
+<li><p>bool()</p></li>
+<li><p>complex()</p></li>
+<li><p>float()</p></li>
+<li><p>int()</p></li>
+<li><p>str()</p></li>
+<li><p>bytes()</p></li>
 </ul>
 <p id="index-15">The following example illustrates the difference between coercing traits and
 casting traits:</p>
@@ -317,206 +305,180 @@ default values, or as callables, which can take additional arguments. If the
 trait cannot be used as a simple name, it is omitted from the Name column of
 the table.</p>
 <span class="target" id="index-16"></span><span class="target" id="index-17"></span><span class="target" id="index-18"></span><span class="target" id="index-19"></span><span class="target" id="index-20"></span><span class="target" id="index-21"></span><span class="target" id="index-22"></span><span class="target" id="index-23"></span><span class="target" id="index-24"></span><p class="rubric" id="predefined-traits-beyond-simple-types-table"><span id="index-25"></span>Predefined traits beyond simple types</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="24%" />
-<col width="76%" />
+<col style="width: 24%" />
+<col style="width: 76%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Name</th>
-<th class="head">Callable Signature</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Callable Signature</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>Any</td>
-<td>Any( [<em>value</em> = None, **<em>metadata</em>] )</td>
+<tbody>
+<tr class="row-even"><td><p>Any</p></td>
+<td><p>Any( [<em>value</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>Array</td>
-<td>Array( [<em>dtype</em> = None, <em>shape</em> = None, <em>value</em> = None,
-<em>typecode</em> = None, **<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>Array</p></td>
+<td><p>Array( [<em>dtype</em> = None, <em>shape</em> = None, <em>value</em> = None,
+<em>typecode</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>ArrayOrNone</td>
-<td>ArrayOrNone( [<em>dtype</em> = None, <em>shape</em> = None,
-<em>value</em> = None, <em>typecode</em> = None, **<em>metadata</em>] )</td>
+<tr class="row-even"><td><p>ArrayOrNone</p></td>
+<td><p>ArrayOrNone( [<em>dtype</em> = None, <em>shape</em> = None,
+<em>value</em> = None, <em>typecode</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>Button</td>
-<td>Button( [<em>label</em> = ‘’, <em>image</em> = None, <em>style</em> =
+<tr class="row-odd"><td><p>Button</p></td>
+<td><p>Button( [<em>label</em> = ‘’, <em>image</em> = None, <em>style</em> =
 ‘button’, <em>orientation</em> = ‘vertical’, <em>width_padding</em> =
-7, <em>height_padding</em> = 5, **<em>metadata</em>] )</td>
+7, <em>height_padding</em> = 5, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>Callable</td>
-<td>Callable( [<em>value</em> = None, **<em>metadata</em>] )</td>
+<tr class="row-even"><td><p>Callable</p></td>
+<td><p>Callable( [<em>value</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>CArray</td>
-<td>CArray( [<em>dtype</em> = None, <em>shape</em> = None, <em>value</em> = None,
-<em>typecode</em> = None, **<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>CArray</p></td>
+<td><p>CArray( [<em>dtype</em> = None, <em>shape</em> = None, <em>value</em> = None,
+<em>typecode</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>Code</td>
-<td>Code( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
-<em>regex</em> = ‘’, **<em>metadata</em>] )</td>
+<tr class="row-even"><td><p>Code</p></td>
+<td><p>Code( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
+<em>regex</em> = ‘’, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>Color</td>
-<td>Color( [*<em>args</em>, **<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>Color</p></td>
+<td><p>Color( [*<em>args</em>, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>CSet</td>
-<td>CSet( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
-**<em>metadata</em>] )</td>
+<tr class="row-even"><td><p>CSet</p></td>
+<td><p>CSet( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
+**<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>Constant</td>
-<td>Constant( <em>value</em>[, **<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>Constant</p></td>
+<td><p>Constant( <em>value</em>[, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>Dict, DictStrAny,
-DictStrBool,
-DictStrFloat,
-DictStrInt,
-DictStrList,
-DictStrLong,
-DictStrStr</td>
-<td>Dict( [<em>key_trait</em> = None, <em>value_trait</em> = None,
-<em>value</em> = None, <em>items</em> = True, **<em>metadata</em>] )</td>
+<tr class="row-even"><td><p>Dict</p></td>
+<td><p>Dict( [<em>key_trait</em> = None, <em>value_trait</em> = None,
+<em>value</em> = None, <em>items</em> = True, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>Directory</td>
-<td>Directory( [<em>value</em> = ‘’, <em>auto_set</em> = False, <em>entries</em> =
-10, <em>exists</em> = False, **<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>Directory</p></td>
+<td><p>Directory( [<em>value</em> = ‘’, <em>auto_set</em> = False, <em>entries</em> =
+10, <em>exists</em> = False, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>Disallow</td>
-<td>n/a</td>
+<tr class="row-even"><td><p>Disallow</p></td>
+<td><p>n/a</p></td>
 </tr>
-<tr class="row-odd"><td>Either</td>
-<td>Either( <em>val1</em>[, <em>val2</em>, …, <em>valN</em>,
-**<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>Either</p></td>
+<td><p>Either( <em>val1</em>[, <em>val2</em>, …, <em>valN</em>,
+**<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>Enum</td>
-<td>Enum( <em>values</em>[, **<em>metadata</em>] )</td>
+<tr class="row-even"><td><p>Enum</p></td>
+<td><p>Enum( <em>values</em>[, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>Event</td>
-<td>Event( [<em>trait</em> = None, **<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>Event</p></td>
+<td><p>Event( [<em>trait</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>Expression</td>
-<td>Expression( [<em>value</em> = ‘0’, **<em>metadata</em>] )</td>
+<tr class="row-even"><td><p>Expression</p></td>
+<td><p>Expression( [<em>value</em> = ‘0’, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>false</td>
-<td>n/a</td>
+<tr class="row-odd"><td><p>File</p></td>
+<td><p>File( [<em>value</em> = ‘’, <em>filter</em> = None, <em>auto_set</em> = False,
+<em>entries</em> = 10, <em>exists</em> = False,  **<em>metadata</em> ] )</p></td>
 </tr>
-<tr class="row-even"><td>File</td>
-<td>File( [<em>value</em> = ‘’, <em>filter</em> = None, <em>auto_set</em> = False,
-<em>entries</em> = 10, <em>exists</em> = False,  **<em>metadata</em> ] )</td>
+<tr class="row-even"><td><p>Font</p></td>
+<td><p>Font( [*<em>args</em>, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>Font</td>
-<td>Font( [*<em>args</em>, **<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>Function</p></td>
+<td><p>Function( [<em>value</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>Function</td>
-<td>Function( [<em>value</em> = None, **<em>metadata</em>] )</td>
+<tr class="row-even"><td><p>generic_trait</p></td>
+<td><p>n/a</p></td>
 </tr>
-<tr class="row-odd"><td>Generic</td>
-<td>Generic( [<em>value</em> = None, **<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>HTML</p></td>
+<td><p>HTML( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
+<em>regex</em> = ‘’,  **<em>metadata</em> ] )</p></td>
 </tr>
-<tr class="row-even"><td>generic_trait</td>
-<td>n/a</td>
-</tr>
-<tr class="row-odd"><td>HTML</td>
-<td>HTML( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
-<em>regex</em> = ‘’,  **<em>metadata</em> ] )</td>
-</tr>
-<tr class="row-even"><td>Instance</td>
-<td>Instance( [<em>klass</em> = None, <em>factory</em> = None, <em>args</em> =
+<tr class="row-even"><td><p>Instance</p></td>
+<td><p>Instance( [<em>klass</em> = None, <em>factory</em> = None, <em>args</em> =
 None, <em>kw</em> = None, <em>allow_none</em> = True, <em>adapt</em> = None,
-<em>module</em> = None, **<em>metadata</em>] )</td>
+<em>module</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>List, ListBool,
-ListComplex,
-ListFloat,
-ListFunction,
-ListInt,
-ListMethod,
-ListStr,
-ListThis,
-ListUnicode</td>
-<td>List([<em>trait</em> = None, <em>value</em> = None, <em>minlen</em> = 0,</td>
+<tr class="row-odd"><td><p>List</p></td>
+<td><p>List([<em>trait</em> = None, <em>value</em> = None, <em>minlen</em> = 0,</p></td>
 </tr>
-<tr class="row-even"><td>Method</td>
-<td>Method ([**<em>metadata</em>] )</td>
+<tr class="row-even"><td><p>Method</p></td>
+<td><p>Method ([**<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>Module</td>
-<td>Module ( [**<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>Module</p></td>
+<td><p>Module ( [**<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>Password</td>
-<td>Password( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> =
-sys.maxint, <em>regex</em> = ‘’, **<em>metadata</em>] )</td>
+<tr class="row-even"><td><p>Password</p></td>
+<td><p>Password( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> =
+sys.maxint, <em>regex</em> = ‘’, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>Property</td>
-<td><p class="first">Property( [<em>fget</em> = None, <em>fset</em> = None, <em>fvalidate</em> =
+<tr class="row-odd"><td><p>Property</p></td>
+<td><p>Property( [<em>fget</em> = None, <em>fset</em> = None, <em>fvalidate</em> =
 None, <em>force</em> = False, <em>handler</em> = None, <em>trait</em> = None,
 **<em>metadata</em>] )</p>
-<p class="last">See <a class="reference internal" href="advanced.html#property-traits"><span class="std std-ref">Property Traits</span></a>, for details.</p>
+<p>See <a class="reference internal" href="advanced.html#property-traits"><span class="std std-ref">Property Traits</span></a>, for details.</p>
 </td>
 </tr>
-<tr class="row-even"><td>Python</td>
-<td>Python ( [<em>value</em> = None, **<em>metadata</em>] )</td>
+<tr class="row-even"><td><p>Python</p></td>
+<td><p>Python ( [<em>value</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>PythonValue</td>
-<td>PythonValue( [<em>value</em> = None, **<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>PythonValue</p></td>
+<td><p>PythonValue( [<em>value</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>Range</td>
-<td>Range( [<em>low</em> = None, <em>high</em> = None, <em>value</em> = None,
+<tr class="row-even"><td><p>Range</p></td>
+<td><p>Range( [<em>low</em> = None, <em>high</em> = None, <em>value</em> = None,
 <em>exclude_low</em> = False, <em>exclude_high</em> = False,
-*<em>metadata</em>] )</td>
+*<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>ReadOnly</td>
-<td>ReadOnly( [<em>value</em> = Undefined, **<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>ReadOnly</p></td>
+<td><p>ReadOnly( [<em>value</em> = Undefined, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>Regex</td>
-<td>Regex( [<em>value</em> = ‘’, <em>regex</em> = ‘.*’, **<em>metadata</em>])</td>
+<tr class="row-even"><td><p>Regex</p></td>
+<td><p>Regex( [<em>value</em> = ‘’, <em>regex</em> = ‘.*’, **<em>metadata</em>])</p></td>
 </tr>
-<tr class="row-odd"><td>RGBColor</td>
-<td>RGBColor( [*<em>args</em>, **<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>RGBColor</p></td>
+<td><p>RGBColor( [*<em>args</em>, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>self</td>
-<td>n/a</td>
+<tr class="row-even"><td><p>self</p></td>
+<td><p>n/a</p></td>
 </tr>
-<tr class="row-odd"><td>Set</td>
-<td>Set( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
-**<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>Set</p></td>
+<td><p>Set( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
+**<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>String</td>
-<td>String( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> =
-sys.maxint, <em>regex</em> = ‘’, **<em>metadata</em>] )</td>
+<tr class="row-even"><td><p>String</p></td>
+<td><p>String( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> =
+sys.maxint, <em>regex</em> = ‘’, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>This</td>
-<td>n/a</td>
+<tr class="row-odd"><td><p>Subclass</p></td>
+<td><p>Subclass( [<em>value</em> = None, <em>klass</em> = None, <em>allow_none</em> =
+True, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>ToolbarButton</td>
-<td>ToolbarButton( [<em>label</em> = ‘’, <em>image</em> = None, <em>style</em> =
+<tr class="row-even"><td><p>This</p></td>
+<td><p>n/a</p></td>
+</tr>
+<tr class="row-odd"><td><p>ToolbarButton</p></td>
+<td><p>ToolbarButton( [<em>label</em> = ‘’, <em>image</em> = None, <em>style</em> =
 ‘toolbar’, <em>orientation</em> = ‘vertical’, <em>width_padding</em> =
-2, <em>height_padding</em> = 2, **<em>metadata</em>] )</td>
+2, <em>height_padding</em> = 2, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>true</td>
-<td>n/a</td>
+<tr class="row-even"><td><p>Tuple</p></td>
+<td><p>Tuple( [*<em>traits</em>, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>Tuple</td>
-<td>Tuple( [*<em>traits</em>, **<em>metadata</em>] )</td>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Type( [<em>value</em> = None, <em>klass</em> = None, <em>allow_none</em> =
+True, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>Type</td>
-<td>Type( [<em>value</em> = None, <em>klass</em> = None, <em>allow_none</em> =
-True, **<em>metadata</em>] )</td>
+<tr class="row-even"><td><p>UUID <a class="footnote-reference brackets" href="#id16" id="id8">3</a></p></td>
+<td><p>UUID( [**<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td>undefined</td>
-<td>n/a</td>
+<tr class="row-odd"><td><p>ValidatedTuple</p></td>
+<td><p>ValidatedTuple( [*<em>traits</em>, <em>fvalidate</em> = None,
+<em>fvalidate_info</em> = ‘’ , **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td>UStr</td>
-<td>UStr( [<em>owner</em>, <em>list_name</em>, <em>str_name</em>, <em>default_value =
-NoDefaultSpecified, ***metadata</em>])</td>
-</tr>
-<tr class="row-even"><td>UUID <a class="footnote-reference" href="#id16" id="id8">[3]</a></td>
-<td>UUID( [**<em>metadata</em>] )</td>
-</tr>
-<tr class="row-odd"><td>ValidatedTuple</td>
-<td>ValidatedTuple( [*<em>traits</em>, <em>fvalidate</em> = None,
-<em>fvalidate_info</em> = ‘’ , **<em>metadata</em>] )</td>
-</tr>
-<tr class="row-even"><td>WeakRef</td>
-<td>WeakRef( [<em>klass</em> = ‘traits.HasTraits’,
-<em>allow_none</em> = False, <em>adapt</em> = ‘yes’, **<em>metadata</em>])</td>
+<tr class="row-even"><td><p>WeakRef</p></td>
+<td><p>WeakRef( [<em>klass</em> = ‘traits.HasTraits’,
+<em>allow_none</em> = False, <em>adapt</em> = ‘yes’, **<em>metadata</em>])</p></td>
 </tr>
 </tbody>
 </table>
@@ -678,10 +640,10 @@ one can specify <strong>another trait</strong> that holds the list of possible v
 <span id="index-32"></span><span id="id11"></span><h2>Trait Metadata<a class="headerlink" href="#trait-metadata" title="Permalink to this headline">¶</a></h2>
 <p>Trait objects can contain metadata attributes, which fall into three categories:</p>
 <ul class="simple">
-<li>Internal attributes, which you can query but not set.</li>
-<li>Recognized attributes, which you can set to determine the behavior of the
-trait.</li>
-<li>Arbitrary attributes, which you can use for your own purposes.</li>
+<li><p>Internal attributes, which you can query but not set.</p></li>
+<li><p>Recognized attributes, which you can set to determine the behavior of the
+trait.</p></li>
+<li><p>Arbitrary attributes, which you can use for your own purposes.</p></li>
 </ul>
 <p>You can specify values for recognized or arbitrary metadata attributes by
 passing them as keyword arguments to callable traits. The value of each
@@ -692,39 +654,41 @@ of an attribute having the same name as the keyword.</p>
 <p>The following metadata attributes are used internally by the Traits package,
 and can be queried:</p>
 <span class="target" id="index-34"></span><span class="target" id="index-35"></span><span class="target" id="index-36"></span><span class="target" id="index-37"></span><ul class="simple" id="index-38">
-<li><strong>array</strong>: Indicates whether the trait is an array.</li>
-<li><strong>default</strong>: Returns the default value for the trait, if known; otherwise it
-returns Undefined.</li>
-<li><strong>default_kind</strong>: Returns a string describing the type of value returned by
-the default attribute for the trait. The possible values are:<ul>
-<li><code class="docutils literal notranslate"><span class="pre">value</span></code>: The default attribute returns the actual default value.</li>
-<li><code class="docutils literal notranslate"><span class="pre">list</span></code>: A copy of the list default value.</li>
-<li><code class="docutils literal notranslate"><span class="pre">dict</span></code>: A copy of the dictionary default value.</li>
-<li><code class="docutils literal notranslate"><span class="pre">self</span></code>: The default value is the object the trait is bound to; the
-<strong>default</strong> attribute returns Undefined.</li>
-<li><code class="docutils literal notranslate"><span class="pre">factory</span></code>: The default value is created by calling a factory; the
-<strong>default</strong> attribute returns Undefined.</li>
-<li><code class="docutils literal notranslate"><span class="pre">method</span></code>: The default value is created by calling a method on the object
-the trait is bound to; the <strong>default</strong> attribute returns Undefined.</li>
+<li><p><strong>array</strong>: Indicates whether the trait is an array.</p></li>
+<li><p><strong>default</strong>: Returns the default value for the trait, if known; otherwise it
+returns Undefined.</p></li>
+<li><p><strong>default_kind</strong>: Returns a string describing the type of value returned by
+the default attribute for the trait. The possible values are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">value</span></code>: The default attribute returns the actual default value.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list</span></code>: A copy of the list default value.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dict</span></code>: A copy of the dictionary default value.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">self</span></code>: The default value is the object the trait is bound to; the
+<strong>default</strong> attribute returns Undefined.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">factory</span></code>: The default value is created by calling a factory; the
+<strong>default</strong> attribute returns Undefined.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">method</span></code>: The default value is created by calling a method on the object
+the trait is bound to; the <strong>default</strong> attribute returns Undefined.</p></li>
 </ul>
 </li>
-<li><strong>delegate</strong>: The name of the attribute on this object that references the
-object that this object delegates to.</li>
-<li><strong>inner_traits</strong>: Returns a tuple containing the “inner” traits
+<li><p><strong>delegate</strong>: The name of the attribute on this object that references the
+object that this object delegates to.</p></li>
+<li><p><strong>inner_traits</strong>: Returns a tuple containing the “inner” traits
 for the trait. For most traits, this is empty, but for List and Dict traits,
 it contains the traits that define the items in the list or the keys and
-values in the dictionary.</li>
-<li><strong>parent</strong>: The trait from which this one is derived.</li>
-<li><strong>prefix</strong>: A prefix or substitution applied to the delegate attribute.
-See <a class="reference internal" href="deferring.html#deferring-traits"><span class="std std-ref">Deferring Trait Definitions</span></a> for details.</li>
-<li><strong>trait_type</strong>: Returns the type of the trait, which is typically a handler
-derived from TraitType.</li>
-<li><strong>type</strong>: One of the following, depending on the nature of the trait:<ul>
-<li><code class="docutils literal notranslate"><span class="pre">constant</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">delegate</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">event</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">property</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">trait</span></code></li>
+values in the dictionary.</p></li>
+<li><p><strong>parent</strong>: The trait from which this one is derived.</p></li>
+<li><p><strong>prefix</strong>: A prefix or substitution applied to the delegate attribute.
+See <a class="reference internal" href="deferring.html#deferring-traits"><span class="std std-ref">Deferring Trait Definitions</span></a> for details.</p></li>
+<li><p><strong>trait_type</strong>: Returns the type of the trait, which is typically a handler
+derived from TraitType.</p></li>
+<li><p><strong>type</strong>: One of the following, depending on the nature of the trait:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">constant</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">delegate</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">event</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">property</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">trait</span></code></p></li>
 </ul>
 </li>
 </ul>
@@ -734,33 +698,25 @@ derived from TraitType.</li>
 <p>The following metadata attributes are not predefined, but are recognized by
 HasTraits objects:</p>
 <span class="target" id="index-40"></span><span class="target" id="index-41"></span><ul class="simple" id="index-42">
-<li><strong>desc</strong>: A string describing the intended meaning of the trait. It is used
-in exception messages and fly-over help in user interface trait editors.</li>
-<li><strong>editor</strong>: Specifies an instance of a subclass of TraitEditor to use when
+<li><p><strong>desc</strong>: A string describing the intended meaning of the trait. It is used
+in exception messages and fly-over help in user interface trait editors.</p></li>
+<li><p><strong>editor</strong>: Specifies an instance of a subclass of TraitEditor to use when
 creating a user interface editor for the trait. Refer to the
 <a class="reference external" href="http://docs.enthought.com/traitsui/traitsui_user_manual/index.html">TraitsUI User Manual</a>
-for more information on trait editors.</li>
-<li><strong>label</strong>: A string providing a human-readable name for the trait. It is
-used to label trait attribute values in user interface trait editors.</li>
-<li><strong>rich_compare</strong>: A Boolean indicating whether the basis for considering a
-trait attribute value to have changed is a “rich” comparison (True, the
-default), or simple object identity (False). This attribute can be useful
-in cases where a detailed comparison of two objects is very expensive, or
-where you do not care if the details of an object change, as long as the
-same object is used.</li>
-<li><strong>trait_value</strong>: A Boolean indicating whether the trait attribute accepts
-values that are instances of TraitValue. The default is False. The TraitValue
-class provides a mechanism for dynamically modifying trait definitions. See
-the <em>Traits API Reference</em> for details on TraitValue. If <strong>trait_value</strong> is
-True, then setting the trait attribute to TraitValue(), with no arguments,
-resets the attribute to it original default value.</li>
-<li><strong>transient</strong>: A Boolean indicating that the trait value is not persisted
+for more information on trait editors.</p></li>
+<li><p><strong>label</strong>: A string providing a human-readable name for the trait. It is
+used to label trait attribute values in user interface trait editors.</p></li>
+<li><p><strong>comparison_mode</strong>: Indicates when trait change notifications should be
+generated based upon the result of comparing the old and new values of a
+trait assignment. This should be a member of the
+<a class="reference internal" href="../traits_api_reference/constants.html#traits.constants.ComparisonMode" title="traits.constants.ComparisonMode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComparisonMode</span></code></a> enumeration class.</p></li>
+<li><p><strong>transient</strong>: A Boolean indicating that the trait value is not persisted
 when the object containing it is persisted. The default value for most
 predefined traits is False (the value will be persisted if its container is).
 You can set it to True for traits whose values you know you do not want to
 persist. Do not set it to True on traits where it is set internally to
 False, as doing so is likely to create unintended consequences. See
-<a class="reference internal" href="advanced.html#persistence"><span class="std std-ref">Persistence</span></a> for more information.</li>
+<a class="reference internal" href="advanced.html#persistence"><span class="std std-ref">Persistence</span></a> for more information.</p></li>
 </ul>
 <p>Other metadata attributes may be recognized by specific predefined traits.</p>
 </div>
@@ -832,22 +788,18 @@ the metadata attribute:</p>
 </pre></div>
 </div>
 <p class="rubric">Footnotes</p>
-<table class="docutils footnote" frame="void" id="id15" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>Most callable predefined traits are classes, but a few are functions.
+<dl class="footnote brackets">
+<dt class="label" id="id15"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
+<dd><p>Most callable predefined traits are classes, but a few are functions.
 The distinction does not make a difference unless you are trying to
 extend an existing predefined trait. See the <em>Traits API Reference</em> for
 details on particular traits, and see Chapter 5 for details on extending
-existing traits.</td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id16" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id8">[3]</a></td><td>Available in Python 2.5.</td></tr>
-</tbody>
-</table>
+existing traits.</p>
+</dd>
+<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id8">3</a></span></dt>
+<dd><p>Available in Python 2.5.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -900,13 +852,11 @@ existing traits.</td></tr>
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -927,13 +877,13 @@ existing traits.</td></tr>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2019, Enthought Inc
+        &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on Nov 18, 2019.
+      Last updated on Feb 14, 2020.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
       </li>
     </ul>
     </div>

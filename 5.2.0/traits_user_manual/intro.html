@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>Introduction &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="Traits 5 User Manual" href="index.html" >
+    <link rel="next" title="Defining Traits: Initialization and Validation" href="defining.html" >
+    <link rel="prev" title="Traits 5 User Manual" href="front.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">Traits 5 User Manual</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="defining.html" title="Defining Traits: Initialization and Validation"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="front.html" title="Traits 5 User Manual"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>The Traits package for the Python language allows Python programmers to use
+a special kind of type definition called a trait. This document introduces the
+concepts behind, and usage of, the Traits package.</p>
+<p>For more information on the Traits package, refer to the <a class="reference external" href="http://github.com/enthought/traits">Traits GitHub
+repository</a>. Additional documentation
+for the Traits package is available,
+including:</p>
+<ul class="simple">
+<li><em>Traits API Reference</em></li>
+<li><a class="reference external" href="http://docs.enthought.com/traitsui/traitsui_user_manual/index.html">TraitsUI User Manual</a></li>
+<li>Traits Technical Notes</li>
+</ul>
+<div class="section" id="what-are-traits">
+<h2>What Are Traits?<a class="headerlink" href="#what-are-traits" title="Permalink to this headline">¶</a></h2>
+<p>A trait is a type definition that can be used for normal Python object
+attributes, giving the attributes some additional characteristics:</p>
+<ul class="simple" id="index-0">
+<li><strong>Initialization</strong>: A trait has a <em>default value</em>, which is
+automatically set as the initial value of an attribute, before its first
+use in a program.</li>
+</ul>
+<ul class="simple" id="index-1">
+<li><strong>Validation</strong>: A trait attribute is <em>explicitly typed</em>. The type of a
+trait-based attribute is evident in the code, and only values that meet a
+programmer-specified set of criteria (i.e., the trait definition) can be
+assigned to that attribute. Note that the default value need not meet the
+criteria defined for assignment of values. Traits 4.0 also supports defining
+and using abstract interfaces, as well as adapters between interfaces.</li>
+</ul>
+<ul class="simple" id="index-2">
+<li><strong>Deferral</strong>: The value of a trait attribute can be contained either
+in the defining object or in another object that is <em>deferred to</em> by the
+trait.</li>
+</ul>
+<ul class="simple" id="index-3">
+<li><strong>Notification</strong>: Setting the value of a trait attribute can <em>notify</em>
+other parts of the program that the value has changed.</li>
+</ul>
+<ul class="simple" id="index-4">
+<li><strong>Visualization</strong>: User interfaces that allow a user to <em>interactively
+modify</em> the values of trait attributes can be automatically constructed using
+the traits’ definitions. This feature requires that a supported GUI
+toolkit be installed. However, if this feature is not used, the Traits package
+does not otherwise require GUI support. For details on the visualization
+features of Traits, see the <a class="reference external" href="http://docs.enthought.com/traitsui/traitsui_user_manual/index.html">TraitsUI User Manual</a>.</li>
+</ul>
+<p>A class can freely mix trait-based attributes with normal Python attributes,
+or can opt to allow the use of only a fixed or open set of trait attributes
+within the class. Trait attributes defined by a class are automatically
+inherited by any subclass derived from the class.</p>
+<p>The following example <a class="footnote-reference" href="#id3" id="id2">[1]</a> illustrates each of the features of the Traits
+package. These features are elaborated in the rest of this guide.</p>
+<div class="highlight-default notranslate" id="index-5"><div class="highlight"><pre><span></span><span class="c1"># all_traits_features.py --- Shows primary features of the Traits</span>
+<span class="c1">#                            package</span>
+
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Delegate</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span>\
+                                 <span class="n">Int</span><span class="p">,</span> <span class="n">Str</span>
+<span class="k">class</span> <span class="nc">Parent</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+
+    <span class="c1"># INITIALIZATION: last_name&#39; is initialized to &#39;&#39;:</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span> <span class="s1">&#39;&#39;</span> <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Child</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+
+    <span class="n">age</span> <span class="o">=</span> <span class="n">Int</span>
+
+    <span class="c1"># VALIDATION: &#39;father&#39; must be a Parent instance:</span>
+    <span class="n">father</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">Parent</span> <span class="p">)</span>
+
+    <span class="c1"># DELEGATION: &#39;last_name&#39; is delegated to father&#39;s &#39;last_name&#39;:</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Delegate</span><span class="p">(</span> <span class="s1">&#39;father&#39;</span> <span class="p">)</span>
+
+    <span class="c1"># NOTIFICATION: This method is called when &#39;age&#39; changes:</span>
+    <span class="k">def</span> <span class="nf">_age_changed</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Age changed from </span><span class="si">%s</span><span class="s1"> to </span><span class="si">%s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">))</span>
+
+<span class="c1"># Set up the example:</span>
+<span class="n">joe</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span>
+<span class="n">joe</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="s1">&#39;Johnson&#39;</span>
+<span class="n">moe</span> <span class="o">=</span> <span class="n">Child</span><span class="p">()</span>
+<span class="n">moe</span><span class="o">.</span><span class="n">father</span> <span class="o">=</span> <span class="n">joe</span>
+
+<span class="c1"># DELEGATION in action:</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Moe&#39;s last name is </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">moe</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span>
+<span class="c1"># Result:</span>
+<span class="c1"># Moe&#39;s last name is Johnson</span>
+
+<span class="c1"># NOTIFICATION in action</span>
+<span class="n">moe</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="c1"># Result:</span>
+<span class="c1"># Age changed from 0 to 10</span>
+
+<span class="c1"># VISUALIZATION: Displays a UI for editing moe&#39;s attributes</span>
+<span class="c1"># (if a supported GUI toolkit is installed)</span>
+<span class="n">moe</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>Python does not require the data type of variables to be declared. As any
+experienced Python programmer knows, this flexibility has both good and bad
+points. The Traits package was developed to address some of the problems
+caused by not having declared variable types, in those cases where problems
+might arise. In particular, the motivation for Traits came as a direct result
+of work done on Chaco, an open source scientific plotting package.</p>
+<p id="index-6">Chaco provides a set of high-level plotting objects, each of which has a number
+of user-settable attributes, such as line color, text font, relative location,
+and so on. To make the objects easy for scientists and engineers to use, the
+attributes attempt to accept a wide variety and style of values. For example,
+a color-related attribute of a Chaco object might accept any of the following
+as legal values for the color red:</p>
+<ul class="simple">
+<li>‘red’</li>
+<li>0xFF0000</li>
+<li>( 1.0, 0.0, 0.0, 1.0 )</li>
+</ul>
+<p>Thus, the user might write:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plotitem</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
+</pre></div>
+</div>
+<p>In a predecessor to Chaco, providing such flexibility came at a cost:</p>
+<ul class="simple">
+<li>When the value of an attribute was used by an object internally (for example,
+setting the correct pen color when drawing a plot line), the object would
+often have to map the user-supplied value to a suitable internal
+representation, a potentially expensive operation in some cases.</li>
+<li>If the user supplied a value outside the realm accepted by the object
+internally, it often caused disastrous or mysterious program behavior.
+This behavior was often difficult to track down because the cause and effect
+were usually widely separated in terms of the logic flow of the program.</li>
+</ul>
+<p>So, one of the main goals of the Traits package is to provide a form of type
+checking that:</p>
+<ul class="simple">
+<li>Allows for flexibility in the set of values an attribute can have, such as
+allowing ‘red’, 0xFF0000 and ( 1.0, 0.0, 0.0, 1.0 ) as equivalent ways of
+expressing the color red.</li>
+<li>Catches illegal value assignments at the point of error, and provides a
+meaningful and useful explanation of the error and the set of allowable
+values.</li>
+<li>Eliminates the need for an object’s implementation to map user-supplied
+attribute values into a separate internal representation.</li>
+</ul>
+<p>In the process of meeting these design goals, the Traits package evolved into
+a useful component in its own right, satisfying all of the above requirements
+and introducing several additional, powerful features of its own. In projects
+where the Traits package has been used, it has proven valuable for enhancing
+programmers’ ability to understand code, during both concurrent
+development and maintenance.</p>
+<p>The Traits 5.2.0 package works with versions 2.7 and 3.4 and later of
+Python.  It is similar in some ways to the Python property language feature.
+Standard Python properties provide the similar capabilities to the Traits
+package, but with more work on the part of the programmer.</p>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td><p class="first">All code examples in this guide that include a file name are also
+available as examples in the tutorials/doc_examples/examples
+subdirectory of the Traits docs directory.  You can run them
+individually, or view them in a tutorial program by running:</p>
+<p class="last">python &lt;Traits dir&gt;/traits/tutor/tutor.py &lt;Traits dir&gt;/docs/tutorials/doc_examples</p>
+</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#what-are-traits">What Are Traits?</a></li>
+<li><a class="reference internal" href="#background">Background</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="front.html"
+                        title="previous chapter">Traits 5 User Manual</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="defining.html"
+                        title="next chapter">Defining Traits: Initialization and Validation</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_user_manual/intro.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2019, Enthought Inc
+      </li>
+      <li>
+      Last updated on Nov 18, 2019.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

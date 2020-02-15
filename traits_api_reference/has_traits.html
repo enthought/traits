@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>has_traits Module &mdash; Traits 5 User Manual</title>
+    <title>traits.has_traits Module &mdash; Traits 5 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '5.2.0',
+        VERSION:     '6.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,11 +26,12 @@
     <script type="text/javascript" src="../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
     <link rel="top" title="Traits 5 User Manual" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
-    <link rel="next" title="has_dynamic_views Module" href="has_dynamic_views.html" >
-    <link rel="prev" title="category Module" href="category.html" > 
+    <link rel="next" title="traits.base_trait_handler Module" href="base_trait_handler.html" >
+    <link rel="prev" title="traits.traits Module" href="traits.html" > 
   </head>
   <body>
   <div class="container">
@@ -55,15 +56,19 @@
               
     <ul class="nav nav-pills pull-right">
       <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
         <a href="../py-modindex.html" title="Python Module Index"
            >modules</a>
       </li>
       <li class="active">
-        <a href="has_dynamic_views.html" title="has_dynamic_views Module"
+        <a href="base_trait_handler.html" title="traits.base_trait_handler Module"
            accesskey="N">next</a>
       </li>
       <li class="active">
-        <a href="category.html" title="category Module"
+        <a href="traits.html" title="traits.traits Module"
            accesskey="P">previous</a>
       </li>
     </ul>
@@ -80,31 +85,31 @@
           <div class="body" id="spc-section-body">
             
   <div class="section" id="module-traits.has_traits">
-<span id="has-traits-module"></span><h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">has_traits</span></code> Module<a class="headerlink" href="#module-traits.has_traits" title="Permalink to this headline">¶</a></h1>
+<span id="traits-has-traits-module"></span><h1><a class="reference internal" href="#module-traits.has_traits" title="traits.has_traits"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.has_traits</span></code></a> Module<a class="headerlink" href="#module-traits.has_traits" title="Permalink to this headline">¶</a></h1>
 <p>Defines the HasTraits class, along with several useful subclasses and
 associated metaclasses.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="traits.has_traits.MetaHasTraits">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">MetaHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">MetaHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Controls the creation of HasTraits classes.</p>
 <p>The heavy work is done by the <cite>create_traits_meta_dict</cite> function, which
 takes the <code class="docutils literal notranslate"><span class="pre">class_dict</span></code> dictionary of class members and extracts and
 processes the trait declarations in it. The trait declarations are then
 added back to the class dictionary and passed off to the __new__ method
 of the type superclass, to be added to the class.</p>
-<dl class="classmethod">
+<dl class="method">
 <dt id="traits.has_traits.MetaHasTraits.add_listener">
-<em class="property">classmethod </em><code class="descname">add_listener</code><span class="sig-paren">(</span><em>listener</em>, <em>class_name=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits.add_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits.add_listener" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">add_listener</code><span class="sig-paren">(</span><em class="sig-param">listener</em>, <em class="sig-param">class_name=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits.add_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits.add_listener" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a class creation listener.</p>
 <p>If the class name is the empty string then the listener will be called
 when <em>any</em> class is created.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="traits.has_traits.MetaHasTraits.remove_listener">
-<em class="property">classmethod </em><code class="descname">remove_listener</code><span class="sig-paren">(</span><em>listener</em>, <em>class_name=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits.remove_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits.remove_listener" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">remove_listener</code><span class="sig-paren">(</span><em class="sig-param">listener</em>, <em class="sig-param">class_name=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits.remove_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits.remove_listener" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes a class creation listener.</p>
 </dd></dl>
 
@@ -112,22 +117,22 @@ when <em>any</em> class is created.</p>
 
 <dl class="class">
 <dt id="traits.has_traits.MetaInterface">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">MetaInterface</code><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">MetaInterface</code><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Meta class for interfaces.</p>
 <p>Interfaces are simple ABCs with the following features:-</p>
 <ol class="arabic simple">
-<li>They cannot be instantiated (they are interfaces, not implementations!).</li>
-<li>Calling them is equivalent to calling ‘adapt’.</li>
+<li><p>They cannot be instantiated (they are interfaces, not implementations!).</p></li>
+<li><p>Calling them is equivalent to calling ‘adapt’.</p></li>
 </ol>
 <dl class="method">
 <dt id="traits.has_traits.MetaInterface.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.has_traits.MetaInterface.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.has_traits.MetaInterface.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.MetaInterface.__call__">
-<code class="descname">__call__</code><span class="sig-paren">(</span><em>adaptee</em>, <em>default=&lt;class 'traits.adaptation.adaptation_error.AdaptationError'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface.__call__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">adaptee</em>, <em class="sig-param">default=&lt;class 'traits.adaptation.adaptation_error.AdaptationError'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempt to adapt the adaptee to this interface.</p>
 <p>Note that this means that (intentionally ;^) that interfaces
 cannot be instantiated!</p>
@@ -137,7 +142,7 @@ cannot be instantiated!</p>
 
 <dl class="class">
 <dt id="traits.has_traits.HasTraits">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">HasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">HasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enables any Python class derived from it to have trait attributes.</p>
 <p>Most of the methods of HasTraits operated by default only on the trait
 attributes explicitly defined in the class definition. They do not operate
@@ -162,7 +167,7 @@ The wildcard attribute <em>temp_lunch</em> and the dynamically-added trait
 attribute <em>favorite_sport</em> are not listed.</p>
 <dl class="attribute">
 <dt id="traits.has_traits.HasTraits.wrappers">
-<code class="descname">wrappers</code><em class="property"> =</em><a class="headerlink" href="#traits.has_traits.HasTraits.wrappers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">wrappers</code><em class="property"> =</em><a class="headerlink" href="#traits.has_traits.HasTraits.wrappers" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><div class="line-block">
 <div class="line">{‘same’: TraitChangeNotifyWrapper,</div>
@@ -179,531 +184,449 @@ attribute <em>favorite_sport</em> are not listed.</p>
 
 <dl class="attribute">
 <dt id="traits.has_traits.HasTraits.trait_added">
-<code class="descname">trait_added</code><em class="property"> = Event(six.string_types[0])</em><a class="headerlink" href="#traits.has_traits.HasTraits.trait_added" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trait_added</code><em class="property"> = Event(str)</em><a class="headerlink" href="#traits.has_traits.HasTraits.trait_added" title="Permalink to this definition">¶</a></dt>
 <dd><p>An event fired when a new trait is dynamically added to the object</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.has_traits.HasTraits.trait_modified">
-<code class="descname">trait_modified</code><em class="property"> = Event</em><a class="headerlink" href="#traits.has_traits.HasTraits.trait_modified" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trait_modified</code><em class="property"> = Event</em><a class="headerlink" href="#traits.has_traits.HasTraits.trait_modified" title="Permalink to this definition">¶</a></dt>
 <dd><p>An event that can be fired to indicate that the state of the object has
 been modified</p>
 </dd></dl>
 
-<dl class="classmethod">
-<dt id="traits.has_traits.HasTraits.trait_monitor">
-<em class="property">classmethod </em><code class="descname">trait_monitor</code><span class="sig-paren">(</span><em>handler</em>, <em>remove=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_monitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_monitor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds or removes the specified <em>handler</em> from the list of active
-monitors.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>handler</strong> (<em>function</em>) – The function to add or remove as a monitor.</li>
-<li><strong>remove</strong> (<em>bool</em>) – Flag indicating whether to remove (True) or add the specified
-handler as a monitor for this class.</li>
-<li><strong>Description</strong> – </li>
-<li><strong>-----------</strong> – </li>
-<li><strong>remove is omitted</strong><strong> or </strong><strong>False</strong><strong>, </strong><strong>the specified handler is added to</strong> (<em>If</em>) – </li>
-<li><strong>list of active monitors; if remove is True</strong><strong>, </strong><strong>the handler is</strong> (<em>the</em>) – </li>
-<li><strong>from the active monitor list.</strong> (<em>removed</em>) – </li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="classmethod">
+<dl class="method">
 <dt id="traits.has_traits.HasTraits.add_class_trait">
-<em class="property">classmethod </em><code class="descname">add_class_trait</code><span class="sig-paren">(</span><em>name</em>, <em>*trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.add_class_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.add_class_trait" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">add_class_trait</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">*trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.add_class_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.add_class_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a named trait attribute to this class.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) – Name of the attribute to add.</li>
-<li><strong>*trait</strong> – A trait or a value that can be converted to a trait using Trait()
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the attribute to add.</p></li>
+<li><p><strong>*trait</strong> – A trait or a value that can be converted to a trait using Trait()
 Trait definition of the attribute. It can be a single value or
-a list equivalent to an argument list for the Trait() function.</li>
+a list equivalent to an argument list for the Trait() function.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="classmethod">
-<dt id="traits.has_traits.HasTraits.add_trait_category">
-<em class="property">classmethod </em><code class="descname">add_trait_category</code><span class="sig-paren">(</span><em>category</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.add_trait_category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.add_trait_category" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a trait category to a class.</p>
-<div class="deprecated">
-<p><span class="versionmodified">Deprecated since version 5.2: </span>The category extension mechanism is deprecated, and this method
-will be removed in a future version of Traits.</p>
-</div>
-</dd></dl>
-
-<dl class="classmethod">
+<dl class="method">
 <dt id="traits.has_traits.HasTraits.set_trait_dispatch_handler">
-<em class="property">classmethod </em><code class="descname">set_trait_dispatch_handler</code><span class="sig-paren">(</span><em>name</em>, <em>klass</em>, <em>override=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.set_trait_dispatch_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.set_trait_dispatch_handler" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">set_trait_dispatch_handler</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">klass</em>, <em class="sig-param">override=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.set_trait_dispatch_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.set_trait_dispatch_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets a trait notification dispatch handler.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_subclasses">
-<em class="property">classmethod </em><code class="descname">trait_subclasses</code><span class="sig-paren">(</span><em>all=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_subclasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_subclasses" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">trait_subclasses</code><span class="sig-paren">(</span><em class="sig-param">all=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_subclasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_subclasses" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of the immediate (or all) subclasses of this class.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>all</strong> (<em>bool</em>) – Indicates whether to return all subclasses of this class. If
-False, only immediate subclasses are returned.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>all</strong> (<em>bool</em>) – Indicates whether to return all subclasses of this class. If
+False, only immediate subclasses are returned.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.has_traits_interface">
-<code class="descname">has_traits_interface</code><span class="sig-paren">(</span><em>*interfaces</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.has_traits_interface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.has_traits_interface" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">has_traits_interface</code><span class="sig-paren">(</span><em class="sig-param">*interfaces</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.has_traits_interface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.has_traits_interface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns whether the object implements a specified traits interface.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>*interfaces</strong> – One or more traits Interface (sub)classes.</li>
-<li><strong>Description</strong> – </li>
-<li><strong>-----------</strong> – </li>
-<li><strong>whether the object implements one</strong><strong> or </strong><strong>more of the interfaces</strong> (<em>Tests</em>) – </li>
-<li><strong>by interfaces. Return True if it does</strong><strong>, </strong><strong>and False</strong> (<em>specified</em>) – </li>
-<li><strong>otherwise.</strong> – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*interfaces</strong> – One or more traits Interface (sub)classes.</p></li>
+<li><p><strong>Description</strong> – </p></li>
+<li><p><strong>-----------</strong> – </p></li>
+<li><p><strong>whether the object implements one</strong><strong> or </strong><strong>more of the interfaces</strong> (<em>Tests</em>) – </p></li>
+<li><p><strong>by interfaces. Return True if it does</strong><strong>, </strong><strong>and False</strong> (<em>specified</em>) – </p></li>
+<li><p><strong>otherwise.</strong> – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_get">
-<code class="descname">trait_get</code><span class="sig-paren">(</span><em>*names</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trait_get</code><span class="sig-paren">(</span><em class="sig-param">*names</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for getting object trait attributes.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> (<em>list of strings</em>) – A list of trait attribute names whose values are requested.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
-<li><strong>result</strong> (<em>dict</em>) – A dictionary whose keys are the names passed as arguments and whose
-values are the corresponding trait values.</li>
-<li><em>Description</em></li>
-<li><em>———–</em></li>
-<li><em>Looks up the value of each trait whose name is passed as an argument</em></li>
-<li><em>and returns a dictionary containing the resulting name/value pairs.</em></li>
-<li><em>If any name does not correspond to a defined trait, it is not included</em></li>
-<li><em>in the result.</em></li>
-<li><em>If no names are specified, the result is a dictionary containing</em></li>
-<li><em>name/value pairs for *all</em> traits defined on the object.*</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>names</strong> (<em>list of strings</em>) – A list of trait attribute names whose values are requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>result</strong> (<em>dict</em>) – A dictionary whose keys are the names passed as arguments and whose
+values are the corresponding trait values.</p></li>
+<li><p><em>Description</em></p></li>
+<li><p><em>———–</em></p></li>
+<li><p><em>Looks up the value of each trait whose name is passed as an argument</em></p></li>
+<li><p><em>and returns a dictionary containing the resulting name/value pairs.</em></p></li>
+<li><p><em>If any name does not correspond to a defined trait, it is not included</em></p></li>
+<li><p><em>in the result.</em></p></li>
+<li><p><em>If no names are specified, the result is a dictionary containing</em></p></li>
+<li><p><em>name/value pairs for *all</em> traits defined on the object.*</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.get">
-<code class="descname">get</code><span class="sig-paren">(</span><em>*names</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">*names</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for getting object trait attributes.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>names</strong> (<em>list of strings</em>) – A list of trait attribute names whose values are requested.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
-<li><strong>result</strong> (<em>dict</em>) – A dictionary whose keys are the names passed as arguments and whose
-values are the corresponding trait values.</li>
-<li><em>Description</em></li>
-<li><em>———–</em></li>
-<li><em>Looks up the value of each trait whose name is passed as an argument</em></li>
-<li><em>and returns a dictionary containing the resulting name/value pairs.</em></li>
-<li><em>If any name does not correspond to a defined trait, it is not included</em></li>
-<li><em>in the result.</em></li>
-<li><em>If no names are specified, the result is a dictionary containing</em></li>
-<li><em>name/value pairs for *all</em> traits defined on the object.*</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>names</strong> (<em>list of strings</em>) – A list of trait attribute names whose values are requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>result</strong> (<em>dict</em>) – A dictionary whose keys are the names passed as arguments and whose
+values are the corresponding trait values.</p></li>
+<li><p><em>Description</em></p></li>
+<li><p><em>———–</em></p></li>
+<li><p><em>Looks up the value of each trait whose name is passed as an argument</em></p></li>
+<li><p><em>and returns a dictionary containing the resulting name/value pairs.</em></p></li>
+<li><p><em>If any name does not correspond to a defined trait, it is not included</em></p></li>
+<li><p><em>in the result.</em></p></li>
+<li><p><em>If no names are specified, the result is a dictionary containing</em></p></li>
+<li><p><em>name/value pairs for *all</em> traits defined on the object.*</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_set">
-<code class="descname">trait_set</code><span class="sig-paren">(</span><em>trait_change_notify=True</em>, <em>**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_set" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trait_set</code><span class="sig-paren">(</span><em class="sig-param">trait_change_notify=True</em>, <em class="sig-param">**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for setting object trait attributes.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>trait_change_notify</strong> (<em>bool</em>) – If <strong>True</strong> (the default), then each value assigned may generate a
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trait_change_notify</strong> (<em>bool</em>) – If <strong>True</strong> (the default), then each value assigned may generate a
 trait change notification. If <strong>False</strong>, then no trait change
-notifications will be generated. (see also: trait_setq)</li>
-<li><strong>**traits</strong> – Key/value pairs, the trait attributes and their values to be
-set</li>
+notifications will be generated. (see also: trait_setq)</p></li>
+<li><p><strong>**traits</strong> – Key/value pairs, the trait attributes and their values to be
+set</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><em>self</em> – The method returns this object, after setting attributes.</li>
-<li><em>Description</em></li>
-<li><em>———–</em></li>
-<li><em>Treats each keyword argument to the method as the name of a trait</em></li>
-<li><em>attribute and sets the corresponding trait attribute to the value</em></li>
-<li><em>specified. This is a useful shorthand when a number of trait attributes</em></li>
-<li><em>need to be set on an object, or a trait attribute value needs to be set</em></li>
-<li><em>in a lambda function. For example, you can write::</em> – person.trait_set(name=’Bill’, age=27)</li>
-<li><em>instead of::</em> – person.name = ‘Bill’
-person.age = 27</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>self</em> – The method returns this object, after setting attributes.</p></li>
+<li><p><em>Description</em></p></li>
+<li><p><em>———–</em></p></li>
+<li><p><em>Treats each keyword argument to the method as the name of a trait</em></p></li>
+<li><p><em>attribute and sets the corresponding trait attribute to the value</em></p></li>
+<li><p><em>specified. This is a useful shorthand when a number of trait attributes</em></p></li>
+<li><p><em>need to be set on an object, or a trait attribute value needs to be set</em></p></li>
+<li><p><em>in a lambda function. For example, you can write::</em> – person.trait_set(name=’Bill’, age=27)</p></li>
+<li><p><em>instead of::</em> – person.name = ‘Bill’
+person.age = 27</p></li>
 </ul>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.set">
-<code class="descname">set</code><span class="sig-paren">(</span><em>trait_change_notify=True</em>, <em>**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.set" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="sig-param">trait_change_notify=True</em>, <em class="sig-param">**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for setting object trait attributes.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>trait_change_notify</strong> (<em>bool</em>) – If <strong>True</strong> (the default), then each value assigned may generate a
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trait_change_notify</strong> (<em>bool</em>) – If <strong>True</strong> (the default), then each value assigned may generate a
 trait change notification. If <strong>False</strong>, then no trait change
-notifications will be generated. (see also: trait_setq)</li>
-<li><strong>**traits</strong> – Key/value pairs, the trait attributes and their values to be
-set</li>
+notifications will be generated. (see also: trait_setq)</p></li>
+<li><p><strong>**traits</strong> – Key/value pairs, the trait attributes and their values to be
+set</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><em>self</em> – The method returns this object, after setting attributes.</li>
-<li><em>Description</em></li>
-<li><em>———–</em></li>
-<li><em>Treats each keyword argument to the method as the name of a trait</em></li>
-<li><em>attribute and sets the corresponding trait attribute to the value</em></li>
-<li><em>specified. This is a useful shorthand when a number of trait attributes</em></li>
-<li><em>need to be set on an object, or a trait attribute value needs to be set</em></li>
-<li><em>in a lambda function. For example, you can write::</em> – person.trait_set(name=’Bill’, age=27)</li>
-<li><em>instead of::</em> – person.name = ‘Bill’
-person.age = 27</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>self</em> – The method returns this object, after setting attributes.</p></li>
+<li><p><em>Description</em></p></li>
+<li><p><em>———–</em></p></li>
+<li><p><em>Treats each keyword argument to the method as the name of a trait</em></p></li>
+<li><p><em>attribute and sets the corresponding trait attribute to the value</em></p></li>
+<li><p><em>specified. This is a useful shorthand when a number of trait attributes</em></p></li>
+<li><p><em>need to be set on an object, or a trait attribute value needs to be set</em></p></li>
+<li><p><em>in a lambda function. For example, you can write::</em> – person.trait_set(name=’Bill’, age=27)</p></li>
+<li><p><em>instead of::</em> – person.name = ‘Bill’
+person.age = 27</p></li>
 </ul>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_setq">
-<code class="descname">trait_setq</code><span class="sig-paren">(</span><em>**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_setq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_setq" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trait_setq</code><span class="sig-paren">(</span><em class="sig-param">**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_setq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_setq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for setting object trait attributes.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>**traits</strong> – Key/value pairs, the trait attributes and their values to be set.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>**traits</strong> – Key/value pairs, the trait attributes and their values to be set.
 No trait change notifications will be generated for any values
-assigned (see also: trait_set).</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
-<li><em>self</em> – The method returns this object, after setting attributes.</li>
-<li><em>Description</em></li>
-<li><em>———–</em></li>
-<li><em>Treats each keyword argument to the method as the name of a trait</em></li>
-<li><em>attribute and sets the corresponding trait attribute to the value</em></li>
-<li><em>specified. This is a useful shorthand when a number of trait attributes</em></li>
-<li><em>need to be set on an object, or a trait attribute value needs to be set</em></li>
-<li><em>in a lambda function. For example, you can write::</em> – person.trait_setq(name=’Bill’, age=27)</li>
-<li><em>instead of::</em> – person.name = ‘Bill’
-person.age = 27</li>
+assigned (see also: trait_set).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>self</em> – The method returns this object, after setting attributes.</p></li>
+<li><p><em>Description</em></p></li>
+<li><p><em>———–</em></p></li>
+<li><p><em>Treats each keyword argument to the method as the name of a trait</em></p></li>
+<li><p><em>attribute and sets the corresponding trait attribute to the value</em></p></li>
+<li><p><em>specified. This is a useful shorthand when a number of trait attributes</em></p></li>
+<li><p><em>need to be set on an object, or a trait attribute value needs to be set</em></p></li>
+<li><p><em>in a lambda function. For example, you can write::</em> – person.trait_setq(name=’Bill’, age=27)</p></li>
+<li><p><em>instead of::</em> – person.name = ‘Bill’
+person.age = 27</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.reset_traits">
-<code class="descname">reset_traits</code><span class="sig-paren">(</span><em>traits=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.reset_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.reset_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reset_traits</code><span class="sig-paren">(</span><em class="sig-param">traits=None</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.reset_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.reset_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resets some or all of an object’s trait attributes to their default
 values.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>traits</strong> (<em>list of strings</em>) – Names of trait attributes to reset.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
-<li><strong>unresetable</strong> (<em>list of strings</em>) – A list of attributes that the method was unable to reset, which is
-empty if all the attributes were successfully reset.</li>
-<li><em>Description</em></li>
-<li><em>———–</em></li>
-<li><em>Resets each of the traits whose names are specified in the *traits*</em></li>
-<li><em>list to their default values. If *traits</em> is None or omitted, the*</li>
-<li><em>method resets all explicitly-defined object trait attributes to their</em></li>
-<li><em>default values. Note that this does not affect wildcard trait</em></li>
-<li><em>attributes or trait attributes added via add_trait(), unless they are</em></li>
-<li><em>explicitly named in *traits</em>.*</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>traits</strong> (<em>list of strings</em>) – Names of trait attributes to reset.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>unresetable</strong> (<em>list of strings</em>) – A list of attributes that the method was unable to reset, which is
+empty if all the attributes were successfully reset.</p></li>
+<li><p><em>Description</em></p></li>
+<li><p><em>———–</em></p></li>
+<li><p><em>Resets each of the traits whose names are specified in the *traits*</em></p></li>
+<li><p><em>list to their default values. If *traits</em> is None or omitted, the*</p></li>
+<li><p><em>method resets all explicitly-defined object trait attributes to their</em></p></li>
+<li><p><em>default values. Note that this does not affect wildcard trait</em></p></li>
+<li><p><em>attributes or trait attributes added via add_trait(), unless they are</em></p></li>
+<li><p><em>explicitly named in *traits</em>.*</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.copyable_trait_names">
-<code class="descname">copyable_trait_names</code><span class="sig-paren">(</span><em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.copyable_trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.copyable_trait_names" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">copyable_trait_names</code><span class="sig-paren">(</span><em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.copyable_trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.copyable_trait_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the list of trait names to copy or clone by default.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.all_trait_names">
-<code class="descname">all_trait_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.all_trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.all_trait_names" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">all_trait_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.all_trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.all_trait_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the list of all trait names, including implicitly defined
 traits.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.copy_traits">
-<code class="descname">copy_traits</code><span class="sig-paren">(</span><em>other</em>, <em>traits=None</em>, <em>memo=None</em>, <em>copy=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.copy_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.copy_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">copy_traits</code><span class="sig-paren">(</span><em class="sig-param">other</em>, <em class="sig-param">traits=None</em>, <em class="sig-param">memo=None</em>, <em class="sig-param">copy=None</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.copy_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.copy_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copies another object’s trait attributes into this one.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>other</strong> (<em>object</em>) – The object whose trait attribute values should be copied.</li>
-<li><strong>traits</strong> (<em>list of strings</em>) – A list of names of trait attributes to copy. If None or
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<em>object</em>) – The object whose trait attribute values should be copied.</p></li>
+<li><p><strong>traits</strong> (<em>list of strings</em>) – A list of names of trait attributes to copy. If None or
 unspecified, the set of names returned by trait_names() is used.
 If ‘all’ or an empty list, the set of names returned by
-all_trait_names() is used.</li>
-<li><strong>memo</strong> (<em>dict</em>) – A dictionary of objects that have already been copied.</li>
-<li><strong>copy</strong> (<em>None | 'deep' | 'shallow'</em>) – The type of copy to perform on any trait that does not have
-explicit ‘copy’ metadata. A value of None means ‘copy reference’.</li>
+all_trait_names() is used.</p></li>
+<li><p><strong>memo</strong> (<em>dict</em>) – A dictionary of objects that have already been copied.</p></li>
+<li><p><strong>copy</strong> (<em>None | 'deep' | 'shallow'</em>) – The type of copy to perform on any trait that does not have
+explicit ‘copy’ metadata. A value of None means ‘copy reference’.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>unassignable</strong> – A list of attributes that the method was unable to copy, which is
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>unassignable</strong> – A list of attributes that the method was unable to copy, which is
 empty if all the attributes were successfully copied.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of strings</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of strings</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.clone_traits">
-<code class="descname">clone_traits</code><span class="sig-paren">(</span><em>traits=None</em>, <em>memo=None</em>, <em>copy=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.clone_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.clone_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">clone_traits</code><span class="sig-paren">(</span><em class="sig-param">traits=None</em>, <em class="sig-param">memo=None</em>, <em class="sig-param">copy=None</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.clone_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.clone_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clones a new object from this one, optionally copying only a
 specified set of traits.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>traits</strong> (<em>list of strings</em>) – The list of names of the trait attributes to copy.</li>
-<li><strong>memo</strong> (<em>dict</em>) – A dictionary of objects that have already been copied.</li>
-<li><strong>copy</strong> (<em>str</em>) – The type of copy <code class="docutils literal notranslate"><span class="pre">deep</span></code> or <code class="docutils literal notranslate"><span class="pre">shallow</span></code> to perform on any trait
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traits</strong> (<em>list of strings</em>) – The list of names of the trait attributes to copy.</p></li>
+<li><p><strong>memo</strong> (<em>dict</em>) – A dictionary of objects that have already been copied.</p></li>
+<li><p><strong>copy</strong> (<em>str</em>) – The type of copy <code class="docutils literal notranslate"><span class="pre">deep</span></code> or <code class="docutils literal notranslate"><span class="pre">shallow</span></code> to perform on any trait
 that does not have explicit ‘copy’ metadata. A value of None means
-‘copy reference’.</li>
+‘copy reference’.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><em>new</em> – The newly cloned object.</li>
-<li><em>Description</em></li>
-<li><em>———–</em></li>
-<li><em>Creates a new object that is a clone of the current object. If *traits*</em></li>
-<li><em>is None (the default), then all explicit trait attributes defined</em></li>
-<li><em>for this object are cloned. If *traits</em> is ‘all’ or an empty list, the*</li>
-<li><em>list of traits returned by all_trait_names() is used; otherwise,</em></li>
-<li><em>*traits</em> must be a list of the names of the trait attributes to be*</li>
-<li><em>cloned.</em></li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>new</em> – The newly cloned object.</p></li>
+<li><p><em>Description</em></p></li>
+<li><p><em>———–</em></p></li>
+<li><p><em>Creates a new object that is a clone of the current object. If *traits*</em></p></li>
+<li><p><em>is None (the default), then all explicit trait attributes defined</em></p></li>
+<li><p><em>for this object are cloned. If *traits</em> is ‘all’ or an empty list, the*</p></li>
+<li><p><em>list of traits returned by all_trait_names() is used; otherwise,</em></p></li>
+<li><p><em>*traits</em> must be a list of the names of the trait attributes to be*</p></li>
+<li><p><em>cloned.</em></p></li>
 </ul>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.edit_traits">
-<code class="descname">edit_traits</code><span class="sig-paren">(</span><em>view=None</em>, <em>parent=None</em>, <em>kind=None</em>, <em>context=None</em>, <em>handler=None</em>, <em>id=''</em>, <em>scrollable=None</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.edit_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.edit_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">edit_traits</code><span class="sig-paren">(</span><em class="sig-param">view=None</em>, <em class="sig-param">parent=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">context=None</em>, <em class="sig-param">handler=None</em>, <em class="sig-param">id=''</em>, <em class="sig-param">scrollable=None</em>, <em class="sig-param">**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.edit_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.edit_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Displays a user interface window for editing trait attribute values.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>view</strong> (<em>View</em><em> or </em><em>string</em>) – A View object (or its name) that defines a user interface for
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>view</strong> (<em>View</em><em> or </em><em>string</em>) – A View object (or its name) that defines a user interface for
 editing trait attribute values of the current object. If the view is
 defined as an attribute on this class, use the name of the attribute.
 Otherwise, use a reference to the view object. If this attribute is
-not specified, the View object returned by trait_view() is used.</li>
-<li><strong>parent</strong> (<em>toolkit control</em>) – The reference to a user interface component to use as the parent
-window for the object’s UI window.</li>
-<li><strong>kind</strong> (<em>str</em>) – The type of user interface window to create. See the
+not specified, the View object returned by trait_view() is used.</p></li>
+<li><p><strong>parent</strong> (<em>toolkit control</em>) – The reference to a user interface component to use as the parent
+window for the object’s UI window.</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – The type of user interface window to create. See the
 <strong>traitsui.view.kind_trait</strong> trait for values and
 their meanings. If <em>kind</em> is unspecified or None, the <strong>kind</strong>
-attribute of the View object is used.</li>
-<li><strong>context</strong> (<em>object</em><em> or </em><em>dictionary</em>) – A single object or a dictionary of string/object pairs, whose trait
+attribute of the View object is used.</p></li>
+<li><p><strong>context</strong> (<em>object</em><em> or </em><em>dictionary</em>) – A single object or a dictionary of string/object pairs, whose trait
 attributes are to be edited. If not specified, the current object is
-used.</li>
-<li><strong>handler</strong> (<em>Handler</em>) – A handler object used for event handling in the dialog box. If
-None, the default handler for Traits UI is used.</li>
-<li><strong>id</strong> (<em>str</em>) – A unique ID for persisting preferences about this user interface,
+used.</p></li>
+<li><p><strong>handler</strong> (<em>Handler</em>) – A handler object used for event handling in the dialog box. If
+None, the default handler for Traits UI is used.</p></li>
+<li><p><strong>id</strong> (<em>str</em>) – A unique ID for persisting preferences about this user interface,
 such as size and position. If not specified, no user preferences
-are saved.</li>
-<li><strong>scrollable</strong> (<em>bool</em>) – Indicates whether the dialog box should be scrollable. When set to
+are saved.</p></li>
+<li><p><strong>scrollable</strong> (<em>bool</em>) – Indicates whether the dialog box should be scrollable. When set to
 True, scroll bars appear on the dialog box if it is not large enough
-to display all of the items in the view at one time.</li>
+to display all of the items in the view at one time.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A UI object.</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>A UI object.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_context">
-<code class="descname">trait_context</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_context" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trait_context</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_context" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the default context to use for editing or configuring
 traits.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_view">
-<code class="descname">trait_view</code><span class="sig-paren">(</span><em>name=None</em>, <em>view_element=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_view" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trait_view</code><span class="sig-paren">(</span><em class="sig-param">name=None</em>, <em class="sig-param">view_element=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets or sets a ViewElement associated with an object’s class.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>str</em>) – Name of a view element</li>
-<li><strong>view_element</strong> (<em>ViewElement</em>) – View element to associate</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of a view element</p></li>
+<li><p><strong>view_element</strong> (<em>ViewElement</em>) – View element to associate</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><em>A view element.</em></li>
-<li><em>Description</em></li>
-<li><em>———–</em></li>
-<li><em>If both *name</em> and <em>view_element</em> are specified, the view element is*</li>
-<li><em>associated with *name</em> for the current object’s class. (That is,*</li>
-<li><em>*view_element</em> is added to the ViewElements object associated with*</li>
-<li><em>the current object’s class, indexed by *name</em>.)*</li>
-<li><em>If only *name</em> is specified, the function returns the view element*</li>
-<li><em>object associated with *name</em>, or None if <em>name</em> has no associated*</li>
-<li><em>view element. View elements retrieved by this function are those that</em></li>
-<li><em>are bound to a class attribute in the class definition, or that are</em></li>
-<li><em>associated with a name by a previous call to this method.</em></li>
-<li><em>If neither *name</em> nor <em>view_element</em> is specified, the method returns a*</li>
-<li><em>View object, based on the following order of preference</em></li>
-<li><ol class="first arabic">
-<li>If there is a View object named <code class="docutils literal notranslate"><span class="pre">traits_view</span></code> associated with the – current object, it is returned.</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>A view element.</em></p></li>
+<li><p><em>Description</em></p></li>
+<li><p><em>———–</em></p></li>
+<li><p><em>If both *name</em> and <em>view_element</em> are specified, the view element is*</p></li>
+<li><p><em>associated with *name</em> for the current object’s class. (That is,*</p></li>
+<li><p><em>*view_element</em> is added to the ViewElements object associated with*</p></li>
+<li><p><em>the current object’s class, indexed by *name</em>.)*</p></li>
+<li><p><em>If only *name</em> is specified, the function returns the view element*</p></li>
+<li><p><em>object associated with *name</em>, or None if <em>name</em> has no associated*</p></li>
+<li><p><em>view element. View elements retrieved by this function are those that</em></p></li>
+<li><p><em>are bound to a class attribute in the class definition, or that are</em></p></li>
+<li><p><em>associated with a name by a previous call to this method.</em></p></li>
+<li><p><em>If neither *name</em> nor <em>view_element</em> is specified, the method returns a*</p></li>
+<li><p><em>View object, based on the following order of preference</em></p></li>
+<li><ol class="arabic simple">
+<li><p>If there is a View object named <code class="docutils literal notranslate"><span class="pre">traits_view</span></code> associated with the – current object, it is returned.</p></li>
 </ol>
 </li>
-<li><em>2. If there is exactly one View object associated the current</em> – object, it is returned.</li>
-<li><em>3. Otherwise, it returns a View object containing items for all the</em> – non-event trait attributes on the current object.</li>
+<li><p><em>2. If there is exactly one View object associated the current</em> – object, it is returned.</p></li>
+<li><p><em>3. Otherwise, it returns a View object containing items for all the</em> – non-event trait attributes on the current object.</p></li>
 </ul>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.default_traits_view">
-<code class="descname">default_traits_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.default_traits_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.default_traits_view" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">default_traits_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.default_traits_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.default_traits_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the name of the default traits view for the object’s class.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="traits.has_traits.HasTraits.class_default_traits_view">
-<em class="property">classmethod </em><code class="descname">class_default_traits_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_default_traits_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_default_traits_view" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">class_default_traits_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_default_traits_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_default_traits_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the name of the default traits view for the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_views">
-<code class="descname">trait_views</code><span class="sig-paren">(</span><em>klass=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_views"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_views" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trait_views</code><span class="sig-paren">(</span><em class="sig-param">klass=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_views"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_views" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of the names of all view elements associated with the
 current object’s class.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>klass</strong> (<em>class</em>) – <p>A class, such that all returned names must correspond to instances
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>klass</strong> (<em>class</em>) – <p>A class, such that all returned names must correspond to instances
 of this class. Possible values include:</p>
 <ul>
-<li>Group</li>
-<li>Item</li>
-<li>View</li>
-<li>ViewElement</li>
-<li>ViewSubElement</li>
+<li><p>Group</p></li>
+<li><p>Item</p></li>
+<li><p>View</p></li>
+<li><p>ViewElement</p></li>
+<li><p>ViewSubElement</p></li>
 </ul>
-</li>
-<li><strong>Description</strong> – </li>
-<li><strong>-----------</strong> – </li>
-<li><strong>klass is specified</strong><strong>, </strong><strong>the list of names is filtered such that only</strong> (<em>If</em>) – </li>
-<li><strong>that are instances of the specified class are returned.</strong> (<em>objects</em>) – </li>
+</p></li>
+<li><p><strong>Description</strong> – </p></li>
+<li><p><strong>-----------</strong> – </p></li>
+<li><p><strong>klass is specified</strong><strong>, </strong><strong>the list of names is filtered such that only</strong> (<em>If</em>) – </p></li>
+<li><p><strong>that are instances of the specified class are returned.</strong> (<em>objects</em>) – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_view_elements">
-<code class="descname">trait_view_elements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_view_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_view_elements" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trait_view_elements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_view_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_view_elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the ViewElements object associated with the object’s
 class.</p>
 <p>The returned object can be used to access all the view elements
 associated with the class.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="traits.has_traits.HasTraits.class_trait_view_elements">
-<em class="property">classmethod </em><code class="descname">class_trait_view_elements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_trait_view_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_trait_view_elements" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">class_trait_view_elements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_trait_view_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_trait_view_elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the ViewElements object associated with the class.</p>
 <p>The returned object can be used to access all the view elements
 associated with the class.</p>
@@ -711,254 +634,270 @@ associated with the class.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.configure_traits">
-<code class="descname">configure_traits</code><span class="sig-paren">(</span><em>filename=None</em>, <em>view=None</em>, <em>kind=None</em>, <em>edit=True</em>, <em>context=None</em>, <em>handler=None</em>, <em>id=''</em>, <em>scrollable=None</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.configure_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.configure_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">configure_traits</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em>, <em class="sig-param">view=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">edit=True</em>, <em class="sig-param">context=None</em>, <em class="sig-param">handler=None</em>, <em class="sig-param">id=''</em>, <em class="sig-param">scrollable=None</em>, <em class="sig-param">**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.configure_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.configure_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates and displays a dialog box for editing values of trait
 attributes, as if it were a complete, self-contained GUI application.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filename</strong> (<em>str</em>) – The name (including path) of a file that contains a pickled
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – NOTE: Deprecated as of traits 6.0.0.
+The name (including path) of a file that contains a pickled
 representation of the current object. When this parameter is
 specified, the method reads the corresponding file (if it exists)
 to restore the saved values of the object’s traits before displaying
 them. If the user confirms the dialog box (by clicking <strong>OK</strong>),
 the new values are written to the file. If this parameter is not
 specified, the values are loaded from the in-memory object, and are
-not persisted when the dialog box is closed.</li>
-<li><strong>view</strong> (<em>View</em><em> or </em><em>str</em>) – A View object (or its name) that defines a user interface for
+not persisted when the dialog box is closed.</p></li>
+<li><p><strong>view</strong> (<em>View</em><em> or </em><em>str</em>) – A View object (or its name) that defines a user interface for
 editing trait attribute values of the current object. If the view is
 defined as an attribute on this class, use the name of the attribute.
 Otherwise, use a reference to the view object. If this attribute is
-not specified, the View object returned by trait_view() is used.</li>
-<li><strong>kind</strong> (<em>str</em>) – The type of user interface window to create. See the
+not specified, the View object returned by trait_view() is used.</p></li>
+<li><p><strong>kind</strong> (<em>str</em>) – The type of user interface window to create. See the
 <strong>traitsui.view.kind_trait</strong> trait for values and
 their meanings. If <em>kind</em> is unspecified or None, the <strong>kind</strong>
-attribute of the View object is used.</li>
-<li><strong>edit</strong> (<em>bool</em>) – Indicates whether to display a user interface. If <em>filename</em>
+attribute of the View object is used.</p></li>
+<li><p><strong>edit</strong> (<em>bool</em>) – Indicates whether to display a user interface. If <em>filename</em>
 specifies an existing file, setting <em>edit</em> to False loads the
 saved values from that file into the object without requiring
-user interaction.</li>
-<li><strong>context</strong> (<em>object</em><em> or </em><em>dictionary</em>) – A single object or a dictionary of string/object pairs, whose trait
+user interaction.</p></li>
+<li><p><strong>context</strong> (<em>object</em><em> or </em><em>dictionary</em>) – A single object or a dictionary of string/object pairs, whose trait
 attributes are to be edited. If not specified, the current object is
-used</li>
-<li><strong>handler</strong> (<em>Handler</em>) – A handler object used for event handling in the dialog box. If
-None, the default handler for Traits UI is used.</li>
-<li><strong>id</strong> (<em>str</em>) – A unique ID for persisting preferences about this user interface,
+used</p></li>
+<li><p><strong>handler</strong> (<em>Handler</em>) – A handler object used for event handling in the dialog box. If
+None, the default handler for Traits UI is used.</p></li>
+<li><p><strong>id</strong> (<em>str</em>) – A unique ID for persisting preferences about this user interface,
 such as size and position. If not specified, no user preferences
-are saved.</li>
-<li><strong>scrollable</strong> (<em>bool</em>) – Indicates whether the dialog box should be scrollable. When set to
+are saved.</p></li>
+<li><p><strong>scrollable</strong> (<em>bool</em>) – Indicates whether the dialog box should be scrollable. When set to
 True, scroll bars appear on the dialog box if it is not large enough
-to display all of the items in the view at one time.</li>
+to display all of the items in the view at one time.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><em>True on success.</em></li>
-<li><em>Description</em></li>
-<li><em>———–</em></li>
-<li><em>This method is intended for use in applications that do not normally</em></li>
-<li><em>have a GUI. Control does not resume in the calling application until</em></li>
-<li><em>the user closes the dialog box.</em></li>
-<li><em>The method attempts to open and unpickle the contents of *filename*</em></li>
-<li><em>before displaying the dialog box. When editing is complete, the method</em></li>
-<li><em>attempts to pickle the updated contents of the object back to *filename</em>.*</li>
-<li><em>If the file referenced by *filename</em> does not exist, the object is not*</li>
-<li><em>modified before displaying the dialog box. If *filename</em> is unspecified*</li>
-<li><em>or None, no pickling or unpickling occurs.</em></li>
-<li><em>If *edit</em> is True (the default), a dialog box for editing the*</li>
-<li><em>current object is displayed. If *edit</em> is False or None, no*</li>
-<li>dialog box is displayed. You can use <code class="docutils literal notranslate"><span class="pre">edit=False</span></code> if you want the</li>
-<li><em>object to be restored from the contents of *filename</em>, without being*</li>
-<li><em>modified by the user.</em></li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>True on success.</em></p></li>
+<li><p><em>Description</em></p></li>
+<li><p><em>———–</em></p></li>
+<li><p><em>This method is intended for use in applications that do not normally</em></p></li>
+<li><p><em>have a GUI. Control does not resume in the calling application until</em></p></li>
+<li><p><em>the user closes the dialog box.</em></p></li>
+<li><p><em>The method attempts to open and unpickle the contents of *filename*</em></p></li>
+<li><p><em>before displaying the dialog box. When editing is complete, the method</em></p></li>
+<li><p><em>attempts to pickle the updated contents of the object back to *filename</em>.*</p></li>
+<li><p><em>If the file referenced by *filename</em> does not exist, the object is not*</p></li>
+<li><p><em>modified before displaying the dialog box. If *filename</em> is unspecified*</p></li>
+<li><p><em>or None, no pickling or unpickling occurs.</em></p></li>
+<li><p><em>If *edit</em> is True (the default), a dialog box for editing the*</p></li>
+<li><p><em>current object is displayed. If *edit</em> is False or None, no*</p></li>
+<li><p>dialog box is displayed. You can use <code class="docutils literal notranslate"><span class="pre">edit=False</span></code> if you want the</p></li>
+<li><p><em>object to be restored from the contents of *filename</em>, without being*</p></li>
+<li><p><em>modified by the user.</em></p></li>
 </ul>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.editable_traits">
-<code class="descname">editable_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.editable_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.editable_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">editable_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.editable_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.editable_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an alphabetically sorted list of the names of non-event
 trait attributes associated with the current object.</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="traits.has_traits.HasTraits.class_editable_traits">
-<em class="property">classmethod </em><code class="descname">class_editable_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_editable_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_editable_traits" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">class_editable_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_editable_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_editable_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an alphabetically sorted list of the names of non-event
 trait attributes associated with the current class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.visible_traits">
-<code class="descname">visible_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.visible_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.visible_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">visible_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.visible_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.visible_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an alphabetically sorted list of the names of non-event
 trait attributes associated with the current object, that should be GUI visible</p>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="traits.has_traits.HasTraits.class_visible_traits">
-<em class="property">classmethod </em><code class="descname">class_visible_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_visible_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_visible_traits" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">class_visible_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_visible_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_visible_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an alphabetically sorted list of the names of non-event
 trait attributes associated with the current class, that should be GUI visible</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.print_traits">
-<code class="descname">print_traits</code><span class="sig-paren">(</span><em>show_help=False</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.print_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.print_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">print_traits</code><span class="sig-paren">(</span><em class="sig-param">show_help=False</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.print_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.print_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints the values of all explicitly-defined, non-event trait
 attributes on the current object, in an easily readable format.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>show_help</strong> (<em>bool</em>) – Indicates whether to display additional descriptive information.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>show_help</strong> (<em>bool</em>) – Indicates whether to display additional descriptive information.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.on_trait_change">
-<code class="descname">on_trait_change</code><span class="sig-paren">(</span><em>handler</em>, <em>name=None</em>, <em>remove=False</em>, <em>dispatch='same'</em>, <em>priority=False</em>, <em>deferred=False</em>, <em>target=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.on_trait_change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.on_trait_change" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_trait_change</code><span class="sig-paren">(</span><em class="sig-param">handler</em>, <em class="sig-param">name=None</em>, <em class="sig-param">remove=False</em>, <em class="sig-param">dispatch='same'</em>, <em class="sig-param">priority=False</em>, <em class="sig-param">deferred=False</em>, <em class="sig-param">target=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.on_trait_change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.on_trait_change" title="Permalink to this definition">¶</a></dt>
 <dd><p>Causes the object to invoke a handler whenever a trait attribute
 matching a specified pattern is modified, or removes the association.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>handler</strong> (<em>function</em>) – A trait notification function for the <em>name</em> trait attribute, with
-one of the signatures described below.</li>
-<li><strong>name</strong> (<em>str</em>) – The name of the trait attribute whose value changes trigger the
-notification. The <em>name</em> can specify complex patterns of trait
-changes using an extended <em>name</em> syntax, which is described below.</li>
-<li><strong>remove</strong> (<em>bool</em>) – If True, removes the previously-set association between
-<em>handler</em> and <em>name</em>; if False (the default), creates the
-association.</li>
-<li><strong>dispatch</strong> (<em>str</em>) – <p>A string indicating the thread on which notifications must be run.
-Possible values are:</p>
-<table border="1" class="docutils">
+<p>Multiple handlers can be defined for the same object, or even for the
+same trait attribute on the same object. If <em>name</em> is not specified or
+is None, <em>handler</em> is invoked when any trait attribute on the
+object is changed.</p>
+<p>The <em>name</em> parameter is a single <em>xname</em> or a list of <em>xname</em> names,
+where an <em>xname</em> is an extended name of the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xname2</span><span class="p">[(</span><span class="s1">&#39;.&#39;</span><span class="o">|</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="n">xname2</span><span class="p">]</span><span class="o">*</span>
+</pre></div>
+</div>
+<p>An <em>xname2</em> is of the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span> <span class="n">xname3</span> <span class="o">|</span> <span class="s1">&#39;[&#39;</span><span class="n">xname3</span><span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="n">xname3</span><span class="p">]</span><span class="o">*</span><span class="s1">&#39;]&#39;</span> <span class="p">)</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>An <em>xname3</em> is of the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s1">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>A <em>name</em> is any valid Python attribute name. The semantic meaning of
+this notation is as follows:</p>
+<table class="docutils align-default">
 <colgroup>
-<col width="17%" />
-<col width="83%" />
+<col style="width: 46%" />
+<col style="width: 54%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">value</th>
-<th class="head">dispatch</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>expression</p></th>
+<th class="head"><p>meaning</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">same</span></code></td>
-<td>Run notifications on the same thread as this one.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ui</span></code></td>
-<td>Run notifications on the UI thread. If the current
-thread is the UI thread, the notifications are executed
-immediately; otherwise, they are placed on the UI
-event queue.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">fast_ui</span></code></td>
-<td>Alias for <code class="docutils literal notranslate"><span class="pre">ui</span></code>.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">new</span></code></td>
-<td>Run notifications in a new thread.</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li><strong>Description</strong> – </li>
-<li><strong>-----------</strong> – </li>
-<li><strong>handlers can be defined for the same object</strong><strong>, or </strong><strong>even for the</strong> (<em>Multiple</em>) – </li>
-<li><strong>trait attribute on the same object. If name is not specified or</strong> (<em>same</em>) – </li>
-<li><strong>None</strong><strong>, </strong><strong>handler is invoked when any trait attribute on the</strong> (<em>is</em>) – </li>
-<li><strong>is changed.</strong> (<em>object</em>) – </li>
-<li><strong>name parameter is a single xname</strong><strong> or </strong><strong>a list of xname names</strong><strong>,</strong> (<em>The</em>) – </li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>:param where an <em>xname</em> is an extended name of the form::: xname2[(‘.’|’:’) xname2]*
-:param An <em>xname2</em> is of the form::: ( xname3 | ‘[‘xname3[‘,’xname3]*’]’ ) [‘*’]
-:param An <em>xname3</em> is of the form::: xname | [‘+’|’-‘][name] | name[‘?’ | (‘+’|’-‘)[name]]
-:param A <em>name</em> is any valid Python attribute name. The semantic meaning of:
-:param this notation is as follows:
-:param ================================ ======================================:
-:param expression                       meaning:
-:param ================================ ======================================:
-:param <code class="docutils literal notranslate"><span class="pre">item1.item2</span></code>                  means <em>item1</em> is a trait containing an: object (or objects if <em>item1</em> is a</p>
-<blockquote>
-<div>list or dict) with a trait called
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">item1.item2</span></code></p></td>
+<td><p>means <em>item1</em> is a trait containing an
+object (or objects if <em>item1</em> is a
+list or dict) with a trait called
 <em>item2</em>. Changes to either <em>item1</em> or
 <em>item2</em> cause a notification to be
-generated.</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>``item1</strong> – <p>object (or objects if <em>item1</em> is a
+generated.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">item1:item2</span></code></p></td>
+<td><p>means <em>item1</em> is a trait containing an
+object (or objects if <em>item1</em> is a
 list or dict) with a trait called
 <em>item2</em>. Changes to <em>item2</em> cause a
 notification to be generated, while
 changes to <em>item1</em> do not (i.e., the
 ‘:’ indicates that changes to the
-<em>link</em> object should not be reported).</p>
-</li>
-<li><strong>item1</strong><strong>, </strong><strong>item2</strong><strong>, </strong><strong>..</strong><strong>, </strong><strong>itemN</strong><strong> ] </strong><strong>A list which matches any of the</strong> (<em>[</em>) – specified items. Note that at the
+<em>link</em> object should not be reported).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">item1,</span> <span class="pre">item2,</span> <span class="pre">...,</span> <span class="pre">itemN</span> <span class="pre">]</span></code></p></td>
+<td><p>A list which matches any of the
+specified items. Note that at the
 topmost level, the surrounding square
-brackets are optional.</li>
-<li><strong>If the current object does not have an</strong> (<em>name?</em>) – attribute called <em>name</em>, the reference
+brackets are optional.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">name?</span></code></p></td>
+<td><p>If the current object does not have an
+attribute called <em>name</em>, the reference
 can be ignored. If the ‘?’ character
 is omitted, the current object must
 have a trait called <em>name</em>, otherwise
-an exception will be raised.</li>
-<li><strong>Matches any trait on the object whose</strong> (<em>prefix+metadata_name</em>) – name begins with <em>prefix</em>.</li>
-<li><strong>Matches any trait on the object having</strong> (<em>+metadata_name</em>) – <em>metadata_name</em> metadata.</li>
-<li><strong>Matches any trait on the object which</strong> (<em>-metadata_name</em>) – does not have <em>metadata_name</em>
-metadata.</li>
-<li><strong>Matches any trait on the object whose</strong> – name begins with <em>prefix</em> and which
-has <em>metadata_name</em> metadata.</li>
-<li><strong>Matches any trait on the object</strong> (<em>prefix-metadata_name</em>) – whose name begins with <em>prefix</em> and
+an exception will be raised.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">prefix+</span></code></p></td>
+<td><p>Matches any trait on the object whose
+name begins with <em>prefix</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">+metadata_name</span></code></p></td>
+<td><p>Matches any trait on the object having
+<em>metadata_name</em> metadata.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">-metadata_name</span></code></p></td>
+<td><p>Matches any trait on the object which
+does not have <em>metadata_name</em>
+metadata.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">prefix+metadata_name</span></code></p></td>
+<td><p>Matches any trait on the object whose
+name begins with <em>prefix</em> and which
+has <em>metadata_name</em> metadata.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">prefix-metadata_name</span></code></p></td>
+<td><p>Matches any trait on the object
+whose name begins with <em>prefix</em> and
 which does not have <em>metadata_name</em>
-metadata.</li>
-<li><strong>Matches all traits on the object.</strong> (<em>+</em>) – </li>
-<li><strong>Matches object graphs where pattern</strong> (<em>pattern*</em>) – occurs one or more times (useful for
+metadata.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">+</span></code></p></td>
+<td><p>Matches all traits on the object.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pattern*</span></code></p></td>
+<td><p>Matches object graphs where <em>pattern</em>
+occurs one or more times (useful for
 setting up listeners on recursive data
 structures like trees or linked
-lists).</li>
-<li><strong>======================================</strong> (<em>================================</em>) – </li>
-<li><strong>examples of valid names and their meaning are as follows</strong> (<em>Some</em>) – </li>
-<li><strong>===============================================</strong> (<em>=======================</em>) – </li>
-<li><strong>meaning</strong> (<em>example</em>) – </li>
-<li><strong>===============================================</strong> – </li>
-<li><strong>Listen for trait changes to object.foo</strong><strong>,</strong> (<em>foo</em><em>,</em><em>bar</em><em>,</em><em>baz</em>) – <em>object.bar</em>, and <em>object.baz</em>.</li>
-<li><strong>Equivalent to 'foo</strong><strong>,</strong><strong>bar</strong><strong>,</strong><strong>baz'</strong><strong>, </strong><strong>but may be more</strong> (<em>[</em><em>'foo'</em><em>,</em><em>'bar'</em><em>,</em><em>'baz'</em><em>]</em>) – useful in cases where the individual items are
-computed.</li>
-<li><strong>Listen for trait changes to</strong> (<em>foo.bar.baz</em>) – <em>object.foo.bar.baz</em> and report changes to
+lists).</p></td>
+</tr>
+</tbody>
+</table>
+<p>Some examples of valid names and their meaning are as follows:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>example</p></th>
+<th class="head"><p>meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">foo,bar,baz</span></code></p></td>
+<td><p>Listen for trait changes to <em>object.foo</em>,
+<em>object.bar</em>, and <em>object.baz</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">['foo','bar','baz']</span></code></p></td>
+<td><p>Equivalent to ‘foo,bar,baz’, but may be more
+useful in cases where the individual items are
+computed.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">foo.bar.baz</span></code></p></td>
+<td><p>Listen for trait changes to
+<em>object.foo.bar.baz</em> and report changes to
 <em>object.foo</em>, <em>object.foo.bar</em> or
-<em>object.foo.bar.baz</em>.</li>
-<li><strong>``foo</strong> – <p>only report changes to <em>object.foo.bar.baz</em>.</p>
-</li>
-<li><strong>Listen for trait changes to object.foo.bar</strong> (<em>foo.</em><em>[</em><em>bar</em><em>,</em><em>baz</em><em>]</em>) – and <em>object.foo.baz</em>.</li>
-<li><strong>Listen for trait changes to the name trait of</strong> (<em>[</em><em>left</em><em>,</em><em>right</em><em>]</em><em>*.name</em>) – each node of a tree having <em>left</em> and <em>right</em>
+<em>object.foo.bar.baz</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">foo:bar:baz</span></code></p></td>
+<td><p>Listen for changes to <em>object.foo.bar.baz</em>, and
+only report changes to <em>object.foo.bar.baz</em>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">foo.[bar,baz]</span></code></p></td>
+<td><p>Listen for trait changes to <em>object.foo.bar</em>
+and <em>object.foo.baz</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">[left,right]*.name</span></code></p></td>
+<td><p>Listen for trait changes to the <em>name</em> trait of
+each node of a tree having <em>left</em> and <em>right</em>
 links to other tree nodes, and where <em>object</em>
 the method is applied to the root node of the
-tree.</li>
-<li><strong>Listen for trait changes on any trait in the</strong> (<em>+dirty</em>) – <em>object</em> which has the ‘dirty’ metadata set.</li>
-<li><strong>Listen for trait changes on any trait in</strong> (<em>foo.+dirty</em>) – <em>object.foo</em> which has the ‘dirty’ metadata
-set.</li>
-<li><strong>Listen for trait changes on object.foo.bar or</strong> (<em>foo.</em><em>[</em><em>bar</em><em>,</em><em>-dirty</em><em>]</em>) – any trait on <em>object.foo</em> which does not have
-‘dirty’ metadata set.</li>
-<li><strong>===============================================</strong> – </li>
-</ul>
-</td>
+tree.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">+dirty</span></code></p></td>
+<td><p>Listen for trait changes on any trait in the
+<em>object</em> which has the ‘dirty’ metadata set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">foo.+dirty</span></code></p></td>
+<td><p>Listen for trait changes on any trait in
+<em>object.foo</em> which has the ‘dirty’ metadata
+set.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">foo.[bar,-dirty]</span></code></p></td>
+<td><p>Listen for trait changes on <em>object.foo.bar</em> or
+any trait on <em>object.foo</em> which does not have
+‘dirty’ metadata set.</p></td>
 </tr>
 </tbody>
 </table>
@@ -977,11 +916,11 @@ being monitored.</p>
 how changes to intermediate traits are processed. The five valid
 handler signatures are:</p>
 <ol class="arabic simple">
-<li>handler()</li>
-<li>handler(new)</li>
-<li>handler(name,new)</li>
-<li>handler(object,name,new)</li>
-<li>handler(object,name,old,new)</li>
+<li><p>handler()</p></li>
+<li><p>handler(new)</p></li>
+<li><p>handler(name,new)</p></li>
+<li><p>handler(object,name,new)</p></li>
+<li><p>handler(object,name,old,new)</p></li>
 </ol>
 <p>For signatures 1, 4 and 5, any change to any element of a path
 being listened to invokes the handler with information about the
@@ -989,22 +928,22 @@ particular element that was modified (e.g., if the item being
 monitored is ‘foo.bar.baz’, a change to ‘bar’ will call <em>handler</em>
 with the following information:</p>
 <ul class="simple">
-<li>object: object.foo</li>
-<li>name:   bar</li>
-<li>old:    old value for object.foo.bar</li>
-<li>new:    new value for object.foo.bar</li>
+<li><p>object: object.foo</p></li>
+<li><p>name:   bar</p></li>
+<li><p>old:    old value for object.foo.bar</p></li>
+<li><p>new:    new value for object.foo.bar</p></li>
 </ul>
 <p>If one of the intermediate links is a List or Dict, the call to
 <em>handler</em> may report an <em>_items</em> changed event. If in the previous
 example, <em>bar</em> is a List, and a new item is added to <em>bar</em>, then
 the information passed to <em>handler</em> would be:</p>
 <ul class="simple">
-<li>object: object.foo</li>
-<li>name:   bar_items</li>
-<li>old:    Undefined</li>
-<li><dl class="first docutils">
-<dt>new:    TraitListEvent whose <em>added</em> trait contains the new item</dt>
-<dd>added to <em>bar</em>.</dd>
+<li><p>object: object.foo</p></li>
+<li><p>name:   bar_items</p></li>
+<li><p>old:    Undefined</p></li>
+<li><dl class="simple">
+<dt>new:    TraitListEvent whose <em>added</em> trait contains the new item</dt><dd><p>added to <em>bar</em>.</p>
+</dd>
 </dl>
 </li>
 </ul>
@@ -1028,144 +967,211 @@ cases where the <em>handler</em> only needs to know that some aspect of the
 final trait has been changed. For all other <em>handler</em> signatures,
 you must explicitly specify the ‘xxx_items’ trait if you want to
 be notified of changes to any of the items of the ‘xxx’ trait.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handler</strong> (<em>function</em>) – A trait notification function for the <em>name</em> trait attribute, with
+one of the signatures described below.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the trait attribute whose value changes trigger the
+notification. The <em>name</em> can specify complex patterns of trait
+changes using an extended <em>name</em> syntax, which is described below.</p></li>
+<li><p><strong>remove</strong> (<em>bool</em>) – If True, removes the previously-set association between
+<em>handler</em> and <em>name</em>; if False (the default), creates the
+association.</p></li>
+<li><p><strong>dispatch</strong> (<em>str</em>) – <p>A string indicating the thread on which notifications must be run.
+Possible values are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 83%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>value</p></th>
+<th class="head"><p>dispatch</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">same</span></code></p></td>
+<td><p>Run notifications on the same thread as this one.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ui</span></code></p></td>
+<td><p>Run notifications on the UI thread. If the current
+thread is the UI thread, the notifications are executed
+immediately; otherwise, they are placed on the UI
+event queue.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fast_ui</span></code></p></td>
+<td><p>Alias for <code class="docutils literal notranslate"><span class="pre">ui</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">new</span></code></p></td>
+<td><p>Run notifications in a new thread.</p></td>
+</tr>
+</tbody>
+</table>
+</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.on_trait_event">
-<code class="descname">on_trait_event</code><span class="sig-paren">(</span><em>handler</em>, <em>name=None</em>, <em>remove=False</em>, <em>dispatch='same'</em>, <em>priority=False</em>, <em>deferred=False</em>, <em>target=None</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.has_traits.HasTraits.on_trait_event" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_trait_event</code><span class="sig-paren">(</span><em class="sig-param">handler</em>, <em class="sig-param">name=None</em>, <em class="sig-param">remove=False</em>, <em class="sig-param">dispatch='same'</em>, <em class="sig-param">priority=False</em>, <em class="sig-param">deferred=False</em>, <em class="sig-param">target=None</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.has_traits.HasTraits.on_trait_event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Causes the object to invoke a handler whenever a trait attribute
 matching a specified pattern is modified, or removes the association.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>handler</strong> (<em>function</em>) – A trait notification function for the <em>name</em> trait attribute, with
-one of the signatures described below.</li>
-<li><strong>name</strong> (<em>str</em>) – The name of the trait attribute whose value changes trigger the
-notification. The <em>name</em> can specify complex patterns of trait
-changes using an extended <em>name</em> syntax, which is described below.</li>
-<li><strong>remove</strong> (<em>bool</em>) – If True, removes the previously-set association between
-<em>handler</em> and <em>name</em>; if False (the default), creates the
-association.</li>
-<li><strong>dispatch</strong> (<em>str</em>) – <p>A string indicating the thread on which notifications must be run.
-Possible values are:</p>
-<table border="1" class="docutils">
+<p>Multiple handlers can be defined for the same object, or even for the
+same trait attribute on the same object. If <em>name</em> is not specified or
+is None, <em>handler</em> is invoked when any trait attribute on the
+object is changed.</p>
+<p>The <em>name</em> parameter is a single <em>xname</em> or a list of <em>xname</em> names,
+where an <em>xname</em> is an extended name of the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xname2</span><span class="p">[(</span><span class="s1">&#39;.&#39;</span><span class="o">|</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="n">xname2</span><span class="p">]</span><span class="o">*</span>
+</pre></div>
+</div>
+<p>An <em>xname2</em> is of the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span> <span class="n">xname3</span> <span class="o">|</span> <span class="s1">&#39;[&#39;</span><span class="n">xname3</span><span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="n">xname3</span><span class="p">]</span><span class="o">*</span><span class="s1">&#39;]&#39;</span> <span class="p">)</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>An <em>xname3</em> is of the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s1">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>A <em>name</em> is any valid Python attribute name. The semantic meaning of
+this notation is as follows:</p>
+<table class="docutils align-default">
 <colgroup>
-<col width="17%" />
-<col width="83%" />
+<col style="width: 46%" />
+<col style="width: 54%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">value</th>
-<th class="head">dispatch</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>expression</p></th>
+<th class="head"><p>meaning</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">same</span></code></td>
-<td>Run notifications on the same thread as this one.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ui</span></code></td>
-<td>Run notifications on the UI thread. If the current
-thread is the UI thread, the notifications are executed
-immediately; otherwise, they are placed on the UI
-event queue.</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">fast_ui</span></code></td>
-<td>Alias for <code class="docutils literal notranslate"><span class="pre">ui</span></code>.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">new</span></code></td>
-<td>Run notifications in a new thread.</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li><strong>Description</strong> – </li>
-<li><strong>-----------</strong> – </li>
-<li><strong>handlers can be defined for the same object</strong><strong>, or </strong><strong>even for the</strong> (<em>Multiple</em>) – </li>
-<li><strong>trait attribute on the same object. If name is not specified or</strong> (<em>same</em>) – </li>
-<li><strong>None</strong><strong>, </strong><strong>handler is invoked when any trait attribute on the</strong> (<em>is</em>) – </li>
-<li><strong>is changed.</strong> (<em>object</em>) – </li>
-<li><strong>name parameter is a single xname</strong><strong> or </strong><strong>a list of xname names</strong><strong>,</strong> (<em>The</em>) – </li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>:param where an <em>xname</em> is an extended name of the form::: xname2[(‘.’|’:’) xname2]*
-:param An <em>xname2</em> is of the form::: ( xname3 | ‘[‘xname3[‘,’xname3]*’]’ ) [‘*’]
-:param An <em>xname3</em> is of the form::: xname | [‘+’|’-‘][name] | name[‘?’ | (‘+’|’-‘)[name]]
-:param A <em>name</em> is any valid Python attribute name. The semantic meaning of:
-:param this notation is as follows:
-:param ================================ ======================================:
-:param expression                       meaning:
-:param ================================ ======================================:
-:param <code class="docutils literal notranslate"><span class="pre">item1.item2</span></code>                  means <em>item1</em> is a trait containing an: object (or objects if <em>item1</em> is a</p>
-<blockquote>
-<div>list or dict) with a trait called
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">item1.item2</span></code></p></td>
+<td><p>means <em>item1</em> is a trait containing an
+object (or objects if <em>item1</em> is a
+list or dict) with a trait called
 <em>item2</em>. Changes to either <em>item1</em> or
 <em>item2</em> cause a notification to be
-generated.</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>``item1</strong> – <p>object (or objects if <em>item1</em> is a
+generated.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">item1:item2</span></code></p></td>
+<td><p>means <em>item1</em> is a trait containing an
+object (or objects if <em>item1</em> is a
 list or dict) with a trait called
 <em>item2</em>. Changes to <em>item2</em> cause a
 notification to be generated, while
 changes to <em>item1</em> do not (i.e., the
 ‘:’ indicates that changes to the
-<em>link</em> object should not be reported).</p>
-</li>
-<li><strong>item1</strong><strong>, </strong><strong>item2</strong><strong>, </strong><strong>..</strong><strong>, </strong><strong>itemN</strong><strong> ] </strong><strong>A list which matches any of the</strong> (<em>[</em>) – specified items. Note that at the
+<em>link</em> object should not be reported).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">item1,</span> <span class="pre">item2,</span> <span class="pre">...,</span> <span class="pre">itemN</span> <span class="pre">]</span></code></p></td>
+<td><p>A list which matches any of the
+specified items. Note that at the
 topmost level, the surrounding square
-brackets are optional.</li>
-<li><strong>If the current object does not have an</strong> (<em>name?</em>) – attribute called <em>name</em>, the reference
+brackets are optional.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">name?</span></code></p></td>
+<td><p>If the current object does not have an
+attribute called <em>name</em>, the reference
 can be ignored. If the ‘?’ character
 is omitted, the current object must
 have a trait called <em>name</em>, otherwise
-an exception will be raised.</li>
-<li><strong>Matches any trait on the object whose</strong> (<em>prefix+metadata_name</em>) – name begins with <em>prefix</em>.</li>
-<li><strong>Matches any trait on the object having</strong> (<em>+metadata_name</em>) – <em>metadata_name</em> metadata.</li>
-<li><strong>Matches any trait on the object which</strong> (<em>-metadata_name</em>) – does not have <em>metadata_name</em>
-metadata.</li>
-<li><strong>Matches any trait on the object whose</strong> – name begins with <em>prefix</em> and which
-has <em>metadata_name</em> metadata.</li>
-<li><strong>Matches any trait on the object</strong> (<em>prefix-metadata_name</em>) – whose name begins with <em>prefix</em> and
+an exception will be raised.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">prefix+</span></code></p></td>
+<td><p>Matches any trait on the object whose
+name begins with <em>prefix</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">+metadata_name</span></code></p></td>
+<td><p>Matches any trait on the object having
+<em>metadata_name</em> metadata.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">-metadata_name</span></code></p></td>
+<td><p>Matches any trait on the object which
+does not have <em>metadata_name</em>
+metadata.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">prefix+metadata_name</span></code></p></td>
+<td><p>Matches any trait on the object whose
+name begins with <em>prefix</em> and which
+has <em>metadata_name</em> metadata.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">prefix-metadata_name</span></code></p></td>
+<td><p>Matches any trait on the object
+whose name begins with <em>prefix</em> and
 which does not have <em>metadata_name</em>
-metadata.</li>
-<li><strong>Matches all traits on the object.</strong> (<em>+</em>) – </li>
-<li><strong>Matches object graphs where pattern</strong> (<em>pattern*</em>) – occurs one or more times (useful for
+metadata.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">+</span></code></p></td>
+<td><p>Matches all traits on the object.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pattern*</span></code></p></td>
+<td><p>Matches object graphs where <em>pattern</em>
+occurs one or more times (useful for
 setting up listeners on recursive data
 structures like trees or linked
-lists).</li>
-<li><strong>======================================</strong> (<em>================================</em>) – </li>
-<li><strong>examples of valid names and their meaning are as follows</strong> (<em>Some</em>) – </li>
-<li><strong>===============================================</strong> (<em>=======================</em>) – </li>
-<li><strong>meaning</strong> (<em>example</em>) – </li>
-<li><strong>===============================================</strong> – </li>
-<li><strong>Listen for trait changes to object.foo</strong><strong>,</strong> (<em>foo</em><em>,</em><em>bar</em><em>,</em><em>baz</em>) – <em>object.bar</em>, and <em>object.baz</em>.</li>
-<li><strong>Equivalent to 'foo</strong><strong>,</strong><strong>bar</strong><strong>,</strong><strong>baz'</strong><strong>, </strong><strong>but may be more</strong> (<em>[</em><em>'foo'</em><em>,</em><em>'bar'</em><em>,</em><em>'baz'</em><em>]</em>) – useful in cases where the individual items are
-computed.</li>
-<li><strong>Listen for trait changes to</strong> (<em>foo.bar.baz</em>) – <em>object.foo.bar.baz</em> and report changes to
+lists).</p></td>
+</tr>
+</tbody>
+</table>
+<p>Some examples of valid names and their meaning are as follows:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>example</p></th>
+<th class="head"><p>meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">foo,bar,baz</span></code></p></td>
+<td><p>Listen for trait changes to <em>object.foo</em>,
+<em>object.bar</em>, and <em>object.baz</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">['foo','bar','baz']</span></code></p></td>
+<td><p>Equivalent to ‘foo,bar,baz’, but may be more
+useful in cases where the individual items are
+computed.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">foo.bar.baz</span></code></p></td>
+<td><p>Listen for trait changes to
+<em>object.foo.bar.baz</em> and report changes to
 <em>object.foo</em>, <em>object.foo.bar</em> or
-<em>object.foo.bar.baz</em>.</li>
-<li><strong>``foo</strong> – <p>only report changes to <em>object.foo.bar.baz</em>.</p>
-</li>
-<li><strong>Listen for trait changes to object.foo.bar</strong> (<em>foo.</em><em>[</em><em>bar</em><em>,</em><em>baz</em><em>]</em>) – and <em>object.foo.baz</em>.</li>
-<li><strong>Listen for trait changes to the name trait of</strong> (<em>[</em><em>left</em><em>,</em><em>right</em><em>]</em><em>*.name</em>) – each node of a tree having <em>left</em> and <em>right</em>
+<em>object.foo.bar.baz</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">foo:bar:baz</span></code></p></td>
+<td><p>Listen for changes to <em>object.foo.bar.baz</em>, and
+only report changes to <em>object.foo.bar.baz</em>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">foo.[bar,baz]</span></code></p></td>
+<td><p>Listen for trait changes to <em>object.foo.bar</em>
+and <em>object.foo.baz</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">[left,right]*.name</span></code></p></td>
+<td><p>Listen for trait changes to the <em>name</em> trait of
+each node of a tree having <em>left</em> and <em>right</em>
 links to other tree nodes, and where <em>object</em>
 the method is applied to the root node of the
-tree.</li>
-<li><strong>Listen for trait changes on any trait in the</strong> (<em>+dirty</em>) – <em>object</em> which has the ‘dirty’ metadata set.</li>
-<li><strong>Listen for trait changes on any trait in</strong> (<em>foo.+dirty</em>) – <em>object.foo</em> which has the ‘dirty’ metadata
-set.</li>
-<li><strong>Listen for trait changes on object.foo.bar or</strong> (<em>foo.</em><em>[</em><em>bar</em><em>,</em><em>-dirty</em><em>]</em>) – any trait on <em>object.foo</em> which does not have
-‘dirty’ metadata set.</li>
-<li><strong>===============================================</strong> – </li>
-</ul>
-</td>
+tree.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">+dirty</span></code></p></td>
+<td><p>Listen for trait changes on any trait in the
+<em>object</em> which has the ‘dirty’ metadata set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">foo.+dirty</span></code></p></td>
+<td><p>Listen for trait changes on any trait in
+<em>object.foo</em> which has the ‘dirty’ metadata
+set.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">foo.[bar,-dirty]</span></code></p></td>
+<td><p>Listen for trait changes on <em>object.foo.bar</em> or
+any trait on <em>object.foo</em> which does not have
+‘dirty’ metadata set.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1184,11 +1190,11 @@ being monitored.</p>
 how changes to intermediate traits are processed. The five valid
 handler signatures are:</p>
 <ol class="arabic simple">
-<li>handler()</li>
-<li>handler(new)</li>
-<li>handler(name,new)</li>
-<li>handler(object,name,new)</li>
-<li>handler(object,name,old,new)</li>
+<li><p>handler()</p></li>
+<li><p>handler(new)</p></li>
+<li><p>handler(name,new)</p></li>
+<li><p>handler(object,name,new)</p></li>
+<li><p>handler(object,name,old,new)</p></li>
 </ol>
 <p>For signatures 1, 4 and 5, any change to any element of a path
 being listened to invokes the handler with information about the
@@ -1196,22 +1202,22 @@ particular element that was modified (e.g., if the item being
 monitored is ‘foo.bar.baz’, a change to ‘bar’ will call <em>handler</em>
 with the following information:</p>
 <ul class="simple">
-<li>object: object.foo</li>
-<li>name:   bar</li>
-<li>old:    old value for object.foo.bar</li>
-<li>new:    new value for object.foo.bar</li>
+<li><p>object: object.foo</p></li>
+<li><p>name:   bar</p></li>
+<li><p>old:    old value for object.foo.bar</p></li>
+<li><p>new:    new value for object.foo.bar</p></li>
 </ul>
 <p>If one of the intermediate links is a List or Dict, the call to
 <em>handler</em> may report an <em>_items</em> changed event. If in the previous
 example, <em>bar</em> is a List, and a new item is added to <em>bar</em>, then
 the information passed to <em>handler</em> would be:</p>
 <ul class="simple">
-<li>object: object.foo</li>
-<li>name:   bar_items</li>
-<li>old:    Undefined</li>
-<li><dl class="first docutils">
-<dt>new:    TraitListEvent whose <em>added</em> trait contains the new item</dt>
-<dd>added to <em>bar</em>.</dd>
+<li><p>object: object.foo</p></li>
+<li><p>name:   bar_items</p></li>
+<li><p>old:    Undefined</p></li>
+<li><dl class="simple">
+<dt>new:    TraitListEvent whose <em>added</em> trait contains the new item</dt><dd><p>added to <em>bar</em>.</p>
+</dd>
 </dl>
 </li>
 </ul>
@@ -1235,264 +1241,276 @@ cases where the <em>handler</em> only needs to know that some aspect of the
 final trait has been changed. For all other <em>handler</em> signatures,
 you must explicitly specify the ‘xxx_items’ trait if you want to
 be notified of changes to any of the items of the ‘xxx’ trait.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handler</strong> (<em>function</em>) – A trait notification function for the <em>name</em> trait attribute, with
+one of the signatures described below.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the trait attribute whose value changes trigger the
+notification. The <em>name</em> can specify complex patterns of trait
+changes using an extended <em>name</em> syntax, which is described below.</p></li>
+<li><p><strong>remove</strong> (<em>bool</em>) – If True, removes the previously-set association between
+<em>handler</em> and <em>name</em>; if False (the default), creates the
+association.</p></li>
+<li><p><strong>dispatch</strong> (<em>str</em>) – <p>A string indicating the thread on which notifications must be run.
+Possible values are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 83%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>value</p></th>
+<th class="head"><p>dispatch</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">same</span></code></p></td>
+<td><p>Run notifications on the same thread as this one.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ui</span></code></p></td>
+<td><p>Run notifications on the UI thread. If the current
+thread is the UI thread, the notifications are executed
+immediately; otherwise, they are placed on the UI
+event queue.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fast_ui</span></code></p></td>
+<td><p>Alias for <code class="docutils literal notranslate"><span class="pre">ui</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">new</span></code></p></td>
+<td><p>Run notifications in a new thread.</p></td>
+</tr>
+</tbody>
+</table>
+</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.sync_trait">
-<code class="descname">sync_trait</code><span class="sig-paren">(</span><em>trait_name</em>, <em>object</em>, <em>alias=None</em>, <em>mutual=True</em>, <em>remove=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.sync_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.sync_trait" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">sync_trait</code><span class="sig-paren">(</span><em class="sig-param">trait_name</em>, <em class="sig-param">object</em>, <em class="sig-param">alias=None</em>, <em class="sig-param">mutual=True</em>, <em class="sig-param">remove=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.sync_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.sync_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Synchronizes the value of a trait attribute on this object with a
 trait attribute on another object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) – Name of the trait attribute on this object.</li>
-<li><strong>object</strong> (<em>object</em>) – The object with which to synchronize.</li>
-<li><strong>alias</strong> (<em>str</em>) – Name of the trait attribute on <em>other</em>; if None or omitted, same
-as <em>name</em>.</li>
-<li><strong>mutual</strong> (<em>bool</em><em> or </em><em>int</em>) – Indicates whether synchronization is mutual (True or non-zero)
-or one-way (False or zero)</li>
-<li><strong>remove</strong> (<em>bool</em><em> or </em><em>int</em>) – Indicates whether synchronization is being added (False or zero)
-or removed (True or non-zero)</li>
-<li><strong>Description</strong> – </li>
-<li><strong>-----------</strong> – </li>
-<li><strong>mutual synchronization</strong><strong>, </strong><strong>any change to the value of the specified</strong> (<em>In</em>) – </li>
-<li><strong>attribute of either object results in the same value being</strong> (<em>trait</em>) – </li>
-<li><strong>to the corresponding trait attribute of the other object.</strong> (<em>assigned</em>) – </li>
-<li><strong>one-way synchronization</strong><strong>, </strong><strong>any change to the value of the attribute</strong> (<em>In</em>) – </li>
-<li><strong>this object causes the corresponding trait attribute of object to</strong> (<em>on</em>) – </li>
-<li><strong>updated</strong><strong>, </strong><strong>but not vice versa.</strong> (<em>be</em>) – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the trait attribute on this object.</p></li>
+<li><p><strong>object</strong> (<em>object</em>) – The object with which to synchronize.</p></li>
+<li><p><strong>alias</strong> (<em>str</em>) – Name of the trait attribute on <em>other</em>; if None or omitted, same
+as <em>name</em>.</p></li>
+<li><p><strong>mutual</strong> (<em>bool</em><em> or </em><em>int</em>) – Indicates whether synchronization is mutual (True or non-zero)
+or one-way (False or zero)</p></li>
+<li><p><strong>remove</strong> (<em>bool</em><em> or </em><em>int</em>) – Indicates whether synchronization is being added (False or zero)
+or removed (True or non-zero)</p></li>
+<li><p><strong>Description</strong> – </p></li>
+<li><p><strong>-----------</strong> – </p></li>
+<li><p><strong>mutual synchronization</strong><strong>, </strong><strong>any change to the value of the specified</strong> (<em>In</em>) – </p></li>
+<li><p><strong>attribute of either object results in the same value being</strong> (<em>trait</em>) – </p></li>
+<li><p><strong>to the corresponding trait attribute of the other object.</strong> (<em>assigned</em>) – </p></li>
+<li><p><strong>one-way synchronization</strong><strong>, </strong><strong>any change to the value of the attribute</strong> (<em>In</em>) – </p></li>
+<li><p><strong>this object causes the corresponding trait attribute of object to</strong> (<em>on</em>) – </p></li>
+<li><p><strong>updated</strong><strong>, </strong><strong>but not vice versa.</strong> (<em>be</em>) – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.add_trait">
-<code class="descname">add_trait</code><span class="sig-paren">(</span><em>name</em>, <em>*trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.add_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.add_trait" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_trait</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">*trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.add_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.add_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a trait attribute to this object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) – Name of the attribute to add.</li>
-<li><strong>*trait</strong> – Trait or a value that can be converted to a trait by Trait().
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the attribute to add.</p></li>
+<li><p><strong>*trait</strong> – Trait or a value that can be converted to a trait by Trait().
 Trait definition for <em>name</em>. If more than one value is specified,
-it is equivalent to passing the entire list of values to Trait().</li>
+it is equivalent to passing the entire list of values to Trait().</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.remove_trait">
-<code class="descname">remove_trait</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.remove_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.remove_trait" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">remove_trait</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.remove_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.remove_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes a trait attribute from this object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Name of the attribute to remove.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> – True if the trait was successfully removed.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute to remove.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>result</strong> – True if the trait was successfully removed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait">
-<code class="descname">trait</code><span class="sig-paren">(</span><em>name</em>, <em>force=False</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trait</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">force=False</em>, <em class="sig-param">copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the trait definition for the <em>name</em> trait attribute.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) – Name of the attribute whose trait definition is to be returned.</li>
-<li><strong>force</strong> (<em>bool</em>) – Indicates whether to return a trait definition if <em>name</em> is
-not explicitly defined.</li>
-<li><strong>copy</strong> (<em>bool</em>) – Indicates whether to return the original trait definition or a
-copy.</li>
-<li><strong>Description</strong> – </li>
-<li><strong>-----------</strong> – </li>
-<li><strong>force is False</strong><strong> (</strong><strong>the default</strong><strong>) </strong><strong>and name is the name of an</strong> (<em>If</em>) – </li>
-<li><strong>defined trait attribute that has never been referenced</strong> (<em>implicitly</em>) – </li>
-<li><strong>(</strong><strong>i.e.</strong><strong>, </strong><strong>has not yet been defined</strong><strong>)</strong><strong>, </strong><strong>the result is None. In</strong> (<em>explicitly</em>) – </li>
-<li><strong>other cases</strong><strong>, </strong><strong>the result is the trait definition object associated</strong> (<em>all</em>) – </li>
-<li><strong>name.</strong> (<em>with</em>) – </li>
-<li><strong>copy is True</strong><strong>, </strong><strong>and a valid trait definition is found for name</strong><strong>,</strong> (<em>If</em>) – </li>
-<li><strong>copy of the trait found is returned. In all other cases</strong><strong>, </strong><strong>the trait</strong> (<em>a</em>) – </li>
-<li><strong>found is returned unmodified</strong><strong> (</strong><strong>the default</strong><strong>)</strong><strong></strong> (<em>definition</em>) – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the attribute whose trait definition is to be returned.</p></li>
+<li><p><strong>force</strong> (<em>bool</em>) – Indicates whether to return a trait definition if <em>name</em> is
+not explicitly defined.</p></li>
+<li><p><strong>copy</strong> (<em>bool</em>) – Indicates whether to return the original trait definition or a
+copy.</p></li>
+<li><p><strong>Description</strong> – </p></li>
+<li><p><strong>-----------</strong> – </p></li>
+<li><p><strong>force is False</strong><strong> (</strong><strong>the default</strong><strong>) </strong><strong>and name is the name of an</strong> (<em>If</em>) – </p></li>
+<li><p><strong>defined trait attribute that has never been referenced</strong> (<em>implicitly</em>) – </p></li>
+<li><p><strong>(</strong><strong>i.e.</strong><strong>, </strong><strong>has not yet been defined</strong><strong>)</strong><strong>, </strong><strong>the result is None. In</strong> (<em>explicitly</em>) – </p></li>
+<li><p><strong>other cases</strong><strong>, </strong><strong>the result is the trait definition object associated</strong> (<em>all</em>) – </p></li>
+<li><p><strong>name.</strong> (<em>with</em>) – </p></li>
+<li><p><strong>copy is True</strong><strong>, </strong><strong>and a valid trait definition is found for name</strong><strong>,</strong> (<em>If</em>) – </p></li>
+<li><p><strong>copy of the trait found is returned. In all other cases</strong><strong>, </strong><strong>the trait</strong> (<em>a</em>) – </p></li>
+<li><p><strong>found is returned unmodified</strong><strong> (</strong><strong>the default</strong><strong>)</strong><strong></strong> (<em>definition</em>) – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.base_trait">
-<code class="descname">base_trait</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.base_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.base_trait" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">base_trait</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.base_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.base_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the base trait definition for a trait attribute.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) – Name of the attribute whose trait definition is returned.</li>
-<li><strong>Description</strong> – </li>
-<li><strong>-----------</strong> – </li>
-<li><strong>method is similar to the trait</strong><strong>(</strong><strong>) </strong><strong>method</strong><strong>, </strong><strong>and returns a</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
-<li><strong>result only in the case where the trait attribute defined by</strong> (<em>different</em>) – </li>
-<li><strong>is a delegate. In this case</strong><strong>, </strong><strong>the base_trait</strong><strong>(</strong><strong>) </strong><strong>method follows the</strong> (<em>*name*</em>) – </li>
-<li><strong>chain until a non-delegated trait attribute is reached</strong><strong>, </strong><strong>and</strong> (<em>delegation</em>) – </li>
-<li><strong>the definition of that attribute's trait as the result.</strong> (<em>returns</em>) – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the attribute whose trait definition is returned.</p></li>
+<li><p><strong>Description</strong> – </p></li>
+<li><p><strong>-----------</strong> – </p></li>
+<li><p><strong>method is similar to the trait</strong><strong>(</strong><strong>) </strong><strong>method</strong><strong>, </strong><strong>and returns a</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </p></li>
+<li><p><strong>result only in the case where the trait attribute defined by</strong> (<em>different</em>) – </p></li>
+<li><p><strong>is a delegate. In this case</strong><strong>, </strong><strong>the base_trait</strong><strong>(</strong><strong>) </strong><strong>method follows the</strong> (<em>*name*</em>) – </p></li>
+<li><p><strong>chain until a non-delegated trait attribute is reached</strong><strong>, </strong><strong>and</strong> (<em>delegation</em>) – </p></li>
+<li><p><strong>the definition of that attribute's trait as the result.</strong> (<em>returns</em>) – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.validate_trait">
-<code class="descname">validate_trait</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.validate_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.validate_trait" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">validate_trait</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.validate_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.validate_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates whether a value is legal for a trait.</p>
 <p>Returns the validated value if it is valid.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.traits">
-<code class="descname">traits</code><span class="sig-paren">(</span><em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">traits</code><span class="sig-paren">(</span><em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dictionary containing the definitions of all of the trait
 attributes of this object that match the set of <em>metadata</em> criteria.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>**metadata</strong> – Criteria for selecting trait attributes.</li>
-<li><strong>Description</strong> – </li>
-<li><strong>-----------</strong> – </li>
-<li><strong>keys of the returned dictionary are the trait attribute names</strong><strong>, </strong><strong>and</strong> (<em>The</em>) – </li>
-<li><strong>values are their corresponding trait definition objects.</strong> (<em>the</em>) – </li>
-<li><strong>no metadata information is specified</strong><strong>, </strong><strong>then all explicitly defined</strong> (<em>If</em>) – </li>
-<li><strong>attributes defined for the object are returned.</strong> (<em>trait</em>) – </li>
-<li><strong>the metadata keyword dictionary is assumed to define a set</strong> (<em>Otherwise</em><em>,</em>) – </li>
-<li><strong>search criteria for selecting trait attributes of interest. The</strong> (<em>of</em>) – </li>
-<li><strong>dictionary keys correspond to the names of trait metadata</strong> (<em>*metadata*</em>) – </li>
-<li><strong>to examine</strong><strong>, </strong><strong>and the values correspond to the values the</strong> (<em>attributes</em>) – </li>
-<li><strong>attribute must have in order to be included in the search</strong> (<em>metadata</em>) – </li>
-<li><strong>results.</strong> – </li>
-<li><strong>metadata values either may be simple Python values like strings or</strong> (<em>The</em>) – </li>
-<li><strong>or may be lambda expressions</strong><strong> or </strong><strong>functions that return True</strong> (<em>integers</em><em>,</em>) – </li>
-<li><strong>the trait attribute is to be included in the result. A lambda</strong> (<em>if</em>) – </li>
-<li><strong>or function must receive a single argument</strong><strong>, </strong><strong>which is the</strong> (<em>expression</em>) – </li>
-<li><strong>of the trait metadata attribute being tested. If more than one</strong> (<em>value</em>) – </li>
-<li><strong>keyword is specified</strong><strong>, </strong><strong>a trait attribute must match the metadata</strong> (<em>metadata</em>) – </li>
-<li><strong>of all keywords to be included in the result.</strong> (<em>values</em>) – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>**metadata</strong> – Criteria for selecting trait attributes.</p></li>
+<li><p><strong>Description</strong> – </p></li>
+<li><p><strong>-----------</strong> – </p></li>
+<li><p><strong>keys of the returned dictionary are the trait attribute names</strong><strong>, </strong><strong>and</strong> (<em>The</em>) – </p></li>
+<li><p><strong>values are their corresponding trait definition objects.</strong> (<em>the</em>) – </p></li>
+<li><p><strong>no metadata information is specified</strong><strong>, </strong><strong>then all explicitly defined</strong> (<em>If</em>) – </p></li>
+<li><p><strong>attributes defined for the object are returned.</strong> (<em>trait</em>) – </p></li>
+<li><p><strong>the metadata keyword dictionary is assumed to define a set</strong> (<em>Otherwise</em><em>,</em>) – </p></li>
+<li><p><strong>search criteria for selecting trait attributes of interest. The</strong> (<em>of</em>) – </p></li>
+<li><p><strong>dictionary keys correspond to the names of trait metadata</strong> (<em>*metadata*</em>) – </p></li>
+<li><p><strong>to examine</strong><strong>, </strong><strong>and the values correspond to the values the</strong> (<em>attributes</em>) – </p></li>
+<li><p><strong>attribute must have in order to be included in the search</strong> (<em>metadata</em>) – </p></li>
+<li><p><strong>results.</strong> – </p></li>
+<li><p><strong>metadata values either may be simple Python values like strings or</strong> (<em>The</em>) – </p></li>
+<li><p><strong>or may be lambda expressions</strong><strong> or </strong><strong>functions that return True</strong> (<em>integers</em><em>,</em>) – </p></li>
+<li><p><strong>the trait attribute is to be included in the result. A lambda</strong> (<em>if</em>) – </p></li>
+<li><p><strong>or function must receive a single argument</strong><strong>, </strong><strong>which is the</strong> (<em>expression</em>) – </p></li>
+<li><p><strong>of the trait metadata attribute being tested. If more than one</strong> (<em>value</em>) – </p></li>
+<li><p><strong>keyword is specified</strong><strong>, </strong><strong>a trait attribute must match the metadata</strong> (<em>metadata</em>) – </p></li>
+<li><p><strong>of all keywords to be included in the result.</strong> (<em>values</em>) – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="traits.has_traits.HasTraits.class_traits">
-<em class="property">classmethod </em><code class="descname">class_traits</code><span class="sig-paren">(</span><em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_traits" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">class_traits</code><span class="sig-paren">(</span><em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dictionary containing the definitions of all of the trait
 attributes of the class that match the set of <em>metadata</em> criteria.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>**metadata</strong> – Criteria for selecting trait attributes.</li>
-<li><strong>Description</strong> – </li>
-<li><strong>-----------</strong> – </li>
-<li><strong>keys of the returned dictionary are the trait attribute names</strong><strong>, </strong><strong>and</strong> (<em>The</em>) – </li>
-<li><strong>values are their corresponding trait definition objects.</strong> (<em>the</em>) – </li>
-<li><strong>no metadata information is specified</strong><strong>, </strong><strong>then all explicitly defined</strong> (<em>If</em>) – </li>
-<li><strong>attributes defined for the class are returned.</strong> (<em>trait</em>) – </li>
-<li><strong>the metadata keyword dictionary is assumed to define a set</strong> (<em>Otherwise</em><em>,</em>) – </li>
-<li><strong>search criteria for selecting trait attributes of interest. The</strong> (<em>of</em>) – </li>
-<li><strong>dictionary keys correspond to the names of trait metadata</strong> (<em>*metadata*</em>) – </li>
-<li><strong>to examine</strong><strong>, </strong><strong>and the values correspond to the values the</strong> (<em>attributes</em>) – </li>
-<li><strong>attribute must have in order to be included in the search</strong> (<em>metadata</em>) – </li>
-<li><strong>results.</strong> – </li>
-<li><strong>metadata values either may be simple Python values like strings or</strong> (<em>The</em>) – </li>
-<li><strong>or may be lambda expressions</strong><strong> or </strong><strong>functions that return True</strong> (<em>integers</em><em>,</em>) – </li>
-<li><strong>the trait attribute is to be included in the result. A lambda</strong> (<em>if</em>) – </li>
-<li><strong>or function must receive a single argument</strong><strong>, </strong><strong>which is the</strong> (<em>expression</em>) – </li>
-<li><strong>of the trait metadata attribute being tested. If more than one</strong> (<em>value</em>) – </li>
-<li><strong>keyword is specified</strong><strong>, </strong><strong>a trait attribute must match the metadata</strong> (<em>metadata</em>) – </li>
-<li><strong>of all keywords to be included in the result.</strong> (<em>values</em>) – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>**metadata</strong> – Criteria for selecting trait attributes.</p></li>
+<li><p><strong>Description</strong> – </p></li>
+<li><p><strong>-----------</strong> – </p></li>
+<li><p><strong>keys of the returned dictionary are the trait attribute names</strong><strong>, </strong><strong>and</strong> (<em>The</em>) – </p></li>
+<li><p><strong>values are their corresponding trait definition objects.</strong> (<em>the</em>) – </p></li>
+<li><p><strong>no metadata information is specified</strong><strong>, </strong><strong>then all explicitly defined</strong> (<em>If</em>) – </p></li>
+<li><p><strong>attributes defined for the class are returned.</strong> (<em>trait</em>) – </p></li>
+<li><p><strong>the metadata keyword dictionary is assumed to define a set</strong> (<em>Otherwise</em><em>,</em>) – </p></li>
+<li><p><strong>search criteria for selecting trait attributes of interest. The</strong> (<em>of</em>) – </p></li>
+<li><p><strong>dictionary keys correspond to the names of trait metadata</strong> (<em>*metadata*</em>) – </p></li>
+<li><p><strong>to examine</strong><strong>, </strong><strong>and the values correspond to the values the</strong> (<em>attributes</em>) – </p></li>
+<li><p><strong>attribute must have in order to be included in the search</strong> (<em>metadata</em>) – </p></li>
+<li><p><strong>results.</strong> – </p></li>
+<li><p><strong>metadata values either may be simple Python values like strings or</strong> (<em>The</em>) – </p></li>
+<li><p><strong>or may be lambda expressions</strong><strong> or </strong><strong>functions that return True</strong> (<em>integers</em><em>,</em>) – </p></li>
+<li><p><strong>the trait attribute is to be included in the result. A lambda</strong> (<em>if</em>) – </p></li>
+<li><p><strong>or function must receive a single argument</strong><strong>, </strong><strong>which is the</strong> (<em>expression</em>) – </p></li>
+<li><p><strong>of the trait metadata attribute being tested. If more than one</strong> (<em>value</em>) – </p></li>
+<li><p><strong>keyword is specified</strong><strong>, </strong><strong>a trait attribute must match the metadata</strong> (<em>metadata</em>) – </p></li>
+<li><p><strong>of all keywords to be included in the result.</strong> (<em>values</em>) – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_names">
-<code class="descname">trait_names</code><span class="sig-paren">(</span><em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_names" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trait_names</code><span class="sig-paren">(</span><em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of the names of all trait attributes whose definitions
 match the set of <em>metadata</em> criteria specified.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>**metadata</strong> – Criteria for selecting trait attributes.</li>
-<li><strong>Description</strong> – </li>
-<li><strong>-----------</strong> – </li>
-<li><strong>method is similar to the traits</strong><strong>(</strong><strong>) </strong><strong>method</strong><strong>, </strong><strong>but returns only the</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
-<li><strong>of the matching trait attributes</strong><strong>, </strong><strong>not the trait definitions.</strong> (<em>names</em>) – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>**metadata</strong> – Criteria for selecting trait attributes.</p></li>
+<li><p><strong>Description</strong> – </p></li>
+<li><p><strong>-----------</strong> – </p></li>
+<li><p><strong>method is similar to the traits</strong><strong>(</strong><strong>) </strong><strong>method</strong><strong>, </strong><strong>but returns only the</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </p></li>
+<li><p><strong>of the matching trait attributes</strong><strong>, </strong><strong>not the trait definitions.</strong> (<em>names</em>) – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="classmethod">
+<dl class="method">
 <dt id="traits.has_traits.HasTraits.class_trait_names">
-<em class="property">classmethod </em><code class="descname">class_trait_names</code><span class="sig-paren">(</span><em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_trait_names" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">class_trait_names</code><span class="sig-paren">(</span><em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_trait_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of the names of all trait attributes whose definitions
 match the set of <em>metadata</em> criteria specified.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>**metadata</strong> – Criteria for selecting trait attributes.</li>
-<li><strong>Description</strong> – </li>
-<li><strong>-----------</strong> – </li>
-<li><strong>method is similar to the traits</strong><strong>(</strong><strong>) </strong><strong>method</strong><strong>, </strong><strong>but returns only the</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </li>
-<li><strong>of the matching trait attributes</strong><strong>, </strong><strong>not the trait definitions.</strong> (<em>names</em>) – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>**metadata</strong> – Criteria for selecting trait attributes.</p></li>
+<li><p><strong>Description</strong> – </p></li>
+<li><p><strong>-----------</strong> – </p></li>
+<li><p><strong>method is similar to the traits</strong><strong>(</strong><strong>) </strong><strong>method</strong><strong>, </strong><strong>but returns only the</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </p></li>
+<li><p><strong>of the matching trait attributes</strong><strong>, </strong><strong>not the trait definitions.</strong> (<em>names</em>) – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.HasStrictTraits">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">HasStrictTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#HasStrictTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasStrictTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">HasStrictTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#HasStrictTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasStrictTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class guarantees that any object attribute that does not have an
 explicit or wildcard trait definition results in an exception.</p>
 <p>This feature can be useful in cases where a more rigorous software
@@ -1503,63 +1521,37 @@ going unnoticed; a misspelled attribute name typically causes an exception.</p>
 
 <dl class="class">
 <dt id="traits.has_traits.HasRequiredTraits">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">HasRequiredTraits</code><span class="sig-paren">(</span><em>**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasRequiredTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasRequiredTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">HasRequiredTraits</code><span class="sig-paren">(</span><em class="sig-param">**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasRequiredTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasRequiredTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class builds on the functionality of HasStrictTraits and ensures
 that any object attribute with <cite>required=True</cite> in its metadata must be
 passed as an argument on object initialization.</p>
 <p>This can be useful in cases where an object has traits which are required
 for it to function correctly.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last">
-<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">TraitError</span></code> – If a required trait is not passed as an argument.</p>
-</li>
-<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Usage</span></code></p>
-</li>
-<li><p class="first"><code class="xref py py-exc docutils literal notranslate"><span class="pre">-----</span></code></p>
-</li>
-<li><p class="first">A class with required traits:</p>
-</li>
-<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">RequiredTest</span><span class="p">(</span><span class="n">HasRequiredTraits</span><span class="p">):</span>
-</pre></div>
-</div>
-</li>
-<li><p class="first">…     required_trait = Any(required=True)</p>
-</li>
-<li><p class="first">…     non_required_trait = Any()</p>
-</li>
-<li><p class="first">Creating an instance of a HasRequiredTraits subclass:</p>
-</li>
-<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">required_trait</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">non_required_trait</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
-<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance2</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">required_trait</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
-<li><p class="first">Forgetting to specify a required trait:</p>
-</li>
-<li><div class="first highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_instance</span> <span class="o">=</span> <span class="n">RequiredTest</span><span class="p">(</span><span class="n">non_required_trait</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
-<li><p class="first">traits.trait_errors.TraitError: The following required traits were not</p>
-</li>
-<li><p class="first">provided: required_trait.</p>
-</li>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="trait_errors.html#traits.trait_errors.TraitError" title="traits.trait_errors.TraitError"><strong>TraitError</strong></a> – If a required trait is not passed as an argument.</p></li>
+<li><p><strong>Usage</strong> – </p></li>
+<li><p><strong>-----</strong> – </p></li>
+<li><p><strong>A class with required traits:</strong> – </p></li>
+<li><p><strong>&gt;&gt;&gt; class RequiredTest</strong><strong>(</strong><a class="reference internal" href="#traits.has_traits.HasRequiredTraits" title="traits.has_traits.HasRequiredTraits"><strong>HasRequiredTraits</strong></a><strong>)</strong><strong>:</strong> – </p></li>
+<li><p><strong>..     required_trait = Any</strong><strong>(</strong><strong>required=True</strong><strong>)</strong> – </p></li>
+<li><p><strong>..     non_required_trait = Any</strong><strong>(</strong><strong>)</strong> – </p></li>
+<li><p><strong>Creating an instance of a HasRequiredTraits subclass:</strong> – </p></li>
+<li><p><strong>&gt;&gt;&gt; test_instance = RequiredTest</strong><strong>(</strong><strong>required_trait=13</strong><strong>, </strong><strong>non_required_trait=11</strong><strong>)</strong> – </p></li>
+<li><p><strong>&gt;&gt;&gt; test_instance2 = RequiredTest</strong><strong>(</strong><strong>required_trait=13</strong><strong>)</strong> – </p></li>
+<li><p><strong>Forgetting to specify a required trait:</strong> – </p></li>
+<li><p><strong>&gt;&gt;&gt; test_instance = RequiredTest</strong><strong>(</strong><strong>non_required_trait=11</strong><strong>)</strong> – </p></li>
+<li><p><a class="reference internal" href="trait_errors.html#traits.trait_errors.TraitError" title="traits.trait_errors.TraitError"><strong>traits.trait_errors.TraitError</strong></a> – The following required traits were not:</p></li>
+<li><p><strong>provided</strong> – required_trait.:</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.HasPrivateTraits">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">HasPrivateTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#HasPrivateTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasPrivateTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">HasPrivateTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#HasPrivateTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasPrivateTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class ensures that any public object attribute that does not have
 an explicit or wildcard trait definition results in an exception, but
 “private” attributes (whose names start with ‘_’) have an initial value of
@@ -1572,70 +1564,70 @@ manipulated only by the (presumably correct) methods of the class itself.</p>
 
 <dl class="class">
 <dt id="traits.has_traits.SingletonHasTraits">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">SingletonHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#SingletonHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.SingletonHasTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">SingletonHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#SingletonHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.SingletonHasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Singleton class that support trait attributes.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.SingletonHasStrictTraits">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">SingletonHasStrictTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#SingletonHasStrictTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.SingletonHasStrictTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">SingletonHasStrictTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#SingletonHasStrictTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.SingletonHasStrictTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Singleton class that supports strict trait attributes.</p>
 <p>Non-trait attributes generate an exception.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.SingletonHasPrivateTraits">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">SingletonHasPrivateTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#SingletonHasPrivateTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.SingletonHasPrivateTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">SingletonHasPrivateTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#SingletonHasPrivateTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.SingletonHasPrivateTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Singleton class that supports trait attributes, with private attributes
 being unchecked.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.Vetoable">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">Vetoable</code><a class="reference internal" href="../_modules/traits/has_traits.html#Vetoable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.Vetoable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">Vetoable</code><a class="reference internal" href="../_modules/traits/has_traits.html#Vetoable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.Vetoable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines a ‘vetoable’ request object and an associated event.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.Interface">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">Interface</code><a class="reference internal" href="../_modules/traits/has_traits.html#Interface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.Interface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">Interface</code><a class="reference internal" href="../_modules/traits/has_traits.html#Interface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.Interface" title="Permalink to this definition">¶</a></dt>
 <dd><p>The base class for all interfaces.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.ISerializable">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">ISerializable</code><a class="reference internal" href="../_modules/traits/has_traits.html#ISerializable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ISerializable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">ISerializable</code><a class="reference internal" href="../_modules/traits/has_traits.html#ISerializable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ISerializable" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class that implemented ISerializable requires that all HasTraits
 objects saved as part of its state also implement ISerializable.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.traits_super">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">traits_super</code><a class="reference internal" href="../_modules/traits/has_traits.html#traits_super"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.traits_super" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">traits_super</code><a class="reference internal" href="../_modules/traits/has_traits.html#traits_super"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.traits_super" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 <div class="section" id="abc-classes">
 <h2>ABC classes<a class="headerlink" href="#abc-classes" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">These classes are only available when the abc module is present.</p>
+<p class="admonition-title">Note</p>
+<p>These classes are only available when the abc module is present.</p>
 </div>
 <dl class="class">
 <dt id="traits.has_traits.ABCMetaHasTraits">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">ABCMetaHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#ABCMetaHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCMetaHasTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">ABCMetaHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#ABCMetaHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCMetaHasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>A MetaHasTraits subclass which also inherits from
 abc.ABCMeta.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The ABCMeta class is cooperative and behaves nicely
+<p class="admonition-title">Note</p>
+<p>The ABCMeta class is cooperative and behaves nicely
 with MetaHasTraits, provided it is inherited first.</p>
 </div>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.ABCHasTraits">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">ABCHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#ABCHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCHasTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">ABCHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#ABCHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCHasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>A HasTraits subclass which enables the features of Abstract
 Base Classes (ABC). See the ‘abc’ module in the standard library
 for more information.</p>
@@ -1643,7 +1635,7 @@ for more information.</p>
 
 <dl class="class">
 <dt id="traits.has_traits.ABCHasStrictTraits">
-<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">ABCHasStrictTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#ABCHasStrictTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCHasStrictTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">ABCHasStrictTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#ABCHasStrictTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCHasStrictTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>A HasTraits subclass which behaves like HasStrictTraits but
 also enables the features of Abstract Base Classes (ABC). See the
 ‘abc’ module in the standard library for more information.</p>
@@ -1654,7 +1646,7 @@ also enables the features of Abstract Base Classes (ABC). See the
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="traits.has_traits.cached_property">
-<code class="descclassname">traits.has_traits.</code><code class="descname">cached_property</code><span class="sig-paren">(</span><em>function</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#cached_property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.cached_property" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">cached_property</code><span class="sig-paren">(</span><em class="sig-param">function</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#cached_property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.cached_property" title="Permalink to this definition">¶</a></dt>
 <dd><p>Marks the following method definition as being a “cached property”.
 That is, it is a property getter which, for performance reasons, caches
 its most recently computed result in an attribute whose name is of the
@@ -1687,14 +1679,14 @@ For details, see the traits.traits.Property() function.</p>
 
 <dl class="function">
 <dt id="traits.has_traits.get_delegate_pattern">
-<code class="descclassname">traits.has_traits.</code><code class="descname">get_delegate_pattern</code><span class="sig-paren">(</span><em>name</em>, <em>trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#get_delegate_pattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.get_delegate_pattern" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">get_delegate_pattern</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#get_delegate_pattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.get_delegate_pattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the correct ‘delegate’ listener pattern for a specified name and
 delegate trait.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.has_traits.on_trait_change">
-<code class="descclassname">traits.has_traits.</code><code class="descname">on_trait_change</code><span class="sig-paren">(</span><em>name</em>, <em>post_init=False</em>, <em>dispatch='same'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#on_trait_change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.on_trait_change" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">on_trait_change</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">post_init=False</em>, <em class="sig-param">dispatch='same'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#on_trait_change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.on_trait_change" title="Permalink to this definition">¶</a></dt>
 <dd><p>Marks the following method definition as being a handler for the
 extended trait change specified by <em>name(s)</em>.</p>
 <p>Refer to the documentation for the on_trait_change() method of
@@ -1710,7 +1702,7 @@ will not cause the handler to be invoked.</p>
 
 <dl class="function">
 <dt id="traits.has_traits.property_depends_on">
-<code class="descclassname">traits.has_traits.</code><code class="descname">property_depends_on</code><span class="sig-paren">(</span><em>dependency</em>, <em>settable=False</em>, <em>flushable=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#property_depends_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.property_depends_on" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">property_depends_on</code><span class="sig-paren">(</span><em class="sig-param">dependency</em>, <em class="sig-param">settable=False</em>, <em class="sig-param">flushable=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#property_depends_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.property_depends_on" title="Permalink to this definition">¶</a></dt>
 <dd><p>Marks the following method definition as being a “cached property”
 that depends on the specified extended trait names. That is, it is a
 property getter which, for performance reasons, caches its most recently
@@ -1742,22 +1734,19 @@ code, is returned.</p>
 
 <dl class="function">
 <dt id="traits.has_traits.provides">
-<code class="descclassname">traits.has_traits.</code><code class="descname">provides</code><span class="sig-paren">(</span><em>*protocols</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#provides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.provides" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">provides</code><span class="sig-paren">(</span><em class="sig-param">*protocols</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#provides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.provides" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class decorator to declare the protocols that a class provides.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*protocols</strong> – A list of protocols (Interface classes or Python ABCs) that the
-decorated class provides.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*protocols</strong> – A list of protocols (Interface classes or Python ABCs) that the
+decorated class provides.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.has_traits.weak_arg">
-<code class="descclassname">traits.has_traits.</code><code class="descname">weak_arg</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#weak_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.weak_arg" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">weak_arg</code><span class="sig-paren">(</span><em class="sig-param">arg</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#weak_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.weak_arg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a weak reference to arg and wrap the function so that the
 dereferenced weakref is passed as the first argument. If arg has been
 deleted then the function is not called.</p>
@@ -1777,7 +1766,7 @@ deleted then the function is not called.</p>
             </a></p>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">has_traits</span></code> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.has_traits</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#abc-classes">ABC classes</a></li>
 <li><a class="reference internal" href="#functions">Functions</a></li>
@@ -1786,24 +1775,22 @@ deleted then the function is not called.</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="category.html"
-                        title="previous chapter"><code class="docutils literal notranslate"><span class="pre">category</span></code> Module</a></p>
+  <p class="topless"><a href="traits.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.traits</span></code> Module</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="has_dynamic_views.html"
-                        title="next chapter"><code class="docutils literal notranslate"><span class="pre">has_dynamic_views</span></code> Module</a></p>
+  <p class="topless"><a href="base_trait_handler.html"
+                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.base_trait_handler</span></code> Module</a></p>
   <h3>This Page</h3>
   <div>
     <a href="../_sources/traits_api_reference/has_traits.rst.txt"
        rel="nofollow">Show Source</a>
   </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -1824,13 +1811,13 @@ deleted then the function is not called.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2019, Enthought Inc
+        &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on Nov 18, 2019.
+      Last updated on Feb 14, 2020.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
       </li>
     </ul>
     </div>

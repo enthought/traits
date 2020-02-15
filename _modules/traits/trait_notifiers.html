@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '5.2.0',
+        VERSION:     '6.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
     <link rel="top" title="Traits 5 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
@@ -53,6 +54,10 @@
               
     <ul class="nav nav-pills pull-right">
       <li class="active">
+        <a href="../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
         <a href="../../py-modindex.html" title="Python Module Index"
            >modules</a>
       </li>
@@ -70,22 +75,15 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for traits.trait_notifiers</h1><div class="highlight"><pre>
-<span></span><span class="c1"># ------------------------------------------------------------------------------</span>
+<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
-<span class="c1">#  Copyright (c) 2005-2013, Enthought, Inc.</span>
-<span class="c1">#  All rights reserved.</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
 <span class="c1">#</span>
-<span class="c1">#  This software is provided without warranty under the terms of the BSD</span>
-<span class="c1">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
-<span class="c1">#  under the conditions described in the aforementioned license.  The license</span>
-<span class="c1">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
-<span class="c1">#</span>
-<span class="c1">#  Thanks for using Enthought open source!</span>
-<span class="c1">#</span>
-<span class="c1">#  Author:        David C. Morrill</span>
-<span class="c1">#  Original Date: 06/21/2002</span>
-<span class="c1">#</span>
-<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
 
 <span class="sd">&quot;&quot;&quot; Classes that implement and support the Traits change notification mechanism</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -94,16 +92,10 @@
 <span class="c1">#  Imports:</span>
 <span class="c1"># -------------------------------------------------------------------------------</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
-
 <span class="kn">import</span> <span class="nn">contextlib</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
-
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">local</span> <span class="k">as</span> <span class="n">thread_local</span>
 <span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Thread</span>
-
 <span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">MethodType</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
@@ -795,13 +787,11 @@
               <img class="logo" src="../../_static/img/e-logo.png" alt="Logo">
             </a></p>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -822,13 +812,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2019, Enthought Inc
+        &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on Nov 18, 2019.
+      Last updated on Feb 14, 2020.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
       </li>
     </ul>
     </div>

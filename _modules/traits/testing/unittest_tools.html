@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '5.2.0',
+        VERSION:     '6.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
     <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
     <link rel="top" title="Traits 5 User Manual" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
@@ -53,6 +54,10 @@
               
     <ul class="nav nav-pills pull-right">
       <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
         <a href="../../../py-modindex.html" title="Python Module Index"
            >modules</a>
       </li>
@@ -70,16 +75,16 @@
           <div class="body" id="spc-section-body">
             
   <h1>Source code for traits.testing.unittest_tools</h1><div class="highlight"><pre>
-<span></span><span class="c1"># ------------------------------------------------------------------------------</span>
-<span class="c1"># Copyright (c) 2005-2013, Enthought, Inc.</span>
+<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># This software is provided without warranty under the terms of the BSD</span>
-<span class="c1"># license included in /LICENSE.txt and may be redistributed only</span>
-<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
 <span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
 <span class="c1"># Thanks for using Enthought open source!</span>
-<span class="c1"># ------------------------------------------------------------------------------</span>
+
 <span class="sd">&quot;&quot;&quot; Trait assert mixin class to simplify test implementation for Trait</span>
 <span class="sd">Classes.</span>
 
@@ -106,11 +111,32 @@
     <span class="n">Property</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">traits.util.async_trait_wait</span> <span class="k">import</span> <span class="n">wait_for_condition</span>
-<span class="kn">from</span> <span class="nn">traits</span> <span class="k">import</span> <span class="n">_py2to3</span>
 
 
 <span class="k">class</span> <span class="nc">_AssertTraitChangesContext</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A context manager used to implement the trait change assert methods.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Checking if the provided xname corresponds to valid traits in the class</span>
+<span class="sd">    is not implemented yet.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    obj : HasTraits</span>
+<span class="sd">        The HasTraits class instance whose class trait will change.</span>
+
+<span class="sd">    xname : str</span>
+<span class="sd">        The extended trait name of trait changes to listen to.</span>
+
+<span class="sd">    count : int, optional</span>
+<span class="sd">        The expected number of times the event should be fired. When None</span>
+<span class="sd">        (default value) there is no check for the number of times the</span>
+<span class="sd">        change event was fired.</span>
+
+<span class="sd">    test_case : TestCase</span>
+<span class="sd">        A unittest TestCase where to raise the failureException if</span>
+<span class="sd">        necessary.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -138,31 +164,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">test_case</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Initialize the trait change assertion context manager.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        obj : HasTraits</span>
-<span class="sd">            The HasTraits class instance whose class trait will change.</span>
-
-<span class="sd">        xname : str</span>
-<span class="sd">            The extended trait name of trait changes to listen to.</span>
-
-<span class="sd">        count : int, optional</span>
-<span class="sd">            The expected number of times the event should be fired. When None</span>
-<span class="sd">            (default value) there is no check for the number of times the</span>
-<span class="sd">            change event was fired.</span>
-
-<span class="sd">        test_case : TestCase</span>
-<span class="sd">            A unittest TestCase where to raise the failureException if</span>
-<span class="sd">            necessary.</span>
-
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        - Checking if the provided xname corresponds to valid traits in</span>
-<span class="sd">          the class is not implemented yet.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">obj</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">xname</span> <span class="o">=</span> <span class="n">xname</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span>
@@ -404,7 +405,8 @@
             <span class="n">callableObj</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span></div>
 
-<div class="viewcode-block" id="UnittestTools.assertMultiTraitChanges"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges">[docs]</a>    <span class="k">def</span> <span class="nf">assertMultiTraitChanges</span><span class="p">(</span>
+<div class="viewcode-block" id="UnittestTools.assertMultiTraitChanges"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges">[docs]</a>    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+    <span class="k">def</span> <span class="nf">assertMultiTraitChanges</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">,</span> <span class="n">traits_modified</span><span class="p">,</span> <span class="n">traits_not_modified</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Assert that traits on multiple objects do or do not change.</span>
@@ -424,13 +426,16 @@
 <span class="sd">            The extended trait names of traits not expected to change.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">traits_modified</span><span class="p">:</span>
-                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">traits_not_modified</span><span class="p">:</span>
-                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assertTraitDoesNotChange</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">_py2to3</span><span class="o">.</span><span class="n">nested_context_mgrs</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+        <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">ExitStack</span><span class="p">()</span> <span class="k">as</span> <span class="n">exit_stack</span><span class="p">:</span>
+            <span class="n">cms</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">traits_modified</span><span class="p">:</span>
+                    <span class="n">cms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exit_stack</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">)))</span>
+                <span class="k">for</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">traits_not_modified</span><span class="p">:</span>
+                    <span class="n">cms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exit_stack</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitDoesNotChange</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">)))</span>
+            <span class="k">yield</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cms</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UnittestTools.assertTraitChangesAsync"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync">[docs]</a>    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
     <span class="k">def</span> <span class="nf">assertTraitChangesAsync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">):</span>
@@ -584,13 +589,11 @@
               <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
             </a></p>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -611,13 +614,13 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2019, Enthought Inc
+        &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on Nov 18, 2019.
+      Last updated on Feb 14, 2020.
       </li>
       <li>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
       </li>
     </ul>
     </div>

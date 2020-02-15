@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>traits.trait_dict_object Module &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '6.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="traits.trait_errors Module" href="trait_errors.html" >
+    <link rel="prev" title="traits.trait_converters Module" href="trait_converters.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="trait_errors.html" title="traits.trait_errors Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="trait_converters.html" title="traits.trait_converters Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="module-traits.trait_dict_object">
+<span id="traits-trait-dict-object-module"></span><h1><a class="reference internal" href="#module-traits.trait_dict_object" title="traits.trait_dict_object"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_dict_object</span></code></a> Module<a class="headerlink" href="#module-traits.trait_dict_object" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="traits.trait_dict_object.TraitDictEvent">
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_dict_object.</code><code class="sig-name descname">TraitDictEvent</code><span class="sig-paren">(</span><em class="sig-param">added=None</em>, <em class="sig-param">changed=None</em>, <em class="sig-param">removed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_dict_object.html#TraitDictEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_dict_object.TraitDictEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>An object reporting in-place changes to a traits dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>added</strong> (<em>dict</em><em> or </em><em>None</em>) – New keys and values, or optionally None if nothing was added.</p></li>
+<li><p><strong>changed</strong> (<em>dict</em><em> or </em><em>None</em>) – Updated keys and their previous values, or optionally None if nothing
+was changed.</p></li>
+<li><p><strong>removed</strong> (<em>dict</em><em> or </em><em>None</em>) – Old keys and values that were just removed, or optionally None if
+nothing was removed.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="traits.trait_dict_object.TraitDictEvent.added">
+<code class="sig-name descname">added</code><a class="headerlink" href="#traits.trait_dict_object.TraitDictEvent.added" title="Permalink to this definition">¶</a></dt>
+<dd><p>New keys and values.  If nothing was added this is an empty dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_dict_object.TraitDictEvent.changed">
+<code class="sig-name descname">changed</code><a class="headerlink" href="#traits.trait_dict_object.TraitDictEvent.changed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updated keys and their previous values.  If nothing was changed this
+is an empty dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_dict_object.TraitDictEvent.removed">
+<code class="sig-name descname">removed</code><a class="headerlink" href="#traits.trait_dict_object.TraitDictEvent.removed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Old keys and values that were just removed.  If nothing was removed
+this is an empty dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_dict_object.TraitDictObject">
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_dict_object.</code><code class="sig-name descname">TraitDictObject</code><span class="sig-paren">(</span><em class="sig-param">trait</em>, <em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_dict_object.html#TraitDictObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_dict_object.TraitDictObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>A subclass of dict that fires trait events when mutated.</p>
+<p>This is used by the Dict trait type, and all values set into a Dict
+trait will be copied into a new TraitDictObject instance.</p>
+<p>Mutation of the TraitDictObject will fire a “name_items” event with
+appropriate added, changed and removed values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trait</strong> (<em>CTrait instance</em>) – The CTrait instance associated with the attribute that this dict
+has been set to.</p></li>
+<li><p><strong>object</strong> (<em>HasTraits instance</em>) – The HasTraits instance that the dict has been set as an attribute for.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute on the object.</p></li>
+<li><p><strong>value</strong> (<em>dict</em>) – The dict of values to initialize the TraitDictObject with.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="traits.trait_dict_object.TraitDictObject.trait">
+<code class="sig-name descname">trait</code><a class="headerlink" href="#traits.trait_dict_object.TraitDictObject.trait" title="Permalink to this definition">¶</a></dt>
+<dd><p>The CTrait instance associated with the attribute that this dict
+has been set to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>CTrait instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_dict_object.TraitDictObject.object">
+<code class="sig-name descname">object</code><a class="headerlink" href="#traits.trait_dict_object.TraitDictObject.object" title="Permalink to this definition">¶</a></dt>
+<dd><p>A weak reference to a HasTraits instance that the dict has been set
+as an attribute for.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>weak reference to a HasTraits instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_dict_object.TraitDictObject.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#traits.trait_dict_object.TraitDictObject.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the attribute on the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_dict_object.TraitDictObject.name_items">
+<code class="sig-name descname">name_items</code><a class="headerlink" href="#traits.trait_dict_object.TraitDictObject.name_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the items event trait that the trait dict will fire when
+mutated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_dict_object.TraitDictObject.clear">
+<code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None.  Remove all items from D.<a class="reference internal" href="../_modules/traits/trait_dict_object.html#TraitDictObject.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_dict_object.TraitDictObject.clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_dict_object.TraitDictObject.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">E</em>, <span class="optional">]</span><em class="sig-param">**F</em><span class="sig-paren">)</span> &#x2192; None.  Update D from dict/iterable E and F.<a class="reference internal" href="../_modules/traits/trait_dict_object.html#TraitDictObject.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_dict_object.TraitDictObject.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>If E is present and has a .keys() method, then does:  for k in E: D[k] = E[k]
+If E is present and lacks a .keys() method, then does:  for k, v in E: D[k] = v
+In either case, this is followed by: for k in F:  D[k] = F[k]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_dict_object.TraitDictObject.setdefault">
+<code class="sig-name descname">setdefault</code><span class="sig-paren">(</span><em class="sig-param">k</em><span class="optional">[</span>, <em class="sig-param">d</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; D.get(k,d), also set D[k]=d if k not in D<a class="reference internal" href="../_modules/traits/trait_dict_object.html#TraitDictObject.setdefault"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_dict_object.TraitDictObject.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_dict_object.TraitDictObject.pop">
+<code class="sig-name descname">pop</code><span class="sig-paren">(</span><em class="sig-param">k</em><span class="optional">[</span>, <em class="sig-param">d</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; v, remove specified key and return the corresponding value.<a class="reference internal" href="../_modules/traits/trait_dict_object.html#TraitDictObject.pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_dict_object.TraitDictObject.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>If key is not found, d is returned if given, otherwise KeyError is raised</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_dict_object.TraitDictObject.popitem">
+<code class="sig-name descname">popitem</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; (k, v), remove and return some (key, value) pair as a<a class="reference internal" href="../_modules/traits/trait_dict_object.html#TraitDictObject.popitem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_dict_object.TraitDictObject.popitem" title="Permalink to this definition">¶</a></dt>
+<dd><p>2-tuple; but raise KeyError if D is empty.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_dict_object</span></code> Module</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trait_converters.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_converters</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trait_errors.html"
+                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_errors</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/trait_dict_object.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought Inc
+      </li>
+      <li>
+      Last updated on Feb 14, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>traits.trait_type Module &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '6.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="traits.trait_types Module" href="trait_types.html" >
+    <link rel="prev" title="traits.trait_numeric Module" href="trait_numeric.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="trait_types.html" title="traits.trait_types Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="trait_numeric.html" title="traits.trait_numeric Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="module-traits.trait_type">
+<span id="traits-trait-type-module"></span><h1><a class="reference internal" href="#module-traits.trait_type" title="traits.trait_type"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_type</span></code></a> Module<a class="headerlink" href="#module-traits.trait_type" title="Permalink to this headline">¶</a></h1>
+<p>Defines the TraitType class.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">TraitType</span></code> class a trait handler that is the base class for modern
+traits, and provides a richer API than the old-style traits derived from
+<code class="docutils literal notranslate"><span class="pre">TraitHandler</span></code>.</p>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="attribute">
+<dt id="traits.trait_type.NoDefaultSpecified">
+<code class="sig-prename descclassname">traits.trait_type.</code><code class="sig-name descname">NoDefaultSpecified</code><a class="reference internal" href="../_modules/traits/trait_type.html#NoDefaultSpecified"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.NoDefaultSpecified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_type.TraitType">
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_type.</code><code class="sig-name descname">TraitType</code><span class="sig-paren">(</span><em class="sig-param">default_value=&lt;traits.trait_type.NoDefaultSpecified object&gt;</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for new trait types.</p>
+<p>This class enables you to define new traits using a class-based
+approach, instead of by calling the Trait() factory function with an
+instance of a TraitHandler derived object.</p>
+<p>When subclassing this class, you can implement one or more of the
+method signatures below. Note that these methods are defined only as
+comments, because the absence of method definitions in the subclass
+definition implicitly provides information about how the trait should
+operate.</p>
+<p>The optional methods are as follows:</p>
+<p><code class="docutils literal notranslate"><span class="pre">get(self,</span> <span class="pre">object,</span> <span class="pre">name)</span></code></p>
+<blockquote>
+<div><p>This is the getter method of a trait that behaves like a property.</p>
+<p>If neither this method nor the <code class="docutils literal notranslate"><span class="pre">set()</span></code> method is defined, the value
+of the trait is handled like a normal object attribute. If this
+method is not defined, but the <code class="docutils literal notranslate"><span class="pre">set()</span></code> method is defined, the trait
+behaves like a write-only property. This method should return the
+value of the <code class="docutils literal notranslate"><span class="pre">name</span></code> property for the <code class="docutils literal notranslate"><span class="pre">object</span></code> object.</p>
+<dl class="simple">
+<dt>Parameters</dt><dd><dl class="simple">
+<dt>object<span class="classifier">any</span></dt><dd><p>The object that the property applies to.</p>
+</dd>
+<dt>name<span class="classifier">str</span></dt><dd><p>The name of the property on <code class="docutils literal notranslate"><span class="pre">object</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">set(self,</span> <span class="pre">object,</span> <span class="pre">name,</span> <span class="pre">value)</span></code></p>
+<blockquote>
+<div><p>This is the setter method of a trait that behaves like a property.</p>
+<p>If neither this method nor the <code class="docutils literal notranslate"><span class="pre">get()</span></code> method is implemented, the
+trait behaves like a normal trait attribute. If this method is not
+defined, but the <code class="docutils literal notranslate"><span class="pre">get()</span></code> method is defined, the trait behaves like a
+read-only property. This method does not need to return a value,
+but it should raise a <code class="docutils literal notranslate"><span class="pre">TraitError</span></code> exception if the specified
+<code class="docutils literal notranslate"><span class="pre">value</span></code> is not valid and cannot be coerced or adapted to a valid
+value.</p>
+<dl class="simple">
+<dt>Parameters</dt><dd><dl class="simple">
+<dt>object<span class="classifier">any</span></dt><dd><p>The object that the property applies to.</p>
+</dd>
+<dt>name<span class="classifier">str</span></dt><dd><p>The name of the property on <code class="docutils literal notranslate"><span class="pre">object</span></code>.</p>
+</dd>
+<dt>value<span class="classifier">any</span></dt><dd><p>The value being assigned as the value of the property.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">validate(self,</span> <span class="pre">object,</span> <span class="pre">name,</span> <span class="pre">value)</span></code></p>
+<blockquote>
+<div><p>This method validates, coerces, or adapts the specified <code class="docutils literal notranslate"><span class="pre">value</span></code> as
+the value of the <code class="docutils literal notranslate"><span class="pre">name</span></code> trait of the <code class="docutils literal notranslate"><span class="pre">object</span></code> object. This method
+is called when a value is assigned to an object trait that is
+based on this subclass of <code class="docutils literal notranslate"><span class="pre">TraitType</span></code> and the class does not
+contain a definition for either the get() or set() methods. This
+method must return the original <code class="docutils literal notranslate"><span class="pre">value</span></code> or any suitably coerced or
+adapted value that is a legal value for the trait. If <code class="docutils literal notranslate"><span class="pre">value</span></code> is
+not a legal value for the trait, and cannot be coerced or adapted
+to a legal value, the method should either raise a <code class="docutils literal notranslate"><span class="pre">TraitError</span></code> or
+call the <code class="docutils literal notranslate"><span class="pre">error</span></code> method to raise the <code class="docutils literal notranslate"><span class="pre">TraitError</span></code> on its behalf.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">is_valid_for(self,</span> <span class="pre">value)</span></code></p>
+<blockquote>
+<div><p>As an alternative to implementing the <code class="docutils literal notranslate"><span class="pre">validate</span></code> method, you can
+instead implement the <code class="docutils literal notranslate"><span class="pre">is_valid_for</span></code> method, which receives only
+the <code class="docutils literal notranslate"><span class="pre">value</span></code> being assigned. It should return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the value is
+valid, and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">value_for</span> <span class="pre">(</span> <span class="pre">self,</span> <span class="pre">value</span> <span class="pre">)</span></code></p>
+<blockquote>
+<div><p>As another alternative to implementing the <code class="docutils literal notranslate"><span class="pre">validate</span></code> method, you
+can instead implement the <code class="docutils literal notranslate"><span class="pre">value_for</span></code> method, which receives only
+the <code class="docutils literal notranslate"><span class="pre">value</span></code> being assigned. It should return the validated form of
+<code class="docutils literal notranslate"><span class="pre">value</span></code> if it is valid, or raise a <code class="docutils literal notranslate"><span class="pre">TraitError</span></code> if the value is not
+valid.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">post_setattr(self,</span> <span class="pre">object,</span> <span class="pre">name,</span> <span class="pre">value)</span></code></p>
+<blockquote>
+<div><p>This method allows the trait to do additional processing after
+<code class="docutils literal notranslate"><span class="pre">value</span></code> has been successfully assigned to the <code class="docutils literal notranslate"><span class="pre">name</span></code> trait of the
+<code class="docutils literal notranslate"><span class="pre">object</span></code> object. For most traits there is no additional processing
+that needs to be done, and this method need not be defined. It is
+normally used for creating “shadow” (i.e., “mapped” traits), but
+other uses may arise as well. This method does not need to return
+a value, and should normally not raise any exceptions.</p>
+</div></blockquote>
+<dl class="attribute">
+<dt id="traits.trait_type.TraitType.metadata">
+<code class="sig-name descname">metadata</code><em class="property"> = {}</em><a class="headerlink" href="#traits.trait_type.TraitType.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>The metadata for the trait.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_type.TraitType.default_value">
+<code class="sig-name descname">default_value</code><em class="property"> = &lt;undefined&gt;</em><a class="headerlink" href="#traits.trait_type.TraitType.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default value for the trait type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_type.TraitType.init">
+<code class="sig-name descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows the trait to perform any additional initialization needed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_type.TraitType.get_default_value">
+<code class="sig-name descname">get_default_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.get_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.get_default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get information about the default value.</p>
+<p>The default implementation analyzes the value of the trait’s
+<code class="docutils literal notranslate"><span class="pre">default_value</span></code> attribute and determines an appropriate
+<code class="docutils literal notranslate"><span class="pre">default_value_type</span></code> for the <code class="docutils literal notranslate"><span class="pre">default_value</span></code>. If you need to
+override this method to provide a different result tuple, the
+following values are valid values for <code class="docutils literal notranslate"><span class="pre">default_value_type</span></code>:</p>
+<ul class="simple">
+<li><p>0, 1: The <code class="docutils literal notranslate"><span class="pre">default_value</span></code> item of the tuple is the default
+value.</p></li>
+<li><p>2: The object containing the trait is the default value.</p></li>
+<li><p>3: A new copy of the list specified by <code class="docutils literal notranslate"><span class="pre">default_value</span></code> is
+the default value.</p></li>
+<li><p>4: A new copy of the dictionary specified by <code class="docutils literal notranslate"><span class="pre">default_value</span></code>
+is the default value.</p></li>
+<li><p>5: A new instance of TraitListObject constructed using the
+<code class="docutils literal notranslate"><span class="pre">default_value</span></code> list is the default value.</p></li>
+<li><p>6: A new instance of TraitDictObject constructed using the
+<code class="docutils literal notranslate"><span class="pre">default_value</span></code> dictionary is the default value.</p></li>
+<li><p>7: <code class="docutils literal notranslate"><span class="pre">default_value</span></code> is a tuple of the form:
+<code class="docutils literal notranslate"><span class="pre">(callable,</span> <span class="pre">args,</span> <span class="pre">kw)</span></code>, where <code class="docutils literal notranslate"><span class="pre">callable</span></code> is a callable,
+<code class="docutils literal notranslate"><span class="pre">args</span></code> is a tuple, and <code class="docutils literal notranslate"><span class="pre">kw</span></code> is either a dictionary or None.
+The default value is the result obtained by invoking
+<code class="docutils literal notranslate"><span class="pre">callable(\*args,</span> <span class="pre">\*\*kw)</span></code>.</p></li>
+<li><p>8: <code class="docutils literal notranslate"><span class="pre">default_value</span></code> is a callable. The default value is the
+result obtained by invoking <code class="docutils literal notranslate"><span class="pre">default_value(object)</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">object</span></code> is the object containing the trait. If the trait has
+a <code class="docutils literal notranslate"><span class="pre">validate()</span></code> method, the <code class="docutils literal notranslate"><span class="pre">validate()</span></code> method is also called
+to validate the result.</p></li>
+<li><p>9: A new instance of <code class="docutils literal notranslate"><span class="pre">TraitSetObject</span></code> constructed using the
+<code class="docutils literal notranslate"><span class="pre">default_value</span></code> set is the default value.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>default_value_type, default_value</strong> – The default value information, consisting of an integer, giving
+the type of default value, and the corresponding default value
+as described above.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int, any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_type.TraitType.clone">
+<code class="sig-name descname">clone</code><span class="sig-paren">(</span><em class="sig-param">default_value=&lt;traits.trait_type.NoDefaultSpecified object&gt;</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy, optionally modifying default value and metadata.</p>
+<p>Clones the contents of this object into a new instance of the same
+class, and then modifies the cloned copy using the specified
+<code class="docutils literal notranslate"><span class="pre">default_value</span></code> and <code class="docutils literal notranslate"><span class="pre">metadata</span></code>. Returns the cloned object as the
+result.</p>
+<p>Note that subclasses can change the signature of this method if
+needed, but should always call the ‘super’ method if possible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>default_value</strong> (<em>any</em>) – The new default value for the trait.</p></li>
+<li><p><strong>**metadata</strong> (<em>dict</em>) – A dictionary of metadata names and corresponding values as
+arbitrary keyword arguments.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_type.TraitType.get_value">
+<code class="sig-name descname">get_value</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">trait=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.get_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current value of a property-based trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_type.TraitType.set_value">
+<code class="sig-name descname">set_value</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.set_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.set_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the cached value of a property-based trait and fires the
+appropriate trait change event.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_type.TraitType.as_ctrait">
+<code class="sig-name descname">as_ctrait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a CTrait corresponding to the trait defined by this class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_type.TraitType.instantiate_and_get_ctrait">
+<em class="property">classmethod </em><code class="sig-name descname">instantiate_and_get_ctrait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#TraitType.instantiate_and_get_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type.TraitType.instantiate_and_get_ctrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiate the class an return a CTrait instance</p>
+<p>This is primarily to allow traits to be defined within
+classes without having to explicitly call them.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="private-functions">
+<h2>Private Functions<a class="headerlink" href="#private-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="traits.trait_type._infer_default_value_type">
+<code class="sig-prename descclassname">traits.trait_type.</code><code class="sig-name descname">_infer_default_value_type</code><span class="sig-paren">(</span><em class="sig-param">default_value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#_infer_default_value_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type._infer_default_value_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Figure out the default value type given a default value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.trait_type._arg_count">
+<code class="sig-prename descclassname">traits.trait_type.</code><code class="sig-name descname">_arg_count</code><span class="sig-paren">(</span><em class="sig-param">func</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#_arg_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type._arg_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the correct argument count for a specified function or method.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.trait_type._write_only">
+<code class="sig-prename descclassname">traits.trait_type.</code><code class="sig-name descname">_write_only</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#_write_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type._write_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise a trait error for a write-only trait.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.trait_type._read_only">
+<code class="sig-prename descclassname">traits.trait_type.</code><code class="sig-name descname">_read_only</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_type.html#_read_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_type._read_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise a trait error for a read-only trait.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_type</span></code> Module</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#private-functions">Private Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trait_numeric.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_numeric</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trait_types.html"
+                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_types</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/trait_type.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought Inc
+      </li>
+      <li>
+      Last updated on Feb 14, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

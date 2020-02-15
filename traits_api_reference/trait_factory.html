@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>traits.trait_factory Module &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '6.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="traits.trait_handler Module" href="trait_handler.html" >
+    <link rel="prev" title="traits.trait_errors Module" href="trait_errors.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="trait_handler.html" title="traits.trait_handler Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="trait_errors.html" title="traits.trait_errors Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="module-traits.trait_factory">
+<span id="traits-trait-factory-module"></span><h1><a class="reference internal" href="#module-traits.trait_factory" title="traits.trait_factory"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_factory</span></code></a> Module<a class="headerlink" href="#module-traits.trait_factory" title="Permalink to this headline">¶</a></h1>
+<p>Defines the TraitFactory class and related objects.</p>
+<p>A TraitFactory is a class which allows deferred, but cached, creation of
+CTrait instances.  The TraitFactory API provides the <code class="docutils literal notranslate"><span class="pre">as_ctrait</span></code> method
+so that the trait conversion functions can generate CTrait instances in a
+standard way.</p>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="traits.trait_factory.TraitFactory">
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_factory.</code><code class="sig-name descname">TraitFactory</code><span class="sig-paren">(</span><em class="sig-param">maker_function=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_factory.html#TraitFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_factory.TraitFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>A factory class that allows deferred creation of traits</p>
+<p>Traits created by TraitFactory instances are cached, and the cached
+trait is returned by all subsequent calls to the same TraitFactory
+instance.</p>
+<dl class="method">
+<dt id="traits.trait_factory.TraitFactory.as_ctrait">
+<code class="sig-name descname">as_ctrait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_factory.html#TraitFactory.as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_factory.TraitFactory.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the CTrait instance from the factory.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_factory.TraitImportError">
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_factory.</code><code class="sig-name descname">TraitImportError</code><span class="sig-paren">(</span><em class="sig-param">message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_factory.html#TraitImportError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_factory.TraitImportError" title="Permalink to this definition">¶</a></dt>
+<dd><p>TraitFactory subclass that always fails when creating a CTrait</p>
+<p>This class is designed for uses such as deferring import problems until
+encountering code that actually tries to use the unimportable trait.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="traits.trait_factory.trait_factory">
+<code class="sig-prename descclassname">traits.trait_factory.</code><code class="sig-name descname">trait_factory</code><span class="sig-paren">(</span><em class="sig-param">trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_factory.html#trait_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_factory.trait_factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a trait created from a TraitFactory instance</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_factory</span></code> Module</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="trait_errors.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_errors</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="trait_handler.html"
+                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.trait_handler</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/trait_factory.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought Inc
+      </li>
+      <li>
+      Last updated on Feb 14, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

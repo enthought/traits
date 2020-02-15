@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>traits.ctraits Module &mdash; Traits 5 User Manual</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '6.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Traits 5 User Manual" href="../index.html" >
+    <link rel="up" title="API Reference" href="index.html" >
+    <link rel="next" title="traits.editor_factories Module" href="editor_factories.html" >
+    <link rel="prev" title="traits.ctrait Module" href="ctrait.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Traits 5 User Manual</a></li>
+	
+          <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="editor_factories.html" title="traits.editor_factories Module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="ctrait.html" title="traits.ctrait Module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="module-traits.ctraits">
+<span id="traits-ctraits-module"></span><h1><a class="reference internal" href="#module-traits.ctraits" title="traits.ctraits"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.ctraits</span></code></a> Module<a class="headerlink" href="#module-traits.ctraits" title="Permalink to this headline">¶</a></h1>
+<p>Fast base classes for HasTraits and CTrait.</p>
+<p>The ctraits module defines the CHasTraits and cTrait extension types
+that define the core performance-oriented portions of the Traits
+package. Users will rarely need to use this module directly. Instead,
+they should use the API-complete HasTraits and CTrait subclasses of
+CHasTraits and cTrait (respectively).</p>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="traits.ctraits.CHasTraits">
+<em class="property">class </em><code class="sig-prename descclassname">traits.ctraits.</code><code class="sig-name descname">CHasTraits</code><a class="headerlink" href="#traits.ctraits.CHasTraits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for HasTraits.</p>
+<p>The CHasTraits class is not intended to be instantiated directly.
+Instead, it serves as a base class for the HasTraits class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>**traits</strong> (<em>dict</em>) – Dictionary mapping trait names to trait values.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="traits.ctraits.CHasTraits.trait_items_event">
+<code class="sig-name descname">trait_items_event</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">event_object</em>, <em class="sig-param">event_trait</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.trait_items_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fire an items event for changes to a Traits collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the item trait for which an event is being fired. (The name
+will usually end in ‘_items’.)</p></li>
+<li><p><strong>event_object</strong> (<em>object</em>) – Object of type <code class="docutils literal notranslate"><span class="pre">TraitListEvent</span></code>, <code class="docutils literal notranslate"><span class="pre">TraitDictEvent</span></code> or <code class="docutils literal notranslate"><span class="pre">TraitSetEvent</span></code>
+describing the changes to the underlying collection trait value.</p></li>
+<li><p><strong>event_trait</strong> (<a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><em>CTrait</em></a>) – The items trait, of trait type <code class="docutils literal notranslate"><span class="pre">Event</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctraits.CHasTraits.trait_property_changed">
+<code class="sig-name descname">trait_property_changed</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">old_value</em><span class="optional">[</span>, <em class="sig-param">new_value</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.trait_property_changed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call notifiers when a trait property value is explicitly changed.</p>
+<p>Calls trait and object notifiers for a property value change.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the trait whose value has changed</p></li>
+<li><p><strong>old_value</strong> (<em>any</em>) – Old value for this trait.</p></li>
+<li><p><strong>new_value</strong> (<em>any</em><em>, </em><em>optional</em>) – New value for this trait. If the new value is not provided,
+it’s looked up on the object.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctraits.CHasTraits.traits_init">
+<code class="sig-name descname">traits_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.traits_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform any final object initialization needed.</p>
+<p>For the CHasTraits base class, this method currently does nothing.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctraits.CHasTraits.traits_inited">
+<code class="sig-name descname">traits_inited</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.traits_inited" title="Permalink to this definition">¶</a></dt>
+<dd><p>traits_inited(value)</p>
+<p>Get or set the initialization state of this object.</p>
+<p>With zero arguments, get the state: return True if the object has
+already been initialized, and False otherwise.</p>
+<p>With a single argument, if that argument is true, mark the object
+as initialized. If the argument is false, the state is unchanged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>bool</em>) – Only the value True (or another truthy value) should be passed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>initialized</strong> – True if the object is initialized, else False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.ctraits.cTrait">
+<em class="property">class </em><code class="sig-prename descclassname">traits.ctraits.</code><code class="sig-name descname">cTrait</code><a class="headerlink" href="#traits.ctraits.cTrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for CTrait.</p>
+<p>The cTrait class is not intended to be instantiated directly.
+Instead, it serves as a base class for CTrait.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>kind</strong> (<em>int</em>) – Integer between 0 and 8 representing the kind of this trait. The
+kind determines how attribute get and set operations behave for
+attributes using this trait. The values for <em>kind</em> correspond
+to the members of the <code class="docutils literal notranslate"><span class="pre">TraitKind</span></code> enumeration type.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="traits.ctraits.cTrait.clone">
+<code class="sig-name descname">clone</code><span class="sig-paren">(</span><em class="sig-param">source</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clone state of another trait into this one.</p>
+<p>This method copies all of the state of the <em>source</em> trait into
+this trait, with the exception of the trait notifiers and the
+trait __dict__. The copy is a simple shallow copy: for example,
+after the copy, the handler for this trait will be the same
+object as the handler for the <em>source</em> trait.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>source</strong> (<a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><em>CTrait</em></a>) – The source trait.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.ctraits.cTrait.comparison_mode">
+<code class="sig-name descname">comparison_mode</code><a class="headerlink" href="#traits.ctraits.cTrait.comparison_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integer constant indicating when notifiers are executed.</p>
+<p>The value of this constant is the integer corresponding to a member
+of the <a class="reference internal" href="constants.html#traits.constants.ComparisonMode" title="traits.constants.ComparisonMode"><code class="xref py py-data docutils literal notranslate"><span class="pre">ComparisonMode</span></code></a> enumeration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctraits.cTrait.default_value">
+<code class="sig-name descname">default_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return tuple giving default value information for this trait.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>default_value_type</strong> (<em>int</em>) – An integer representing the kind of the default value</p></li>
+<li><p><strong>default_value</strong> (<em>value</em>) – A value or callable providing the default</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctraits.cTrait.default_value_for">
+<code class="sig-name descname">default_value_for</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.default_value_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the default value of this CTrait instance for a specified object
+and trait name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The object the trait is attached to.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the trait.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>default_value</strong> – The default value for the given object and name.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctraits.cTrait.delegate">
+<code class="sig-name descname">delegate</code><span class="sig-paren">(</span><em class="sig-param">delegate_name</em>, <em class="sig-param">prefix</em>, <em class="sig-param">prefix_type</em>, <em class="sig-param">modify_delegate</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.delegate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set another trait as the delegate of this trait.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>delegate_name</strong> (<em>str</em>) – Name of an attribute on the current object with references the
+object that is the trait’s delegate.</p></li>
+<li><p><strong>delegate_prefix</strong> (<em>str</em>) – A prefix or substitution applied to the original attribute when
+looking up the delegated attribute.</p></li>
+<li><p><strong>prefix_type</strong> (<em>int</em>) – <p>An integer between 0 and 3, inclusive. This controls how the
+delegator attribute name is mapped to an attribute name on the
+delegate object. The meanings of the values are as follows:</p>
+<dl class="simple">
+<dt>0</dt><dd><p>The delegation is to an attribute on the delegate object with
+the same name as the delegator attribute. <em>delegate_prefix</em>
+is unused.</p>
+</dd>
+<dt>1</dt><dd><p>The delegation is to an attribute with name given directly by
+<em>delegate_prefix</em>.</p>
+</dd>
+<dt>2</dt><dd><p>The delegation is to an attribute whose name is the value of
+<em>delegate_prefix</em>, prepended to the delegator attribute name.</p>
+</dd>
+<dt>3</dt><dd><p>The delegation is to an attribute whose name is the value of
+the delegator object’s <code class="docutils literal notranslate"><span class="pre">__prefix__</span></code> attribute, prepended to
+the delegator attribute name.</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>modify_delegate</strong> (<em>bool</em>) – Whether to modify the delegate when the value of this trait
+is modified.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctraits.cTrait.get_validate">
+<code class="sig-name descname">get_validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.get_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the validator of a CTrait instance.</p>
+<p>Returns the current validator for a CTrait instance, or None
+if the trait has no validator. See also the set_validate
+method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>validator</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple, callable, or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.ctraits.cTrait.handler">
+<code class="sig-name descname">handler</code><a class="headerlink" href="#traits.ctraits.cTrait.handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>The trait handler underlying this trait.</p>
+<p>The value of this property should be an instance of
+<code class="docutils literal notranslate"><span class="pre">BaseTraitHandler</span></code>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.ctraits.cTrait.is_mapped">
+<code class="sig-name descname">is_mapped</code><a class="headerlink" href="#traits.ctraits.cTrait.is_mapped" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this is a mapped trait, else False.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.ctraits.cTrait.is_property">
+<code class="sig-name descname">is_property</code><a class="headerlink" href="#traits.ctraits.cTrait.is_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this trait is a property trait, else False.</p>
+<p>This property is read-only.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.ctraits.cTrait.modify_delegate">
+<code class="sig-name descname">modify_delegate</code><a class="headerlink" href="#traits.ctraits.cTrait.modify_delegate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicate whether modifications affect the delegate.</p>
+<p>For delegated traits, this is a boolean indicating whether
+modifications to this trait also modify the delegated trait.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.ctraits.cTrait.post_setattr">
+<code class="sig-name descname">post_setattr</code><a class="headerlink" href="#traits.ctraits.cTrait.post_setattr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callable called after a successful value assignment to this trait.</p>
+<p>The value of this property is either a callable or <em>None</em>.
+If the value is a callable, this callable allows the trait to do
+additional processing after a value has successfully been assigned.
+The callable is called with arguments (object, name, value), and the
+return value of the callable is ignored.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.ctraits.cTrait.post_setattr_original_value">
+<code class="sig-name descname">post_setattr_original_value</code><a class="headerlink" href="#traits.ctraits.cTrait.post_setattr_original_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether post_setattr receives the original or the validated value.</p>
+<p>If true, the post_setattr callable for this trait (if defined)
+receives the original, unvalidated value assigned to the trait.
+If false, the validated value is provided to post_setattr.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctraits.cTrait.property">
+<code class="sig-name descname">property</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.property" title="Permalink to this definition">¶</a></dt>
+<dd><p>property(get, get_n, set, set_n, validate, validate_n)</p>
+<p>Get or set property fields for this trait.</p>
+<p>When called with no arguments on a property trait, this method returns a
+tuple (get, set, validate) of length 3 containing the getter, setter and
+validator for this property trait.</p>
+<p>When called with no arguments on a non-property trait, this method
+returns <em>None</em>.</p>
+<p>Otherwise, the <em>property</em> method expects six arguments, and uses these
+arguments to set the get, set and validation for the trait. It also
+sets the property flag on the trait.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>get</strong> (<em>callable</em>) – <p>Function called when getting the value of this property trait.
+This function will be called with one of the following argument
+combinations, depending on the value of <em>get_n</em>.</p>
+<ul>
+<li><p>no arguments</p></li>
+<li><p>a single argument <code class="docutils literal notranslate"><span class="pre">obj</span></code></p></li>
+<li><p>a pair of arguments <code class="docutils literal notranslate"><span class="pre">obj,</span> <span class="pre">name</span></code></p></li>
+<li><p>a triple of arguments <code class="docutils literal notranslate"><span class="pre">obj,</span> <span class="pre">name,</span> <span class="pre">trait</span></code></p></li>
+</ul>
+</p></li>
+<li><p><strong>get_n</strong> (<em>int</em>) – Number of arguments to supply to the getter. This should be
+between 0 and 3, inclusive.</p></li>
+<li><p><strong>set</strong> (<em>callable</em>) – <p>Function called when setting the value of this property trait.
+This function will be called with one of the following argument
+combinations, depending on the value of <em>set_n</em>.</p>
+<ul>
+<li><p>no arguments</p></li>
+<li><p>a single argument <code class="docutils literal notranslate"><span class="pre">value</span></code></p></li>
+<li><p>a pair of arguments <code class="docutils literal notranslate"><span class="pre">obj,</span> <span class="pre">value</span></code></p></li>
+<li><p>a triple of arguments <code class="docutils literal notranslate"><span class="pre">obj,</span> <span class="pre">name,</span> <span class="pre">value</span></code></p></li>
+</ul>
+</p></li>
+<li><p><strong>set_n</strong> (<em>int</em>) – Number of arguments to supply to the setter. This should be
+between 0 and 3, inclusive.</p></li>
+<li><p><strong>validate</strong> (<em>callable</em><em> or </em><em>None</em>) – <p>Function called for validation. This function will be called
+with one of the following argument combinations, depending on
+the value of <em>validate_n</em>.</p>
+<ul>
+<li><p>no arguments</p></li>
+<li><p>a single argument <code class="docutils literal notranslate"><span class="pre">value</span></code></p></li>
+<li><p>a pair of arguments <code class="docutils literal notranslate"><span class="pre">obj,</span> <span class="pre">value</span></code></p></li>
+<li><p>a triple of arguments <code class="docutils literal notranslate"><span class="pre">obj,</span> <span class="pre">name,</span> <span class="pre">value</span></code></p></li>
+</ul>
+</p></li>
+<li><p><strong>validate_n</strong> (<em>int</em>) – Number of arguments to supply to the validator. This should be
+between 0 and 3, inclusive.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctraits.cTrait.set_default_value">
+<code class="sig-name descname">set_default_value</code><span class="sig-paren">(</span><em class="sig-param">default_value_type</em>, <em class="sig-param">default_value</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.set_default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default value information for this trait.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>default_value_type</strong> (<em>int</em>) – An integer representing the kind of the default value</p></li>
+<li><p><strong>default_value</strong> (<em>value</em>) – A value or callable providing the default</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctraits.cTrait.set_validate">
+<code class="sig-name descname">set_validate</code><span class="sig-paren">(</span><em class="sig-param">validator</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.set_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the validator of a CTrait instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>validator</strong> (<em>callable</em><em> or </em><em>tuple</em>) – <p>Either a callable used for validation, or a tuple representing
+validation information.</p>
+<p>A callable used for validation should have signature
+validator(obj, name, value) -&gt; value, and should return the
+validated (and possibly transformed) value. It should raise
+TraitError on failure to validate.</p>
+<p>If the validator is a tuple, its first entry will be an integer
+specifying the type of validation, and the remaining entries
+in the tuple (if any) provide additional information specific
+to the validation type</p>
+</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the given tuple does not have any of the expected forms.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.ctraits.cTrait.setattr_original_value">
+<code class="sig-name descname">setattr_original_value</code><a class="headerlink" href="#traits.ctraits.cTrait.setattr_original_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether setattr stores the original or the validated value.</p>
+<p>If true, setattr will store the original, unvalidated, value set on
+the trait to the object’s dictionary. If false, the value returned
+from the validator will be stored.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctraits.cTrait.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform validation and appropriate conversions on a value for this trait.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits object that validation is being performed for.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The name of the trait.</p></li>
+<li><p><strong>value</strong> (<em>object</em>) – The value to be validated.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>The validated, converted value.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="trait_errors.html#traits.trait_errors.TraitError" title="traits.trait_errors.TraitError"><strong>TraitError</strong></a> – If the given value is invalid for this trait.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.ctraits</span></code> Module</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ctrait.html"
+                        title="previous chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.ctrait</span></code> Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="editor_factories.html"
+                        title="next chapter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.editor_factories</span></code> Module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/traits_api_reference/ctraits.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought Inc
+      </li>
+      <li>
+      Last updated on Feb 14, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>
