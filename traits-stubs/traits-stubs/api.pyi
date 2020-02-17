@@ -35,3 +35,5 @@ from .trait_types import AdaptedTo as AdaptedTo, AdaptsTo as AdaptsTo, \
     false as false, self as self, true as true, undefined as undefined
 from .traits import Color as Color, Default as Default, Font as Font, \
     Property as Property, RGBColor as RGBColor, Trait as Trait
+
+from .has_traits import HasTraits as HasTraits
