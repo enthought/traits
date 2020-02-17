@@ -163,7 +163,7 @@ if BUILD_DOCSET:
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = "Traits 5 User Manual"
+html_title = "Traits 6 User Manual"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 # html_short_title = None
@@ -220,7 +220,7 @@ latex_documents = [
     (
         "index",
         "Traits.tex",
-        "Traits 5 User Manual",
+        "Traits 6 User Manual",
         "Enthought, Inc.",
         "manual",
     )
@@ -254,7 +254,7 @@ texinfo_documents = [
     (
         "index",
         "traits",
-        "Traits 5 User Manual",
+        "Traits 6 User Manual",
         "Enthought, Inc.",
         "Traits",
         "Explicitly typed attributes for Python.",
