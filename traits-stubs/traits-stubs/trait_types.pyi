@@ -1,3 +1,4 @@
+from pathlib import PurePath as _PurePath
 from typing import (
     Any as _Any,
     Callable as _CallableType,
@@ -10,7 +11,8 @@ from typing import (
     TypeVar,
     Union as _Union,
 )
-from uuid import UUID as _UUIDType
+
+from uuid import UUID as _UUID
 
 from .trait_type import TraitType as TraitType
 from .trait_type import _TraitType
@@ -124,8 +126,8 @@ class Bool(BaseBool):
 
 # -----------------BaseCInt--------------------
 
-class BaseCInt(BaseInt):
-    ...
+class BaseCInt(_BaseInt[_Any]):
+    default_value: _Any = ...
 
 
 class CInt(BaseCInt):
@@ -134,7 +136,7 @@ class CInt(BaseCInt):
 
 # -----------------BaseCFloat--------------------
 
-class BaseCFloat(BaseFloat):
+class BaseCFloat(_BaseFloat[_Any]):
     ...
 
 
@@ -144,7 +146,7 @@ class CFloat(BaseCFloat):
 
 # -----------------BaseCComplex--------------------
 
-class BaseCComplex(BaseComplex):
+class BaseCComplex(_BaseComplex[_Any]):
     ...
 
 
@@ -154,7 +156,7 @@ class CComplex(BaseCComplex):
 
 # -----------------BaseCStr--------------------
 
-class BaseCStr(BaseStr):
+class BaseCStr(_BaseStr[_Any]):
     ...
 
 
@@ -164,7 +166,7 @@ class CStr(BaseCStr):
 
 # -----------------BaseCBytes--------------------
 
-class BaseCBytes(BaseBytes):
+class BaseCBytes(_BaseBytes[_Any]):
     ...
 
 
@@ -174,7 +176,7 @@ class CBytes(BaseCBytes):
 
 # -----------------BaseCBool--------------------
 
-class BaseCBool(BaseBool):
+class BaseCBool(_BaseBool[_Any]):
     ...
 
 
@@ -220,7 +222,11 @@ class Password(String):
 
 # -----------------Callable--------------------
 
-class _BaseCallable(_TraitType[_T, _CallableType[..., _Any]]):
+
+_OptionalCallable = Optional[_CallableType[..., _Any]]
+
+
+class _BaseCallable(_TraitType[_OptionalCallable, _OptionalCallable]):
     ...
 
 
@@ -298,7 +304,7 @@ class Delegate(_TraitType):
 
 
 # -----------------DelegatesTo--------------------
-class DelegaatesTo(Delegate):
+class DelegatesTo(Delegate):
     ...
 
 
@@ -318,7 +324,7 @@ class PythonValue(_Any):
 
 
 # ----------------BaseFile---------------------
-class _BaseFile(_BaseStr):
+class _BaseFile(_TraitType[_Union[str, _PurePath], str]):
     ...
 
 
@@ -394,11 +400,7 @@ class Tuple(BaseTuple):
 
 
 # ----------------UUID---------------------
-class _UUID(_TraitType[_T, _UUIDType]):
-    ...
-
-
-class UUID(_UUID[_Union[str, _UUIDType]]):
+class UUID(_TraitType[_Union[str, _UUID], _UUID]):
     ...
 
 

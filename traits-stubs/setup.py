@@ -19,6 +19,6 @@ if __name__ == "__main__":
         install_requires=["mypy", "traits"],
         packages=["traits-stubs"],
         package_data={
-            'traits-stubs': ['./*.pyi', './**/*.pyi'],
+            'traits-stubs': ['./*.pyi', './**/*.pyi', './tests/examples/*'],
         },
     )

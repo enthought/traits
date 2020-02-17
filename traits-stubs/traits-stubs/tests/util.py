@@ -1,7 +1,6 @@
-from collections import defaultdict
 import inspect
 import re
-import tempfile
+from collections import defaultdict
 
 from mypy import api as mypy_api
 
@@ -33,6 +32,18 @@ def parse(obj):
     return code_string, line_err_map
 
 
+def parse_file(filepath):
+    line_err_map = {}
+
+    with open(filepath) as fp:
+        line_count = 0
+        for line in fp.readlines():
+            line_count += 1
+            if "{ERR}" in line:
+                line_err_map[line_count] = "{ERR}"
+    return line_err_map
+
+
 def parse_output(output_str):
     line_errors_dict = defaultdict(list)
     for line in output_str.split("\n"):
@@ -43,19 +54,9 @@ def parse_output(output_str):
     return line_errors_dict
 
 
-def run_mypy(code_string):
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".py",
-                                     delete=True) as f:
-        f.write(code_string)
-        f.flush()
-        normal_report, error_report, exit_status = mypy_api.run([f.name])
-
+def run_mypy(filepath):
+    normal_report, error_report, exit_status = mypy_api.run([filepath])
     return normal_report, error_report, exit_status
-
-
-def getlines(multiline_string, list_line_nos):
-    lines = multiline_string.split("\n")
-    return [lines[i - 1] for i in list_line_nos]
 
 
 class MypyAssertions(object):
@@ -67,11 +68,10 @@ class MypyAssertions(object):
             raise AssertionError(
                 f"{normal_report} {error_report} {exit_status}")
 
-    def assertRaisesMypyError(self, obj):
-        code_string, line_error_map = parse(obj)
-        normal_report, error_report, exit_status = run_mypy(code_string)
+    def assertRaisesMypyError(self, filepath):
+        line_error_map = parse_file(filepath)
+        normal_report, error_report, exit_status = run_mypy(str(filepath))
         out = parse_output(normal_report)
-        print(f"Expected Errors: {getlines(code_string, line_error_map.keys())}")
-        print(f"Actual Errors: {getlines(code_string, out.keys())}")
+
         if not out.keys() == line_error_map.keys():
             raise AssertionError(f'{normal_report}')
