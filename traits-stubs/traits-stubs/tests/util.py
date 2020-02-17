@@ -76,8 +76,7 @@ class MypyAssertions(object):
         code_string, _ = parse(obj)
         normal_report, error_report, exit_status = run_mypy(code_string)
         if exit_status != 0:
-            raise AssertionError(
-                f"{normal_report} {error_report} {exit_status}")
+            raise AssertionError("Mypy Report: {}".format(normal_report))
 
     def assertRaisesMypyError(self, filepath):
         line_error_map = parse_file(filepath)
@@ -85,4 +84,4 @@ class MypyAssertions(object):
         out = parse_output(normal_report)
 
         if not out.keys() == line_error_map.keys():
-            raise AssertionError(f'{normal_report}')
+            raise AssertionError("Mypy Report: {}".format(normal_report))
