@@ -357,7 +357,16 @@ class Directory(_BaseDirectory):
 
 # ----------------BaseRange---------------------
 class _BaseRange(_TraitType):
-    ...
+    def __init__(
+            self,
+            low: _Union[int, float, str] = ...,
+            high: _Union[int, float, str] = ...,
+            value: _Union[int, float, str] = ...,
+            exclude_low: bool = ...,
+            exclude_high: bool = ...,
+            **metadata: _Dict[str, _Any]
+    ) -> None:
+        ...
 
 
 class BaseRange(_BaseRange):
