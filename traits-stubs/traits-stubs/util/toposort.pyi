@@ -1,6 +1,0 @@
-from typing import Any
-
-class CyclicGraph(Exception):
-    def __init__(self) -> None: ...
-
-def topological_sort(graph: Any): ...

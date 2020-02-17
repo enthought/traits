@@ -10,17 +10,17 @@ def code_block():
         var = Set(trait=Int())
 
     obj = Test()
-    obj.var = "5"
-    obj.var = 5
+    obj.var = "5"  # {ERR}
+    obj.var = 5  # {ERR}
 
-    obj.var = False
-    obj.var = 5.5
+    obj.var = False  # {ERR}
+    obj.var = 5.5  # {ERR}
 
-    obj.var = 5 + 4j
-    obj.var = True
+    obj.var = 5 + 4j  # {ERR}
+    obj.var = True  # {ERR}
 
     obj.var = [1, 2, 3]
-    obj.var = [1, 2, "3"]
+    obj.var = [1, 2, "3"]  # {ERR}
 
 
 class TestSet(TestCase, MypyAssertions):
