@@ -19,6 +19,9 @@ from traits.has_traits import (
     ListenerTraits,
     InstanceTraits,
     HasTraits,
+    SingletonHasTraits,
+    SingletonHasStrictTraits,
+    SingletonHasPrivateTraits,
 )
 from traits.ctrait import CTrait
 from traits.traits import ForwardProperty, generic_trait
@@ -321,3 +324,24 @@ class TestHasTraits(unittest.TestCase):
         foo._trait_set_inited()
 
         self.assertTrue(foo.traits_inited())
+
+
+class TestDeprecatedHasTraits(unittest.TestCase):
+    def test_deprecated(self):
+        class TestSingletonHasTraits(SingletonHasTraits):
+            pass
+
+        class TestSingletonHasStrictTraits(SingletonHasStrictTraits):
+            pass
+
+        class TestSingletonHasPrivateTraits(SingletonHasPrivateTraits):
+            pass
+
+        with self.assertWarns(DeprecationWarning):
+            TestSingletonHasTraits()
+
+        with self.assertWarns(DeprecationWarning):
+            TestSingletonHasStrictTraits()
+
+        with self.assertWarns(DeprecationWarning):
+            TestSingletonHasPrivateTraits()

@@ -72,7 +72,7 @@ Functions
 Deprecated Classes
 ------------------
 
-The following :class:`~.HasTraits` classes and instances are deprecated,
+The following :class:`~.HasTraits` subclasses are deprecated,
 and may be removed in a future version of Traits.
 
 .. autoclass:: SingletonHasTraits
