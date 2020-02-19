@@ -36,7 +36,7 @@ _S = TypeVar("_S")
 _Trait = _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]]
 
 
-class Any(TraitType):
+class Any(_TraitType[_Any, _Any]):
     ...
 
 
@@ -46,11 +46,11 @@ class _BaseInt(_TraitType[_T, int]):
 
 
 class BaseInt(_BaseInt[int]):
-    default_value: int = ...
+    ...
 
 
 class Int(BaseInt):
-    default_value: int = ...
+    ...
 
 
 # -----------------Float--------------------
@@ -59,11 +59,11 @@ class _BaseFloat(_TraitType[_T, float]):
 
 
 class BaseFloat(_BaseFloat[float]):
-    default_value: float = ...
+    ...
 
 
 class Float(BaseFloat):
-    default_value: float = ...
+    ...
 
 
 # -----------------Complex--------------------
@@ -72,35 +72,31 @@ class _BaseComplex(_TraitType[_T, complex]):
 
 
 class BaseComplex(_BaseComplex[complex]):
-    default_value: complex = ...
+    ...
 
 
 class Complex(BaseComplex):
-    default_value: complex = ...
+    ...
 
 
 # -----------------Str--------------------
 
 class _BaseStr(_TraitType[_T, str]):
-    default_value: str = ...
+    ...
 
 
 class BaseStr(_BaseStr[str]):
-    default_value: str = ...
+    ...
 
 
-class _Str(BaseStr):
-    default_value: str = ...
-
-
-class Str(_Str):
+class Str(BaseStr):
     ...
 
 
 # -----------------Title--------------------
 
-class Title(_Str):
-    default_value: str = ...
+class Title(Str):
+    ...
 
 
 # -----------------Bytes--------------------
@@ -109,11 +105,11 @@ class _BaseBytes(_TraitType[_T, bytes]):
 
 
 class BaseBytes(_BaseBytes[bytes]):
-    default_value: bytes = ...
+    ...
 
 
 class Bytes(BaseBytes):
-    default_value: bytes = ...
+    ...
 
 
 # -----------------Bool--------------------
@@ -173,11 +169,7 @@ class BaseCStr(_BaseCStr):
     ...
 
 
-class _CStr(_BaseCStr):
-    ...
-
-
-class CStr(_CStr):
+class CStr(_BaseCStr):
     ...
 
 
@@ -208,8 +200,13 @@ class _String(_TraitType[_T, str]):
 
 
 class String(_String[str]):
-    def __init__(self, value: str = ..., minlen: int = ..., maxlen: int = ...,
-                 regex: str = ...):
+    def __init__(self,
+                 value: str = ...,
+                 minlen: int = ...,
+                 maxlen: int = ...,
+                 regex: str = ...,
+                 **metadata: _DictType[str, _Any]
+                 ):
         ...
 
 
@@ -255,125 +252,97 @@ class Callable(BaseCallable):
     ...
 
 
-# -----------------Type--------------------
-
-# TODO
-class BaseType(_Any):
+class BaseType(_TraitType[_Any, _Any]):
     ...
 
 
-class Type(BaseType):
-    ...
-
-
-# -----------------This--------------------
 class This(BaseType):
     ...
 
 
-# -----------------self--------------------
 class self(This):
     ...
 
 
-# -----------------Function--------------------
-class Function(_TraitType):
+class Function(_TraitType[_OptionalCallable, _OptionalCallable]):
     ...
 
 
-# -----------------Method--------------------
-
-class Method(_TraitType):
+class Method(_TraitType[_OptionalCallable, _OptionalCallable]):
     ...
 
 
-# -----------------Module--------------------
-
-class Module(_TraitType):
+class Module(_TraitType[_Any, _Any]):
     ...
 
 
-# -----------------Python--------------------
-class Python(_TraitType):
+class Python(_TraitType[_Any, _Any]):
     ...
 
 
-# -----------------ReadOnly--------------------
-# TODO
-class ReadOnly(_Any):
+class ReadOnly(_TraitType[_Any, _Any]):
     ...
 
 
-# -----------------Disallow--------------------
-# TODO
-class Disallow(_Any):
+class Disallow(_TraitType[_Any, _Any]):
     ...
 
 
-# -----------------Constant--------------------
-class Constant(_TraitType):
+class Constant(_TraitType[_Any, _Any]):
     ...
 
 
-# -----------------Delegate--------------------
-class Delegate(_TraitType):
-    ...
+class Delegate(_TraitType[_Any, _Any]):
+    def __init__(self,
+                 deligate: str = ...,
+                 prefix: str = ...,
+                 modify: bool = ...,
+                 listenable: bool = ...,
+                 ):
+        ...
 
 
-# -----------------DelegatesTo--------------------
 class DelegatesTo(Delegate):
     ...
 
 
-# -----------------PrototypedFrom--------------------
 class PrototypedFrom(Delegate):
     ...
 
 
-# -----------------Expression--------------------
-class Expression(_TraitType):
+class Expression(_TraitType[_Any, _Any]):
     ...
 
 
-# ---------------------PythonValue----------------
-class PythonValue(_Any):
+class PythonValue(Any):
     ...
 
 
-# ----------------BaseFile---------------------
-class _BaseFile(_TraitType[_Union[str, _PurePath], str]):
+class BaseFile(_TraitType[_Union[str, _PurePath], str]):
+    def __init__(self,
+                 value: str = ...,
+                 filter: str = ...,
+                 auto_set: bool = ...,
+                 entries: int = ...,
+                 exists: bool = ...,
+                 ):
+        ...
+
+
+class File(BaseFile):
     ...
 
 
-class BaseFile(_BaseFile):
+class BaseDirectory(_BaseStr):
     ...
 
 
-# ----------------File---------------------
-class _File(_BaseFile):
-    ...
-
-
-class File(_File):
-    ...
-
-
-# ----------------BaseDirectory---------------------
-class _BaseDirectory(_BaseStr):
-    ...
-
-
-class BaseDirectory(_BaseDirectory):
-    ...
-
-
-# ----------------Directory---------------------
-class Directory(_BaseDirectory):
+class Directory(BaseDirectory):
     ...
 
 
 # ----------------BaseRange---------------------
-class _BaseRange(_TraitType):
+class _BaseRange(_TraitType[_T, _Union[int, float]]):
     def __init__(
             self,
             low: _Union[int, float, str] = ...,
@@ -386,16 +355,11 @@ class _BaseRange(_TraitType):
         ...
 
 
-class BaseRange(_BaseRange):
+class BaseRange(_BaseRange[_Union[int, float]]):
     ...
 
 
-# ----------------Range---------------------
-class _Range(_BaseRange):
-    ...
-
-
-class Range(_Range):
+class Range(BaseRange):
     ...
 
 
@@ -404,15 +368,14 @@ class _BaseEnum(_TraitType[_T, _Any]):
     ...
 
 
-class BaseEnum(_BaseEnum):
+class BaseEnum(_BaseEnum[_Any]):
     ...
 
 
-class Enum(_BaseEnum):
+class Enum(BaseEnum):
     ...
 
 
-# ----------------Tuple---------------------
 class _BaseTuple(_TraitType[_T, tuple]):
     ...
 
@@ -425,12 +388,15 @@ class Tuple(BaseTuple):
     ...
 
 
-# ----------------UUID---------------------
-class UUID(_TraitType[_Union[str, _UUID], _UUID]):
-    ...
+class ValidatedTuple(BaseTuple):
+    def __init__(self,
+                 types: _Any = ...,
+                 fvalidate: _OptionalCallable = ...,
+                 fvalidate_info: Optional[str] = ...,
+                 **metadata: _DictType[str, _Any]
+                 ):
+        ...
 
-
-# ----------------List---------------------
 
 class _List(_TraitType[_Sequence[_S], _ListType[_T]]):
     def __init__(
@@ -449,7 +415,10 @@ class List(_List[_S, _T]):
     ...
 
 
-# ----------------Set---------------------
+class PrefixList(BaseStr):
+    ...
+
+
 class _Set(_TraitType[_SetType[_S], _SetType[_T]]):
     def __init__(
             self,
@@ -465,7 +434,7 @@ class Set(_Set[_S, _T]):
     ...
 
 
-class CSet(_Set[_S, _T]):
+class CSet(Set):
     ...
 
 
@@ -483,67 +452,58 @@ class _Dict(_TraitType[_DictType[_S, _T], _DictType[_S, _T]]):
         ...
 
 
-class Dict(_Dict):
+class Dict(_Dict[_S, _T]):
     ...
 
 
-class _BaseClass(_TraitType[Optional[_Type, str], Optional[_Type, str]]):
+class BaseClass(_TraitType[Optional[_Type, str], Optional[_Type, str]]):
     ...
 
 
-class BaseClass(_BaseClass):
+class BaseInstance(BaseClass):
     ...
 
 
-class _BaseInstance(_BaseClass):
+class Instance(BaseInstance):
     ...
 
 
-class BaseInstance(_BaseInstance):
+class Supports(Instance):
     ...
 
 
-class _Instance(_BaseInstance):
+class AdaptsTo(Supports):
     ...
 
 
-class Instance(_Instance):
+class Type(BaseClass):
     ...
 
 
-class _Supports(_Instance):
+class Subclass(Type):
     ...
 
 
-class Supports(_Supports):
+class Event(_TraitType[_Any, _Any]):
     ...
 
 
-class AdaptsTo(_Supports):
-    ...
+class Button(Event):
+    def __init__(self,
+                 label: str = ...,
+                 image: _Any = ...,
+                 style: str = ...,
+                 values_trait: str = ...,
+                 orientation: str = ...,
+                 width_padding: int = ...,
+                 height_padding: int = ...,
+                 view: Optional[_Any] = ...,
+                 **metadata: _DictType[str, _Any]
+                 ):
+        ...
 
 
-# class Type(_BaseClass):
-#     ...
-
-
-class _Event(_TraitType[_Any, _Any]):
-    ...
-
-
-class Event(_Event):
-    ...
-
-
-class _Button(_Event):
-    ...
-
-
-class Button(_Button):
-    ...
-
-
-class ToolbarButton(_Button):
+class ToolbarButton(Button):
     ...
 
 
@@ -559,23 +519,27 @@ class Union(_TraitType[_Any, _Any]):
     ...
 
 
+class UUID(_TraitType[_Union[str, _UUID], _UUID]):
+    ...
+
+
 class Symbol(_TraitType[_Any, _Any]):
     ...
 
 
-class WeakRef(_Instance):
+class WeakRef(Instance):
     ...
 
 
-class Date(_BaseInstance):
+class Date(BaseInstance):
     ...
 
 
-class Datetime(_BaseInstance):
+class Datetime(BaseInstance):
     ...
 
 
-class Time(_BaseInstance):
+class Time(BaseInstance):
     ...
 
 
@@ -583,23 +547,31 @@ class AdaptedTo(Supports):
     ...
 
 
-class BaseUnicode(_BaseStr):
+class BaseUnicode(BaseStr):
     ...
 
 
-class Unicode(_Str):
+class Unicode(Str):
     ...
 
 
-class BaseCUnicode(_BaseStr):
+class BaseCUnicode(BaseStr):
     ...
 
 
-class CUnicode(_CStr):
+class CUnicode(CStr):
     ...
 
 
-class BaseCLong(_BaseCInt):
+class BaseLong(BaseInt):
+    ...
+
+
+class Long(Int):
+    ...
+
+
+class BaseCLong(BaseCInt):
     ...
 
 
