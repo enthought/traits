@@ -48,11 +48,12 @@ def parse_file(filepath):
 
     with open(filepath) as fp:
         line_count = 0
-        for line in fp.readlines():
+        lines = fp.readlines()
+        for line in lines:
             line_count += 1
             if "{ERR}" in line:
                 line_err_map[line_count] = "{ERR}"
-    return line_err_map
+    return line_err_map, lines
 
 
 def parse_output(output_str):
@@ -70,6 +71,21 @@ def run_mypy(filepath):
     return normal_report, error_report, exit_status
 
 
+def show_diff(input_py_lines, expect_error_line_nums_list,
+              actual_error_line_nums_list):
+    s = '\n'
+    s += ("Expected Errors----------\n")
+    for line_num in expect_error_line_nums_list:
+        s += (input_py_lines[line_num - 1])
+
+    s += ("\nActual Errors-----------\n")
+    for line_num in actual_error_line_nums_list:
+        s += (input_py_lines[line_num - 1])
+    s += '\n'
+
+    return s
+
+
 class MypyAssertions(object):
 
     def assertNoMypyError(self, obj):
@@ -79,9 +95,12 @@ class MypyAssertions(object):
             raise AssertionError("Mypy Report: {}".format(normal_report))
 
     def assertRaisesMypyError(self, filepath):
-        line_error_map = parse_file(filepath)
+        line_error_map, lines = parse_file(filepath)
         normal_report, error_report, exit_status = run_mypy(str(filepath))
         out = parse_output(normal_report)
 
         if not out.keys() == line_error_map.keys():
-            raise AssertionError("Mypy Report: {}".format(normal_report))
+            s = "\n" + str(filepath)
+            s += show_diff(lines, line_error_map.keys(), out.keys())
+            s += normal_report
+            raise AssertionError(s)

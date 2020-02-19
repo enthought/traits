@@ -1,16 +1,17 @@
-from traits.api import ListInt, HasTraits
+from traits.api import ListComplex, HasTraits
 
 
 class Test(HasTraits):
-    var = ListInt()
+    var = ListComplex()
 
 
 obj = Test()
 obj.var = []
+obj.var = [3 + 5j]
 obj.var = [1, 2, 3]
+obj.var = [1.1]
+obj.var = [1.1, 2, 3.3]
 
-obj.var = [1.1]  # {ERR}
-obj.var = [1.1, 2, 3.3]  # {ERR}
 obj.var = ''  # {ERR}
 obj.var = "5"  # {ERR}
 obj.var = 5  # {ERR}

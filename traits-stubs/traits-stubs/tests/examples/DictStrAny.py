@@ -1,14 +1,14 @@
-from traits.api import ListInt, HasTraits
+from traits.api import DictStrAny, HasTraits
 
 
 class Test(HasTraits):
-    var = ListInt()
+    var = DictStrAny()
 
 
 obj = Test()
-obj.var = []
-obj.var = [1, 2, 3]
-
+obj.var = {"a": 5, "b": None, "c": ""}
+obj.var = []  # {ERR}
+obj.var = [1, 2, 3]  # {ERR}
 obj.var = [1.1]  # {ERR}
 obj.var = [1.1, 2, 3.3]  # {ERR}
 obj.var = ''  # {ERR}

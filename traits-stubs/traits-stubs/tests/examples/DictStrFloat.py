@@ -1,12 +1,14 @@
-from traits.api import DictStrInt, HasTraits
+from traits.api import DictStrFloat, HasTraits
 
 
 class Test(HasTraits):
-    var = DictStrInt()
+    var = DictStrFloat()
 
 
 obj = Test()
 obj.var = {"a": 5, "b": 6}
+obj.var = {"a": 5.5, "b": 6}
+
 obj.var = {"a": 5, "b": None, "c": ""}  # {ERR}
 obj.var = []  # {ERR}
 obj.var = [1, 2, 3]  # {ERR}

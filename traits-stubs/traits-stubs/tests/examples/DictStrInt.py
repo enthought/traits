@@ -7,6 +7,8 @@ class Test(HasTraits):
 
 obj = Test()
 obj.var = {"a": 5, "b": 6}
+
+obj.var = {"a": 5, "b": 6.6}  # {ERR}
 obj.var = {"a": 5, "b": None, "c": ""}  # {ERR}
 obj.var = []  # {ERR}
 obj.var = [1, 2, 3]  # {ERR}

@@ -18,10 +18,11 @@ from util import MypyAssertions
 
 examples_dir = Path(
     pkg_resources.resource_filename('traits-stubs', 'tests/examples'))
+__unittest = True
 
 
 class TestAnnotations(TestCase, MypyAssertions):
-    def test_all(self):
-        for file_path in examples_dir.glob("*.py"):
+    def test_all(self, type=''):
+        for file_path in examples_dir.glob("*{}.py".format(type)):
             with self.subTest(file_path=file_path):
                 self.assertRaisesMypyError(file_path)
