@@ -4094,7 +4094,7 @@ validate_trait_complex(
             case 22: /* Callable check: */
                 {
                     if (PyCallable_Check(value)) {
-                        return value;
+                        goto done;
                     }
                     else if (value == Py_None) {
                         int allow_none;
@@ -4102,8 +4102,7 @@ validate_trait_complex(
 
                         //Handle callables without allow_none, default to allow None
                         if (tuple_size < 2) {
-                            Py_INCREF(value);
-                            return value;
+                            goto done;
                         }
 
                         allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
@@ -4113,7 +4112,7 @@ validate_trait_complex(
                         }
 
                         else if (allow_none) {
-                            return value;
+                            goto done;
                         }
                     }
                     break;
