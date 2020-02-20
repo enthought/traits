@@ -17,7 +17,7 @@ obj.var = True  # {ERR}
 
 
 class Test2(HasTraits):
-    var = String(minlen=5)
+    var = String(minlen=5, something="else", regex=r"5")
 
 
 class Test3(HasTraits):

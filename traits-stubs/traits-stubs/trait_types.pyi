@@ -1,4 +1,3 @@
-import datetime
 from pathlib import PurePath as _PurePath
 from typing import (
     Any as _Any,
@@ -12,10 +11,8 @@ from typing import (
     TypeVar,
     Union as _Union,
 )
-
 from uuid import UUID as _UUID
 
-from .trait_type import TraitType as TraitType
 from .trait_type import _TraitType
 
 MutableTypes: _Any
@@ -205,7 +202,7 @@ class String(_String[str]):
                  minlen: int = ...,
                  maxlen: int = ...,
                  regex: str = ...,
-                 **metadata: _DictType[str, _Any]
+                 **metadata: _Any
                  ):
         ...
 
@@ -350,7 +347,7 @@ class _BaseRange(_TraitType[_T, _Union[int, float]]):
             value: _Union[int, float, str] = ...,
             exclude_low: bool = ...,
             exclude_high: bool = ...,
-            **metadata: _DictType[str, _Any]
+            **metadata: _Any
     ) -> None:
         ...
 
@@ -393,7 +390,7 @@ class ValidatedTuple(BaseTuple):
                  types: _Any = ...,
                  fvalidate: _OptionalCallable = ...,
                  fvalidate_info: Optional[str] = ...,
-                 **metadata: _DictType[str, _Any]
+                 **metadata: _Any
                  ):
         ...
 
@@ -406,7 +403,7 @@ class _List(_TraitType[_Sequence[_S], _ListType[_T]]):
             minlen: int = ...,
             maxlen: int = ...,
             items: bool = ...,
-            **metadata: _DictType[str, _Any]
+            **metadata: _Any
     ) -> None:
         ...
 
@@ -425,7 +422,7 @@ class _Set(_TraitType[_SetType[_S], _SetType[_T]]):
             trait: _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]] = ...,
             value: _Sequence[_S] = ...,
             items: bool = ...,
-            **metadata: _DictType[str, _Any]
+            **metadata: _Any
     ) -> None:
         ...
 
@@ -447,7 +444,7 @@ class _Dict(_TraitType[_DictType[_S, _T], _DictType[_S, _T]]):
                 _TraitType[_S, _T], _Type[_TraitType[_S, _T]]] = ...,
             value: dict = ...,
             items: bool = ...,
-            **metadata: _DictType[str, _Any]
+            **metadata: _Any
     ) -> None:
         ...
 
@@ -498,7 +495,7 @@ class Button(Event):
                  width_padding: int = ...,
                  height_padding: int = ...,
                  view: Optional[_Any] = ...,
-                 **metadata: _DictType[str, _Any]
+                 **metadata: _Any
                  ):
         ...
 

@@ -22,7 +22,7 @@ __unittest = True
 
 
 class TestAnnotations(TestCase, MypyAssertions):
-    def test_all(self, type='Bool'):
+    def test_all(self, type=''):
         for file_path in examples_dir.glob("*{}.py".format(type)):
             with self.subTest(file_path=file_path):
                 self.assertRaisesMypyError(file_path)
