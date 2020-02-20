@@ -412,6 +412,10 @@ class List(_List[_S, _T]):
     ...
 
 
+class CList(_List[_S, _T]):
+    ...
+
+
 class PrefixList(BaseStr):
     ...
 
@@ -624,11 +628,19 @@ class ListMethod(_List[_CallableType, _CallableType]):
     ...
 
 
+class ListThis(_List[_CallableType, _CallableType]):
+    ...
+
+
 class DictStrAny(_Dict[str, _Any]):
     ...
 
 
 class DictStrInt(_Dict[str, int]):
+    ...
+
+
+class DictStrStr(_Dict[str, str]):
     ...
 
 
