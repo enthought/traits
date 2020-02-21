@@ -2,7 +2,7 @@ from traits.api import HasTraits, Tuple
 
 
 class Test(HasTraits):
-    var = Tuple()
+    var = Tuple(1, 2, 3)
 
 
 obj = Test()

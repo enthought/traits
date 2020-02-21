@@ -362,7 +362,11 @@ class Range(BaseRange):
 
 # ----------------BaseEnum---------------------
 class _BaseEnum(_TraitType[_T, _Any]):
-    ...
+    def __init__(self,
+                 *args: _Any,
+                 **metadata: _Any,
+                 ) -> None:
+        ...
 
 
 class BaseEnum(_BaseEnum[_Any]):
@@ -374,7 +378,11 @@ class Enum(BaseEnum):
 
 
 class _BaseTuple(_TraitType[_T, tuple]):
-    ...
+    def __init__(self,
+                 *args: _Any,
+                 **metadata: _Any,
+                 ) -> None:
+        ...
 
 
 class BaseTuple(_BaseTuple[tuple]):
