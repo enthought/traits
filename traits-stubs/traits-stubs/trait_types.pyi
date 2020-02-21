@@ -1,3 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 import datetime
 from pathlib import PurePath as _PurePath
 from typing import (
@@ -37,7 +47,6 @@ _Trait = _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]]
 Any = _Any
 
 
-# -----------------Int--------------------
 class _BaseInt(_TraitType[_T, int]):
     ...
 
@@ -50,7 +59,6 @@ class Int(BaseInt):
     ...
 
 
-# -----------------Float--------------------
 class _BaseFloat(_TraitType[_T, float]):
     ...
 
@@ -63,7 +71,6 @@ class Float(BaseFloat):
     ...
 
 
-# -----------------Complex--------------------
 class _BaseComplex(_TraitType[_T, complex]):
     ...
 
@@ -75,8 +82,6 @@ class BaseComplex(_BaseComplex[complex]):
 class Complex(BaseComplex):
     ...
 
-
-# -----------------Str--------------------
 
 class _BaseStr(_TraitType[_T, str]):
     ...
@@ -90,13 +95,10 @@ class Str(BaseStr):
     ...
 
 
-# -----------------Title--------------------
-
 class Title(Str):
     ...
 
 
-# -----------------Bytes--------------------
 class _BaseBytes(_TraitType[_T, bytes]):
     ...
 
@@ -109,7 +111,6 @@ class Bytes(BaseBytes):
     ...
 
 
-# -----------------Bool--------------------
 class _BaseBool(_TraitType[_T, bool]):
     ...
 
@@ -121,8 +122,6 @@ class BaseBool(_BaseBool[bool]):
 class Bool(BaseBool):
     default_value: bool = ...
 
-
-# -----------------BaseCInt--------------------
 
 class _BaseCInt(_BaseInt[_Any]):
     default_value: _Any = ...
@@ -136,8 +135,6 @@ class CInt(_BaseCInt):
     ...
 
 
-# -----------------BaseCFloat--------------------
-
 class BaseCFloat(_BaseFloat[_Any]):
     ...
 
@@ -146,8 +143,6 @@ class CFloat(BaseCFloat):
     ...
 
 
-# -----------------BaseCComplex--------------------
-
 class BaseCComplex(_BaseComplex[_Any]):
     ...
 
@@ -155,8 +150,6 @@ class BaseCComplex(_BaseComplex[_Any]):
 class CComplex(BaseCComplex):
     ...
 
-
-# -----------------BaseCStr--------------------
 
 class _BaseCStr(_BaseStr[_Any]):
     ...
@@ -170,8 +163,6 @@ class CStr(_BaseCStr):
     ...
 
 
-# -----------------BaseCBytes--------------------
-
 class BaseCBytes(_BaseBytes[_Any]):
     ...
 
@@ -180,8 +171,6 @@ class CBytes(BaseCBytes):
     ...
 
 
-# -----------------BaseCBool--------------------
-
 class BaseCBool(_BaseBool[_Any]):
     ...
 
@@ -189,8 +178,6 @@ class BaseCBool(_BaseBool[_Any]):
 class CBool(BaseCBool):
     ...
 
-
-# -----------------String--------------------
 
 class _String(_TraitType[_T, str]):
     ...
@@ -208,31 +195,20 @@ class String(_String[str]):
         ...
 
 
-# -----------------Regex--------------------
-
 class Regex(String):
     ...
 
-
-# -----------------Code--------------------
 
 class Code(String):
     ...
 
 
-# -----------------HTML--------------------
-
 class HTML(String):
     ...
 
 
-# -----------------Password--------------------
-
 class Password(String):
     ...
-
-
-# -----------------Callable--------------------
 
 
 _OptionalCallable = Optional[_CallableType[..., _Any]]
@@ -297,6 +273,7 @@ class Delegate(_TraitType[_Any, _Any]):
             prefix: str = ...,
             modify: bool = ...,
             listenable: bool = ...,
+            **metadata: _Any
     ):
         ...
 
@@ -325,6 +302,7 @@ class BaseFile(_TraitType[_Union[str, _PurePath], str]):
             auto_set: bool = ...,
             entries: int = ...,
             exists: bool = ...,
+            **metadata: _Any
     ):
         ...
 
@@ -363,7 +341,6 @@ class Range(BaseRange):
     ...
 
 
-# ----------------BaseEnum---------------------
 class _BaseEnum(_TraitType[_T, _Any]):
     def __init__(self,
                  *args: _Any,
@@ -383,7 +360,7 @@ class Enum(BaseEnum):
 class _BaseTuple(_TraitType[_T, tuple]):
     def __init__(
             self,
-            *args: _Any,
+            *types: _Any,
             **metadata: _Any,
     ) -> None:
         ...
@@ -400,7 +377,7 @@ class Tuple(BaseTuple):
 class ValidatedTuple(BaseTuple):
     def __init__(
             self,
-            types: _Any = ...,
+            *types: _Any,
             fvalidate: _OptionalCallable = ...,
             fvalidate_info: Optional[str] = ...,
             **metadata: _Any
@@ -430,7 +407,11 @@ class CList(_List[_S, _T]):
 
 
 class PrefixList(BaseStr):
-    ...
+    def __init__(self,
+                 *values: _Union[str, _Sequence[str]],
+                 **metadata: _Any,
+                 ) -> None:
+        ...
 
 
 class _Set(_TraitType[_SetType[_S], _SetType[_T]]):
@@ -508,7 +489,13 @@ class AdaptsTo(Supports):
 
 
 class Type(BaseClass):
-    ...
+    def __init__(self,
+                 value: Optional[_Type] = ...,
+                 klass: Optional[_Union[_Type, str]] = ...,
+                 allow_none: bool = ...,
+                 **metadata: _Any
+                 ) -> None:
+        ...
 
 
 class Subclass(Type):
@@ -536,11 +523,25 @@ class Button(Event):
 
 
 class ToolbarButton(Button):
-    ...
+    def __init__(
+            self,
+            label: str = ...,
+            image: _Any = ...,
+            style: str = ...,
+            orientation: str = ...,
+            width_padding: int = ...,
+            height_padding: int = ...,
+            **metadata: _Any
+    ) -> None:
+        ...
 
 
 class Either(_TraitType[_Any, _Any]):
-    ...
+    def __init__(self,
+                 *traits: _Any,
+                 **metadata: _Any
+                 ) -> None:
+        ...
 
 
 class NoneTrait(_TraitType[None, None]):
@@ -548,19 +549,33 @@ class NoneTrait(_TraitType[None, None]):
 
 
 class Union(_TraitType[_Any, _Any]):
-    ...
-
-
-class UUID(_TraitType[_Union[str, _UUID], _UUID]):
-    ...
+    def __init__(self,
+                 *traits: _Any,
+                 **metadata: _Any
+                 ) -> None:
+        ...
 
 
 class Symbol(_TraitType[_Any, _Any]):
     ...
 
 
+class UUID(_TraitType[_Union[str, _UUID], _UUID]):
+    def __init__(self,
+                 can_init: bool = ...,
+                 **metadata: _Any
+                 ) -> None:
+        ...
+
+
 class WeakRef(Instance):
-    ...
+    def __init__(self,
+                 klass: _Any = ...,
+                 allow_none: bool = ...,
+                 adapt: str = ...,
+                 **metadata: _Any
+                 ) -> None:
+        ...
 
 
 class Date(_BaseInstance[datetime.date]):

@@ -1,3 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 from . import ctraits as ctraits
 from .constants import ComparisonMode as ComparisonMode, DefaultValue as DefaultValue, default_value_map as default_value_map
 from .trait_base import SequenceTypes as SequenceTypes, Undefined as Undefined
