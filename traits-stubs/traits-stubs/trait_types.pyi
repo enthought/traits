@@ -1,8 +1,10 @@
+import datetime
 from pathlib import PurePath as _PurePath
 from typing import (
     Any as _Any,
     Callable as _CallableType,
     Dict as _DictType,
+    Generic as Generic,
     List as _ListType,
     Optional,
     Sequence as _Sequence,
@@ -32,9 +34,7 @@ _S = TypeVar("_S")
 
 _Trait = _Union[_TraitType[_S, _T], _Type[_TraitType[_S, _T]]]
 
-
-class Any(_TraitType[_Any, _Any]):
-    ...
+Any = _Any
 
 
 # -----------------Int--------------------
@@ -197,13 +197,14 @@ class _String(_TraitType[_T, str]):
 
 
 class String(_String[str]):
-    def __init__(self,
-                 value: str = ...,
-                 minlen: int = ...,
-                 maxlen: int = ...,
-                 regex: str = ...,
-                 **metadata: _Any
-                 ):
+    def __init__(
+            self,
+            value: str = ...,
+            minlen: int = ...,
+            maxlen: int = ...,
+            regex: str = ...,
+            **metadata: _Any
+    ):
         ...
 
 
@@ -290,12 +291,13 @@ class Constant(_TraitType[_Any, _Any]):
 
 
 class Delegate(_TraitType[_Any, _Any]):
-    def __init__(self,
-                 deligate: str = ...,
-                 prefix: str = ...,
-                 modify: bool = ...,
-                 listenable: bool = ...,
-                 ):
+    def __init__(
+            self,
+            deligate: str = ...,
+            prefix: str = ...,
+            modify: bool = ...,
+            listenable: bool = ...,
+    ):
         ...
 
 
@@ -316,13 +318,14 @@ class PythonValue(Any):
 
 
 class BaseFile(_TraitType[_Union[str, _PurePath], str]):
-    def __init__(self,
-                 value: str = ...,
-                 filter: str = ...,
-                 auto_set: bool = ...,
-                 entries: int = ...,
-                 exists: bool = ...,
-                 ):
+    def __init__(
+            self,
+            value: str = ...,
+            filter: str = ...,
+            auto_set: bool = ...,
+            entries: int = ...,
+            exists: bool = ...,
+    ):
         ...
 
 
@@ -378,10 +381,11 @@ class Enum(BaseEnum):
 
 
 class _BaseTuple(_TraitType[_T, tuple]):
-    def __init__(self,
-                 *args: _Any,
-                 **metadata: _Any,
-                 ) -> None:
+    def __init__(
+            self,
+            *args: _Any,
+            **metadata: _Any,
+    ) -> None:
         ...
 
 
@@ -394,12 +398,13 @@ class Tuple(BaseTuple):
 
 
 class ValidatedTuple(BaseTuple):
-    def __init__(self,
-                 types: _Any = ...,
-                 fvalidate: _OptionalCallable = ...,
-                 fvalidate_info: Optional[str] = ...,
-                 **metadata: _Any
-                 ):
+    def __init__(
+            self,
+            types: _Any = ...,
+            fvalidate: _OptionalCallable = ...,
+            fvalidate_info: Optional[str] = ...,
+            **metadata: _Any
+    ):
         ...
 
 
@@ -465,15 +470,32 @@ class Dict(_Dict[_S, _T]):
     ...
 
 
-class BaseClass(_TraitType[Optional[_Type, str], Optional[_Type, str]]):
+class _BaseClass(_TraitType[_Union[_T, str, None], _Union[_T, str, None]]):
     ...
 
 
-class BaseInstance(BaseClass):
+class BaseClass(_BaseClass[_Type]):
     ...
 
 
-class Instance(BaseInstance):
+class _BaseInstance(_BaseClass[_T]):
+    def __init__(
+            self,
+            klass: _T = ...,
+            factory: _OptionalCallable = ...,
+            args: tuple = ...,
+            kw: _Dict[_Any, _Any] = ...,
+            allow_none: bool = ...,
+            adapt: str = ...,
+    ) -> None:
+        ...
+
+
+class BaseInstance(_BaseInstance[_Type]):
+    ...
+
+
+class Instance(BaseInstance[_Any]):
     ...
 
 
@@ -498,17 +520,18 @@ class Event(_TraitType[_Any, _Any]):
 
 
 class Button(Event):
-    def __init__(self,
-                 label: str = ...,
-                 image: _Any = ...,
-                 style: str = ...,
-                 values_trait: str = ...,
-                 orientation: str = ...,
-                 width_padding: int = ...,
-                 height_padding: int = ...,
-                 view: Optional[_Any] = ...,
-                 **metadata: _Any
-                 ):
+    def __init__(
+            self,
+            label: str = ...,
+            image: _Any = ...,
+            style: str = ...,
+            values_trait: str = ...,
+            orientation: str = ...,
+            width_padding: int = ...,
+            height_padding: int = ...,
+            view: Optional[_Any] = ...,
+            **metadata: _Any
+    ):
         ...
 
 
@@ -540,15 +563,15 @@ class WeakRef(Instance):
     ...
 
 
-class Date(BaseInstance):
+class Date(_BaseInstance[datetime.date]):
     ...
 
 
-class Datetime(BaseInstance):
+class Datetime(_BaseInstance[datetime.datetime]):
     ...
 
 
-class Time(BaseInstance):
+class Time(_BaseInstance[datetime.time]):
     ...
 
 
@@ -596,8 +619,7 @@ class true(Bool):
     ...
 
 
-class undefined(Any):
-    ...
+undefined = _Any
 
 
 class ListInt(_List[int, int]):
@@ -644,11 +666,11 @@ class DictStrAny(_Dict[str, _Any]):
     ...
 
 
-class DictStrInt(_Dict[str, int]):
+class DictStrStr(_Dict[str, str]):
     ...
 
 
-class DictStrStr(_Dict[str, str]):
+class DictStrInt(_Dict[str, int]):
     ...
 
 

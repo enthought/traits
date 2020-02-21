@@ -1,4 +1,5 @@
-from traits.api import HasTraits, Any
+from traits.api import HasTraits, Any, Instance, Int
+from typing import Any as _Any
 
 
 class Test(HasTraits):
@@ -34,3 +35,17 @@ class Test2(HasTraits):
 
 class Test3(HasTraits):
     i = Any(default_value=234)
+
+
+class Foo:
+    pass
+
+
+class Superclass(HasTraits):
+    x = Any()
+    # y = Any()
+
+
+class Subclass(Superclass):
+    x = Instance(Foo)
+    y = Int()
