@@ -11,6 +11,6 @@ obj = TestClass()
 obj.t = "sometime-string"
 obj.t = datetime.datetime.now()
 
-obj.t = 9  # {ERR}
-obj.t = []  # {ERR}
-obj.t = datetime.datetime.now.date()  # {ERR}
+obj.t = 9  # E: assignment
+obj.t = []  # E: assignment
+obj.t = datetime.datetime.now().date()  # E: assignment

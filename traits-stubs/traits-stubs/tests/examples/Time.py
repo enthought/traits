@@ -10,6 +10,6 @@ class TestClass(HasTraits):
 obj = TestClass()
 obj.t = datetime.time()
 obj.t = "sometime-string"
-obj.t = datetime.datetime()  # {ERR}
-obj.t = 9  # {ERR}
-obj.t = []  # {ERR}
+obj.t = datetime.datetime()  # E: assignment, call-arg
+obj.t = 9  # E: assignment
+obj.t = []  # E: assignment

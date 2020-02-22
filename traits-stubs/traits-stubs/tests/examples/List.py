@@ -6,15 +6,15 @@ class Test(HasTraits):
 
 
 obj = Test()
-obj.var = "5"  # {ERR}
-obj.var = 5  # {ERR}
-obj.var = False  # {ERR}
-obj.var = 5.5  # {ERR}
-obj.var = 5 + 4j  # {ERR}
-obj.var = True  # {ERR}
-obj.var = [1.1, 2, 3.3]  # {ERR}
-obj.var = [1, 2, "3"]  # {ERR}
-obj.var = None  # {ERR}
+obj.var = "5"  # E: assignment
+obj.var = 5  # E: assignment
+obj.var = False  # E: assignment
+obj.var = 5.5  # E: assignment
+obj.var = 5 + 4j  # E: assignment
+obj.var = True  # E: assignment
+obj.var = [1.1, 2, 3.3]  # E: list-item
+obj.var = [1, 2, "3"]  # E: list-item
+obj.var = None  # E: assignment
 
 obj.var = [1, 2, 3]
 
@@ -25,17 +25,17 @@ class TestAnyList(HasTraits):
 
 obj = TestAnyList()
 obj.var = "5"
-obj.var = 5  # {ERR}
-obj.var = False  # {ERR}
-obj.var = 5.5  # {ERR}
-obj.var = 5 + 4j  # {ERR}
-obj.var = True  # {ERR}
+obj.var = 5  # E: assignment
+obj.var = False  # E: assignment
+obj.var = 5.5  # E: assignment
+obj.var = 5 + 4j  # E: assignment
+obj.var = True  # E: assignment
 obj.var = [1.1, 2, 3.3]
 obj.var = [1, 2, "3"]
-obj.var = None  # {ERR}
+obj.var = None  # E: assignment
 
 obj.var = [1, 2, 3]
 
 
 class TestPlainList(HasTraits):
-    var = List()  # {ERR}
+    var = List()  # E: var-annotated

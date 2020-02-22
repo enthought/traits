@@ -12,7 +12,7 @@ o.i = 5.5
 
 
 class Test(HasTraits):
-    i = BaseCInt(default_value="234")  # {ERR}
+    i = BaseCInt(default_value="234")  # E: arg-type
 
 
 class Test2(HasTraits):

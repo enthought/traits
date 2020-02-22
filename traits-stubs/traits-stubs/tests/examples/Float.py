@@ -6,6 +6,6 @@ class Test(HasTraits):
 
 
 o = Test()
-o.i = "5"  # {ERR}
+o.i = "5"  # E: assignment
 o.i = 5
 o.i = 5.5

@@ -6,16 +6,16 @@ class Test(HasTraits):
 
 
 obj = Test()
-obj.var = "5"  # {ERR}
-obj.var = 5  # {ERR}
+obj.var = "5"  # E: assignment
+obj.var = 5  # E: assignment
 
-obj.var = False  # {ERR}
-obj.var = 5.5  # {ERR}
+obj.var = False  # E: assignment
+obj.var = 5.5  # E: assignment
 
-obj.var = 5 + 4j  # {ERR}
-obj.var = True  # {ERR}
+obj.var = 5 + 4j  # E: assignment
+obj.var = True  # E: assignment
 
-obj.var = [1, 2, 3]  # {ERR}
-obj.var = [1, 2, "3"]  # {ERR}
+obj.var = [1, 2, 3]  # E: assignment
+obj.var = [1, 2, "3"]  # E: assignment
 
 obj.var = {1, 2, 3}

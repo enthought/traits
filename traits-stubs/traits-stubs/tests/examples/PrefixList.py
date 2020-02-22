@@ -8,4 +8,4 @@ class Person(HasTraits):
 
 
 p = Person()
-p.atr = 5  # {ERR}
+p.atr = 5  # E: assignment

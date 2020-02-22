@@ -17,7 +17,7 @@ from mypy import api as mypy_api
 
 
 def parse(obj):
-    line_err_map = {}
+    line_err_map = defaultdict(list)
     code, _ = inspect.getsourcelines(obj)
     code = code[1:]  # Remove the method signature
     code_string = ''
@@ -37,53 +37,47 @@ def parse(obj):
         code_string = code_string + line[indent:]
         line_count = line_count + 1
 
-        if "{ERR}" in line:
-            line_err_map[line_count] = "{ERR}"
+        match = re.search(r'#[\s]*E:[\s]* (.*)', line)
+        if match:
+            err_codes = match.group(1)
+            list_err_codes = err_codes.replace(' ', '').split(',')
+            line_err_map[line_count] = list_err_codes
 
     return code_string, line_err_map
 
 
 def parse_file(filepath):
     line_err_map = {}
+    regex = re.compile(r'#[\s]*E:[\s]* (.*)')
 
     with open(filepath) as fp:
         line_count = 0
         lines = fp.readlines()
         for line in lines:
             line_count += 1
-            if "{ERR}" in line:
-                line_err_map[line_count] = "{ERR}"
+            match = regex.search(line)
+            if match:
+                err_codes = match.group(1)
+                list_err_codes = err_codes.replace(' ', '').split(',')
+                line_err_map[line_count] = list_err_codes
     return line_err_map, lines
 
 
 def parse_output(output_str):
-    line_errors_dict = defaultdict(list)
+    line_errors_dict = defaultdict(set)
+    error_line_regex = re.compile(r"([0-9]*): error:.*\[(.*)\]")
     for line in output_str.split("\n"):
-        match = re.search(r"([0-9]*): error:", line)
+        match = error_line_regex.search(line)
         if match:
-            line_no = int(match.group(1))
-            line_errors_dict[line_no].append("{ERR}")
+            line_no_str, err_code = match.groups()
+            line_errors_dict[int(line_no_str)].add(err_code)
     return line_errors_dict
 
 
 def run_mypy(filepath):
-    normal_report, error_report, exit_status = mypy_api.run([filepath])
+    normal_report, error_report, exit_status = mypy_api.run(
+        [filepath, '--show-error-code'])
     return normal_report, error_report, exit_status
-
-
-def show_diff(input_py_lines, expect_error_line_nums_list,
-              actual_error_line_nums_list):
-    s = '\n'
-    s += ("Expected Errors----------\n")
-    for line_num in expect_error_line_nums_list:
-        s += (input_py_lines[line_num - 1])
-
-    s += ("\nActual Errors-----------\n")
-    for line_num in actual_error_line_nums_list:
-        s += (input_py_lines[line_num - 1])
-    s += '\n'
-
-    return s
 
 
 class MypyAssertions(object):
@@ -97,10 +91,9 @@ class MypyAssertions(object):
     def assertRaisesMypyError(self, filepath):
         line_error_map, lines = parse_file(filepath)
         normal_report, error_report, exit_status = run_mypy(str(filepath))
-        out = parse_output(normal_report)
+        parsed_mypy_output = parse_output(normal_report)
 
-        if not out.keys() == line_error_map.keys():
-            s = "\n" + str(filepath)
-            s += show_diff(lines, line_error_map.keys(), out.keys())
-            s += normal_report
-            raise AssertionError(s)
+        for line, error_codes in parsed_mypy_output.items():
+            if sorted(line_error_map[line]) != sorted(list(error_codes)):
+                s = "\n{}\n{}".format(filepath, normal_report)
+                raise AssertionError(s)

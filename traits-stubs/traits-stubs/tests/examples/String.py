@@ -7,13 +7,13 @@ class Test(HasTraits):
 
 obj = Test()
 obj.var = "5"
-obj.var = 5  # {ERR}
+obj.var = 5  # E: assignment
 
-obj.var = False  # {ERR}
-obj.var = 5.5  # {ERR}
+obj.var = False  # E: assignment
+obj.var = 5.5  # E: assignment
 
-obj.var = 5 + 4j  # {ERR}
-obj.var = True  # {ERR}
+obj.var = 5 + 4j  # E: assignment
+obj.var = True  # E: assignment
 
 
 class Test2(HasTraits):
@@ -21,4 +21,4 @@ class Test2(HasTraits):
 
 
 class Test3(HasTraits):
-    var = String(minlen="5")  # {ERR}
+    var = String(minlen="5")  # E: arg-type
