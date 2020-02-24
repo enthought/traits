@@ -9,44 +9,13 @@
 # Thanks for using Enthought open source!
 
 
-import inspect
-import re
 from collections import defaultdict
+import re
 
 from mypy import api as mypy_api
 
 
-def parse(obj):
-    line_err_map = defaultdict(list)
-    code, _ = inspect.getsourcelines(obj)
-    code = code[1:]  # Remove the method signature
-    code_string = ''
-
-    indent = None
-    line_count = 0
-    for line in code:
-        stripped_line = line.strip()
-
-        if stripped_line == '':
-            continue
-
-        if indent is None:
-            first_valid_char_position = line.find(stripped_line[0])
-            indent = first_valid_char_position
-
-        code_string = code_string + line[indent:]
-        line_count = line_count + 1
-
-        match = re.search(r'#[\s]*E:[\s]* (.*)', line)
-        if match:
-            err_codes = match.group(1)
-            list_err_codes = err_codes.replace(' ', '').split(',')
-            line_err_map[line_count] = list_err_codes
-
-    return code_string, line_err_map
-
-
-def parse_file(filepath):
+def parse_py_file(filepath):
     line_err_map = {}
     regex = re.compile(r'#[\s]*E:[\s]* (.*)')
 
@@ -63,7 +32,7 @@ def parse_file(filepath):
     return line_err_map, lines
 
 
-def parse_output(output_str):
+def parse_mypy_output(output_str):
     line_errors_dict = defaultdict(set)
     error_line_regex = re.compile(r"([0-9]*): error:.*\[(.*)\]")
     for line in output_str.split("\n"):
@@ -80,20 +49,21 @@ def run_mypy(filepath):
     return normal_report, error_report, exit_status
 
 
-class MypyAssertions(object):
+class MypyAssertions:
 
-    def assertNoMypyError(self, obj):
-        code_string, _ = parse(obj)
-        normal_report, error_report, exit_status = run_mypy(code_string)
+    def assertNoMypyError(self, filepath):
+        normal_report, error_report, exit_status = run_mypy(str(filepath))
         if exit_status != 0:
-            raise AssertionError("Mypy Report: {}".format(normal_report))
+            s = "\n{}\n{}".format(filepath, normal_report)
+            raise AssertionError(s)
 
     def assertRaisesMypyError(self, filepath):
-        line_error_map, lines = parse_file(filepath)
+        line_error_map, lines = parse_py_file(filepath)
         normal_report, error_report, exit_status = run_mypy(str(filepath))
-        parsed_mypy_output = parse_output(normal_report)
+        parsed_mypy_output = parse_mypy_output(normal_report)
 
         for line, error_codes in parsed_mypy_output.items():
-            if sorted(line_error_map[line]) != sorted(list(error_codes)):
+            if line not in line_error_map or sorted(
+                    line_error_map[line]) != sorted(list(error_codes)):
                 s = "\n{}\n{}".format(filepath, normal_report)
                 raise AssertionError(s)

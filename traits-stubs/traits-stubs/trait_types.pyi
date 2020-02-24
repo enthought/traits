@@ -191,7 +191,7 @@ class String(_String[str]):
             maxlen: int = ...,
             regex: str = ...,
             **metadata: _Any
-    ):
+    ) -> None:
         ...
 
 
@@ -274,7 +274,7 @@ class Delegate(_TraitType[_Any, _Any]):
             modify: bool = ...,
             listenable: bool = ...,
             **metadata: _Any
-    ):
+    ) -> None:
         ...
 
 
@@ -303,7 +303,7 @@ class BaseFile(_TraitType[_Union[str, _PurePath], str]):
             entries: int = ...,
             exists: bool = ...,
             **metadata: _Any
-    ):
+    ) -> None:
         ...
 
 
@@ -342,10 +342,11 @@ class Range(BaseRange):
 
 
 class _BaseEnum(_TraitType[_T, _Any]):
-    def __init__(self,
-                 *args: _Any,
-                 **metadata: _Any,
-                 ) -> None:
+    def __init__(
+            self,
+            *args: _Any,
+            **metadata: _Any,
+    ) -> None:
         ...
 
 
@@ -381,7 +382,7 @@ class ValidatedTuple(BaseTuple):
             fvalidate: _OptionalCallable = ...,
             fvalidate_info: Optional[str] = ...,
             **metadata: _Any
-    ):
+    ) -> None:
         ...
 
 
@@ -407,10 +408,11 @@ class CList(_List[_S, _T]):
 
 
 class PrefixList(BaseStr):
-    def __init__(self,
-                 *values: _Union[str, _Sequence[str]],
-                 **metadata: _Any,
-                 ) -> None:
+    def __init__(
+            self,
+            *values: _Union[str, _Sequence[str]],
+            **metadata: _Any,
+    ) -> None:
         ...
 
 
@@ -489,12 +491,13 @@ class AdaptsTo(Supports):
 
 
 class Type(BaseClass):
-    def __init__(self,
-                 value: Optional[_Type] = ...,
-                 klass: Optional[_Union[_Type, str]] = ...,
-                 allow_none: bool = ...,
-                 **metadata: _Any
-                 ) -> None:
+    def __init__(
+            self,
+            value: Optional[_Type] = ...,
+            klass: Optional[_Union[_Type, str]] = ...,
+            allow_none: bool = ...,
+            **metadata: _Any
+    ) -> None:
         ...
 
 
@@ -518,7 +521,7 @@ class Button(Event):
             height_padding: int = ...,
             view: Optional[_Any] = ...,
             **metadata: _Any
-    ):
+    ) -> None:
         ...
 
 
@@ -537,10 +540,11 @@ class ToolbarButton(Button):
 
 
 class Either(_TraitType[_Any, _Any]):
-    def __init__(self,
-                 *traits: _Any,
-                 **metadata: _Any
-                 ) -> None:
+    def __init__(
+            self,
+            *traits: _Any,
+            **metadata: _Any
+    ) -> None:
         ...
 
 
@@ -549,10 +553,11 @@ class NoneTrait(_TraitType[None, None]):
 
 
 class Union(_TraitType[_Any, _Any]):
-    def __init__(self,
-                 *traits: _Any,
-                 **metadata: _Any
-                 ) -> None:
+    def __init__(
+            self,
+            *traits: _Any,
+            **metadata: _Any
+    ) -> None:
         ...
 
 
@@ -561,20 +566,22 @@ class Symbol(_TraitType[_Any, _Any]):
 
 
 class UUID(_TraitType[_Union[str, _UUID], _UUID]):
-    def __init__(self,
-                 can_init: bool = ...,
-                 **metadata: _Any
-                 ) -> None:
+    def __init__(
+            self,
+            can_init: bool = ...,
+            **metadata: _Any
+    ) -> None:
         ...
 
 
 class WeakRef(Instance):
-    def __init__(self,
-                 klass: _Any = ...,
-                 allow_none: bool = ...,
-                 adapt: str = ...,
-                 **metadata: _Any
-                 ) -> None:
+    def __init__(
+            self,
+            klass: _Any = ...,
+            allow_none: bool = ...,
+            adapt: str = ...,
+            **metadata: _Any
+    ) -> None:
         ...
 
 
