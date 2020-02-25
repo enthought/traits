@@ -93,13 +93,11 @@ class EnumEnumExample(HasTraits):
 class EnumCollectionExample(HasTraits):
     rgb = Enum("red", CustomCollection("red", "green", "blue"))
 
-    rgb_char = Enum("r", "rgb")
+    rgb_char = Enum("r", "g", "b")
 
     numbers = Enum(CustomCollection("one", "two", "three"))
 
     letters = Enum("abcdefg")
-
-    months = Enum("january", "february")
 
 
 class EnumTestCase(unittest.TestCase):
@@ -190,12 +188,12 @@ class EnumTestCase(unittest.TestCase):
         self.assertEqual("r", collection_enum.rgb_char)
         self.assertEqual("one", collection_enum.numbers)
         self.assertEqual("abcdefg", collection_enum.letters)
-        self.assertEqual("january", collection_enum.months)
 
-        collection_enum.rgb_char = 'rgb'
-        self.assertEqual("rgb", collection_enum.rgb_char)
+        collection_enum.rgb = "blue"
+        self.assertEqual("blue", collection_enum.rgb)
 
-        collection_enum.months = "february"
+        collection_enum.rgb_char = 'g'
+        self.assertEqual("g", collection_enum.rgb_char)
 
         with self.assertRaises(TraitError):
             collection_enum.rgb = "two"
