@@ -474,11 +474,11 @@ class _BaseInstance(_BaseClass[_T]):
         ...
 
 
-class BaseInstance(_BaseInstance[_Type]):
+class BaseInstance(_BaseInstance[_Any]):
     ...
 
 
-class Instance(BaseInstance[_Any]):
+class Instance(_BaseInstance[_Any]):
     ...
 
 
