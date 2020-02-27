@@ -91,6 +91,21 @@ class TestCallable(unittest.TestCase):
                 a.callable_or_str = value
             self.assertEqual(a.callable_or_str, old_value)
 
+    def test_compound_callable_refcount(self):
+        # Regression test for enthought/traits#906.
+
+        def my_function():
+            pass
+
+        a = MyCallable()
+
+        string_value = "some string"
+        callable_value = my_function
+
+        for _ in range(10):
+            a.callable_or_str = string_value
+            a.callable_or_str = callable_value
+
     def test_disallow_none(self):
 
         class MyNewCallable(HasTraits):
