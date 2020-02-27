@@ -3685,7 +3685,7 @@ validate_trait_callable(
         int allow_none;
 
         /* Backwards compatibility with the old Callable:
-            allow None by default. */
+           allow None by default. */
         if (PyTuple_GET_SIZE(type_info) < 2) {
             goto done;
         }
