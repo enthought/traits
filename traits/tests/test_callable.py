@@ -34,10 +34,37 @@ class Dummy(object):
         pass
 
 
+class OldCallable(BaseCallable):
+    """
+    Old-style Callable, whose validation tuple doesn't include
+    the allow_none field.
+
+    We only care about this case because it's possible that old pickles
+    could include Callable instances whose validation tuple has length 1.
+    """
+    def __init__(self, value=None, **metadata):
+        self.fast_validate = (ValidateTrait.callable,)
+        super().__init__(value, **metadata)
+
+
+class Unbool:
+    """
+    Object that can't be interpreted as a bool, for testing purposes.
+    """
+    def __bool__(self):
+        raise ZeroDivisionError()
+
+
 class MyCallable(HasTraits):
     value = Callable()
 
-    callable_or_str = Either(Callable(), Str)
+    callable_or_str = Either(Callable, Str)
+
+    old_callable_or_str = Either(OldCallable, Str)
+
+    bad_allow_none = Either(Callable(allow_none=Unbool()), Str)
+
+    non_none_callable_or_str = Either(Callable(allow_none=False), Str)
 
 
 class MyBaseCallable(HasTraits):
@@ -144,12 +171,24 @@ class TestCallable(unittest.TestCase):
             obj.a_non_none_union = None
         obj.a_allow_none_union = None
 
-    def test_old_style_callable(self):
-        class OldCallable(Callable):
-            def __init__(self, value=None, **metadata):
-                self.fast_validate = (ValidateTrait.callable,)
-                super(BaseCallable, self).__init__(value, **metadata)
+    def test_implicitly_allowed_none_in_compound(self):
+        obj = MyCallable()
+        obj.old_callable_or_str = "bob"
+        obj.old_callable_or_str = None
+        self.assertIsNone(obj.old_callable_or_str)
 
+    def test_non_bool_allow_none(self):
+        obj = MyCallable()
+        obj.bad_allow_none = "a string"
+        with self.assertRaises(ZeroDivisionError):
+            obj.bad_allow_none = None
+
+    def test_none_not_allowed_in_compound(self):
+        obj = MyCallable()
+        with self.assertRaises(TraitError):
+            obj.non_none_callable_or_str = None
+
+    def test_old_style_callable(self):
         class MyCallable(HasTraits):
             # allow_none flag should be ineffective
             value = OldCallable()

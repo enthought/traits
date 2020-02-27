@@ -2921,7 +2921,7 @@ trait_new(PyTypeObject *trait_type, PyObject *args, PyObject *kw)
     }
 
     PyErr_Format(
-        TraitError, 
+        TraitError,
         "Invalid argument to trait constructor. The argument `kind` "
         "must be an integer between 0 and 8 but a value of %d was provided.",
         kind);
@@ -3679,33 +3679,40 @@ validate_trait_callable(
     trait_object *trait, has_traits_object *obj, PyObject *name,
     PyObject *value)
 {
-    if (PyCallable_Check(value)) {
-        Py_INCREF(value);
-        return value;
-    }
-    else if (value == Py_None) {
-        int allow_none;
-        int tuple_size = PyTuple_GET_SIZE(trait->py_validate);
+    PyObject *type_info = trait->py_validate;
 
-        //Handle callables without allow_none, default to allow None
-        if (tuple_size < 2) {
-            Py_INCREF(value);
-            return value;
+    if (value == Py_None) {
+        int allow_none;
+
+        /* Backwards compatibility with the old Callable:
+            allow None by default. */
+        if (PyTuple_GET_SIZE(type_info) < 2) {
+            goto done;
         }
 
-        allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
-
+        allow_none = PyObject_IsTrue(
+            PyTuple_GET_ITEM(type_info, 1));
         if (allow_none == -1) {
+            /* propagate any exception arising from
+                conversion to bool */
             return NULL;
         }
-
-        else if (allow_none) {
-            Py_INCREF(value);
-            return value;
+        if (allow_none) {
+            goto done;
         }
     }
+    else if (PyCallable_Check(value)) {
+        /* No need to check return value: PyCallable_Check
+           always succeeds. */
+        goto done;
+    }
 
-    return raise_trait_error(trait, obj, name, value);
+    raise_trait_error(trait, obj, name, value);
+    return NULL;
+
+  done:
+    Py_INCREF(value);
+    return value;
 }
 
 /*-----------------------------------------------------------------------------
@@ -4093,28 +4100,32 @@ validate_trait_complex(
 
             case 22: /* Callable check: */
                 {
-                    if (PyCallable_Check(value)) {
-                        goto done;
-                    }
-                    else if (value == Py_None) {
+                    if (value == Py_None) {
                         int allow_none;
-                        int tuple_size = PyTuple_GET_SIZE(trait->py_validate);
 
-                        //Handle callables without allow_none, default to allow None
-                        if (tuple_size < 2) {
+                        /* Backwards compatibility with the old Callable:
+                           allow None by default. */
+                        if (PyTuple_GET_SIZE(type_info) < 2) {
                             goto done;
                         }
 
-                        allow_none = PyObject_IsTrue(PyTuple_GET_ITEM(trait->py_validate, 1));
-
+                        allow_none = PyObject_IsTrue(
+                            PyTuple_GET_ITEM(type_info, 1));
                         if (allow_none == -1) {
+                            /* propagate any exception arising from
+                               conversion to bool */
                             return NULL;
                         }
-
-                        else if (allow_none) {
+                        if (allow_none) {
                             goto done;
                         }
                     }
+                    else if (PyCallable_Check(value)) {
+                        /* No need to check return value: PyCallable_Check
+                           always succeeds. */
+                        goto done;
+                    }
+
                     break;
                 }
 
