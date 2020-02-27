@@ -3693,11 +3693,8 @@ _validate_trait_callable(PyObject *type_info, PyObject *value)
             return PyObject_IsTrue(PyTuple_GET_ITEM(type_info, 1));
         }
     }
-    else if (PyCallable_Check(value)) {
-        return 1;
-    }
     else {
-        return 0;
+        return PyCallable_Check(value);
     }
 }
 
