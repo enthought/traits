@@ -3681,8 +3681,7 @@ validate_trait_function(
 */
 
 static int
-_validate_trait_callable(
-    PyObject *type_info, PyObject *value)
+_validate_trait_callable(PyObject *type_info, PyObject *value)
 {
     if (value == Py_None) {
         if (PyTuple_GET_SIZE(type_info) < 2) {
