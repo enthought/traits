@@ -102,9 +102,8 @@ class TestCallable(unittest.TestCase):
         string_value = "some string"
         callable_value = my_function
 
-        for _ in range(10):
-            a.callable_or_str = string_value
-            a.callable_or_str = callable_value
+        a.callable_or_str = string_value
+        a.callable_or_str = callable_value
 
     def test_disallow_none(self):
 
