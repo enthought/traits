@@ -1,13 +1,20 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
 # delegate.py --- Example of trait delegation
 
-# --[Imports]-------------------------------------------------------------------
+# --[Imports]------------------------------------------------------------------
 from traits.api import DelegatesTo, HasTraits, Instance, Str, TraitError
 
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 class Parent(HasTraits):
     first_name = Str
     last_name = Str
@@ -20,7 +27,7 @@ class Child(HasTraits):
     mother = Instance(Parent)
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 tony = Parent(first_name="Anthony", last_name="Jones")
 alice = Parent(first_name="Alice", last_name="Smith")
 sally = Child(first_name="Sally", father=tony, mother=alice)

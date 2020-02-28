@@ -1,3 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """ Tests for the extended notifiers.
 
 The "extended notifiers" are set up internally when using extended traits, to
@@ -201,6 +211,12 @@ class TestExtendedNotifiers(unittest.TestCase):
         self.assertEqual([(obj, "fail", 0, 1)] * 5, self.exceptions)
 
     def test_extended_notifiers_functions(self):
+        calls_0.clear()
+        calls_1.clear()
+        calls_2.clear()
+        calls_3.clear()
+        calls_4.clear()
+
         obj = ExtendedNotifiers()
 
         obj._on_trait_change(function_listener_0, "ok", dispatch="extended")
@@ -211,6 +227,9 @@ class TestExtendedNotifiers(unittest.TestCase):
 
         obj.ok = 2
         obj.ok = 3
+
+        expected_0 = [True, True]
+        self.assertEqual(expected_0, calls_0)
 
         expected_1 = [2, 3]
         self.assertEqual(expected_1, calls_1)
@@ -226,6 +245,8 @@ class TestExtendedNotifiers(unittest.TestCase):
 
     def test_extended_notifiers_functions_failing(self):
         obj = ExtendedNotifiers()
+
+        exceptions_from.clear()
 
         obj._on_trait_change(
             failing_function_listener_0, "fail", dispatch="extended"

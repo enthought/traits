@@ -1,13 +1,20 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
 # deferring_notification.py -- Example of notification with deferring
 
-# --[Imports]-------------------------------------------------------------------
+# --[Imports]------------------------------------------------------------------
 from traits.api import HasTraits, Instance, PrototypedFrom, Str
 
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 class Parent(HasTraits):
 
     first_name = Str
@@ -27,7 +34,7 @@ class Child(HasTraits):
         print("Child's last name changed to %s." % new)
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 dad = Parent(first_name="William", last_name="Chase")
 # Output: Parent's last name changed to Chase.
 

@@ -1,13 +1,13 @@
-# ------------------------------------------------------------------------------
-# Copyright (c) 2005-2013, Enthought, Inc.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in /LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
+#
 # Thanks for using Enthought open source!
-# ------------------------------------------------------------------------------
+
 """ Trait assert mixin class to simplify test implementation for Trait
 Classes.
 
@@ -39,6 +39,28 @@ from traits.util.async_trait_wait import wait_for_condition
 class _AssertTraitChangesContext(object):
     """ A context manager used to implement the trait change assert methods.
 
+    Notes
+    -----
+    Checking if the provided xname corresponds to valid traits in the class
+    is not implemented yet.
+
+    Parameters
+    ----------
+    obj : HasTraits
+        The HasTraits class instance whose class trait will change.
+
+    xname : str
+        The extended trait name of trait changes to listen to.
+
+    count : int, optional
+        The expected number of times the event should be fired. When None
+        (default value) there is no check for the number of times the
+        change event was fired.
+
+    test_case : TestCase
+        A unittest TestCase where to raise the failureException if
+        necessary.
+
     Attributes
     ----------
     obj : HasTraits
@@ -65,31 +87,6 @@ class _AssertTraitChangesContext(object):
     """
 
     def __init__(self, obj, xname, count, test_case):
-        """ Initialize the trait change assertion context manager.
-
-        Parameters
-        ----------
-        obj : HasTraits
-            The HasTraits class instance whose class trait will change.
-
-        xname : str
-            The extended trait name of trait changes to listen to.
-
-        count : int, optional
-            The expected number of times the event should be fired. When None
-            (default value) there is no check for the number of times the
-            change event was fired.
-
-        test_case : TestCase
-            A unittest TestCase where to raise the failureException if
-            necessary.
-
-        Notes
-        -----
-        - Checking if the provided xname corresponds to valid traits in
-          the class is not implemented yet.
-
-        """
         self.obj = obj
         self.xname = xname
         self.count = count
@@ -265,11 +262,10 @@ class UnittestTools(object):
         Returns
         -------
         context : context manager or None
-            If ``callableObj`` is None, an assertion context manager is returned,
-            inside of which a trait-change trigger can be invoked. Otherwise,
-            the context is used internally with ``callableObj`` as the trigger,
-            in which case None is returned.
-
+            If ``callableObj`` is None, an assertion context manager is
+            returned, inside of which a trait-change trigger can be invoked.
+            Otherwise, the context is used internally with ``callableObj`` as
+            the trigger, in which case None is returned.
 
         Notes
         -----
@@ -316,11 +312,10 @@ class UnittestTools(object):
         Returns
         -------
         context : context manager or None
-            If ``callableObj`` is None, an assertion context manager is returned,
-            inside of which a trait-change trigger can be invoked. Otherwise,
-            the context is used internally with ``callableObj`` as the trigger,
-            in which case None is returned.
-
+            If ``callableObj`` is None, an assertion context manager is
+            returned, inside of which a trait-change trigger can be invoked.
+            Otherwise, the context is used internally with ``callableObj`` as
+            the trigger, in which case None is returned.
 
         """
         msg = "A change event was fired for: {0}".format(trait)

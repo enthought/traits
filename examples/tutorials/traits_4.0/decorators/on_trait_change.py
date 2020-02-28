@@ -1,7 +1,14 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
-# --(on_trait_change Decorator)-------------------------------------------------
+# --(on_trait_change Decorator)------------------------------------------------
 """
 on_trait_change Decorator
 =========================
@@ -115,11 +122,11 @@ Refer to the code tabs of this lesson for a complete example using the
 *sick_again* method in the **Corporation Class** tab.
 """
 
-# --<Imports>-------------------------------------------------------------------
+# --<Imports>------------------------------------------------------------------
 from traits.api import *
 
 
-# --[Employee Class]------------------------------------------------------------
+# --[Employee Class]-----------------------------------------------------------
 class Employee(HasTraits):
 
     # The name of the employee:
@@ -129,7 +136,7 @@ class Employee(HasTraits):
     sick_days = Int
 
 
-# --[Department Class]----------------------------------------------------------
+# --[Department Class]---------------------------------------------------------
 class Department(HasTraits):
 
     # The name of the department:
@@ -139,7 +146,7 @@ class Department(HasTraits):
     employees = List(Employee)
 
 
-# --[Corporation Class]---------------------------------------------------------
+# --[Corporation Class]--------------------------------------------------------
 class Corporation(HasTraits):
 
     # The name of the corporation:
@@ -157,7 +164,7 @@ class Corporation(HasTraits):
         )
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 # Create some sample employees:
 millie = Employee(name="Millie", sick_days=2)
 ralph = Employee(name="Ralph", sick_days=3)

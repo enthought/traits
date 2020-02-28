@@ -1,7 +1,14 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
-# --(New Trait Definition Style)------------------------------------------------
+# --(New Trait Definition Style)-----------------------------------------------
 """
 New Trait Definition Style
 ==========================
@@ -91,11 +98,11 @@ This provides the exact same functionality as the previous definition of
   creating a new trait type a little more understandable to a wider group of
   developers.
 """
-# --<Imports>-------------------------------------------------------------------
+# --<Imports>------------------------------------------------------------------
 from traits.api import *
 
 
-# --[OddInt Definition]---------------------------------------------------------
+# --[OddInt Definition]--------------------------------------------------------
 class OddInt(Int):
 
     # Define the default value:
@@ -112,14 +119,14 @@ class OddInt(Int):
         self.error(object, name, value)
 
 
-# --[Test Class]----------------------------------------------------------------
+# --[Test Class]---------------------------------------------------------------
 class Test(HasTraits):
 
     any_int = Int
     odd_int = OddInt
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 
 # Create a test object:
 t = Test()

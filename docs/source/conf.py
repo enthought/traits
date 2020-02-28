@@ -1,5 +1,13 @@
-# -*- coding: utf-8 -*-
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 # Traits documentation build configuration file, created by
 # sphinx-quickstart on Tue Jul 22 10:52:03 2008.
 #
@@ -13,7 +21,6 @@
 # All configuration values have a default value; values that are commented out
 # serve to show the default value.
 import datetime
-import io
 import os
 import sys
 
@@ -27,101 +34,6 @@ BUILD_DOCSET = bool(os.environ.get("BUILD_DOCSET"))
 sys.path.append(os.path.abspath("../../"))
 
 
-def mock_modules():
-    """ Optionally Mock missing modules to allow autodoc based documentation.
-
-    The ``traits.has_dynamics_view`` imports the traitsui module and
-    thus traitsui is needed so that the ``autodoc`` extension can
-    extract the docstrings from the has_dynamics_view module. This
-    function optionally mocks the traitsui module so that the traits
-    documentation can be built without the traitui optional dependency
-    installed.
-
-    .. note::
-
-       The mock library is needed in order to mock the traitsui
-       package.
-
-    """
-
-    MOCK_MODULES = []
-    MOCK_TYPES = []
-
-    # Check to see if we need to mock the traitsui package
-    try:
-        import traitsui
-    except ImportError:
-        # Modules that we need to mock
-        MOCK_MODULES = [
-            "traitsui",
-            "traitsui.api",
-            "traitsui.delegating_handler",
-        ]
-
-        # Collect the types from traitsui that are based on HasTraits
-        # We will need to mock them in a special way so that
-        # TraitDocumenter can properly identify and document traits.
-        from traits.api import HasTraits, HasPrivateTraits
-
-        MOCK_TYPES.append(
-            ("traitsui.delegating_handler", "DelegatingHandler", (HasTraits,))
-        )
-        MOCK_TYPES.append(
-            ("traitsui.view_element", "ViewSubElement", (HasPrivateTraits,))
-        )
-    else:
-        return
-
-    from unittest.mock import MagicMock
-
-    # Create the custom types for the HasTraits based traitsui objects.
-    TYPES = {
-        mock_type: type(mock_type, bases, {"__module__": path})
-        for path, mock_type, bases in MOCK_TYPES
-    }
-
-    class DocMock(MagicMock):
-        """ The special sphinx friendly mocking class to mock missing packages.
-
-        Based on the suggestion from http://docs.readthedocs.org/en/latest/faq.html#i-get-import-errors-on-libraries-that-depend-on-c-modules
-
-        """
-
-        @classmethod
-        def __getattr__(self, name):
-            if name in ("__file__", "__path__", "_mock_methods"):
-                # sphinx does not like getting a Mock object in this case.
-                return "/dev/null"
-            else:
-                # Return a mock or a custom type as requested.
-                return TYPES.get(name, DocMock(mocked_name=name))
-
-        # MagicMock does not define __call__ we do just to make sure
-        # that we cover all cases.
-        def __call__(self, *args, **kwards):
-            return DocMock()
-
-        @property
-        def __name__(self):
-            # Make sure that if sphinx asks for the name of a Mocked class
-            # it gets a nice strings to use (instead of "DocMock")
-            return self.mocked_name
-
-    # Add the mocked modules to sys
-    sys.modules.update(
-        (mod_name, DocMock(mocked_name=mod_name)) for mod_name in MOCK_MODULES
-    )
-
-    # Report on what was mocked.
-    print(
-        "mocking modules {0} and types {1}".format(
-            MOCK_MODULES, [mocked[1] for mocked in MOCK_TYPES]
-        )
-    )
-
-
-mock_modules()
-
 # General configuration
 # ---------------------
 
@@ -129,6 +41,7 @@ mock_modules()
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
     "sphinx.ext.autosummary",
+    "sphinx.ext.coverage",
     "sphinx.ext.githubpages",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
@@ -146,13 +59,14 @@ master_doc = "index"
 
 # General substitutions.
 project = "traits"
-copyright = "2008-{date.year}, Enthought Inc".format(date=datetime.date.today())
+copyright = "2008-{date.year}, Enthought Inc".format(
+    date=datetime.date.today())
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
 version_info = {}
 traits_init_path = os.path.join("..", "..", "traits", "__init__.py")
-with io.open(traits_init_path, "r", encoding="utf-8") as version_module:
+with open(traits_init_path, "r", encoding="utf-8") as version_module:
     version_code = compile(version_module.read(), "__init__.py", "exec")
     exec(version_code, version_info)
 version = release = version_info["__version__"]
@@ -189,7 +103,9 @@ today_fmt = "%B %d, %Y"
 pygments_style = "sphinx"
 
 # Options for the autodoc extension.
-autodoc_default_flags = ["members"]
+autodoc_default_options = {
+    "members": None,
+}
 
 autodoc_member_order = "bysource"
 
@@ -247,7 +163,7 @@ if BUILD_DOCSET:
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = "Traits 5 User Manual"
+html_title = "Traits 6 User Manual"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 # html_short_title = None
@@ -267,11 +183,8 @@ html_use_smartypants = True
 # template names.
 # html_additional_pages = {}
 
-# If false, no module index is generated.
-html_use_modindex = BUILD_DOCSET
-
 # If false, no index is generated.
-html_use_index = BUILD_DOCSET
+html_use_index = True
 
 # If true, the index is split into individual pages for each letter.
 # html_split_index = False
@@ -307,7 +220,7 @@ latex_documents = [
     (
         "index",
         "Traits.tex",
-        "Traits 5 User Manual",
+        "Traits 6 User Manual",
         "Enthought, Inc.",
         "manual",
     )
@@ -341,7 +254,7 @@ texinfo_documents = [
     (
         "index",
         "traits",
-        "Traits 5 User Manual",
+        "Traits 6 User Manual",
         "Enthought, Inc.",
         "Traits",
         "Explicitly typed attributes for Python.",

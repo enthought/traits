@@ -1,15 +1,13 @@
-# ----------------------------------------------------------------------------
-# Copyright (c) 2014, Enthought, Inc.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in /LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
-#
-# ----------------------------------------------------------------------------
+
 import os
 import shutil
 import tempfile
@@ -42,7 +40,7 @@ class TestRecordContainers(unittest.TestCase):
         # save records
         container.save_to_file(self.filename)
 
-        with open(self.filename, "r") as handle:
+        with open(self.filename, "r", encoding="utf-8") as handle:
             lines = handle.readlines()
         self.assertEqual(lines, ["\n"] * 7)
 
@@ -71,6 +69,6 @@ class TestRecordContainers(unittest.TestCase):
         container.save_to_directory(self.directory)
         for name in container._record_containers:
             filename = os.path.join(self.directory, "{0}.trace".format(name))
-            with open(filename, "r") as handle:
+            with open(filename, "r", encoding="utf-8") as handle:
                 lines = handle.readlines()
             self.assertEqual(lines, ["\n"])

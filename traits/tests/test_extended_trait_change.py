@@ -1,15 +1,12 @@
-#  Unit test case for testing HasTraits 'on_trait_change' support.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Written by: David C. Morrill
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  Date: 4/10/2007
-#
-#  (c) Copyright 2007 by Enthought, Inc.
-#
-#  This software is provided without warranty under the terms of the BSD
-#  license included in /LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
+# Thanks for using Enthought open source!
 
 """ Unit test case for testing HasTraits 'on_trait_change' support.
 """
@@ -606,7 +603,7 @@ class OnTraitChangeTest(unittest.TestCase):
             dst_new={0: 0, 1: 1, 2: 2, 3: 3},
         )
         inst.ref.value[3] = 3
-        self.assertEqual(inst.calls,  {0: 1, 1: 0, 2: 0, 3: 0, 4: 0})
+        self.assertEqual(inst.calls, {0: 1, 1: 0, 2: 0, 3: 0, 4: 0})
         self.assertEqual(inst.ref.value, {0: 0, 1: 1, 2: 2, 3: 3})
 
     def test_instance_value_list_listener(self):
@@ -995,7 +992,7 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(pdo.pcalls, (3 * 3) + 1)
         self.assertEqual(pdo.calls, 3 * 3)
         for i in range(10):
-            x = pdo.sum
+            pdo.sum
         self.assertEqual(pdo.pcalls, (3 * 3) + 1)
         pdo.trait_set(exp_old=sum, exp_new=60)
         old_ref = pdo.ref

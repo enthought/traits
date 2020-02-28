@@ -1,18 +1,20 @@
-#  Copyright (c) 2005-19, Enthought, Inc.
-#  All rights reserved.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  Thanks for using Enthought open source!
+# Thanks for using Enthought open source!
 
+"""
+Editor factory functions.
+"""
+
+import datetime
 from functools import partial
-
-# -------------------------------------------------------------------------------
-#  Editor factory functions:
-# -------------------------------------------------------------------------------
+import logging
 
 PasswordEditors = {}
 MultilineTextEditors = {}
@@ -22,6 +24,8 @@ HTMLTextEditor = None
 PythonShellEditor = None
 DateEditor = None
 TimeEditor = None
+
+logger = logging.getLogger(__name__)
 
 
 def password_editor(auto_set=True, enter_set=False):
@@ -139,6 +143,47 @@ def date_editor():
         DateEditor = DateEditor()
 
     return DateEditor
+
+
+def _datetime_str_to_datetime(datetime_str, format="%Y-%m-%dT%H:%M:%S"):
+    """ Returns the datetime object for a datetime string in the specified
+    format (default ISO format).
+
+    Raises a ValueError if datetime_str does not match the format.
+    """
+    if datetime_str is not None:
+        return datetime.datetime.strptime(datetime_str, format)
+
+
+def _datetime_to_datetime_str(datetime_obj, format="%Y-%m-%dT%H:%M:%S"):
+    """ Returns a string representation for a datetime object in the specified
+    format (default ISO format).
+    """
+    if datetime_obj is not None:
+        return datetime.date.strftime(datetime_obj, format)
+
+
+def datetime_editor():
+    """ Factory function that returns an editor with date & time for
+    editing Datetime values.
+    """
+
+    try:
+        from traitsui.api import DatetimeEditor
+
+        return DatetimeEditor()
+
+    except ImportError:
+
+        logger.warn(msg="Could not import DatetimeEditor from "
+                        "traitsui.api, using TextEditor instead")
+
+        from traitsui.api import TextEditor
+
+        return TextEditor(
+            evaluate=_datetime_str_to_datetime,
+            format_func=_datetime_to_datetime_str
+        )
 
 
 def _expects_hastraits_instance(handler):

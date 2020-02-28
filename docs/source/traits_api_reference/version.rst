@@ -1,5 +1,5 @@
-:mod:`version` Module
-=====================
+:mod:`traits.version` Module
+============================
 
 .. automodule:: traits.version
     :no-members:

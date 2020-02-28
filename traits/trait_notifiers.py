@@ -1,26 +1,15 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2005-2013, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#  Author:        David C. Morrill
-#  Original Date: 06/21/2002
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """ Classes that implement and support the Traits change notification mechanism
 """
-
-# -------------------------------------------------------------------------------
-#  Imports:
-# -------------------------------------------------------------------------------
 
 import contextlib
 import threading
@@ -34,19 +23,13 @@ import sys
 from .trait_base import Uninitialized
 from .trait_errors import TraitNotificationError
 
-# -------------------------------------------------------------------------------
-#  Global Data:
-# -------------------------------------------------------------------------------
+# Global Data
 
 # The thread ID for the user interface thread
 ui_thread = -1
 
 # The handler for notifications that must be run on the UI thread
 ui_handler = None
-
-# -------------------------------------------------------------------------------
-#  Sets up the user interface thread handler:
-# -------------------------------------------------------------------------------
 
 
 def set_ui_handler(handler):
@@ -65,21 +48,11 @@ def ui_dispatch(handler, *args, **kw):
         ui_handler(handler, *args, **kw)
 
 
-# -------------------------------------------------------------------------------
-#  'NotificationExceptionHandlerState' class:
-# -------------------------------------------------------------------------------
-
-
 class NotificationExceptionHandlerState(object):
     def __init__(self, handler, reraise_exceptions, locked):
         self.handler = handler
         self.reraise_exceptions = reraise_exceptions
         self.locked = locked
-
-
-# -------------------------------------------------------------------------------
-#  'NotificationExceptionHandler' class:
-# -------------------------------------------------------------------------------
 
 
 class NotificationExceptionHandler(object):
@@ -88,7 +61,7 @@ class NotificationExceptionHandler(object):
         self.main_thread = None
         self.thread_local = thread_local()
 
-    # -- Private Methods ------------------------------------------------------------
+    # -- Private Methods ------------------------------------------------------
 
     def _push_handler(
         self, handler=None, reraise_exceptions=False, main=False, locked=False
@@ -208,16 +181,12 @@ class NotificationExceptionHandler(object):
                 "No changes are allowed."
             )
 
-    # ---------------------------------------------------------------------------
-    #  This method defines the default notification exception handling
-    #  behavior of traits. However, it can be completely overridden by pushing
-    #  a new handler using the '_push_handler' method.
-    #
-    #  It logs any exceptions generated in a trait notification handler.
-    # ---------------------------------------------------------------------------
-
     def _log_exception(self, object, trait_name, old, new):
         """ Logs any exceptions generated in a trait notification handler.
+
+        This method defines the default notification exception handling
+        behavior of traits. However, it can be completely overridden by pushing
+        a new handler using the '_push_handler' method.
         """
         # When the stack depth is too great, the logger can't always log the
         # message. Make sure that it goes to the console at a minimum:
@@ -264,9 +233,7 @@ class NotificationExceptionHandler(object):
             pass
 
 
-# -------------------------------------------------------------------------------
-#  Traits global notification exception handler:
-# -------------------------------------------------------------------------------
+# Traits global notification exception handler
 
 notification_exception_handler = NotificationExceptionHandler()
 
@@ -274,9 +241,7 @@ push_exception_handler = notification_exception_handler._push_handler
 pop_exception_handler = notification_exception_handler._pop_handler
 handle_exception = notification_exception_handler._handle_exception
 
-# -------------------------------------------------------------------------------
-#  Traits global notification event tracer:
-# -------------------------------------------------------------------------------
+# Traits global notification event tracer
 
 _pre_change_event_tracer = None
 _post_change_event_tracer = None
@@ -340,11 +305,6 @@ def change_event_tracers(pre_tracer, post_tracer):
         set_change_event_tracers(old_pre_tracer, old_post_tracer)
 
 
-# -------------------------------------------------------------------------------
-#  'AbstractStaticChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
-
-
 class AbstractStaticChangeNotifyWrapper(object):
     """
     Concrete implementation must define the 'argument_transforms' class
@@ -360,9 +320,9 @@ class AbstractStaticChangeNotifyWrapper(object):
         if arg_count > 4:
             raise TraitNotificationError(
                 (
-                    "Invalid number of arguments for the static anytrait change "
-                    "notification handler: %s. A maximum of 4 arguments is "
-                    "allowed, but %s were specified."
+                    "Invalid number of arguments for the static anytrait "
+                    "change notification handler: %s. A maximum of 4 "
+                    "arguments is allowed, but %s were specified."
                 )
                 % (handler.__name__, arg_count)
             )
@@ -407,11 +367,6 @@ class AbstractStaticChangeNotifyWrapper(object):
         return False
 
 
-# -------------------------------------------------------------------------------
-#  'StaticAnyTraitChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
-
-
 class StaticAnyTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
 
     # The wrapper is called with the full set of argument, and we need to
@@ -426,11 +381,6 @@ class StaticAnyTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
     }
 
 
-# -------------------------------------------------------------------------------
-#  'StaticTraitChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
-
-
 class StaticTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
 
     # The wrapper is called with the full set of argument, and we need to
@@ -443,11 +393,6 @@ class StaticTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
         3: lambda obj, name, old, new: (obj, old, new),
         4: lambda obj, name, old, new: (obj, name, old, new),
     }
-
-
-# -------------------------------------------------------------------------------
-#  'TraitChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
 
 
 class TraitChangeNotifyWrapper(object):
@@ -486,9 +431,9 @@ class TraitChangeNotifyWrapper(object):
                 if arg_count > 4:
                     raise TraitNotificationError(
                         (
-                            "Invalid number of arguments for the dynamic trait "
-                            "change notification handler: %s. A maximum of 4 "
-                            "arguments is allowed, but %s were specified."
+                            "Invalid number of arguments for the dynamic "
+                            "trait change notification handler: %s. A maximum "
+                            "of 4 arguments is allowed, but %s were specified."
                         )
                         % (func.__name__, arg_count)
                     )
@@ -622,11 +567,6 @@ class TraitChangeNotifyWrapper(object):
             )
 
 
-# -------------------------------------------------------------------------------
-#  'ExtendedTraitChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
-
-
 class ExtendedTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
     """ Change notify wrapper for "extended" trait change events..
 
@@ -671,11 +611,6 @@ class ExtendedTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
         self._dispatch_change_event(object, trait_name, old, new, self.handler)
 
 
-# -------------------------------------------------------------------------------
-#  'FastUITraitChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
-
-
 class FastUITraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
     """ Dynamic change notify wrapper, dispatching on the UI thread.
 
@@ -689,11 +624,6 @@ class FastUITraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
             handler(*args)
         else:
             ui_handler(handler, *args)
-
-
-# -------------------------------------------------------------------------------
-#  'NewTraitChangeNotifyWrapper' class:
-# -------------------------------------------------------------------------------
 
 
 class NewTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):

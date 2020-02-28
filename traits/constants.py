@@ -1,18 +1,19 @@
-#  Copyright (c) 2019, Enthought, Inc.
-#  All rights reserved.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  Thanks for using Enthought open source!
+# Thanks for using Enthought open source!
 
 from enum import IntEnum
 
 
 class TraitKind(IntEnum):
-    """ These determine the getters and setters used by the cTrait instance. """
+    """ These determine the getters and setters used by the cTrait instance.
+    """
 
     #: A standard trait (validates and notifies).
     trait = 0
@@ -103,6 +104,9 @@ class ValidateTrait(IntEnum):
     #: A floating-point check.
     float = 21
 
+    #: A callable check.
+    callable = 22
+
 
 class ComparisonMode(IntEnum):
     """ Comparison mode.
@@ -110,23 +114,40 @@ class ComparisonMode(IntEnum):
     Indicates when trait change notifications should be generated based upon
     the result of comparing the old and new values of a trait assignment:
 
-    * 0 (no_compare): The values are not compared and a trait change
-        notification is generated on each assignment.
-    * 1 (object_id_compare): A trait change notification is
-        generated if the old and new values are not the same object.
-    * 2 (equality_compare): A trait change notification is generated if the
-        old and new values are not equal using Python's standard equality
+    Enumeration members:
+
+    none
+        The values are not compared and a trait change notification is
+        generated on each assignment.
+    identity
+        A trait change notification is generated if the old and new values are
+        not the same object.
+    equality
+        A trait change notification is generated if the old and new values are
+        not the same object, and not equal using Python's standard equality
         testing. This is the default.
     """
 
     #: Do not compare values (always fire trait change)
-    no_compare = 0
+    none = 0
 
     #: Compare values by object identity.
-    object_id_compare = 1
+    identity = 1
 
     #: Compare values by equality.
-    equality_compare = 2
+    equality = 2
+
+
+# Backward compatibility for comparison mode constants.
+
+#: Deprecated alias for ``ComparisonMode.none``.
+NO_COMPARE = ComparisonMode.none
+
+#: Deprecated alias for ``ComparisonMode.identity``.
+OBJECT_IDENTITY_COMPARE = ComparisonMode.identity
+
+#: Deprecated alias for ``ComparisonMode.equality``.
+RICH_COMPARE = ComparisonMode.equality
 
 
 class DefaultValue(IntEnum):
@@ -150,12 +171,12 @@ class DefaultValue(IntEnum):
     #: A new copy of the dict specified by default_value is the default value.
     dict_copy = 4
 
-    #: A new instance of TraitListObject constructed using the default_value list
-    #: is the default value.
+    #: A new instance of TraitListObject constructed using the default_value
+    #: list is the default value.
     trait_list_object = 5
 
-    #: A new instance of TraitDictObject constructed using the default_value dict
-    #: is the default value.
+    #: A new instance of TraitDictObject constructed using the default_value
+    #: dict is the default value.
     trait_dict_object = 6
 
     #: The default_value is a tuple of the form: (*callable*, *args*, *kw*),
@@ -164,10 +185,10 @@ class DefaultValue(IntEnum):
     #: ``callable(\*args, \*\*kw)``.
     callable_and_args = 7
 
-    #: The default_value is a callable. The default value is the result obtained
-    #: by invoking *default_value*(*object*), where *object* is the object
-    #: containing the trait. If the trait has a validate() method, the validate()
-    #: method is also called to validate the result.
+    #: The default_value is a callable. The default value is the result
+    #: obtained by invoking *default_value*(*object*), where *object* is the
+    #: object containing the trait. If the trait has a validate() method, the
+    #: validate() method is also called to validate the result.
     callable = 8
 
     #: A new instance of TraitSetObject constructed using the default_value set

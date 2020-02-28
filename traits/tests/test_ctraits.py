@@ -1,22 +1,25 @@
-# ------------------------------------------------------------------------------
-# Copyright (c) 2019, Enthought, Inc.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
+#
 # Thanks for using Enthought open source!
-# ------------------------------------------------------------------------------
 
-
+import sys
 import unittest
 import warnings
+import weakref
 
+from traits.api import HasTraits
 from traits.constants import (
     ComparisonMode, DefaultValue, TraitKind, MAXIMUM_DEFAULT_VALUE_TYPE
 )
-from traits.traits import CTrait
+from traits.ctrait import CTrait
+from traits.trait_errors import TraitError
+from traits.trait_types import Any, List
 
 
 def getter():
@@ -98,18 +101,6 @@ class TestCTrait(unittest.TestCase):
 
         self.assertTrue(trait.modify_delegate)
 
-    def test_object_id_test(self):
-        trait = CTrait(TraitKind.trait)
-
-        self.assertFalse(trait.object_id_test)
-
-        trait.comparison_mode(ComparisonMode.object_id_compare)
-
-        self.assertTrue(trait.object_id_test)
-
-        with self.assertRaises(AttributeError):
-            trait.object_id_test = False
-
     def test_setattr_original_value(self):
         trait = CTrait(TraitKind.trait)
 
@@ -137,14 +128,153 @@ class TestCTrait(unittest.TestCase):
 
         self.assertTrue(trait.is_mapped)
 
-    def test_no_value_test(self):
+    def test_default_comparison_mode(self):
         trait = CTrait(TraitKind.trait)
 
-        self.assertFalse(trait.no_value_test)
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(trait.comparison_mode, ComparisonMode.equality)
 
-        trait.comparison_mode(ComparisonMode.no_compare)
+    def test_invalid_comparison_mode(self):
+        trait = CTrait(TraitKind.trait)
 
-        self.assertTrue(trait.no_value_test)
+        # comparison modes other than {0,1,2}
+        # are invalid
+        with self.assertRaises(ValueError):
+            trait.comparison_mode = -1
 
-        with self.assertRaises(AttributeError):
-            trait.no_value_test = False
+        with self.assertRaises(ValueError):
+            trait.comparison_mode = 3
+
+    def test_comparison_mode_unchanged_if_invalid(self):
+        trait = CTrait(TraitKind.trait)
+        default_comparison_mode = trait.comparison_mode
+
+        self.assertNotEqual(default_comparison_mode, ComparisonMode.none)
+
+        trait.comparison_mode = ComparisonMode.none
+
+        with self.assertRaises(ValueError):
+            trait.comparison_mode = -1
+
+        self.assertEqual(trait.comparison_mode, ComparisonMode.none)
+
+    def test_comparison_mode_int(self):
+        trait = CTrait(TraitKind.trait)
+
+        trait.comparison_mode = 0
+
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(trait.comparison_mode, ComparisonMode.none)
+
+        trait.comparison_mode = 1
+
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(trait.comparison_mode, ComparisonMode.identity)
+
+        trait.comparison_mode = 2
+
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(trait.comparison_mode, ComparisonMode.equality)
+
+    def test_comparison_mode_enum(self):
+        trait = CTrait(TraitKind.trait)
+
+        trait.comparison_mode = ComparisonMode.none
+
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(trait.comparison_mode, ComparisonMode.none)
+
+        trait.comparison_mode = ComparisonMode.identity
+
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(trait.comparison_mode, ComparisonMode.identity)
+
+        trait.comparison_mode = ComparisonMode.equality
+
+        self.assertIsInstance(trait.comparison_mode, ComparisonMode)
+        self.assertEqual(trait.comparison_mode, ComparisonMode.equality)
+
+    def test_assign_post_setattr_none(self):
+        old_value = "old_value"
+        new_value = "new_value"
+
+        def post_setattr_func(obj, name, value):
+            obj.output_variable = value
+
+        trait = CTrait(TraitKind.trait)
+
+        class TestClass(HasTraits):
+            atr = trait
+
+        trait.post_setattr = post_setattr_func
+        self.assertIsNotNone(trait.post_setattr)
+
+        obj = TestClass()
+        obj.atr = old_value
+        self.assertEqual(old_value, obj.output_variable)
+
+        trait.post_setattr = None
+        self.assertIsNone(trait.post_setattr)
+        obj.atr = new_value
+        self.assertEqual(old_value, obj.output_variable)
+
+        trait.post_setattr = post_setattr_func
+        obj.atr = old_value
+        self.assertEqual(old_value, obj.output_variable)
+
+        with self.assertRaises(ValueError):
+            trait.post_setattr = "Invalid"
+
+    def test_unsafe_set_value(self):
+        # Regression test for enthought/traits#832. The test below causes
+        # a segfault (on at least some systems) before the fix.
+
+        def get_handler_refcount():
+            sys.getrefcount(tr.handler)
+
+        # Anything that we can create a weakref to works here.
+        weakrefable_object = {1, 2, 3}
+
+        tr = CTrait(0)
+        tr.handler = Any(weakrefable_object)
+        finalizer = weakref.finalize(weakrefable_object, get_handler_refcount)
+        del weakrefable_object
+
+        # Reassigning the handler should trigger the finaliser.
+        self.assertTrue(finalizer.alive)
+        tr.handler = None
+        self.assertFalse(finalizer.alive)
+        self.assertIsNone(tr.handler)
+
+    def test_invalid_initialization(self):
+        with self.assertRaises(TraitError):
+            CTrait(max(TraitKind) + 1)
+
+    def test_initialization_with_keywords_fails(self):
+        with self.assertRaises(TraitError):
+            CTrait(kind=0)
+
+    def test_default_initialization(self):
+        ctrait = CTrait()
+
+        validate = unittest.mock.MagicMock(return_value="baz")
+        ctrait.set_validate(validate)
+
+        class Foo(HasTraits):
+            bar = ctrait
+
+            bar_changed = List
+
+            def _bar_changed(self, new):
+                self.bar_changed.append(new)
+
+        foo = Foo()
+
+        self.assertEqual(len(foo.bar_changed), 0)
+
+        foo.bar = 1
+
+        validate.assert_called_once_with(foo, "bar", 1)
+        self.assertEqual(foo.bar, "baz")
+        self.assertEqual(len(foo.bar_changed), 1)
+        self.assertEqual(foo.bar_changed[0], "baz")

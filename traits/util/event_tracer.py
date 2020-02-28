@@ -1,16 +1,13 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2013, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
+
 """ Record trait change events in single and multi-threaded environments.
 
 """
@@ -157,7 +154,7 @@ class RecordContainer(object):
         """ Save the records into a file.
 
         """
-        with open(filename, "w") as fh:
+        with open(filename, "w", encoding="utf-8") as fh:
             for record in self._records:
                 fh.write(str(record))
 
@@ -209,17 +206,20 @@ class MultiThreadRecordContainer(object):
 class ChangeEventRecorder(object):
     """ A single thread trait change event recorder.
 
+    Parameters
+    ----------
+    container : MultiThreadRecordContainer
+        A container to store the records for each trait change.
+
+    Attributes
+    ----------
+    container : MultiThreadRecordContainer
+        A container to store the records for each trait change.
+    indent : int
+        Indentation level when reporting chained events.
     """
 
     def __init__(self, container):
-        """ Class constructor
-
-        Parameters
-        ----------
-        container : MultiThreadRecordContainer
-           An container to store the records for each trait change.
-
-        """
         self.indent = 1
         self.container = container
 
@@ -284,18 +284,22 @@ class MultiThreadChangeEventRecorder(object):
     The class manages multiple ChangeEventRecorders which record trait change
     events for each thread in a separate file.
 
+    Parameters
+    ----------
+    container : MultiThreadChangeEventRecorder
+        The container of RecordContainers to keep the trait change records
+        for each thread.
+
+    Attributes
+    ----------
+    container : MultiThreadChangeEventRecorder
+        The container of RecordContainers to keep the trait change records
+        for each thread.
+    tracers : dict
+        Mapping from threads to ChangeEventRecorder instances.
     """
 
     def __init__(self, container):
-        """ Object constructor
-
-        Parameters
-        ----------
-        container : MultiThreadChangeEventRecorder
-            The container of RecordContainers to keep the trait change records
-            for each thread.
-
-        """
         self.tracers = {}
         self._tracer_lock = threading.Lock()
         self.container = container
@@ -342,17 +346,16 @@ class MultiThreadChangeEventRecorder(object):
 def record_events():
     """ Multi-threaded trait change event tracer.
 
-    Usage
-    -----
-    ::
+    Example
+    -------
+
+    This will install a tracer that will record all events that occur from
+    setting of some_trait on the my_model instance::
 
         >>> from trace_recorder import record_events
         >>> with record_events() as change_event_container:
         ...     my_model.some_trait = True
         >>> change_event_container.save_to_directory('C:\\dev\\trace')
-
-    This will install a tracer that will record all events that occur from
-    setting of some_trait on the my_model instance.
 
     The results will be stored in one file per running thread in the
     directory 'C:\\dev\\trace'.  The files are named after the thread being

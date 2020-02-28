@@ -1,3 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """ Tests the 'ETSConfig' configuration object. """
 
 # Standard library imports.
@@ -164,15 +174,13 @@ class ETSConfigTestCase(unittest.TestCase):
         path = os.path.join(dirname, "dummy.txt")
         data = str(time.time())
 
-        f = open(path, "w")
-        f.write(data)
-        f.close()
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(data)
 
         self.assertEqual(os.path.exists(path), True)
 
-        f = open(path)
-        result = f.read()
-        f.close()
+        with open(path, "r", encoding="utf-8") as f:
+            result = f.read()
 
         os.remove(path)
 
@@ -350,15 +358,13 @@ class ETSConfigTestCase(unittest.TestCase):
         path = os.path.join(dirname, "dummy.txt")
         data = str(time.time())
 
-        f = open(path, "w")
-        f.write(data)
-        f.close()
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(data)
 
         self.assertEqual(os.path.exists(path), True)
 
-        f = open(path)
-        result = f.read()
-        f.close()
+        with open(path, "r", encoding="utf-8") as f:
+            result = f.read()
 
         os.remove(path)
 

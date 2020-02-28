@@ -257,6 +257,12 @@ item in the list or value in the dictionary. For example, if **self.children**
 is a list, a handler set for ``'children.name'`` listens for changes to the
 **name** trait for each item in the **self.children** list.
 
+.. note::
+    In the case of Dict, List, and Set with nested patterns (e.g.,
+    ``'children.name'``), not all handler signatures (see
+    :ref:`notification-handler-signatures`) are supported; see section
+    :ref:`dynamic-handler-special-cases` for more details.
+
 The handler routine is also invoked when items are added or removed from a list
 or dictionary, because this is treated as an implied change to the item's trait
 being monitored.
@@ -549,12 +555,10 @@ signatures.
 
 In these signatures:
 
-* *new* is the new value assigned to the trait attribute. For List and Dict
-  objects, this is a list of the items that were added.
-* *old* is the old value assigned to the trait attribute. For  List and Dict
-  objects, this is a list of the items that were deleted.
+* *new* is the new value assigned to the trait attribute.
+* *old* is the old value assigned to the trait attribute.
 * *name* is the name of the trait attribute.  The extended trait name syntax
-  is not supported. [4]_
+  is not supported.
 
 Note that these signatures follow a different pattern for argument
 interpretation from dynamic handlers and decorated static handlers. Both of
@@ -675,14 +679,43 @@ as the value of the old parameter to each handler, to indicate that the
 attribute previously had no value. Similarly, the value of a trait event is
 always Undefined.
 
-.. rubric:: Footnotes
-.. [4] For List and Dict trait attributes, you can define a handler with the
-   name _\ *name*\ _items_changed(), which receives notifications of changes to
-   the contents of the list or dictionary. This feature exists for backward
-   compatibility. The preferred approach is to use the @on_trait_change
-   decorator with extended name syntax. For a static
-   _\ *name*\ _items_changed() handler, the *new* parameter is a TraitListEvent
-   or TraitDictEvent whose **index**, **added**, and **removed** attributes
-   indicate the nature of the change, and the *old* parameter is Undefined.
+.. _trait-items-handlers:
 
+Container Items Events
+``````````````````````
+.. index::
+    pair: container items; event
+    single: _name_items_changed()
 
+For the container traits (List, Dict and Set) both static and dynamic handlers
+for the trait are only called when the entire value of the trait is replaced
+with another value; they do not get fired when the item itself is mutated
+in-place.  To listen to internal changes, you need to either use a dynamic
+handler with the ``[]`` suffix as noted in the Table
+:ref:`semantics-of-extended-name-notation-table`, or you can define an
+*name*\ _items event handler.
+
+For these trait types, an auxilliary *name*\ _items Event trait is defined which
+you can listen to either with a static handler _\ *name*\ _items_changed()
+or a dynamic handler which matches *name*\ _items, and these handlers will be
+called with notifications of changes to the contents of the list, set or
+dictionary.
+
+.. index:: TraitListEvent, TraitSetEvent, TraitDictEvent
+
+For these handlers the *new* parameter is a :index:`TraitListEvent`,
+:index:`TraitSetEvent` or :index:`TraitDictEvent` object whose attributes
+indicate the nature of the change and, because they are Event handlers, the
+*old* parameter is Undefined.
+
+All of these event objects have **added** and **removed** attributes that
+hold a list, set or dictionary of the items that were added and removed,
+respectively.
+
+The TraitListEvent has an additional **index** attribute that holds either
+the index of the first item changed, or for changes involving slices with
+steps other than 1, **index** holds the _slice_ that was changed.
+
+The TraitDictEvent has an additional **changed** attribute which holds the
+keys that were modified and the _old_ values that those keys held.  The new
+values can be queried from directly from the trait value, if needed).

@@ -1,12 +1,12 @@
-#  Copyright (c) 2005-19, Enthought, Inc.
-#  All rights reserved.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  Thanks for using Enthought open source!
+# Thanks for using Enthought open source!
 
 import copy
 import copyreg
@@ -16,17 +16,27 @@ from .trait_errors import TraitError
 
 
 class TraitSetEvent(object):
-    """ An object reporting in-place changes to a traits sets. """
+    """ An object reporting in-place changes to a traits sets.
+
+    Parameters
+    ----------
+    added : dict or None
+        New values added to the set, or optionally None if nothing was added.
+    removed : dict or None
+        Old values that were removed, or optionally None if nothing was
+        removed.
+
+    Attributes
+    ----------
+    added : dict
+        New values added to the set. If nothing was added this is an empty
+        set.
+    removed : dict
+        Old values that were removed. If nothing was removed this is an empty
+        set.
+    """
 
     def __init__(self, removed=None, added=None):
-        """
-        Parameters
-        ----------
-        added : dict
-            New values added to the set.
-        removed : dict
-            Old values that were removed.
-        """
         if removed is None:
             removed = set()
         self.removed = removed
@@ -37,7 +47,40 @@ class TraitSetEvent(object):
 
 
 class TraitSetObject(set):
-    """ A subclass of set that fires trait events when mutated. """
+    """ A subclass of set that fires trait events when mutated.
+
+    This is used by the Set trait type, and all values set into a Set
+    trait will be copied into a new TraitSetObject instance.
+
+    Mutation of the TraitSetObject will fire a "name_items" event with
+    appropriate added and removed values.
+
+    Parameters
+    ----------
+    trait : CTrait instance
+        The CTrait instance associated with the attribute that this Set
+        has been set to.
+    object : HasTraits instance
+        The HasTraits instance that the set has been set as an attribute for.
+    name : str
+        The name of the attribute on the object.
+    value : set
+        The set of values to initialize the TraitSetObject with.
+
+    Attributes
+    ----------
+    trait : CTrait instance
+        The CTrait instance associated with the attribute that this set
+        has been set to.
+    object : weak reference to a HasTraits instance
+        A weak reference to a HasTraits instance that the set has been set
+        as an attribute for.
+    name : str
+        The name of the attribute on the object.
+    name_items : str
+        The name of the items event trait that the trait set will fire when
+        mutated.
+    """
 
     def __init__(self, trait, object, name, value):
         self.trait = trait
@@ -62,7 +105,7 @@ class TraitSetObject(set):
             raise excp
 
     def _send_trait_items_event(self, name, event, items_event=None):
-        """ Send a TraitDictEvent to the owning object if there is one.
+        """ Send a TraitSetEvent to the owning object if there is one.
         """
         object = self.object()
         if object is not None:
@@ -206,11 +249,6 @@ class TraitSetObject(set):
             self._send_trait_items_event(
                 self.name_items, TraitSetEvent(removed)
             )
-
-    def copy(self):
-        """ Return a true ``set`` object with a copy of the data.
-        """
-        return set(self)
 
     def __reduce_ex__(self, protocol=None):
         """ Overridden to make sure we call our custom __getstate__.
