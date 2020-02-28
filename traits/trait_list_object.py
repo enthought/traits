@@ -1,12 +1,12 @@
-#  Copyright (c) 2005-19, Enthought, Inc.
-#  All rights reserved.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  Thanks for using Enthought open source!
+# Thanks for using Enthought open source!
 
 import copy
 import operator
@@ -449,8 +449,9 @@ class TraitListObject(TraitList):
             raise excp
 
     def notifier(self, trait_list, index, removed, added):
-        if not hasattr(self,
-                       "trait") or self.trait is None or self.name_items is None:
+        is_trait_none = self.trait is None
+        is_name_items_none = self.name_items is None
+        if not hasattr(self, "trait") or is_trait_none or is_name_items_none:
             return
 
         object = self.object()
