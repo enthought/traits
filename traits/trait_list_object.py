@@ -16,6 +16,41 @@ from .trait_base import class_of, Undefined
 from .trait_errors import TraitError
 
 
+class TraitListEvent(object):
+    """ An object reporting in-place changes to a traits list.
+
+    Attributes
+    ----------
+    index : int or slice
+        The index of the change in the list.
+    added : list
+        The list of values added to the list.
+    removed : list
+        The list of values removed from the list.
+    """
+
+    def __init__(self, index=0, removed=None, added=None):
+        """
+        Parameters
+        ----------
+        index : int or slice
+            The index of the change in the list.
+        added : list
+            The list of values added to the list.
+        removed : list
+            The list of values removed from the list.
+        """
+        self.index = index
+
+        if removed is None:
+            removed = []
+        self.removed = removed
+
+        if added is None:
+            added = []
+        self.added = added
+
+
 def adapt_trait_validator(trait_validator):
     """ Adapt a trait validator to work as a trait list validator.
     """
@@ -198,7 +233,7 @@ class TraitList(list):
     def __imul__(self, count):
         """ Implement self *= value. """
         if count > 1:
-            self.extend(self * (count-1))
+            self.extend(self * (count - 1))
         elif count == 0:
             self[:] = []
         return self
@@ -215,7 +250,7 @@ class TraitList(list):
 
     def extend(self, iterable):
         """ Extend list by appending elements from the iterable """
-        index = slice(len(self), len(self))
+        index = slice(len(self), len(self) + len(iterable))
         removed = []
         added = self.validate(index, removed, iterable)
 
@@ -232,6 +267,15 @@ class TraitList(list):
         super().insert(index, added)
 
         self.notify(norm_index, removed, added)
+
+    def clear(self):
+        """ Clear the list """
+        removed = [copy.deepcopy(x) for x in self]
+        added = Undefined
+        index = slice(0, len(self), None)
+        super().clear()
+
+        self.notify(index, removed, added)
 
     def pop(self, index=-1):
         """ Remove and return item at index (default last).
@@ -263,10 +307,22 @@ class TraitList(list):
     def sort(self, key=None, reverse=False):
         """ Stable sort *IN PLACE* """
         self[:] = sorted(self, key=key, reverse=reverse)
+        index = slice(0, len(self), None)
+
+        # Notification is not fired if added == removed, so make them unequal
+        added = []
+        removed = Undefined
+        self.notify(index, removed, added)
 
     def reversed(self):
         """ Reverse *IN PLACE* """
         self[:] = self[::-1]
+        index = slice(0, len(self), None)
+
+        # Notification is not fired if added == removed, so make them unequal
+        added = []
+        removed = Undefined
+        self.notify(index, removed, added)
 
     # ------------------------------------------------------------------------
     # Private interface
@@ -314,62 +370,14 @@ class TraitList(list):
         return slice(start, stop, index.step)
 
 
-def TraitListObject(trait, object, name, value, notifiers=[]):
-    """ Factory function for backward compatible traits lists.
+class TraitListObject(TraitList):
 
-    This creates a TraitList with default validator and notifier which
-    provide bug-for-bug compatibility with the TraitsListObject from
-    Traits versions before 6.0.
+    def __init__(self, trait, object, name, value, notifiers=[]):
 
-    The state required is encapsulated in a helper object.
-
-    Parameters
-    ----------
-    trait : CTrait
-        The trait that the list has been assigned to.
-    object : HasTraits
-        The object the list belongs to.
-    name : str
-        The name of the trait on the object.
-    value : iterable
-        The initial value of the list.
-    notifiers : list
-        Additional notifiers for the list.
-
-    Returns
-    -------
-    trait_list : TraitList
-        A configured trait list.
-    """
-    helper = TraitListObjectHelper(trait, object, name)
-    return TraitList(
-        value,
-        validator=helper.validator,
-        notifiers=[helper.notifier] + notifiers
-    )
-
-
-class TraitListObjectHelper:
-    """ Helper object for backward compatible traits lists.
-
-    The object encapsulates the state required for backward compatible
-    behaviour and provides a validator and a listener method that
-    produce compatible result.
-
-    Attributes
-    ----------
-    trait : CTrait
-        The trait that the list has been assigned to.
-    object : HasTraits
-        The object the list belongs to.
-    name : str
-        The name of the trait on the object.
-    name_items : str
-        The name of the "items" trait on the object.
-    """
-
-    def __init__(self, trait, object, name):
-        """ TraitListObjectHelper initializer.
+        """
+        This creates a TraitListObject with default validator and notifier
+        which provide bug-for-bug compatibility with the TraitsListObject from
+        Traits versions before 6.0.
 
         Parameters
         ----------
@@ -379,6 +387,10 @@ class TraitListObjectHelper:
             The object the list belongs to.
         name : str
             The name of the trait on the object.
+        value : iterable
+            The initial value of the list.
+        notifiers : list
+            Additional notifiers for the list.
         """
         self.trait = trait
         self.object = ref(object)
@@ -386,6 +398,9 @@ class TraitListObjectHelper:
         self.name_items = None
         if trait.has_items:
             self.name_items = name + "_items"
+
+        super().__init__(value, validator=self.validator,
+                         notifiers=[self.notifier] + notifiers)
 
     def validator(self, trait_list, index, removed, value):
         object = self.object()
@@ -411,7 +426,7 @@ class TraitListObjectHelper:
                     class_of(object),
                     self.trait.full_info(object, self.name, Undefined),
                     new_len,
-                    "s"[new_len == 1 :],
+                    "s"[new_len == 1:],
                 )
             )
 
@@ -434,7 +449,8 @@ class TraitListObjectHelper:
             raise excp
 
     def notifier(self, trait_list, index, removed, added):
-        if not hasattr(self, "trait") or self.trait is None or self.name_items is None:
+        if not hasattr(self,
+                       "trait") or self.trait is None or self.name_items is None:
             return
 
         object = self.object()
@@ -460,9 +476,6 @@ class TraitListObjectHelper:
                 added = [added]
         event = TraitListEvent(index, removed, added)
         items_event = self.trait.items_event()
-        if items_event is None:
-            items_event = self.trait.items_event()
-
         object.trait_items_event(self.name_items, event, items_event)
 
     def __deepcopy__(self, memo):
@@ -470,10 +483,11 @@ class TraitListObjectHelper:
         if id_self in memo:
             return memo[id_self]
 
-        memo[id_self] = result = TraitListObjectHelper(
+        memo[id_self] = result = TraitListObject(
             self.trait,
             lambda: None,
             self.name,
+            [copy.deepcopy(x, memo) for x in self],
         )
 
         return result
@@ -498,38 +512,3 @@ class TraitListObjectHelper:
             state['trait'] = None
 
         self.__dict__.update(state)
-
-
-class TraitListEvent(object):
-    """ An object reporting in-place changes to a traits list.
-
-    Attributes
-    ----------
-    index : int or slice
-        The index of the change in the list.
-    added : list
-        The list of values added to the list.
-    removed : list
-        The list of values removed from the list.
-    """
-
-    def __init__(self, index=0, removed=None, added=None):
-        """
-        Parameters
-        ----------
-        index : int or slice
-            The index of the change in the list.
-        added : list
-            The list of values added to the list.
-        removed : list
-            The list of values removed from the list.
-        """
-        self.index = index
-
-        if removed is None:
-            removed = []
-        self.removed = removed
-
-        if added is None:
-            added = []
-        self.added = added
