@@ -102,7 +102,7 @@ class TestCallable(unittest.TestCase):
         string_value = "some string"
         callable_value = my_function
 
-        for _ in range(2):
+        for _ in range(3):
             a.callable_or_str = string_value
             a.callable_or_str = callable_value
 
