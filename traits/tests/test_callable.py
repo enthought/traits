@@ -122,7 +122,7 @@ class TestCallable(unittest.TestCase):
         # Regression test for enthought/traits#906.
 
         def my_function():
-            pass
+            return 72
 
         a = MyCallable()
 
@@ -134,6 +134,8 @@ class TestCallable(unittest.TestCase):
         for _ in range(5):
             a.callable_or_str = string_value
             a.callable_or_str = callable_value
+
+        self.assertEqual(a.callable_or_str(), 72)
 
     def test_disallow_none(self):
 
