@@ -270,9 +270,9 @@ class TraitList(list):
 
     def clear(self):
         """ Clear the list """
-        removed = [copy.deepcopy(x) for x in self]
-        added = Undefined
         index = slice(0, len(self), None)
+        removed = [copy.deepcopy(x) for x in self]
+        added = self.validate(index, removed, [])
         super().clear()
 
         self.notify(index, removed, added)
@@ -462,17 +462,18 @@ class TraitListObject(TraitList):
             if index.step in {1, None}:
                 index = min(index.start, index.stop)
             else:
-                if added:
+                if added and not isinstance(added, list):
                     added = [added]
-                removed = [removed]
+                if not isinstance(removed, list):
+                    removed = [removed]
         else:
             if removed is Undefined:
                 removed = []
-            else:
+            elif not isinstance(removed, list):
                 removed = [removed]
             if added is Undefined:
                 added = []
-            else:
+            elif not isinstance(added, list):
                 added = [added]
         event = TraitListEvent(index, removed, added)
         items_event = self.trait.items_event()

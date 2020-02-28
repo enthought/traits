@@ -214,7 +214,7 @@ class TestTraitList(unittest.TestCase):
         tl.clear()
         self.assertEqual(slice(0, 5, None), self.index)
         self.assertEqual([1, 2, 3, 4, 5], self.removed)
-        self.assertEqual(Undefined, self.added)
+        self.assertEqual([], self.added)
 
     def test_sort(self):
         tl = TraitList([2, 3, 1, 4, 5, 0],
