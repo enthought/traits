@@ -129,7 +129,9 @@ class TestCallable(unittest.TestCase):
         string_value = "some string"
         callable_value = my_function
 
-        for _ in range(10):
+        # We seem to need at least 3 repetitions to reliably produce
+        # a crash. Let's hoik it up to 5 to be safe.
+        for _ in range(5):
             a.callable_or_str = string_value
             a.callable_or_str = callable_value
 
