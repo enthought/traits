@@ -62,222 +62,137 @@ class TraitDictEvent(object):
         self.removed = removed
 
 
-class TraitDictObject(dict):
-    """ A subclass of dict that fires trait events when mutated.
+class TraitDict(dict):
 
-    This is used by the Dict trait type, and all values set into a Dict
-    trait will be copied into a new TraitDictObject instance.
+    def validate_key(self, key):
+        if getattr(self, 'key_validator', None) is None:
+            return key
+        else:
+            try:
+                return self.key_validator(key)
+            except TraitError as excep:
+                excep.set_prefix("Each key of the")
+                raise excep
 
-    Mutation of the TraitDictObject will fire a "name_items" event with
-    appropriate added, changed and removed values.
+    def validate_value(self, value):
+        if getattr(self, 'value_validator', None) is None:
+            return value
+        else:
+            try:
+                return self.value_validator(value)
+            except TraitError as excep:
+                excep.set_prefix("Each value of the")
+                raise excep
 
-    Parameters
-    ----------
-    trait : CTrait instance
-        The CTrait instance associated with the attribute that this dict
-        has been set to.
-    object : HasTraits instance
-        The HasTraits instance that the dict has been set as an attribute for.
-    name : str
-        The name of the attribute on the object.
-    value : dict
-        The dict of values to initialize the TraitDictObject with.
+    def validate_dict(self, seq):
+        if isinstance(seq, dict):
+            items = seq.items()
+        else:
+            items = seq
 
-    Attributes
-    ----------
-    trait : CTrait instance
-        The CTrait instance associated with the attribute that this dict
-        has been set to.
-    object : weak reference to a HasTraits instance
-        A weak reference to a HasTraits instance that the dict has been set
-        as an attribute for.
-    name : str
-        The name of the attribute on the object.
-    name_items : str
-        The name of the items event trait that the trait dict will fire when
-        mutated.
-    """
+        validated_items = []
+        added = []
+        changed = []
+        for key, value in items:
+            key = self.validate_key(key)
+            value = self.validate_value(value)
+            validated_items.append((key, value))
+            if key in self:
+                changed.append((key, value))
+            else:
+                added.append((key, value))
+        return dict(validated_items), dict(added), dict(changed)
 
-    def __init__(self, trait, object, name, value):
-        self.trait = trait
-        self.object = ref(object)
-        self.name = name
-        self.name_items = None
-        if trait.has_items:
-            self.name_items = name + "_items"
+    def notifiy(self, added={}, changed={}, removed={}):
 
-        if len(value) > 0:
-            dict.update(self, self._validate_dic(value))
+        if added is None:
+            added = {}
+        if changed is None:
+            changed = {}
+        if removed is None:
+            removed = {}
 
-    def _send_trait_items_event(self, name, event, items_event=None):
-        """ Send a TraitDictEvent to the owning object if there is one.
-        """
-        object = self.object()
-        if object is not None:
-            if items_event is None and hasattr(self, "trait"):
-                items_event = self.trait.items_event()
-            object.trait_items_event(name, event, items_event)
+        for notifier in getattr(self, 'notifiers', []):
+            notifier(self, added, changed, removed)
+
+    def __init__(self, value={}, *, key_validator=None, value_validator=None,
+                 notifiers=()):
+        self.key_validator = key_validator
+        self.value_validator = value_validator
+        self.notifiers = list(notifiers)
+        value, _, _ = self.validate_dict(value)
+        super().__init__(value)
 
     def __deepcopy__(self, memo):
         id_self = id(self)
         if id_self in memo:
             return memo[id_self]
 
-        memo[id_self] = result = TraitDictObject(
-            self.trait,
-            lambda: None,
-            self.name,
+        memo[id_self] = result = TraitDict(
             dict(copy.deepcopy(x, memo) for x in self.items()),
+            key_validator=copy.deepcopy(self.key_validator, memo),
+            value_validator=copy.deepcopy(self.value_validator, memo),
+            notifiers=[]
         )
-
         return result
 
     def __setitem__(self, key, value):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            dict.__setitem__(self, key, value)
-            return
+        key = self.validate_key(key)
+        value = self.validate_value(value)
 
-        object = self.object()
-        try:
-            validate = trait.key_trait.handler.validate
-            if validate is not None:
-                key = validate(object, self.name, key)
+        entry = {key: value}
+        added = changed = removed = {}
 
-        except TraitError as excp:
-            excp.set_prefix("Each key of the")
-            raise excp
+        if key in self:
+            changed = entry
+        else:
+            added = entry
 
-        try:
-            validate = trait.value_handler.validate
-            if validate is not None:
-                value = validate(object, self.name, value)
-
-            if self.name_items is not None:
-                if key in self:
-                    added = None
-                    old = self[key]
-                    changed = {key: old}
-                else:
-                    added = {key: value}
-                    changed = None
-
-            dict.__setitem__(self, key, value)
-
-            if self.name_items is not None:
-                if added is None:
-                    try:
-                        if old == value:
-                            return
-                    except Exception:
-                        # Treat incomparable objects as unequal:
-                        pass
-                self._send_trait_items_event(
-                    self.name_items,
-                    TraitDictEvent(added, changed),
-                    trait.items_event(),
-                )
-
-        except TraitError as excp:
-            excp.set_prefix("Each value of the")
-            raise excp
+        self.notifiy(added, changed, removed)
+        super().__setitem__(key, value)
 
     def __delitem__(self, key):
-        if self.name_items is not None:
+        key = self.key_validator(key)
+        if key in self:
             removed = {key: self[key]}
-
-        dict.__delitem__(self, key)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitDictEvent(removed=removed)
-            )
+            self.notifiy(removed=removed)
+            super().__delitem__(key)
 
     def clear(self):
-        if len(self) > 0:
-            if self.name_items is not None:
-                removed = self.copy()
-
-            dict.clear(self)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitDictEvent(removed=removed)
-                )
+        if self != {}:
+            removed = self.copy()
+            self.notifiy(removed=removed)
+            super().clear()
 
     def update(self, dic):
-        trait = getattr(self, "trait", None)
-        if trait is None:
-            dict.update(self, dic)
-            return
-
-        if len(dic) > 0:
-            new_dic = self._validate_dic(dic)
-
-            if self.name_items is not None:
-                added = {}
-                changed = {}
-                for key, value in new_dic.items():
-                    if key in self:
-                        changed[key] = self[key]
-                    else:
-                        added[key] = value
-
-                dict.update(self, new_dic)
-
-                self._send_trait_items_event(
-                    self.name_items,
-                    TraitDictEvent(added=added, changed=changed),
-                )
-            else:
-                dict.update(self, new_dic)
+        validated_dict, added, changed = self.validate_dict(dic)
+        self.notifiy(added, changed)
+        super().update(validated_dict)
 
     def setdefault(self, key, value=None):
+        key = self.key_validator(key)
         if key in self:
             return self[key]
 
         self[key] = value
-        result = self[key]
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitDictEvent(added={key: result})
-            )
-
-        return result
-
-    def pop(self, key, value=Undefined):
-        if (value is Undefined) or key in self:
-            result = dict.pop(self, key)
-
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitDictEvent(removed={key: result})
-                )
-
-            return result
-
+        added = {key: value}
+        self.notifiy(added)
         return value
 
-    def popitem(self):
-        result = dict.popitem(self)
-
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitDictEvent(removed={result[0]: result[1]})
-            )
-
-        return result
-
-    def rename(self, name):
-        trait = self.object()._trait(name, 0)
-        if trait is not None:
-            self.name = name
-            self.trait = trait.handler
+    def pop(self, key, value):
+        key = self.key_validator(key)
+        if key in self:
+            removed = {key: self[key]}
+            result = super().pop(key)
+            self.notifiy(removed=removed)
+            return result
         else:
-            logger.debug(
-                "rename: No 'trait' in %s for '%s'" % (self.object(), name)
-            )
+            return value
+
+    def popitem(self):
+        item = super().popitem()
+        self.notifiy(removed=dict([item]))
+        return item
 
     def __getstate__(self):
         result = self.__dict__.copy()
@@ -296,34 +211,88 @@ class TraitDictObject(dict):
 
         self.__dict__.update(state)
 
-    # -- Private Methods ------------------------------------------------------
 
-    def _validate_dic(self, dic):
-        name = self.name
-        new_dic = {}
+class TraitDictObject(TraitDict):
+    def __init__(self, trait, object, name, value, notifiers=[]):
+        self.trait = trait
+        self.object = ref(object)
+        self.name = name
+        self.name_items = None
+        if trait.has_items:
+            self.name_items = name + "_items"
 
-        key_validate = self.trait.key_trait.handler.validate
-        if key_validate is None:
-            key_validate = lambda object, name, key: key
+        super().__init__(value, key_validator=self.key_validator,
+                         value_validator=self.value_validator,
+                         notifiers=[self.notifier] + notifiers)
 
-        value_validate = self.trait.value_trait.handler.validate
-        if value_validate is None:
-            value_validate = lambda object, name, value: value
+    def __deepcopy__(self, memo):
+        id_self = id(self)
+        if id_self in memo:
+            return memo[id_self]
 
+        memo[id_self] = result = TraitDictObject(
+            self.trait,
+            lambda: None,
+            self.name,
+            dict(copy.deepcopy(x, memo) for x in self.items()),
+        )
+
+        return result
+
+    def __getstate__(self):
+        result = self.__dict__.copy()
+        result.pop("object", None)
+        result.pop("trait", None)
+        return result
+
+    def __setstate__(self, state):
+        name = state.setdefault("name", "")
+        object = state.pop("object", None)
+        if object is not None:
+            state[object] = ref(object)
+            trait = self.object()._trait(name, 0)
+            if trait is not None:
+                state['trait'] = trait.handler
+
+        else:
+            state['object'] = lambda: None
+            state['trait'] = None
+
+        self.__dict__.update(state)
+
+    def key_validator(self, key):
         object = self.object()
-        for key, value in dic.items():
-            try:
-                key = key_validate(object, name, key)
-            except TraitError as excp:
-                excp.set_prefix("Each key of the")
-                raise excp
+        trait = self.trait
+        if object is None or trait is None:
+            return key
 
-            try:
-                value = value_validate(object, name, value)
-            except TraitError as excp:
-                excp.set_prefix("Each value of the")
-                raise excp
+        validate = trait.key_trait.handler.validator
+        if validate is None:
+            return key
 
-            new_dic[key] = value
+        return self.validate(object, self.name, key)
 
-        return new_dic
+    def value_validator(self, value):
+        object = self.object()
+        trait = self.trait
+        if object is None or trait is None:
+            return value
+
+        validate = trait.value_trait.handler.validator
+        if validate is None:
+            return value
+
+        return self.validate(object, self.name, value)
+
+    def notifier(self, trait_list, added, changed, removed):
+        is_trait_none = self.trait is None
+        is_name_items_none = self.name_items is None
+        if not hasattr(self, "trait") or is_trait_none or is_name_items_none:
+            return
+        object = self.object()
+        if object is None:
+            return
+
+        event = TraitDictEvent(added, changed, removed)
+        items_event = self.trait.items_event()
+        object.trait_items_event(self.name_items, event, items_event)
