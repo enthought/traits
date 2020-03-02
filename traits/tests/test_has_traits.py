@@ -326,6 +326,38 @@ class TestHasTraits(unittest.TestCase):
         self.assertTrue(foo.traits_inited())
 
 
+class TestObjectNotifiers(unittest.TestCase):
+    """ Test calling object notifiers. """
+
+    def test_notifiers_empty(self):
+
+        class Foo(HasTraits):
+            x = Int()
+
+        foo = Foo(x=1)
+        self.assertEqual(foo._notifiers(True), [])
+
+    def test_notifiers_on_object(self):
+
+        class Foo(HasTraits):
+            x = Int()
+
+        foo = Foo(x=1)
+        self.assertEqual(foo._notifiers(True), [])
+
+        # when
+        def handler():
+            pass
+
+        foo.on_trait_change(handler, name="anytrait")
+
+        # then
+        notifiers = foo._notifiers(True)
+        self.assertEqual(len(notifiers), 1)
+        onotifier, = notifiers
+        self.assertEqual(onotifier.handler, handler)
+
+
 class TestDeprecatedHasTraits(unittest.TestCase):
     def test_deprecated(self):
         class TestSingletonHasTraits(SingletonHasTraits):
