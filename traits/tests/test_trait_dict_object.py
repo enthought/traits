@@ -71,7 +71,7 @@ class TestTraitList(unittest.TestCase):
         td["a"] = 5
 
         self.assertEqual({}, self.added)
-        self.assertEqual({"a": 5}, self.changed)
+        self.assertEqual({"a": 1}, self.changed)
         self.assertEqual({}, self.removed)
 
     def test_delitem(self):
@@ -92,7 +92,7 @@ class TestTraitList(unittest.TestCase):
         td.update({"a": 2, "b": 4, "c": 5})
 
         self.assertEqual({"c": 5}, self.added)
-        self.assertEqual({"a": 2, "b": 4}, self.changed)
+        self.assertEqual({"a": 1, "b": 2}, self.changed)
         self.assertEqual({}, self.removed)
 
     def test_clear(self):
@@ -155,11 +155,15 @@ class TestTraitList(unittest.TestCase):
         self.assertIn(k, ["a", "b"])
         self.assertIn(v, [1, 2])
 
+        td = TraitDict({}, key_validator=str_validator,
+                       value_validator=int_validator,
+                       notifiers=[self.notification_handler])
+
+        with self.assertRaises(KeyError):
+            td.popitem()
+
     def test_pickle(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
                        value_validator=int_validator,
                        notifiers=[self.notification_handler])
-        serialized = pickle.dumps(td)
-        td_unserialized = pickle.loads(serialized)
-
-
+        pickle.loads(pickle.dumps(td))
