@@ -314,7 +314,7 @@ class TraitList(list):
         removed = Undefined
         self.notify(index, removed, added)
 
-    def reversed(self):
+    def reverse(self):
         """ Reverse *IN PLACE* """
         self[:] = self[::-1]
         index = slice(0, len(self), None)

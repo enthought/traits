@@ -230,12 +230,12 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(Undefined, self.removed)
         self.assertEqual([], self.added)
 
-    def test_reversed(self):
+    def test_reverse(self):
         tl = TraitList([1, 2, 3, 4, 5],
                        validator=int_validator,
                        notifiers=[self.notification_handler])
 
-        tl.reversed()
+        tl.reverse()
         self.assertEqual([5, 4, 3, 2, 1], tl)
         self.assertEqual(slice(0, 5, None), self.index)
         self.assertEqual(Undefined, self.removed)
