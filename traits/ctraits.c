@@ -4527,7 +4527,7 @@ static trait_setattr setattr_property_handlers[] = {
 static PyObject *
 _trait_property(trait_object *trait, PyObject *args)
 {
-    PyObject *get, *set, *validate, *result, *temp;
+    PyObject *get, *set, *validate;
     int get_n, set_n, validate_n;
 
     if (PyTuple_GET_SIZE(args) == 0) {
