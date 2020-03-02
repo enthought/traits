@@ -311,6 +311,47 @@ class TestHasTraits(unittest.TestCase):
         target.event = event
         self.assertEqual(target.event_count, old_count + 1)
 
+    def test__object_notifiers_vetoed(self):
+
+        class SomeEvent(HasTraits):
+            event_id = Int()
+
+        class Target(HasTraits):
+            event = Event(Instance(SomeEvent))
+
+            event_count = Int(0)
+
+        target = Target()
+        event = SomeEvent(event_id=9)
+
+        def object_handler(object, name, old, new):
+            if name == "event":
+                object.event_count += 1
+
+        target.on_trait_change(object_handler, name="anytrait")
+
+        # Default state is not vetoed.
+        self.assertFalse(event._trait_notifications_vetoed())
+
+        # Firing the event increments the count.
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count + 1)
+
+        # Now veto the event. Firing the event won't affect the count.
+        event._trait_veto_notify(True)
+        self.assertTrue(event._trait_notifications_vetoed())
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count)
+
+        # Unveto the event.
+        event._trait_veto_notify(False)
+        self.assertFalse(event._trait_notifications_vetoed())
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count + 1)
+
     def test_traits_inited(self):
         foo = HasTraits()
 
