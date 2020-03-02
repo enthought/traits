@@ -10,7 +10,10 @@
 
 
 from collections import defaultdict
+import os
+import shutil
 import re
+import tempfile
 
 from mypy import api as mypy_api
 
@@ -44,8 +47,14 @@ def parse_mypy_output(output_str):
 
 
 def run_mypy(filepath):
-    normal_report, error_report, exit_status = mypy_api.run(
-        [filepath, '--show-error-code'])
+    # Need to use  tempdir since mypy complains that:
+    # "site-packages is in PYTHONPATH. Please change directory so it is not."
+
+    with tempfile.TemporaryDirectory() as tempdir:
+        dest_filename = os.path.basename(filepath)
+        dest = shutil.copyfile(filepath, os.path.join(tempdir, dest_filename))
+        normal_report, error_report, exit_status = mypy_api.run(
+            [dest, '--show-error-code'])
     return normal_report, error_report, exit_status
 
 
