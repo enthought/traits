@@ -10,15 +10,16 @@
 
 import setuptools
 
-
 if __name__ == "__main__":
     setuptools.setup(
         name="traits-stubs",
         version="0.1.0",
         description="type annotation integration stubs for traits",
         install_requires=["mypy", "traits"],
-        packages=["traits-stubs"],
+        packages=["traits-stubs",
+                  "traits_stubs_tests",
+                  "traits_stubs_tests.examples"],
         package_data={
-            'traits-stubs': ['./*.pyi', './**/*.pyi', './tests/examples/*'],
+            'traits-stubs': ['./*.pyi', './**/*.pyi'],
         },
     )
