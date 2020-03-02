@@ -14,7 +14,7 @@ from unittest import TestCase
 
 import pkg_resources
 
-from util import MypyAssertions
+from .util import MypyAssertions
 
 examples_dir = Path(
     pkg_resources.resource_filename('traits-stubs', 'tests/examples'))
@@ -22,7 +22,16 @@ __unittest = True
 
 
 class TestAnnotations(TestCase, MypyAssertions):
-    def test_all(self, type=''):
-        for file_path in examples_dir.glob("*{}.py".format(type)):
+    def test_all(self, filename_suffix=''):
+        """ Run mypy for all files contained in tests/examples directory.
+        Lines with expected errors are marked inside these files.
+        Any mismatch will raise an assertion error.
+
+        Parameters
+        ----------
+        filename_suffix: str
+            Optional filename suffix filter.
+        """
+        for file_path in examples_dir.glob("*{}.py".format(filename_suffix)):
             with self.subTest(file_path=file_path):
                 self.assertRaisesMypyError(file_path)
