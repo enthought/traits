@@ -582,19 +582,12 @@ call_class(
     PyObject *name, PyObject *value)
 {
     PyObject *result;
+    PyObject *args;
 
-    PyObject *args = PyTuple_New(4);
+    args = PyTuple_Pack(4, trait->handler, (PyObject *)obj, name, value);
     if (args == NULL) {
         return NULL;
     }
-    PyTuple_SET_ITEM(args, 0, trait->handler);
-    PyTuple_SET_ITEM(args, 1, (PyObject *)obj);
-    PyTuple_SET_ITEM(args, 2, name);
-    PyTuple_SET_ITEM(args, 3, value);
-    Py_INCREF(trait->handler);
-    Py_INCREF(obj);
-    Py_INCREF(name);
-    Py_INCREF(value);
     result = PyObject_Call(class, args, NULL);
     Py_DECREF(args);
     return result;
@@ -1812,11 +1805,10 @@ default_value_for(trait_object *trait, has_traits_object *obj, PyObject *name)
             return PyObject_Call(
                 PyTuple_GET_ITEM(dv, 0), PyTuple_GET_ITEM(dv, 1), kw);
         case CALLABLE_DEFAULT_VALUE:
-            if ((tuple = PyTuple_New(1)) == NULL) {
+            tuple = PyTuple_Pack(1, (PyObject *)obj);
+            if (tuple == NULL) {
                 return NULL;
             }
-            PyTuple_SET_ITEM(tuple, 0, (PyObject *)obj);
-            Py_INCREF(obj);
             result = PyObject_Call(trait->default_value, tuple, NULL);
             Py_DECREF(tuple);
             if ((result != NULL) && (trait->validate != NULL)) {
@@ -2185,24 +2177,15 @@ call_notifiers(
     PyObject *name, PyObject *old_value, PyObject *new_value)
 {
     int i, n, new_value_has_traits;
-    PyObject *result, *item, *temp;
-
+    PyObject *result, *item, *temp, *args;
     int rc = 0;
 
-    PyObject *args = PyTuple_New(4);
+    args = PyTuple_Pack(4, (PyObject *)obj, name, old_value, new_value);
     if (args == NULL) {
         return -1;
     }
 
     new_value_has_traits = PyHasTraits_Check(new_value);
-    PyTuple_SET_ITEM(args, 0, (PyObject *)obj);
-    PyTuple_SET_ITEM(args, 1, name);
-    PyTuple_SET_ITEM(args, 2, old_value);
-    PyTuple_SET_ITEM(args, 3, new_value);
-    Py_INCREF(obj);
-    Py_INCREF(name);
-    Py_INCREF(old_value);
-    Py_INCREF(new_value);
 
     // Do nothing if the user has explicitly requested no traits notifications
     // to be sent.
@@ -3093,18 +3076,12 @@ validate_trait_python(
     PyObject *value)
 {
     PyObject *result;
+    PyObject *args;
 
-    PyObject *args = PyTuple_New(3);
+    args = PyTuple_Pack(3, (PyObject *)obj, name, value);
     if (args == NULL) {
         return NULL;
     }
-
-    Py_INCREF(obj);
-    Py_INCREF(name);
-    Py_INCREF(value);
-    PyTuple_SET_ITEM(args, 0, (PyObject *)obj);
-    PyTuple_SET_ITEM(args, 1, name);
-    PyTuple_SET_ITEM(args, 2, value);
     result = PyObject_Call(trait->py_validate, args, NULL);
     Py_DECREF(args);
 
@@ -3121,18 +3098,12 @@ call_validator(
     PyObject *value)
 {
     PyObject *result;
+    PyObject *args;
 
-    PyObject *args = PyTuple_New(3);
+    args = PyTuple_Pack(3, (PyObject *)obj, name, value);
     if (args == NULL) {
         return NULL;
     }
-
-    PyTuple_SET_ITEM(args, 0, (PyObject *)obj);
-    PyTuple_SET_ITEM(args, 1, name);
-    PyTuple_SET_ITEM(args, 2, value);
-    Py_INCREF(obj);
-    Py_INCREF(name);
-    Py_INCREF(value);
     result = PyObject_Call(validator, args, NULL);
     Py_DECREF(args);
 
@@ -3140,21 +3111,19 @@ call_validator(
 }
 
 /*-----------------------------------------------------------------------------
-|  Calls the specified type convertor:
+|  Calls the specified type converter:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
 type_converter(PyObject *type, PyObject *value)
 {
     PyObject *result;
+    PyObject *args;
 
-    PyObject *args = PyTuple_New(1);
+    args = PyTuple_Pack(1, value);
     if (args == NULL) {
         return NULL;
     }
-
-    PyTuple_SET_ITEM(args, 0, value);
-    Py_INCREF(value);
     result = PyObject_Call(type, args, NULL);
     Py_DECREF(args);
 
@@ -4376,18 +4345,12 @@ post_setattr_trait_python(
     PyObject *value)
 {
     PyObject *result;
+    PyObject *args;
 
-    PyObject *args = PyTuple_New(3);
+    args = PyTuple_Pack(3, (PyObject *)obj, name, value);
     if (args == NULL) {
         return -1;
     }
-
-    Py_INCREF(obj);
-    Py_INCREF(name);
-    Py_INCREF(value);
-    PyTuple_SET_ITEM(args, 0, (PyObject *)obj);
-    PyTuple_SET_ITEM(args, 1, name);
-    PyTuple_SET_ITEM(args, 2, value);
     result = PyObject_Call(trait->py_post_setattr, args, NULL);
     Py_DECREF(args);
 
@@ -4569,17 +4532,9 @@ _trait_property(trait_object *trait, PyObject *args)
 
     if (PyTuple_GET_SIZE(args) == 0) {
         if (trait->flags & TRAIT_PROPERTY) {
-            result = PyTuple_New(3);
-            if (result != NULL) {
-                PyTuple_SET_ITEM(result, 0, temp = trait->delegate_name);
-                Py_INCREF(temp);
-                PyTuple_SET_ITEM(result, 1, temp = trait->delegate_prefix);
-                Py_INCREF(temp);
-                PyTuple_SET_ITEM(result, 2, temp = trait->py_validate);
-                Py_INCREF(temp);
-                return result;
-            }
-            return NULL;
+            return PyTuple_Pack(
+                3, trait->delegate_name, trait->delegate_prefix,
+                trait->py_validate);
         }
         else {
             Py_INCREF(Py_None);
