@@ -107,7 +107,6 @@ default_runtime = "3.6"
 
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
 
-
 # Click options shared by multiple commands.
 edm_option = click.option(
     "--edm",
@@ -176,17 +175,15 @@ def install(edm, runtime, environment, editable, docs, source):
         "{edm} --config edm.yaml install -y -e {environment} " + packages,
         "{edm} plumbing remove-package -e {environment} traits",
     ]
-    if editable:
-        install_cmd = (
-            "{edm} run -e {environment} -- "
-            "python -m pip install --editable . --no-dependencies"
-        )
-    else:
-        install_cmd = (
-            "{edm} run -e {environment} -- "
-            "python -m pip install . --no-dependencies"
-        )
+
+    install_cmd = _get_install_command_string(".", editable)
+    install_mypy_cmd = _get_install_command_string("mypy", editable, False)
+    install_stubs_cmd = _get_install_command_string("./traits-stubs/",
+                                                    editable)
+
     commands.append(install_cmd)
+    commands.append(install_mypy_cmd)
+    commands.append(install_stubs_cmd)
 
     install_copyright_checker = (
         "{edm} run -e {environment} -- "
@@ -227,6 +224,16 @@ def install(edm, runtime, environment, editable, docs, source):
     click.echo("Done install")
 
 
+def _get_install_command_string(pkg_or_location, editable, no_deps=True):
+    cmd = "{edm} run -e {environment} -- python -m pip install "
+    if editable:
+        cmd += "--editable"
+    cmd += " {} ".format(pkg_or_location)
+    if no_deps:
+        cmd += "--no-dependencies"
+    return cmd
+
+
 @cli.command()
 @edm_option
 @runtime_option
@@ -261,7 +268,9 @@ def test(edm, runtime, verbose, environment):
     options = "--verbose " if verbose else ""
     commands = [
         "{edm} run -e {environment} -- coverage run -p -m "
-        "unittest discover " + options + "traits"
+        "unittest discover " + options + "traits",
+        "{edm} run -e {environment} -- coverage run -p -m "
+        "unittest discover " + options + "traits_stubs_tests"
     ]
 
     # We run in a tempdir to avoid accidentally picking up wrong traits
