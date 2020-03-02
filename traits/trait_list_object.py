@@ -30,16 +30,6 @@ class TraitListEvent(object):
     """
 
     def __init__(self, index=0, removed=None, added=None):
-        """
-        Parameters
-        ----------
-        index : int or slice
-            The index of the change in the list.
-        added : list
-            The list of values added to the list.
-        removed : list
-            The list of values removed from the list.
-        """
         self.index = index
 
         if removed is None:
@@ -106,7 +96,7 @@ class TraitList(list):
         Raises
         ------
         TraitError
-            If validatation fails.
+            If validation fails.
         """
         # Use getattr as pickle can call `extend` before validator is set.
         if getattr(self, 'validator', None) is None:
@@ -194,7 +184,31 @@ class TraitList(list):
         self.__dict__.update(state)
 
     def __setitem__(self, index, value):
-        """ Set self[index] to value. """
+        """ Set a value at index, implements self[index] = value
+
+        Parameters
+        ----------
+        index : int
+            Index at which the value will be set
+        value : Any
+            The value to set at the index
+
+        Returns
+        -------
+        None
+
+        Notification
+        ------------
+        index : int or slice
+            Index or normalized slice start and stop
+            to range 0 to len (inclusive)
+        added : value
+            The  value added
+        removed : value
+            The removed value or Undefined if no value was previously
+            present at the index
+
+        """
         removed = self._get_removed(index)
         if isinstance(index, slice):
             if len(removed) != len(value) and index.step not in {1, None}:
@@ -212,7 +226,29 @@ class TraitList(list):
         self.notify(norm_index, removed, added)
 
     def __delitem__(self, index):
-        """ Delete self[index]. """
+        """ Delete an item from the list at index
+
+        Parameters
+        ----------
+        index : int
+            Index of the element to be deleted
+
+        Returns
+        -------
+        None
+
+        Notification
+        ------------
+        index : int or slice
+            Index or normalized slice start and stop
+            to range 0 to len (inclusive)
+        added : Undefined
+        removed : value
+            The removed value or Undefined if no value was previously
+            present at the index
+
+
+        """
         removed = self._get_removed(index)
         if isinstance(index, slice):
             added = self.validate(index, removed, [])
@@ -226,12 +262,42 @@ class TraitList(list):
         self.notify(norm_index, removed, added)
 
     def __iadd__(self, other):
-        """ Implement self += value. """
+        """ Implements the self += value operator
+
+        Parameters
+        ----------
+        other : Any
+            The item to add to the list
+
+        Returns
+        -------
+        None
+
+        """
         self.extend(other)
         return self
 
     def __imul__(self, count):
-        """ Implement self *= value. """
+        """ Implements the self *= value operator
+
+        Parameters
+        ----------
+        count : int
+            Number of times to duplicate the list
+
+        Returns
+        -------
+        None
+
+        Notification
+        ------------
+        index : slice
+            Slice ranging from current_length to new_length
+        added : list
+            The  new values that were added
+        removed : []
+
+        """
         if count > 1:
             self.extend(self * (count - 1))
         elif count == 0:
@@ -239,7 +305,26 @@ class TraitList(list):
         return self
 
     def append(self, object):
-        """ Append object to end """
+        """ Append an object to the end of the list
+
+        Parameters
+        ----------
+        object : Any
+            The item to append to the list
+
+        Returns
+        -------
+        None
+
+        Notification
+        ------------
+        index : int
+            The index of the newly appended item
+        added : Any
+            The  new item
+        removed : Undefined
+
+        """
         index = len(self)
         removed = Undefined
         added = self.validate(index, removed, object)
@@ -249,7 +334,25 @@ class TraitList(list):
         self.notify(index, removed, added)
 
     def extend(self, iterable):
-        """ Extend list by appending elements from the iterable """
+        """ Extend list by appending elements from the iterable
+
+        Parameters
+        ----------
+        iterable : An iterable
+
+        Returns
+        -------
+        None
+
+        Notification
+        ------------
+        index : slice
+            The slice from current_length to new_length
+        added : list
+            The newly added items
+        removed : Undefined
+
+        """
         index = slice(len(self), len(self) + len(iterable))
         removed = []
         added = self.validate(index, removed, iterable)
@@ -259,7 +362,28 @@ class TraitList(list):
         self.notify(index, removed, added)
 
     def insert(self, index, object):
-        """ Insert object before index """
+        """ Insert an object to the list before index.
+
+        Parameters
+        ----------
+        index : int
+            The index before which to insert the object
+        object : Any
+            The object to insert
+
+        Returns
+        -------
+        None
+
+        Notification
+        ------------
+        index : int
+            The index before which the item was inserted
+        added : item
+            The newly added items
+        removed : Undefined
+
+        """
         removed = Undefined
         added = self.validate(index, removed, object)
         norm_index = self._normalize_index(index)
@@ -269,7 +393,22 @@ class TraitList(list):
         self.notify(norm_index, removed, added)
 
     def clear(self):
-        """ Clear the list """
+        """ Remove all items from the list
+
+        Returns
+        -------
+        None
+
+        Notification
+        ------------
+        index : slice
+            The range of the slice will be 0 to len(self)
+        added : list
+            The empty list []
+        removed : list
+            The removed items
+
+        """
         index = slice(0, len(self), None)
         removed = [copy.deepcopy(x) for x in self]
         added = self.validate(index, removed, [])
@@ -280,8 +419,30 @@ class TraitList(list):
     def pop(self, index=-1):
         """ Remove and return item at index (default last).
 
-        Raises IndexError if list is empty or index is out of range.
+        Parameters
+        ----------
+        index: int
+            Index at which item has to be removed
+
+        Returns
+        -------
+        item : An item in the list at given index
+
+        Raises
+        ------
+        IndexError
+            If list is empty or index is out of range.
+
+        Notification
+        ------------
+        index : int
+            The normalized index between 0 and len(self)
+        added : Undefined
+        removed : item
+            The removed item
+
         """
+
         removed = self._get_removed(index)
         added = self.validate(index, removed, Undefined)
         norm_index = self._normalize_index(index)
@@ -295,7 +456,28 @@ class TraitList(list):
     def remove(self, value):
         """ Remove first occurrence of value.
 
-        Raises ValueError if the value is not present.
+        Parameters
+        ----------
+        value : Any
+            A value contained in the list
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        ValueError
+            If the value is not present
+
+        Notification
+        ------------
+        index : int
+            The index between 0 and len(self)
+        added : Undefined
+        removed : item
+            The removed item
+
         """
         index = self.index(value)
         added = self.validate(index, value, Undefined)
@@ -305,7 +487,30 @@ class TraitList(list):
         self.notify(index, value, added)
 
     def sort(self, key=None, reverse=False):
-        """ Stable sort *IN PLACE* """
+        """ Sort the items in the list in ascending order, *IN PLACE*.
+        A custom key function can be supplied to customize
+        the sort order, and the reverse flag can be set to request the result
+        in descending order.
+
+        Parameters
+        ----------
+        key : Callable
+            Custom function
+        reverse : bool
+            If true, the resulting list will be sorted in descending order
+
+        Returns
+        -------
+        None
+
+        Notification
+        ------------
+        index : slice
+            The slice between 0 and len(self)
+        added : list
+            Will be []
+        removed : Undefined
+        """
         self[:] = sorted(self, key=key, reverse=reverse)
         index = slice(0, len(self), None)
 
@@ -315,7 +520,21 @@ class TraitList(list):
         self.notify(index, removed, added)
 
     def reverse(self):
-        """ Reverse *IN PLACE* """
+        """ Reverse the order of the items in the list *IN PLACE*
+
+        Returns
+        -------
+        None
+
+        Notification
+        ------------
+        index : slice
+            The slice between 0 and len(self)
+        added : list
+            Will be []
+        removed : Undefined
+
+        """
         self[:] = self[::-1]
         index = slice(0, len(self), None)
 
@@ -371,27 +590,26 @@ class TraitList(list):
 
 
 class TraitListObject(TraitList):
+    """ A specialization of TraitList with a default validator and notifier
+    which provide bug-for-bug compatibility with the TraitsListObject from
+    Traits versions before 6.0.
+
+    Parameters
+    ----------
+    trait : CTrait
+        The trait that the list has been assigned to.
+    object : HasTraits
+        The object the list belongs to.
+    name : str
+        The name of the trait on the object.
+    value : iterable
+        The initial value of the list.
+    notifiers : list
+        Additional notifiers for the list.
+    """
 
     def __init__(self, trait, object, name, value, notifiers=[]):
 
-        """
-        This creates a TraitListObject with default validator and notifier
-        which provide bug-for-bug compatibility with the TraitsListObject from
-        Traits versions before 6.0.
-
-        Parameters
-        ----------
-        trait : CTrait
-            The trait that the list has been assigned to.
-        object : HasTraits
-            The object the list belongs to.
-        name : str
-            The name of the trait on the object.
-        value : iterable
-            The initial value of the list.
-        notifiers : list
-            Additional notifiers for the list.
-        """
         self.trait = trait
         self.object = ref(object)
         self.name = name
@@ -481,6 +699,10 @@ class TraitListObject(TraitList):
         object.trait_items_event(self.name_items, event, items_event)
 
     def __deepcopy__(self, memo):
+        """ Perform a deepcopy operation.
+
+        Notifiers are transient and should not be copied.
+        """
         id_self = id(self)
         if id_self in memo:
             return memo[id_self]
@@ -495,6 +717,10 @@ class TraitListObject(TraitList):
         return result
 
     def __getstate__(self):
+        """ Get the state of the object for serialization.
+
+        Notifiers are transient and should not be serialized.
+        """
         result = self.__dict__.copy()
         result.pop("object", None)
         result.pop("trait", None)
@@ -502,6 +728,10 @@ class TraitListObject(TraitList):
         return result
 
     def __setstate__(self, state):
+        """ Restore the state of the object after serialization.
+
+        Notifiers are transient and are restored to the empty list.
+        """
         name = state.setdefault("name", "")
         object = state.pop("object", None)
         if object is not None:

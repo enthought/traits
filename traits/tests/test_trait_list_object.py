@@ -254,3 +254,11 @@ class TestTraitList(unittest.TestCase):
 
         for i, j in zip(tl, tl_unpickled):
             self.assertIs(i, j)
+
+    def test_invalid_entry(self):
+        tl = TraitList([1, 2, 3, 4, 5],
+                       validator=int_validator,
+                       notifiers=[self.notification_handler])
+
+        with self.assertRaises(TypeError):
+            tl.append("A")
