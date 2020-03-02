@@ -358,6 +358,40 @@ class TestObjectNotifiers(unittest.TestCase):
         self.assertEqual(onotifier.handler, handler)
 
 
+class TestCallNotifiers(unittest.TestCase):
+
+    def test_trait_and_object_notifiers_called(self):
+
+        side_effects = []
+
+        class Foo(HasTraits):
+            x = Int()
+            y = Int()
+
+            def _x_changed(self):
+                side_effects.append("x")
+
+        def object_handler():
+            side_effects.append("object")
+
+        foo = Foo()
+        foo.on_trait_change(object_handler, name="anytrait")
+
+        # when
+        side_effects.clear()
+        foo.x = 3
+
+        # then
+        self.assertEqual(side_effects, ["x", "object"])
+
+        # when
+        side_effects.clear()
+        foo.y = 4
+
+        # then
+        self.assertEqual(side_effects, ["object"])
+
+
 class TestDeprecatedHasTraits(unittest.TestCase):
     def test_deprecated(self):
         class TestSingletonHasTraits(SingletonHasTraits):
