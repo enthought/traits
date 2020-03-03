@@ -2170,12 +2170,26 @@ setattr_generic(
 /*-----------------------------------------------------------------------------
 |  Call all notifiers for a specified trait:
 |
-|  `tnotifiers` is expected to be either NULL or a list of callables.
-|  `onotifiers` is expected to be either NULL or a list of callables.
-|  `obj` is expected to be an instance of HasTraits.
-|  `name` is the name of the trait changed.
-|  `old_value` is the previous value of the trait.
-|  `new_value` is the new value of the trait.
+|  Parameters
+|  ----------
+|  tnotifiers : NULL or a list of callables.
+|     Notifiers attached to the trait.
+|  onotifiers : NULL or a list of callables.
+|     Notifiers attached to the HasTraits instance.
+|  obj : instance of HasTraits
+|     Instance on which the trait changed.
+|  name : str
+|     Name of the trait changed.
+|  old_value : any
+|     Value of the trait before the change.
+|  new_value : any
+|     Value of the trait after the change.
+|
+|  Returns
+|  -------
+|  return_code : int
+|      0 indicates success.
+|     -1 indicates unexpected errors.
 +----------------------------------------------------------------------------*/
 
 static int
