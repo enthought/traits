@@ -16,31 +16,6 @@ from .trait_base import class_of, Undefined
 from .trait_errors import TraitError
 
 
-class TraitListEvent(object):
-    """ An object reporting in-place changes to a traits list.
-
-    Attributes
-    ----------
-    index : int or slice
-        The index of the change in the list.
-    added : list
-        The list of values added to the list.
-    removed : list
-        The list of values removed from the list.
-    """
-
-    def __init__(self, index=0, removed=None, added=None):
-        self.index = index
-
-        if removed is None:
-            removed = []
-        self.removed = removed
-
-        if added is None:
-            added = []
-        self.added = added
-
-
 def adapt_trait_validator(trait_validator):
     """ Adapt a trait validator to work as a trait list validator.
     """
@@ -61,8 +36,69 @@ def adapt_trait_validator(trait_validator):
     return validator
 
 
+class TraitListEvent(object):
+    """ An object reporting in-place changes to a traits list.
+
+    Parameters
+    ----------
+    index : int or slice
+        An index or slice indicating the location of the changes to the list.
+    added : list or None
+        The list of values added to the list, or optionally None if nothing
+        is added.
+    removed : list or None
+        The list of values removed from the list, or optionally None if
+        nothing is removed.
+
+    Attributes
+    ----------
+    index : int or slice
+        An index or slice indicating the location of the changes to the list.
+    added : list
+        The list of values added to the list.  If nothing was added this is
+        an empty list.
+    removed : list
+        The list of values removed from the list.  If nothing was removed
+        this is an empty list.
+    """
+
+    def __init__(self, index=0, removed=None, added=None):
+        self.index = index
+
+        if removed is None:
+            removed = []
+        self.removed = removed
+
+        if added is None:
+            added = []
+        self.added = added
+
+
 class TraitList(list):
     """ A subclass of list that validates and notifies listeners of changes.
+
+    Parameters
+    ----------
+    value : list
+        The value for the list
+    validator : callable
+        Called to validate items in the list
+    notifiers : list of callable
+        A list of callables with the signature::
+
+         notifier(trait_list, index, removed, added)
+
+    Attributes
+    ----------
+    value : list
+        The value for the list
+    validator : callable
+        Called to validate items in the list
+    notifiers : list of callable
+        A list of callables with the signature::
+
+         notifier(trait_list, index, removed, added)
+
     """
 
     # ------------------------------------------------------------------------
@@ -272,6 +308,14 @@ class TraitList(list):
         Returns
         -------
         None
+
+        Notification
+        ------------
+        index : slice
+            Slice ranging from current_length to new_length
+        added : list
+            The  new values that were added
+        removed : []
 
         """
         self.extend(other)
@@ -606,6 +650,19 @@ class TraitListObject(TraitList):
         The initial value of the list.
     notifiers : list
         Additional notifiers for the list.
+
+    Attributes
+    ----------
+    trait : CTrait
+        The trait that the list has been assigned to.
+    object : HasTraits
+        The object the list belongs to.
+    name : str
+        The name of the trait on the object.
+    value : iterable
+        The initial value of the list.
+    notifiers : list
+        Additional notifiers for the list.
     """
 
     def __init__(self, trait, object, name, value, notifiers=[]):
@@ -621,6 +678,32 @@ class TraitListObject(TraitList):
                          notifiers=[self.notifier] + notifiers)
 
     def validator(self, trait_list, index, removed, value):
+        """ Validates the value by calling the inner trait's validate method
+        and also ensures that the size of the list is within the specified
+        bounds.
+
+        Parameters
+        ----------
+        trait_list : list
+            The current list
+        index : index or slice
+            Index or slice corresponding to the values added/removed
+        removed : list
+            values that are removed
+        value : value or list of values
+            value or list of values that are added
+
+        Returns
+        -------
+        value : validated value or list of validated values
+
+        Raises
+        ------
+        TraitError
+            On validation failure for the inner trait or if the size of the
+            list exceeds the specified bounds
+
+        """
         object = self.object()
         trait = self.trait
         if object is None or trait is None:
@@ -667,6 +750,25 @@ class TraitListObject(TraitList):
             raise excp
 
     def notifier(self, trait_list, index, removed, added):
+        """ Converts and consolidates the parameters to a TraitListEvent and
+        then fires the event.
+
+        Parameters
+        ----------
+        trait_list : list
+            The list
+        index : int or slice
+            Index or slice that was modified
+        removed : value or list of values
+            Value or list of values that were removed
+        added : value or list of values
+            Value or list of values that were added
+
+        Returns
+        -------
+        None
+
+        """
         is_trait_none = self.trait is None
         is_name_items_none = self.name_items is None
         if not hasattr(self, "trait") or is_trait_none or is_name_items_none:
