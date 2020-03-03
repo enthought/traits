@@ -2182,7 +2182,7 @@ call_notifiers(
 
     // Do nothing if the user has explicitly requested no traits notifications
     // to be sent.
-    if ((obj->flags & HASTRAITS_NO_NOTIFY)) {
+    if (obj->flags & HASTRAITS_NO_NOTIFY) {
         return rc;
     }
 
