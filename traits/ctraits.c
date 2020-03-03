@@ -2197,7 +2197,8 @@ call_notifiers(
     PyListObject *tnotifiers, PyListObject *onotifiers, has_traits_object *obj,
     PyObject *name, PyObject *old_value, PyObject *new_value)
 {
-    int i, t_len, o_len, new_value_has_traits;
+    Py_ssize_t i, t_len, o_len;
+    int new_value_has_traits;
     PyObject *result, *item, *all_notifiers, *args;
     int rc = 0;
 
