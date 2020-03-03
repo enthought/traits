@@ -2180,18 +2180,18 @@ call_notifiers(
     PyObject *result, *item, *all_notifiers, *args;
     int rc = 0;
 
+    // Do nothing if the user has explicitly requested no traits notifications
+    // to be sent.
+    if (obj->flags & HASTRAITS_NO_NOTIFY) {
+        return rc;
+    }
+
     args = PyTuple_Pack(4, (PyObject *)obj, name, old_value, new_value);
     if (args == NULL) {
         return -1;
     }
 
     new_value_has_traits = PyHasTraits_Check(new_value);
-
-    // Do nothing if the user has explicitly requested no traits notifications
-    // to be sent.
-    if ((obj->flags & HASTRAITS_NO_NOTIFY)) {
-        goto exit;
-    }
 
     if (tnotifiers != NULL) {
         t_len = PyList_GET_SIZE(tnotifiers);

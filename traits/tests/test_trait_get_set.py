@@ -85,3 +85,21 @@ class TestTraitGet(UnittestTools, unittest.TestCase):
         with self.assertDeprecated():
             values = obj.get("string")
         self.assertEqual(values, {"string": "foo"})
+
+    def test_trait_set_quiet(self):
+        obj = TraitsObject()
+        obj.string = "foo"
+
+        with self.assertTraitDoesNotChange(obj, "string"):
+            obj.trait_set(trait_change_notify=False, string="bar")
+
+        self.assertEqual(obj.string, "bar")
+
+    def test_trait_setq(self):
+        obj = TraitsObject()
+        obj.string = "foo"
+
+        with self.assertTraitDoesNotChange(obj, "string"):
+            obj.trait_setq(string="bar")
+
+        self.assertEqual(obj.string, "bar")
