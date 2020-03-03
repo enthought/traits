@@ -432,6 +432,49 @@ class TestCallNotifiers(unittest.TestCase):
         # then
         self.assertEqual(side_effects, ["object"])
 
+    def test_trait_notifier_modify_object_notifier(self):
+        # Test when a trait notifier has a side effect of adding
+        # an object notifier
+
+        side_effects = []
+
+        def object_handler1():
+            side_effects.append("object1")
+
+        def object_handler2():
+            side_effects.append("object2")
+
+        class Foo(HasTraits):
+            x = Int()
+            y = Int()
+
+            def _x_changed(self):
+                side_effects.append("x")
+
+                # add the second object notifier
+                self.on_trait_change(object_handler2, name="anytrait")
+
+        # Add an object handler so that the list is created for mutation.
+        foo = Foo()
+        foo.on_trait_change(object_handler1, name="anytrait")
+
+        # when
+        side_effects.clear()
+        foo.x = 1
+
+        # then
+        # the second object notifier is not called.
+        self.assertEqual(side_effects, ["x", "object1"])
+
+        # But the object notifier is added and will be used the next time
+        # when
+        side_effects.clear()
+        foo.y = 2
+
+        # then
+        # the second object notifier is called.
+        self.assertEqual(side_effects, ["object1", "object2"])
+
 
 class TestDeprecatedHasTraits(unittest.TestCase):
     def test_deprecated(self):
