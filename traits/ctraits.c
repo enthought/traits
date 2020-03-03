@@ -2169,6 +2169,27 @@ setattr_generic(
 
 /*-----------------------------------------------------------------------------
 |  Call all notifiers for a specified trait:
+|
+|  Parameters
+|  ----------
+|  tnotifiers : NULL or a list of callables.
+|     Notifiers attached to the trait.
+|  onotifiers : NULL or a list of callables.
+|     Notifiers attached to the HasTraits instance.
+|  obj : instance of HasTraits
+|     Instance on which the trait changed.
+|  name : str
+|     Name of the trait changed.
+|  old_value : any
+|     Value of the trait before the change.
+|  new_value : any
+|     Value of the trait after the change.
+|
+|  Returns
+|  -------
+|  return_code : int
+|      0 indicates success.
+|     -1 indicates unexpected errors.
 +----------------------------------------------------------------------------*/
 
 static int
@@ -2176,8 +2197,9 @@ call_notifiers(
     PyListObject *tnotifiers, PyListObject *onotifiers, has_traits_object *obj,
     PyObject *name, PyObject *old_value, PyObject *new_value)
 {
-    int i, n, new_value_has_traits;
-    PyObject *result, *item, *temp, *args;
+    Py_ssize_t i, t_len, o_len;
+    int new_value_has_traits;
+    PyObject *result, *item, *all_notifiers, *args;
     int rc = 0;
 
     // Do nothing if the user has explicitly requested no traits notifications
@@ -2194,72 +2216,51 @@ call_notifiers(
     new_value_has_traits = PyHasTraits_Check(new_value);
 
     if (tnotifiers != NULL) {
-        n = PyList_GET_SIZE(tnotifiers);
-        temp = NULL;
-        if (n > 1) {
-            temp = PyList_New(n);
-            if (temp == NULL) {
-                rc = -1;
-                goto exit2;
-            }
-            for (i = 0; i < n; i++) {
-                item = PyList_GET_ITEM(tnotifiers, i);
-                PyList_SET_ITEM(temp, i, item);
-                Py_INCREF(item);
-            }
-            tnotifiers = (PyListObject *)temp;
-        }
-        for (i = 0; i < n; i++) {
-            if (new_value_has_traits
-                && (((has_traits_object *)new_value)->flags
-                    & HASTRAITS_VETO_NOTIFY)) {
-                goto exit;
-            }
-            result = PyObject_Call(PyList_GET_ITEM(tnotifiers, i), args, NULL);
-            if (result == NULL) {
-                rc = -1;
-                goto exit;
-            }
-            Py_DECREF(result);
-        }
-        Py_XDECREF(temp);
+        t_len = PyList_GET_SIZE(tnotifiers);
+    } else {
+        t_len = 0;
     }
-
-    temp = NULL;
     if (onotifiers != NULL) {
-        n = PyList_GET_SIZE(onotifiers);
-        if (n > 1) {
-            temp = PyList_New(n);
-            if (temp == NULL) {
-                rc = -1;
-                goto exit2;
-            }
-            for (i = 0; i < n; i++) {
-                item = PyList_GET_ITEM(onotifiers, i);
-                PyList_SET_ITEM(temp, i, item);
-                Py_INCREF(item);
-            }
-            onotifiers = (PyListObject *)temp;
-        }
-        for (i = 0; i < n; i++) {
-            if (new_value_has_traits
-                && (((has_traits_object *)new_value)->flags
-                    & HASTRAITS_VETO_NOTIFY)) {
-                break;
-            }
-            result = PyObject_Call(PyList_GET_ITEM(onotifiers, i), args, NULL);
-            if (result == NULL) {
-                rc = -1;
-                goto exit;
-            }
-            Py_DECREF(result);
-        }
+        o_len = PyList_GET_SIZE(onotifiers);
+    } else {
+        o_len = 0;
     }
-exit:
-    Py_XDECREF(temp);
-exit2:
-    Py_DECREF(args);
 
+    // Concatenating trait notifiers and object notifiers.
+    // Notifier lists are copied in order to prevent run-time modifications.
+    all_notifiers = PyList_New(t_len + o_len);
+    if (all_notifiers == NULL) {
+        rc = -1;
+        goto exit;
+    }
+    for (i = 0; i < t_len; i++) {
+        item = PyList_GET_ITEM(tnotifiers, i);
+        PyList_SET_ITEM(all_notifiers, i, item);
+        Py_INCREF(item);
+    }
+    for (i = 0; i < o_len; i++) {
+        item = PyList_GET_ITEM(onotifiers, i);
+        PyList_SET_ITEM(all_notifiers, i + t_len, item);
+        Py_INCREF(item);
+    }
+
+    for (i = 0; i < t_len + o_len; i++) {
+        if (new_value_has_traits
+            && ((has_traits_object *)new_value)->flags
+                & HASTRAITS_VETO_NOTIFY) {
+            break;
+        }
+        result = PyObject_Call(PyList_GET_ITEM(all_notifiers, i), args, NULL);
+        if (result == NULL) {
+            rc = -1;
+            break;
+        }
+        Py_DECREF(result);
+    }
+    Py_DECREF(all_notifiers);
+
+exit:
+    Py_DECREF(args);
     return rc;
 }
 
