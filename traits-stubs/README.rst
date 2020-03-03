@@ -29,7 +29,7 @@ Note: `mypy` creates a `.mypy_cache` folder when run. This may be excluded
 from source control.
 
 Plugins
-------------
+-------
 The recommended way to use `mypy` is by installing the plugin for your favourite
 editor. Some plugins call out errors as the files are being modified which can
 be very useful.

@@ -16,10 +16,6 @@ import pkg_resources
 
 from traits_stubs_tests.util import MypyAssertions
 
-examples_dir = Path(
-    pkg_resources.resource_filename('traits_stubs_tests', 'examples'))
-__unittest = True
-
 
 class TestAnnotations(TestCase, MypyAssertions):
     def test_all(self, filename_suffix=''):
@@ -34,6 +30,9 @@ class TestAnnotations(TestCase, MypyAssertions):
         filename_suffix: str
             Optional filename suffix filter.
         """
+        examples_dir = Path(pkg_resources.resource_filename(
+            'traits_stubs_tests', 'examples'))
+
         for file_path in examples_dir.glob("*{}.py".format(filename_suffix)):
             with self.subTest(file_path=file_path):
                 self.assertRaisesMypyError(file_path)

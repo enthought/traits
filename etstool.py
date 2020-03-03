@@ -176,10 +176,11 @@ def install(edm, runtime, environment, editable, docs, source):
         "{edm} plumbing remove-package -e {environment} traits",
     ]
 
-    install_cmd = _get_install_command_string(".", editable)
-    install_mypy_cmd = _get_install_command_string("mypy", editable, False)
+    install_cmd = _get_install_command_string(".", editable=editable)
+    install_mypy_cmd = _get_install_command_string("mypy", editable=False,
+                                                   no_deps=False)
     install_stubs_cmd = _get_install_command_string("./traits-stubs/",
-                                                    editable)
+                                                    editable=editable)
 
     commands.append(install_cmd)
     commands.append(install_mypy_cmd)
@@ -222,16 +223,6 @@ def install(edm, runtime, environment, editable, docs, source):
             "{environment}'.".format(**parameters)
         )
     click.echo("Done install")
-
-
-def _get_install_command_string(pkg_or_location, editable, no_deps=True):
-    cmd = "{edm} run -e {environment} -- python -m pip install "
-    if editable:
-        cmd += "--editable"
-    cmd += " {} ".format(pkg_or_location)
-    if no_deps:
-        cmd += "--no-dependencies"
-    return cmd
 
 
 @cli.command()
@@ -529,6 +520,36 @@ def locate_edm():
         edm = os.path.join(os.path.dirname(edm), "embedded", "edm.exe")
 
     return edm
+
+
+def _get_install_command_string(pkg_or_location, editable, no_deps=True):
+    """ Create and return a command string configured by the provided
+    parameters.
+
+    Parameters
+    ----------
+    pkg_or_location : str
+        Either a location in the filesystem containing setup.py or the
+        name of a package.
+    editable : bool
+        Whether to add --editable flag
+    no_deps : bool
+        Whether to add --no-dependencies flag
+
+    Returns
+    -------
+    cmd : str
+        A command string, which if executed will install the package or run
+        the setup script at the provided location.
+
+    """
+    cmd = "{edm} run -e {environment} -- python -m pip install "
+    if editable:
+        cmd += "--editable"
+    cmd += " {} ".format(pkg_or_location)
+    if no_deps:
+        cmd += "--no-dependencies"
+    return cmd
 
 
 if __name__ == "__main__":

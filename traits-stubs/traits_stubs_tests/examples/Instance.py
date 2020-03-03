@@ -1,11 +1,11 @@
 from traits.api import HasTraits, Instance
 
 
-class Friut:
+class Fruit:
     info = "good for you"
 
 
-class Orange(Friut):
+class Orange(Fruit):
     pass
 
 
@@ -14,7 +14,7 @@ class Pizza:
 
 
 class TestClass(HasTraits):
-    itm = Instance(Friut)
+    itm = Instance(Fruit)
 
 
 obj = TestClass()
