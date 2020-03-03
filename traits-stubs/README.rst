@@ -19,10 +19,9 @@ Information on how to setup and run `mypy` can be found here:
 
 Installation
 ------------
-- Checkout the `traits-stubs` repository.
 - Activate an environment with `traits` installed.
 - Install mypy by following the instructions found in the links above.
-- Run `pip install <location containing setup.py>` for traits-stubs.
+- Run `pip install .` inside the dirctory /traits-stubs.
 - Run `mypy` with `mypy <somefile.py>`.
 
 Note: `mypy` creates a `.mypy_cache` folder when run. This may be excluded
