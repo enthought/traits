@@ -280,7 +280,6 @@ class TestCTrait(unittest.TestCase):
         self.assertEqual(foo.bar_changed[0], "baz")
 
 
-
 class TestCTraitNotifiers(unittest.TestCase):
     """ Test calling trait notifiers and object notifiers. """
 
