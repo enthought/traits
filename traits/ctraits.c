@@ -2244,7 +2244,7 @@ call_notifiers(
         Py_INCREF(item);
     }
 
-    for (i = 0; i < (t_len + o_len); i++) {
+    for (i = 0; i < t_len + o_len; i++) {
         if (new_value_has_traits
             && ((has_traits_object *)new_value)->flags
                 & HASTRAITS_VETO_NOTIFY) {
