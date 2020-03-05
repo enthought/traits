@@ -12,12 +12,17 @@ import copy
 import operator
 from weakref import ref
 
-from .trait_base import class_of, Undefined
-from .trait_errors import TraitError
+from traits.trait_base import class_of, Undefined
+from traits.trait_errors import TraitError
 
 
 def adapt_trait_validator(trait_validator):
     """ Adapt a trait validator to work as a trait list validator.
+
+    The trait validator is expected to have the signature::
+
+        validator(object, name, value)
+
     """
 
     def validator(trait_list, index, removed, value):
@@ -37,7 +42,7 @@ def adapt_trait_validator(trait_validator):
 
 
 class TraitListEvent(object):
-    """ An object reporting in-place changes to a traits list.
+    """ An object reporting in-place changes to a trait list.
 
     Parameters
     ----------
@@ -207,7 +212,6 @@ class TraitList(list):
         Notifiers are transient and should not be serialized.
         """
         result = self.__dict__.copy()
-        # notifiers are transient and should not be serialized
         result.pop("notifiers", None)
         return result
 
@@ -225,9 +229,9 @@ class TraitList(list):
         Parameters
         ----------
         index : int
-            Index at which the value will be set
+            Index at which the value will be set.
         value : Any
-            The value to set at the index
+            The value to set at the index.
 
         Returns
         -------
@@ -235,14 +239,13 @@ class TraitList(list):
 
         Notification
         ------------
-        index : int or slice
-            Index or normalized slice start and stop
-            to range 0 to len (inclusive)
-        added : value
-            The  value added
-        removed : value
+        index : int
+            The index of the value.
+        added : Any
+            The value that is set.
+        removed : Any
             The removed value or Undefined if no value was previously
-            present at the index
+            present at the index.
 
         """
         removed = self._get_removed(index)
@@ -262,12 +265,12 @@ class TraitList(list):
         self.notify(norm_index, removed, added)
 
     def __delitem__(self, index):
-        """ Delete an item from the list at index
+        """ Delete an item from the list at index.
 
         Parameters
         ----------
         index : int
-            Index of the element to be deleted
+            Index of the element to be deleted.
 
         Returns
         -------
@@ -275,13 +278,12 @@ class TraitList(list):
 
         Notification
         ------------
-        index : int or slice
-            Index or normalized slice start and stop
-            to range 0 to len (inclusive)
+        index : int
+            The index of the value that is deleted.
         added : Undefined
         removed : value
             The removed value or Undefined if no value was previously
-            present at the index
+            present at the index.
 
 
         """
@@ -297,64 +299,13 @@ class TraitList(list):
 
         self.notify(norm_index, removed, added)
 
-    def __iadd__(self, other):
-        """ Implements the self += value operator
-
-        Parameters
-        ----------
-        other : Any
-            The item to add to the list
-
-        Returns
-        -------
-        None
-
-        Notification
-        ------------
-        index : slice
-            Slice ranging from current_length to new_length
-        added : list
-            The  new values that were added
-        removed : []
-
-        """
-        self.extend(other)
-        return self
-
-    def __imul__(self, count):
-        """ Implements the self *= value operator
-
-        Parameters
-        ----------
-        count : int
-            Number of times to duplicate the list
-
-        Returns
-        -------
-        None
-
-        Notification
-        ------------
-        index : slice
-            Slice ranging from current_length to new_length
-        added : list
-            The  new values that were added
-        removed : []
-
-        """
-        if count > 1:
-            self.extend(self * (count - 1))
-        elif count == 0:
-            self[:] = []
-        return self
-
     def append(self, object):
-        """ Append an object to the end of the list
+        """ Append an item to the end of the list.
 
         Parameters
         ----------
         object : Any
-            The item to append to the list
+            The item to append to the list.
 
         Returns
         -------
@@ -363,7 +314,7 @@ class TraitList(list):
         Notification
         ------------
         index : int
-            The index of the newly appended item
+            The index of the newly appended item.
         added : Any
             The  new item
         removed : Undefined
@@ -378,11 +329,12 @@ class TraitList(list):
         self.notify(index, removed, added)
 
     def extend(self, iterable):
-        """ Extend list by appending elements from the iterable
+        """ Extend list by appending elements from the iterable.
 
         Parameters
         ----------
-        iterable : An iterable
+        iterable : iterable
+            Any iterable type
 
         Returns
         -------
@@ -391,9 +343,9 @@ class TraitList(list):
         Notification
         ------------
         index : slice
-            The slice from current_length to new_length
+            The slice from current_length to new_length if successful.
         added : list
-            The newly added items
+            The newly added items.
         removed : Undefined
 
         """
@@ -411,9 +363,9 @@ class TraitList(list):
         Parameters
         ----------
         index : int
-            The index before which to insert the object
+            The index before which to insert the object.
         object : Any
-            The object to insert
+            The object to insert.
 
         Returns
         -------
@@ -422,7 +374,7 @@ class TraitList(list):
         Notification
         ------------
         index : int
-            The index before which the item was inserted
+            The index before which the item was inserted.
         added : item
             The newly added items
         removed : Undefined
@@ -446,11 +398,11 @@ class TraitList(list):
         Notification
         ------------
         index : slice
-            The range of the slice will be 0 to len(self)
+            The range of the slice will be 0 to len(self).
         added : list
-            The empty list []
+            The empty list [].
         removed : list
-            The removed items
+            The removed items.
 
         """
         index = slice(0, len(self), None)
@@ -466,11 +418,11 @@ class TraitList(list):
         Parameters
         ----------
         index: int
-            Index at which item has to be removed
+            Index at which item has to be removed.
 
         Returns
         -------
-        item : An item in the list at given index
+        item : An item in the list at given index, last item if no index given.
 
         Raises
         ------
@@ -480,7 +432,7 @@ class TraitList(list):
         Notification
         ------------
         index : int
-            The normalized index between 0 and len(self)
+            The normalized index between 0 and len(self).
         added : Undefined
         removed : item
             The removed item
@@ -503,7 +455,7 @@ class TraitList(list):
         Parameters
         ----------
         value : Any
-            A value contained in the list
+            A value contained in the list.
 
         Returns
         -------
@@ -512,15 +464,15 @@ class TraitList(list):
         Raises
         ------
         ValueError
-            If the value is not present
+            If the value is not present.
 
         Notification
         ------------
         index : int
-            The index between 0 and len(self)
+            The index between 0 and len(self).
         added : Undefined
         removed : item
-            The removed item
+            The removed item.
 
         """
         index = self.index(value)
@@ -539,9 +491,9 @@ class TraitList(list):
         Parameters
         ----------
         key : Callable
-            Custom function
+            Custom function.
         reverse : bool
-            If true, the resulting list will be sorted in descending order
+            If true, the resulting list will be sorted in descending order.
 
         Returns
         -------
@@ -552,7 +504,7 @@ class TraitList(list):
         index : slice
             The slice between 0 and len(self)
         added : list
-            Will be []
+            Will be [].
         removed : Undefined
         """
         self[:] = sorted(self, key=key, reverse=reverse)
@@ -564,7 +516,7 @@ class TraitList(list):
         self.notify(index, removed, added)
 
     def reverse(self):
-        """ Reverse the order of the items in the list *IN PLACE*
+        """ Reverse the order of the items in the list *IN PLACE*.
 
         Returns
         -------
@@ -573,10 +525,10 @@ class TraitList(list):
         Notification
         ------------
         index : slice
-            The slice between 0 and len(self)
+            The slice between 0 and len(self).
         added : list
             Will be []
-        removed : Undefined
+        removed : Undefined.
 
         """
         self[:] = self[::-1]
@@ -586,6 +538,57 @@ class TraitList(list):
         added = []
         removed = Undefined
         self.notify(index, removed, added)
+
+    def __iadd__(self, other):
+        """ Implements the self += value operator.
+
+        Parameters
+        ----------
+        other : Any
+            The item to add to the list.
+
+        Returns
+        -------
+        None
+
+        Notification
+        ------------
+        index : slice
+            Slice ranging from current_length to new_length.
+        added : list
+            The  new values that were added.
+        removed : []
+
+        """
+        self.extend(other)
+        return self
+
+    def __imul__(self, count):
+        """ Implements the self *= value operator.
+
+        Parameters
+        ----------
+        count : int
+            Number of times to duplicate the list.
+
+        Returns
+        -------
+        None
+
+        Notification
+        ------------
+        index : slice
+            Slice ranging from current_length to new_length.
+        added : list
+            The  new values that were added.
+        removed : []
+
+        """
+        if count > 1:
+            self.extend(self * (count - 1))
+        elif count == 0:
+            self[:] = []
+        return self
 
     # ------------------------------------------------------------------------
     # Private interface
@@ -685,17 +688,17 @@ class TraitListObject(TraitList):
         Parameters
         ----------
         trait_list : list
-            The current list
+            The current list.
         index : index or slice
-            Index or slice corresponding to the values added/removed
+            Index or slice corresponding to the values added/removed.
         removed : list
-            values that are removed
+            values that are removed.
         value : value or list of values
-            value or list of values that are added
+            value or list of values that are added.
 
         Returns
         -------
-        value : validated value or list of validated values
+        value : validated value or list of validated values.
 
         Raises
         ------
