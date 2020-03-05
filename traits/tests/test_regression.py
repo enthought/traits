@@ -1,10 +1,17 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """ General regression tests for a variety of bugs. """
 import gc
 import sys
 import unittest
-
-import six
-import six.moves as sm
 
 from traits.has_traits import (
     HasStrictTraits,
@@ -12,9 +19,10 @@ from traits.has_traits import (
     Property,
     on_trait_change,
 )
-from traits.trait_errors import TraitError
-from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
 from traits.testing.optional_dependencies import numpy, requires_numpy
+from traits.trait_errors import TraitError
+from traits.trait_type import TraitType
+from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
 
 if numpy is not None:
     from traits.trait_numeric import Array
@@ -108,6 +116,20 @@ class ExtendedListenerInList(HasTraits):
         self.changed = True
 
 
+class RaisingValidator(TraitType):
+    """ Trait type whose ``validate`` method raises an inappropriate exception.
+
+    Used for testing propagation of that exception.
+    """
+    info_text = "bogus"
+
+    #: The default value for the trait:
+    default_value = None
+
+    def validate(self, object, name, value):
+        raise ZeroDivisionError("Just testing")
+
+
 class TestRegression(unittest.TestCase):
     def test_default_value_for_no_cache(self):
         """ Make sure that CTrait.default_value_for() does not cache the
@@ -162,11 +184,11 @@ class TestRegression(unittest.TestCase):
         """
         dummy = Dummy()
         ctrait = dummy._trait("x", 2)
-        self.assertEqual(len(ctrait._notifiers(1)), 0)
+        self.assertEqual(len(ctrait._notifiers(True)), 0)
         presenter = Presenter(obj=dummy)
-        self.assertEqual(len(ctrait._notifiers(1)), 1)
+        self.assertEqual(len(ctrait._notifiers(True)), 1)
         del presenter
-        self.assertEqual(len(ctrait._notifiers(1)), 0)
+        self.assertEqual(len(ctrait._notifiers(True)), 0)
 
     def test_init_list_depends(self):
         """ Using two lists with bracket notation in extended name notation
@@ -195,26 +217,26 @@ class TestRegression(unittest.TestCase):
             obj.on_trait_change(handler)
 
         # Warmup.
-        for _ in sm.range(cycles):
+        for _ in range(cycles):
             f()
             gc.collect()
             counts.append(len(gc.get_objects()))
 
         # All the counts beyond the warmup period should be the same.
-        self.assertEqual(counts[warmup:-1], counts[warmup + 1 :])
+        self.assertEqual(counts[warmup:-1], counts[warmup + 1:])
 
     def test_delegation_refleak(self):
         warmup = 5
         cycles = 10
         counts = []
 
-        for _ in sm.range(cycles):
+        for _ in range(cycles):
             DelegateLeak()
             gc.collect()
             counts.append(len(gc.get_objects()))
 
         # All the counts should be the same.
-        self.assertEqual(counts[warmup:-1], counts[warmup + 1 :])
+        self.assertEqual(counts[warmup:-1], counts[warmup + 1:])
 
     @requires_numpy
     def test_exception_from_numpy_comparison_ignored(self):
@@ -223,7 +245,7 @@ class TestRegression(unittest.TestCase):
         class MultiArrayDataSource(HasTraits):
             data = Either(None, Array)
 
-        b = MultiArrayDataSource(data=numpy.array([1, 2]))
+        b = MultiArrayDataSource(data=numpy.array([1, 2]))  # noqa: F841
         # The following line was necessary to trigger the bug: the previous
         # line set a Python exception, but didn't return the correct result to
         # the CPython interpreter, so the exception wasn't triggered until
@@ -247,14 +269,23 @@ class TestRegression(unittest.TestCase):
         with self.assertRaises(TraitError):
             StrictDummy(forbidden=53)
 
-        if six.PY2:
-            with self.assertRaises(TraitError):
-                StrictDummy(**{b"forbidden": 53})
-
         # This is the case that used to fail on Python 2.
         with self.assertRaises(TraitError):
-            StrictDummy(**{u"forbidden": 53})
+            StrictDummy(**{"forbidden": 53})
 
         a = StrictDummy()
         with self.assertRaises(TraitError):
-            setattr(a, u"forbidden", 53)
+            setattr(a, "forbidden", 53)
+
+    def test_validate_exception_propagates(self):
+        class A(HasTraits):
+            foo = RaisingValidator()
+
+            bar = Either(None, RaisingValidator())
+
+        a = A()
+        with self.assertRaises(ZeroDivisionError):
+            a.foo = "foo"
+
+        with self.assertRaises(ZeroDivisionError):
+            a.bar = "foo"

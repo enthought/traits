@@ -1,7 +1,14 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
-# --(Extended Property depends_on References)-----------------------------------
+# --(Extended Property depends_on References)----------------------------------
 """
 Extended Property *depends_on* References
 =========================================
@@ -53,11 +60,7 @@ trait reference. In particular, take a look at the **LeagueModelView Class**
 tab's *total_hits* trait definition.
 """
 
-from __future__ import print_function
-
 # FIXME redo example without traitsui
-
-import six.moves as sm
 
 from traits.api import *
 
@@ -66,7 +69,7 @@ from traitsui.api import *
 from traitsui.table_column import *
 
 
-# --[Player Class]--------------------------------------------------------------
+# --[Player Class]-------------------------------------------------------------
 # Define a baseball player:
 class Player(HasTraits):
 
@@ -77,7 +80,7 @@ class Player(HasTraits):
     hits = Int
 
 
-# --[Team Class]----------------------------------------------------------------
+# --[Team Class]---------------------------------------------------------------
 # Define a baseball team:
 class Team(HasTraits):
 
@@ -96,7 +99,7 @@ class Team(HasTraits):
         return len(self.players)
 
 
-# --[League Class]--------------------------------------------------------------
+# --[League Class]-------------------------------------------------------------
 # Define a baseball league model:
 class League(HasTraits):
 
@@ -107,7 +110,7 @@ class League(HasTraits):
     teams = List(Team)
 
 
-# --[LeagueModelView Class]-----------------------------------------------------
+# --[LeagueModelView Class]----------------------------------------------------
 # Define a ModelView for a League model:
 class LeagueModelView(ModelView):
 
@@ -128,13 +131,9 @@ class LeagueModelView(ModelView):
     def _get_total_hits(self):
         """ Returns the total number of hits across all teams and players.
         """
-        return sm.reduce(
-            add,
-            [
-                sm.reduce(add, [p.hits for p in t.players], 0)
-                for t in self.model.teams
-            ],
-            0,
+        return sum(
+            sum(p.hits for p in t.players)
+            for t in self.model.teams
         )
 
     view = View(
@@ -225,7 +224,7 @@ class LeagueModelView(ModelView):
 # Function to add two numbers (used with 'reduce'):
 add = lambda a, b: a + b
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 
 # Define some sample teams and players:
 blue_birds = Team(

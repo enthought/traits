@@ -1,5 +1,5 @@
-:mod:`trait_notifiers` Module
-=============================
+:mod:`traits.trait_notifiers` Module
+====================================
 
 .. automodule:: traits.trait_notifiers
     :no-members:

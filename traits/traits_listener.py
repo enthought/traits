@@ -1,29 +1,16 @@
-# -------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2007, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#  Author: David C. Morrill
-#  Date:   03/05/2007
-#
-# -------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 """ Defines classes used to implement and manage various trait listener
     patterns.
 """
-
-# -------------------------------------------------------------------------------
-#  Imports:
-# -------------------------------------------------------------------------------
-
-from __future__ import absolute_import
 
 import re
 import string
@@ -31,22 +18,16 @@ import weakref
 from string import whitespace
 from types import MethodType
 
+from .constants import DefaultValue
 from .has_traits import HasPrivateTraits
 from .trait_base import Undefined, Uninitialized
 from .traits import Property
-from .trait_handlers import (
-    TRAIT_LIST_OBJECT_DEFAULT_VALUE,
-    TRAIT_DICT_OBJECT_DEFAULT_VALUE,
-    TRAIT_SET_OBJECT_DEFAULT_VALUE,
-)
 from .trait_types import Str, Int, Bool, Instance, List, Enum, Any
 from .trait_errors import TraitError
 from .trait_notifiers import TraitChangeNotifyWrapper
 from .util.weakiddict import WeakIDKeyDict
 
-# ---------------------------------------------------------------------------
-#  Constants:
-# ---------------------------------------------------------------------------
+# Constants
 
 # The name of the dictionary used to store active listeners
 TraitsListener = "__traits_listener__"
@@ -64,9 +45,9 @@ SET_LISTENER = "_register_set"
 
 # Mapping from trait default value types to listener types
 type_map = {
-    TRAIT_LIST_OBJECT_DEFAULT_VALUE: LIST_LISTENER,
-    TRAIT_DICT_OBJECT_DEFAULT_VALUE: DICT_LISTENER,
-    TRAIT_SET_OBJECT_DEFAULT_VALUE: SET_LISTENER,
+    DefaultValue.trait_list_object: LIST_LISTENER,
+    DefaultValue.trait_dict_object: DICT_LISTENER,
+    DefaultValue.trait_set_object: SET_LISTENER,
 }
 
 # Listener types:
@@ -92,10 +73,8 @@ name_pat = re.compile(r"([a-zA-Z_]\w*)\s*(.*)")
 # Characters valid in a traits name:
 name_chars = string.ascii_letters + string.digits + "_"
 
-# -------------------------------------------------------------------------------
-# Utility functions:
-# -------------------------------------------------------------------------------
 
+# Utility functions
 
 def indent(text, first_line=True, n=1, width=4):
     """ Indent lines of text.
@@ -131,10 +110,7 @@ def indent(text, first_line=True, n=1, width=4):
     return indented
 
 
-# -------------------------------------------------------------------------------
-#  Metadata filters:
-# -------------------------------------------------------------------------------
-
+# Metadata filters
 
 def is_not_none(value):
     return value is not None
@@ -148,16 +124,7 @@ def not_event(value):
     return value != "event"
 
 
-# -------------------------------------------------------------------------------
-#  'ListenerBase' class:
-# -------------------------------------------------------------------------------
-
-
 class ListenerBase(HasPrivateTraits):
-
-    # ---------------------------------------------------------------------------
-    #  Trait definitions:
-    # ---------------------------------------------------------------------------
 
     # The handler to be called when any listened to trait is changed:
     # handler = Any
@@ -183,63 +150,35 @@ class ListenerBase(HasPrivateTraits):
     # be deferred until the associated trait is first read or set?
     # deferred = Bool
 
-    # ---------------------------------------------------------------------------
-    #  Registers new listeners:
-    # ---------------------------------------------------------------------------
-
     def register(self, new):
         """ Registers new listeners.
         """
         raise NotImplementedError
-
-    # ---------------------------------------------------------------------------
-    #  Unregisters any existing listeners:
-    # ---------------------------------------------------------------------------
 
     def unregister(self, old):
         """ Unregisters any existing listeners.
         """
         raise NotImplementedError
 
-    # ---------------------------------------------------------------------------
-    #  Handles a trait change for a simple trait:
-    # ---------------------------------------------------------------------------
-
     def handle(self, object, name, old, new):
         """ Handles a trait change for a simple trait.
         """
         raise NotImplementedError
-
-    # ---------------------------------------------------------------------------
-    #  Handles a trait change for a list trait:
-    # ---------------------------------------------------------------------------
 
     def handle_list(self, object, name, old, new):
         """ Handles a trait change for a list trait.
         """
         raise NotImplementedError
 
-    # ---------------------------------------------------------------------------
-    #  Handles a trait change for a list traits items:
-    # ---------------------------------------------------------------------------
-
     def handle_list_items(self, object, name, old, new):
         """ Handles a trait change for a list traits items.
         """
         raise NotImplementedError
 
-    # ---------------------------------------------------------------------------
-    #  Handles a trait change for a dictionary trait:
-    # ---------------------------------------------------------------------------
-
     def handle_dict(self, object, name, old, new):
         """ Handles a trait change for a dictionary trait.
         """
         raise NotImplementedError
-
-    # ---------------------------------------------------------------------------
-    #  Handles a trait change for a dictionary traits items:
-    # ---------------------------------------------------------------------------
 
     def handle_dict_items(self, object, name, old, new):
         """ Handles a trait change for a dictionary traits items.
@@ -247,16 +186,7 @@ class ListenerBase(HasPrivateTraits):
         raise NotImplementedError
 
 
-# -------------------------------------------------------------------------------
-#  'ListenerItem' class:
-# -------------------------------------------------------------------------------
-
-
 class ListenerItem(ListenerBase):
-
-    # ---------------------------------------------------------------------------
-    #  Trait definitions:
-    # ---------------------------------------------------------------------------
 
     #: The name of the trait to listen to:
     name = Str
@@ -300,8 +230,8 @@ class ListenerItem(ListenerBase):
     is_any_trait = Bool(False)
 
     #: Is the associated handler a special list handler that handles both
-    #: 'foo' and 'foo_items' events by receiving a list of 'deleted' and 'added'
-    #: items as the 'old' and 'new' arguments?
+    #: 'foo' and 'foo_items' events by receiving a list of 'deleted' and
+    #: 'added' items as the 'old' and 'new' arguments?
     is_list_handler = Bool(False)
 
     #: A dictionary mapping objects to a list of all current active
@@ -309,17 +239,13 @@ class ListenerItem(ListenerBase):
     #: listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).
     active = Instance(WeakIDKeyDict, ())
 
-    # -- 'ListenerBase' Class Method Implementations ----------------------------
-
-    # ---------------------------------------------------------------------------
-    #  String representation:
-    # ---------------------------------------------------------------------------
+    # -- 'ListenerBase' Class Method Implementations --------------------------
 
     def __repr__(self, seen=None):
         """Returns a string representation of the object.
 
-        Since the object graph may have cycles, we extend the basic __repr__ API
-        to include a set of objects we've already seen while constructing
+        Since the object graph may have cycles, we extend the basic __repr__
+        API to include a set of objects we've already seen while constructing
         a string representation. When this method tries to get the repr of
         a ListenerItem or ListenerGroup, we will use the extended API and build
         up the set of seen objects. The repr of a seen object will just be
@@ -359,10 +285,6 @@ class ListenerItem(ListenerBase):
             self.type,
             indent(next_repr, False),
         )
-
-    # ---------------------------------------------------------------------------
-    #  Registers new listeners:
-    # ---------------------------------------------------------------------------
 
     def register(self, new):
         """ Registers new listeners.
@@ -468,10 +390,6 @@ class ListenerItem(ListenerBase):
 
         return INVALID_DESTINATION
 
-    # ---------------------------------------------------------------------------
-    #  Unregisters any existing listeners:
-    # ---------------------------------------------------------------------------
-
     def unregister(self, old):
         """ Unregisters any existing listeners.
         """
@@ -486,10 +404,6 @@ class ListenerItem(ListenerBase):
                 # which a weakref cannot be created and used an a key for
                 # 'self.active':
                 pass
-
-    # ---------------------------------------------------------------------------
-    #  Handles a trait change for an intermediate link trait:
-    # ---------------------------------------------------------------------------
 
     def handle_simple(self, object, name, old, new):
         """ Handles a trait change for an intermediate link trait.
@@ -514,10 +428,6 @@ class ListenerItem(ListenerBase):
             if wh is not None:
                 wh(object, name, old, getattr(object, name, Undefined))
 
-    # ---------------------------------------------------------------------------
-    #  Handles a trait change for a list (or set) trait:
-    # ---------------------------------------------------------------------------
-
     def handle_list(self, object, name, old, new):
         """ Handles a trait change for a list (or set) trait.
         """
@@ -529,10 +439,6 @@ class ListenerItem(ListenerBase):
         register = self.next.register
         for obj in new:
             register(obj)
-
-    # ---------------------------------------------------------------------------
-    #  Handles a trait change for a list (or set) traits items:
-    # ---------------------------------------------------------------------------
 
     def handle_list_items(self, object, name, old, new):
         """ Handles a trait change for items of a list (or set) trait.
@@ -547,10 +453,6 @@ class ListenerItem(ListenerBase):
         if wh is not None:
             wh(object, name, new.removed, new.added)
 
-    # ---------------------------------------------------------------------------
-    #  Handles a trait change for a dictionary trait:
-    # ---------------------------------------------------------------------------
-
     def handle_dict(self, object, name, old, new):
         """ Handles a trait change for a dictionary trait.
         """
@@ -562,10 +464,6 @@ class ListenerItem(ListenerBase):
         register = self.next.register
         for obj in new.values():
             register(obj)
-
-    # ---------------------------------------------------------------------------
-    #  Handles a trait change for a dictionary traits items:
-    # ---------------------------------------------------------------------------
 
     def handle_dict_items(self, object, name, old, new):
         """ Handles a trait change for items of a dictionary trait.
@@ -588,11 +486,6 @@ class ListenerItem(ListenerBase):
                 unregister(obj)
                 register(dict[key])
 
-    # ---------------------------------------------------------------------------
-    #  Handles an invalid intermediate trait change to a handler that must be
-    #  applied to the final destination object.trait:
-    # ---------------------------------------------------------------------------
-
     def handle_error(self, obj, name, old, new):
         """ Handles an invalid intermediate trait change to a handler that must
             be applied to the final destination object.trait.
@@ -603,11 +496,7 @@ class ListenerItem(ListenerBase):
                 "incompatible with a change to an intermediate trait"
             )
 
-    # -- Event Handlers ---------------------------------------------------------
-
-    # ---------------------------------------------------------------------------
-    #  Handles the 'handler' trait being changed:
-    # ---------------------------------------------------------------------------
+    # -- Event Handlers -------------------------------------------------------
 
     def _handler_changed(self, handler):
         """ Handles the **handler** trait being changed.
@@ -615,19 +504,11 @@ class ListenerItem(ListenerBase):
         if self.next is not None:
             self.next.handler = handler
 
-    # ---------------------------------------------------------------------------
-    #  Handles the 'wrapped_handler_ref' trait being changed:
-    # ---------------------------------------------------------------------------
-
     def _wrapped_handler_ref_changed(self, wrapped_handler_ref):
         """ Handles the 'wrapped_handler_ref' trait being changed.
         """
         if self.next is not None:
             self.next.wrapped_handler_ref = wrapped_handler_ref
-
-    # ---------------------------------------------------------------------------
-    #  Handles the 'dispatch' trait being changed:
-    # ---------------------------------------------------------------------------
 
     def _dispatch_changed(self, dispatch):
         """ Handles the **dispatch** trait being changed.
@@ -635,21 +516,13 @@ class ListenerItem(ListenerBase):
         if self.next is not None:
             self.next.dispatch = dispatch
 
-    # ---------------------------------------------------------------------------
-    #  Handles the 'priority' trait being changed:
-    # ---------------------------------------------------------------------------
-
     def _priority_changed(self, priority):
         """ Handles the **priority** trait being changed.
         """
         if self.next is not None:
             self.next.priority = priority
 
-    # -- Private Methods --------------------------------------------------------
-
-    # ---------------------------------------------------------------------------
-    #  Registers any 'anytrait' listener:
-    # ---------------------------------------------------------------------------
+    # -- Private Methods ------------------------------------------------------
 
     def _register_anytrait(self, object, name, remove):
         """ Registers any 'anytrait' listener.
@@ -665,10 +538,6 @@ class ListenerItem(ListenerBase):
             )
 
         return (object, name)
-
-    # ---------------------------------------------------------------------------
-    #  Registers a handler for a simple trait:
-    # ---------------------------------------------------------------------------
 
     def _register_simple(self, object, name, remove):
         """ Registers a handler for a simple trait.
@@ -724,8 +593,8 @@ class ListenerItem(ListenerBase):
             return next.unregister(getattr(object, name))
 
         if not self.deferred or name in object.__dict__:
-            # Sometimes, the trait may already be assigned. This can happen when
-            # there are chains of dynamic initializers and 'delegate'
+            # Sometimes, the trait may already be assigned. This can happen
+            # when there are chains of dynamic initializers and 'delegate'
             # notifications. If 'trait_a' and 'trait_b' have dynamic
             # initializers and 'trait_a's initializer creates 'trait_b', *and*
             # we have a DelegatesTo trait that delegates to 'trait_a', then the
@@ -733,15 +602,11 @@ class ListenerItem(ListenerBase):
             # thus 'trait_b'. If we are creating an extended trait change
             # listener on 'trait_b.something', and the 'trait_a' delegate
             # listeners just happen to get hooked up before this one, then
-            # 'trait_b' will have been initialized already, and the registration
-            # that we are deferring will never happen.
+            # 'trait_b' will have been initialized already, and the
+            # registration that we are deferring will never happen.
             return next.register(getattr(object, name))
 
         return (object, name)
-
-    # ---------------------------------------------------------------------------
-    #  Registers a handler for a list trait:
-    # ---------------------------------------------------------------------------
 
     def _register_list(self, object, name, remove):
         """ Registers a handler for a list trait.
@@ -848,18 +713,14 @@ class ListenerItem(ListenerBase):
         return INVALID_DESTINATION
 
     # Handle 'sets' the same as 'lists':
-    # Note: Currently the behavior of sets is almost identical to that of lists,
-    # so we are able to share the same code for both. This includes some 'duck
-    # typing' that occurs with the TraitListEvent and TraitSetEvent, that define
-    # 'removed' and 'added' attributes that behave similarly enough (from the
-    # point of view of this module) that they can be treated as equivalent. If
-    # the behavior of sets ever diverges from that of lists, then this code may
-    # need to be changed.
+    # Note: Currently the behavior of sets is almost identical to that of
+    # lists, so we are able to share the same code for both. This includes some
+    # 'duck typing' that occurs with the TraitListEvent and TraitSetEvent, that
+    # define 'removed' and 'added' attributes that behave similarly enough
+    # (from the point of view of this module) that they can be treated as
+    # equivalent. If the behavior of sets ever diverges from that of lists,
+    # then this code may need to be changed.
     _register_set = _register_list
-
-    # ---------------------------------------------------------------------------
-    #  Registers a handler for a dictionary trait:
-    # ---------------------------------------------------------------------------
 
     def _register_dict(self, object, name, remove):
         """ Registers a handler for a dictionary trait.
@@ -946,10 +807,6 @@ class ListenerItem(ListenerBase):
 
         return INVALID_DESTINATION
 
-    # ---------------------------------------------------------------------------
-    #  Handles new traits being added to an object being monitored:
-    # ---------------------------------------------------------------------------
-
     def _new_trait_added(self, object, name, new_trait):
         """ Handles new traits being added to an object being monitored.
         """
@@ -986,11 +843,6 @@ class ListenerItem(ListenerBase):
         return target
 
 
-# -------------------------------------------------------------------------------
-#  'ListenerGroup' class:
-# -------------------------------------------------------------------------------
-
-
 def _set_value(self, name, value):
     for item in self.items:
         setattr(item, name, value)
@@ -1008,10 +860,6 @@ ListProperty = Property(fget=_get_value, fset=_set_value)
 
 
 class ListenerGroup(ListenerBase):
-
-    # ---------------------------------------------------------------------------
-    #  Trait definitions:
-    # ---------------------------------------------------------------------------
 
     #: The handler to be called when any listened-to trait is changed
     handler = Property
@@ -1043,7 +891,7 @@ class ListenerGroup(ListenerBase):
     # The list of ListenerBase objects in the group
     items = List(ListenerBase)
 
-    # -- Property Implementations -----------------------------------------------
+    # -- Property Implementations ---------------------------------------------
 
     def _set_handler(self, handler):
         if self._handler is None:
@@ -1063,17 +911,13 @@ class ListenerGroup(ListenerBase):
             for item in self.items:
                 item.dispatch = dispatch
 
-    # -- 'ListenerBase' Class Method Implementations ----------------------------
-
-    # ---------------------------------------------------------------------------
-    #  String representation:
-    # ---------------------------------------------------------------------------
+    # -- 'ListenerBase' Class Method Implementations --------------------------
 
     def __repr__(self, seen=None):
         """Returns a string representation of the object.
 
-        Since the object graph may have cycles, we extend the basic __repr__ API
-        to include a set of objects we've already seen while constructing
+        Since the object graph may have cycles, we extend the basic __repr__
+        API to include a set of objects we've already seen while constructing
         a string representation. When this method tries to get the repr of
         a ListenerItem or ListenerGroup, we will use the extended API and build
         up the set of seen objects. The repr of a seen object will just be
@@ -1094,10 +938,6 @@ class ListenerGroup(ListenerBase):
 
         return "\n".join(lines)
 
-    # ---------------------------------------------------------------------------
-    #  Registers new listeners:
-    # ---------------------------------------------------------------------------
-
     def register(self, new):
         """ Registers new listeners.
         """
@@ -1106,10 +946,6 @@ class ListenerGroup(ListenerBase):
 
         return INVALID_DESTINATION
 
-    # ---------------------------------------------------------------------------
-    #  Unregisters any existing listeners:
-    # ---------------------------------------------------------------------------
-
     def unregister(self, old):
         """ Unregisters any existing listeners.
         """
@@ -1117,16 +953,7 @@ class ListenerGroup(ListenerBase):
             item.unregister(old)
 
 
-# -------------------------------------------------------------------------------
-#  'ListenerParser' class:
-# -------------------------------------------------------------------------------
-
-
 class ListenerParser(HasPrivateTraits):
-
-    # -------------------------------------------------------------------------------
-    #  Trait definitions:
-    # -------------------------------------------------------------------------------
 
     #: The string being parsed
     text = Str
@@ -1152,7 +979,7 @@ class ListenerParser(HasPrivateTraits):
     #: The ListenerBase object resulting from parsing **text**
     listener = Instance(ListenerBase)
 
-    # -- Property Implementations -----------------------------------------------
+    # -- Property Implementations ---------------------------------------------
 
     def _get_next(self):
         index = self.index
@@ -1180,18 +1007,13 @@ class ListenerParser(HasPrivateTraits):
 
         return match.group(1)
 
-    # -- object Method Overrides ------------------------------------------------
+    # -- object Method Overrides ----------------------------------------------
 
     def __init__(self, text="", **traits):
         self.text = text
         super(ListenerParser, self).__init__(**traits)
 
-    # -- Private Methods --------------------------------------------------------
-
-    # ---------------------------------------------------------------------------
-    #  Parses the text and returns the appropriate collection of ListenerBase
-    #  objects described by the text:
-    # ---------------------------------------------------------------------------
+    # -- Private Methods ------------------------------------------------------
 
     def parse(self):
         """ Parses the text and returns the appropriate collection of
@@ -1214,10 +1036,6 @@ class ListenerParser(HasPrivateTraits):
 
         return self.parse_group(EOS)
 
-    # ---------------------------------------------------------------------------
-    #  Parses the contents of a group:
-    # ---------------------------------------------------------------------------
-
     def parse_group(self, terminator="]"):
         """ Parses the contents of a group.
         """
@@ -1239,10 +1057,6 @@ class ListenerParser(HasPrivateTraits):
             return items[0]
 
         return ListenerGroup(items=items)
-
-    # ---------------------------------------------------------------------------
-    #  Parses a single, complete listener item/group string:
-    # ---------------------------------------------------------------------------
 
     def parse_item(self, terminator):
         """ Parses a single, complete listener item or group string.
@@ -1319,10 +1133,6 @@ class ListenerParser(HasPrivateTraits):
 
         return result
 
-    # ---------------------------------------------------------------------------
-    #  Parses the metadata portion of a listener item:
-    # ---------------------------------------------------------------------------
-
     def parse_metadata(self, item):
         """ Parses the metadata portion of a listener item.
         """
@@ -1331,10 +1141,6 @@ class ListenerParser(HasPrivateTraits):
         if name == "":
             self.backspace
 
-    # ---------------------------------------------------------------------------
-    #  Raises a syntax error:
-    # ---------------------------------------------------------------------------
-
     def error(self, msg):
         """ Raises a syntax error.
         """
@@ -1342,11 +1148,7 @@ class ListenerParser(HasPrivateTraits):
             "%s at column %d of '%s'" % (msg, self.index, self.text)
         )
 
-    # -- Event Handlers ---------------------------------------------------------
-
-    # ---------------------------------------------------------------------------
-    #  Handles the 'text' trait being changed:
-    # ---------------------------------------------------------------------------
+    # -- Event Handlers -------------------------------------------------------
 
     def _text_changed(self):
         self.index = 0
@@ -1354,14 +1156,9 @@ class ListenerParser(HasPrivateTraits):
         self.listener = self.parse()
 
 
-# -------------------------------------------------------------------------------
-#  'ListenerNotifyWrapper' class:
-# -------------------------------------------------------------------------------
-
-
 class ListenerNotifyWrapper(TraitChangeNotifyWrapper):
 
-    # -- TraitChangeNotifyWrapper Method Overrides ------------------------------
+    # -- TraitChangeNotifyWrapper Method Overrides ----------------------------
 
     def __init__(self, handler, owner, id, listener, target=None):
         self.type = ListenerType.get(
@@ -1388,11 +1185,6 @@ class ListenerNotifyWrapper(TraitChangeNotifyWrapper):
 
     def owner_deleted(self, ref):
         self.object = self.owner = None
-
-
-# -------------------------------------------------------------------------------
-#  'ListenerHandler' class:
-# -------------------------------------------------------------------------------
 
 
 class ListenerHandler(object):

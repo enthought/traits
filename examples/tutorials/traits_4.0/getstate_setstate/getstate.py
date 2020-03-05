@@ -1,7 +1,14 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
-# --(__getstate__/__setstate__ Changes and Improvements)------------------------
+# --(__getstate__/__setstate__ Changes and Improvements)-----------------------
 """
 __getstate__/__setstate__ Changes and Improvements
 ==================================================
@@ -127,14 +134,13 @@ notifications managed by traits are correctly initialized for the object.
 Failure to call this method may result in lost change notifications.
 """
 
-from __future__ import print_function
-from six.moves.cPickle import dumps, loads
+from pickle import dumps, loads
 
 from traits.api import *
 from time import time, sleep
 
 
-# --[Session Class]-------------------------------------------------------------
+# --[Session Class]------------------------------------------------------------
 class Session(HasTraits):
 
     # The name of the session:
@@ -147,7 +153,7 @@ class Session(HasTraits):
         self.created = time()
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 
 # The following shows an example of pickling and unpickling a Session object.
 # Unfortunately, it is not possible to successfully pickle objects created as

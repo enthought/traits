@@ -1,19 +1,16 @@
-# ------------------------------------------------------------------------------
-# Copyright (c) 2005-2013, Enthought, Inc.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in /LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
+#
 # Thanks for using Enthought open source!
-# ------------------------------------------------------------------------------
+
 import threading
 import time
 import warnings
-
-import six
-import six.moves as sm
 
 from traits.api import (
     Bool,
@@ -232,7 +229,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         with self.assertTraitDoesNotChange(test_object, "number"):
             self.assertEqual(test_object.number, 16.0)
 
-        with six.assertRaisesRegex(self, AssertionError, r"16\.0 != 12\.0"):
+        with self.assertRaisesRegex(AssertionError, r"16\.0 != 12\.0"):
             with self.assertTraitDoesNotChange(test_object, "number"):
                 self.assertEqual(test_object.number, 12.0)
 
@@ -256,12 +253,12 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
         def thread_target(obj, count):
             "Fire obj.event 'count' times."
-            for _ in sm.range(count):
+            for _ in range(count):
                 obj.event = True
 
         threads = [
             threading.Thread(target=thread_target, args=(a, events_per_thread))
-            for _ in sm.range(thread_count)
+            for _ in range(thread_count)
         ]
 
         expected_count = thread_count * events_per_thread
@@ -287,13 +284,13 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
         def thread_target(obj, count):
             "Fire obj.event 'count' times."
-            for n in sm.range(count):
+            for n in range(count):
                 time.sleep(0.001)
                 obj.event = n
 
         threads = [
             threading.Thread(target=thread_target, args=(a, events_per_thread))
-            for _ in sm.range(thread_count)
+            for _ in range(thread_count)
         ]
 
         expected_count = thread_count * events_per_thread
@@ -306,10 +303,9 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         for t in threads:
             t.join()
 
-        six.assertCountEqual(
-            self,
+        self.assertCountEqual(
             event_collector.events,
-            list(sm.range(events_per_thread)) * thread_count,
+            list(range(events_per_thread)) * thread_count,
         )
 
     def test_assert_trait_changes_async_failure(self):
@@ -324,12 +320,12 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
         def thread_target(obj, count):
             "Fire obj.event 'count' times."
-            for _ in sm.range(count):
+            for _ in range(count):
                 obj.event = True
 
         threads = [
             threading.Thread(target=thread_target, args=(a, events_per_thread))
-            for _ in sm.range(thread_count)
+            for _ in range(thread_count)
         ]
 
         expected_count = thread_count * events_per_thread
@@ -405,12 +401,15 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         def old_and_dull_caller():
             old_and_dull()
 
-        # Pollute the registry by pre-calling the function.
-        old_and_dull_caller()
+        with warnings.catch_warnings(record=True):
+            warnings.simplefilter("always", DeprecationWarning)
 
-        # Check that we can still detect the DeprecationWarning.
-        with self.assertDeprecated():
+            # Pollute the registry by pre-calling the function.
             old_and_dull_caller()
+
+            # Check that we can still detect the DeprecationWarning.
+            with self.assertDeprecated():
+                old_and_dull_caller()
 
     def test_assert_not_deprecated_failures(self):
         with self.assertRaises(self.failureException):
@@ -430,10 +429,13 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         def old_and_dull_caller():
             old_and_dull()
 
-        # Pollute the registry by pre-calling the function.
-        old_and_dull_caller()
+        with warnings.catch_warnings(record=True):
+            warnings.simplefilter("always", DeprecationWarning)
 
-        # Check that we can still detect the DeprecationWarning.
-        with self.assertRaises(self.failureException):
-            with self.assertNotDeprecated():
-                old_and_dull_caller()
+            # Pollute the registry by pre-calling the function.
+            old_and_dull_caller()
+
+            # Check that we can still detect the DeprecationWarning.
+            with self.assertRaises(self.failureException):
+                with self.assertNotDeprecated():
+                    old_and_dull_caller()

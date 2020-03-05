@@ -1,26 +1,21 @@
-# ------------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2014, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in /LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
+
 """
 Tests for the ArrayOrNone TraitType.
 
 """
 
-from __future__ import absolute_import
-
 import unittest
 
-from traits.api import ArrayOrNone, HasTraits, NO_COMPARE, TraitError
+from traits.api import ArrayOrNone, ComparisonMode, HasTraits, TraitError
 from traits.testing.unittest_tools import UnittestTools
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
@@ -37,7 +32,8 @@ if numpy is not None:
 
         maybe_array_with_default = ArrayOrNone(value=[1, 2, 3])
 
-        maybe_array_no_compare = ArrayOrNone(comparison_mode=NO_COMPARE)
+        maybe_array_no_compare = ArrayOrNone(
+            comparison_mode=ComparisonMode.none)
 
 
 @requires_numpy

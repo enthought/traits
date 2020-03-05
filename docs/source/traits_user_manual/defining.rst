@@ -126,14 +126,11 @@ in the following table.
 .. index::
    pair: types; casting
    pair: types; coercing
-   pair: plain; integer type
-   pair: long; integer type
    pair: type; string
-   pair: type; Unicode
 .. index:: Boolean type, Bool trait, CBool trait, Complex trait, CComplex trait
-.. index:: complex number type, Float trait, CFloat trait, Int trait, CInt trait
-.. index:: floating point number type, Long trait, CLong trait, Str trait
-.. index:: CStr trait, Unicode; trait, CUnicode trait, Bytes trait, CBytes trait
+.. index:: Float trait, CFloat trait, Int trait, CInt trait
+.. index:: integer type, floating point number type, complex number type
+.. index:: Str trait, CStr trait, Bytes trait, CBytes trait
 
 .. _predefined-defaults-for-simple-types-table:
 
@@ -145,10 +142,8 @@ Coercing Trait Casting Trait Python Type            Built-in Default Value
 Bool           CBool         Boolean                False
 Complex        CComplex      Complex number         0+0j
 Float          CFloat        Floating point number  0.0
-Int            CInt          Plain integer          0
-Long           CLong         Long integer           0L
+Int            CInt          Integer                0
 Str            CStr          String                 ''
-Unicode        CUnicode      Unicode                u''
 Bytes          CBytes        Bytes                  b''
 ============== ============= ====================== ======================
 
@@ -177,10 +172,8 @@ lists traits that coerce values, and the types that each coerces.
 ============= ===========================================
 Trait         Coercible Types
 ============= ===========================================
-Complex       Floating point number, plain integer
-Float         Plain integer
-Long          Plain integer
-Unicode       String
+Complex       Floating point number, integer
+Float         Integer
 ============= ===========================================
 
 .. index::
@@ -202,7 +195,6 @@ Python built-in functions for type conversion:
 * float()
 * int()
 * str()
-* unicode()
 * bytes()
 
 .. index::
@@ -234,7 +226,7 @@ casting traits::
 Other Predefined Traits
 ```````````````````````
 The Traits package provides a number of other predefined traits besides those
-for simple types, corresponding to other commonly used data types; ::these
+for simple types, corresponding to other commonly used data types; these
 predefined traits are listed in the following table. Refer to  the
 *Traits API Reference*, in the section for the module traits.traits,
 for details. Most can be used either as simple names, which use their built-in
@@ -287,13 +279,8 @@ the table.
 +------------------+----------------------------------------------------------+
 | Constant         | Constant( *value*\ [, \*\*\ *metadata*] )                |
 +------------------+----------------------------------------------------------+
-| Dict, DictStrAny,| Dict( [*key_trait* = None, *value_trait* = None,         |
-| DictStrBool,     | *value* = None, *items* = True, \*\*\ *metadata*] )      |
-| DictStrFloat,    |                                                          |
-| DictStrInt,      |                                                          |
-| DictStrList,     |                                                          |
-| DictStrLong,     |                                                          |
-| DictStrStr       |                                                          |
+| Dict             | Dict( [*key_trait* = None, *value_trait* = None,         |
+|                  | *value* = None, *items* = True, \*\*\ *metadata*] )      |
 +------------------+----------------------------------------------------------+
 | Directory        | Directory( [*value* = '', *auto_set* = False, *entries* =|
 |                  | 10, *exists* = False, \*\*\ *metadata*] )                |
@@ -309,16 +296,12 @@ the table.
 +------------------+----------------------------------------------------------+
 | Expression       | Expression( [*value* = '0', \*\*\ *metadata*] )          |
 +------------------+----------------------------------------------------------+
-| false            | n/a                                                      |
-+------------------+----------------------------------------------------------+
 | File             | File( [*value* = '', *filter* = None, *auto_set* = False,|
 |                  | *entries* = 10, *exists* = False,  \*\*\ *metadata* ] )  |
 +------------------+----------------------------------------------------------+
 | Font             | Font( [\*\ *args*, \*\*\ *metadata*] )                   |
 +------------------+----------------------------------------------------------+
 | Function         | Function( [*value* = None, \*\*\ *metadata*] )           |
-+------------------+----------------------------------------------------------+
-| Generic          | Generic( [*value* = None, \*\*\ *metadata*] )            |
 +------------------+----------------------------------------------------------+
 | generic_trait    | n/a                                                      |
 +------------------+----------------------------------------------------------+
@@ -329,15 +312,7 @@ the table.
 |                  | None, *kw* = None, *allow_none* = True, *adapt* = None,  |
 |                  | *module* = None, \*\*\ *metadata*] )                     |
 +------------------+----------------------------------------------------------+
-| List, ListBool,  | List([*trait* = None, *value* = None, *minlen* = 0,      |
-| ListComplex,     |                                                          |
-| ListFloat,       |                                                          |
-| ListFunction,    |                                                          |
-| ListInt,         |                                                          |
-| ListMethod,      |                                                          |
-| ListStr,         |                                                          |
-| ListThis,        |                                                          |
-| ListUnicode      |                                                          |
+| List             | List([*trait* = None, *value* = None, *minlen* = 0,      |
 +------------------+----------------------------------------------------------+
 | Method           | Method ([\*\*\ *metadata*] )                             |
 +------------------+----------------------------------------------------------+
@@ -374,23 +349,19 @@ the table.
 | String           | String( [*value* = '', *minlen* = 0, *maxlen* =          |
 |                  | sys.maxint, *regex* = '', \*\*\ *metadata*] )            |
 +------------------+----------------------------------------------------------+
+| Subclass         | Subclass( [*value* = None, *klass* = None, *allow_none* =|
+|                  | True, \*\*\ *metadata*] )                                |
++------------------+----------------------------------------------------------+
 | This             | n/a                                                      |
 +------------------+----------------------------------------------------------+
 | ToolbarButton    | ToolbarButton( [*label* = '', *image* = None, *style* =  |
 |                  | 'toolbar', *orientation* = 'vertical', *width_padding* = |
 |                  | 2, *height_padding* = 2, \*\*\ *metadata*] )             |
 +------------------+----------------------------------------------------------+
-| true             | n/a                                                      |
-+------------------+----------------------------------------------------------+
 | Tuple            | Tuple( [\*\ *traits*, \*\*\ *metadata*] )                |
 +------------------+----------------------------------------------------------+
 | Type             | Type( [*value* = None, *klass* = None, *allow_none* =    |
 |                  | True, \*\*\ *metadata*] )                                |
-+------------------+----------------------------------------------------------+
-| undefined        | n/a                                                      |
-+------------------+----------------------------------------------------------+
-| UStr             | UStr( [*owner*, *list_name*, *str_name*, *default_value =|
-|                  | NoDefaultSpecified, \*\*\ *metadata*])                   |
 +------------------+----------------------------------------------------------+
 | UUID [3]_        | UUID( [\*\*\ *metadata*] )                               |
 +------------------+----------------------------------------------------------+
@@ -500,6 +471,69 @@ will raise a TraitError if a value of any other type is assigned. For example::
     >>> # Assigning a value that is neither a string nor None will fail.
     >>> steven.manager_name = 5
     traits.trait_errors.TraitError: The 'manager_name' trait of an Employee instance must be a string or None, but a value of 5 <type 'int'> was specified.
+
+.. index:: Union trait
+
+.. _union:
+
+Union
+::::::
+The Union trait accepts a value that is considered valid by at least one
+of the traits in its definition. It is a simpler and therefore less error-prone
+alternative to the `Either` trait, which allows more complex constructs and
+may sometimes exhibit mysterious validation behaviour. The Union trait however,
+validates the value assigned to it against each of the traits in its definition
+in the order they are defined. Union only accepts trait types or trait type
+instances or None in its definition. Prefer to use Union over `Either` to
+remain future proof.
+
+.. index::
+   pair: Union trait; examples
+
+The following is an example of using Union::
+
+    # union.py --- Example of Union predefined trait
+
+    from traits.api import HasTraits, Union, Int, Float, Instance
+
+    class Salary(HasTraits):
+        basic = Float
+        bonus = Float
+
+    class Employee(HasTraits):
+        manager_name = Union(Str, None)
+        pay = Union(Instance(Salary), Float)
+
+This example defines an Employee class, which has a **manager_name** trait
+attribute, which accepts either an Str instance or None as its value, a
+**salary** trait that accepts an instance of Salary or Float and will raise a
+TraitError if a value of any other type is assigned. For example::
+
+    >>> from traits.api import HasTraits, Either, Str
+    >>> class Employee(HasTraits):
+    ...     manager_name = Union(Str, None)
+    ...
+    >>> steven = Employee(manager_name="Jenni")
+    >>> # Here steven's manager is named "Jenni"
+    >>> # Assigning a value that is neither a string nor None will fail.
+    >>> steven.manager_name = 5
+    traits.trait_errors.TraitError: The 'manager_name' trait of an Employee instance must be a string or a None type, but a value of 5 <class 'int'> was specified.
+
+The following example illustrates the difference between `Either` and `Union`::
+
+    >>> from traits.api import HasTraits, Either, Union, Str
+    >>> class IntegerClass(HasTraits):
+    ...     primes = Either([2], None, {'3':6}, 5, 7, 11)
+    ...
+    >>> i = IntegerClass(primes=2) # Acceptable value, no error
+    >>> i = IntegerClass(primes=4)
+    traits.trait_errors.TraitError: The 'primes' trait of an IntegerClass instance must be 2 or None or 5 or 7 or 11 or '3', but a value of 4 <class 'int'> was specified.
+    >>>
+    >>> # But Union does not allow such declerations.
+    >>> class IntegerClass(HasTraits):
+    ...     primes = Union([2], None, {'3':6}, 5, 7, 11)
+    ValueError: Union trait declaration expects a trait type or an instance of trait type or None, but got [2] instead
+
 
 .. index:: multiple values, defining trait with
 
@@ -655,9 +689,9 @@ Recognized Metadata Attributes
 The following metadata attributes are not predefined, but are recognized by
 HasTraits objects:
 
-.. index:: desc metadata attribute, editor metadata attribute, TraitValue class
-.. index:: label; metadata attribute, rich_compare metadata attribute
-.. index:: trait_value metadata attribute, transient metadata attribute
+.. index:: desc metadata attribute, editor metadata attribute
+.. index:: label; metadata attribute, comparison_mode metadata attribute
+.. index:: transient metadata attribute
 
 * **desc**: A string describing the intended meaning of the trait. It is used
   in exception messages and fly-over help in user interface trait editors.
@@ -668,18 +702,10 @@ HasTraits objects:
   for more information on trait editors.
 * **label**: A string providing a human-readable name for the trait. It is
   used to label trait attribute values in user interface trait editors.
-* **rich_compare**: A Boolean indicating whether the basis for considering a
-  trait attribute value to have changed is a "rich" comparison (True, the
-  default), or simple object identity (False). This attribute can be useful
-  in cases where a detailed comparison of two objects is very expensive, or
-  where you do not care if the details of an object change, as long as the
-  same object is used.
-* **trait_value**: A Boolean indicating whether the trait attribute accepts
-  values that are instances of TraitValue. The default is False. The TraitValue
-  class provides a mechanism for dynamically modifying trait definitions. See
-  the *Traits API Reference* for details on TraitValue. If **trait_value** is
-  True, then setting the trait attribute to TraitValue(), with no arguments,
-  resets the attribute to it original default value.
+* **comparison_mode**: Indicates when trait change notifications should be
+  generated based upon the result of comparing the old and new values of a
+  trait assignment. This should be a member of the
+  :class:`~traits.constants.ComparisonMode` enumeration class.
 * **transient**: A Boolean indicating that the trait value is not persisted
   when the object containing it is persisted. The default value for most
   predefined traits is False (the value will be persisted if its container is).

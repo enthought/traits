@@ -1,14 +1,20 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
 # prototype_prefix.py --- Examples of PrototypedFrom() prefix parameter
 
-# --[Imports]-------------------------------------------------------------------
-from __future__ import print_function
+# --[Imports]------------------------------------------------------------------
 from traits.api import PrototypedFrom, Float, HasTraits, Instance, Str
 
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 class Parent(HasTraits):
     first_name = Str
     family_name = ""
@@ -25,7 +31,7 @@ class Child(HasTraits):
     mother = Instance(Parent)
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 fred = Parent(
     first_name="Fred",
     family_name="Lopez",

@@ -1,23 +1,17 @@
-# ------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: David C. Morrill Date: 03/20/2003 Description: Unit Test Case for the
-# Traits Package
-# ------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 #  Imports
-from __future__ import absolute_import, print_function
 
 import unittest
-
-import six
+import warnings
 
 from traits.api import (
     Any,
@@ -25,14 +19,14 @@ from traits.api import (
     CBytes,
     CFloat,
     CInt,
-    CLong,
+    ComparisonMode,
     Delegate,
     Float,
     HasTraits,
     Instance,
     Int,
     List,
-    Long,
+    Range,
     Str,
     This,
     Trait,
@@ -40,18 +34,12 @@ from traits.api import (
     TraitList,
     TraitPrefixList,
     TraitPrefixMap,
-    TraitRange,
     Tuple,
     pop_exception_handler,
     push_exception_handler,
 )
 
 #  Base unit test classes:
-
-if six.PY2:
-    LONG_TYPE = long
-else:
-    LONG_TYPE = int
 
 
 class BaseTest(object):
@@ -104,41 +92,27 @@ class test_base2(unittest.TestCase):
         mapped_values=None,
     ):
         obj = self.obj
-        try:
-            # Make sure the default value is correct:
-            msg = "default value"
-            value = default_value
-            self.assertEqual(getattr(obj, name), value)
 
-            # Iterate over all legal values being tested:
-            if actual_values is None:
-                actual_values = good_values
-            msg = "legal values"
-            i = 0
-            for value in good_values:
-                setattr(obj, name, value)
-                self.assertEqual(getattr(obj, name), actual_values[i])
-                if mapped_values is not None:
-                    self.assertEqual(
-                        getattr(obj, name + "_"), mapped_values[i]
-                    )
-                i += 1
+        # Make sure the default value is correct:
+        value = default_value
+        self.assertEqual(getattr(obj, name), value)
 
-            # Iterate over all illegal values being tested:
-            msg = "illegal values"
-            for value in bad_values:
-                self.assertRaises(TraitError, setattr, obj, name, value)
-        except:
-            print(
-                "Failed while testing %s for value: %s(%s) in %s"
-                % (
-                    msg,
-                    value,
-                    value.__class__.__name__,
-                    self.__class__.__name__,
+        # Iterate over all legal values being tested:
+        if actual_values is None:
+            actual_values = good_values
+        i = 0
+        for value in good_values:
+            setattr(obj, name, value)
+            self.assertEqual(getattr(obj, name), actual_values[i])
+            if mapped_values is not None:
+                self.assertEqual(
+                    getattr(obj, name + "_"), mapped_values[i]
                 )
-            )
-            raise
+            i += 1
+
+        # Iterate over all illegal values being tested:
+        for value in bad_values:
+            self.assertRaises(TraitError, setattr, obj, name, value)
 
 
 class AnyTrait(HasTraits):
@@ -147,10 +121,11 @@ class AnyTrait(HasTraits):
 
 class AnyTraitTest(BaseTest, unittest.TestCase):
 
-    obj = AnyTrait()
+    def setUp(self):
+        self.obj = AnyTrait()
 
     _default_value = None
-    _good_values = [10.0, "ten", u"ten", [10], {"ten": 10}, (10,), None, 1j]
+    _good_values = [10.0, b"ten", "ten", [10], {"ten": 10}, (10,), None, 1j]
     _mapped_values = []
     _bad_values = []
 
@@ -165,32 +140,31 @@ class IntTrait(HasTraits):
 
 class CoercibleIntTest(AnyTraitTest):
 
-    obj = CoercibleIntTrait()
+    def setUp(self):
+        self.obj = CoercibleIntTrait()
 
     _default_value = 99
     _good_values = [
         10,
         -10,
-        LONG_TYPE(10),
-        LONG_TYPE(-10),
         10.1,
         -10.1,
         "10",
         "-10",
-        u"10",
-        u"-10",
+        b"10",
+        b"-10",
     ]
     _bad_values = [
         "10L",
         "-10L",
         "10.1",
         "-10.1",
-        u"10L",
-        u"-10L",
-        u"10.1",
-        u"-10.1",
+        b"10L",
+        b"-10L",
+        b"10.1",
+        b"-10.1",
         "ten",
-        u"ten",
+        b"ten",
         [10],
         {"ten": 10},
         (10,),
@@ -202,21 +176,19 @@ class CoercibleIntTest(AnyTraitTest):
         try:
             return int(value)
         except:
-            try:
-                return int(float(value))
-            except:
-                return int(LONG_TYPE(value))
+            return int(float(value))
 
 
 class IntTest(AnyTraitTest):
 
-    obj = IntTrait()
+    def setUp(self):
+        self.obj = IntTrait()
 
     _default_value = 99
-    _good_values = [10, -10, LONG_TYPE(10), LONG_TYPE(-10)]
+    _good_values = [10, -10]
     _bad_values = [
         "ten",
-        u"ten",
+        b"ten",
         [10],
         {"ten": 10},
         (10,),
@@ -228,14 +200,14 @@ class IntTest(AnyTraitTest):
         "-10L",
         "10.1",
         "-10.1",
-        u"10L",
-        u"-10L",
-        u"10.1",
-        u"-10.1",
+        b"10L",
+        b"-10L",
+        b"10.1",
+        b"-10.1",
         "10",
         "-10",
-        u"10",
-        u"-10",
+        b"10",
+        b"-10",
     ]
 
     try:
@@ -258,99 +230,7 @@ class IntTest(AnyTraitTest):
         try:
             return int(value)
         except:
-            try:
-                return int(float(value))
-            except:
-                return int(LONG_TYPE(value))
-
-
-class CoercibleLongTrait(HasTraits):
-    value = CLong(LONG_TYPE(99))
-
-
-class LongTrait(HasTraits):
-    value = Long(LONG_TYPE(99))
-
-
-class CoercibleLongTest(AnyTraitTest):
-
-    obj = CoercibleLongTrait()
-
-    _default_value = LONG_TYPE(99)
-    _good_values = [
-        10,
-        -10,
-        LONG_TYPE(10),
-        LONG_TYPE(-10),
-        10.1,
-        -10.1,
-        "10",
-        "-10",
-        u"10",
-        u"-10",
-    ]
-    if six.PY2:
-        _good_values.extend(["10L", "-10L", u"10L", u"-10L"])
-    _bad_values = [
-        "10.1",
-        "-10.1",
-        u"10.1",
-        u"-10.1",
-        "ten",
-        u"ten",
-        [10],
-        [LONG_TYPE(10)],
-        {"ten": 10},
-        (10,),
-        (LONG_TYPE(10),),
-        None,
-        1j,
-    ]
-
-    def coerce(self, value):
-        try:
-            return LONG_TYPE(value)
-        except:
-            return LONG_TYPE(float(value))
-
-
-class LongTest(AnyTraitTest):
-
-    obj = LongTrait()
-
-    _default_value = LONG_TYPE(99)
-    _good_values = [10, -10, LONG_TYPE(10), LONG_TYPE(-10)]
-    _bad_values = [
-        "ten",
-        u"ten",
-        [10],
-        [LONG_TYPE(10)],
-        {"ten": 10},
-        (10,),
-        (LONG_TYPE(10),),
-        None,
-        1j,
-        10.1,
-        -10.1,
-        "10",
-        "-10",
-        "10L",
-        "-10L",
-        "10.1",
-        "-10.1",
-        u"10",
-        u"-10",
-        u"10L",
-        u"-10L",
-        u"10.1",
-        u"-10.1",
-    ]
-
-    def coerce(self, value):
-        try:
-            return LONG_TYPE(value)
-        except:
-            return LONG_TYPE(float(value))
+            return int(float(value))
 
 
 class CoercibleFloatTrait(HasTraits):
@@ -362,32 +242,31 @@ class FloatTrait(HasTraits):
 
 
 class CoercibleFloatTest(AnyTraitTest):
-    obj = CoercibleFloatTrait()
+    def setUp(self):
+        self.obj = CoercibleFloatTrait()
 
     _default_value = 99.0
     _good_values = [
         10,
         -10,
-        LONG_TYPE(10),
-        LONG_TYPE(-10),
         10.1,
         -10.1,
         "10",
         "-10",
         "10.1",
         "-10.1",
-        u"10",
-        u"-10",
-        u"10.1",
-        u"-10.1",
+        b"10",
+        b"-10",
+        b"10.1",
+        b"-10.1",
     ]
     _bad_values = [
         "10L",
         "-10L",
-        u"10L",
-        u"-10L",
+        b"10L",
+        b"-10L",
         "ten",
-        u"ten",
+        b"ten",
         [10],
         {"ten": 10},
         (10,),
@@ -396,20 +275,18 @@ class CoercibleFloatTest(AnyTraitTest):
     ]
 
     def coerce(self, value):
-        try:
-            return float(value)
-        except:
-            return float(LONG_TYPE(value))
+        return float(value)
 
 
 class FloatTest(AnyTraitTest):
-    obj = FloatTrait()
+    def setUp(self):
+        self.obj = FloatTrait()
 
     _default_value = 99.0
     _good_values = [10, -10, 10.1, -10.1]
     _bad_values = [
         "ten",
-        u"ten",
+        b"ten",
         [10],
         {"ten": 10},
         (10,),
@@ -421,22 +298,16 @@ class FloatTest(AnyTraitTest):
         "-10L",
         "10.1",
         "-10.1",
-        u"10",
-        u"-10",
-        u"10L",
-        u"-10L",
-        u"10.1",
-        u"-10.1",
+        b"10",
+        b"-10",
+        b"10L",
+        b"-10L",
+        b"10.1",
+        b"-10.1",
     ]
 
-    if six.PY2:
-        _good_values.extend([LONG_TYPE(-10), LONG_TYPE(10)])
-
     def coerce(self, value):
-        try:
-            return float(value)
-        except:
-            return float(LONG_TYPE(value))
+        return float(value)
 
 
 #  Trait that can only have 'complex'(i.e. imaginary) values:
@@ -447,15 +318,13 @@ class ImaginaryValueTrait(HasTraits):
 
 
 class ImaginaryValueTest(AnyTraitTest):
-
-    obj = ImaginaryValueTrait()
+    def setUp(self):
+        self.obj = ImaginaryValueTrait()
 
     _default_value = 99.0 - 99.0j
     _good_values = [
         10,
         -10,
-        LONG_TYPE(10),
-        LONG_TYPE(-10),
         10.1,
         -10.1,
         "10",
@@ -472,13 +341,10 @@ class ImaginaryValueTest(AnyTraitTest):
         "10+10j",
         "10-10j",
     ]
-    _bad_values = [u"10L", u"-10L", "ten", [10], {"ten": 10}, (10,), None]
+    _bad_values = [b"10L", "-10L", "ten", [10], {"ten": 10}, (10,), None]
 
     def coerce(self, value):
-        try:
-            return complex(value)
-        except:
-            return complex(LONG_TYPE(value))
+        return complex(value)
 
 
 class StringTrait(HasTraits):
@@ -487,14 +353,13 @@ class StringTrait(HasTraits):
 
 class StringTest(AnyTraitTest):
 
-    obj = StringTrait()
+    def setUp(self):
+        self.obj = StringTrait()
 
     _default_value = "string"
     _good_values = [
         10,
         -10,
-        LONG_TYPE(10),
-        LONG_TYPE(-10),
         10.1,
         -10.1,
         "10",
@@ -504,50 +369,9 @@ class StringTest(AnyTraitTest):
         "10.1",
         "-10.1",
         "string",
-        u"string",
         1j,
         [10],
         ["ten"],
-        {"ten": 10},
-        (10,),
-        None,
-    ]
-    _bad_values = []
-
-    def coerce(self, value):
-        return str(value)
-
-
-class UnicodeTrait(HasTraits):
-    value = Trait(u"unicode")
-
-
-class UnicodeTest(StringTest):
-
-    obj = UnicodeTrait()
-
-    _default_value = u"unicode"
-    _good_values = [
-        10,
-        -10,
-        LONG_TYPE(10),
-        LONG_TYPE(-10),
-        10.1,
-        -10.1,
-        "10",
-        "-10",
-        "10L",
-        "-10L",
-        "10.1",
-        "-10.1",
-        "",
-        u"",
-        "string",
-        u"string",
-        1j,
-        [10],
-        ["ten"],
-        [u"ten"],
         {"ten": 10},
         (10,),
         None,
@@ -562,24 +386,17 @@ class BytesTrait(HasTraits):
     value = Bytes(b"bytes")
 
 
-version_dependent = ["", "string"]
-
-
 class BytesTest(StringTest):
 
-    obj = BytesTrait()
+    def setUp(self):
+        self.obj = BytesTrait()
 
     _default_value = b"bytes"
-    _good_values = [b"", b"10", b"-10"] + (
-        version_dependent if six.PY2 else []
-    )
+    _good_values = [b"", b"10", b"-10"]
     _bad_values = [
         10,
         -10,
-        LONG_TYPE(10),
         10.1,
-        u"unicode",
-        u"",
         [b""],
         [b"bytes"],
         [0],
@@ -587,7 +404,9 @@ class BytesTest(StringTest):
         (b"",),
         None,
         True,
-    ] + ([] if six.PY2 else version_dependent)
+        "",
+        "string",
+    ]
 
     def coerce(self, value):
         return bytes(value)
@@ -597,32 +416,10 @@ class CoercibleBytesTrait(HasTraits):
     value = CBytes(b"bytes")
 
 
-version_dependent = [
-    "",
-    "string",
-    u"unicode",
-    u"",
-    -10,
-    10.1,
-    [b""],
-    [b"bytes"],
-    [-10],
-    (-10,),
-    {-10: "foo"},
-    set([-10]),
-    [256],
-    (256,),
-    {256: "foo"},
-    set([256]),
-    {b"ten": b"10"},
-    (b"",),
-    None,
-]
-
-
 class CoercibleBytesTest(StringTest):
 
-    obj = CoercibleBytesTrait()
+    def setUp(self):
+        self.obj = CoercibleBytesTrait()
 
     _default_value = b"bytes"
     _good_values = [
@@ -630,29 +427,47 @@ class CoercibleBytesTest(StringTest):
         b"10",
         b"-10",
         10,
-        LONG_TYPE(10),
         [10],
         (10,),
         set([10]),
         {10: "foo"},
         True,
-    ] + (version_dependent if six.PY2 else [])
-    _bad_values = [] if six.PY2 else version_dependent
+    ]
+    _bad_values = [
+        "",
+        "string",
+        -10,
+        10.1,
+        [b""],
+        [b"bytes"],
+        [-10],
+        (-10,),
+        {-10: "foo"},
+        set([-10]),
+        [256],
+        (256,),
+        {256: "foo"},
+        set([256]),
+        {b"ten": b"10"},
+        (b"",),
+        None,
+    ]
 
     def coerce(self, value):
         return bytes(value)
 
 
 class EnumTrait(HasTraits):
-    value = Trait([1, "one", 2, "two", 3, "three", 4.4, u"four.four"])
+    value = Trait([1, "one", 2, "two", 3, "three", 4.4, "four.four"])
 
 
 class EnumTest(AnyTraitTest):
 
-    obj = EnumTrait()
+    def setUp(self):
+        self.obj = EnumTrait()
 
     _default_value = 1
-    _good_values = [1, "one", 2, "two", 3, "three", 4.4, u"four.four"]
+    _good_values = [1, "one", 2, "two", 3, "three", 4.4, "four.four"]
     _bad_values = [0, "zero", 4, None]
 
 
@@ -661,7 +476,8 @@ class MappedTrait(HasTraits):
 
 
 class MappedTest(AnyTraitTest):
-    obj = MappedTrait()
+    def setUp(self):
+        self.obj = MappedTrait()
 
     _default_value = "one"
     _good_values = ["one", "two", "three"]
@@ -674,7 +490,8 @@ class PrefixListTrait(HasTraits):
 
 
 class PrefixListTest(AnyTraitTest):
-    obj = PrefixListTrait()
+    def setUp(self):
+        self.obj = PrefixListTrait()
 
     _default_value = "one"
     _good_values = [
@@ -699,7 +516,8 @@ class PrefixMapTrait(HasTraits):
 
 
 class PrefixMapTest(AnyTraitTest):
-    obj = PrefixMapTrait()
+    def setUp(self):
+        self.obj = PrefixMapTrait()
 
     _default_value = "one"
     _good_values = [
@@ -718,60 +536,6 @@ class PrefixMapTest(AnyTraitTest):
 
     def coerce(self, value):
         return {"o": "one", "on": "one", "tw": "two", "th": "three"}[value[:2]]
-
-
-class IntRangeTrait(HasTraits):
-    value = Trait(3, TraitRange(2, 5))
-
-
-class IntRangeTest(AnyTraitTest):
-
-    obj = IntRangeTrait()
-
-    _default_value = 3
-    _good_values = [2, 3, 4, 5]
-    _bad_values = [0, 1, 6, 0.999, 6.01, "two", "0.999", "6.01", None]
-
-    def coerce(self, value):
-        try:
-            return int(value)
-        except:
-            try:
-                return int(float(value))
-            except:
-                return int(LONG_TYPE(value))
-
-
-class FloatRangeTrait(HasTraits):
-    value = Trait(3.0, TraitRange(2.0, 5.0))
-
-
-class FloatRangeTest(AnyTraitTest):
-
-    obj = FloatRangeTrait()
-
-    _default_value = 3.0
-    _good_values = [2.0, 3.0, 4.0, 5.0, 2.001, 4.999]
-    _bad_values = [
-        0,
-        1,
-        6,
-        LONG_TYPE(0),
-        LONG_TYPE(1),
-        LONG_TYPE(6),
-        1.999,
-        6.01,
-        "two",
-        "0.999",
-        "6.01",
-        None,
-    ]
-
-    def coerce(self, value):
-        try:
-            return float(value)
-        except:
-            return float(LONG_TYPE(value))
 
 
 # Old style class version:
@@ -801,7 +565,8 @@ class OldInstanceTrait(HasTraits):
 
 
 class OldInstanceTest(AnyTraitTest):
-    obj = OldInstanceTrait()
+    def setUp(self):
+        self.obj = OldInstanceTrait()
 
     _default_value = otrait_test1
     _good_values = [
@@ -813,14 +578,13 @@ class OldInstanceTest(AnyTraitTest):
     ]
     _bad_values = [
         0,
-        LONG_TYPE(0),
         0.0,
         0j,
         OTraitTest1,
         OTraitTest2,
         OBadTraitTest(),
+        b"bytes",
         "string",
-        u"string",
         [otrait_test1],
         (otrait_test1,),
         {"data": otrait_test1},
@@ -852,7 +616,8 @@ class NewInstanceTrait(HasTraits):
 
 
 class NewInstanceTest(AnyTraitTest):
-    obj = NewInstanceTrait()
+    def setUp(self):
+        self.obj = NewInstanceTrait()
 
     _default_value = ntrait_test1
     _good_values = [
@@ -864,14 +629,13 @@ class NewInstanceTest(AnyTraitTest):
     ]
     _bad_values = [
         0,
-        LONG_TYPE(0),
         0.0,
         0j,
         NTraitTest1,
         NTraitTest2,
         NBadTraitTest(),
+        b"bytes",
         "string",
-        u"string",
         [ntrait_test1],
         (ntrait_test1,),
         {"data": ntrait_test1},
@@ -942,7 +706,8 @@ class OddIntegerTrait(HasTraits):
 
 
 class OddIntegerTest(AnyTraitTest):
-    obj = OddIntegerTrait()
+    def setUp(self):
+        self.obj = OddIntegerTrait()
 
     _default_value = 99
     _good_values = [
@@ -952,12 +717,6 @@ class OddIntegerTest(AnyTraitTest):
         7,
         9,
         999999999,
-        LONG_TYPE(1),
-        LONG_TYPE(3),
-        LONG_TYPE(5),
-        LONG_TYPE(7),
-        LONG_TYPE(9),
-        LONG_TYPE(999999999),
         1.0,
         3.0,
         5.0,
@@ -970,12 +729,6 @@ class OddIntegerTest(AnyTraitTest):
         -7,
         -9,
         -999999999,
-        LONG_TYPE(-1),
-        LONG_TYPE(-3),
-        LONG_TYPE(-5),
-        LONG_TYPE(-7),
-        LONG_TYPE(-9),
-        LONG_TYPE(-999999999),
         -1.0,
         -3.0,
         -5.0,
@@ -1006,13 +759,8 @@ class NotifierTraits(HasTraits):
 
 
 class NotifierTests(unittest.TestCase):
-    obj = NotifierTraits()
-
-    def __init__(self, value):
-        unittest.TestCase.__init__(self, value)
-
     def setUp(self):
-        obj = self.obj
+        obj = self.obj = NotifierTraits()
         obj.value1 = 0
         obj.value2 = 0
         obj.value1_count = 0
@@ -1178,7 +926,7 @@ class DelegateTests(unittest.TestCase):
 
 # Make a TraitCompound handler that does not have a fast_validate so we can
 # check for a particular regression.
-slow = Trait(1, TraitRange(1, 3), TraitRange(-3, -1))
+slow = Trait(1, Range(1, 3), Range(-3, -1))
 try:
     del slow.handler.fast_validate
 except AttributeError:
@@ -1186,15 +934,15 @@ except AttributeError:
 
 
 class complex_value(HasTraits):
-    num1 = Trait(1, TraitRange(1, 5), TraitRange(-5, -1))
+    num1 = Trait(1, Range(1, 5), Range(-5, -1))
     num2 = Trait(
         1,
-        TraitRange(1, 5),
+        Range(1, 5),
         TraitPrefixList("one", "two", "three", "four", "five"),
     )
     num3 = Trait(
         1,
-        TraitRange(1, 5),
+        Range(1, 5),
         TraitPrefixMap({"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}),
     )
     num4 = Trait(1, Trait(1, Tuple, slow), 10)
@@ -1202,7 +950,8 @@ class complex_value(HasTraits):
 
 
 class test_complex_value(test_base2):
-    obj = complex_value()
+    def setUp(self):
+        self.obj = complex_value()
 
     def test_num1(self):
         self.check_values(
@@ -1239,19 +988,19 @@ class test_complex_value(test_base2):
         )
 
 
-class list_value(HasTraits):
-    # Trait definitions:
-    list1 = Trait([2], TraitList(Trait([1, 2, 3, 4]), maxlen=4))
-    list2 = Trait([2], TraitList(Trait([1, 2, 3, 4]), minlen=1, maxlen=4))
-    alist = List()
-
-
 class test_list_value(test_base2):
-
-    obj = list_value()
-
     def setUp(self):
-        test_base2.setUp(self)
+        with self.assertWarns(DeprecationWarning):
+
+            class list_value(HasTraits):
+                # Trait definitions:
+                list1 = Trait([2], TraitList(Trait([1, 2, 3, 4]), maxlen=4))
+                list2 = Trait(
+                    [2], TraitList(Trait([1, 2, 3, 4]), minlen=1, maxlen=4)
+                )
+                alist = List()
+
+        self.obj = list_value()
         self.last_event = None
 
     def tearDown(self):
@@ -1346,10 +1095,10 @@ class test_list_value(test_base2):
         self.assertIs(self.last_event, old_event)
         self.obj.alist[0:4:2] = [10, 11]
         self.assertLastTraitListEventEqual(
-            slice(0, 4, 2), [[8, 4]], [[10, 11]]
+            slice(0, 4, 2), [8, 4], [10, 11]
         )
         del self.obj.alist[1:4:2]
-        self.assertLastTraitListEventEqual(slice(1, 4, 2), [[9, 5]], [])
+        self.assertLastTraitListEventEqual(slice(1, 4, 2), [9, 5], [])
         self.obj.alist = [1, 2, 3, 4]
         del self.obj.alist[2:4]
         self.assertLastTraitListEventEqual(2, [3, 4], [])
@@ -1394,3 +1143,135 @@ class TestThis(unittest.TestCase):
         with self.assertRaises(TraitError):
             d.allows_none = object()
         self.assertIsNone(d.allows_none)
+
+
+class ComparisonModeTests(unittest.TestCase):
+    def test_comparison_mode_none(self):
+        class HasComparisonMode(HasTraits):
+            bar = Trait(comparison_mode=ComparisonMode.none)
+
+        old_compare = HasComparisonMode()
+        events = []
+        old_compare.on_trait_change(lambda: events.append(None), "bar")
+
+        some_list = [1, 2, 3]
+
+        self.assertEqual(len(events), 0)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 2)
+        old_compare.bar = [1, 2, 3]
+        self.assertEqual(len(events), 3)
+        old_compare.bar = [4, 5, 6]
+        self.assertEqual(len(events), 4)
+
+    def test_comparison_mode_identity(self):
+        class HasComparisonMode(HasTraits):
+            bar = Trait(comparison_mode=ComparisonMode.identity)
+
+        old_compare = HasComparisonMode()
+        events = []
+        old_compare.on_trait_change(lambda: events.append(None), "bar")
+
+        some_list = [1, 2, 3]
+
+        self.assertEqual(len(events), 0)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [1, 2, 3]
+        self.assertEqual(len(events), 2)
+        old_compare.bar = [4, 5, 6]
+        self.assertEqual(len(events), 3)
+
+    def test_comparison_mode_equality(self):
+        class HasComparisonMode(HasTraits):
+            bar = Trait(comparison_mode=ComparisonMode.equality)
+
+        old_compare = HasComparisonMode()
+        events = []
+        old_compare.on_trait_change(lambda: events.append(None), "bar")
+
+        some_list = [1, 2, 3]
+
+        self.assertEqual(len(events), 0)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [1, 2, 3]
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [4, 5, 6]
+        self.assertEqual(len(events), 2)
+
+    def test_rich_compare_false(self):
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", DeprecationWarning)
+
+            class OldRichCompare(HasTraits):
+                bar = Trait(rich_compare=False)
+
+        # Check for a DeprecationWarning.
+        self.assertEqual(len(warn_msgs), 1)
+        warn_msg = warn_msgs[0]
+        self.assertIs(warn_msg.category, DeprecationWarning)
+        self.assertIn(
+            "'rich_compare' metadata has been deprecated",
+            str(warn_msg.message)
+        )
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warn_msg.filename)
+
+        # Behaviour matches comparison_mode=ComparisonMode.identity.
+        old_compare = OldRichCompare()
+        events = []
+        old_compare.on_trait_change(lambda: events.append(None), "bar")
+
+        some_list = [1, 2, 3]
+
+        self.assertEqual(len(events), 0)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [1, 2, 3]
+        self.assertEqual(len(events), 2)
+        old_compare.bar = [4, 5, 6]
+        self.assertEqual(len(events), 3)
+
+    def test_rich_compare_true(self):
+        with warnings.catch_warnings(record=True) as warn_msgs:
+            warnings.simplefilter("always", DeprecationWarning)
+
+            class OldRichCompare(HasTraits):
+                bar = Trait(rich_compare=True)
+
+        # Check for a DeprecationWarning.
+        self.assertEqual(len(warn_msgs), 1)
+        warn_msg = warn_msgs[0]
+        self.assertIs(warn_msg.category, DeprecationWarning)
+        self.assertIn(
+            "'rich_compare' metadata has been deprecated",
+            str(warn_msg.message)
+        )
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warn_msg.filename)
+
+        # Behaviour matches comparison_mode=ComparisonMode.identity.
+        old_compare = OldRichCompare()
+        events = []
+        old_compare.on_trait_change(lambda: events.append(None), "bar")
+
+        some_list = [1, 2, 3]
+
+        self.assertEqual(len(events), 0)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = some_list
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [1, 2, 3]
+        self.assertEqual(len(events), 1)
+        old_compare.bar = [4, 5, 6]
+        self.assertEqual(len(events), 2)

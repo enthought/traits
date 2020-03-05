@@ -1,7 +1,14 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
-# --(Interfaces)----------------------------------------------------------------
+# --(Interfaces)---------------------------------------------------------------
 """
 Interfaces
 ==========
@@ -93,19 +100,18 @@ interfaces, such as::
 In this case, the value of the trait must be an object which is an instance of
 the specified class or one of its subclasses.
 """
-# --<Imports>-------------------------------------------------------------------
-from __future__ import print_function
+# --<Imports>------------------------------------------------------------------
 from traits.api import *
 
 
-# --[IName Interface]-----------------------------------------------------------
+# --[IName Interface]----------------------------------------------------------
 # Define the 'IName' interface:
 class IName(Interface):
     def get_name(self):
         """ Returns the name of an object. """
 
 
-# --[Person Class]--------------------------------------------------------------
+# --[Person Class]-------------------------------------------------------------
 class Person(HasTraits):
 
     implements(IName)
@@ -119,14 +125,14 @@ class Person(HasTraits):
         return "%s %s" % (self.first_name, self.last_name)
 
 
-# --[Apartment Class]-----------------------------------------------------------
+# --[Apartment Class]----------------------------------------------------------
 # Define a class using an object that implements the 'IName' interface:
 class Apartment(HasTraits):
 
     renter = Instance(IName)
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 # Create an object implementing the 'IName' interface:
 william = Person(first_name="William", last_name="Adams")
 

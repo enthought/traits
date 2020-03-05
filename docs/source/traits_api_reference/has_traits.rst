@@ -1,13 +1,11 @@
-:mod:`has_traits` Module
-========================
+:mod:`traits.has_traits` Module
+===============================
 
 .. automodule:: traits.has_traits
     :no-members:
 
 Classes
 -------
-
-.. autoclass:: ViewElement
 
 .. autoclass:: MetaHasTraits
 
@@ -36,12 +34,6 @@ Classes
 .. autoclass:: HasRequiredTraits
 
 .. autoclass:: HasPrivateTraits
-
-.. autoclass:: SingletonHasTraits
-
-.. autoclass:: SingletonHasStrictTraits
-
-.. autoclass:: SingletonHasPrivateTraits
 
 .. autoclass:: Vetoable
 
@@ -76,3 +68,16 @@ Functions
 .. autofunction:: provides
 
 .. autofunction:: weak_arg
+
+Deprecated Classes
+------------------
+
+The following :class:`~.HasTraits` subclasses are deprecated,
+and may be removed in a future version of Traits.
+
+.. autoclass:: SingletonHasTraits
+
+.. autoclass:: SingletonHasStrictTraits
+
+.. autoclass:: SingletonHasPrivateTraits
+

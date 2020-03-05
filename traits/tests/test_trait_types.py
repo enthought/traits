@@ -1,19 +1,12 @@
-#  Unit test case for testing trait types created by subclassing TraitType.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Written by: David C. Morrill
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  Date: 4/10/2007
-#
-#  Copyright (c) 2007, Enthought, Inc.
-#  All rights reserved.
-#
-#  This software is provided without warranty under the terms of the BSD
-#  license included in /LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
+# Thanks for using Enthought open source!
 
 """ Unit test case for testing trait types created by subclassing TraitType.
 """
@@ -26,7 +19,8 @@ import shutil
 import subprocess
 import unittest
 
-from traits.api import Float, TraitType
+from traits.trait_type import TraitType
+from traits.trait_types import Float
 from traits.testing.optional_dependencies import requires_numpy
 
 
@@ -59,7 +53,7 @@ class TraitTypesTest(unittest.TestCase):
         tmpdir = tempfile.mkdtemp()
         try:
             tmpfile = os.path.join(tmpdir, "test_script.py")
-            with open(tmpfile, "w") as f:
+            with open(tmpfile, "w", encoding="utf-8") as f:
                 f.write(test_script)
             cmd = [this_python, tmpfile]
             output = subprocess.check_output(cmd).decode("utf-8")

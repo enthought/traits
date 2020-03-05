@@ -1,32 +1,21 @@
-# -----------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2015, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in /LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-# -----------------------------------------------------------------------------
+# Thanks for using Enthought open source!
+
 """
 Tests for the Float trait type.
 
 """
 import unittest
 
-import six
-
-from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
-from traits.testing.optional_dependencies import (
-    numpy, requires_numpy, requires_python2)
-
-if six.PY2:
-    LONG_TYPE = long
-else:
-    LONG_TYPE = int
+from traits.api import BaseFloat, Either, Float, HasTraits, Str, TraitError
+from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
 class MyFloat(object):
@@ -35,6 +24,10 @@ class MyFloat(object):
 
     def __float__(self):
         return self._value
+
+
+class InheritsFromFloat(float):
+    pass
 
 
 class BadFloat(object):
@@ -49,7 +42,7 @@ class FloatModel(HasTraits):
     # validate_trait_complex in ctraits.c).
     value_or_none = Either(None, Float)
 
-    float_or_text = Either(Float, Unicode)
+    float_or_text = Either(Float, Str)
 
 
 class BaseFloatModel(HasTraits):
@@ -57,7 +50,7 @@ class BaseFloatModel(HasTraits):
 
     value_or_none = Either(None, BaseFloat)
 
-    float_or_text = Either(Float, Unicode)
+    float_or_text = Either(Float, Str)
 
 
 class CommonFloatTests(object):
@@ -77,6 +70,17 @@ class CommonFloatTests(object):
         a.value_or_none = 5.6
         self.assertIs(type(a.value_or_none), float)
         self.assertEqual(a.value_or_none, 5.6)
+
+    def test_accepts_float_subclass(self):
+        a = self.test_class()
+
+        a.value = InheritsFromFloat(37.0)
+        self.assertIs(type(a.value), float)
+        self.assertEqual(a.value, 37.0)
+
+        a.value_or_none = InheritsFromFloat(37.0)
+        self.assertIs(type(a.value), float)
+        self.assertEqual(a.value, 37.0)
 
     def test_accepts_int(self):
         a = self.test_class()
@@ -116,25 +120,22 @@ class CommonFloatTests(object):
         # Check that a failure to convert to float doesn't terminate
         # an assignment to a compound trait.
         a = self.test_class()
-        a.float_or_text = u"not a float"
-        self.assertEqual(a.float_or_text, u"not a float")
+        a.float_or_text = "not a float"
+        self.assertEqual(a.float_or_text, "not a float")
 
-    @requires_python2
-    def test_accepts_small_long(self):
+    def test_accepts_small_integer(self):
         a = self.test_class()
-        a.value = LONG_TYPE(2)
+        a.value = 2
         self.assertIs(type(a.value), float)
         self.assertEqual(a.value, 2.0)
 
-        a.value_or_none = LONG_TYPE(2)
+        a.value_or_none = 2
         self.assertIs(type(a.value_or_none), float)
         self.assertEqual(a.value_or_none, 2.0)
 
-    @requires_python2
-    def test_accepts_large_long(self):
+    def test_accepts_large_integer(self):
         a = self.test_class()
 
-        # Value large enough to be a long on Python 2.
         a.value = 2 ** 64
         self.assertIs(type(a.value), float)
         self.assertEqual(a.value, 2 ** 64)

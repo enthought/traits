@@ -1,22 +1,21 @@
-#  Test the 'trait_set', 'trait_get' interface to
-#  the HasTraits class.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2014, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  License included in /LICENSE.txt and may be redistributed only under the
-#  conditions described in the aforementioned license.  The license is also
-#  available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-from __future__ import absolute_import
+# Thanks for using Enthought open source!
 
+"""
+Test the 'trait_set', 'trait_get' interface to the HasTraits class.
+
+"""
 from contextlib import contextmanager
 import logging
 import unittest
 
-import traits.has_traits
 from traits.api import HasTraits, Str, Int
 from traits.testing.unittest_tools import UnittestTools
 
@@ -86,3 +85,21 @@ class TestTraitGet(UnittestTools, unittest.TestCase):
         with self.assertDeprecated():
             values = obj.get("string")
         self.assertEqual(values, {"string": "foo"})
+
+    def test_trait_set_quiet(self):
+        obj = TraitsObject()
+        obj.string = "foo"
+
+        with self.assertTraitDoesNotChange(obj, "string"):
+            obj.trait_set(trait_change_notify=False, string="bar")
+
+        self.assertEqual(obj.string, "bar")
+
+    def test_trait_setq(self):
+        obj = TraitsObject()
+        obj.string = "foo"
+
+        with self.assertTraitDoesNotChange(obj, "string"):
+            obj.trait_setq(string="bar")
+
+        self.assertEqual(obj.string, "bar")

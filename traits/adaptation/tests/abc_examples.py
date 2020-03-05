@@ -1,9 +1,17 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """ Test data for testing the protocol manager with ABCs. """
 
 
-from abc import ABCMeta
-
-import six
+from abc import ABC
 
 from traits.adaptation.api import PurePythonAdapter as Adapter
 
@@ -13,23 +21,19 @@ from traits.adaptation.api import PurePythonAdapter as Adapter
 #### Protocols ################################################################
 
 
-@six.add_metaclass(ABCMeta)
-class UKStandard(object):
+class UKStandard(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class EUStandard(object):
+class EUStandard(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class JapanStandard(object):
+class JapanStandard(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IraqStandard(object):
+class IraqStandard(ABC):
     pass
 
 
@@ -78,42 +82,54 @@ class UKStandardToEUStandard(Adapter):
 
 EUStandard.register(UKStandardToEUStandard)
 
+
 # EU->Japan
+
 class EUStandardToJapanStandard(Adapter):
     pass
 
 
 JapanStandard.register(EUStandardToJapanStandard)
 
+
 # Japan->Iraq
+
 class JapanStandardToIraqStandard(Adapter):
     pass
 
 
 IraqStandard.register(JapanStandardToIraqStandard)
 
+
 # EU->Iraq
+
 class EUStandardToIraqStandard(Adapter):
     pass
 
 
 IraqStandard.register(EUStandardToIraqStandard)
 
+
 # UK->Japan
+
 class UKStandardToJapanStandard(Adapter):
     pass
 
 
 JapanStandard.register(UKStandardToJapanStandard)
 
+
 # Travel->Japan
+
 class TravelPlugToJapanStandard(Adapter):
     pass
 
 
 JapanStandard.register(TravelPlugToJapanStandard)
 
+
 # Travel->EU
+
 class TravelPlugToEUStandard(Adapter):
     pass
 
@@ -128,18 +144,15 @@ class FileType(object):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IEditor(object):
+class IEditor(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IScriptable(object):
+class IScriptable(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IUndoable(object):
+class IUndoable(ABC):
     pass
 
 
@@ -161,8 +174,7 @@ IUndoable.register(IScriptableToIUndoable)
 #### Hierarchy example ########################################################
 
 
-@six.add_metaclass(ABCMeta)
-class IPrintable(object):
+class IPrintable(ABC):
     pass
 
 
@@ -191,8 +203,7 @@ IPrintable.register(TextEditorToIPrintable)
 #### Interface hierarchy example ##############################################
 
 
-@six.add_metaclass(ABCMeta)
-class IPrimate(object):
+class IPrimate(ABC):
     pass
 
 
@@ -204,13 +215,11 @@ class IChild(IHuman):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IIntermediate(object):
+class IIntermediate(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class ITarget(object):
+class ITarget(ABC):
     pass
 
 
@@ -252,13 +261,11 @@ ITarget.register(IIntermediateToITarget)
 #### Non-trivial chaining example #############################################
 
 
-@six.add_metaclass(ABCMeta)
-class IStart(object):
+class IStart(ABC):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IGeneric(object):
+class IGeneric(ABC):
     pass
 
 
@@ -266,8 +273,7 @@ class ISpecific(IGeneric):
     pass
 
 
-@six.add_metaclass(ABCMeta)
-class IEnd(object):
+class IEnd(ABC):
     pass
 
 

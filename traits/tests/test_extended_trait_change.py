@@ -1,20 +1,15 @@
-#  Unit test case for testing HasTraits 'on_trait_change' support.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Written by: David C. Morrill
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  Date: 4/10/2007
-#
-#  (c) Copyright 2007 by Enthought, Inc.
-#
-#  This software is provided without warranty under the terms of the BSD
-#  license included in /LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
+# Thanks for using Enthought open source!
 
 """ Unit test case for testing HasTraits 'on_trait_change' support.
 """
-
-from __future__ import absolute_import
 
 import unittest
 
@@ -27,16 +22,16 @@ from traits.api import (
     List,
     Property,
     TraitDictEvent,
+    TraitDictObject,
     TraitError,
     TraitListEvent,
+    TraitListObject,
     Undefined,
     cached_property,
     on_trait_change,
     pop_exception_handler,
     push_exception_handler,
 )
-
-from traits.trait_handlers import TraitListObject, TraitDictObject
 
 
 class ArgCheckBase(HasTraits):
@@ -51,6 +46,16 @@ class ArgCheckBase(HasTraits):
 
     calls = Int(0)
     tc = Any
+
+
+class ArgCheckList(ArgCheckBase):
+
+    value = List(Int, [0, 1, 2])
+
+
+class ArgCheckDict(ArgCheckBase):
+
+    value = Dict(Int, Int, {0: 0, 1: 1, 2: 2})
 
 
 class ArgCheckSimple(ArgCheckBase):
@@ -112,11 +117,12 @@ class ArgCheckDecorator(ArgCheckBase):
         self.tc.assertEqual(new, self.value)
 
 
-class Instance1(HasTraits):
+class BaseInstance(HasTraits):
 
-    ref = Instance(ArgCheckBase, ())
+    #: An instance with a value trait we want to listen to.
+    ref = Instance(HasTraits)
 
-    calls = Int(0)
+    calls = Dict({x: 0 for x in range(5)})
     exp_object = Any
     exp_name = Any
     dst_name = Any
@@ -125,31 +131,87 @@ class Instance1(HasTraits):
     dst_new = Any
     tc = Any
 
+
+class InstanceValueListener(BaseInstance):
+
     @on_trait_change("ref.value")
     def arg_check0(self):
-        self.calls += 1
+        self.calls[0] += 1
 
     @on_trait_change("ref.value")
     def arg_check1(self, new):
-        self.calls += 1
+        self.calls[1] += 1
         self.tc.assertEqual(new, self.dst_new)
 
     @on_trait_change("ref.value")
     def arg_check2(self, name, new):
-        self.calls += 1
+        self.calls[2] += 1
         self.tc.assertEqual(name, self.dst_name)
         self.tc.assertEqual(new, self.dst_new)
 
     @on_trait_change("ref.value")
     def arg_check3(self, object, name, new):
-        self.calls += 1
+        self.calls[3] += 1
         self.tc.assertIs(object, self.exp_object)
         self.tc.assertEqual(name, self.exp_name)
         self.tc.assertEqual(new, self.exp_new)
 
     @on_trait_change("ref.value")
     def arg_check4(self, object, name, old, new):
-        self.calls += 1
+        self.calls[4] += 1
+        self.tc.assertIs(object, self.exp_object)
+        self.tc.assertEqual(name, self.exp_name)
+        self.tc.assertEqual(old, self.exp_old)
+        self.tc.assertEqual(new, self.exp_new)
+
+
+class InstanceSimpleValue(InstanceValueListener):
+
+    #: An instance with a simple value trait we want to listen to.
+    ref = Instance(ArgCheckBase, ())
+
+
+class InstanceListValue(InstanceValueListener):
+
+    #: An instance with a list value trait we want to listen to.
+    ref = Instance(ArgCheckList, ())
+
+
+class InstanceDictValue(InstanceValueListener):
+
+    ref = Instance(ArgCheckDict, ())
+
+
+class InstanceValueListListener(BaseInstance):
+
+    #: An instance with a list value trait we want to listen to.
+    ref = Instance(ArgCheckList, ())
+
+    @on_trait_change("ref.value[]")
+    def arg_check0(self):
+        self.calls[0] += 1
+
+    @on_trait_change("ref.value[]")
+    def arg_check1(self, new):
+        self.calls[1] += 1
+        self.tc.assertEqual(new, self.dst_new)
+
+    @on_trait_change("ref.value[]")
+    def arg_check2(self, name, new):
+        self.calls[2] += 1
+        self.tc.assertEqual(name, self.dst_name)
+        self.tc.assertEqual(new, self.dst_new)
+
+    @on_trait_change("ref.value[]")
+    def arg_check3(self, object, name, new):
+        self.calls[3] += 1
+        self.tc.assertIs(object, self.exp_object)
+        self.tc.assertEqual(name, self.exp_name)
+        self.tc.assertEqual(new, self.exp_new)
+
+    @on_trait_change("ref.value[]")
+    def arg_check4(self, object, name, old, new):
+        self.calls[4] += 1
         self.tc.assertIs(object, self.exp_object)
         self.tc.assertEqual(name, self.exp_name)
         self.tc.assertEqual(old, self.exp_old)
@@ -159,7 +221,7 @@ class Instance1(HasTraits):
 class List1(HasTraits):
 
     refs = List(ArgCheckBase)
-    calls = Int(0)
+    calls = Dict({0: 0, 3: 0, 4: 0})
 
     exp_object = Any
     exp_name = Any
@@ -171,11 +233,11 @@ class List1(HasTraits):
 
     @on_trait_change("refs.value")
     def arg_check0(self):
-        self.calls += 1
+        self.calls[0] += 1
 
     @on_trait_change("refs.value")
     def arg_check3(self, object, name, new):
-        self.calls += 1
+        self.calls[3] += 1
         self.tc.assertIs(object, self.exp_object)
         self.tc.assertEqual(name, self.exp_name)
         if self.type_new is None:
@@ -185,7 +247,7 @@ class List1(HasTraits):
 
     @on_trait_change("refs.value")
     def arg_check4(self, object, name, old, new):
-        self.calls += 1
+        self.calls[4] += 1
         self.tc.assertIs(object, self.exp_object)
         self.tc.assertEqual(name, self.exp_name)
         if self.type_old is None:
@@ -413,45 +475,212 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(ac.calls, (3 * 5))
         self.assertEqual(ac.value, 3)
 
-    def test_instance1(self):
-        i1 = Instance1(tc=self)
+    def test_instance_simple_value(self):
+        inst = InstanceSimpleValue(tc=self)
         for i in range(3):
-            i1.trait_set(
-                exp_object=i1.ref,
+            inst.trait_set(
+                exp_object=inst.ref,
                 exp_name="value",
                 dst_name="value",
                 exp_old=i,
                 exp_new=(i + 1),
                 dst_new=(i + 1),
             )
-            i1.ref.value = i + 1
-        self.assertEqual(i1.calls, (3 * 5))
-        self.assertEqual(i1.ref.value, 3)
+            inst.ref.value = i + 1
+        self.assertEqual(inst.calls, {x: 3 for x in range(5)})
+        self.assertEqual(inst.ref.value, 3)
+
+        inst.reset_traits(['calls'])
         ref = ArgCheckBase()
-        i1.trait_set(
-            exp_object=i1,
+        inst.trait_set(
+            exp_object=inst,
             exp_name="ref",
             dst_name="value",
-            exp_old=i1.ref,
+            exp_old=inst.ref,
             exp_new=ref,
             dst_new=0,
         )
-        i1.ref = ref
-        self.assertEqual(i1.calls, (4 * 5))
-        self.assertEqual(i1.ref.value, 0)
+        inst.ref = ref
+        self.assertEqual(inst.calls, {x: 1 for x in range(5)})
+        self.assertEqual(inst.ref.value, 0)
+
+        inst.reset_traits(['calls'])
         for i in range(3):
-            i1.trait_set(
-                exp_object=i1.ref,
+            inst.trait_set(
+                exp_object=inst.ref,
                 exp_name="value",
                 dst_name="value",
                 exp_old=i,
                 exp_new=(i + 1),
                 dst_new=(i + 1),
             )
-            i1.ref.value = i + 1
-        self.assertEqual(i1.calls, (7 * 5))
-        self.assertEqual(i1.ref.value, 3)
+            inst.ref.value = i + 1
+        self.assertEqual(inst.calls, {x: 3 for x in range(5)})
+        self.assertEqual(inst.ref.value, 3)
 
+    @unittest.expectedFailure  # Github issue #537
+    def test_instance_list_value(self):
+        inst = InstanceListValue(tc=self)
+
+        inst.trait_set(
+            exp_object=inst.ref,
+            exp_name="value",
+            dst_name="value",
+            exp_old=[0, 1, 2],
+            exp_new=[0, 1, 2, 3],
+            dst_new=[0, 1, 2, 3],
+        )
+        inst.ref.value = [0, 1, 2, 3]
+        self.assertEqual(inst.calls, {x: 1 for x in range(5)})
+        self.assertEqual(inst.ref.value, [0, 1, 2, 3])
+
+        inst.reset_traits(['calls'])
+        ref = ArgCheckList()
+        inst.trait_set(
+            exp_object=inst,
+            exp_name="ref",
+            dst_name="value",
+            exp_old=inst.ref,
+            exp_new=ref,
+            dst_new=[0, 1, 2],
+        )
+        inst.ref = ref
+        self.assertEqual(inst.calls, {x: 1 for x in range(5)})
+        self.assertEqual(inst.ref.value, [0, 1, 2])
+
+        inst.reset_traits(['calls'])
+        inst.trait_set(
+            exp_object=inst.ref,
+            exp_name="value",
+            dst_name="value",
+            exp_old=[0, 1, 2],
+            exp_new=[0, 1, 2, 3],
+            dst_new=[0, 1, 2, 3],
+        )
+        inst.ref.value.append(3)
+        self.assertEqual(
+            inst.calls, {0: 1, 1: 0, 2: 0, 3: 0, 4: 0}
+        )
+        self.assertEqual(inst.ref.value, [0, 1, 2, 3])
+
+    @unittest.expectedFailure  # Github issue #537
+    def test_instance_dict_value(self):
+        inst = InstanceDictValue(tc=self)
+
+        inst.trait_set(
+            exp_object=inst.ref,
+            exp_name="value",
+            dst_name="value",
+            exp_old={0: 0, 1: 1, 2: 2},
+            exp_new={0: 0, 1: 1, 2: 2, 3: 3},
+            dst_new={0: 0, 1: 1, 2: 2, 3: 3},
+        )
+        inst.ref.value = {0: 0, 1: 1, 2: 2, 3: 3}
+        self.assertEqual(inst.calls, {x: 1 for x in range(5)})
+        self.assertEqual(inst.ref.value, {0: 0, 1: 1, 2: 2, 3: 3})
+
+        inst.reset_traits(['calls'])
+        ref = ArgCheckDict()
+        inst.trait_set(
+            exp_object=inst,
+            exp_name="ref",
+            dst_name="value",
+            exp_old=inst.ref,
+            exp_new=ref,
+            dst_new={0: 0, 1: 1, 2: 2},
+        )
+        inst.ref = ref
+        self.assertEqual(inst.calls, {x: 1 for x in range(5)})
+        self.assertEqual(inst.ref.value, {0: 0, 1: 1, 2: 2})
+
+        inst.reset_traits(['calls'])
+        inst.trait_set(
+            exp_object=inst.ref,
+            exp_name="value",
+            dst_name="value",
+            exp_old={0: 0, 1: 1, 2: 2},
+            exp_new={0: 0, 1: 1, 2: 2, 3: 3},
+            dst_new={0: 0, 1: 1, 2: 2, 3: 3},
+        )
+        inst.ref.value[3] = 3
+        self.assertEqual(inst.calls, {0: 1, 1: 0, 2: 0, 3: 0, 4: 0})
+        self.assertEqual(inst.ref.value, {0: 0, 1: 1, 2: 2, 3: 3})
+
+    def test_instance_value_list_listener(self):
+        inst = InstanceValueListListener(tc=self)
+
+        inst.trait_set(
+            exp_object=inst.ref,
+            exp_name="value",
+            dst_name="value",
+            exp_old=[0, 1, 2],
+            exp_new=[0, 1, 2, 3],
+            dst_new=[0, 1, 2, 3],
+        )
+        inst.ref.value = [0, 1, 2, 3]
+        self.assertEqual(inst.calls, {x: 1 for x in range(5)})
+        self.assertEqual(inst.ref.value, [0, 1, 2, 3])
+
+        inst.reset_traits(['calls'])
+        ref = ArgCheckList()
+        inst.trait_set(
+            exp_object=inst,
+            exp_name="ref",
+            dst_name="value",
+            exp_old=inst.ref,
+            exp_new=ref,
+            dst_new=[0, 1, 2],
+        )
+        inst.ref = ref
+        self.assertEqual(inst.calls, {x: 1 for x in range(5)})
+        self.assertEqual(inst.ref.value, [0, 1, 2])
+
+        inst.reset_traits(['calls'])
+        inst.trait_set(
+            exp_object=inst.ref,
+            exp_name="value_items",
+            dst_name="value_items",
+            exp_old=[],
+            exp_new=[3],
+            dst_new=[3],
+        )
+        inst.ref.value.append(3)
+        self.assertEqual(
+            inst.calls, {x: 1 for x in range(5)}
+        )
+        self.assertEqual(inst.ref.value, [0, 1, 2, 3])
+
+        inst.reset_traits(['calls'])
+        inst.trait_set(
+            exp_object=inst.ref,
+            exp_name="value_items",
+            dst_name="value_items",
+            exp_old=[2],
+            exp_new=[],
+            dst_new=[],
+        )
+        inst.ref.value.pop(2)
+        self.assertEqual(
+            inst.calls, {x: 1 for x in range(5)}
+        )
+        self.assertEqual(inst.ref.value, [0, 1, 3])
+
+        inst.reset_traits(['calls'])
+        inst.trait_set(
+            exp_object=inst.ref,
+            exp_name="value_items",
+            dst_name="value_items",
+            exp_old=[1],
+            exp_new=[1, 2],
+            dst_new=[1, 2],
+        )
+        inst.ref.value[1:2] = [1, 2]
+        self.assertEqual(
+            inst.calls, {x: 1 for x in range(5)}
+        )
+        self.assertEqual(inst.ref.value, [0, 1, 2, 3])
+
+    @unittest.expectedFailure  # Github issue #538
     def test_list1(self):
         l1 = List1(tc=self)
         for i in range(3):
@@ -464,9 +693,11 @@ class OnTraitChangeTest(unittest.TestCase):
                 type_new=TraitListEvent,
             )
             l1.refs.append(ac)
-        # self.assertEqual(l1.calls, (3 * 3))  # FIXME
+        self.assertEqual(l1.calls, {0: 3, 3: 3, 4: 3})
         for i in range(3):
             self.assertEqual(l1.refs[i].value, 0)
+
+        l1.reset_traits(['calls'])
         refs = [ArgCheckBase(), ArgCheckBase(), ArgCheckBase()]
         l1.trait_set(
             exp_object=l1,
@@ -476,9 +707,11 @@ class OnTraitChangeTest(unittest.TestCase):
             type_new=TraitListObject,
         )
         l1.refs = refs
-        # self.assertEqual(l1.calls, (4 * 3))
+        self.assertEqual(l1.calls, {0: 1, 3: 1, 4: 1})
         for i in range(3):
             self.assertEqual(l1.refs[i].value, 0)
+
+        l1.reset_traits(['calls'])
         for i in range(3):
             for j in range(3):
                 l1.trait_set(
@@ -490,7 +723,8 @@ class OnTraitChangeTest(unittest.TestCase):
                     exp_new=(i + 1),
                 )
                 l1.refs[j].value = i + 1
-        # self.assertEqual(l1.calls, (13 * 3))
+
+        self.assertEqual(l1.calls, {0: 9, 3: 9, 4: 9})
         for i in range(3):
             self.assertEqual(l1.refs[i].value, 3)
 
@@ -500,6 +734,7 @@ class OnTraitChangeTest(unittest.TestCase):
     def test_list3(self):
         self.check_list(List3(tc=self))
 
+    @unittest.expectedFailure  # Github issue #538
     def test_dict1(self):
         d1 = Dict1(tc=self)
         for i in range(3):
@@ -512,9 +747,11 @@ class OnTraitChangeTest(unittest.TestCase):
                 type_new=TraitDictEvent,
             )
             d1.refs[i] = ac
-        # self.assertEqual(d1.calls, (3 * 3))  # FIXME
+        self.assertEqual(d1.calls, {0: 3, 3: 3, 4: 3})
         for i in range(3):
             self.assertEqual(d1.refs[i].value, 0)
+
+        d1.reset_traits(['calls'])
         refs = {0: ArgCheckBase(), 1: ArgCheckBase(), 2: ArgCheckBase()}
         d1.trait_set(
             exp_object=d1,
@@ -524,9 +761,11 @@ class OnTraitChangeTest(unittest.TestCase):
             type_new=TraitDictObject,
         )
         d1.refs = refs
-        # self.assertEqual(d1.calls, (4 * 3))
+        self.assertEqual(d1.calls, {0: 1, 3: 1, 4: 1})
         for i in range(3):
             self.assertEqual(d1.refs[i].value, 0)
+
+        d1.reset_traits(['calls'])
         for i in range(3):
             for j in range(3):
                 d1.trait_set(
@@ -538,7 +777,7 @@ class OnTraitChangeTest(unittest.TestCase):
                     exp_new=(i + 1),
                 )
                 d1.refs[j].value = i + 1
-        # self.assertEqual(d1.calls, (13 * 3))
+        self.assertEqual(d1.calls, {0: 9, 3: 9, 4: 9})
         for i in range(3):
             self.assertEqual(d1.refs[i].value, 3)
 
@@ -753,7 +992,7 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(pdo.pcalls, (3 * 3) + 1)
         self.assertEqual(pdo.calls, 3 * 3)
         for i in range(10):
-            x = pdo.sum
+            pdo.sum
         self.assertEqual(pdo.pcalls, (3 * 3) + 1)
         pdo.trait_set(exp_old=sum, exp_new=60)
         old_ref = pdo.ref

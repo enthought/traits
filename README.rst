@@ -4,12 +4,12 @@ traits: explicitly typed attributes for Python
 
 http://docs.enthought.com/traits
 
-.. image:: https://api.travis-ci.org/enthought/traits.png?branch=master
+.. image:: https://travis-ci.org/enthought/traits.svg?branch=master
    :target: https://travis-ci.org/enthought/traits
    :alt: Build status
 
-.. image:: https://coveralls.io/repos/enthought/traits/badge.png
-   :target: https://coveralls.io/r/enthought/traits
+.. image:: https://coveralls.io/repos/github/enthought/traits/badge.svg?branch=master
+   :target: https://coveralls.io/github/enthought/traits
    :alt: Coverage status
 
 The Traits project is at the center of all Enthought Tool Suite development
@@ -48,8 +48,7 @@ inherited by any subclass derived from the class.
 Dependencies
 ------------
 
-Traits runs on both Python 2 and Python 3. It requires Python 2.7
-or Python >= 3.4.
+Traits requires Python >= 3.5.
 
 Traits has the following optional dependencies:
 
@@ -60,8 +59,7 @@ Traits has the following optional dependencies:
 
 To build the full documentation one needs:
 
-* sphinx > 1.2.3
-* mock (for Python 2 only; optional if traitsui is not available)
+* sphinx >= 1.8
 * `enthought-sphinx-theme
   <https://github.com/enthought/enthought-sphinx-theme>`_
   (a version of the documentation can be built without this, but

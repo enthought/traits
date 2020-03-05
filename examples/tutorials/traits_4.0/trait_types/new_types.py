@@ -1,7 +1,14 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
-# --(Creating New Trait Types)--------------------------------------------------
+# --(Creating New Trait Types)-------------------------------------------------
 """
 Creating New Trait Types
 ========================
@@ -136,12 +143,11 @@ to the preceding section on defining a trait type for additional information
 that applies to properties as well.
 """
 
-# --<Imports>-------------------------------------------------------------------
-from __future__ import print_function
+# --<Imports>------------------------------------------------------------------
 from traits.api import *
 
 
-# --[DiceRoll Type]-------------------------------------------------------------
+# --[DiceRoll Type]------------------------------------------------------------
 # Define a type whose value represents the roll of a pair of dice:
 class DiceRoll(TraitType):
 
@@ -169,7 +175,7 @@ class DiceRoll(TraitType):
         self.error(object, name, value)
 
 
-# --[RandInt Property]----------------------------------------------------------
+# --[RandInt Property]---------------------------------------------------------
 
 from random import randint
 
@@ -196,7 +202,7 @@ class RandInt(TraitType):
         )
 
 
-# --[Craps Class]---------------------------------------------------------------
+# --[Craps Class]--------------------------------------------------------------
 
 
 # Define a test class containing both new trait types/properties:
@@ -206,7 +212,7 @@ class Craps(HasTraits):
     die = RandInt(1, 6)
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 
 # Create a test object:
 craps = Craps()

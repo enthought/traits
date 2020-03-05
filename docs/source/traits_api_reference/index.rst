@@ -8,19 +8,28 @@ Traits core
     :maxdepth: 1
 
     traits
-    category
     has_traits
-    has_dynamic_views
+
+    base_trait_handler
+    constants
+    ctrait
+    ctraits
+    editor_factories
     interface_checker
     trait_base
+    trait_converters
+    trait_dict_object
     trait_errors
+    trait_factory
+    trait_handler
     trait_handlers
+    trait_list_object
     trait_numeric
+    trait_type
     trait_types
-    trait_value
-    traits_listener
     trait_notifiers
-    ustr_trait
+    trait_set_object
+    traits_listener
     version
 
 Subpackages
@@ -31,7 +40,6 @@ Subpackages
 
     traits.adaptation
     traits.etsconfig
-    traits.protocols
     traits.testing
     traits.util
 

@@ -1,17 +1,26 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """ Simple benchmarking of the adaptation manager.
 
 This is not 'enforced' by any tests (i.e. we currently aren't bound to satisfy
 any performance criteria - but in the future we might be ;^).
 
 """
-from __future__ import print_function
 
-import abc
-from pprint import pprint
+# Imports are needed by the 'exec'd code.
+import abc  # noqa: F401
 import time
 
 from traits.adaptation.adaptation_manager import AdaptationManager
-from traits.api import Adapter, HasTraits, Interface, provides
+from traits.api import Adapter, HasTraits, Interface, provides  # noqa: F401
 
 
 N_SOURCES = 3
@@ -31,7 +40,7 @@ for i in range(N_SOURCES):
     exec(create_classes_to_adapt.format(i=i))
 
 # The object that we will try to adapt!
-foo = Foo1()
+foo = Foo1()  # noqa: F821
 
 # Create a lot of other interfaces that we will adapt to.
 for i in range(N_PROTOCOLS):
@@ -49,7 +58,7 @@ for source in range(N_SOURCES):
         exec(create_traits_adapter_class.format(source=source, target=target))
 
 
-#### traits.adaptation with Interfaces ########################################
+# traits.adaptation with Interfaces ###########################################
 
 adaptation_manager = AdaptationManager()
 
@@ -72,19 +81,18 @@ for source in range(N_SOURCES):
 
 start_time = time.time()
 for _ in range(N_ITERATIONS):
-    adaptation_manager.adapt(foo, I0)
+    adaptation_manager.adapt(foo, I0)  # noqa: F821
 time_per_iter = (time.time() - start_time) / float(N_ITERATIONS) * 1000.0
 print("apptools using Interfaces: %.3f msec per iteration" % time_per_iter)
 
 
-#### traits.adaptation with ABCs ##############################################
+# traits.adaptation with ABCs #################################################
 
 # Create some classes to adapt (using ABCs!).
 for i in range(N_SOURCES):
     exec(
         """
-@six.add_metaclass(abc.ABCMeta)
-class FooABC{i}(object):
+class FooABC{i}(abc.ABC):
     pass
 """.format(
             i=i
@@ -94,14 +102,13 @@ class FooABC{i}(object):
     exec("FooABC{i}.register(Foo{i})".format(i=i))
 
 # The object that we will try to adapt!
-foo = Foo0()
+foo = Foo0()  # noqa: F821
 
 # Create a lot of other ABCs!
 for i in range(N_PROTOCOLS):
     exec(
         """
-@six.add_metaclass(abc.ABCMeta)
-class ABC{i}(object):
+class ABC{i}(abc.ABC):
     pass
 """.format(
             i=i
@@ -141,6 +148,6 @@ for source in range(N_SOURCES):
 
 start_time = time.time()
 for _ in range(N_ITERATIONS):
-    adaptation_manager.adapt(foo, ABC0)
+    adaptation_manager.adapt(foo, ABC0)  # noqa: F821
 time_per_iter = (time.time() - start_time) / float(N_ITERATIONS) * 1000.0
 print("apptools using ABCs: %.3f msec per iteration" % time_per_iter)

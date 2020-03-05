@@ -1,6 +1,14 @@
-""" Tests the 'ETSConfig' configuration object. """
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
-from __future__ import print_function
+""" Tests the 'ETSConfig' configuration object. """
 
 # Standard library imports.
 import contextlib
@@ -166,15 +174,13 @@ class ETSConfigTestCase(unittest.TestCase):
         path = os.path.join(dirname, "dummy.txt")
         data = str(time.time())
 
-        f = open(path, "w")
-        f.write(data)
-        f.close()
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(data)
 
         self.assertEqual(os.path.exists(path), True)
 
-        f = open(path)
-        result = f.read()
-        f.close()
+        with open(path, "r", encoding="utf-8") as f:
+            result = f.read()
 
         os.remove(path)
 
@@ -258,7 +264,7 @@ class ETSConfigTestCase(unittest.TestCase):
 
         with mock_sys_argv(test_args):
             with mock_os_environ(test_environ):
-                print(repr(self.ETSConfig.toolkit))
+                repr(self.ETSConfig.toolkit)
                 with self.ETSConfig.provisional_toolkit("test_direct"):
                     toolkit = self.ETSConfig.toolkit
                     self.assertEqual(toolkit, "test_direct")
@@ -352,15 +358,13 @@ class ETSConfigTestCase(unittest.TestCase):
         path = os.path.join(dirname, "dummy.txt")
         data = str(time.time())
 
-        f = open(path, "w")
-        f.write(data)
-        f.close()
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(data)
 
         self.assertEqual(os.path.exists(path), True)
 
-        f = open(path)
-        result = f.read()
-        f.close()
+        with open(path, "r", encoding="utf-8") as f:
+            result = f.read()
 
         os.remove(path)
 

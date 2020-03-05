@@ -1,14 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2017, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in enthought/LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
+# Thanks for using Enthought open source!
+
 """
 Tasks for Test Runs
 ===================
@@ -52,7 +51,7 @@ you can run tests in all supported runtimes::
 
     python etstool.py test-all
 
-Currently supported runtime values are ``2.7``, ``3.5`` and ``3.6``.  Not all
+Currently supported runtime values are ``3.5`` and ``3.6``.  Not all
 combinations of runtimes will work, but the tasks will fail with
 a clear error if that is the case.
 
@@ -83,11 +82,12 @@ from contextlib import contextmanager
 
 import click
 
-# Dependencies common to both Python 2 and Python 3.
+# Dependencies common to all configurations.
 common_dependencies = {
     "coverage",
     "cython",
     "enthought_sphinx_theme",
+    "flake8",
     "numpy",
     "pyqt",
     "Sphinx",
@@ -97,16 +97,15 @@ common_dependencies = {
 # Dependencies we install from source for testing
 source_dependencies = {"traitsui"}
 
-# Python 2-specific dependencies.
-python2_dependencies = {
-    "mock",
+# Unix-specific dependencies.
+unix_dependencies = {
+    "gnureadline",
 }
 
-supported_runtimes = ["2.7", "3.5", "3.6"]
+supported_runtimes = ["3.5", "3.6"]
 default_runtime = "3.6"
 
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
-
 
 # Click options shared by multiple commands.
 edm_option = click.option(
@@ -129,6 +128,11 @@ editable_option = click.option(
     "--editable/--not-editable",
     default=False,
     help="Install main package in 'editable' mode?  [default: --not-editable]",
+)
+verbose_option = click.option(
+    "--verbose/--quiet",
+    default=True,
+    help="Run tests in verbose mode? [default: --verbose]",
 )
 
 
@@ -159,8 +163,8 @@ def install(edm, runtime, environment, editable, docs, source):
     """
     parameters = get_parameters(edm, runtime, environment)
     dependencies = common_dependencies.copy()
-    if runtime.startswith("2."):
-        dependencies.update(python2_dependencies)
+    if sys.platform != "win32":
+        dependencies.update(unix_dependencies)
     packages = " ".join(dependencies)
 
     # EDM commands to set up the development environment. The installation
@@ -168,20 +172,25 @@ def install(edm, runtime, environment, editable, docs, source):
     # to explicitly uninstall it before re-installing from source.
     commands = [
         "{edm} environments create {environment} --force --version={runtime}",
-        "{edm} install -y -e {environment} " + packages,
+        "{edm} --config edm.yaml install -y -e {environment} " + packages,
         "{edm} plumbing remove-package -e {environment} traits",
     ]
-    if editable:
-        install_cmd = (
-            "{edm} run -e {environment} -- "
-            "python -m pip install --editable . --no-dependencies"
-        )
-    else:
-        install_cmd = (
-            "{edm} run -e {environment} -- "
-            "python -m pip install . --no-dependencies"
-        )
+
+    install_cmd = _get_install_command_string(".", editable=editable)
+    install_mypy_cmd = _get_install_command_string("mypy", editable=False,
+                                                   no_deps=False)
+    install_stubs_cmd = _get_install_command_string("./traits-stubs/",
+                                                    editable=editable)
+
     commands.append(install_cmd)
+    commands.append(install_mypy_cmd)
+    commands.append(install_stubs_cmd)
+
+    install_copyright_checker = (
+        "{edm} run -e {environment} -- "
+        "python -m pip install copyright_header/"
+    )
+    commands.append(install_copyright_checker)
 
     click.echo("Creating environment '{environment}'".format(**parameters))
     execute(commands, parameters)
@@ -220,9 +229,25 @@ def install(edm, runtime, environment, editable, docs, source):
 @edm_option
 @runtime_option
 @click.option(
+    "--environment", default=None, help="Name of EDM environment to check."
+)
+def flake8(edm, runtime, environment):
+    """ Run a flake8 check in a given environment.
+
+    """
+    parameters = get_parameters(edm, runtime, environment)
+    commands = ["{edm} run -e {environment} -- python -m flake8"]
+    execute(commands, parameters)
+
+
+@cli.command()
+@edm_option
+@runtime_option
+@verbose_option
+@click.option(
     "--environment", default=None, help="Name of EDM environment to test."
 )
-def test(edm, runtime, environment):
+def test(edm, runtime, verbose, environment):
     """ Run the test suite in a given environment.
 
     """
@@ -231,9 +256,12 @@ def test(edm, runtime, environment):
     environ = {}
     environ["PYTHONUNBUFFERED"] = "1"
 
+    options = "--verbose " if verbose else ""
     commands = [
-        "{edm} run -e {environment} -- "
-        "coverage run -p -m unittest discover -v traits"
+        "{edm} run -e {environment} -- coverage run -p -m "
+        "unittest discover " + options + "traits",
+        "{edm} run -e {environment} -- coverage run -p -m "
+        "unittest discover " + options + "traits_stubs_tests"
     ]
 
     # We run in a tempdir to avoid accidentally picking up wrong traits
@@ -257,15 +285,22 @@ def test(edm, runtime, environment):
     default=None,
     help="Name of EDM environment to build docs for.",
 )
-def docs(edm, runtime, environment):
+@click.option(
+    "--error-on-warn/--no-error-on-warn",
+    default=True,
+    help="Turn warnings into errors?  [default: --error-on-warn] ",
+)
+def docs(edm, runtime, environment, error_on_warn):
     """ Build the html documentation.
 
     """
     parameters = get_parameters(edm, runtime, environment)
-    commands = [
+    build_docs = (
         "{edm} run -e {environment} -- sphinx-build -b html "
-        "-d build/doctrees source build/html",
-    ]
+        + ("-W " if error_on_warn else "")
+        + "-d build/doctrees source build/html"
+    )
+    commands = [build_docs]
     with do_in_existingdir(os.path.join(os.getcwd(), "docs")):
         execute(commands, parameters)
 
@@ -361,10 +396,7 @@ def test_all(edm):
         sys.exit(1)
 
 
-# ----------------------------------------------------------------------------
 # Utility routines
-# ----------------------------------------------------------------------------
-
 
 def get_parameters(edm, runtime, environment):
     """ Set up parameters dictionary for format() substitution. """
@@ -485,6 +517,36 @@ def locate_edm():
         edm = os.path.join(os.path.dirname(edm), "embedded", "edm.exe")
 
     return edm
+
+
+def _get_install_command_string(pkg_or_location, editable, no_deps=True):
+    """ Create and return a command string configured by the provided
+    parameters.
+
+    Parameters
+    ----------
+    pkg_or_location : str
+        Either a location in the filesystem containing setup.py or the
+        name of a package.
+    editable : bool
+        Whether to add --editable flag
+    no_deps : bool
+        Whether to add --no-dependencies flag
+
+    Returns
+    -------
+    cmd : str
+        A command string, which if executed will install the package or run
+        the setup script at the provided location.
+
+    """
+    cmd = "{edm} run -e {environment} -- python -m pip install "
+    if editable:
+        cmd += "--editable"
+    cmd += " {} ".format(pkg_or_location)
+    if no_deps:
+        cmd += "--no-dependencies"
+    return cmd
 
 
 if __name__ == "__main__":

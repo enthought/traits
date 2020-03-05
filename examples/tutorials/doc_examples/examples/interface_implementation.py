@@ -1,15 +1,21 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
 # interface_implementation.py - Example of implementing an interface
 
-# --[Imports]-------------------------------------------------------------------
-from __future__ import print_function
+# --[Imports]------------------------------------------------------------------
 from traits.api import HasTraits, implements, Str, Instance
 from interface_definition import IName
 
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 class Person(HasTraits):
     implements(IName)
 
@@ -22,7 +28,7 @@ class Person(HasTraits):
         return "%s %s" % (self.first_name, self.last_name)
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 class Apartment(HasTraits):
     renter = Instance(IName)
 

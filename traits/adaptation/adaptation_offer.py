@@ -1,18 +1,14 @@
-# ------------------------------------------------------------------------------
-# Copyright (c) 2013, Enthought, Inc.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# ------------------------------------------------------------------------------
-""" An offer to provide adapters from one protocol to another. """
+# Thanks for using Enthought open source!
 
-import six
+""" An offer to provide adapters from one protocol to another. """
 
 from traits.api import Any, Bool, HasTraits, Property
 
@@ -76,7 +72,7 @@ class AdaptationOffer(HasTraits):
     def _get_to_protocol_name(self):
         return self._get_type_name(self._to_protocol)
 
-    #### Private protocol ######################################################
+    #### Private protocol #####################################################
 
     #: Shadow trait for the corresponding property.
     _factory = Any
@@ -86,7 +82,7 @@ class AdaptationOffer(HasTraits):
         """ Trait property getter. """
 
         if not self._factory_loaded:
-            if isinstance(self._factory, six.string_types):
+            if isinstance(self._factory, str):
                 self._factory = import_symbol(self._factory)
 
             self._factory_loaded = True
@@ -108,7 +104,7 @@ class AdaptationOffer(HasTraits):
         """ Trait property getter. """
 
         if not self._from_protocol_loaded:
-            if isinstance(self._from_protocol, six.string_types):
+            if isinstance(self._from_protocol, str):
                 self._from_protocol = import_symbol(self._from_protocol)
 
             self._from_protocol_loaded = True
@@ -130,7 +126,7 @@ class AdaptationOffer(HasTraits):
         """ Trait property getter. """
 
         if not self._to_protocol_loaded:
-            if isinstance(self._to_protocol, six.string_types):
+            if isinstance(self._to_protocol, str):
                 self._to_protocol = import_symbol(self._to_protocol)
 
             self._to_protocol_loaded = True
@@ -156,7 +152,7 @@ class AdaptationOffer(HasTraits):
 
         """
 
-        if isinstance(type_or_type_name, six.string_types):
+        if isinstance(type_or_type_name, str):
             type_name = type_or_type_name
 
         else:

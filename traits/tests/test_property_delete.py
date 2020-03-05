@@ -1,3 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """
 Unit tests to ensure that we can call reset_traits/delete on a
 property trait (regression tests for Github issue #67).
@@ -5,8 +15,6 @@ property trait (regression tests for Github issue #67).
 """
 
 import unittest
-
-import six
 
 from traits.api import Any, HasTraits, Int, Property, TraitError
 
@@ -29,4 +37,4 @@ class TestPropertyDelete(unittest.TestCase):
     def test_property_reset_traits(self):
         e = E()
         unresetable = e.reset_traits()
-        six.assertCountEqual(self, unresetable, ["a", "b"])
+        self.assertCountEqual(unresetable, ["a", "b"])

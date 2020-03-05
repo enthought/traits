@@ -1,16 +1,21 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
-
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
 # all_traits_features.py --- Shows primary features of the Traits
 #                            package
 
-# --[Imports]-------------------------------------------------------------------
-from __future__ import print_function
+# --[Imports]------------------------------------------------------------------
 from traits.api import Delegate, HasTraits, Instance, Int, Str
 
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 # Shows the five primary features of the Traits package.
 class Parent(HasTraits):
 
@@ -33,7 +38,7 @@ class Child(HasTraits):
         print("Age changed from %s to %s " % (old, new))
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 
 # Set up the example:
 joe = Parent()

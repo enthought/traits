@@ -1,0 +1,14 @@
+# A style for the clang-format tool that roughly matches Python's PEP 7.
+# Used with Clang 9.0 to update ctraits.c, via:
+#
+#    $ clang-format --style=file -i traits/ctraits.c
+
+BasedOnStyle: Google
+AlignAfterOpenBracket: AlwaysBreak
+AlwaysBreakAfterReturnType: All
+AllowShortIfStatementsOnASingleLine: Never
+BreakBeforeBraces: Stroustrup
+ColumnLimit: 79
+IndentWidth: 4
+BreakBeforeBinaryOperators: NonAssignment
+StatementMacros: ['PyObject_HEAD']

@@ -1,30 +1,20 @@
-# -----------------------------------------------------------------------------
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2016, Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in /LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-# -----------------------------------------------------------------------------
+# Thanks for using Enthought open source!
+
 """
 Tests for the Bool trait type.
 """
 import unittest
 
-import six
-
 from traits.api import Bool, Dict, HasTraits, Int, TraitError
 from traits.testing.optional_dependencies import numpy, requires_numpy
-
-if six.PY2:
-    LONG_TYPE = long
-else:
-    LONG_TYPE = int
 
 
 class A(HasTraits):
@@ -48,7 +38,7 @@ class TestBool(unittest.TestCase):
     def test_does_not_accept_int_or_float(self):
         a = A()
 
-        bad_values = [-1, LONG_TYPE(1), "a string", 1.0]
+        bad_values = [-1, "a string", 1.0]
         for bad_value in bad_values:
             with self.assertRaises(TraitError):
                 a.foo = bad_value

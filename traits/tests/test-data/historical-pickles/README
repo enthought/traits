@@ -1,0 +1,13 @@
+This directory contains binary files *.pkl whose contents are pickled traits
+and trait-related objects of various kinds, used for testing backward
+compatibility Traits unpickling.
+
+The pickle filenames are of the form:
+
+    hitp-t5.2.0-p0-<description>.pkl
+
+where the "t5.2.0" portion gives the version of Traits that was used to create
+the pickle, and the "p0" portion describes the pickle protocol.
+
+The "generate_pickles" script can be used to generate pickle files for
+a new version of Traits.

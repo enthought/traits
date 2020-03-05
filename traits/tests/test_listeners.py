@@ -1,31 +1,25 @@
-#  Test the 'add_trait_listener', 'remove_trait_listener' interface to
-#  the HasTraits class.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Written by: David C. Morrill
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  Date: 09/07/2005
-#
-#  (c) Copyright 2005 by Enthought, Inc.
-#
-#  Copyright (c) 2007, Enthought, Inc.
-#  All rights reserved.
-#
-#  This software is provided without warranty under the terms of the BSD
-#  License included in /LICENSE.txt and may be redistributed only under the
-#  conditions described in the aforementioned license.  The license is also
-#  available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
+# Thanks for using Enthought open source!
 
-from __future__ import absolute_import
+"""
+Test the 'add_trait_listener', 'remove_trait_listener' interface to the
+HasTraits class.
+
+"""
 
 import contextlib
+import io
 import sys
 import threading
 import time
 import unittest
-
-import six
 
 from traits.api import HasTraits, Str, Int, Float, Any, Event
 from traits.api import push_exception_handler, pop_exception_handler
@@ -37,7 +31,7 @@ def captured_stderr():
     Return a context manager that directs all stderr output to a string.
 
     """
-    new_stderr = six.StringIO()
+    new_stderr = io.StringIO()
     original_stderr = sys.stderr
     sys.stderr = new_stderr
     try:
@@ -141,10 +135,9 @@ class TestListeners(unittest.TestCase):
         self.assertEqual(events, {})
 
     def test_trait_exception_handler_can_access_exception(self):
-        """ Tests if trait exception handlers can access the traceback of the exception.
+        """ Tests if trait exception handlers can access the traceback of the
+        exception.
         """
-        import traceback
-
         from traits import trait_notifiers
 
         def _handle_exception(obj, name, old, new):

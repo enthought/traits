@@ -1,4 +1,13 @@
-# -*- coding: utf-8 -*-
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """ Tests for the trait documenter. """
 
 import contextlib
@@ -9,14 +18,7 @@ import tempfile
 import textwrap
 import tokenize
 import unittest
-try:
-    # Python 3: mock in the standard library.
-    import unittest.mock as mock
-except ImportError:
-    # Python 2: need to use 3rd-party mock.
-    import mock
-
-import six
+import unittest.mock as mock
 
 from traits.api import HasTraits, Int
 from traits.testing.optional_dependencies import sphinx, requires_sphinx
@@ -59,7 +61,7 @@ class TestTraitDocumenter(unittest.TestCase):
     depth_interval = Property(Tuple(Float, Float),
                               depends_on="_depth_interval")
 """
-        string_io = six.StringIO(self.source)
+        string_io = io.StringIO(self.source)
         tokens = tokenize.generate_tokens(string_io.readline)
         self.tokens = tokens
 
@@ -70,7 +72,7 @@ class TestTraitDocumenter(unittest.TestCase):
                                   depends_on="_depth_interval")
         """
         )
-        string_io = six.StringIO(src)
+        string_io = io.StringIO(src)
         tokens = tokenize.generate_tokens(string_io.readline)
 
         definition_tokens = _get_definition_tokens(tokens)
@@ -87,7 +89,7 @@ class TestTraitDocumenter(unittest.TestCase):
         class Fake(HasTraits):
 
             #: Test attribute
-            test = Property(Bool, label=u"ミスあり")
+            test = Property(Bool, label="ミスあり")
         """
         )
         mocked_directive = mock.MagicMock()
@@ -143,13 +145,25 @@ class TestTraitDocumenter(unittest.TestCase):
         with self.tmpdir() as tmpdir:
             # The configuration file must exist, but it's okay if it's empty.
             conf_file = os.path.join(tmpdir, "conf.py")
-            with io.open(conf_file, "w", encoding="utf-8"):
+            with open(conf_file, "w", encoding="utf-8"):
                 pass
 
             app = SphinxTestApp(srcdir=path(tmpdir))
             app.builder.env.app = app
             app.builder.env.temp_data["docname"] = "dummy"
-            yield DocumenterBridge(app.env, LoggingReporter(''), Options(), 1)
+
+            # Backwards compatibility hack: for now, we need to be compatible
+            # with both Sphinx < 2.1 (whose DocumenterBridge doesn't take
+            # a state argument) and Sphinx >= 2.3 (which warns if the state
+            # isn't passed). Eventually we should be able to drop support
+            # for Sphinx < 2.1.
+            kwds = {}
+            if sphinx.version_info >= (2, 1):
+                state = mock.Mock()
+                state.document.settings.tab_width = 8
+                kwds["state"] = state
+            yield DocumenterBridge(
+                app.env, LoggingReporter(''), Options(), 1, **kwds)
 
     @contextlib.contextmanager
     def tmpdir(self):

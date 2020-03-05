@@ -1,18 +1,14 @@
-# ----------------------------------------------------------------------------
-# Copyright (c) 2014, Enthought, Inc.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in /LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
-#
-# ----------------------------------------------------------------------------
-import unittest
 
-import six
+import unittest
 
 from traits.util.event_tracer import (
     SentinelRecord,
@@ -26,8 +22,8 @@ class TestMessageRecords(unittest.TestCase):
     def test_base_message_record(self):
         record = SentinelRecord()
 
-        # Check unicode output
-        self.assertEqual(six.text_type(record), u"\n")
+        # Check str output
+        self.assertEqual(str(record), "\n")
 
         # Check initialization
         self.assertRaises(TypeError, SentinelRecord, sdd=0)
@@ -37,10 +33,10 @@ class TestMessageRecords(unittest.TestCase):
             time=1, indent=3, name="john", old=1, new=1, class_name="MyClass"
         )
 
-        # Check unicode output
+        # Check str output
         self.assertEqual(
-            six.text_type(record),
-            u"1 -----> 'john' changed from 1 to 1 in 'MyClass'\n",
+            str(record),
+            "1 -----> 'john' changed from 1 to 1 in 'MyClass'\n",
         )
 
         # Check initialization
@@ -51,9 +47,9 @@ class TestMessageRecords(unittest.TestCase):
             time=7, indent=5, handler="john", exception="sssss"
         )
 
-        # Check unicode output
+        # Check str output
         self.assertEqual(
-            six.text_type(record), u"7 <--------- EXIT: 'john'sssss\n"
+            str(record), "7 <--------- EXIT: 'john'sssss\n"
         )
 
         # Check initialization
@@ -64,9 +60,9 @@ class TestMessageRecords(unittest.TestCase):
             time=7, indent=5, handler="john", source="sssss"
         )
 
-        # Check unicode output
+        # Check str output
         self.assertEqual(
-            six.text_type(record), u"7             CALLING: 'john' in sssss\n"
+            str(record), "7             CALLING: 'john' in sssss\n"
         )
 
         # Check initialization

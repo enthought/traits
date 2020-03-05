@@ -1,19 +1,19 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  All rights reserved.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  This software is provided without warranty under the terms of the BSD
-#  license included in /LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
 # cached_prop.py - Example of @cached_property decorator
-# --[Imports]-------------------------------------------------------------------
-import six.moves as sm
-
+# --[Imports]------------------------------------------------------------------
 from traits.api import HasPrivateTraits, List, Int, Property, cached_property
 
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 class TestScores(HasPrivateTraits):
 
     scores = List(Int)
@@ -22,4 +22,4 @@ class TestScores(HasPrivateTraits):
     @cached_property
     def _get_average(self):
         s = self.scores
-        return float(sm.reduce(lambda n1, n2: n1 + n2, s, 0)) / len(s)
+        return sum(s) / len(s)

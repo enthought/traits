@@ -1,20 +1,15 @@
-#  Unit test case for testing interfaces and adaptation.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Written by: David C. Morrill
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  Date: 4/10/2007
-#
-#  Copyright (c) 2007, Enthought, Inc.
-#  All rights reserved.
-#
-#  This software is provided without warranty under the terms of the BSD
-#  license included in /LICENSE.txt and may be redistributed only
-#  under the conditions described in the aforementioned license.  The license
-#  is also available online at http://www.enthought.com/licenses/BSD.txt
+# Thanks for using Enthought open source!
+
 """ Unit test case for testing interfaces and adaptation.
 """
-
-from __future__ import absolute_import
 
 import unittest
 
@@ -91,6 +86,15 @@ class SampleAverage(HasTraits):
         for item in value:
             average += item
         return average / len(value)
+
+
+class UndeclaredAverageProvider(HasTraits):
+    """
+    Class that conforms to the IAverage interface, but doesn't declare
+    that it does so.
+    """
+    def get_average(self):
+        return 5.6
 
 
 class SampleBad(HasTraits):
@@ -221,17 +225,17 @@ class InterfacesTest(unittest.TestCase):
     def test_instance_adapt_yes(self):
         ta = TraitsHolder()
 
-        ta.a_yes = object = SampleAverage()
+        ta.a_yes = SampleAverage()
         self.assertEqual(ta.a_yes.get_average(), 200.0)
         self.assertIsInstance(ta.a_yes, SampleAverage)
         self.assertFalse(hasattr(ta, "a_yes_"))
 
-        ta.a_yes = object = SampleList()
+        ta.a_yes = SampleList()
         self.assertEqual(ta.a_yes.get_average(), 20.0)
         self.assertIsInstance(ta.a_yes, ListAverageAdapter)
         self.assertFalse(hasattr(ta, "a_yes_"))
 
-        ta.a_yes = object = Sample()
+        ta.a_yes = Sample()
         self.assertEqual(ta.a_yes.get_average(), 2.0)
         self.assertIsInstance(ta.a_yes, ListAverageAdapter)
         self.assertFalse(hasattr(ta, "a_yes_"))
@@ -241,22 +245,22 @@ class InterfacesTest(unittest.TestCase):
     def test_instance_adapt_default(self):
         ta = TraitsHolder()
 
-        ta.a_default = object = SampleAverage()
+        ta.a_default = SampleAverage()
         self.assertEqual(ta.a_default.get_average(), 200.0)
         self.assertIsInstance(ta.a_default, SampleAverage)
         self.assertFalse(hasattr(ta, "a_default_"))
 
-        ta.a_default = object = SampleList()
+        ta.a_default = SampleList()
         self.assertEqual(ta.a_default.get_average(), 20.0)
         self.assertIsInstance(ta.a_default, ListAverageAdapter)
         self.assertFalse(hasattr(ta, "a_default_"))
 
-        ta.a_default = object = Sample()
+        ta.a_default = Sample()
         self.assertEqual(ta.a_default.get_average(), 2.0)
         self.assertIsInstance(ta.a_default, ListAverageAdapter)
         self.assertFalse(hasattr(ta, "a_default_"))
 
-        ta.a_default = object = SampleBad()
+        ta.a_default = SampleBad()
         self.assertEqual(ta.a_default, None)
         self.assertFalse(hasattr(ta, "a_default_"))
 
@@ -307,3 +311,9 @@ class InterfacesTest(unittest.TestCase):
     def test_decorated_class_name_and_docstring(self):
         self.assertEqual(SampleList.__name__, "SampleList")
         self.assertEqual(SampleList.__doc__, "SampleList docstring.")
+
+    def test_instance_requires_provides(self):
+        ta = TraitsHolder()
+        provider = UndeclaredAverageProvider()
+        with self.assertRaises(TraitError):
+            ta.a_no = provider

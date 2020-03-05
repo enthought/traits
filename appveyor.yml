@@ -3,18 +3,11 @@ environment:
 
   global:
     PYTHONUNBUFFERED: "1"
-    INSTALL_EDM_VERSION: "1.9.2"
-    # We're having trouble setting up EDM 1.10.0.
-    # See PR #420 for details.
+    INSTALL_EDM_VERSION: "2.0.0"
 
   matrix:
-
-    - RUNTIME: '2.7'
     - RUNTIME: '3.5'
     - RUNTIME: '3.6'
-
-matrix:
-  fast_finish: true
 
 cache:
   - C:\Users\appveyor\.cache -> appveyor-clean-cache.txt
@@ -29,6 +22,7 @@ install:
   - edm install -y wheel click coverage
   - edm run -- python etstool.py install --runtime=%runtime%
 test_script:
+  - edm run -- python etstool.py flake8 --runtime=%runtime%
   - edm run -- python etstool.py test --runtime=%runtime%
   - edm run -- python etstool.py docs --runtime=%runtime%
 on_success:

@@ -1,14 +1,20 @@
-#  Copyright (c) 2007, Enthought, Inc.
-#  License: BSD Style.
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 
 # metadata.py --- Example of accessing trait metadata attributes
 
-# --[Imports]-------------------------------------------------------------------
-from __future__ import print_function
+# --[Imports]------------------------------------------------------------------
 from traits.api import HasTraits, Int, List, Float, Instance, Any, TraitType
 
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 class Foo(HasTraits):
     pass
 
@@ -20,7 +26,7 @@ class Test(HasTraits):
     any = Any([1, 2, 3])
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 t = Test()
 
 # Prints values of various metadata attributes for each of the traits.
