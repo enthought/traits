@@ -311,7 +311,7 @@ class Array(AbstractArray):
     casting : str
         Casting rule for ``numpy.ndarray.astype``. Values that cannot be
         cast to a supplied ``dtype`` according to this rule cannot be
-        assigned.
+        assigned. Default is "unsafe".
     """
 
     def __init__(
@@ -368,7 +368,7 @@ class CArray(AbstractArray):
     casting : str
         Casting rule for ``numpy.ndarray.astype``. Values that cannot be
         cast to a supplied ``dtype`` according to this rule cannot be
-        assigned.
+        assigned. Default is "unsafe".
     """
 
     def __init__(
