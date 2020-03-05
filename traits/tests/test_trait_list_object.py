@@ -13,7 +13,8 @@ import pickle
 import unittest
 
 from traits.trait_base import Undefined
-from traits.trait_list_object import TraitList
+from traits.trait_errors import TraitError
+from traits.trait_list_object import adapt_trait_validator, TraitList
 from traits.trait_types import _validate_int
 
 
@@ -262,3 +263,37 @@ class TestTraitList(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             tl.append("A")
+
+    def test_adapt_trait_validator(self):
+
+        def bool_validator(object, name, value):
+            if isinstance(value, bool):
+                return value
+            else:
+                raise TraitError
+
+        # Fail without adaptor
+        with self.assertRaises(TypeError):
+            tl = TraitList([], validator=bool_validator)
+
+        # Attach the adaptor
+        list_bool_validator = adapt_trait_validator(bool_validator)
+
+        # It now works!
+        tl_2 = TraitList([], validator=list_bool_validator)
+        tl_2.extend([True, False, True])
+
+        # Decorate with list adaptor
+        @adapt_trait_validator
+        def bool_validator(object, name, value):
+            if isinstance(value, bool):
+                return value
+            else:
+                raise TraitError
+
+        # Still working
+        tl = TraitList([], validator=bool_validator)
+        tl.extend([True, False, True])
+
+        with self.assertRaises(TraitError):
+            tl.extend(["invalid"])
