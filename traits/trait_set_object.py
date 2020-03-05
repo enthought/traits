@@ -12,6 +12,7 @@ import copy
 import copyreg
 from weakref import ref
 
+from .trait_base import Undefined
 from .trait_errors import TraitError
 
 
@@ -46,209 +47,321 @@ class TraitSetEvent(object):
         self.added = added
 
 
-class TraitSetObject(set):
-    """ A subclass of set that fires trait events when mutated.
-
-    This is used by the Set trait type, and all values set into a Set
-    trait will be copied into a new TraitSetObject instance.
-
-    Mutation of the TraitSetObject will fire a "name_items" event with
-    appropriate added and removed values.
+class TraitSet(set):
+    """ A subclass of set that validates and notifies listeners of changes.
 
     Parameters
     ----------
-    trait : CTrait instance
-        The CTrait instance associated with the attribute that this Set
-        has been set to.
-    object : HasTraits instance
-        The HasTraits instance that the set has been set as an attribute for.
-    name : str
-        The name of the attribute on the object.
     value : set
-        The set of values to initialize the TraitSetObject with.
+        The value for the set
+    validator : callable
+        Called to validate items in the set
+    notifiers : list of callable
+        A list of callables with the signature::
+
+         notifier(trait_set, removed, added)
 
     Attributes
     ----------
-    trait : CTrait instance
-        The CTrait instance associated with the attribute that this set
-        has been set to.
-    object : weak reference to a HasTraits instance
-        A weak reference to a HasTraits instance that the set has been set
-        as an attribute for.
-    name : str
-        The name of the attribute on the object.
-    name_items : str
-        The name of the items event trait that the trait set will fire when
-        mutated.
+    value : set
+        The value for the set
+    validator : callable
+        Called to validate items in the set
+    notifiers : list of callable
+        A list of callables with the signature::
+
+         notifier(trait_set, removed, added)
+
     """
 
-    def __init__(self, trait, object, name, value):
-        self.trait = trait
-        self.object = ref(object)
-        self.name = name
-        self.name_items = None
-        if trait.has_items:
-            self.name_items = name + "_items"
+    # ------------------------------------------------------------------------
+    # TraitSet interface
+    # ------------------------------------------------------------------------
 
-        # Validate and assign the initial set value:
-        try:
-            validate = trait.item_trait.handler.validate
-            if validate is not None:
-                value = [validate(object, name, val) for val in value]
+    def validate(self, value):
+        """ Validate value and removed values.
 
-            super(TraitSetObject, self).__init__(value)
+        This simply calls the validator provided by the class, if any.
+        The validator is expected to have the signature::
 
+            validator(value)
+
+        and return a set of validated values or raise TraitError.
+
+        Parameters
+        ----------
+        value : set
+            The new item or items being added to the set.
+
+        Returns
+        -------
+        values : set
+            The set of validated values
+
+        Raises
+        ------
+        TraitError
+            If validation fails.
+        """
+
+        if not isinstance(value, set):
+            try:
+                # FIXME: str type will turn into a set of letters
+                value = set(value)
+            except TypeError:
+                value = {value}
+
+        # Use getattr as pickle can call `extend` before validator is set.
+        if getattr(self, 'validator', None) is None:
+            return value
+        else:
+            return self.validator(value)
+
+    def notify(self, removed, added):
+        """ Call all notifiers
+
+        This simply calls all notifiers provided by the class, if any.
+        The notifiers are expected to have the signature::
+
+            notifier(trait_list, index, removed, added)
+
+        Any return values are ignored.
+
+        Parameters
+        ----------
+        removed : set
+            The items to be removed.
+        added : set
+            The new items being added to the set.
+        """
+        if removed == added:
             return
 
-        except TraitError as excp:
-            excp.set_prefix("Each element of the")
-            raise excp
+        if removed is Undefined:
+            removed = set()
 
-    def _send_trait_items_event(self, name, event, items_event=None):
-        """ Send a TraitSetEvent to the owning object if there is one.
-        """
-        object = self.object()
-        if object is not None:
-            if items_event is None and hasattr(self, "trait"):
-                items_event = self.trait.items_event()
-            object.trait_items_event(name, event, items_event)
+        if added is Undefined:
+            added = set()
+
+        # Use getattr as pickle can call `extend` before notifiers are set.
+        for notifier in getattr(self, 'notifiers', []):
+            notifier(self, removed, added)
+
+    def object(self):
+        """ Stub method to pass persistence tests. """
+        # XXX fix persistence tests to not introspect this!
+        return None
+
+    # ------------------------------------------------------------------------
+    # set interface
+    # ------------------------------------------------------------------------
+
+    def __init__(self, value=(), *, validator=None, notifiers=()):
+        self.validator = validator
+        self.notifiers = list(notifiers)
+        value = self.validate(value)
+        super().__init__(value)
 
     def __deepcopy__(self, memo):
+        """ Perform a deepcopy operation.
+
+        Notifiers are transient and should not be copied.
+        """
         id_self = id(self)
         if id_self in memo:
             return memo[id_self]
 
-        memo[id_self] = result = TraitSetObject(
-            self.trait,
-            lambda: None,
-            self.name,
+        # notifiers are transient and should not be copied
+        memo[id_self] = result = TraitSet(
             [copy.deepcopy(x, memo) for x in self],
+            validator=copy.deepcopy(self.validator, memo),
+            notifiers=[],
         )
 
         return result
 
+    def __getstate__(self):
+        """ Get the state of the object for serialization.
+
+        Notifiers are transient and should not be serialized.
+        """
+        result = self.__dict__.copy()
+        # notifiers are transient and should not be serialized
+        result.pop("notifiers", None)
+        return result
+
+    def __setstate__(self, state):
+        """ Restore the state of the object after serialization.
+
+        Notifiers are transient and are restored to the empty list.
+        """
+        state['notifiers'] = []
+        self.__dict__.update(state)
+
     def update(self, value):
-        if not hasattr(self, "trait"):
-            return set.update(self, value)
-        try:
-            if not isinstance(value, set):
-                value = set(value)
-            added = value.difference(self)
-            if len(added) > 0:
-                object = self.object()
-                validate = self.trait.item_trait.handler.validate
-                if validate is not None:
-                    name = self.name
-                    added = set(
-                        [validate(object, name, item) for item in added]
-                    )
+        """ Update a set with the union of itself and others.
 
-                set.update(self, added)
+        Parameters
+        ----------
+        value : iterable
+            The other iterable
 
-                if self.name_items is not None:
-                    self._send_trait_items_event(
-                        self.name_items, TraitSetEvent(None, added)
-                    )
-        except TraitError as excp:
-            excp.set_prefix("Each element of the")
-            raise excp
+        Returns
+        -------
+        None
 
-    def intersection_update(self, value):
-        removed = self.difference(value)
-        if len(removed) > 0:
-            set.difference_update(self, removed)
+        """
+        validated_values = self.validate(value)
+        added = validated_values.difference(self)
 
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitSetEvent(removed)
-                )
+        if len(added) > 0:
+            self.notify(Undefined, added)
+
+        super().update(added)
 
     def difference_update(self, value):
-        removed = self.intersection(value)
-        if len(removed) > 0:
-            set.difference_update(self, removed)
+        """  Remove all elements of another set from this set.
 
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitSetEvent(removed)
-                )
+        Parameters
+        ----------
+        value : iterable
+            The other iterable
+
+        Returns
+        -------
+        None
+
+        """
+        validated_values = self.validate(value)
+        removed = self.intersection(value)
+        super().difference_update(validated_values)
+
+        if len(removed) > 0:
+            self.notify(removed, Undefined)
 
     def symmetric_difference_update(self, value):
-        if not hasattr(self, "trait"):
-            return set.symmetric_difference_update(self, value)
-        if not isinstance(value, set):
-            value = set(value)
-        removed = self.intersection(value)
-        added = value.difference(self)
-        if (len(removed) > 0) or (len(added) > 0):
-            object = self.object()
-            set.difference_update(self, removed)
+        """ Return the symmetric difference of two sets as a new set.
 
-            if len(added) > 0:
-                validate = self.trait.item_trait.handler.validate
-                if validate is not None:
-                    name = self.name
-                    added = set(
-                        [validate(object, name, item) for item in added]
-                    )
+        (i.e. all elements that are in exactly one of the sets.)
 
-                set.update(self, added)
+        Parameters
+        ----------
+        value : iterable
 
-            if self.name_items is not None:
-                self._send_trait_items_event(
-                    self.name_items, TraitSetEvent(removed, added)
-                )
+        Returns
+        -------
+        None
+
+        """
+        validated_values = self.validate(value)
+
+        removed = self.intersection(validated_values)
+        added = validated_values.difference(self)
+
+        super().symmetric_difference_update(validated_values)
+
+        if len(removed) + len(added) > 0:
+            self.notify(removed, added)
 
     def add(self, value):
-        if not hasattr(self, "trait"):
-            return set.add(self, value)
+        """ Add an element to a set.
+
+        This has no effect if the element is already present.
+
+        Parameters
+        ----------
+        value : Any
+            The value to add to the set.
+
+        Returns
+        -------
+
+        """
+        validated_values = self.validate(value)
+        if len(validated_values) > 1:
+            raise TypeError()
+
+        value = validated_values.pop()
         if value not in self:
-            try:
-                object = self.object()
-                validate = self.trait.item_trait.handler.validate
-                if validate is not None:
-                    value = validate(object, self.name, value)
-
-                set.add(self, value)
-
-                if self.name_items is not None:
-                    self._send_trait_items_event(
-                        self.name_items, TraitSetEvent(None, set([value]))
-                    )
-            except TraitError as excp:
-                excp.set_prefix("Each element of the")
-                raise excp
+            super().add(value)
+            self.notify(Undefined, value)
 
     def remove(self, value):
-        set.remove(self, value)
+        """ Remove an element from a set; it must be a member.
 
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitSetEvent(set([value]))
-            )
+        If the element is not a member, raise a KeyError.
+
+        Parameters
+        ----------
+        value : Any
+            An element in the set
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        KeyError
+
+        """
+        validated_values = self.validate(value)
+        if len(validated_values) > 1:
+            raise TypeError()
+
+        value = validated_values.pop()
+        super().remove(value)
+        self.notify(value, Undefined)
 
     def discard(self, value):
-        if value in self:
+        """ Remove an element from a set if it is a member.
+
+        If the element is not a member, do nothing.
+
+        Parameters
+        ----------
+        value : Any
+            An item in the set
+
+        Returns
+        -------
+        None
+
+        """
+        try:
             self.remove(value)
+        except KeyError:
+            pass
 
     def pop(self):
-        value = set.pop(self)
+        """ Remove and return an arbitrary set element.
+        Raises KeyError if the set is empty.
 
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitSetEvent(set([value]))
-            )
+        Returns
+        -------
+        item : Any
+            An element from the set
 
-        return value
+        Raises
+        ------
+        KeyError
+
+        """
+        removed = super().pop()
+        self.notify(removed, Undefined)
+        return removed
 
     def clear(self):
-        removed = set(self)
-        set.clear(self)
+        """ Remove all elements from this set.
 
-        if self.name_items is not None:
-            self._send_trait_items_event(
-                self.name_items, TraitSetEvent(removed)
-            )
+        Returns
+        -------
+        None
+
+        """
+        removed = set(self)
+        super().clear()
+        self.notify(removed, Undefined)
 
     def __reduce_ex__(self, protocol=None):
         """ Overridden to make sure we call our custom __getstate__.
@@ -259,35 +372,240 @@ class TraitSetObject(set):
             self.__getstate__(),
         )
 
-    def __getstate__(self):
-        result = self.__dict__.copy()
-        result.pop("object", None)
-        result.pop("trait", None)
-        return result
-
-    def __setstate__(self, state):
-        name = state.setdefault("name", "")
-        object = state.pop("object", None)
-        if object is not None:
-            self.object = ref(object)
-            self.rename(name)
-        else:
-            self.object = lambda: None
-
-        self.__dict__.update(state)
-
     def __ior__(self, value):
+        """ Return self|=value.
+
+        Parameters
+        ----------
+        value : Any
+            A value
+
+        Returns
+        -------
+        self : set
+            The updated set
+
+        """
         self.update(value)
         return self
 
     def __iand__(self, value):
+        """  Return self&=value.
+
+        Parameters
+        ----------
+        value : Any
+            A value
+
+        Returns
+        -------
+        self : set
+            The updated set
+
+        """
         self.intersection_update(value)
         return self
 
     def __ixor__(self, value):
+        """ Return self ^= value.
+
+        Parameters
+        ----------
+        value : Any
+            A value
+
+        Returns
+        -------
+        self : set
+            The updated set
+
+        """
         self.symmetric_difference_update(value)
         return self
 
     def __isub__(self, value):
+        """ Return self-=value.
+
+        Parameters
+        ----------
+        value : Any
+            A value
+
+        Returns
+        -------
+        self : set
+            The updated set
+
+        """
         self.difference_update(value)
         return self
+
+
+class TraitSetObject(TraitSet):
+    """ A specialization of TraitList with a default validator and notifier
+    which provide bug-for-bug compatibility with the TraitsListObject from
+    Traits versions before 6.0.
+
+    Parameters
+    ----------
+    trait : CTrait
+        The trait that the list has been assigned to.
+    object : HasTraits
+        The object the list belongs to.
+    name : str
+        The name of the trait on the object.
+    value : iterable
+        The initial value of the list.
+    notifiers : list
+        Additional notifiers for the list.
+
+    Attributes
+    ----------
+    trait : CTrait
+        The trait that the list has been assigned to.
+    object : HasTraits
+        The object the list belongs to.
+    name : str
+        The name of the trait on the object.
+    value : iterable
+        The initial value of the list.
+    notifiers : list
+        Additional notifiers for the list.
+    """
+
+    def __init__(self, trait, object, name, value, notifiers=[]):
+
+        self.trait = trait
+        self.object = ref(object)
+        self.name = name
+        self.name_items = None
+        if trait.has_items:
+            self.name_items = name + "_items"
+
+        super().__init__(value, validator=self.validator,
+                         notifiers=[self.notifier] + notifiers)
+
+    def validator(self, value):
+        """ Validates the value by calling the inner trait's validate method
+        and also ensures that the size of the list is within the specified
+        bounds.
+
+        Parameters
+        ----------
+        value : set
+            set of values that need to be validated
+
+        Returns
+        -------
+        value : set of validated values
+
+        Raises
+        ------
+        TraitError
+            On validation failure for the inner trait or if the size of the
+            list exceeds the specified bounds
+
+        """
+        object = self.object()
+        trait = self.trait
+        if object is None or trait is None:
+            return value
+
+        # validate the new value(s)
+        validate = trait.item_trait.handler.validate
+        if validate is None:
+            return value
+
+        try:
+            if value is Undefined:
+                return Undefined
+            else:
+                return {validate(object, self.name, item) for item in value}
+
+        except TraitError as excp:
+            excp.set_prefix("Each element of the")
+            raise excp
+
+    def notifier(self, trait_set, removed, added):
+        """ Converts and consolidates the parameters to a TraitSetEvent and
+        then fires the event.
+
+        Parameters
+        ----------
+        trait_set : set
+            The set
+        removed : set
+            Set of values that were removed
+        added : set
+            Set of values that were added
+
+        Returns
+        -------
+        None
+
+        """
+        is_trait_none = self.trait is None
+        is_name_items_none = self.name_items is None
+        if not hasattr(self, "trait") or is_trait_none or is_name_items_none:
+            return
+
+        object = self.object()
+        if object is None:
+            return
+
+        if added is Undefined:
+            added = set()
+
+        if removed is Undefined:
+            removed = set()
+
+        event = TraitSetEvent(removed, added)
+        items_event = self.trait.items_event()
+        object.trait_items_event(self.name_items, event, items_event)
+
+    def __deepcopy__(self, memo):
+        """ Perform a deepcopy operation.
+
+        Notifiers are transient and should not be copied.
+        """
+        id_self = id(self)
+        if id_self in memo:
+            return memo[id_self]
+
+        memo[id_self] = result = TraitSetObject(
+            self.trait,
+            lambda: None,
+            self.name,
+            {copy.deepcopy(x, memo) for x in self},
+        )
+
+        return result
+
+    def __getstate__(self):
+        """ Get the state of the object for serialization.
+
+        Notifiers are transient and should not be serialized.
+        """
+        result = self.__dict__.copy()
+        result.pop("object", None)
+        result.pop("trait", None)
+
+        return result
+
+    def __setstate__(self, state):
+        """ Restore the state of the object after serialization.
+
+        Notifiers are transient and are restored to the empty list.
+        """
+        name = state.setdefault("name", "")
+        object = state.pop("object", None)
+        if object is not None:
+            state['object'] = ref(object)
+            trait = self.object()._trait(name, 0)
+            if trait is not None:
+                state['trait'] = trait.handler
+        else:
+            state['object'] = lambda: None
+            state['trait'] = None
+
+        self.__dict__.update(state)
