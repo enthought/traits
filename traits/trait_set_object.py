@@ -123,7 +123,7 @@ class TraitSet(set):
         This simply calls all notifiers provided by the class, if any.
         The notifiers are expected to have the signature::
 
-            notifier(trait_list, index, removed, added)
+            notifier(removed, added)
 
         Any return values are ignored.
 
@@ -145,7 +145,7 @@ class TraitSet(set):
 
         # Use getattr as pickle can call `extend` before notifiers are set.
         for notifier in getattr(self, 'notifiers', []):
-            notifier(self, removed, added)
+            notifier(removed, added)
 
     def object(self):
         """ Stub method to pass persistence tests. """
@@ -239,6 +239,25 @@ class TraitSet(set):
         if len(removed) > 0:
             self.notify(removed, Undefined)
 
+    def intersection_update(self, value):
+        """  Remove all elements of set which are not common to another set
+
+        Parameters
+        ----------
+        value : iterable
+            The other iterable
+
+        Returns
+        -------
+        None
+
+        """
+        validated_values = self.validate(value)
+        removed = self.difference(self.intersection(validated_values))
+        super().intersection_update(validated_values)
+        if len(removed) > 0:
+            self.notify(removed, Undefined)
+
     def symmetric_difference_update(self, value):
         """ Return the symmetric difference of two sets as a new set.
 
@@ -284,7 +303,7 @@ class TraitSet(set):
         value = validated_values.pop()
         if value not in self:
             super().add(value)
-            self.notify(Undefined, value)
+            self.notify(Undefined, {value})
 
     def remove(self, value):
         """ Remove an element from a set; it must be a member.
@@ -311,7 +330,7 @@ class TraitSet(set):
 
         value = validated_values.pop()
         super().remove(value)
-        self.notify(value, Undefined)
+        self.notify({value}, Undefined)
 
     def discard(self, value):
         """ Remove an element from a set if it is a member.
@@ -348,7 +367,7 @@ class TraitSet(set):
 
         """
         removed = super().pop()
-        self.notify(removed, Undefined)
+        self.notify({removed}, Undefined)
         return removed
 
     def clear(self):
@@ -526,14 +545,12 @@ class TraitSetObject(TraitSet):
             excp.set_prefix("Each element of the")
             raise excp
 
-    def notifier(self, trait_set, removed, added):
+    def notifier(self, removed, added):
         """ Converts and consolidates the parameters to a TraitSetEvent and
         then fires the event.
 
         Parameters
         ----------
-        trait_set : set
-            The set
         removed : set
             Set of values that were removed
         added : set
