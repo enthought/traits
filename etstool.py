@@ -88,7 +88,6 @@ common_dependencies = {
     "cython",
     "enthought_sphinx_theme",
     "flake8",
-    "mypy",
     "numpy",
     "pyqt",
     "Sphinx",
@@ -165,6 +164,10 @@ def install(edm, runtime, environment, editable, source):
     dependencies = common_dependencies.copy()
     if sys.platform != "win32":
         dependencies.update(unix_dependencies)
+    # For Python 3.5, we don't have mypy builds from packages.enthought.com.
+    if runtime != "3.5":
+        dependencies.add("mypy")
+
     packages = " ".join(dependencies)
 
     # EDM commands to set up the development environment. The installation
@@ -246,9 +249,12 @@ def test(edm, runtime, verbose, environment):
     commands = [
         "{edm} run -e {environment} -- coverage run -p -m "
         "unittest discover " + options + "traits",
-        "{edm} run -e {environment} -- coverage run -p -m "
-        "unittest discover " + options + "traits_stubs_tests",
     ]
+    if runtime != "3.5":
+        commands += [
+            "{edm} run -e {environment} -- coverage run -p -m "
+            "unittest discover " + options + "traits_stubs_tests",
+        ]
 
     # We run in a tempdir to avoid accidentally picking up wrong traits
     # code from a local dir.  We need to ensure a good .coveragerc is in
