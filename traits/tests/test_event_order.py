@@ -55,12 +55,9 @@ class Bar(HasTraits):
         if new is not None:
             new.on_trait_change(self._cause_changed, name="cause")
 
-        return
-
     def _cause_changed(self, obj, name, old, new):
         self.test.events_delivered.append("Bar._caused_changed")
         self.effect = new.lower()
-        return
 
 
 class Baz(HasTraits):
@@ -80,12 +77,8 @@ class Baz(HasTraits):
             new.foo.on_trait_change(self._cause_changed, name="cause")
             new.on_trait_change(self._effect_changed, name="effect")
 
-        return
-
     def _cause_changed(self, obj, name, old, new):
         self.test.events_delivered.append("Baz._caused_changed")
-        return
 
     def _effect_changed(self, obj, name, old, new):
         self.test.events_delivered.append("Baz._effect_changed")
-        return
