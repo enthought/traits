@@ -170,24 +170,22 @@ def install(edm, runtime, environment, editable, source):
     # EDM commands to set up the development environment. The installation
     # of TraitsUI from EDM installs Traits as a dependency, so we need
     # to explicitly uninstall it before re-installing from source.
-    commands = [
-        "{edm} environments create {environment} --force --version={runtime}",
-        "{edm} --config edm.yaml install -y -e {environment} " + packages,
-        "{edm} plumbing remove-package -e {environment} traits",
-    ]
-
-    install_cmd = _get_install_command_string(".", editable=editable)
-    install_stubs_cmd = _get_install_command_string("./traits-stubs/",
-                                                    editable=editable)
+    install_traits = _get_install_command_string(".", editable=editable)
+    install_stubs = _get_install_command_string(
+        "./traits-stubs/", editable=editable
+    )
     install_copyright_checker = (
         "{edm} run -e {environment} -- "
         "python -m pip install copyright_header/"
     )
-    commands.extend([
-        install_cmd,
-        install_stubs_cmd,
+    commands = [
+        "{edm} environments create {environment} --force --version={runtime}",
+        "{edm} --config edm.yaml install -y -e {environment} " + packages,
+        "{edm} plumbing remove-package -e {environment} traits",
+        install_traits,
+        install_stubs,
         install_copyright_checker,
-    ])
+    ]
 
     click.echo("Creating environment '{environment}'".format(**parameters))
     execute(commands, parameters)
@@ -249,7 +247,7 @@ def test(edm, runtime, verbose, environment):
         "{edm} run -e {environment} -- coverage run -p -m "
         "unittest discover " + options + "traits",
         "{edm} run -e {environment} -- coverage run -p -m "
-        "unittest discover " + options + "traits_stubs_tests"
+        "unittest discover " + options + "traits_stubs_tests",
     ]
 
     # We run in a tempdir to avoid accidentally picking up wrong traits
