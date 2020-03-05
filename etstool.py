@@ -88,6 +88,7 @@ common_dependencies = {
     "cython",
     "enthought_sphinx_theme",
     "flake8",
+    "mypy",
     "numpy",
     "pyqt",
     "Sphinx",
@@ -153,9 +154,8 @@ def cli():
     help="Name of the EDM environment to install",
 )
 @editable_option
-@click.option("--docs/--no-docs", default=True)
 @click.option("--source/--no-source", default=False)
-def install(edm, runtime, environment, editable, docs, source):
+def install(edm, runtime, environment, editable, source):
     """ Install project and dependencies into a clean EDM environment and
     optionally install further dependencies required for building
     documentation.
@@ -177,19 +177,17 @@ def install(edm, runtime, environment, editable, docs, source):
     ]
 
     install_cmd = _get_install_command_string(".", editable=editable)
-    install_mypy_cmd = _get_install_command_string("mypy", editable=False,
-                                                   no_deps=False)
     install_stubs_cmd = _get_install_command_string("./traits-stubs/",
                                                     editable=editable)
-
-    commands.append(install_cmd)
-    commands.append(install_mypy_cmd)
-    commands.append(install_stubs_cmd)
-
     install_copyright_checker = (
         "{edm} run -e {environment} -- "
         "python -m pip install copyright_header/"
     )
+    commands = [
+        install_cmd,
+        install_stubs_cmd,
+        install_copyright_checker,
+    ]
     commands.append(install_copyright_checker)
 
     click.echo("Creating environment '{environment}'".format(**parameters))
@@ -212,16 +210,7 @@ def install(edm, runtime, environment, editable, docs, source):
             "{edm} run -e {environment} -- " + command for command in commands
         ]
         execute(commands, parameters)
-    if docs:
-        commands = [
-            "{edm} run -e {environment} -- pip install -r "
-            "ci-doc-requirements.txt --no-dependencies"
-        ]
-        execute(commands, parameters)
-        click.echo(
-            "Installed enthought-sphinx-theme in '"
-            "{environment}'.".format(**parameters)
-        )
+
     click.echo("Done install")
 
 
@@ -540,12 +529,12 @@ def _get_install_command_string(pkg_or_location, editable, no_deps=True):
         the setup script at the provided location.
 
     """
-    cmd = "{edm} run -e {environment} -- python -m pip install "
+    cmd = "{edm} run -e {environment} -- python -m pip install"
     if editable:
-        cmd += "--editable"
-    cmd += " {} ".format(pkg_or_location)
+        cmd += " --editable"
+    cmd += " {}".format(pkg_or_location)
     if no_deps:
-        cmd += "--no-dependencies"
+        cmd += " --no-dependencies"
     return cmd
 
 
