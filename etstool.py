@@ -107,7 +107,6 @@ default_runtime = "3.6"
 
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
 
-
 # Click options shared by multiple commands.
 edm_option = click.option(
     "--edm",
@@ -176,17 +175,16 @@ def install(edm, runtime, environment, editable, docs, source):
         "{edm} --config edm.yaml install -y -e {environment} " + packages,
         "{edm} plumbing remove-package -e {environment} traits",
     ]
-    if editable:
-        install_cmd = (
-            "{edm} run -e {environment} -- "
-            "python -m pip install --editable . --no-dependencies"
-        )
-    else:
-        install_cmd = (
-            "{edm} run -e {environment} -- "
-            "python -m pip install . --no-dependencies"
-        )
+
+    install_cmd = _get_install_command_string(".", editable=editable)
+    install_mypy_cmd = _get_install_command_string("mypy", editable=False,
+                                                   no_deps=False)
+    install_stubs_cmd = _get_install_command_string("./traits-stubs/",
+                                                    editable=editable)
+
     commands.append(install_cmd)
+    commands.append(install_mypy_cmd)
+    commands.append(install_stubs_cmd)
 
     install_copyright_checker = (
         "{edm} run -e {environment} -- "
@@ -261,7 +259,9 @@ def test(edm, runtime, verbose, environment):
     options = "--verbose " if verbose else ""
     commands = [
         "{edm} run -e {environment} -- coverage run -p -m "
-        "unittest discover " + options + "traits"
+        "unittest discover " + options + "traits",
+        "{edm} run -e {environment} -- coverage run -p -m "
+        "unittest discover " + options + "traits_stubs_tests"
     ]
 
     # We run in a tempdir to avoid accidentally picking up wrong traits
@@ -517,6 +517,36 @@ def locate_edm():
         edm = os.path.join(os.path.dirname(edm), "embedded", "edm.exe")
 
     return edm
+
+
+def _get_install_command_string(pkg_or_location, editable, no_deps=True):
+    """ Create and return a command string configured by the provided
+    parameters.
+
+    Parameters
+    ----------
+    pkg_or_location : str
+        Either a location in the filesystem containing setup.py or the
+        name of a package.
+    editable : bool
+        Whether to add --editable flag
+    no_deps : bool
+        Whether to add --no-dependencies flag
+
+    Returns
+    -------
+    cmd : str
+        A command string, which if executed will install the package or run
+        the setup script at the provided location.
+
+    """
+    cmd = "{edm} run -e {environment} -- python -m pip install "
+    if editable:
+        cmd += "--editable"
+    cmd += " {} ".format(pkg_or_location)
+    if no_deps:
+        cmd += "--no-dependencies"
+    return cmd
 
 
 if __name__ == "__main__":

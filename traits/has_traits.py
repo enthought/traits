@@ -3274,6 +3274,8 @@ class SingletonHasTraits(HasTraits):
     """ Singleton class that support trait attributes.
     """
 
+    @deprecated("SingletonHasTraits has been deprecated and will be removed "
+                "in the future. Avoid using it")
     def __new__(cls, *args, **traits):
         if "_the_instance" not in cls.__dict__:
             cls._the_instance = HasTraits.__new__(cls, *args, **traits)
@@ -3286,6 +3288,8 @@ class SingletonHasStrictTraits(HasStrictTraits):
         Non-trait attributes generate an exception.
     """
 
+    @deprecated("SingletonHasStrictTraits has been deprecated and will be "
+                "removed in the future. Avoid using it")
     def __new__(cls, *args, **traits):
         return SingletonHasTraits.__new__(cls, *args, **traits)
 
@@ -3295,6 +3299,8 @@ class SingletonHasPrivateTraits(HasPrivateTraits):
         being unchecked.
     """
 
+    @deprecated("SingletonHasPrivateTraits has been deprecated and will be "
+                "removed in the future. Avoid using it")
     def __new__(cls, *args, **traits):
         return SingletonHasTraits.__new__(cls, *args, **traits)
 
