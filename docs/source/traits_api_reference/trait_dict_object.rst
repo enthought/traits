@@ -9,4 +9,6 @@ Classes
 
 .. autoclass:: TraitDictEvent
 
+.. autoclass:: TraitDict
+
 .. autoclass:: TraitDictObject
