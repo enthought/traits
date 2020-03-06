@@ -8,6 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
+import copy
 import pickle
 import unittest
 
@@ -64,6 +65,19 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual({}, self.changed)
         self.assertEqual({}, self.removed)
 
+    def test_deepcopy(self):
+        td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
+                       value_validator=int_validator,
+                       notifiers=[self.notification_handler])
+        td_copy = copy.deepcopy(td)
+
+        for itm, itm_cpy in zip(td.items(), td_copy.items()):
+            self.assertTupleEqual(itm, itm_cpy)
+
+        self.assertEqual([], td_copy.notifiers)
+        self.assertEqual(td.value_validator, td_copy.value_validator)
+        self.assertEqual(td.key_validator, td_copy.key_validator)
+
     def test_setitem(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
                        value_validator=int_validator,
@@ -73,6 +87,9 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual({}, self.added)
         self.assertEqual({"a": 1}, self.changed)
         self.assertEqual({}, self.removed)
+
+        with self.assertRaises(TraitError):
+            td[5] = "a"
 
     def test_delitem(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
@@ -128,8 +145,9 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         result = td.setdefault("c", 3)
-
         self.assertEqual(3, result)
+
+        self.assertEqual(1, td.setdefault("a", 5))
 
     def test_pop(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
@@ -148,12 +166,13 @@ class TestTraitList(unittest.TestCase):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
                        value_validator=int_validator,
                        notifiers=[self.notification_handler])
-        td.popitem()
 
-        k, v = list(self.removed.items())[0]
+        items_cpy = td.copy().items()
 
-        self.assertIn(k, ["a", "b"])
-        self.assertIn(v, [1, 2])
+        itm = td.popitem()
+
+        self.assertIn(itm, items_cpy)
+        self.assertNotIn(itm, td.items())
 
         td = TraitDict({}, key_validator=str_validator,
                        value_validator=int_validator,

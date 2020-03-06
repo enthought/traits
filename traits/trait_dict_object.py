@@ -12,7 +12,7 @@ import copy
 import logging
 from weakref import ref
 
-from .trait_errors import TraitError
+from traits.trait_errors import TraitError
 
 # Set up a logger:
 logger = logging.getLogger(__name__)
@@ -68,20 +68,20 @@ class TraitDict(dict):
     Parameters
     ----------
     value : dict
-        The value for the dict
+        The initial dict.
     key_validator : callable
-        Called to validate the keys in the dict
+        Called to validate a key in the dict.
     value_validator : callable
-        Called to validate the values in the dict
+        Called to validate a value in the dict.
 
     Attributes
     ----------
     value : dict
-        The value for the dict
+        The initial dict.
     key_validator : callable
-        Called to validate the keys in the dict
+        Called to validate a key in the dict.
     value_validator : callable
-        Called to validate the values in the dict
+        Called to validate a value in the dict.
 
     """
 
@@ -94,13 +94,13 @@ class TraitDict(dict):
 
         Parameters
         ----------
-        key : Any
-            The key to be validated
+        key : A hashable type.
+            The key to be validated.
 
         Returns
         -------
-        validated_key : Any
-            The validated key
+        validated_key : A hashable type.
+            The validated key.
 
         Raises
         ------
@@ -111,17 +111,17 @@ class TraitDict(dict):
         return self._validate(key_validator, key, msg="Each key of the")
 
     def validate_value(self, value):
-        """ Validates the value with the value_validator for the TraitDict
+        """ Validates the value with the value_validator for the TraitDict.
 
         Parameters
         ----------
         value : Any
-            The value to be validated
+            The value to be validated.
 
         Returns
         -------
         validated_value : Any
-            The validated value
+            The validated value.
 
         Raises
         ------
@@ -131,7 +131,7 @@ class TraitDict(dict):
         return self._validate(value_validator, value, msg="Each value of the")
 
     def notifiy(self, added={}, changed={}, removed={}):
-        """ Call all notifiers
+        """ Call all notifiers.
 
         This simply calls all notifiers provided by the class, if any.
         The notifiers are expected to have the signature::
@@ -143,12 +143,12 @@ class TraitDict(dict):
         Parameters
         ----------
         added : dict
-            A dictionary of items that were added to the dict
+            A dictionary of items that were added to the dict.
         changed : dict
             A dictionary of items that were changed in the dict. This will
             contain the values before the change.
         removed : dict
-            A dictionary of items that were removed from the dict
+            A dictionary of items that were removed from the dict.
         """
 
         if added is None:
@@ -210,14 +210,14 @@ class TraitDict(dict):
     # ------------------------------------------------------------------------
 
     def __setitem__(self, key, value):
-        """ Set a value for the key, implements self[key] = value
+        """ Set a value for the key, implements self[key] = value.
 
         Parameters
         ----------
-        key : Any
-            The key for the value
+        key : A hashable type.
+            The key for the value.
         value : Any
-            The value to set for the corresponding key
+            The value to set for the corresponding key.
 
         Returns
         -------
@@ -226,11 +226,12 @@ class TraitDict(dict):
         Notification
         ------------
         added : dict
-            The dict of the item that was added
+            The dict of the item that was added.
         changed : dict
-            Will be an empty dict
+            A dict of the previous key value pair, if the key was present,
+            else an empty dict.
         removed : dict
-            Will be an empty dict
+            Will be an empty dict.
 
         """
         validated_key = self.validate_key(key)
@@ -251,8 +252,8 @@ class TraitDict(dict):
 
         Parameters
         ----------
-        key : Any
-            The key to be deleted
+        key : A hashable type.
+            The key to be deleted.
 
         Returns
         -------
@@ -261,11 +262,11 @@ class TraitDict(dict):
         Notification
         ------------
         added : dict
-            Will be an empty dict
+            Will be an empty dict.
         changed : dict
-            Will be an empty dict
+            Will be an empty dict.
         removed : dict
-            The dict of the item that was removed
+            The dict of the item that was removed.
 
         """
         key = self.key_validator(key)
@@ -275,7 +276,7 @@ class TraitDict(dict):
             super().__delitem__(key)
 
     def clear(self):
-        """ Remove all items from the dict
+        """ Remove all items from the dict.
 
         Returns
         -------
@@ -284,11 +285,11 @@ class TraitDict(dict):
         Notification
         ------------
         added : dict
-            Will be an empty dict
+            Will be an empty dict.
         changed : dict
-            Will be an empty dict
+            Will be an empty dict.
         removed : dict
-            The dict of the item that was removed which is a copy of the dict
+            A copy of the dict before it was removed.
 
         """
         if self != {}:
@@ -297,12 +298,12 @@ class TraitDict(dict):
             super().clear()
 
     def update(self, adict):
-        """ Update the values in the dict by the new dict
+        """ Update the values in the dict by the new dict.
 
         Parameters
         ----------
         adict : dict
-            The dict from which values will be updated into this dict
+            The dict from which values will be updated into this dict.
 
         Returns
         -------
@@ -311,11 +312,11 @@ class TraitDict(dict):
         Notification
         ------------
         added : dict
-            The dict of the item that was added
+            The dict of the item that was added.
         changed : dict
-            The dict of the item that was changed
+            The dict of the item that was changed.
         removed : dict
-            Will be an empty dict
+            Will be an empty dict.
 
         """
 
@@ -329,8 +330,8 @@ class TraitDict(dict):
 
         Parameters
         ----------
-        adict : dict
-            The dict from which values will be updated into this dict
+        key : A hashable type.
+            Key to the item.
 
         Returns
         -------
@@ -342,9 +343,9 @@ class TraitDict(dict):
             The dict of the item that was added, notification is fired
             only if the key was absent.
         changed : dict
-            The dict of the item that was changed
+            The dict of the item that was changed.
         removed : dict
-            Will be an empty dict
+            Will be an empty dict.
 
         """
 
@@ -369,8 +370,11 @@ class TraitDict(dict):
 
         Parameters
         ----------
-        adict : dict
-            The dict from which values will be updated into this dict
+        key : A hashable type.
+            Key to the dict item.
+
+        default_value : Any
+            Value to return if key is absent.
 
         Returns
         -------
@@ -440,12 +444,12 @@ class TraitDict(dict):
 
         Returns
         -------
-        validatated_dict : dict
-            The validated dict
+        validated_dict : dict
+            The validated dict.
         added : dict
-            The added items as a dict
+            The added items as a dict.
         changed : dict
-            The changed items as a dict
+            The changed items as a dict.
 
         """
 
@@ -466,21 +470,21 @@ class TraitDict(dict):
 
     def _validate(self, validator, value, msg=""):
         """ Calls the validator with the value as an argument and returns
-        a validated value or raises an error
+        a validated value or raises an error.
 
         Parameters
         ----------
         validator : callable
             The validator callable
         value : Any
-            The value to be validated
+            The value to be validated.
         msg : str
-            Error message on failure
+            Error message on failure.
 
         Returns
         -------
         validated_value : Any
-            The validated value
+            The validated value.
 
         Raises
         ------
@@ -540,22 +544,22 @@ class TraitDictObject(TraitDict):
     """
 
     def key_validator(self, key):
-        """ Calls the trait's key_trait.handler.validate
+        """ Calls the trait's key_trait.handler.validate.
 
         Parameters
         ----------
-        key : Any
-            The key to validate
+        key : A hashable type.
+            The key to validate.
 
         Returns
         -------
-        validated_key : Any
-            The validated key
+        validated_key : A hashable type.
+            The validated key.
 
         Raises
         ------
         TraitError
-            If the validation fails
+            If the validation fails.
 
         """
         object = self.object()
@@ -575,17 +579,17 @@ class TraitDictObject(TraitDict):
         Parameters
         ----------
         value : Any
-            The value to validate
+            The value to validate.
 
         Returns
         -------
         validated_value : Any
-            The validated value
+            The validated value.
 
         Raises
         ------
         TraitError
-            If the validation fails
+            If the validation fails.
 
         """
         object = self.object()
@@ -599,19 +603,19 @@ class TraitDictObject(TraitDict):
 
         return validate(object, self.name, value)
 
-    def notifier(self, trait_list, added, changed, removed):
-        """ Fire the TraitDictEvent with the provided parameters
+    def notifier(self, trait_dict, added, changed, removed):
+        """ Fire the TraitDictEvent with the provided parameters.
 
         Parameters
         ----------
-        trait_list : dict
-            The complete dictionary
+        trait_dict : dict
+            The complete dictionary.
         added : dict
-            Dict of added items
+            Dict of added items.
         changed : dict
-            Dict of changed items
+            Dict of changed items.
         removed : dict
-            Dict of removed items
+            Dict of removed items.
 
         Returns
         -------
@@ -644,7 +648,7 @@ class TraitDictObject(TraitDict):
                          notifiers=[self.notifier] + notifiers)
 
     def __deepcopy__(self, memo):
-        """ Perform a deepcopy operation.
+        """ Perform a deepcopy operation..
 
         Object is a weakref and should not be copied.
         """
