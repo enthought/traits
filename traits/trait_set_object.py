@@ -98,8 +98,6 @@ class TraitSetObject(set):
 
             super(TraitSetObject, self).__init__(value)
 
-            return
-
         except TraitError as excp:
             excp.set_prefix("Each element of the")
             raise excp
