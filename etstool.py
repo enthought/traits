@@ -177,9 +177,8 @@ def install(edm, runtime, environment, editable, source):
     install_stubs = _get_install_command_string(
         "./traits-stubs/", editable=editable
     )
-    install_copyright_checker = (
-        "{edm} run -e {environment} -- "
-        "python -m pip install copyright_header/"
+    install_copyright_checker = _get_install_command_string(
+        "copyright_header/", editable=False, no_deps=False
     )
     commands = [
         "{edm} environments create {environment} --force --version={runtime}",
