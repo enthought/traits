@@ -23,7 +23,7 @@ from .has_traits import HasPrivateTraits
 from .trait_base import Undefined, Uninitialized
 from .traits import Property
 from .trait_types import Str, Int, Bool, Instance, List, Enum, Any
-from .trait_errors import TraitError
+from .trait_errors import TraitError, TraitNotificationError
 from .trait_notifiers import TraitChangeNotifyWrapper
 from .util.weakiddict import WeakIDKeyDict
 
@@ -1023,6 +1023,9 @@ class ListenerParser(HasPrivateTraits):
         # Python name never triggers this parser, so we don't try to make that
         # a shortcut too. Whitespace should already have been stripped from the
         # start and end.
+
+        if self.text.strip().endswith(","):
+            raise TraitNotificationError("Trailing ',' is not allowed")
 
         # TODO: The use of regexes should be used throughout all of the parsing
         # functions to speed up all aspects of parsing.
