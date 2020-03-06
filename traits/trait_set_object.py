@@ -12,8 +12,8 @@ import copy
 import copyreg
 from weakref import ref
 
-from .trait_base import Undefined
-from .trait_errors import TraitError
+from traits.trait_base import Undefined
+from traits.trait_errors import TraitError
 
 
 class TraitSetEvent(object):
@@ -79,7 +79,7 @@ class TraitSet(set):
     # ------------------------------------------------------------------------
 
     def validate(self, value):
-        """ Validate value and removed values.
+        """ Validate the set of values.
 
         This simply calls the validator provided by the class, if any.
         The validator is expected to have the signature::
@@ -96,7 +96,7 @@ class TraitSet(set):
         Returns
         -------
         values : set
-            The set of validated values
+            The set of validated values.
 
         Raises
         ------
@@ -118,7 +118,7 @@ class TraitSet(set):
             return self.validator(value)
 
     def notify(self, removed, added):
-        """ Call all notifiers
+        """ Call all notifiers.
 
         This simply calls all notifiers provided by the class, if any.
         The notifiers are expected to have the signature::
@@ -204,7 +204,7 @@ class TraitSet(set):
         Parameters
         ----------
         value : iterable
-            The other iterable
+            The other iterable.
 
         Returns
         -------
@@ -225,7 +225,7 @@ class TraitSet(set):
         Parameters
         ----------
         value : iterable
-            The other iterable
+            The other iterable.
 
         Returns
         -------
@@ -240,12 +240,12 @@ class TraitSet(set):
             self.notify(removed, Undefined)
 
     def intersection_update(self, value):
-        """  Remove all elements of set which are not common to another set
+        """  Remove all elements of set which are not common to another set.
 
         Parameters
         ----------
         value : iterable
-            The other iterable
+            The other iterable.
 
         Returns
         -------
@@ -359,7 +359,7 @@ class TraitSet(set):
         Returns
         -------
         item : Any
-            An element from the set
+            An element from the set.
 
         Raises
         ------
@@ -414,12 +414,12 @@ class TraitSet(set):
         Parameters
         ----------
         value : Any
-            A value
+            A value.
 
         Returns
         -------
         self : set
-            The updated set
+            The updated set.
 
         """
         self.intersection_update(value)
@@ -431,12 +431,12 @@ class TraitSet(set):
         Parameters
         ----------
         value : Any
-            A value
+            A value.
 
         Returns
         -------
         self : set
-            The updated set
+            The updated set.
 
         """
         self.symmetric_difference_update(value)
@@ -448,12 +448,12 @@ class TraitSet(set):
         Parameters
         ----------
         value : Any
-            A value
+            A value.
 
         Returns
         -------
         self : set
-            The updated set
+            The updated set.
 
         """
         self.difference_update(value)
@@ -512,7 +512,7 @@ class TraitSetObject(TraitSet):
         Parameters
         ----------
         value : set
-            set of values that need to be validated
+            set of values that need to be validated.
 
         Returns
         -------
@@ -522,7 +522,7 @@ class TraitSetObject(TraitSet):
         ------
         TraitError
             On validation failure for the inner trait or if the size of the
-            list exceeds the specified bounds
+            list exceeds the specified bounds.
 
         """
         object = self.object()
@@ -552,9 +552,9 @@ class TraitSetObject(TraitSet):
         Parameters
         ----------
         removed : set
-            Set of values that were removed
+            Set of values that were removed.
         added : set
-            Set of values that were added
+            Set of values that were added.
 
         Returns
         -------
