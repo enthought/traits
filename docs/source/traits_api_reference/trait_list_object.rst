@@ -9,6 +9,4 @@ Classes
 
 .. autoclass:: TraitListEvent
 
-.. autoclass:: TraitList
-
 .. autoclass:: TraitListObject
