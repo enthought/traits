@@ -1025,7 +1025,8 @@ class ListenerParser(HasPrivateTraits):
         # start and end.
 
         if self.text.strip().endswith(","):
-            raise TraitNotificationError("Trailing ',' is not allowed")
+            raise TraitNotificationError("Error parsing name. "
+                                         "Trailing ',' is not allowed")
 
         # TODO: The use of regexes should be used throughout all of the parsing
         # functions to speed up all aspects of parsing.
