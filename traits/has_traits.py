@@ -1355,7 +1355,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         trait_names = self.trait_names()
         method_names = [method for method in self._each_trait_method(self)]
         class_attrs = list(vars(self.__class__).keys())
-        return trait_names + method_names + class_attrs
+        return list(
+            set(trait_names + method_names + class_attrs + super().__dir__()))
 
     def copy_traits(
         self, other, traits=None, memo=None, copy=None, **metadata
