@@ -26,6 +26,7 @@ from traits.api import (
     TraitError,
     TraitListEvent,
     TraitListObject,
+    TraitNotificationError,
     Undefined,
     cached_property,
     on_trait_change,
@@ -115,6 +116,13 @@ class ArgCheckDecorator(ArgCheckBase):
         self.tc.assertEqual(name, "value")
         self.tc.assertEqual(old, (self.value - 1))
         self.tc.assertEqual(new, self.value)
+
+
+class ArgCheckDecoratorTrailingComma(ArgCheckDecorator):
+    @on_trait_change("int1, int2,")
+    def arg_check(self, object, name, old, new):
+        self.calls += 1
+        self.tc.assertIs(object, self)
 
 
 class BaseInstance(HasTraits):
@@ -468,12 +476,22 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(ac.calls, (3 * 5))
         self.assertEqual(ac.value, (2 * 3))
 
+    def test_arg_check_trailing_comma(self):
+        ac = ArgCheckSimple(tc=self)
+
+        with self.assertRaises(TraitNotificationError):
+            ac.on_trait_change(ac.arg_check0, "int1, int2,")
+
     def test_arg_check_decorator(self):
         ac = ArgCheckDecorator(tc=self)
         for i in range(3):
             ac.value += 1
         self.assertEqual(ac.calls, (3 * 5))
         self.assertEqual(ac.value, 3)
+
+    def test_arg_check_decorator_trailing_comma(self):
+        with self.assertRaises(TraitNotificationError):
+            ArgCheckDecoratorTrailingComma(tc=self)
 
     def test_instance_simple_value(self):
         inst = InstanceSimpleValue(tc=self)
