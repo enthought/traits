@@ -528,7 +528,7 @@ class TraitList(list):
         self[:] = self[::-1]
         index = slice(0, len(self), None)
 
-        # Notes is not fired if added == removed, so make them unequal
+        # Notification is not fired if added == removed, so make them unequal
         added = []
         removed = Undefined
         self.notify(index, removed, added)
