@@ -11,15 +11,15 @@
 import unittest
 
 from traits.trait_errors import TraitError
-from traits.trait_set_object import TraitSet
+from traits.trait_set_object import TraitSet, adapt_trait_validator
 from traits.trait_types import _validate_int
 
 
-def int_validator(value):
+def int_validator(current_set, value):
     return {_validate_int(v) for v in value}
 
 
-def string_validator(value):
+def string_validator(current_set, value):
     ret = set()
     for v in value:
         if isinstance(v, str):
@@ -52,6 +52,40 @@ class TestTraitSet(unittest.TestCase):
         self.assertSetEqual(ts, {1, 2, 3})
         self.assertEqual(ts.validator, int_validator)
         self.assertEqual(ts.notifiers, [])
+
+    def test_adapt_trait_validator(self):
+
+        def bool_validator(object, name, value):
+            if isinstance(value, bool):
+                return value
+            else:
+                raise TraitError
+
+        # Fail without adaptor
+        with self.assertRaises(TypeError):
+            tl = TraitSet({}, validator=bool_validator)
+
+        # Attach the adaptor
+        list_bool_validator = adapt_trait_validator(bool_validator)
+
+        # It now works!
+        tl_2 = TraitSet({}, validator=list_bool_validator)
+        tl_2.update([True, False, True])
+
+        # Decorate with set adaptor
+        @adapt_trait_validator
+        def bool_validator(object, name, value):
+            if isinstance(value, bool):
+                return value
+            else:
+                raise TraitError
+
+        # Still working
+        tl = TraitSet({}, validator=bool_validator)
+        tl.update([True, False, True])
+
+        with self.assertRaises(TraitError):
+            tl.update(["invalid"])
 
     def test_notification(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,

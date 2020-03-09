@@ -16,6 +16,37 @@ from traits.trait_base import Undefined
 from traits.trait_errors import TraitError
 
 
+def adapt_trait_validator(trait_validator):
+    """ Adapt a trait validator to work as a trait set validator.
+
+    Parameters
+    ----------
+    trait_validator : callable
+    The trait validator is expected to have the signature::
+
+        validator(object, name, value)
+
+
+    Returns
+    -------
+    set_trait_validator : callable
+        The trait validator that has been adapted for sets.
+
+    """
+
+    def validator(trait_set, value):
+        try:
+            return {
+                trait_validator(trait_set, "items", item)
+                for item in value
+            }
+        except TraitError as excp:
+            excp.set_prefix("Each element of the")
+            raise excp
+
+    return validator
+
+
 class TraitSetEvent(object):
     """ An object reporting in-place changes to a traits sets.
 
@@ -111,10 +142,11 @@ class TraitSet(set):
                 value = {value}
 
         # Use getattr as pickle can call `extend` before validator is set.
-        if getattr(self, 'validator', None) is None:
+        validator = getattr(self, 'validator', None)
+        if validator is None:
             return value
         else:
-            return self.validator(value)
+            return validator(self, value)
 
     def notify(self, removed, added):
         """ Call all notifiers.
@@ -595,13 +627,15 @@ class TraitSetObject(TraitSet):
         super().__init__(value, validator=self.validator,
                          notifiers=[self.notifier] + notifiers)
 
-    def validator(self, value):
+    def validator(self, current_set, value):
         """ Validates the value by calling the inner trait's validate method
         and also ensures that the size of the list is within the specified
         bounds.
 
         Parameters
         ----------
+        current_set : set
+            The current contents of the set.
         value : set
             set of values that need to be validated.
 
