@@ -10,12 +10,23 @@
 
 import unittest
 
+from traits.trait_errors import TraitError
 from traits.trait_set_object import TraitSet
 from traits.trait_types import _validate_int
 
 
 def int_validator(value):
     return {_validate_int(v) for v in value}
+
+
+def string_validator(value):
+    ret = set()
+    for v in value:
+        if isinstance(v, str):
+            ret.add(v)
+        else:
+            raise TraitError
+    return ret
 
 
 class TestTraitSet(unittest.TestCase):
@@ -58,6 +69,13 @@ class TestTraitSet(unittest.TestCase):
         self.assertSetEqual(ts, {1, 2, 3, 5})
         self.assertEqual(set(), self.removed)
         self.assertEqual({5}, self.added)
+
+        ts = TraitSet({"one", "two", "three"}, validator=string_validator,
+                      notifiers=[self.notification_handler])
+        ts.add("four")
+        self.assertSetEqual(ts, {"one", "two", "three", "four"})
+        self.assertEqual(set(), self.removed)
+        self.assertEqual({"four"}, self.added)
 
     def test_remove(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,

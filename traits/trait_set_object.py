@@ -100,15 +100,14 @@ class TraitSet(set):
 
         Raises
         ------
-        TraitError
+        TraitError : Exception
             If validation fails.
         """
 
         if not isinstance(value, set):
-            try:
-                # FIXME: str type will turn into a set of letters
+            if self._is_non_str_iterable(value):
                 value = set(value)
-            except TypeError:
+            else:
                 value = {value}
 
         # Use getattr as pickle can call `extend` before validator is set.
@@ -198,90 +197,6 @@ class TraitSet(set):
         state['notifiers'] = []
         self.__dict__.update(state)
 
-    def update(self, value):
-        """ Update a set with the union of itself and others.
-
-        Parameters
-        ----------
-        value : iterable
-            The other iterable.
-
-        Returns
-        -------
-        None
-
-        """
-        validated_values = self.validate(value)
-        added = validated_values.difference(self)
-
-        if len(added) > 0:
-            self.notify(Undefined, added)
-
-        super().update(added)
-
-    def difference_update(self, value):
-        """  Remove all elements of another set from this set.
-
-        Parameters
-        ----------
-        value : iterable
-            The other iterable.
-
-        Returns
-        -------
-        None
-
-        """
-        validated_values = self.validate(value)
-        removed = self.intersection(value)
-        super().difference_update(validated_values)
-
-        if len(removed) > 0:
-            self.notify(removed, Undefined)
-
-    def intersection_update(self, value):
-        """  Remove all elements of set which are not common to another set.
-
-        Parameters
-        ----------
-        value : iterable
-            The other iterable.
-
-        Returns
-        -------
-        None
-
-        """
-        validated_values = self.validate(value)
-        removed = self.difference(self.intersection(validated_values))
-        super().intersection_update(validated_values)
-        if len(removed) > 0:
-            self.notify(removed, Undefined)
-
-    def symmetric_difference_update(self, value):
-        """ Return the symmetric difference of two sets as a new set.
-
-        (i.e. all elements that are in exactly one of the sets.)
-
-        Parameters
-        ----------
-        value : iterable
-
-        Returns
-        -------
-        None
-
-        """
-        validated_values = self.validate(value)
-
-        removed = self.intersection(validated_values)
-        added = validated_values.difference(self)
-
-        super().symmetric_difference_update(validated_values)
-
-        if len(removed) + len(added) > 0:
-            self.notify(removed, added)
-
     def add(self, value):
         """ Add an element to a set.
 
@@ -292,8 +207,13 @@ class TraitSet(set):
         value : Any
             The value to add to the set.
 
-        Returns
-        -------
+        Notes
+        -----
+        Notification:
+            removed : Undefined
+                Will be Undefined.
+            added : set
+                A set containing the added value.
 
         """
         validated_values = self.validate(value)
@@ -315,13 +235,18 @@ class TraitSet(set):
         value : Any
             An element in the set
 
-        Returns
-        -------
-        None
-
         Raises
         ------
-        KeyError
+        KeyError : Exception
+            If the value is not found in the set.
+
+        Notes
+        -----
+        Notification:
+            removed : set
+                A set containing the removed value.
+            added : Undefined
+                Will be Undefined.
 
         """
         validated_values = self.validate(value)
@@ -332,6 +257,107 @@ class TraitSet(set):
         super().remove(value)
         self.notify({value}, Undefined)
 
+    def update(self, value):
+        """ Update a set with the union of itself and others.
+
+        Parameters
+        ----------
+        value : iterable
+            The other iterable.
+
+        Notes
+        -----
+        Notification:
+            removed : Undefined
+                Will be Undefined.
+            added : set
+                A set containing the added values.
+
+        """
+        validated_values = self.validate(value)
+        added = validated_values.difference(self)
+
+        if len(added) > 0:
+            self.notify(Undefined, added)
+
+        super().update(added)
+
+    def difference_update(self, value):
+        """  Remove all elements of another set from this set.
+
+        Parameters
+        ----------
+        value : iterable
+            The other iterable.
+
+        Notes
+        -----
+        Notification:
+            removed : set
+                A set containing the removed values.
+            added : Undefined
+                Will be Undefined.
+
+        """
+        validated_values = self.validate(value)
+        removed = self.intersection(value)
+        super().difference_update(validated_values)
+
+        if len(removed) > 0:
+            self.notify(removed, Undefined)
+
+    def intersection_update(self, value):
+        """  Remove all elements of set which are not common to another set.
+
+        Parameters
+        ----------
+        value : iterable
+            The other iterable.
+
+        Notes
+        -----
+        Notification:
+            removed : set
+                A set containing the removed values.
+            added : Undefined
+                Will be Undefined.
+
+
+        """
+        validated_values = self.validate(value)
+        removed = self.difference(self.intersection(validated_values))
+        super().intersection_update(validated_values)
+        if len(removed) > 0:
+            self.notify(removed, Undefined)
+
+    def symmetric_difference_update(self, value):
+        """ Return the symmetric difference of two sets as a new set.
+
+        (i.e. all elements that are in exactly one of the sets.)
+
+        Parameters
+        ----------
+        value : iterable
+
+        Notes
+        -----
+        Notification:
+            removed : set
+                A set containing the removed values.
+            added : set
+                A set containing the added values.
+
+        """
+        validated_values = self.validate(value)
+
+        removed = self.intersection(validated_values)
+        added = validated_values.difference(self)
+
+        super().symmetric_difference_update(validated_values)
+
+        if len(removed) + len(added) > 0:
+            self.notify(removed, added)
+
     def discard(self, value):
         """ Remove an element from a set if it is a member.
 
@@ -341,10 +367,15 @@ class TraitSet(set):
         ----------
         value : Any
             An item in the set
+        Notes
+        -----
+        Notification:
+            Fired if a value is removed.
 
-        Returns
-        -------
-        None
+            removed : set
+                A set containing the removed values.
+            added : Undefined
+                Will be Undefined.
 
         """
         try:
@@ -361,9 +392,13 @@ class TraitSet(set):
         item : Any
             An element from the set.
 
-        Raises
-        ------
-        KeyError
+        Notes
+        -----
+        Notification:
+            removed : set
+                A set containing the removed values.
+            added : Undefined
+                Will be Undefined.
 
         """
         removed = super().pop()
@@ -372,10 +407,13 @@ class TraitSet(set):
 
     def clear(self):
         """ Remove all elements from this set.
-
-        Returns
-        -------
-        None
+        Notes
+        -----
+        Notification:
+            removed : set
+                A set containing the removed values.
+            added : Undefined
+                Will be Undefined.
 
         """
         removed = set(self)
@@ -397,12 +435,20 @@ class TraitSet(set):
         Parameters
         ----------
         value : Any
-            A value
+            A value.
 
         Returns
         -------
         self : set
-            The updated set
+            The updated set.
+
+        Notes
+        -----
+        Notification:
+            removed : Undefined
+                Will be Undefined.
+            added : set
+                Set of added values.
 
         """
         self.update(value)
@@ -421,6 +467,15 @@ class TraitSet(set):
         self : set
             The updated set.
 
+        Notes
+        -----
+        Notification:
+            removed : set
+                A set containing the removed values.
+            added : Undefined
+                Will be Undefined.
+
+
         """
         self.intersection_update(value)
         return self
@@ -437,6 +492,13 @@ class TraitSet(set):
         -------
         self : set
             The updated set.
+        Notes
+        -----
+        Notification:
+            removed : set
+                A set containing the removed values.
+            added : set
+                A set containing the added values.
 
         """
         self.symmetric_difference_update(value)
@@ -454,10 +516,39 @@ class TraitSet(set):
         -------
         self : set
             The updated set.
+        Notes
+        -----
+        Notification:
+            removed : set
+                A set containing the removed values.
+            added : Undefined
+                Will be Undefined.
 
         """
         self.difference_update(value)
         return self
+
+    def _is_non_str_iterable(self, value):
+        """ Returns True if the value is an iterable, but is not a string.
+
+        Parameters
+        ----------
+        value : Any
+            The value to test.
+
+        Returns
+        -------
+        is_iterable : bool
+            True if not a str type and is a iterable.
+
+        """
+        if isinstance(value, str):
+            return False
+        try:
+            iter(value)
+            return True
+        except TypeError:
+            return False
 
 
 class TraitSetObject(TraitSet):
