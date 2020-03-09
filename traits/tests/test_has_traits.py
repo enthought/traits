@@ -366,18 +366,6 @@ class TestHasTraits(unittest.TestCase):
 
         self.assertTrue(foo.traits_inited())
 
-    def test___dir__(self):
-        class Base(HasTraits):
-            pass
-        base_obj = Base()
-        names = dir(base_obj)
-
-        # Issue 925: _notifiers not shown in dir()
-        self.assertIn("_notifiers", names)
-
-        # Ensure no duplicates
-        self.assertEqual(len(set(names)), len(names))
-
 
 class TestObjectNotifiers(unittest.TestCase):
     """ Test calling object notifiers. """
