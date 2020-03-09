@@ -69,7 +69,6 @@ from .editor_factories import (
 
 # Constants
 
-MutableTypes = (list, dict)
 SetTypes = SequenceTypes + (set,)
 
 # Numeric type fast validator definitions
