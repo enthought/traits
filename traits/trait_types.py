@@ -1029,14 +1029,6 @@ class Constant(TraitType):
     #: The standard metadata for the trait:
     metadata = {"type": "constant", "transient": True}
 
-    def __init__(self, value, **metadata):
-        if type(value) in MutableTypes:
-            raise TraitError(
-                "Cannot define a constant using a mutable list or dictionary"
-            )
-
-        super(Constant, self).__init__(value, **metadata)
-
 
 class Delegate(TraitType):
     """ A trait type whose value is delegated to a trait on another object.
