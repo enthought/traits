@@ -19,9 +19,18 @@ from traits.trait_errors import TraitError
 def adapt_trait_validator(trait_validator):
     """ Adapt a trait validator to work as a trait list validator.
 
+    Parameters
+    ----------
+    trait_validator : callable
     The trait validator is expected to have the signature::
 
         validator(object, name, value)
+
+
+    Returns
+    -------
+    list_trait_validator : callable
+        The trait validator that has been adapted for lists.
 
     """
 
@@ -233,19 +242,16 @@ class TraitList(list):
         value : Any
             The value to set at the index.
 
-        Returns
-        -------
-        None
-
-        Notification
-        ------------
-        index : int
-            The index of the value.
-        added : Any
-            The value that is set.
-        removed : Any
-            The removed value or Undefined if no value was previously
-            present at the index.
+        Notes
+        -----
+        Notification:
+            index : int
+                The index of the value.
+            added : Any
+                The value that is set.
+            removed : Any
+                The removed value or Undefined if no value was previously
+                present at the index.
 
         """
         removed = self._get_removed(index)
@@ -272,19 +278,15 @@ class TraitList(list):
         index : int
             Index of the element to be deleted.
 
-        Returns
-        -------
-        None
-
-        Notification
-        ------------
-        index : int
-            The index of the value that is deleted.
-        added : Undefined
-        removed : value
-            The removed value or Undefined if no value was previously
-            present at the index.
-
+        Notes
+        -----
+        Notification:
+            index : int
+                The index of the value that is deleted.
+            added : Undefined
+            removed : value
+                The removed value or Undefined if no value was previously
+                present at the index.
 
         """
         removed = self._get_removed(index)
@@ -307,17 +309,16 @@ class TraitList(list):
         object : Any
             The item to append to the list.
 
-        Returns
-        -------
-        None
 
-        Notification
-        ------------
-        index : int
-            The index of the newly appended item.
-        added : Any
-            The  new item
-        removed : Undefined
+        Notes
+        -----
+        Notification:
+            index : int
+                The index of the newly appended item.
+            added : Any
+                The new item
+            removed : Undefined
+                Will be Undefined
 
         """
         index = len(self)
@@ -336,17 +337,16 @@ class TraitList(list):
         iterable : iterable
             Any iterable type
 
-        Returns
-        -------
-        None
 
-        Notification
-        ------------
-        index : slice
-            The slice from current_length to new_length if successful.
-        added : list
-            The newly added items.
-        removed : Undefined
+        Notes
+        -----
+        Notification:
+            index : slice
+                The slice from current_length to new_length if successful.
+            added : list
+                The newly added items.
+            removed : Undefined
+                Will be Undefined
 
         """
         index = slice(len(self), len(self) + len(iterable))
@@ -367,17 +367,16 @@ class TraitList(list):
         object : Any
             The object to insert.
 
-        Returns
-        -------
-        None
 
-        Notification
-        ------------
-        index : int
-            The index before which the item was inserted.
-        added : item
-            The newly added items
-        removed : Undefined
+        Notes
+        -----
+        Notification:
+            index : int
+                The index before which the item was inserted.
+            added : item
+                The newly added items
+            removed : Undefined
+                Will be Undefined
 
         """
         removed = Undefined
@@ -391,18 +390,16 @@ class TraitList(list):
     def clear(self):
         """ Remove all items from the list
 
-        Returns
-        -------
-        None
 
-        Notification
-        ------------
-        index : slice
-            The range of the slice will be 0 to len(self).
-        added : list
-            The empty list [].
-        removed : list
-            The removed items.
+        Notes
+        -----
+        Notification:
+            index : slice
+                The range of the slice will be 0 to len(self).
+            added : list
+                The empty list [].
+            removed : list
+                The removed items.
 
         """
         index = slice(0, len(self), None)
@@ -429,13 +426,15 @@ class TraitList(list):
         IndexError
             If list is empty or index is out of range.
 
-        Notification
-        ------------
-        index : int
-            The normalized index between 0 and len(self).
-        added : Undefined
-        removed : item
-            The removed item
+        Notes
+        -----
+        Notification:
+            index : int
+                The normalized index between 0 and len(self).
+            added : Undefined
+                Will be Undefined
+            removed : item
+                The removed item
 
         """
 
@@ -457,22 +456,20 @@ class TraitList(list):
         value : Any
             A value contained in the list.
 
-        Returns
-        -------
-        None
-
         Raises
         ------
         ValueError
             If the value is not present.
 
-        Notification
-        ------------
-        index : int
-            The index between 0 and len(self).
-        added : Undefined
-        removed : item
-            The removed item.
+        Notes
+        -----
+        Notification:
+            index : int
+                The index between 0 and len(self).
+            added : Undefined
+                Will be Undefined
+            removed : item
+                The removed item.
 
         """
         index = self.index(value)
@@ -495,22 +492,21 @@ class TraitList(list):
         reverse : bool
             If true, the resulting list will be sorted in descending order.
 
-        Returns
-        -------
-        None
+        Notes
+        -----
+        Notification:
+            index : slice
+                The slice between 0 and len(self)
+            added : list
+                Will be [].
+            removed : Undefined
+                Will be Undefined
 
-        Notification
-        ------------
-        index : slice
-            The slice between 0 and len(self)
-        added : list
-            Will be [].
-        removed : Undefined
         """
         self[:] = sorted(self, key=key, reverse=reverse)
         index = slice(0, len(self), None)
 
-        # Notification is not fired if added == removed, so make them unequal
+        # Notes is not fired if added == removed, so make them unequal
         added = []
         removed = Undefined
         self.notify(index, removed, added)
@@ -518,23 +514,21 @@ class TraitList(list):
     def reverse(self):
         """ Reverse the order of the items in the list *IN PLACE*.
 
-        Returns
-        -------
-        None
-
-        Notification
-        ------------
-        index : slice
-            The slice between 0 and len(self).
-        added : list
-            Will be []
-        removed : Undefined.
+        Notes
+        -----
+        Notification:
+            index : slice
+                The slice between 0 and len(self).
+            added : list
+                Will be []
+            removed : Undefined.
+                Will be Undefined
 
         """
         self[:] = self[::-1]
         index = slice(0, len(self), None)
 
-        # Notification is not fired if added == removed, so make them unequal
+        # Notes is not fired if added == removed, so make them unequal
         added = []
         removed = Undefined
         self.notify(index, removed, added)
@@ -547,17 +541,15 @@ class TraitList(list):
         other : Any
             The item to add to the list.
 
-        Returns
-        -------
-        None
-
-        Notification
-        ------------
-        index : slice
-            Slice ranging from current_length to new_length.
-        added : list
-            The  new values that were added.
-        removed : []
+        Notes
+        -----
+        Notification:
+            index : slice
+                Slice ranging from current_length to new_length.
+            added : list
+                The  new values that were added.
+            removed : list
+                The empty list [].
 
         """
         self.extend(other)
@@ -571,17 +563,15 @@ class TraitList(list):
         count : int
             Number of times to duplicate the list.
 
-        Returns
-        -------
-        None
-
-        Notification
-        ------------
-        index : slice
-            Slice ranging from current_length to new_length.
-        added : list
-            The  new values that were added.
-        removed : []
+        Notes
+        -----
+        Notification:
+            index : slice
+                Slice ranging from current_length to new_length.
+            added : list
+                The  new values that were added.
+            removed : list
+                The empty list [].
 
         """
         if count > 1:
@@ -766,10 +756,6 @@ class TraitListObject(TraitList):
             Value or list of values that were removed
         added : value or list of values
             Value or list of values that were added
-
-        Returns
-        -------
-        None
 
         """
         is_trait_none = self.trait is None
