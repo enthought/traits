@@ -63,14 +63,14 @@ class TestTraitSet(unittest.TestCase):
 
         # Fail without adaptor
         with self.assertRaises(TypeError):
-            tl = TraitSet({}, validator=bool_validator)
+            TraitSet({}, validator=bool_validator)
 
         # Attach the adaptor
         list_bool_validator = adapt_trait_validator(bool_validator)
 
         # It now works!
-        tl_2 = TraitSet({}, validator=list_bool_validator)
-        tl_2.update([True, False, True])
+        ts_2 = TraitSet({}, validator=list_bool_validator)
+        ts_2.update([True, False, True])
 
         # Decorate with set adaptor
         @adapt_trait_validator
@@ -81,11 +81,11 @@ class TestTraitSet(unittest.TestCase):
                 raise TraitError
 
         # Still working
-        tl = TraitSet({}, validator=bool_validator)
-        tl.update([True, False, True])
+        ts = TraitSet({}, validator=bool_validator)
+        ts.update([True, False, True])
 
         with self.assertRaises(TraitError):
-            tl.update(["invalid"])
+            ts.update(["invalid"])
 
     def test_notification(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
