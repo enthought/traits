@@ -104,7 +104,8 @@ class TraitDict(dict):
 
         Raises
         ------
-        TraitError
+        TraitError : Exception
+            If the value cannot be validated.
 
         """
         key_validator = getattr(self, 'key_validator', None)
@@ -125,7 +126,8 @@ class TraitDict(dict):
 
         Raises
         ------
-        TraitError
+        TraitError : Exception
+            If the value cannot be validated.
         """
         value_validator = getattr(self, 'value_validator', None)
         return self._validate(value_validator, value, msg="Each value of the")
@@ -219,19 +221,16 @@ class TraitDict(dict):
         value : Any
             The value to set for the corresponding key.
 
-        Returns
-        -------
-        None
-
-        Notification
-        ------------
-        added : dict
-            The dict of the item that was added.
-        changed : dict
-            A dict of the previous key value pair, if the key was present,
-            else an empty dict.
-        removed : dict
-            Will be an empty dict.
+        Notes
+        -----
+        Notification:
+            added : dict
+                The dict of the item that was added.
+            changed : dict
+                A dict of the previous key value pair, if the key was present,
+                else an empty dict.
+            removed : dict
+                Will be an empty dict.
 
         """
         validated_key = self.validate_key(key)
@@ -255,18 +254,15 @@ class TraitDict(dict):
         key : A hashable type.
             The key to be deleted.
 
-        Returns
-        -------
-        None
-
-        Notification
-        ------------
-        added : dict
-            Will be an empty dict.
-        changed : dict
-            Will be an empty dict.
-        removed : dict
-            The dict of the item that was removed.
+        Notes
+        -----
+        Notification:
+            added : dict
+                Will be an empty dict.
+            changed : dict
+                Will be an empty dict.
+            removed : dict
+                The dict of the item that was removed.
 
         """
         key = self.key_validator(key)
@@ -278,18 +274,15 @@ class TraitDict(dict):
     def clear(self):
         """ Remove all items from the dict.
 
-        Returns
-        -------
-        None
-
-        Notification
-        ------------
-        added : dict
-            Will be an empty dict.
-        changed : dict
-            Will be an empty dict.
-        removed : dict
-            A copy of the dict before it was removed.
+        Notes
+        -----
+        Notification:
+            added : dict
+                Will be an empty dict.
+            changed : dict
+                Will be an empty dict.
+            removed : dict
+                A copy of the dict before it was removed.
 
         """
         if self != {}:
@@ -305,18 +298,15 @@ class TraitDict(dict):
         adict : dict
             The dict from which values will be updated into this dict.
 
-        Returns
-        -------
-        None
-
-        Notification
-        ------------
-        added : dict
-            The dict of the item that was added.
-        changed : dict
-            The dict of the item that was changed.
-        removed : dict
-            Will be an empty dict.
+        Notes
+        -----
+        Notification:
+            added : dict
+                The dict of the item that was added.
+            changed : dict
+                The dict of the item that was changed.
+            removed : dict
+                Will be an empty dict.
 
         """
 
@@ -333,19 +323,16 @@ class TraitDict(dict):
         key : A hashable type.
             Key to the item.
 
-        Returns
-        -------
-        None
-
-        Notification
-        ------------
-        added : dict
-            The dict of the item that was added, notification is fired
-            only if the key was absent.
-        changed : dict
-            The dict of the item that was changed.
-        removed : dict
-            Will be an empty dict.
+        Notes
+        -----
+        Notification:
+            added : dict
+                The dict of the item that was added, notification is fired
+                only if the key was absent.
+            changed : dict
+                The dict of the item that was changed.
+            removed : dict
+                Will be an empty dict.
 
         """
 
@@ -376,19 +363,16 @@ class TraitDict(dict):
         default_value : Any
             Value to return if key is absent.
 
-        Returns
-        -------
-        None
-
-        Notification
-        ------------
-        added : dict
-            Will be an empty dict
-        changed : dict
-            The dict of the item that was changed
-        removed : dict
-            The dict of the item that was removed, notification is fired only
-            if the key was present.
+        Notes
+        -----
+        Notification:
+            added : dict
+                Will be an empty dict
+            changed : dict
+                The dict of the item that was changed
+            removed : dict
+                The dict of the item that was removed, notification fired only
+                if the key was present.
 
         """
         key = self.validate_key(key)
@@ -411,17 +395,18 @@ class TraitDict(dict):
 
         Raises
         ------
-        KeyError
+        KeyError : Exception
             If the dict is empty
 
-        Notification
-        ------------
-        added : dict
-            Will be an empty dict
-        changed : dict
-            Will be an empty dict
-        removed : dict
-            The dict of the item that was removed.
+        Notes
+        -----
+        Notification:
+            added : dict
+                Will be an empty dict
+            changed : dict
+                Will be an empty dict
+            removed : dict
+                The dict of the item that was removed.
 
         """
         item = super().popitem()
@@ -488,7 +473,8 @@ class TraitDict(dict):
 
         Raises
         ------
-        TraitError
+        TraitError : Exception
+            If the value cannot be validated.
 
         """
         if validator is None:
