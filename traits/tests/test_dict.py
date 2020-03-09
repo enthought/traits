@@ -29,7 +29,6 @@ def create_listener():
         listener.new = new
         listener.old = old
         listener.called += 1
-        return
 
     listener.initialize = lambda: initialize_listener(listener)
     return initialize_listener(listener)
@@ -63,7 +62,6 @@ class TestDict(unittest.TestCase):
             @on_trait_change("name")
             def _fire_modified_event(self):
                 self.modified = True
-                return
 
         class Bar(HasTraits):
             foos = Dict(Str, Foo)
@@ -72,7 +70,6 @@ class TestDict(unittest.TestCase):
             @on_trait_change("foos_items,foos.modified")
             def _fire_modified_event(self, obj, trait_name, old, new):
                 self.modified = True
-                return
 
         bar = Bar()
         listener = create_listener()
@@ -101,8 +98,6 @@ class TestDict(unittest.TestCase):
         bar.foos["fred"] = Foo(name="wilma")
         self.assertEqual(1, listener.called)
         self.assertEqual("modified", listener.trait_name)
-
-        return
 
     def test_validate(self):
         """ Check the validation method.

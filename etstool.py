@@ -107,7 +107,6 @@ default_runtime = "3.6"
 
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
 
-
 # Click options shared by multiple commands.
 edm_option = click.option(
     "--edm",
@@ -154,9 +153,8 @@ def cli():
     help="Name of the EDM environment to install",
 )
 @editable_option
-@click.option("--docs/--no-docs", default=True)
 @click.option("--source/--no-source", default=False)
-def install(edm, runtime, environment, editable, docs, source):
+def install(edm, runtime, environment, editable, source):
     """ Install project and dependencies into a clean EDM environment and
     optionally install further dependencies required for building
     documentation.
@@ -166,33 +164,30 @@ def install(edm, runtime, environment, editable, docs, source):
     dependencies = common_dependencies.copy()
     if sys.platform != "win32":
         dependencies.update(unix_dependencies)
+    # For Python 3.5, we don't have mypy builds from packages.enthought.com.
+    if runtime != "3.5":
+        dependencies.add("mypy")
+
     packages = " ".join(dependencies)
 
     # EDM commands to set up the development environment. The installation
     # of TraitsUI from EDM installs Traits as a dependency, so we need
     # to explicitly uninstall it before re-installing from source.
+    install_traits = _get_install_command_string(".", editable=editable)
+    install_stubs = _get_install_command_string(
+        "./traits-stubs/", editable=editable
+    )
+    install_copyright_checker = _get_install_command_string(
+        "copyright_header/", editable=False, no_deps=False
+    )
     commands = [
         "{edm} environments create {environment} --force --version={runtime}",
         "{edm} --config edm.yaml install -y -e {environment} " + packages,
         "{edm} plumbing remove-package -e {environment} traits",
+        install_traits,
+        install_stubs,
+        install_copyright_checker,
     ]
-    if editable:
-        install_cmd = (
-            "{edm} run -e {environment} -- "
-            "python -m pip install --editable . --no-dependencies"
-        )
-    else:
-        install_cmd = (
-            "{edm} run -e {environment} -- "
-            "python -m pip install . --no-dependencies"
-        )
-    commands.append(install_cmd)
-
-    install_copyright_checker = (
-        "{edm} run -e {environment} -- "
-        "python -m pip install copyright_header/"
-    )
-    commands.append(install_copyright_checker)
 
     click.echo("Creating environment '{environment}'".format(**parameters))
     execute(commands, parameters)
@@ -214,16 +209,7 @@ def install(edm, runtime, environment, editable, docs, source):
             "{edm} run -e {environment} -- " + command for command in commands
         ]
         execute(commands, parameters)
-    if docs:
-        commands = [
-            "{edm} run -e {environment} -- pip install -r "
-            "ci-doc-requirements.txt --no-dependencies"
-        ]
-        execute(commands, parameters)
-        click.echo(
-            "Installed enthought-sphinx-theme in '"
-            "{environment}'.".format(**parameters)
-        )
+
     click.echo("Done install")
 
 
@@ -261,8 +247,13 @@ def test(edm, runtime, verbose, environment):
     options = "--verbose " if verbose else ""
     commands = [
         "{edm} run -e {environment} -- coverage run -p -m "
-        "unittest discover " + options + "traits"
+        "unittest discover " + options + "traits",
     ]
+    if runtime != "3.5":
+        commands += [
+            "{edm} run -e {environment} -- coverage run -p -m "
+            "unittest discover " + options + "traits_stubs_tests",
+        ]
 
     # We run in a tempdir to avoid accidentally picking up wrong traits
     # code from a local dir.  We need to ensure a good .coveragerc is in
@@ -517,6 +508,36 @@ def locate_edm():
         edm = os.path.join(os.path.dirname(edm), "embedded", "edm.exe")
 
     return edm
+
+
+def _get_install_command_string(pkg_or_location, editable, no_deps=True):
+    """ Create and return a command string configured by the provided
+    parameters.
+
+    Parameters
+    ----------
+    pkg_or_location : str
+        Either a location in the filesystem containing setup.py or the
+        name of a package.
+    editable : bool
+        Whether to add --editable flag
+    no_deps : bool
+        Whether to add --no-dependencies flag
+
+    Returns
+    -------
+    cmd : str
+        A command string, which if executed will install the package or run
+        the setup script at the provided location.
+
+    """
+    cmd = "{edm} run -e {environment} -- python -m pip install"
+    if editable:
+        cmd += " --editable"
+    cmd += " {}".format(pkg_or_location)
+    if no_deps:
+        cmd += " --no-dependencies"
+    return cmd
 
 
 if __name__ == "__main__":

@@ -52,8 +52,6 @@ class CopyTraitsBase(unittest.TestCase):
         self.bar2 = Bar(shared=self.shared2, foo=self.foo2, s="bar2")
         self.baz2 = Baz(shared=self.shared2, bar=self.bar2, s="baz2")
 
-        return
-
     def set_shared_copy(self, value):
         """ Change the copy style for the 'shared' traits. """
         self.foo.base_trait("shared").copy = value
@@ -171,7 +169,6 @@ class TestCopyTraitsSharedCopyNone(CopyTraits, CopyTraitsSharedCopyNone):
 
         # deep is the default value for Instance trait copy
         self.set_shared_copy("deep")
-        return
 
 
 class TestCopyTraitsCopyNotSpecified(
@@ -184,7 +181,6 @@ class TestCopyTraitsCopyNotSpecified(
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
         self.baz2.copy_traits(self.baz)
-        return
 
 
 class TestCopyTraitsCopyShallow(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
@@ -195,7 +191,6 @@ class TestCopyTraitsCopyShallow(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
         self.baz2.copy_traits(self.baz, copy="shallow")
-        return
 
 
 class TestCopyTraitsCopyDeep(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
@@ -206,7 +201,6 @@ class TestCopyTraitsCopyDeep(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
         self.baz2.copy_traits(self.baz, copy="deep")
-        return
 
 
 class CopyTraitsSharedCopyRef(object):
@@ -241,7 +235,6 @@ class TestCopyTraitsSharedCopyRef(CopyTraits, CopyTraitsSharedCopyRef):
     def setUp(self):
         # super(TestCopyTraitsSharedCopyRef,self).setUp()
         self.set_shared_copy("ref")
-        return
 
 
 # The next three tests demonstrate that a 'ref' trait is always copied as a
@@ -256,7 +249,6 @@ class TestCopyTraitsCopyNotSpecifiedSharedRef(
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyRef.setUp(self)
         self.baz2.copy_traits(self.baz)
-        return
 
 
 class TestCopyTraitsCopyShallowSharedRef(
@@ -268,7 +260,6 @@ class TestCopyTraitsCopyShallowSharedRef(
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyRef.setUp(self)
         self.baz2.copy_traits(self.baz, copy="shallow")
-        return
 
 
 class TestCopyTraitsCopyDeepSharedRef(
@@ -280,4 +271,3 @@ class TestCopyTraitsCopyDeepSharedRef(
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyRef.setUp(self)
         self.baz2.copy_traits(self.baz, copy="deep")
-        return
