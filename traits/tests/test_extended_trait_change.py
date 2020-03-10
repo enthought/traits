@@ -556,17 +556,21 @@ class OnTraitChangeTest(unittest.TestCase):
             exp_new=[0, 1, 2, 3],
             dst_new=[0, 1, 2, 3],
         )
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(
+                AssertionError,
+                msg="Behavior of a bug is not reproduced."):
             # Expected failure, see enthought/traits#537
             # InstanceValueListener.arg_check1 receives a TraitListEvent
             # as `new` instead of the expected `[0, 1, 2, 3]`
             inst.ref.value.append(3)
 
-        with self.assertRaises(AssertionError):
-            # Expected failure, see enthought/traits#537
-            self.assertEqual(
-                inst.calls, {0: 1, 1: 1, 2: 1, 3: 1, 4: 1}
-            )
+        # Behavior of an existing bug
+        # See enthought/traits#537
+        self.assertEqual(
+            inst.calls,
+            {0: 1, 1: 1, 2: 0, 3: 0, 4: 0},
+            "Behavior of a bug is not reproduced."
+        )
         self.assertEqual(inst.ref.value, [0, 1, 2, 3])
 
     def test_instance_dict_value(self):
@@ -706,9 +710,13 @@ class OnTraitChangeTest(unittest.TestCase):
             )
             l1.refs.append(ac)
 
-        # Expected failure, see enthought/traits#538
-        with self.assertRaises(AssertionError):
-            self.assertEqual(l1.calls, {0: 3, 3: 3, 4: 3})
+        # Behavior of an existing bug.
+        # The expected value should be {0: 3, 3: 3, 4: 3}
+        # See enthought/traits#538
+        self.assertEqual(
+            l1.calls, {0: 3, 3: 0, 4: 0},
+            "Behavior of a bug is not reproduced."
+        )
 
         for i in range(3):
             self.assertEqual(l1.refs[i].value, 0)
@@ -763,9 +771,13 @@ class OnTraitChangeTest(unittest.TestCase):
             )
             d1.refs[i] = ac
 
-        # Expected failure, see enthought/traits#538
-        with self.assertRaises(AssertionError):
-            self.assertEqual(d1.calls, {0: 3, 3: 3, 4: 3})
+        # Behavior of an existing bug.
+        # The expected value should be {0: 3, 3: 3, 4: 3}
+        # See enthought/traits#538
+        self.assertEqual(
+            d1.calls, {0: 3, 3: 0, 4: 0},
+            "Behavior of a bug is not reproduced."
+        )
 
         for i in range(3):
             self.assertEqual(d1.refs[i].value, 0)
