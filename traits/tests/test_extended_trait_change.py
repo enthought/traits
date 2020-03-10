@@ -558,18 +558,17 @@ class OnTraitChangeTest(unittest.TestCase):
         )
         with self.assertRaises(
                 AssertionError,
-                msg="Behavior of a bug is not reproduced."):
+                msg="Behavior of a bug (#537) is not reproduced."):
             # Expected failure, see enthought/traits#537
             # InstanceValueListener.arg_check1 receives a TraitListEvent
             # as `new` instead of the expected `[0, 1, 2, 3]`
             inst.ref.value.append(3)
 
-        # Behavior of an existing bug
         # See enthought/traits#537
         self.assertEqual(
             inst.calls,
             {0: 1, 1: 1, 2: 0, 3: 0, 4: 0},
-            "Behavior of a bug is not reproduced."
+            "Behavior of a bug (#537) is not reproduced."
         )
         self.assertEqual(inst.ref.value, [0, 1, 2, 3])
 
@@ -715,7 +714,7 @@ class OnTraitChangeTest(unittest.TestCase):
         # See enthought/traits#538
         self.assertEqual(
             l1.calls, {0: 3, 3: 0, 4: 0},
-            "Behavior of a bug is not reproduced."
+            "Behavior of a bug (#538) is not reproduced."
         )
 
         for i in range(3):
@@ -776,7 +775,7 @@ class OnTraitChangeTest(unittest.TestCase):
         # See enthought/traits#538
         self.assertEqual(
             d1.calls, {0: 3, 3: 0, 4: 0},
-            "Behavior of a bug is not reproduced."
+            "Behavior of a bug (#538) is not reproduced."
         )
 
         for i in range(3):
