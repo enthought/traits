@@ -135,6 +135,7 @@ class TestListenerParser(unittest.TestCase):
         self.assertEqual(actual, ["child1", "child2", "child3"])
 
     def test_parse_comma_separated_text_trailing_comma(self):
+        # This may be made illegal, see enthought/traits#406
         text = "child1, child2, child3,"
         parser = traits_listener.ListenerParser(text=text)
 
