@@ -13,7 +13,7 @@ Unittest tests on ListenerParser, ListenerBase etc.
 See test_listeners for integration tests on the public API using these objects.
 
 """
-
+from functools import partial
 import unittest
 
 from traits import traits_listener
@@ -24,11 +24,67 @@ from traits.api import (
 )
 
 
+def assert_listener_item_equal(test_case, item1, item2, msg=None):
+    """ Assertion function for comparing two instances of ListenerItem.
+    """
+
+    def get_msg(name, msg):
+        return "{name} mismatched. {msg}".format(
+            name=name,
+            msg="" if msg is None else msg
+        )
+
+    test_case.assertEqual(
+        item1.name, item2.name,
+        msg=get_msg("name", msg),
+    )
+    test_case.assertEqual(
+        item1.metadata_name, item2.metadata_name,
+        msg=get_msg("metadata_name", msg),
+    )
+    test_case.assertEqual(
+        item1.metadata_defined, item2.metadata_defined,
+        msg=get_msg("metadata_defined", msg),
+    )
+    test_case.assertEqual(
+        item1.is_any_trait, item2.is_any_trait,
+        msg=get_msg("is_any_trait", msg),
+    )
+    test_case.assertEqual(
+        item1.dispatch, item2.dispatch,
+        msg=get_msg("dispatch", msg),
+    )
+    test_case.assertEqual(
+        item1.notify, item2.notify,
+        msg=get_msg("notify", msg),
+    )
+    test_case.assertEqual(
+        item1.is_list_handler, item2.is_list_handler,
+        msg=get_msg("is_list_handler", msg),
+    )
+    test_case.assertEqual(
+        item1.type, item2.type,
+        msg=get_msg("type", msg),
+    )
+    if item1.next is item2.next:
+        # avoid recursion
+        pass
+    else:
+        test_case.assertEqual(
+            item1.next, item2.next,
+            msg=get_msg("next", msg),
+        )
+
+
 class TestListenerParser(unittest.TestCase):
 
     def setUp(self):
         push_exception_handler(
             handler=lambda *args: None, reraise_exceptions=True)
+        self.addTypeEqualityFunc(
+            traits_listener.ListenerItem,
+            partial(assert_listener_item_equal, self)
+        )
 
     def tearDown(self):
         pop_exception_handler()
@@ -37,81 +93,77 @@ class TestListenerParser(unittest.TestCase):
         text = "some_trait_name"
         parser = traits_listener.ListenerParser(text=text)
 
-        listener = parser.listener
-        self.assertEqual(listener.name, "some_trait_name")
-        self.assertEqual(listener.metadata_name, "")
-        self.assertTrue(listener.metadata_defined)
-        self.assertFalse(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertTrue(listener.notify)
-        self.assertFalse(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-        self.assertIsNone(listener.next)
+        expected = traits_listener.ListenerItem(
+            name="some_trait_name",
+            metadata_name="",
+            metadata_defined=True,
+            is_any_trait=False,
+            dispatch="",
+            notify=True,
+            is_list_handler=False,
+            type=traits_listener.ANY_LISTENER,
+            next=None,
+        )
+        self.assertEqual(parser.listener, expected)
 
     def test_listener_parser_trait_of_trait_dot(self):
         text = "parent.child"
         parser = traits_listener.ListenerParser(text=text)
 
-        # parent listener
-        listener = parser.listener
-        self.assertEqual(listener.name, "parent")
-        self.assertEqual(listener.metadata_name, "")
-        self.assertTrue(listener.metadata_defined)
-        self.assertFalse(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertTrue(listener.notify)
-        self.assertFalse(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-
-        # child listener
-        listener = listener.next
-        self.assertEqual(listener.name, "child")
-        self.assertEqual(listener.metadata_name, "")
-        self.assertTrue(listener.metadata_defined)
-        self.assertFalse(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertTrue(listener.notify)
-        self.assertFalse(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-        self.assertIsNone(listener.next)
+        # then
+        common_traits = dict(
+            metadata_name="",
+            metadata_defined=True,
+            is_any_trait=False,
+            dispatch="",
+            notify=True,
+            is_list_handler=False,
+            type=traits_listener.ANY_LISTENER,
+        )
+        expected_child = traits_listener.ListenerItem(
+            name="child",
+            next=None,
+            **common_traits
+        )
+        expected_parent = traits_listener.ListenerItem(
+            name="parent",
+            next=expected_child,
+            **common_traits
+        )
+        self.assertEqual(parser.listener, expected_parent)
 
     def test_listener_parser_trait_of_trait_of_trait_mixed(self):
         text = "parent.child1:child2"
         parser = traits_listener.ListenerParser(text=text)
 
-        # parent listener
-        listener = parser.listener
-        self.assertTrue(listener.notify, "'.' indicates notifications.")
-        self.assertEqual(listener.name, "parent")
-        self.assertEqual(listener.metadata_name, "")
-        self.assertTrue(listener.metadata_defined)
-        self.assertFalse(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertFalse(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-
-        # child1 listener
-        listener = listener.next
-        self.assertFalse(listener.notify, "':' indicates no notifications.")
-        self.assertEqual(listener.name, "child1")
-        self.assertEqual(listener.metadata_name, "")
-        self.assertTrue(listener.metadata_defined)
-        self.assertFalse(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertFalse(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-
-        # child2 listener
-        listener = listener.next
-        self.assertEqual(listener.name, "child2")
-        self.assertEqual(listener.metadata_name, "")
-        self.assertTrue(listener.metadata_defined)
-        self.assertFalse(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertTrue(listener.notify)
-        self.assertFalse(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-        self.assertIsNone(listener.next)
+        # then
+        common_traits = dict(
+            metadata_name="",
+            metadata_defined=True,
+            is_any_trait=False,
+            dispatch="",
+            is_list_handler=False,
+            type=traits_listener.ANY_LISTENER,
+        )
+        expected_child2 = traits_listener.ListenerItem(
+            name="child2",
+            notify=True,
+            next=None,
+            **common_traits
+        )
+        expected_child1 = traits_listener.ListenerItem(
+            name="child1",
+            notify=False,     # ':' indicates no notifications
+            next=expected_child2,
+            **common_traits
+        )
+        expected_parent = traits_listener.ListenerItem(
+            name="parent",
+            notify=True,
+            next=expected_child1,
+            **common_traits
+        )
+        self.assertEqual(parser.listener, expected_parent)
 
     def test_parse_comma_separated_text(self):
         text = "child1, child2, child3"
@@ -119,20 +171,33 @@ class TestListenerParser(unittest.TestCase):
 
         listener_group = parser.listener
 
-        self.assertEqual(len(listener_group.items), 3)
-
-        for listener in listener_group.items:
-            self.assertEqual(listener.metadata_name, "")
-            self.assertTrue(listener.metadata_defined)
-            self.assertFalse(listener.is_any_trait)
-            self.assertEqual(listener.dispatch, "")
-            self.assertTrue(listener.notify)
-            self.assertFalse(listener.is_list_handler)
-            self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-            self.assertIsNone(listener.next)
-
-        actual = [item.name for item in listener_group.items]
-        self.assertEqual(actual, ["child1", "child2", "child3"])
+        common_traits = dict(
+            metadata_name="",
+            metadata_defined=True,
+            is_any_trait=False,
+            dispatch="",
+            notify=True,
+            is_list_handler=False,
+            type=traits_listener.ANY_LISTENER,
+            next=None,
+        )
+        expected_items = [
+            traits_listener.ListenerItem(
+                name="child1",
+                **common_traits,
+            ),
+            traits_listener.ListenerItem(
+                name="child2",
+                **common_traits,
+            ),
+            traits_listener.ListenerItem(
+                name="child3",
+                **common_traits,
+            ),
+        ]
+        self.assertEqual(len(listener_group.items), len(expected_items))
+        for actual, expected in zip(listener_group.items, expected_items):
+            self.assertEqual(actual, expected)
 
     def test_parse_comma_separated_text_trailing_comma(self):
         # This may be made illegal, see enthought/traits#406
@@ -178,113 +243,135 @@ class TestListenerParser(unittest.TestCase):
         text = "prefix*"
         parser = traits_listener.ListenerParser(text=text)
 
-        listener = parser.listener
-        self.assertEqual(listener.name, "prefix")
-        self.assertEqual(listener.metadata_name, "")
-        self.assertTrue(listener.metadata_defined)
-        self.assertFalse(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertTrue(listener.notify)
-        self.assertFalse(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-
-        # next is itself (so it is recursive)
-        self.assertIs(listener.next, listener)
+        actual = parser.listener
+        expected = traits_listener.ListenerItem(
+            name="prefix",
+            metadata_name="",
+            metadata_defined=True,
+            is_any_trait=False,
+            dispatch="",
+            notify=True,
+            is_list_handler=False,
+            type=traits_listener.ANY_LISTENER,
+            # next is the ListenItem itself (so it is recursive)
+            next=actual,
+        )
+        self.assertEqual(actual, expected)
 
     def test_parse_text_with_metadata(self):
         text = "prefix+foo"
         parser = traits_listener.ListenerParser(text=text)
 
-        listener = parser.listener
-        self.assertEqual(listener.name, "prefix*")
-        self.assertEqual(listener.metadata_name, "foo")
-        self.assertTrue(listener.metadata_defined)
-        self.assertFalse(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertTrue(listener.notify)
-        self.assertFalse(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-        self.assertIsNone(listener.next)
+        expected = traits_listener.ListenerItem(
+            name="prefix*",
+            metadata_name="foo",
+            metadata_defined=True,
+            is_any_trait=False,
+            dispatch="",
+            notify=True,
+            is_list_handler=False,
+            type=traits_listener.ANY_LISTENER,
+            next=None,
+        )
+        self.assertEqual(parser.listener, expected)
 
     def test_parse_is_any_trait_plus(self):
         text = "+"
         parser = traits_listener.ListenerParser(text=text)
 
-        listener = parser.listener
-        self.assertEqual(listener.name, "*")
-        self.assertEqual(listener.metadata_name, "")
-        self.assertTrue(listener.metadata_defined)
-        self.assertFalse(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertTrue(listener.notify)
-        self.assertFalse(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-        self.assertIsNone(listener.next)
+        expected = traits_listener.ListenerItem(
+            name="*",
+            metadata_name="",
+            metadata_defined=True,
+            is_any_trait=False,
+            dispatch="",
+            notify=True,
+            is_list_handler=False,
+            type=traits_listener.ANY_LISTENER,
+            next=None,
+        )
+        self.assertEqual(parser.listener, expected)
 
     def test_parse_is_any_trait_minus(self):
         text = "-"
         parser = traits_listener.ListenerParser(text=text)
 
-        listener = parser.listener
-        self.assertEqual(listener.name, "*")
-        self.assertEqual(listener.metadata_name, "")
-        self.assertFalse(listener.metadata_defined)
-        self.assertTrue(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertTrue(listener.notify)
-        self.assertFalse(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-        self.assertIsNone(listener.next)
+        expected = traits_listener.ListenerItem(
+            name="*",
+            metadata_name="",
+            metadata_defined=False,    # the effect of '-'
+            is_any_trait=True,         # the effect of '-'
+            dispatch="",
+            notify=True,
+            is_list_handler=False,
+            type=traits_listener.ANY_LISTENER,
+            next=None,
+        )
+        self.assertEqual(parser.listener, expected)
 
     def test_parse_nested_exclude_empty_metadata_name(self):
         text = "foo-"
         parser = traits_listener.ListenerParser(text=text)
 
-        listener = parser.listener
-        self.assertEqual(listener.name, "foo*")
-        self.assertEqual(listener.metadata_name, "")
-        self.assertFalse(listener.metadata_defined)
-        self.assertFalse(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertTrue(listener.notify)
-        self.assertFalse(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-        self.assertIsNone(listener.next)
+        expected = traits_listener.ListenerItem(
+            name="foo*",
+            metadata_name="",
+            metadata_defined=False,    # the effect of '-'
+            is_any_trait=False,
+            dispatch="",
+            notify=True,
+            is_list_handler=False,
+            type=traits_listener.ANY_LISTENER,
+            next=None,
+        )
+        self.assertEqual(parser.listener, expected)
 
     def test_parse_exclude_metadata(self):
         text = "-foo"
         parser = traits_listener.ListenerParser(text=text)
 
-        listener = parser.listener
-        self.assertEqual(listener.name, "*")
-        self.assertEqual(listener.metadata_name, "foo")
-        self.assertFalse(listener.metadata_defined)
-        self.assertFalse(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertTrue(listener.notify)
-        self.assertFalse(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-        self.assertIsNone(listener.next)
+        expected = traits_listener.ListenerItem(
+            name="*",
+            metadata_name="foo",
+            metadata_defined=False,    # the effect of '-'
+            is_any_trait=False,
+            dispatch="",
+            notify=True,
+            is_list_handler=False,
+            type=traits_listener.ANY_LISTENER,
+            next=None,
+        )
+        self.assertEqual(parser.listener, expected)
 
     def test_parse_square_bracket(self):
         text = "[foo, bar]"
         parser = traits_listener.ListenerParser(text=text)
         listener_group = parser.listener
 
-        self.assertEqual(len(listener_group.items), 2)
-
-        for listener in listener_group.items:
-            self.assertEqual(listener.metadata_name, "")
-            self.assertTrue(listener.metadata_defined)
-            self.assertFalse(listener.is_any_trait)
-            self.assertEqual(listener.dispatch, "")
-            self.assertTrue(listener.notify)
-            self.assertFalse(listener.is_list_handler)
-            self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-            self.assertIsNone(listener.next)
-
-        actual = [item.name for item in listener_group.items]
-        self.assertEqual(actual, ["foo", "bar"])
+        # then
+        common_traits = dict(
+            metadata_name="",
+            metadata_defined=True,
+            is_any_trait=False,
+            dispatch="",
+            notify=True,
+            is_list_handler=False,
+            type=traits_listener.ANY_LISTENER,
+            next=None,
+        )
+        expected_items = [
+            traits_listener.ListenerItem(
+                name="foo",
+                **common_traits,
+            ),
+            traits_listener.ListenerItem(
+                name="bar",
+                **common_traits,
+            )
+        ]
+        self.assertEqual(len(listener_group.items), len(expected_items))
+        for actual, expected in zip(listener_group.items, expected_items):
+            self.assertEqual(actual, expected)
 
     def test_parse_square_bracket_nested_attribute(self):
         text = "[foo, bar].baz"
@@ -293,60 +380,89 @@ class TestListenerParser(unittest.TestCase):
 
         self.assertEqual(len(listener_group.items), 2)
 
-        for listener in listener_group.items:
-            self.assertEqual(listener.metadata_name, "")
-            self.assertTrue(listener.metadata_defined)
-            self.assertFalse(listener.is_any_trait)
-            self.assertEqual(listener.dispatch, "")
-            self.assertTrue(listener.notify)
-            self.assertFalse(listener.is_list_handler)
-            self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-
-            next_listener = listener.next
-            self.assertEqual(next_listener.name, "baz")
-            self.assertEqual(next_listener.metadata_name, "")
-            self.assertTrue(next_listener.metadata_defined)
-            self.assertFalse(next_listener.is_any_trait)
-            self.assertEqual(next_listener.dispatch, "")
-            self.assertTrue(next_listener.notify)
-            self.assertFalse(next_listener.is_list_handler)
-            self.assertEqual(next_listener.type, traits_listener.ANY_LISTENER)
-            self.assertIsNone(next_listener.next)
-
-        actual = [item.name for item in listener_group.items]
-        self.assertEqual(actual, ["foo", "bar"])
+        common_traits = dict(
+            metadata_name="",
+            metadata_defined=True,
+            is_any_trait=False,
+            dispatch="",
+            notify=True,
+            is_list_handler=False,
+            type=traits_listener.ANY_LISTENER,
+        )
+        child_listener = traits_listener.ListenerItem(
+            name="baz",
+            next=None,
+            **common_traits,
+        )
+        expected_items = [
+            traits_listener.ListenerItem(
+                name="foo",
+                next=child_listener,
+                **common_traits,
+            ),
+            traits_listener.ListenerItem(
+                name="bar",
+                next=child_listener,
+                **common_traits,
+            )
+        ]
+        self.assertEqual(len(listener_group.items), len(expected_items))
+        for actual, expected in zip(listener_group.items, expected_items):
+            self.assertEqual(actual, expected)
 
     def test_parse_square_bracket_in_middle(self):
         text = "foo.[bar, baz]"
         parser = traits_listener.ListenerParser(text=text)
-        listener = parser.listener
 
-        self.assertEqual(listener.name, "foo")
-        self.assertEqual(listener.metadata_name, "")
-        self.assertTrue(listener.metadata_defined)
-        self.assertFalse(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertTrue(listener.notify)
-        self.assertFalse(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
+        actual_foo = parser.listener
+        # next is a ListenerGroup, and is checked separately
+        actual_next = actual_foo.next
+        actual_foo.next = None
+
+        common_traits = dict(
+            metadata_name="",
+            metadata_defined=True,
+            is_any_trait=False,
+            dispatch="",
+            notify=True,
+            is_list_handler=False,
+            type=traits_listener.ANY_LISTENER,
+            next=None
+        )
+        expected_foo = traits_listener.ListenerItem(
+            name="foo",
+            **common_traits,
+        )
+        self.assertEqual(actual_foo, expected_foo)
 
         # Next listener is a ListenerGroup
-        listener_group = listener.next
-        self.assertEqual(len(listener_group.items), 2)
-        actual = [item.name for item in listener_group.items]
-        self.assertEqual(actual, ["bar", "baz"])
+        expected_items = [
+            traits_listener.ListenerItem(
+                name="bar",
+                **common_traits,
+            ),
+            traits_listener.ListenerItem(
+                name="baz",
+                **common_traits,
+            ),
+        ]
+        self.assertEqual(len(actual_next.items), len(expected_items))
+        for actual, expected in zip(actual_next.items, expected_items):
+            self.assertEqual(actual, expected)
 
     def test_parse_is_list_handler(self):
         text = "foo[]"
         parser = traits_listener.ListenerParser(text=text)
-        listener = parser.listener
 
-        self.assertEqual(listener.name, "foo")
-        self.assertEqual(listener.metadata_name, "")
-        self.assertTrue(listener.metadata_defined)
-        self.assertFalse(listener.is_any_trait)
-        self.assertEqual(listener.dispatch, "")
-        self.assertTrue(listener.notify)
-        self.assertTrue(listener.is_list_handler)
-        self.assertEqual(listener.type, traits_listener.ANY_LISTENER)
-        self.assertIsNone(listener.next)
+        expected = traits_listener.ListenerItem(
+            name="foo",
+            metadata_name="",
+            metadata_defined=True,
+            is_any_trait=False,
+            dispatch="",
+            notify=True,
+            is_list_handler=True,    # the effect of '[]'
+            type=traits_listener.ANY_LISTENER,
+            next=None,
+        )
+        self.assertEqual(parser.listener, expected)
