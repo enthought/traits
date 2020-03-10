@@ -564,12 +564,18 @@ class OnTraitChangeTest(unittest.TestCase):
             # as `new` instead of the expected `[0, 1, 2, 3]`
             inst.ref.value.append(3)
 
+        # Expected failure
         # See enthought/traits#537
-        self.assertEqual(
-            inst.calls,
-            {0: 1, 1: 1, 2: 0, 3: 0, 4: 0},
-            "Behavior of a bug (#537) is not reproduced."
-        )
+        with self.assertRaises(
+                AssertionError,
+                msg="Behavior of a bug (#537) is not reproduced."):
+            # Handlers with arguments are unexpectedly called, but one of the
+            # handlers fails, leading to the rest of the handlers
+            # not to be called. Actual behavior depends on dictionary ordering
+            # (Python <3.6) or the order of handlers defined in
+            # InstanceValueListener (Python >= 3.6)
+            self.assertEqual(inst.calls, {0: 1, 1: 0, 2: 0, 3: 0, 4: 0})
+
         self.assertEqual(inst.ref.value, [0, 1, 2, 3])
 
     def test_instance_dict_value(self):
@@ -618,11 +624,17 @@ class OnTraitChangeTest(unittest.TestCase):
             # as `new` instead of the expected `{0: 0, 1: 1, 2: 2, 3: 3}`
             inst.ref.value[3] = 3
 
-        # Expected behavior of a bug, see enthought/traits#537
-        self.assertEqual(
-            inst.calls, {0: 1, 1: 1, 2: 0, 3: 0, 4: 0},
-            msg="Behavior of a bug (#537) is not reproduced."
-        )
+        # Expected failure
+        # See enthought/traits#537
+        with self.assertRaises(
+                AssertionError,
+                msg="Behavior of a bug (#537) is not reproduced."):
+            # Handlers with arguments are unexpectedly called, but one of the
+            # handlers fails, leading to the rest of the handlers
+            # not to be called. Actual behavior depends on dictionary ordering
+            # (Python <3.6) or the order of handlers defined in
+            # InstanceValueListener (Python >= 3.6)
+            self.assertEqual(inst.calls, {0: 1, 1: 0, 2: 0, 3: 0, 4: 0})
 
         self.assertEqual(inst.ref.value, {0: 0, 1: 1, 2: 2, 3: 3})
 
