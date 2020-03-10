@@ -9,7 +9,7 @@
 # Thanks for using Enthought open source!
 
 """
-Unittest tests on ListenerParser, ListenBase etc.
+Unittest tests on ListenerParser, ListenerBase etc.
 See test_listeners for integration tests on the public API using these objects.
 
 """
