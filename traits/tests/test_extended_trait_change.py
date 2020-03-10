@@ -610,15 +610,19 @@ class OnTraitChangeTest(unittest.TestCase):
             exp_new={0: 0, 1: 1, 2: 2, 3: 3},
             dst_new={0: 0, 1: 1, 2: 2, 3: 3},
         )
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(
+                AssertionError,
+                msg="Behavior of a bug (#537) is not reproduced."):
             # Expected failure, see enthought/traits#537
             # InstanceValueListener.arg_check1 receives a TraitDictEvent
             # as `new` instead of the expected `{0: 0, 1: 1, 2: 2, 3: 3}`
             inst.ref.value[3] = 3
 
-        with self.assertRaises(AssertionError):
-            # Expected failure, see enthought/traits#537
-            self.assertEqual(inst.calls, {0: 1, 1: 1, 2: 1, 3: 1, 4: 1})
+        # Expected behavior of a bug, see enthought/traits#537
+        self.assertEqual(
+            inst.calls, {0: 1, 1: 1, 2: 0, 3: 0, 4: 0},
+            msg="Behavior of a bug (#537) is not reproduced."
+        )
 
         self.assertEqual(inst.ref.value, {0: 0, 1: 1, 2: 2, 3: 3})
 
