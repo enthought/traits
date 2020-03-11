@@ -27,6 +27,11 @@ def int_validator(trait_list, index, removed, added):
             return _validate_int(added)
 
 
+def list_validator(trait_list, index, removed, added):
+    if isinstance(added, list):
+        return added
+
+
 class TestTraitList(unittest.TestCase):
 
     def setUp(self):
@@ -297,3 +302,10 @@ class TestTraitList(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             tl.extend(["invalid"])
+
+    def test_list_of_lists(self):
+        tl = TraitList([[1]],
+                       validator=list_validator,
+                       notifiers=[self.notification_handler])
+
+        tl.append([2])
