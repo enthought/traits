@@ -150,10 +150,7 @@ class TraitList(list):
         """
         # Use getattr as pickle can call `extend` before validator is set.
         if getattr(self, 'validator', None) is None:
-            if isinstance(index, slice):
-                return list(value)
-            else:
-                return value
+            return value
         else:
             return self.validator(self, index, removed, value)
 
@@ -176,8 +173,6 @@ class TraitList(list):
         added : object or list
             The new item or items being added to the list.
         """
-        if removed == added:
-            return
         # Use getattr as pickle can call `extend` before notifiers are set.
         for notifier in getattr(self, 'notifiers', []):
             notifier(self, index, removed, added)
@@ -268,7 +263,8 @@ class TraitList(list):
             norm_index = self._normalize_index(index)
             super().__setitem__(index, added)
 
-        self.notify(norm_index, removed, added)
+        if self._should_notify(removed, added):
+            self.notify(norm_index, removed, added)
 
     def __delitem__(self, index):
         """ Delete an item from the list at index.
@@ -283,23 +279,24 @@ class TraitList(list):
         Notification:
             index : int
                 The index of the value that is deleted.
-            added : Undefined
+            added : list
             removed : value
                 The removed value or Undefined if no value was previously
                 present at the index.
 
         """
         removed = self._get_removed(index)
-        if isinstance(index, slice):
-            added = self.validate(index, removed, [])
-            norm_index = self._normalize_slice(index)
-            super().__delitem__(index)
-        else:
-            added = self.validate(index, removed, Undefined)
-            norm_index = self._normalize_index(index)
-            super().__delitem__(index)
+        added = self.validate(index, removed, [])
 
-        self.notify(norm_index, removed, added)
+        if isinstance(index, slice):
+            norm_index = self._normalize_slice(index)
+        else:
+            norm_index = self._normalize_index(index)
+
+        super().__delitem__(index)
+
+        if self._should_notify(removed, added):
+            self.notify(norm_index, removed, added)
 
     def append(self, object):
         """ Append an item to the end of the list.
@@ -317,17 +314,18 @@ class TraitList(list):
                 The index of the newly appended item.
             added : Any
                 The new item
-            removed : Undefined
-                Will be Undefined
+            removed : list
+                Will be []
 
         """
         index = len(self)
-        removed = Undefined
+        removed = []
         added = self.validate(index, removed, object)
 
         super().append(added)
 
-        self.notify(index, removed, added)
+        if self._should_notify(removed, added):
+            self.notify(index, removed, added)
 
     def extend(self, iterable):
         """ Extend list by appending elements from the iterable.
@@ -345,8 +343,8 @@ class TraitList(list):
                 The slice from current_length to new_length if successful.
             added : list
                 The newly added items.
-            removed : Undefined
-                Will be Undefined
+            removed : list
+                Will be []
 
         """
         index = slice(len(self), len(self) + len(iterable))
@@ -355,7 +353,8 @@ class TraitList(list):
 
         super().extend(added)
 
-        self.notify(index, removed, added)
+        if self._should_notify(removed, added):
+            self.notify(index, removed, added)
 
     def insert(self, index, object):
         """ Insert an object to the list before index.
@@ -375,17 +374,18 @@ class TraitList(list):
                 The index before which the item was inserted.
             added : item
                 The newly added items
-            removed : Undefined
-                Will be Undefined
+            removed : list
+                Will be []
 
         """
-        removed = Undefined
+        removed = []
         added = self.validate(index, removed, object)
         norm_index = self._normalize_index(index)
 
         super().insert(index, added)
 
-        self.notify(norm_index, removed, added)
+        if self._should_notify(removed, added):
+            self.notify(norm_index, removed, added)
 
     def clear(self):
         """ Remove all items from the list
@@ -407,7 +407,8 @@ class TraitList(list):
         added = self.validate(index, removed, [])
         super().clear()
 
-        self.notify(index, removed, added)
+        if self._should_notify(removed, added):
+            self.notify(index, removed, added)
 
     def pop(self, index=-1):
         """ Remove and return item at index (default last).
@@ -431,20 +432,21 @@ class TraitList(list):
         Notification:
             index : int
                 The normalized index between 0 and len(self).
-            added : Undefined
-                Will be Undefined
+            added : list
+                Will be []
             removed : item
                 The removed item
 
         """
 
         removed = self._get_removed(index)
-        added = self.validate(index, removed, Undefined)
+        added = self.validate(index, removed, [])
         norm_index = self._normalize_index(index)
 
         removed = super().pop(index)
 
-        self.notify(norm_index, removed, added)
+        if self._should_notify(removed, added):
+            self.notify(norm_index, removed, added)
 
         return removed
 
@@ -466,18 +468,20 @@ class TraitList(list):
         Notification:
             index : int
                 The index between 0 and len(self).
-            added : Undefined
-                Will be Undefined
+            added : list
+                Will be []
             removed : item
                 The removed item.
 
         """
         index = self.index(value)
-        added = self.validate(index, value, Undefined)
+        added = self.validate(index, value, [])
+        removed = value
 
         super().remove(value)
 
-        self.notify(index, value, added)
+        if self._should_notify(removed, added):
+            self.notify(index, removed, added)
 
     def sort(self, key=None, reverse=False):
         """ Sort the items in the list in ascending order, *IN PLACE*.
@@ -499,8 +503,8 @@ class TraitList(list):
                 The slice between 0 and len(self)
             added : list
                 Will be [].
-            removed : Undefined
-                Will be Undefined
+            removed : list
+                Will be []
 
         """
         self[:] = sorted(self, key=key, reverse=reverse)
@@ -508,7 +512,7 @@ class TraitList(list):
 
         # Notes is not fired if added == removed, so make them unequal
         added = []
-        removed = Undefined
+        removed = []
         self.notify(index, removed, added)
 
     def reverse(self):
@@ -521,16 +525,15 @@ class TraitList(list):
                 The slice between 0 and len(self).
             added : list
                 Will be []
-            removed : Undefined.
-                Will be Undefined
+            removed : list.
+                Will be []
 
         """
         self[:] = self[::-1]
         index = slice(0, len(self), None)
 
-        # Notification is not fired if added == removed, so make them unequal
         added = []
-        removed = Undefined
+        removed = []
         self.notify(index, removed, added)
 
     def __iadd__(self, other):
@@ -588,11 +591,8 @@ class TraitList(list):
         """ Compute removed values given index. """
         try:
             return self[index]
-        except Exception:
-            if isinstance(index, slice):
-                return []
-            else:
-                return Undefined
+        except IndexError:
+            return []
 
     def _normalize_index(self, index):
         """ Normalize integer index to range 0 to len (inclusive). """
@@ -624,6 +624,14 @@ class TraitList(list):
                 stop = 0
 
         return slice(start, stop, index.step)
+
+    def _should_notify(self, removed, added):
+        try:
+            if added == removed:
+                return False
+            return True
+        except Exception:
+            return True
 
 
 class TraitListObject(TraitList):
@@ -707,9 +715,9 @@ class TraitListObject(TraitList):
             new_len = len(trait_list) - len(removed) + len(value)
         else:
             new_len = len(trait_list)
-            if removed is Undefined:
+            if removed == []:
                 new_len += 1
-            if value is Undefined:
+            if isinstance(value, list) and value == []:
                 new_len -= 1
         if not trait.minlen <= new_len <= trait.maxlen:
             raise TraitError(
@@ -734,8 +742,8 @@ class TraitListObject(TraitList):
                 return [
                     validate(object, self.name, item) for item in value
                 ]
-            elif value is Undefined:
-                return Undefined
+            elif isinstance(value, list) and value == []:
+                return []
             else:
                 return validate(object, self.name, value)
         except TraitError as excp:
@@ -777,11 +785,11 @@ class TraitListObject(TraitList):
                 if not isinstance(removed, list):
                     removed = [removed]
         else:
-            if removed is Undefined:
+            if isinstance(removed, list) and removed == []:
                 removed = []
             elif not isinstance(removed, list):
                 removed = [removed]
-            if added is Undefined:
+            if isinstance(added, list) and added == []:
                 added = []
             elif not isinstance(added, list):
                 added = [added]

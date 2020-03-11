@@ -12,19 +12,19 @@ import copy
 import pickle
 import unittest
 
-from traits.trait_base import Undefined
 from traits.trait_errors import TraitError
 from traits.trait_list_object import adapt_trait_validator, TraitList
 from traits.trait_types import _validate_int
 
 
-def int_validator(trait_list, index, removed, value):
+def int_validator(trait_list, index, removed, added):
     if isinstance(index, slice):
-        return [_validate_int(item) for item in value]
+        return [_validate_int(item) for item in added]
     else:
-        if value is Undefined:
-            return Undefined
-        return _validate_int(value)
+        if isinstance(added, list):
+            return [_validate_int(item) for item in added]
+        else:
+            return _validate_int(added)
 
 
 class TestTraitList(unittest.TestCase):
@@ -106,7 +106,7 @@ class TestTraitList(unittest.TestCase):
         del tl[2]
         self.assertEqual(2, self.index)
         self.assertEqual(3, self.removed)
-        self.assertEqual(Undefined, self.added)
+        self.assertEqual([], self.added)
 
         del tl[:]
 
@@ -148,7 +148,7 @@ class TestTraitList(unittest.TestCase):
 
         tl.append(2)
         self.assertEqual(1, self.index)
-        self.assertEqual(Undefined, self.removed)
+        self.assertEqual([], self.removed)
         self.assertEqual(2, self.added)
 
     def test_extend(self):
@@ -168,12 +168,12 @@ class TestTraitList(unittest.TestCase):
 
         tl.insert(0, 1)  # [1,2]
         self.assertEqual(0, self.index)
-        self.assertEqual(Undefined, self.removed)
+        self.assertEqual([], self.removed)
         self.assertEqual(1, self.added)
 
         tl.insert(-1, 3)  # [1,3,2]
         self.assertEqual(1, self.index)
-        self.assertEqual(Undefined, self.removed)
+        self.assertEqual([], self.removed)
         self.assertEqual(3, self.added)
 
     def test_pop(self):
@@ -184,18 +184,18 @@ class TestTraitList(unittest.TestCase):
         tl.pop()
         self.assertEqual(4, self.index)
         self.assertEqual(5, self.removed)
-        self.assertEqual(Undefined, self.added)
+        self.assertEqual([], self.added)
 
         tl.pop(0)
         self.assertEqual(0, self.index)
         self.assertEqual(1, self.removed)
-        self.assertEqual(Undefined, self.added)
+        self.assertEqual([], self.added)
 
         # tl is now [2,3,4]
         tl.pop(-2)
         self.assertEqual(1, self.index)
         self.assertEqual(3, self.removed)
-        self.assertEqual(Undefined, self.added)
+        self.assertEqual([], self.added)
 
     def test_remove(self):
         tl = TraitList([1, 2, 3, 4, 5],
@@ -205,7 +205,7 @@ class TestTraitList(unittest.TestCase):
         tl.remove(3)
         self.assertEqual(2, self.index)
         self.assertEqual(3, self.removed)
-        self.assertEqual(Undefined, self.added)
+        self.assertEqual([], self.added)
 
         with self.assertRaises(ValueError):
             tl.remove(3)
@@ -228,7 +228,7 @@ class TestTraitList(unittest.TestCase):
 
         self.assertEqual([0, 1, 2, 3, 4, 5], tl)
         self.assertEqual(slice(0, 6, None), self.index)
-        self.assertEqual(Undefined, self.removed)
+        self.assertEqual([], self.removed)
         self.assertEqual([], self.added)
 
     def test_reverse(self):
@@ -239,7 +239,7 @@ class TestTraitList(unittest.TestCase):
         tl.reverse()
         self.assertEqual([5, 4, 3, 2, 1], tl)
         self.assertEqual(slice(0, 5, None), self.index)
-        self.assertEqual(Undefined, self.removed)
+        self.assertEqual([], self.removed)
         self.assertEqual([], self.added)
 
     def test_pickle(self):
