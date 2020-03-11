@@ -168,10 +168,10 @@ class TraitList(list):
         ----------
         index : int or slice
             The indices being modified by the operation.
-        removed : object or list
-            The item or items to be removed.
-        added : object or list
-            The new item or items being added to the list.
+        removed : list
+            The items to be removed.
+        added : list
+            The items being added to the list.
         """
         # Use getattr as pickle can call `extend` before notifiers are set.
         for notifier in getattr(self, 'notifiers', []):
@@ -253,8 +253,7 @@ class TraitList(list):
 
         if isinstance(index, slice):
             if len(removed) != len(value) and index.step not in {1, None}:
-                # will fail with ValueError
-                super().__setitem__(index, value)
+                raise ValueError
 
         added = self.validate(index, removed, value)
         norm_index = self._normalize(index)
@@ -501,12 +500,14 @@ class TraitList(list):
                 Will be []
 
         """
+        removed = copy.deepcopy(self)
+
         self[:] = sorted(self, key=key, reverse=reverse)
+
         index = slice(0, len(self), None)
 
-        # Notes is not fired if added == removed, so make them unequal
-        added = []
-        removed = []
+        added = self
+
         self.notify(index, removed, added)
 
     def reverse(self):

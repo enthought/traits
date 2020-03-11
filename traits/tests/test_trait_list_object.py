@@ -228,8 +228,8 @@ class TestTraitList(unittest.TestCase):
 
         self.assertEqual([0, 1, 2, 3, 4, 5], tl)
         self.assertEqual(slice(0, 6, None), self.index)
-        self.assertEqual([], self.removed)
-        self.assertEqual([], self.added)
+        self.assertEqual([2, 3, 1, 4, 5, 0], self.removed)
+        self.assertEqual([0, 1, 2, 3, 4, 5], self.added)
 
     def test_reverse(self):
         tl = TraitList([1, 2, 3, 4, 5],
