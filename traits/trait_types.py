@@ -1011,12 +1011,11 @@ class Constant(TraitType):
 
     Traits of this type are very space efficient (and fast) because
     *value* is not stored in each instance using the trait, but only in
-    the trait object itself. The *value* cannot be a list or dictionary,
-    because those types have mutable values.
+    the trait object itself.
 
     Parameters
     ----------
-    value : any type other than list or dict
+    value : Any
         The constant value for the trait.
     **metadata
         Trait metadata for the trait.
