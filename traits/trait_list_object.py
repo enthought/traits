@@ -250,18 +250,16 @@ class TraitList(list):
 
         """
         removed = self._get_removed(index)
+
         if isinstance(index, slice):
             if len(removed) != len(value) and index.step not in {1, None}:
                 # will fail with ValueError
                 super().__setitem__(index, value)
 
-            added = self.validate(index, removed, value)
-            norm_index = self._normalize_slice(index)
-            super().__setitem__(index, added)
-        else:
-            added = self.validate(index, removed, value)
-            norm_index = self._normalize_index(index)
-            super().__setitem__(index, added)
+        added = self.validate(index, removed, value)
+        norm_index = self._normalize(index)
+
+        super().__setitem__(index, added)
 
         if self._should_notify(removed, added):
             self.notify(norm_index, removed, added)
@@ -287,11 +285,7 @@ class TraitList(list):
         """
         removed = self._get_removed(index)
         added = self.validate(index, removed, [])
-
-        if isinstance(index, slice):
-            norm_index = self._normalize_slice(index)
-        else:
-            norm_index = self._normalize_index(index)
+        norm_index = self._normalize(index)
 
         super().__delitem__(index)
 
@@ -594,6 +588,12 @@ class TraitList(list):
         except IndexError:
             return []
 
+    def _normalize(self, index):
+        if isinstance(index, slice):
+            return self._normalize_slice(index)
+        else:
+            return self._normalize_index(index)
+
     def _normalize_index(self, index):
         """ Normalize integer index to range 0 to len (inclusive). """
         index = operator.index(index)
@@ -711,14 +711,8 @@ class TraitListObject(TraitList):
             return value
 
         # check that length is within bounds
-        if isinstance(index, slice):
-            new_len = len(trait_list) - len(removed) + len(value)
-        else:
-            new_len = len(trait_list)
-            if removed == []:
-                new_len += 1
-            if isinstance(value, list) and value == []:
-                new_len -= 1
+        new_len = len(trait_list) - self._get_length(
+            removed) + self._get_length(value)
         if not trait.minlen <= new_len <= trait.maxlen:
             raise TraitError(
                 "The '%s' trait of %s instance must be %s, "
@@ -734,7 +728,7 @@ class TraitListObject(TraitList):
 
         # validate the new value(s)
         validate = trait.item_trait.handler.validate
-        if validate is None:
+        if validate is None or value == []:
             return value
 
         try:
@@ -742,10 +736,7 @@ class TraitListObject(TraitList):
                 return [
                     validate(object, self.name, item) for item in value
                 ]
-            elif isinstance(value, list) and value == []:
-                return []
-            else:
-                return validate(object, self.name, value)
+            return validate(object, self.name, value)
         except TraitError as excp:
             excp.set_prefix("Each element of the")
             raise excp
@@ -785,13 +776,9 @@ class TraitListObject(TraitList):
                 if not isinstance(removed, list):
                     removed = [removed]
         else:
-            if isinstance(removed, list) and removed == []:
-                removed = []
-            elif not isinstance(removed, list):
+            if not isinstance(removed, list):
                 removed = [removed]
-            if isinstance(added, list) and added == []:
-                added = []
-            elif not isinstance(added, list):
+            if not isinstance(added, list):
                 added = [added]
         event = TraitListEvent(index, removed, added)
         items_event = self.trait.items_event()
@@ -843,3 +830,9 @@ class TraitListObject(TraitList):
             state['trait'] = None
 
         self.__dict__.update(state)
+
+    def _get_length(self, object):
+        if isinstance(object, list):
+            return len(object)
+        else:
+            return 1
