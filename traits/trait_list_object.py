@@ -605,26 +605,7 @@ class TraitList(list):
 
     def _normalize_slice(self, index):
         """ Normalize slice start and stop to range 0 to len (inclusive). """
-        if index.step is None or index.step > 0:
-            if index.start is not None:
-                start = self._normalize_index(index.start)
-            else:
-                start = 0
-            if index.stop is not None:
-                stop = self._normalize_index(index.stop)
-            else:
-                stop = len(self)
-        else:
-            if index.start is not None:
-                start = self._normalize_index(index.start)
-            else:
-                start = len(self)
-            if index.stop is not None:
-                stop = self._normalize_index(index.stop)
-            else:
-                stop = 0
-
-        return slice(start, stop, index.step)
+        return slice(*index.indices(len(self)))
 
     def _should_notify(self, removed, added):
         try:

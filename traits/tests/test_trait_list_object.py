@@ -99,7 +99,7 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(self.added, 5)
 
         tl[:] = [1, 2, 3, 4, 5]
-        self.assertEqual(slice(0, 3, None), self.index)
+        self.assertEqual(slice(0, 3, 1), self.index)
         self.assertEqual([1, 5, 3], self.removed)
         self.assertEqual([1, 2, 3, 4, 5], self.added)
 
@@ -142,7 +142,7 @@ class TestTraitList(unittest.TestCase):
             tl *= 2.5
 
         tl *= 0
-        self.assertEqual(slice(0, 4, None), self.index)
+        self.assertEqual(slice(0, 4, 1), self.index)
         self.assertEqual([1, 2, 1, 2], self.removed)
         self.assertEqual([], self.added)
 
