@@ -333,14 +333,19 @@ class TraitList(list):
         -----
         Notification:
             index : slice
-                The slice from current_length to new_length if successful.
+                The slice(current_length,new_length) if successful if
+                the iterable supports len() else the slice(current_len,None,1).
             added : list
                 The newly added items.
             removed : list
                 Will be []
 
         """
-        index = slice(len(self), len(self) + len(iterable))
+        try:
+            index = slice(len(self), len(self) + len(iterable))
+        except TypeError:
+            index = slice(len(self), None, 1)
+
         removed = []
         added = self.validate(index, removed, iterable)
 
