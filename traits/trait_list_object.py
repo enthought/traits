@@ -401,7 +401,7 @@ class TraitList(list):
 
         """
         index = slice(0, len(self), None)
-        removed = [copy.deepcopy(x) for x in self]
+        removed = [copy.copy(x) for x in self]
         added = self.validate(index, removed, [])
         super().clear()
 
