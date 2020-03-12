@@ -768,19 +768,15 @@ class TraitListObject(TraitList):
             return
 
         # bug-for-bug conversion of parameters to TraitListEvent
+        if not isinstance(added, list):
+            added = [added]
+        if not isinstance(removed, list):
+            removed = [removed]
+
         if isinstance(index, slice):
             if index.step in {1, None}:
                 index = min(index.start, index.stop)
-            else:
-                if added and not isinstance(added, list):
-                    added = [added]
-                if not isinstance(removed, list):
-                    removed = [removed]
-        else:
-            if not isinstance(removed, list):
-                removed = [removed]
-            if not isinstance(added, list):
-                added = [added]
+
         event = TraitListEvent(index, removed, added)
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
