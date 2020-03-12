@@ -804,7 +804,7 @@ class TraitListObject(TraitList):
 
         Notifiers are transient and should not be serialized.
         """
-        result = self.__dict__.copy()
+        result = super().__getstate__()
         result.pop("object", None)
         result.pop("trait", None)
 
@@ -815,6 +815,7 @@ class TraitListObject(TraitList):
 
         Notifiers are transient and are restored to the empty list.
         """
+        super().__setstate__(state)
         name = state.setdefault("name", "")
         object = state.pop("object", None)
         if object is not None:
