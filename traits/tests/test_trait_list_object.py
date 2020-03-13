@@ -12,6 +12,7 @@ import copy
 import pickle
 import unittest
 
+from traits.api import HasTraits, List, Set
 from traits.trait_errors import TraitError
 from traits.trait_list_object import adapt_trait_validator, TraitList
 from traits.trait_types import _validate_int
@@ -309,3 +310,19 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl.append([2])
+
+    def test_list_of_sets(self):
+        tl = TraitList([{1}],
+                       validator=list_validator,
+                       notifiers=[self.notification_handler])
+        tl.append({2})
+        tl[0].add(2)
+
+    def test_List_Set(self):
+
+        class Collection(HasTraits):
+            res = List(Set())
+
+        obj = Collection(res=[{1}])
+        obj.res[0].add(2)
+
