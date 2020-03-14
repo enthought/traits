@@ -656,7 +656,8 @@ class TraitDictObject(TraitDict):
 
         Object and trait should not be serialized.
         """
-        result = self.__dict__.copy()
+
+        result = super().__getstate__()
         result.pop("object", None)
         result.pop("trait", None)
         return result
@@ -665,6 +666,7 @@ class TraitDictObject(TraitDict):
         """ Restore the state of the object after serialization.
         """
 
+        super().__setstate__(state)
         name = state.setdefault("name", "")
         object = state.pop("object", None)
         if object is not None:
