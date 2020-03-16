@@ -120,8 +120,7 @@ class ArgCheckDecorator(ArgCheckBase):
 class ArgCheckDecoratorTrailingComma(ArgCheckDecorator):
     @on_trait_change("int1, int2,")
     def arg_check(self, object, name, old, new):
-        self.calls += 1
-        self.tc.assertIs(object, self)
+        pass
 
 
 class BaseInstance(HasTraits):
