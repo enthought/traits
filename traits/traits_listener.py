@@ -23,7 +23,7 @@ from .has_traits import HasPrivateTraits
 from .trait_base import Undefined, Uninitialized
 from .traits import Property
 from .trait_types import Str, Int, Bool, Instance, List, Enum, Any
-from .trait_errors import TraitError, TraitNotificationError
+from .trait_errors import TraitError
 from .trait_notifiers import TraitChangeNotifyWrapper
 from .util.weakiddict import WeakIDKeyDict
 
