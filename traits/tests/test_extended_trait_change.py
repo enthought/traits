@@ -479,7 +479,7 @@ class OnTraitChangeTest(unittest.TestCase):
     def test_arg_check_trailing_comma(self):
         ac = ArgCheckSimple(tc=self)
 
-        with self.assertRaises(TraitNotificationError):
+        with self.assertRaises(TraitError):
             ac.on_trait_change(ac.arg_check0, "int1, int2,")
 
     def test_arg_check_decorator(self):
