@@ -26,7 +26,6 @@ from traits.api import (
     TraitError,
     TraitListEvent,
     TraitListObject,
-    TraitNotificationError,
     Undefined,
     cached_property,
     on_trait_change,
@@ -490,7 +489,7 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(ac.value, 3)
 
     def test_arg_check_decorator_trailing_comma(self):
-        with self.assertRaises(TraitNotificationError):
+        with self.assertRaises(TraitError):
             ArgCheckDecoratorTrailingComma(tc=self)
 
     def test_instance_simple_value(self):
