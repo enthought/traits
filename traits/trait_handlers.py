@@ -25,7 +25,6 @@ from .constants import DefaultValue, ValidateTrait
 from .trait_base import (
     SequenceTypes,
     TypeTypes,
-    CoercableTypes,
     class_of,
 )
 from .trait_base import RangeTypes  # noqa: F401, used by TraitsUI
@@ -44,6 +43,12 @@ logger = logging.getLogger(__name__)
 # Constants
 
 CallableTypes = (FunctionType, MethodType)
+
+# Mapping of coercable types.
+CoercableTypes = {
+    float: (ValidateTrait.coerce, float, int),
+    complex: (ValidateTrait.coerce, complex, float, int),
+}
 
 _WARNING_FORMAT_STR = ("'{handler}' trait handler has been deprecated. "
                        "Use {replacement} instead.")

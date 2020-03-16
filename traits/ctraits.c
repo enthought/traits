@@ -5492,6 +5492,7 @@ PyInit_ctraits(void)
     PyObject *module;
     PyObject *trait_base;
     PyObject *trait_errors;
+    int error;
 
     module = PyModule_Create(&ctraitsmodule);
     if (module == NULL) {
@@ -5571,6 +5572,97 @@ PyInit_ctraits(void)
         return NULL;
     }
     Py_DECREF(trait_errors);
+
+    /* Export default-value constants, so that they can be re-used in
+       the DefaultValue enumeration. */
+    error = PyModule_AddIntConstant(
+        module,
+        "_CONSTANT_DEFAULT_VALUE",
+        CONSTANT_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_MISSING_DEFAULT_VALUE",
+        MISSING_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_OBJECT_DEFAULT_VALUE",
+        OBJECT_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_LIST_COPY_DEFAULT_VALUE",
+        LIST_COPY_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_DICT_COPY_DEFAULT_VALUE",
+        DICT_COPY_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_TRAIT_LIST_OBJECT_DEFAULT_VALUE",
+        TRAIT_LIST_OBJECT_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_TRAIT_DICT_OBJECT_DEFAULT_VALUE",
+        TRAIT_DICT_OBJECT_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_TRAIT_SET_OBJECT_DEFAULT_VALUE",
+        TRAIT_SET_OBJECT_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_CALLABLE_DEFAULT_VALUE",
+        CALLABLE_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_CALLABLE_AND_ARGS_DEFAULT_VALUE",
+        CALLABLE_AND_ARGS_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_MAXIMUM_DEFAULT_VALUE_TYPE",
+        MAXIMUM_DEFAULT_VALUE_TYPE
+    );
+    if (error < 0) {
+        return NULL;
+    }
 
     return module;
 }
