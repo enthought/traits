@@ -1015,7 +1015,7 @@ class Constant(TraitType):
 
     Parameters
     ----------
-    value : Any
+    value : any
         The constant value for the trait.
     **metadata
         Trait metadata for the trait.
