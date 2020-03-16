@@ -30,13 +30,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
         self.adaptation_manager = AdaptationManager()
 
-        return
-
-    def tearDown(self):
-        """ Called immediately after each test method has been called. """
-
-        return
-
     #### Tests ################################################################
 
     def test_no_adapter_required(self):
@@ -57,8 +50,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         # The adaptation manager should simply return the same object.
         self.assertIs(uk_plug, plug)
 
-        return
-
     def test_no_adapter_available(self):
 
         ex = self.examples
@@ -76,8 +67,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
         # There should be no way to adapt a UKPlug to a EUPlug.
         self.assertEqual(eu_plug, None)
-
-        return
 
     def test_one_step_adaptation(self):
 
@@ -100,8 +89,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         # We shouldn't be able to adapt it to a *concrete* 'EUPlug' though.
         eu_plug = self.adaptation_manager.adapt(plug, ex.EUPlug, None)
         self.assertIsNone(eu_plug)
-
-        return
 
     def test_adapter_chaining(self):
 
@@ -129,8 +116,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         self.assertIsNotNone(japan_plug)
         self.assertIsInstance(japan_plug, ex.EUStandardToJapanStandard)
         self.assertIs(japan_plug.adaptee.adaptee, uk_plug)
-
-        return
 
     def test_multiple_paths_unambiguous(self):
 
@@ -172,8 +157,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         self.assertIsNotNone(iraq_plug)
         self.assertIsInstance(iraq_plug, ex.EUStandardToIraqStandard)
         self.assertIs(iraq_plug.adaptee.adaptee, uk_plug)
-
-        return
 
     def test_multiple_paths_ambiguous(self):
 
@@ -219,8 +202,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         )
         self.assertIs(iraq_plug.adaptee.adaptee, uk_plug)
 
-        return
-
     def test_conditional_adaptation(self):
 
         ex = self.examples
@@ -256,8 +237,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         )
         self.assertIsNone(eu_plug)
 
-        return
-
     def test_spillover_adaptation_behavior(self):
 
         ex = self.examples
@@ -287,8 +266,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         )
         self.assertIsNone(printable)
 
-        return
-
     def test_adaptation_prefers_subclasses(self):
 
         ex = self.examples
@@ -315,8 +292,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         printable = self.adaptation_manager.adapt(text_editor, ex.IPrintable)
         self.assertIsNotNone(printable)
         self.assertIs(type(printable), ex.TextEditorToIPrintable)
-
-        return
 
     def test_adaptation_prefers_subclasses_other_registration_order(self):
         # This test is identical to `test_adaptation_prefers_subclasses`
@@ -348,8 +323,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         self.assertIsNotNone(printable)
         self.assertIs(type(printable), ex.TextEditorToIPrintable)
 
-        return
-
     def test_circular_adaptation(self):
         # Circles in the adaptation graph should not lead to infinite loops
         # when it is impossible to reach the target.
@@ -379,8 +352,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         bar = self.adaptation_manager.adapt(obj, Bar, None)
         self.assertIsNone(bar)
 
-        return
-
     def test_default_argument_in_adapt(self):
 
         from traits.adaptation.adaptation_manager import AdaptationError
@@ -393,8 +364,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         default = "default"
         result = self.adaptation_manager.adapt("string", int, default=default)
         self.assertIs(result, default)
-
-        return
 
     def test_prefer_specific_interfaces(self):
 
@@ -437,8 +406,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         self.assertIsNotNone(target)
         self.assertIs(type(target.adaptee), ex.IChildToIIntermediate)
 
-        return
-
     def test_chaining_with_intermediate_mro_climbing(self):
 
         ex = self.examples
@@ -465,8 +432,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         end = self.adaptation_manager.adapt(start, ex.IEnd)
         self.assertIsNotNone(end)
         self.assertIs(type(end), ex.IGenericToIEnd)
-
-        return
 
     def test_conditional_recycling(self):
         # Test that an offer that has been considered but failed if considered
@@ -520,8 +485,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         self.assertIsNotNone(b)
         self.assertTrue(hasattr(b, "marker"))
 
-        return
-
     def test_provides_protocol_for_interface_subclass(self):
 
         from traits.api import Interface
@@ -534,8 +497,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
         self.assertTrue(self.adaptation_manager.provides_protocol(IB, IA))
 
-        return
-
     def test_register_provides(self):
 
         from traits.api import Interface
@@ -547,5 +508,3 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         self.assertEqual(None, self.adaptation_manager.adapt(obj, IFoo, None))
         self.adaptation_manager.register_provides(dict, IFoo)
         self.assertEqual(obj, self.adaptation_manager.adapt(obj, IFoo))
-
-        return
