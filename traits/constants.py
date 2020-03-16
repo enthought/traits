@@ -10,6 +10,8 @@
 
 from enum import IntEnum
 
+import traits.ctraits
+
 
 class TraitKind(IntEnum):
     """ These determine the getters and setters used by the cTrait instance.
@@ -157,48 +159,48 @@ class DefaultValue(IntEnum):
     unspecified = -1
 
     #: The default_value of the trait is the default value.
-    constant = 0
+    constant = traits.ctraits._CONSTANT_DEFAULT_VALUE
 
     #: The default_value of the trait is Missing.
-    missing = 1
+    missing = traits.ctraits._MISSING_DEFAULT_VALUE
 
     #: The object containing the trait is the default value.
-    object = 2
+    object = traits.ctraits._OBJECT_DEFAULT_VALUE
 
     #: A new copy of the list specified by default_value is the default value.
-    list_copy = 3
+    list_copy = traits.ctraits._LIST_COPY_DEFAULT_VALUE
 
     #: A new copy of the dict specified by default_value is the default value.
-    dict_copy = 4
+    dict_copy = traits.ctraits._DICT_COPY_DEFAULT_VALUE
 
     #: A new instance of TraitListObject constructed using the default_value
     #: list is the default value.
-    trait_list_object = 5
+    trait_list_object = traits.ctraits._TRAIT_LIST_OBJECT_DEFAULT_VALUE
 
     #: A new instance of TraitDictObject constructed using the default_value
     #: dict is the default value.
-    trait_dict_object = 6
+    trait_dict_object = traits.ctraits._TRAIT_DICT_OBJECT_DEFAULT_VALUE
 
     #: The default_value is a tuple of the form: (*callable*, *args*, *kw*),
     #: where *callable* is a callable, *args* is a tuple, and *kw* is either a
     #: dictionary or None. The default value is the result obtained by invoking
     #: ``callable(\*args, \*\*kw)``.
-    callable_and_args = 7
+    callable_and_args = traits.ctraits._CALLABLE_AND_ARGS_DEFAULT_VALUE
 
     #: The default_value is a callable. The default value is the result
     #: obtained by invoking *default_value*(*object*), where *object* is the
     #: object containing the trait. If the trait has a validate() method, the
     #: validate() method is also called to validate the result.
-    callable = 8
+    callable = traits.ctraits._CALLABLE_DEFAULT_VALUE
 
     #: A new instance of TraitSetObject constructed using the default_value set
     #: is the default value.
-    trait_set_object = 9
+    trait_set_object = traits.ctraits._TRAIT_SET_OBJECT_DEFAULT_VALUE
 
 
 #: Maximum legal value for default_value_type, for use in testing
 #: and validation.
-MAXIMUM_DEFAULT_VALUE_TYPE = max(DefaultValue)
+MAXIMUM_DEFAULT_VALUE_TYPE = traits.ctraits._MAXIMUM_DEFAULT_VALUE_TYPE
 
 
 #: Mapping from 'ctrait' default value types to a string representation:
