@@ -1,4 +1,4 @@
-
+from functools import partial
 
 
 def observe(has_trait, callback, path, remove, dispatch):
@@ -147,16 +147,27 @@ class FilteredTraitListener(BaseListener):
                 yield object._trait(name, 2)._notifiers(True)
 
 
-class SimpleTraitListener(BaseListener):
+class NamedTraitListener(BaseListener):
 
-    def __init__(self, name, notify):
+    def __init__(self, name, notify, optional):
         self.name = name
         self.notify = notify
+        self.optional = optional
 
     def iter_lists_of_notifiers(self, object):
         trait = object.trait(name=self.name)
         if trait is not None:
             yield object._trait(self.name, 2)._notifiers(True)
+        else:
+            # The trait is not defined.
+            if not self.optional:
+                raise ValueError(
+                    "Trait name {!r} is not defined".format(self.name))
+
+
+OptionalTraitListener = partial(NamedTraitListener, optional=True)
+
+RequiredTraitListener = partial(NamedTraitListener, optional=False)
 
 
 class ListItemListener(BaseListener):
@@ -165,8 +176,12 @@ class ListItemListener(BaseListener):
         self.notify = notify
 
     def iter_lists_of_notifiers(self, object):
-        # Not sure what to do here.
-        pass
+        # object should be a TraitListObject
+        yield object.trait._notifiers(True)
+
+    def iter_next_objects(self, object):
+        # object should be a TraitListObject
+        return iter(object)
 
 
 class ListenerPath:
@@ -179,9 +194,9 @@ class ListenerPath:
 # "inst.attr"
 # fire if inst is changed, or inst.attr is changed
 path = ListenerPath(
-    node=SimpleTraitListener(name="inst", notify=True),
+    node=RequiredTraitListener(name="inst", notify=True),
     next=ListenerPath(
-        node=SimpleTraitListener(name="attr", notify=True),
+        node=RequiredTraitListener(name="attr", notify=True),
         next=None,
     )
 )
@@ -191,9 +206,9 @@ path = ListenerPath(
 # do not fire if inst is changed (even if it is changed such that
 # inst.attr is changed)
 path = ListenerPath(
-    node=SimpleTraitListener(name="inst", notify=False),
+    node=RequiredTraitListener(name="inst", notify=False),
     next=ListenerPath(
-        node=SimpleTraitListener(name="attr", notify=True),
+        node=RequiredTraitListener(name="attr", notify=True),
         next=None,
     ),
 )
@@ -202,17 +217,17 @@ path = ListenerPath(
 # This is equivalent to having two paths
 paths = [
     ListenerPath(
-        node=SimpleTraitListener(name="inst1", notify=True),
+        node=RequiredTraitListener(name="inst1", notify=True),
         next=ListenerPath(
-            node=SimpleTraitListener(name="attr", notify=True),
+            node=RequiredTraitListener(name="attr", notify=True),
             next=None,
         )
     ),
     # path2
     ListenerPath(
-        node=SimpleTraitListener(name="inst2", notify=True),
+        node=RequiredTraitListener(name="inst2", notify=True),
         next=ListenerPath(
-            node=SimpleTraitListener(name="attr", notify=True),
+            node=RequiredTraitListener(name="attr", notify=True),
             next=None,
         )
     ),
@@ -220,17 +235,17 @@ paths = [
 
 # "inst.container"
 path = ListenerPath(
-    node=SimpleTraitListener(name="inst", notify=True),
+    node=RequiredTraitListener(name="inst", notify=True),
     next=ListenerPath(
-        node=SimpleTraitListener(name="constainer", notify=True),
+        node=RequiredTraitListener(name="constainer", notify=True),
     ),
 )
 
 # "inst.container_items"
 path = ListenerPath(
-    node=SimpleTraitListener(name="inst", notify=True),
+    node=RequiredTraitListener(name="inst", notify=True),
     next=ListenerPath(
-        node=SimpleTraitListener(name="constainer", notify=False),
+        node=RequiredTraitListener(name="constainer", notify=False),
         next=ListenerPath(
             node=ListItemListener(notify=True),
             next=None,
@@ -241,21 +256,21 @@ path = ListenerPath(
 # "inst.[inst1, inst2].attr"
 paths = [
     ListenerPath(
-        node=SimpleTraitListener(name="inst", notify=True),
+        node=RequiredTraitListener(name="inst", notify=True),
         next=ListenerPath(
-            node=SimpleTraitListener(name="inst1", notify=True),
+            node=RequiredTraitListener(name="inst1", notify=True),
             next=ListenerPath(
-                node=SimpleTraitListener(name="attr", notify=True),
+                node=RequiredTraitListener(name="attr", notify=True),
                 next=None,
             )
         ),
     ),
     ListenerPath(
-        node=SimpleTraitListener(name="inst", notify=True),
+        node=RequiredTraitListener(name="inst", notify=True),
         next=ListenerPath(
-            node=SimpleTraitListener(name="inst2", notify=True),
+            node=RequiredTraitListener(name="inst2", notify=True),
             next=ListenerPath(
-                node=SimpleTraitListener(name="attr", notify=True),
+                node=RequiredTraitListener(name="attr", notify=True),
                 next=None,
             ),
         ),
@@ -264,7 +279,7 @@ paths = [
 
 # "inst.attr?"
 path = ListenerPath(
-    node=SimpleTraitListener(name="inst", notify=True),
+    node=RequiredTraitListener(name="inst", notify=True),
     next=ListenerPath(
         node=OptionalTraitListener(name="attr", notify=True),
         next=None,
@@ -273,8 +288,8 @@ path = ListenerPath(
 
 # "inst.attr*"
 # this should match inst.attr.attr.attr.attr....
-attr = SimpleTraitListener(name="attr", notify=True)
-path = ListenerPath(node=SimpleTraitListener(name="inst", notify=True))
+attr = RequiredTraitListener(name="attr", notify=True)
+path = ListenerPath(node=OptionalTraitListener(name="inst", notify=True))
 path.next = path
 
 
@@ -284,7 +299,7 @@ path = ListenerPath(
     next=ListenerPath(
         node=OptionalTraitListener(name="inst1", notify=True),
         next=ListenerPath(
-            node=OptionalTraitListener(name="attr", notify=True),
+            node=RequiredTraitListener(name="attr", notify=True),
             next=None,
         ),
     )
@@ -292,7 +307,7 @@ path = ListenerPath(
 
 # Listen to changes to the items in the values of Dict(Str(), List())
 path = ListenerPath(
-    node=SimpleTraitListener(name="mapping", notify=True),
+    node=RequiredTraitListener(name="mapping", notify=True),
     next=ListenerPath(
         node=DictValueListener(notify=True),
         next=ListenerPath(
@@ -303,7 +318,14 @@ path = ListenerPath(
 
 # Listen to all traits with a metadata 'updated'
 path = ListenerPath(
-    node=AnyTraitListener(filter=lambda trait: "updated" in trait.__dict__),
+    node=FilteredTraitListener(filter=lambda trait: "updated" in trait.__dict__),
     next=None,
 )
 
+
+# Listen to any traits, then any traits of each of these traits...
+path = ListenerPath(
+    node=AnyTraitListener(),
+    next=None,
+)
+path.next = path
