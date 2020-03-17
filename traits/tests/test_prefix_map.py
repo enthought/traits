@@ -15,7 +15,7 @@ Tests for the PrefixMap handler.
 import pickle
 import unittest
 
-from traits.api import HasTraits, TraitError, PrefixMap
+from traits.api import HasTraits, TraitError, PrefixMap, Undefined
 
 
 class TestPrefixMap(unittest.TestCase):
@@ -25,7 +25,7 @@ class TestPrefixMap(unittest.TestCase):
 
         person = Person()
 
-        self.assertIsNone(person.married)
+        self.assertEqual(Undefined, person.married)
 
         # Test prefix
         person.married = "yea"
@@ -46,12 +46,6 @@ class TestPrefixMap(unittest.TestCase):
         # Test duplicate prefix
         with self.assertRaises(TraitError):
             person.married = "ye"
-
-    def test_invalid_default(self):
-        with self.assertRaises(ValueError):
-            class Person(HasTraits):
-                married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
-                                    default_value="ye")
 
     def test_default(self):
         class Person(HasTraits):

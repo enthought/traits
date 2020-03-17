@@ -2830,10 +2830,7 @@ class Map(TraitType):
         self.map = map
         self.fast_validate = (ValidateTrait.map, map)
 
-        default_value = metadata.pop("default_value", None)
-
-        if default_value is not None:
-            default_value = self.validate(None, None, default_value)
+        default_value = metadata.pop("default_value", Undefined)
 
         super().__init__(default_value, **metadata)
 
@@ -2905,14 +2902,8 @@ class PrefixMap(Map):
             _map[key] = key
         self.fast_validate = (ValidateTrait.prefix_map, _map, self.validate)
 
-        default_value = metadata.pop("default_value", None)
+        default_value = metadata.pop("default_value", Undefined)
 
-        if default_value is not None:
-            try:
-                default_value = self.validate(None, None, default_value)
-            except TraitError:
-                raise ValueError("The default value for PrefixMap trait must "
-                                 "be a unique prefix of a key in the map.")
         super(Map, self).__init__(default_value, **metadata)
 
     def validate(self, object, name, value):

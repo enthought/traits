@@ -15,7 +15,7 @@ Tests for the Map handler.
 import pickle
 import unittest
 
-from traits.api import HasTraits, TraitError, Map
+from traits.api import HasTraits, TraitError, Map, Undefined
 
 
 class TestMap(unittest.TestCase):
@@ -25,7 +25,7 @@ class TestMap(unittest.TestCase):
 
         person = Person()
 
-        self.assertIsNone(person.married)
+        self.assertEqual(Undefined, person.married)
 
         person.married = "yes"
         self.assertEqual("yes", person.married)
@@ -37,12 +37,6 @@ class TestMap(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             person.married = "dont know"
-
-    def test_invalid_default(self):
-        with self.assertRaises(TraitError):
-            class Person(HasTraits):
-                married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
-                              default_value="unknown")
 
     def test_default(self):
         class Person(HasTraits):
