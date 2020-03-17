@@ -84,6 +84,10 @@ def add_notifiers(listener, object, callback, target, dispatch):
             "Don't call add_notifiers if the listener is supposed to "
             "be quiet!"
         )
+    if object is Undefined:
+        # TODO: Do something to defer adding a notifier
+        return
+
     for observer_notifiers in listener.iter_lists_of_notifiers(object):
 
         for other in observer_notifiers:
