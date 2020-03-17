@@ -117,6 +117,12 @@ class ArgCheckDecorator(ArgCheckBase):
         self.tc.assertEqual(new, self.value)
 
 
+class ArgCheckDecoratorTrailingComma(ArgCheckDecorator):
+    @on_trait_change("int1, int2,")
+    def arg_check(self, object, name, old, new):
+        pass
+
+
 class BaseInstance(HasTraits):
 
     #: An instance with a value trait we want to listen to.
@@ -468,12 +474,22 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(ac.calls, (3 * 5))
         self.assertEqual(ac.value, (2 * 3))
 
+    def test_arg_check_trailing_comma(self):
+        ac = ArgCheckSimple(tc=self)
+
+        with self.assertRaises(TraitError):
+            ac.on_trait_change(ac.arg_check0, "int1, int2,")
+
     def test_arg_check_decorator(self):
         ac = ArgCheckDecorator(tc=self)
         for i in range(3):
             ac.value += 1
         self.assertEqual(ac.calls, (3 * 5))
         self.assertEqual(ac.value, 3)
+
+    def test_arg_check_decorator_trailing_comma(self):
+        with self.assertRaises(TraitError):
+            ArgCheckDecoratorTrailingComma(tc=self)
 
     def test_instance_simple_value(self):
         inst = InstanceSimpleValue(tc=self)

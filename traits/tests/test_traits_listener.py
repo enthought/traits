@@ -200,16 +200,10 @@ class TestListenerParser(unittest.TestCase):
             self.assertEqual(actual, expected)
 
     def test_parse_comma_separated_text_trailing_comma(self):
-        # This may be made illegal, see enthought/traits#406
+        # Made illegal, see enthought/traits#406
         text = "child1, child2, child3,"
-        parser = traits_listener.ListenerParser(text=text)
-
-        listener_group = parser.listener
-
-        self.assertEqual(len(listener_group.items), 4)
-
-        actual = [item.name for item in listener_group.items]
-        self.assertEqual(actual, ["child1", "child2", "child3", ""])
+        with self.assertRaises(TraitError):
+            traits_listener.ListenerParser(text=text)
 
     def test_parse_text_with_question_mark(self):
         text = "foo?.bar?"
