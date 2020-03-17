@@ -2838,7 +2838,7 @@ class Map(TraitType):
         try:
             if value in self.map:
                 return value
-        except Exception:
+        except TypeError:
             pass
 
         self.error(object, name, value)
@@ -2907,22 +2907,22 @@ class PrefixMap(Map):
         super(Map, self).__init__(default_value, **metadata)
 
     def validate(self, object, name, value):
-        try:
-            if value not in self._map:
-                match = None
-                n = len(value)
-                for key in self.map.keys():
-                    if value == key[:n]:
-                        if match is not None:
-                            match = None
-                            break
-                        match = key
-                if match is None:
-                    self.error(object, name, value)
-                self._map[value] = match
+        if value in self._map:
             return self._map[value]
-        except:
-            self.error(object, name, value)
+
+        else:
+            match = None
+            n = len(value)
+            for key in self.map.keys():
+                if value == key[:n]:
+                    if match is not None:
+                        match = None
+                        break
+                    match = key
+            if match is None:
+                self.error(object, name, value)
+            self._map[value] = match
+            return self._map[value]
 
     def info(self):
         return super().info() + " (or any unique prefix)"
