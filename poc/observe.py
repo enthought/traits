@@ -6,13 +6,13 @@ from traits.trait_base import Undefined
 def observe(object, callback, path, remove, dispatch):
 
     listener = path.node
-    if remove:
+    if listener.notify and remove:
         remove_notifiers(
             listener=listener,
             object=object,
             callback=callback,
         )
-    else:
+    elif listener.notify and not remove:
         add_notifiers(
             listener=listener,
             object=object,
@@ -20,6 +20,7 @@ def observe(object, callback, path, remove, dispatch):
             target=None,   # what should target be?
             dispatch=dispatch,
         )
+
     if path.next is not None:
         for next_object in listener.iter_next_targets(object):
             observe(next_object, callback, path.next, remove, dispatch)
