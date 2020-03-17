@@ -147,7 +147,9 @@ class TraitListObject(list):
     def __setitem__(self, key, value):
         self_trait = getattr(self, "trait", None)
         if self_trait is None:
-            return list.__setitem__(self, key, value)
+            list.__setitem__(self, key, value)
+            return
+
         try:
             removed = self[key]
         except Exception:
@@ -217,7 +219,8 @@ class TraitListObject(list):
     def __delitem__(self, key):
         trait = getattr(self, "trait", None)
         if trait is None:
-            return list.__delitem__(self, key)
+            list.__delitem__(self, key)
+            return
 
         try:
             removed = self[key]
@@ -308,7 +311,9 @@ class TraitListObject(list):
     def insert(self, index, value):
         trait = getattr(self, "trait", None)
         if trait is None:
-            return list.insert(self, index, value)
+            list.insert(self, index, value)
+            return
+
         if trait.minlen <= (len(self) + 1) <= trait.maxlen:
             try:
                 validate = trait.item_trait.handler.validate
