@@ -61,9 +61,7 @@ class TraitObserverNotifier(object):
 
     @property
     def count(self):
-        if not hasattr(self, "_count"):
-            self._count = 0
-        return self._count
+        return getattr(self, "_count", 0)
 
     @count.setter
     def count(self, value):
