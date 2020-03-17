@@ -20,7 +20,7 @@ class TestConstantTrait(unittest.TestCase):
         class TestClass(HasTraits):
             c_atr = Constant(5)
 
-        self.assertEqual(5, TestClass().c_atr)
+        self.assertEqual(TestClass().c_atr, 5)
 
     def test_mutable_initial_value(self):
         class TestClass(HasTraits):
@@ -29,8 +29,8 @@ class TestConstantTrait(unittest.TestCase):
 
         obj = TestClass()
 
-        self.assertEqual([1, 2, 3, 4, 5], obj.c_atr_1)
-        self.assertEqual({"a": 1, "b": 2}, obj.c_atr_2)
+        self.assertEqual(obj.c_atr_1, [1, 2, 3, 4, 5])
+        self.assertEqual(obj.c_atr_2, {"a": 1, "b": 2})
 
     def test_assign_fails(self):
         class TestClass(HasTraits):
@@ -50,5 +50,5 @@ class TestConstantTrait(unittest.TestCase):
         obj.c_atr_1.append(6)
         obj.c_atr_2["c"] = 3
 
-        self.assertEqual([1, 2, 3, 4, 5, 6], obj.c_atr_1)
-        self.assertEqual({"a": 1, "b": 2, "c": 3}, obj.c_atr_2)
+        self.assertEqual(obj.c_atr_1, [1, 2, 3, 4, 5, 6])
+        self.assertEqual(obj.c_atr_2, {"a": 1, "b": 2, "c": 3})
