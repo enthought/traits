@@ -19,33 +19,6 @@ class INotifier:
         pass
 
 
-class INotifiableObject:
-
-    def _get_notifiers(self):
-        return []
-
-
-class Trait(INotifiableObject):
-
-    def _get_notifiers(self):
-        return self._notifiers(True)
-
-
-class HasTrait(INotifiableObject):
-
-    def _get_notifiers(self):
-        return self._notifiers(True)
-
-
-class TraitListObject(INotifiableObject):
-
-    def _get_notifiers(self):
-        return []
-
-    def _add_notifier(self):
-        pass
-
-
 class BaseObserverEvent:
     pass
 
