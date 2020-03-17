@@ -50,8 +50,8 @@ class CustomCollection(Collection):
     def __iter__(self):
         return iter(self.data)
 
-    def __contains__(self, __x: object):
-        return __x in self.data
+    def __contains__(self, x):
+        return x in self.data
 
 
 class EnumListExample(HasTraits):
@@ -98,6 +98,12 @@ class EnumCollectionExample(HasTraits):
     numbers = Enum(CustomCollection("one", "two", "three"))
 
     letters = Enum("abcdefg")
+
+    int_set_enum = Enum(1, {1, 2})
+
+    correct_int_set_enum = Enum([1, {1, 2}])
+
+    yes_no = Enum("yes", "no")
 
 
 class EnumTestCase(unittest.TestCase):
@@ -197,3 +203,23 @@ class EnumTestCase(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             collection_enum.rgb = "two"
+
+        with self.assertRaises(TraitError):
+            collection_enum.letters = 'b'
+
+        collection_enum.yes_no = "no"
+        with self.assertRaises(TraitError):
+            collection_enum.yes_no = "n"
+
+        self.assertEqual(1, collection_enum.int_set_enum)
+        # Fixing issue #835 introduces the following behaviour, which would
+        # have otherwise not thrown a TraitError
+        with self.assertRaises(TraitError):
+            collection_enum.int_set_enum = {1, 2}
+
+        # But the behaviour can be fixed, as seen below
+        self.assertEqual(1, collection_enum.correct_int_set_enum)
+        collection_enum.correct_int_set_enum = {1, 2}
+
+        with self.assertRaises(TraitError):
+            collection_enum.correct_int_set_enum = 2

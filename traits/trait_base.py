@@ -84,7 +84,6 @@ class _Uninitialized(object):
 #: assignment, and treat it specially.
 Uninitialized = _Uninitialized()
 
-
 Undefined = None
 
 
@@ -205,7 +204,7 @@ def enum_default(values):
     if isinstance(values, enum.EnumMeta):
         default = next(iter(values), None)
     elif is_collection(values):
-        if isinstance(values, str):
+        if is_excluded_collection(values):
             default = values
         else:
             default = next(iter(values))
@@ -402,6 +401,12 @@ def not_event(value):
 
 def is_str(value):
     return isinstance(value, str)
+
+
+def is_excluded_collection(value):
+    if isinstance(value, (str, bytes, bytearray)):
+        return True
+    return False
 
 
 def is_collection(value):

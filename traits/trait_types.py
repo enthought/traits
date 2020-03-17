@@ -41,6 +41,7 @@ from .trait_base import (
     TraitsCache,
     xgetattr,
     is_collection,
+    is_excluded_collection,
 )
 from .trait_converters import trait_from, trait_cast
 from .trait_dict_object import TraitDictEvent, TraitDictObject
@@ -1924,11 +1925,14 @@ class BaseEnum(TraitType):
         The enumeration of all legal values for the trait.  The expected
         signatures are either:
 
-        - a single list, enum.Enum or tuple.  The default value is the first
-          item in the collection.
+        - a single list, enum.Enum, tuple or a collection.  The default value
+          is the first item in the collection. The collection should conform to
+          the collections.abc.Collection interface. That is, it at least
+          provides the __contains__, len and __iter__ methods.
         - a single default value, combined with the values keyword
           argument.
-        - a default value, followed by a single list enum.Enum or tuple.
+        - a default value, followed by a single list enum.Enum, tuple or
+          collection conforming to collections.abc.Collection
         - arbitrary positional arguments each giving a valid value.
     values : str
         The name of a trait holding the legal values.  A default value may
@@ -1969,12 +1973,14 @@ class BaseEnum(TraitType):
                 self.values = args[0]
                 default_value = enum_default(self.values)
 
-                # If values is not a Collection
+                # If values is not a Collection, treat them differently
                 if isinstance(self.values, EnumTypes):
                     self.values = tuple(self.values)
+                elif is_excluded_collection(self.values):
+                    self.values = {self.values}
 
             elif len(args) == 2:
-                if isinstance(args[1], str):
+                if is_excluded_collection(args[1]):
                     self.values = tuple(args)
                 elif is_collection(args[1]):
                     self.values = args[1]
@@ -2064,11 +2070,14 @@ class Enum(BaseEnum):
         The enumeration of all legal values for the trait.  The expected
         signatures are either:
 
-        - a single list, enum.Enum or tuple.  The default value is the first
-          item in the collection.
+        - a single list, enum.Enum, tuple or a collection.  The default value
+          is the first item in the collection. The collection should conform to
+          the collections.abc.Collection interface. That is, it at least
+          provides the __contains__, len and __iter__ methods.
         - a single default value, combined with the values keyword
           argument.
-        - a default value, followed by a single list enum.Enum or tuple.
+        - a default value, followed by a single list enum.Enum, tuple or
+          collection conforming to collections.abc.Collection
         - arbitrary positional arguments each giving a valid value.
 
     values : str
