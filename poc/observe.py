@@ -75,14 +75,6 @@ class TraitObserverNotifier(object):
     def __call__(self, object, name, old, new):
         pass
 
-    @property
-    def count(self):
-        return getattr(self, "_count", 0)
-
-    @count.setter
-    def count(self, value):
-        self._count = value
-
 
 WRAPPERS = {
     # These are placeholders.
@@ -108,7 +100,6 @@ def add_notifiers(listener, object, callback, dispatch):
         observer_notifiers = target._notifiers(True)
         for other in observer_notifiers:
             if other.equals(callback):
-                other.count += 1
                 break
         else:
             new_notifier = WRAPPERS[dispatch](
@@ -117,7 +108,6 @@ def add_notifiers(listener, object, callback, dispatch):
                 target=target,
                 event_factory=listener.event_factory,
             )
-            new_notifier.count = 1
             observer_notifiers.append(new_notifier)
 
 
@@ -128,10 +118,8 @@ def remove_notifiers(listener, object, callback):
         observer_notifiers = target._notifiers(True)
         for other in observer_notifiers[:]:
             if other.equals(callback):
-                other.count -= 1
-                if other.count == 0:
-                    other.observer_deleted()
-                    other.dispose()
+                other.observer_deleted()
+                other.dispose()
                 break
 
 
