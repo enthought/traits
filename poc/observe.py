@@ -176,7 +176,9 @@ class AnyTraitListener(BaseListener):
 
     def iter_next_targets(self, object):
         for name in object.trait_names():
-            yield object.__dict__.get(name, Undefined)
+            value = object.__dict__.get(name, Undefined)
+            if has_notifiers(value):
+                yield value
 
 
 class FilteredTraitListener(BaseListener):
@@ -192,7 +194,11 @@ class FilteredTraitListener(BaseListener):
                 yield object._trait(name, 2)
 
     def iter_next_targets(self, object):
-        pass
+        for name, trait in object.traits().items():
+            if self.filter(trait):
+                value = object.__dict__.get(name, Undefined)
+                if has_notifiers(value):
+                    yield value
 
 
 class NamedTraitListener(BaseListener):
@@ -210,6 +216,11 @@ class NamedTraitListener(BaseListener):
                 "Trait name {!r} is not defined".format(self.name))
         # this has side effect of creating instance trait...
         yield object._trait(self.name, 2)
+
+    def iter_next_targets(self, object):
+        value = object.__dict__.get(self.name, Undefined)
+        if has_notifiers(value):
+            yield value
 
 
 OptionalTraitListener = partial(NamedTraitListener, optional=True)
