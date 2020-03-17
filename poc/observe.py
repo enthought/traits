@@ -25,20 +25,6 @@ def observe(object, callback, path, remove, dispatch):
             observe(next_object, callback, path.next, remove, dispatch)
 
 
-class INotifier:
-
-    def __call__(self, object, trait_name, old, new):
-        pass
-
-    @property
-    def count(self):
-        return 0
-
-    @count.setter
-    def count(self, value):
-        pass
-
-
 class BaseObserverEvent:
     pass
 
@@ -72,6 +58,16 @@ class TraitObserverNotifier(object):
 
     def __call__(self, object, name, old, new):
         pass
+
+    @property
+    def count(self):
+        if not hasattr(self, "_count"):
+            self._count = 0
+        return self._count
+
+    @count.setter
+    def count(self, value):
+        self._count = value
 
 
 WRAPPERS = {
