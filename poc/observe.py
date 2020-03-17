@@ -4,6 +4,22 @@ from traits.trait_base import Undefined
 
 
 def observe(object, callback, path, remove, dispatch):
+    """
+    Parameters
+    ----------
+    object : HasTrait or CTrait
+        An object that implements `_notifiers` for returning a list for
+        adding or removing notifiers
+    callback : callable(object, name, old, new)
+        A callable conforming to the notifier signature.
+    path : ListenerPath
+        Path for listening to extended traits.
+    remove : boolean
+        Whether to remove the observer.
+    dispatch : str
+        A string indicating the thread on which notifications should be
+        run.
+    """
 
     listener = path.node
     if listener.notify and remove:
