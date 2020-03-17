@@ -2,7 +2,22 @@
 
 
 def observe(has_trait, callback, path, remove, dispatch):
-    pass
+
+    listener = path.node
+    if remove:
+        remove_notifiers(
+            listener=listener,
+            object=has_trait,
+            callback=callback,
+        )
+    else:
+        add_notifiers(
+            listener=listener,
+            object=has_trait,
+            callback=callback,
+            target=None,   # what should target be?
+            dispatch=dispatch,
+        )
 
 
 class INotifier:
@@ -111,7 +126,7 @@ class BaseListener:
         self._notify = value
 
     def iter_lists_of_notifiers(self, object):
-        return []
+        raise GeneratorExit()
 
 
 class AnyTraitListener(BaseListener):
