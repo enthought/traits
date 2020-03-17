@@ -131,6 +131,21 @@ def remove_notifiers(object, callback, path):
             remove_notifiers(target, callback, path)
 
 
+def has_notifiers(object):
+    # Is there a better way to identify objects
+    # supporting _notifiers?
+    try:
+        object._notifiers(False)
+    except Exception:
+        return False
+    else:
+        return True
+
+
+class TraitListObject:
+
+    def _notifiers(self, *args, **kwargs):
+        return self.trait._notifiers(*args, **kwargs)
 
 
 class BaseListener:
@@ -209,7 +224,26 @@ class ListItemListener(BaseListener):
 
     def iter_this_targets(self, object):
         # object should be a TraitListObject
-        yield object.trait
+        yield object
+
+    def iter_next_target(self, object):
+        for item in object:
+            if has_notifiers(item):
+                yield item
+
+
+def handle_list_item_changed(event, callback, dispatch, path):
+    # The parent node of path should be a ListItemListener
+    list_ = getattr(event.object, event.name)
+
+    removed = set(event.removed) ^ set(list_)
+    for item in removed:
+        if has_notifiers(item):
+            remove_notifiers(item, callback, path)
+
+    for item in event.added:
+        if has_notifiers(item):
+            add_notifiers(item, callback, dispatch, path)
 
 
 class ListenerPath:
