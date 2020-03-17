@@ -125,14 +125,26 @@ class BaseListener:
     def notify_setter(self, value):
         self._notify = value
 
+    def iter_this_targets(self, object):
+        yield from ()
+
     def iter_lists_of_notifiers(self, object):
-        raise GeneratorExit()
+        for target in self.iter_this_targets(object):
+            yield target._notifiers(True)
+
+    def iter_next_targets(self, object):
+        # For walking down the path of Listeners
+        yield from ()
 
 
 class AnyTraitListener(BaseListener):
 
-    def iter_lists_of_notifiers(self, object):
-        yield object._notifiers(True)
+    def iter_this_targets(self, object):
+        yield object
+
+    def iter_next_targets(self, object):
+        for name in object.trait_names():
+            yield object._trait(name, 2)
 
 
 class FilteredTraitListener(BaseListener):
@@ -141,10 +153,11 @@ class FilteredTraitListener(BaseListener):
         self.filter = filter
         self.notify = notify
 
-    def iter_lists_of_notifiers(self, object):
+    def iter_this_targets(self, object):
+        # object must be an instance of HasTraits
         for name, trait in object.traits().items():
             if self.filter(trait):
-                yield object._trait(name, 2)._notifiers(True)
+                yield object._trait(name, 2)
 
 
 class NamedTraitListener(BaseListener):
@@ -154,15 +167,14 @@ class NamedTraitListener(BaseListener):
         self.notify = notify
         self.optional = optional
 
-    def iter_lists_of_notifiers(self, object):
+    def iter_this_targets(self, object):
+        # object must be an instance of HasTraits
         trait = object.trait(name=self.name)
-        if trait is not None:
-            yield object._trait(self.name, 2)._notifiers(True)
-        else:
-            # The trait is not defined.
-            if not self.optional:
-                raise ValueError(
-                    "Trait name {!r} is not defined".format(self.name))
+        if trait is None and not self.optional:
+            raise ValueError(
+                "Trait name {!r} is not defined".format(self.name))
+        # this has side effect of creating instance trait...
+        yield object._trait(self.name, 2)
 
 
 OptionalTraitListener = partial(NamedTraitListener, optional=True)
@@ -175,13 +187,9 @@ class ListItemListener(BaseListener):
     def __init__(self, notify):
         self.notify = notify
 
-    def iter_lists_of_notifiers(self, object):
+    def iter_this_targets(self, object):
         # object should be a TraitListObject
-        yield object.trait._notifiers(True)
-
-    def iter_next_objects(self, object):
-        # object should be a TraitListObject
-        return iter(object)
+        yield object.trait
 
 
 class ListenerPath:
