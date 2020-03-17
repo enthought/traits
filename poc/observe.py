@@ -17,7 +17,6 @@ def observe(object, callback, path, remove, dispatch):
             listener=listener,
             object=object,
             callback=callback,
-            target=None,   # what should target be?
             dispatch=dispatch,
         )
 
@@ -78,7 +77,7 @@ WRAPPERS = {
 }
 
 
-def add_notifiers(listener, object, callback, target, dispatch):
+def add_notifiers(listener, object, callback, dispatch):
     if listener.notify:
         raise ValueError(
             "Don't call add_notifiers if the listener is supposed to "
@@ -88,8 +87,9 @@ def add_notifiers(listener, object, callback, target, dispatch):
         # TODO: Do something to defer adding a notifier
         return
 
-    for observer_notifiers in listener.iter_lists_of_notifiers(object):
+    for target in listener.iter_this_targets(object):
 
+        observer_notifiers = target._notifiers(True)
         for other in observer_notifiers:
             if other.equals(callback):
                 other.count += 1
@@ -132,10 +132,6 @@ class BaseListener:
     def iter_this_targets(self, object):
         yield from ()
 
-    def iter_lists_of_notifiers(self, object):
-        for target in self.iter_this_targets(object):
-            yield target._notifiers(True)
-
     def iter_next_targets(self, object):
         # For walking down the path of Listeners
         yield from ()
@@ -162,6 +158,9 @@ class FilteredTraitListener(BaseListener):
         for name, trait in object.traits().items():
             if self.filter(trait):
                 yield object._trait(name, 2)
+
+    def iter_next_targets(self, object):
+        pass
 
 
 class NamedTraitListener(BaseListener):
