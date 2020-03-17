@@ -53,6 +53,15 @@ class TestPrefixMap(unittest.TestCase):
                 married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
                                     default_value="ye")
 
+    def test_default(self):
+        class Person(HasTraits):
+            married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
+                                 None: 2},
+                                default_value=None)
+        p = Person()
+        self.assertIsNone(p.married)
+        self.assertEqual(p.married_, 2)
+
     def test_pickle_roundtrip(self):
         class Person(HasTraits):
             married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
@@ -67,9 +76,7 @@ class TestPrefixMap(unittest.TestCase):
         self.assertEqual(reconstituted.validate(p, "married", "yea"), "yeah")
 
         with self.assertRaises(TraitError):
-            self.assertEqual(reconstituted.validate(p, "married", "uknown"),
-                             "unknown")
+            reconstituted.validate(p, "married", "uknown")
 
         with self.assertRaises(TraitError):
-            self.assertEqual(reconstituted.validate(p, "married", "ye"),
-                             "yeah")
+            reconstituted.validate(p, "married", "ye")

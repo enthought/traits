@@ -39,10 +39,19 @@ class TestMap(unittest.TestCase):
             person.married = "dont know"
 
     def test_invalid_default(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TraitError):
             class Person(HasTraits):
                 married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
                               default_value="unknown")
+
+    def test_default(self):
+        class Person(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
+                           None: 2}, default_value=None)
+
+        p = Person()
+        self.assertIsNone(p.married)
+        self.assertEqual(p.married_, 2)
 
     def test_pickle_roundtrip(self):
         class Person(HasTraits):

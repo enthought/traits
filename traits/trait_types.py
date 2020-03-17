@@ -2794,17 +2794,17 @@ class Map(TraitType):
         The following example defines a ``Person`` class::
 
             >>>class Person(HasTraits):
-            ...    married = Map({'yes': 1, 'no': 0 })
+            ...    married = Map({'yes': 1, 'no': 0 }, default_value="yes")
             >>>
             >>>bob = Person()
-            >>>print bob.married
+            >>>print(bob.married)
             yes
-            >>>print bob.married_
+            >>>print(bob.married_)
             1
 
         In this example, the default value of the ``married`` attribute of the
         Person class is 'yes'. Because this attribute is defined using
-        PrefixList, instances of Person have another attribute,
+        Map, instances of Person have another attribute,
         ``married_``, whose default value is 1, the dictionary value
         corresponding to the key 'yes'.
 
@@ -2833,11 +2833,7 @@ class Map(TraitType):
         default_value = metadata.pop("default_value", None)
 
         if default_value is not None:
-            try:
-                default_value = self.validate(None, None, default_value)
-            except TraitError:
-                raise ValueError("The default value for Map trait must be key"
-                                 " in the map.")
+            default_value = self.validate(None, None, default_value)
 
         super().__init__(default_value, **metadata)
 
@@ -2845,7 +2841,7 @@ class Map(TraitType):
         try:
             if value in self.map:
                 return value
-        except:
+        except Exception:
             pass
 
         self.error(object, name, value)
@@ -2855,12 +2851,7 @@ class Map(TraitType):
         return self.map[value]
 
     def post_setattr(self, object, name, value):
-        try:
-            setattr(object, name + "_", self.mapped_value(value))
-        except:
-            # We don't need a fancy error message, because this exception
-            # should always be caught by a TraitCompound handler:
-            raise TraitError("Unmappable")
+        setattr(object, name + "_", self.mapped_value(value))
 
     def info(self):
         keys = sorted(repr(x) for x in self.map.keys())
