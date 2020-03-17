@@ -106,6 +106,8 @@ def add_notifiers(listener, object, callback, dispatch):
 
 
 def remove_notifiers(listener, object, callback):
+    if object is Undefined:
+        return
     for observer_notifiers in listener.iter_lists_of_notifiers(object):
         for other in observer_notifiers[:]:
             if other.equals(callback):
