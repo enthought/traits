@@ -1,23 +1,28 @@
 from functools import partial
 
+from traits.trait_base import Undefined
 
-def observe(has_trait, callback, path, remove, dispatch):
+
+def observe(object, callback, path, remove, dispatch):
 
     listener = path.node
     if remove:
         remove_notifiers(
             listener=listener,
-            object=has_trait,
+            object=object,
             callback=callback,
         )
     else:
         add_notifiers(
             listener=listener,
-            object=has_trait,
+            object=object,
             callback=callback,
             target=None,   # what should target be?
             dispatch=dispatch,
         )
+    if path.next is not None:
+        for next_object in listener.iter_next_targets(object):
+            observe(next_object, callback, path.next, remove, dispatch)
 
 
 class INotifier:
@@ -144,7 +149,7 @@ class AnyTraitListener(BaseListener):
 
     def iter_next_targets(self, object):
         for name in object.trait_names():
-            yield object._trait(name, 2)
+            yield object.__dict__.get(name, Undefined)
 
 
 class FilteredTraitListener(BaseListener):
