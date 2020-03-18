@@ -817,7 +817,7 @@ class TraitListObject(TraitList):
 
     # Addd the following for the POC
     def _notifiers(self, force_create):
-        return self.trait._notifiers(force_create)
+        return self.trait.items_event()._notifiers(force_create)
 
 
 from interfaces import INotifiableObject
