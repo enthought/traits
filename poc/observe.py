@@ -82,25 +82,14 @@ def add_notifiers(object, callback, dispatch, path):
 
         if path.next is not None:
 
-            if isinstance(listener, ListItemListener):
-                h = partial(handle_list_item_changed, callback=callback, dispatch=dispatch, path=path.next)
-                add_notifier(target, h, dispatch, listener.event_factory)
+            adder = partial(add_notifiers, callback=callback, dispatch=dispatch, path=path.next)
+            remover = partial(remove_notifiers, callback=callback, path=path.next)
+            next_callback = partial(listener.change_callback, remove_notifiers=remover, add_notifiers=adder)
+            # TODO: Remove this callback in remove_notifiers?
+            add_notifier(target, next_callback, dispatch, listener.event_factory)
 
             for next_target in listener.iter_next_targets(object):
                 add_notifiers(next_target, callback, dispatch, path.next)
-
-
-def handle_list_item_changed(event, callback, dispatch, path):
-    # The parent node of path should be a ListItemListener
-    list_ = getattr(event.object, event.name)
-    removed = set(event.removed) - set(list_)
-    for item in removed:
-        if has_notifiers(item):
-            remove_notifiers(item, callback, path)
-
-    for item in event.added:
-        if has_notifiers(item):
-            add_notifiers(item, callback, dispatch, path)
 
 
 def add_notifier(object, callback, dispatch, event_factory):
@@ -169,6 +158,9 @@ class BaseListener:
     def iter_next_targets(self, object):
         # For walking down the path of Listeners
         yield from ()
+
+    def change_callback(self, event, remove_notifiers, add_notifiers):
+        pass
 
 
 class AnyTraitListener(BaseListener):
@@ -245,6 +237,16 @@ class ListItemListener(BaseListener):
         for item in object:
             if has_notifiers(item):
                 yield item
+
+    def change_callback(self, event, remove_notifiers, add_notifiers):
+        list_ = getattr(event.object, event.name)
+        removed = set(event.removed) - set(list_)
+        for item in removed:
+            if has_notifiers(item):
+                remove_notifiers(item)
+        for item in event.added:
+            if has_notifiers(item):
+                add_notifiers(item)
 
 
 class DictValueListener(BaseListener):
