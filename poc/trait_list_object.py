@@ -814,3 +814,12 @@ class TraitListObject(TraitList):
             return len(object)
         else:
             return 1
+
+    # Addd the following for the POC
+    def _notifiers(self, force_create):
+        return self.trait._notifiers(force_create)
+
+
+from interfaces import INotifiableObject
+
+INotifiableObject.register(TraitListObject)

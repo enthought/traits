@@ -1,14 +1,23 @@
 from functools import partial
 
+from traits import ctraits
 from traits.trait_base import Undefined
-from traits.ctrait import CHasTraits, CTrait
+from traits.ctrait import CTrait
+from traits.trait_dict_object import TraitDictObject
+from traits.trait_set_object import TraitSetObject
 
-from .interfaces import INotifiableObject
-from .trait_observer_notifier import (
+
+from interfaces import INotifiableObject
+from trait_observer_notifier import (
     ObserverEvent,
     ListObserverEvent,
     TraitObserverNotifier,
 )
+from trait_list_object import TraitListObject
+
+
+# Mega hack for POC: Register the TraitListObject again to the global points...
+ctraits._list_classes(TraitListObject, TraitSetObject, TraitDictObject)
 
 
 # We need to identify objects which has this `_notifiers` methods
@@ -17,7 +26,7 @@ from .trait_observer_notifier import (
 # Here is the LBYL way
 
 INotifiableObject.register(CTrait)
-INotifiableObject.register(CHasTraits)
+INotifiableObject.register(ctraits.CHasTraits)
 
 
 def observe(object, callback, path, remove, dispatch):

@@ -6,7 +6,7 @@
 from types import MethodType
 import weakref
 
-from .trait_base import Uninitialized
+from traits.trait_base import Uninitialized
 
 
 class BaseObserverEvent(object):
