@@ -84,7 +84,7 @@ def add_notifiers(object, callback, dispatch, path, target=None):
 
             adder = partial(add_notifiers, callback=callback, dispatch=dispatch, path=path.next)
             remover = partial(remove_notifiers, callback=callback, path=path.next)
-            next_callback = partial(listener.change_callback, remove_notifiers=remover, add_notifiers=adder)
+            next_callback = partial(listener.change_callback, notifier_remover=remover, notifier_adder=adder)
             # TODO: Remove this callback in remove_notifiers?
             add_notifier(this_target, next_callback, dispatch, listener.event_factory)
 
@@ -238,15 +238,15 @@ class ListItemListener(BaseListener):
             if has_notifiers(item):
                 yield item
 
-    def change_callback(self, event, remove_notifiers, add_notifiers):
+    def change_callback(self, event, notifier_remover, notifier_adder):
         list_ = getattr(event.object, event.name)
         removed = set(event.removed) - set(list_)
         for item in removed:
             if has_notifiers(item):
-                remove_notifiers(item)
+                notifier_remover(item)
         for item in event.added:
             if has_notifiers(item):
-                add_notifiers(item)
+                notifier_adder(item)
 
 
 class DictValueListener(BaseListener):
