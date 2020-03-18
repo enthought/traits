@@ -20,9 +20,11 @@ path = observe.ListenerPath(
     )
 )
 
-def callback():
+def callback(event):
+    print(event)
     print("HERE")
 
 observe.observe(object=f, callback=callback, path=path, remove=False, dispatch="same")
 
+f.l = []
 f.l.append(1)
