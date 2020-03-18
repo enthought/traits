@@ -74,7 +74,6 @@ def add_notifiers(object, callback, dispatch, path):
     listener = path.node
     for target in listener.iter_this_targets(object):
         if listener.notify:
-            print("Adding notifier for ", object, target, callback, dispatch, listener)
             add_notifier(
                 target, callback, dispatch, listener.event_factory,
             )
@@ -85,7 +84,6 @@ def add_notifiers(object, callback, dispatch, path):
 
             if isinstance(listener, ListItemListener):
                 h = partial(handle_list_item_changed, callback=callback, dispatch=dispatch, path=path.next)
-                print(listener.event_factory)
                 add_notifier(target, h, dispatch, listener.event_factory)
 
             for next_target in listener.iter_next_targets(object):
@@ -95,8 +93,6 @@ def add_notifiers(object, callback, dispatch, path):
 def handle_list_item_changed(event, callback, dispatch, path):
     # The parent node of path should be a ListItemListener
     list_ = getattr(event.object, event.name)
-    print(event.object, event.name, list_)
-
     removed = set(event.removed) - set(list_)
     for item in removed:
         if has_notifiers(item):
@@ -115,8 +111,10 @@ def add_notifier(object, callback, dispatch, event_factory):
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers:
         if other.equals(callback):
+            print(other)
             break
     else:
+        print("Adding notifier for ", object, callback, dispatch, event_factory)
         new_notifier = WRAPPERS[dispatch](
             observer=callback,
             owner=observer_notifiers,
@@ -132,7 +130,7 @@ def remove_notifer(object, callback):
     print("Removing notifier for ", object, callback)
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers[:]:
-        if other.equals(callback):
+        if other.equals(callback) and other.owner is observer_notifiers:
             observer_notifiers.remove(other)
             other.dispose()
             break

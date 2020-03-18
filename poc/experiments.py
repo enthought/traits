@@ -1,6 +1,5 @@
 import observe
 
-
 from traits.api import HasTraits, Int
 from trait_types import List
 
@@ -20,15 +19,15 @@ def callback(event):
 
 
 f = Foo(l=[Bar()])
-path = observe.ListenerPath(
+item_path = observe.ListenerPath(
     node=observe.RequiredTraitListener(name="l", notify=False),
     next=observe.ListenerPath(
         node=observe.ListItemListener(notify=True)
     )
 )
-observe.observe(object=f, callback=callback, path=path, remove=False, dispatch="same")
+observe.observe(object=f, callback=callback, path=item_path, remove=False, dispatch="same")
 
-path = observe.ListenerPath(
+age_path = observe.ListenerPath(
     node=observe.RequiredTraitListener(name="l", notify=False),
     next=observe.ListenerPath(
         node=observe.ListItemListener(notify=True),
@@ -37,7 +36,7 @@ path = observe.ListenerPath(
         )
     )
 )
-observe.observe(object=f, callback=callback, path=path, remove=False, dispatch="same")
+observe.observe(object=f, callback=callback, path=age_path, remove=False, dispatch="same")
 
 print("-----------")
 print("Mutate nested trait on the first item")
@@ -60,7 +59,7 @@ print("Append the same object")
 f.l.append(f.l[1])
 
 print("-----------")
-print("Mutate the second (and the third) object")
+print("Mutate the second object (same object as the third)")
 f.l[1].age = 12
 
 print("-----------")
@@ -78,3 +77,26 @@ item = f.l.pop()
 print("----------")
 print("Mutating this item should not fire")
 item.age = 14
+
+
+print("----------")
+print("Two lists sharing the same object")
+f1 = Foo()
+f2 = Foo()
+bar = Bar()
+f1.l = [bar]
+f2.l = [bar]
+age_path2 = observe.ListenerPath(
+    node=observe.RequiredTraitListener(name="l", notify=False),
+    next=observe.ListenerPath(
+        node=observe.ListItemListener(notify=False),
+        next=observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="age", notify=True),
+        )
+    )
+)
+observe.observe(object=f1, callback=callback, path=age_path, remove=False, dispatch="same")
+observe.observe(object=f2, callback=callback, path=age_path, remove=False, dispatch="same")
+print("Mutating the object")
+print("Should we fire once, or twice?")
+bar.age = 12
