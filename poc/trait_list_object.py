@@ -853,7 +853,8 @@ class NewTraitListObject(TraitList):
         # Is this right?
         event = (trait_list, index, removed, added)
         for notifier in self._notifiers(True):
-            notifier(object, self.name, None, event)
+            # We don't actually have the old copy of the list
+            notifier(object, self.name, trait_list, event)
 
     def _notifiers(self, force_create):
         return self._event_ctrait._notifiers(force_create)
