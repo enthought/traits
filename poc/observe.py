@@ -107,7 +107,7 @@ def add_notifier(object, callback, dispatch, event_factory):
         new_notifier = WRAPPERS[dispatch](
             observer=callback,
             owner=observer_notifiers,
-            target=object,
+            target=None,
             event_factory=event_factory,
         )
         observer_notifiers.append(new_notifier)
