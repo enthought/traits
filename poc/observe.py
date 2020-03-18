@@ -235,6 +235,14 @@ def handle_list_item_changed(event, callback, dispatch, path):
             add_notifiers(item, callback, dispatch, path)
 
 
+class DictValueListener(BaseListener):
+    # TODO: Define this class taking into account
+    # what is going to happen in TraitDictObject
+
+    def __init__(self, notify):
+        self.notify = notify
+
+
 class ListenerPath:
 
     def __init__(self, node, next=None):
@@ -369,7 +377,10 @@ path = ListenerPath(
 
 # Listen to all traits with a metadata 'updated'
 path = ListenerPath(
-    node=FilteredTraitListener(filter=lambda trait: "updated" in trait.__dict__),
+    node=FilteredTraitListener(
+        filter=lambda trait: "updated" in trait.__dict__,
+        notify=True,
+    ),
     next=None,
 )
 
