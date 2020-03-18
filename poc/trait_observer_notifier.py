@@ -150,7 +150,7 @@ class TraitObserverNotifier(object):
         pass
 
     def _notify_function_observer(self, object, name, old, new):
-        self.dispatch(self.observer, name, old, new)
+        self.dispatch(self.observer, object, name, old, new)
 
     def _notify_method_observer(self, object, name, old, new):
         observer = self.observer()
