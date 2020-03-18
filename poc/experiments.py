@@ -1,7 +1,21 @@
+import contextlib
+from unittest import mock
+
 import observe
 
 from traits.api import HasTraits, Int
 from trait_types import List
+
+CALL = mock.MagicMock()
+
+
+@contextlib.contextmanager
+def check_call_count(expected):
+    CALL.reset_mock()
+    try:
+        yield
+    finally:
+        assert CALL.call_count == expected
 
 
 class Bar(HasTraits):
@@ -16,6 +30,7 @@ class Foo(HasTraits):
 
 def callback(event):
     print("**** Fire ****", event.__dict__)
+    CALL()
 
 
 f = Foo(l=[Bar()])
@@ -38,45 +53,56 @@ age_path = observe.ListenerPath(
 )
 observe.observe(object=f, callback=callback, path=age_path, remove=False, dispatch="same")
 
+
 print("-----------")
 print("Mutate nested trait on the first item")
-f.l[0].age = 10
+with check_call_count(1):
+    f.l[0].age = 10
 
 print("-----------")
 print("Mutate list")
-f.l.append(Bar())
+with check_call_count(1):
+    f.l.append(Bar())
 
 print("-----------")
 print("Mutate nested trait on the first item")
-f.l[0].age = 20
+with check_call_count(1):
+    f.l[0].age = 20
 
 print("-----------")
 print("Mutate nested trait on the second item")
-f.l[1].age = 10
+with check_call_count(1):
+    f.l[1].age = 10
 
 print("-----------")
 print("Append the same object")
-f.l.append(f.l[1])
+with check_call_count(1):
+    f.l.append(f.l[1])
 
 print("-----------")
 print("Mutate the second object (same object as the third)")
-f.l[1].age = 12
+with check_call_count(1):
+    f.l[1].age = 12
 
 print("-----------")
 print("Pop the last object, but the same object is still there")
-item = f.l.pop()
+with check_call_count(1):
+    item = f.l.pop()
 
 print("-----------")
 print("Mutate the popped item that still lives in the list, which still causes the event to fire")
-item.age = 13
+with check_call_count(1):
+    item.age = 13
 
 print("----------")
 print("Pop the last item, now it does not exist in the list")
-item = f.l.pop()
+with check_call_count(1):
+    item = f.l.pop()
 
 print("----------")
 print("Mutating this item should not fire")
-item.age = 14
+with check_call_count(0):
+    item.age = 14
 
 
 print("----------")
@@ -99,4 +125,5 @@ observe.observe(object=f1, callback=callback, path=age_path, remove=False, dispa
 observe.observe(object=f2, callback=callback, path=age_path, remove=False, dispatch="same")
 print("Mutating the object")
 print("Should we fire once, or twice?")
-bar.age = 12
+with check_call_count(1):
+    bar.age = 12
