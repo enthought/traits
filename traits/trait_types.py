@@ -2901,22 +2901,24 @@ class PrefixMap(Map):
         super(Map, self).__init__(default_value, **metadata)
 
     def validate(self, object, name, value):
-        if value in self._map:
-            return self._map[value]
+        try:
+            if value in self._map:
+                return self._map[value]
+        except TypeError:
+            self.error(object, name, value)
 
-        else:
-            match = None
-            n = len(value)
-            for key in self.map.keys():
-                if value == key[:n]:
-                    if match is not None:
-                        match = None
-                        break
-                    match = key
-            if match is None:
-                self.error(object, name, value)
-            self._map[value] = match
-            return self._map[value]
+        match = None
+        n = len(value)
+        for key in self.map.keys():
+            if value == key[:n]:
+                if match is not None:
+                    match = None
+                    break
+                match = key
+        if match is None:
+            self.error(object, name, value)
+        self._map[value] = match
+        return self._map[value]
 
     def info(self):
         return super().info() + " (or any unique prefix)"
