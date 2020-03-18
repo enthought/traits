@@ -136,7 +136,7 @@ class BaseListener:
         return getattr(self, "_notify", True)
 
     @notify.setter
-    def notify_setter(self, value):
+    def notify(self, value):
         self._notify = value
 
     def iter_this_targets(self, object):
