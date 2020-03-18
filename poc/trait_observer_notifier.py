@@ -72,12 +72,12 @@ class TraitObserverNotifier(object):
             self.observer = weakref.WeakMethod(observer, self.observer_deleted)
             self.notify_observer = self._notify_weak_observer
         else:
-            self.handler = observer
+            self.observer = observer
             self.notify_observer = self._notify_function_observer
 
         self.owner = owner
 
-        if self.target is not None:
+        if target is not None:
             self.target = weakref.ref(target, self.observer_deleted)
         else:
             self.target = None
