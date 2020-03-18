@@ -69,7 +69,6 @@ from .editor_factories import (
 
 # Constants
 
-MutableTypes = (list, dict)
 SetTypes = SequenceTypes + (set,)
 
 # Numeric type fast validator definitions
@@ -843,9 +842,13 @@ class BaseCallable(TraitType):
 class Callable(BaseCallable):
     """ A fast-validating trait type whose value must be a Python callable.
     """
+    def __init__(self, value=None, allow_none=True, **metadata):
 
-    #: The C-level fast validator to use
-    fast_validate = (ValidateTrait.callable,)
+        self.fast_validate = (ValidateTrait.callable, allow_none)
+
+        default_value = metadata.pop("default_value", value)
+
+        super().__init__(default_value, **metadata)
 
 
 class BaseType(TraitType):
@@ -1008,12 +1011,11 @@ class Constant(TraitType):
 
     Traits of this type are very space efficient (and fast) because
     *value* is not stored in each instance using the trait, but only in
-    the trait object itself. The *value* cannot be a list or dictionary,
-    because those types have mutable values.
+    the trait object itself.
 
     Parameters
     ----------
-    value : any type other than list or dict
+    value : any
         The constant value for the trait.
     **metadata
         Trait metadata for the trait.
@@ -1024,14 +1026,6 @@ class Constant(TraitType):
 
     #: The standard metadata for the trait:
     metadata = {"type": "constant", "transient": True}
-
-    def __init__(self, value, **metadata):
-        if type(value) in MutableTypes:
-            raise TraitError(
-                "Cannot define a constant using a mutable list or dictionary"
-            )
-
-        super(Constant, self).__init__(value, **metadata)
 
 
 class Delegate(TraitType):

@@ -143,8 +143,6 @@ class AdaptationManager(HasTraits):
         )
         offers.append(offer)
 
-        return
-
     def register_factory(self, factory, from_protocol, to_protocol):
         """ Register an adapter factory.
 
@@ -163,16 +161,12 @@ class AdaptationManager(HasTraits):
             )
         )
 
-        return
-
     def register_provides(self, provider_protocol, protocol):
         """ Register that a protocol provides another. """
 
         self.register_factory(
             no_adapter_necessary, provider_protocol, protocol
         )
-
-        return
 
     def supports_protocol(self, obj, protocol):
         """ Does the object support a given protocol?

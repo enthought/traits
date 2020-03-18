@@ -98,8 +98,6 @@ class TraitSetObject(set):
 
             super(TraitSetObject, self).__init__(value)
 
-            return
-
         except TraitError as excp:
             excp.set_prefix("Each element of the")
             raise excp
@@ -129,7 +127,9 @@ class TraitSetObject(set):
 
     def update(self, value):
         if not hasattr(self, "trait"):
-            return set.update(self, value)
+            set.update(self, value)
+            return
+
         try:
             if not isinstance(value, set):
                 value = set(value)
@@ -175,7 +175,9 @@ class TraitSetObject(set):
 
     def symmetric_difference_update(self, value):
         if not hasattr(self, "trait"):
-            return set.symmetric_difference_update(self, value)
+            set.symmetric_difference_update(self, value)
+            return
+
         if not isinstance(value, set):
             value = set(value)
         removed = self.intersection(value)
@@ -201,7 +203,9 @@ class TraitSetObject(set):
 
     def add(self, value):
         if not hasattr(self, "trait"):
-            return set.add(self, value)
+            set.add(self, value)
+            return
+
         if value not in self:
             try:
                 object = self.object()

@@ -18,7 +18,8 @@ from traits.constants import (
     ComparisonMode, DefaultValue, TraitKind, MAXIMUM_DEFAULT_VALUE_TYPE
 )
 from traits.ctrait import CTrait
-from traits.trait_types import Any
+from traits.trait_errors import TraitError
+from traits.trait_types import Any, Int, List
 
 
 def getter():
@@ -244,3 +245,66 @@ class TestCTrait(unittest.TestCase):
         tr.handler = None
         self.assertFalse(finalizer.alive)
         self.assertIsNone(tr.handler)
+
+    def test_invalid_initialization(self):
+        with self.assertRaises(TraitError):
+            CTrait(max(TraitKind) + 1)
+
+    def test_initialization_with_keywords_fails(self):
+        with self.assertRaises(TraitError):
+            CTrait(kind=0)
+
+    def test_default_initialization(self):
+        ctrait = CTrait()
+
+        validate = unittest.mock.MagicMock(return_value="baz")
+        ctrait.set_validate(validate)
+
+        class Foo(HasTraits):
+            bar = ctrait
+
+            bar_changed = List
+
+            def _bar_changed(self, new):
+                self.bar_changed.append(new)
+
+        foo = Foo()
+
+        self.assertEqual(len(foo.bar_changed), 0)
+
+        foo.bar = 1
+
+        validate.assert_called_once_with(foo, "bar", 1)
+        self.assertEqual(foo.bar, "baz")
+        self.assertEqual(len(foo.bar_changed), 1)
+        self.assertEqual(foo.bar_changed[0], "baz")
+
+
+class TestCTraitNotifiers(unittest.TestCase):
+    """ Test calling trait notifiers and object notifiers. """
+
+    def test_notifiers_empty(self):
+
+        class Foo(HasTraits):
+            x = Int()
+
+        foo = Foo(x=1)
+        x_ctrait = foo.trait("x")
+
+        self.assertEqual(x_ctrait._notifiers(True), [])
+
+    def test_notifiers_on_trait(self):
+
+        class Foo(HasTraits):
+            x = Int()
+
+            def _x_changed(self):
+                pass
+
+        foo = Foo(x=1)
+        x_ctrait = foo.trait("x")
+
+        tnotifiers = x_ctrait._notifiers(True)
+        self.assertEqual(len(tnotifiers), 1)
+        notifier, = tnotifiers
+        self.assertEqual(notifier.handler, Foo._x_changed)

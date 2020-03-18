@@ -1352,10 +1352,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         """ Returns the list of trait names when calling the dir() builtin on
             the object. This enables tab-completion in IPython.
         """
-        trait_names = self.trait_names()
-        method_names = [method for method in self._each_trait_method(self)]
-        class_attrs = list(vars(self.__class__).keys())
-        return trait_names + method_names + class_attrs
+        return super().__dir__() + self.trait_names()
 
     def copy_traits(
         self, other, traits=None, memo=None, copy=None, **metadata
@@ -3274,6 +3271,8 @@ class SingletonHasTraits(HasTraits):
     """ Singleton class that support trait attributes.
     """
 
+    @deprecated("SingletonHasTraits has been deprecated and will be removed "
+                "in the future. Avoid using it")
     def __new__(cls, *args, **traits):
         if "_the_instance" not in cls.__dict__:
             cls._the_instance = HasTraits.__new__(cls, *args, **traits)
@@ -3286,6 +3285,8 @@ class SingletonHasStrictTraits(HasStrictTraits):
         Non-trait attributes generate an exception.
     """
 
+    @deprecated("SingletonHasStrictTraits has been deprecated and will be "
+                "removed in the future. Avoid using it")
     def __new__(cls, *args, **traits):
         return SingletonHasTraits.__new__(cls, *args, **traits)
 
@@ -3295,6 +3296,8 @@ class SingletonHasPrivateTraits(HasPrivateTraits):
         being unchecked.
     """
 
+    @deprecated("SingletonHasPrivateTraits has been deprecated and will be "
+                "removed in the future. Avoid using it")
     def __new__(cls, *args, **traits):
         return SingletonHasTraits.__new__(cls, *args, **traits)
 

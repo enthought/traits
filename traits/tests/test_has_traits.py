@@ -19,6 +19,9 @@ from traits.has_traits import (
     ListenerTraits,
     InstanceTraits,
     HasTraits,
+    SingletonHasTraits,
+    SingletonHasStrictTraits,
+    SingletonHasPrivateTraits,
 )
 from traits.ctrait import CTrait
 from traits.traits import ForwardProperty, generic_trait
@@ -308,6 +311,47 @@ class TestHasTraits(unittest.TestCase):
         target.event = event
         self.assertEqual(target.event_count, old_count + 1)
 
+    def test__object_notifiers_vetoed(self):
+
+        class SomeEvent(HasTraits):
+            event_id = Int()
+
+        class Target(HasTraits):
+            event = Event(Instance(SomeEvent))
+
+            event_count = Int(0)
+
+        target = Target()
+        event = SomeEvent(event_id=9)
+
+        def object_handler(object, name, old, new):
+            if name == "event":
+                object.event_count += 1
+
+        target.on_trait_change(object_handler, name="anytrait")
+
+        # Default state is not vetoed.
+        self.assertFalse(event._trait_notifications_vetoed())
+
+        # Firing the event increments the count.
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count + 1)
+
+        # Now veto the event. Firing the event won't affect the count.
+        event._trait_veto_notify(True)
+        self.assertTrue(event._trait_notifications_vetoed())
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count)
+
+        # Unveto the event.
+        event._trait_veto_notify(False)
+        self.assertFalse(event._trait_notifications_vetoed())
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count + 1)
+
     def test_traits_inited(self):
         foo = HasTraits()
 
@@ -321,3 +365,133 @@ class TestHasTraits(unittest.TestCase):
         foo._trait_set_inited()
 
         self.assertTrue(foo.traits_inited())
+
+
+class TestObjectNotifiers(unittest.TestCase):
+    """ Test calling object notifiers. """
+
+    def test_notifiers_empty(self):
+
+        class Foo(HasTraits):
+            x = Int()
+
+        foo = Foo(x=1)
+        self.assertEqual(foo._notifiers(True), [])
+
+    def test_notifiers_on_object(self):
+
+        class Foo(HasTraits):
+            x = Int()
+
+        foo = Foo(x=1)
+        self.assertEqual(foo._notifiers(True), [])
+
+        # when
+        def handler():
+            pass
+
+        foo.on_trait_change(handler, name="anytrait")
+
+        # then
+        notifiers = foo._notifiers(True)
+        self.assertEqual(len(notifiers), 1)
+        onotifier, = notifiers
+        self.assertEqual(onotifier.handler, handler)
+
+
+class TestCallNotifiers(unittest.TestCase):
+
+    def test_trait_and_object_notifiers_called(self):
+
+        side_effects = []
+
+        class Foo(HasTraits):
+            x = Int()
+            y = Int()
+
+            def _x_changed(self):
+                side_effects.append("x")
+
+        def object_handler():
+            side_effects.append("object")
+
+        foo = Foo()
+        foo.on_trait_change(object_handler, name="anytrait")
+
+        # when
+        side_effects.clear()
+        foo.x = 3
+
+        # then
+        self.assertEqual(side_effects, ["x", "object"])
+
+        # when
+        side_effects.clear()
+        foo.y = 4
+
+        # then
+        self.assertEqual(side_effects, ["object"])
+
+    def test_trait_notifier_modify_object_notifier(self):
+        # Test when a trait notifier has a side effect of adding
+        # an object notifier
+
+        side_effects = []
+
+        def object_handler1():
+            side_effects.append("object1")
+
+        def object_handler2():
+            side_effects.append("object2")
+
+        class Foo(HasTraits):
+            x = Int()
+            y = Int()
+
+            def _x_changed(self):
+                side_effects.append("x")
+
+                # add the second object notifier
+                self.on_trait_change(object_handler2, name="anytrait")
+
+        # Add an object handler so that the list is created for mutation.
+        foo = Foo()
+        foo.on_trait_change(object_handler1, name="anytrait")
+
+        # when
+        side_effects.clear()
+        foo.x = 1
+
+        # then
+        # the second object notifier is not called.
+        self.assertEqual(side_effects, ["x", "object1"])
+
+        # But the object notifier is added and will be used the next time
+        # when
+        side_effects.clear()
+        foo.y = 2
+
+        # then
+        # the second object notifier is called.
+        self.assertEqual(side_effects, ["object1", "object2"])
+
+
+class TestDeprecatedHasTraits(unittest.TestCase):
+    def test_deprecated(self):
+        class TestSingletonHasTraits(SingletonHasTraits):
+            pass
+
+        class TestSingletonHasStrictTraits(SingletonHasStrictTraits):
+            pass
+
+        class TestSingletonHasPrivateTraits(SingletonHasPrivateTraits):
+            pass
+
+        with self.assertWarns(DeprecationWarning):
+            TestSingletonHasTraits()
+
+        with self.assertWarns(DeprecationWarning):
+            TestSingletonHasStrictTraits()
+
+        with self.assertWarns(DeprecationWarning):
+            TestSingletonHasPrivateTraits()
