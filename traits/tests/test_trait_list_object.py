@@ -12,7 +12,6 @@ import copy
 import pickle
 import unittest
 
-from traits.api import HasTraits, List, Set
 from traits.trait_errors import TraitError
 from traits.trait_list_object import adapt_trait_validator, TraitList
 from traits.trait_types import _validate_int
@@ -100,7 +99,7 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(self.added, 5)
 
         tl[:] = [1, 2, 3, 4, 5]
-        self.assertEqual(slice(0, 3, 1), self.index)
+        self.assertEqual(slice(0, 3, None), self.index)
         self.assertEqual([1, 5, 3], self.removed)
         self.assertEqual([1, 2, 3, 4, 5], self.added)
 
@@ -143,7 +142,7 @@ class TestTraitList(unittest.TestCase):
             tl *= 2.5
 
         tl *= 0
-        self.assertEqual(slice(0, 4, 1), self.index)
+        self.assertEqual(slice(0, 4, None), self.index)
         self.assertEqual([1, 2, 1, 2], self.removed)
         self.assertEqual([], self.added)
 
@@ -234,8 +233,8 @@ class TestTraitList(unittest.TestCase):
 
         self.assertEqual([0, 1, 2, 3, 4, 5], tl)
         self.assertEqual(slice(0, 6, None), self.index)
-        self.assertEqual([2, 3, 1, 4, 5, 0], self.removed)
-        self.assertEqual([0, 1, 2, 3, 4, 5], self.added)
+        self.assertEqual([], self.removed)
+        self.assertEqual([], self.added)
 
     def test_reverse(self):
         tl = TraitList([1, 2, 3, 4, 5],
@@ -310,19 +309,3 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl.append([2])
-
-    def test_list_of_sets(self):
-        tl = TraitList([{1}],
-                       validator=list_validator,
-                       notifiers=[self.notification_handler])
-        tl.append({2})
-        tl[0].add(2)
-
-    def test_List_Set(self):
-
-        class Collection(HasTraits):
-            res = List(Set())
-
-        obj = Collection(res=[{1}])
-        obj.res[0].add(2)
-
