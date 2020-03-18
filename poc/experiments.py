@@ -112,15 +112,6 @@ f2 = Foo()
 bar = Bar()
 f1.l = [bar]
 f2.l = [bar]
-age_path2 = observe.ListenerPath(
-    node=observe.RequiredTraitListener(name="l", notify=False),
-    next=observe.ListenerPath(
-        node=observe.ListItemListener(notify=False),
-        next=observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="age", notify=True),
-        )
-    )
-)
 observe.observe(object=f1, callback=callback, path=age_path, remove=False, dispatch="same")
 observe.observe(object=f2, callback=callback, path=age_path, remove=False, dispatch="same")
 print("Mutating the object")

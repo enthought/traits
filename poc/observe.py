@@ -72,6 +72,7 @@ WRAPPERS = {
 
 def add_notifiers(object, callback, dispatch, path, target=None):
     listener = path.node
+    print(listener)
     for this_target in listener.iter_this_targets(object):
         if listener.notify:
             add_notifier(
