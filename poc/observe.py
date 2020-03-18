@@ -1,6 +1,17 @@
 from functools import partial
 
 from traits.trait_base import Undefined
+from traits.ctrait import CHasTraits, CTrait
+
+from .interfaces import INotifiableObject
+
+# We need to identify objects which has this `_notifiers` methods
+# We could do the easy-to-ask-forgiveness-than-permission way.
+# Or we could do the leap-before-you-leap way.
+# Here is the LBYL way
+
+INotifiableObject.register(CTrait)
+INotifiableObject.register(CHasTraits)
 
 
 def observe(object, callback, path, remove, dispatch):
@@ -132,14 +143,7 @@ def remove_notifiers(object, callback, path):
 
 
 def has_notifiers(object):
-    # Is there a better way to identify objects
-    # supporting _notifiers?
-    try:
-        object._notifiers(False)
-    except Exception:
-        return False
-    else:
-        return True
+    return isinstance(object, INotifiableObject)
 
 
 class TraitListObject:
