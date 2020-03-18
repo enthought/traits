@@ -47,6 +47,9 @@ class TestPrefixMap(unittest.TestCase):
         with self.assertRaises(TraitError):
             person.married = "ye"
 
+        with self.assertRaises(TraitError):
+            person.married = []
+
     def test_default(self):
         class Person(HasTraits):
             married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0,

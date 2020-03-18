@@ -38,6 +38,9 @@ class TestMap(unittest.TestCase):
         with self.assertRaises(TraitError):
             person.married = "dont know"
 
+        with self.assertRaises(TraitError):
+            person.married = []
+
     def test_default(self):
         class Person(HasTraits):
             married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
