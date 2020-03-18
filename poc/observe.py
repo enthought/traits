@@ -4,6 +4,12 @@ from traits.trait_base import Undefined
 from traits.ctrait import CHasTraits, CTrait
 
 from .interfaces import INotifiableObject
+from .trait_observer_notifier import (
+    ObserverEvent,
+    ListObserverEvent,
+    TraitObserverNotifier,
+)
+
 
 # We need to identify objects which has this `_notifiers` methods
 # We could do the easy-to-ask-forgiveness-than-permission way.
@@ -44,41 +50,6 @@ def observe(object, callback, path, remove, dispatch):
             callback=callback,
             dispatch=dispatch,
         )
-
-
-class BaseObserverEvent:
-    pass
-
-
-class ObserverEvent(BaseObserverEvent):
-
-    def __init__(self, object, name, old, new):
-        self.object = object
-        self.name = name
-        self.old = old
-        self.new = new
-
-
-class ListObserverEvent(BaseObserverEvent):
-
-    def __init__(self, object, name, old, new):
-        self.object = object
-        self.name = name
-        self.old = old
-        self.new = new
-        self.added = new.added
-        self.removed = new.removed
-        self.index = new.index
-
-
-class TraitObserverNotifier(object):
-
-    def __init__(
-            self, observer, owner, target=None, event_factory=ObserverEvent):
-        pass
-
-    def __call__(self, object, name, old, new):
-        pass
 
 
 WRAPPERS = {
@@ -144,12 +115,6 @@ def remove_notifiers(object, callback, path):
 
 def has_notifiers(object):
     return isinstance(object, INotifiableObject)
-
-
-class TraitListObject:
-
-    def _notifiers(self, *args, **kwargs):
-        return self.trait._notifiers(*args, **kwargs)
 
 
 class BaseListener:
