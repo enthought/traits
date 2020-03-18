@@ -27,11 +27,12 @@ class ListObserverEvent(BaseObserverEvent):
     def __init__(self, object, name, old, new):
         self.object = object
         self.name = name
-        self.old = old
-        self.new = new
-        self.added = new.added
-        self.removed = new.removed
-        self.index = new.index
+        trait_list, index, removed, added = new
+        self.old = trait_list   # we don't actually the old value!
+        self.new = trait_list
+        self.added = added
+        self.removed = removed
+        self.index = index
 
 
 class TraitObserverNotifier(object):

@@ -307,9 +307,9 @@ class TraitList(list):
         """
         index = len(self)
         removed = []
-        added = self.validate(index, removed, object)
-
-        super().append(added)
+        added = self.validate(index, removed, [object])
+        object, = added
+        super().append(object)
 
         if self._should_notify(removed, added):
             self.notify(index, removed, added)
@@ -851,7 +851,7 @@ class NewTraitListObject(TraitList):
         if object is None:
             return
         # Is this right?
-        event = TraitListEvent(index, removed, added)
+        event = (trait_list, index, removed, added)
         for notifier in self._notifiers(True):
             notifier(object, self.name, None, event)
 

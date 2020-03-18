@@ -72,15 +72,39 @@ WRAPPERS = {
 
 def add_notifiers(object, callback, dispatch, path):
     listener = path.node
-    if listener.notify:
-        for target in listener.iter_this_targets(object):
-            print("Adding notifier for ", object, callback, dispatch, listener)
+    for target in listener.iter_this_targets(object):
+        if listener.notify:
+            print("Adding notifier for ", target, callback, dispatch, listener)
             add_notifier(
-                object, callback, dispatch, listener.event_factory,
+                target, callback, dispatch, listener.event_factory,
             )
-    if path.next is not None:
-        for target in listener.iter_next_targets(object):
-            add_notifiers(target, callback, dispatch, path.next)
+        else:
+            print("Silencing notifier for ", target, callback, dispatch, listener)
+
+        if path.next is not None:
+
+            if isinstance(listener, ListItemListener):
+                h = partial(handle_list_item_changed, callback=callback, dispatch=dispatch, path=path.next)
+                print(listener.event_factory)
+                add_notifier(target, h, dispatch, listener.event_factory)
+
+            for next_target in listener.iter_next_targets(object):
+                add_notifiers(next_target, callback, dispatch, path.next)
+
+
+def handle_list_item_changed(event, callback, dispatch, path):
+    # The parent node of path should be a ListItemListener
+    list_ = getattr(event.object, event.name)
+    print(event.object, event.name, list_)
+
+    removed = set(event.removed) ^ set(list_)
+    for item in removed:
+        if has_notifiers(item):
+            remove_notifiers(item, callback, path)
+
+    for item in event.added:
+        if has_notifiers(item):
+            add_notifiers(item, callback, dispatch, path)
 
 
 def add_notifier(object, callback, dispatch, event_factory):
@@ -209,6 +233,8 @@ RequiredTraitListener = partial(NamedTraitListener, optional=False)
 
 class ListItemListener(BaseListener):
 
+    event_factory = ListObserverEvent
+
     def __init__(self, notify):
         self.notify = notify
 
@@ -216,24 +242,10 @@ class ListItemListener(BaseListener):
         # object should be a TraitListObject
         yield object
 
-    def iter_next_target(self, object):
+    def iter_next_targets(self, object):
         for item in object:
             if has_notifiers(item):
                 yield item
-
-
-def handle_list_item_changed(event, callback, dispatch, path):
-    # The parent node of path should be a ListItemListener
-    list_ = getattr(event.object, event.name)
-
-    removed = set(event.removed) ^ set(list_)
-    for item in removed:
-        if has_notifiers(item):
-            remove_notifiers(item, callback, path)
-
-    for item in event.added:
-        if has_notifiers(item):
-            add_notifiers(item, callback, dispatch, path)
 
 
 class DictValueListener(BaseListener):
