@@ -108,7 +108,7 @@ class TraitObserverNotifier(object):
         event = self.event_factory(object, name, old, new)
         observer(event)
 
-    def equals(self, observer):
+    def equals(self, observer, target):
         """ Check if equal to either self or the observer callback.
 
         Parameters
@@ -122,9 +122,14 @@ class TraitObserverNotifier(object):
             return False
 
         if isinstance(self.observer, weakref.WeakMethod):
-            return observer is self.observer()
+            this_observer = self.observer()
         else:
-            return observer is self.observer
+            this_observer = self.observer
+
+        if self.target is not None:
+            return this_observer is observer and target is self.target()
+        else:
+            return this_observer is observer
 
     def observer_deleted(self, ref=None):
         """ Callback to remove this from the list of notifiers.

@@ -70,15 +70,15 @@ WRAPPERS = {
 }
 
 
-def add_notifiers(object, callback, dispatch, path):
+def add_notifiers(object, callback, dispatch, path, target=None):
     listener = path.node
-    for target in listener.iter_this_targets(object):
+    for this_target in listener.iter_this_targets(object):
         if listener.notify:
             add_notifier(
-                target, callback, dispatch, listener.event_factory,
+                this_target, callback, dispatch, listener.event_factory, target=target
             )
         else:
-            print("Silencing notifier for ", object, target, callback, dispatch, listener)
+            print("Silencing notifier for ", object, this_target, callback, dispatch, listener)
 
         if path.next is not None:
 
@@ -86,20 +86,20 @@ def add_notifiers(object, callback, dispatch, path):
             remover = partial(remove_notifiers, callback=callback, path=path.next)
             next_callback = partial(listener.change_callback, remove_notifiers=remover, add_notifiers=adder)
             # TODO: Remove this callback in remove_notifiers?
-            add_notifier(target, next_callback, dispatch, listener.event_factory)
+            add_notifier(this_target, next_callback, dispatch, listener.event_factory)
 
             for next_target in listener.iter_next_targets(object):
-                add_notifiers(next_target, callback, dispatch, path.next)
+                add_notifiers(next_target, callback, dispatch, path.next, target=object)
 
 
-def add_notifier(object, callback, dispatch, event_factory):
+def add_notifier(object, callback, dispatch, event_factory, target=None):
     if object is Undefined:
         # TODO: Do something to defer adding a notifier
         return
 
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers:
-        if other.equals(callback):
+        if other.equals(callback, target):
             print(other)
             break
     else:
@@ -107,32 +107,32 @@ def add_notifier(object, callback, dispatch, event_factory):
         new_notifier = WRAPPERS[dispatch](
             observer=callback,
             owner=observer_notifiers,
-            target=None,
+            target=target,
             event_factory=event_factory,
         )
         observer_notifiers.append(new_notifier)
 
 
-def remove_notifer(object, callback):
+def remove_notifer(object, callback, target=None):
     if object is Undefined:
         return
     print("Removing notifier for ", object, callback)
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers[:]:
-        if other.equals(callback) and other.owner is observer_notifiers:
+        if other.equals(callback, target):
             observer_notifiers.remove(other)
             other.dispose()
             break
 
 
-def remove_notifiers(object, callback, path):
+def remove_notifiers(object, callback, path, target=None):
     listener = path.node
     if listener.notify:
-        for target in listener.iter_this_targets(object):
-            remove_notifer(target, callback)
+        for this_target in listener.iter_this_targets(object):
+            remove_notifer(this_target, callback, target=target)
     if path.next is not None:
-        for target in listener.iter_next_targets(object):
-            remove_notifiers(target, callback, path)
+        for next_target in listener.iter_next_targets(object):
+            remove_notifiers(next_target, callback, path, target=object)
 
 
 def has_notifiers(object):

@@ -125,5 +125,5 @@ observe.observe(object=f1, callback=callback, path=age_path, remove=False, dispa
 observe.observe(object=f2, callback=callback, path=age_path, remove=False, dispatch="same")
 print("Mutating the object")
 print("Should we fire once, or twice?")
-with check_call_count(1):
+with check_call_count(2):
     bar.age = 12
