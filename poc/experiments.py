@@ -11,20 +11,24 @@ class Foo(HasTraits):
 
 
 f = Foo(l=[1, 2])
-print(type(f.l))
 
 path = observe.ListenerPath(
-    node=observe.RequiredTraitListener(name="l", notify=True),
+    node=observe.RequiredTraitListener(name="l", notify=False),
     next=observe.ListenerPath(
         node=observe.ListItemListener(notify=True)
     )
 )
 
 def callback(event):
-    print(event)
-    print("HERE")
+    print("Fire", event.__dict__)
 
 observe.observe(object=f, callback=callback, path=path, remove=False, dispatch="same")
 
+print("Mutate")
+f.l.append(1)
+
+print("Reassign")
 f.l = []
+
+print("Mutate")
 f.l.append(1)

@@ -6,7 +6,7 @@ from traits.trait_base import SequenceTypes
 from traits.trait_type import TraitType
 from traits.trait_types import Event
 
-from trait_list_object import TraitListObject, TraitListEvent
+from trait_list_object import NewTraitListObject, TraitListEvent
 
 
 class List(TraitType):
@@ -52,9 +52,6 @@ class List(TraitType):
         self,
         trait=None,
         value=None,
-        minlen=0,
-        maxlen=sys.maxsize,
-        items=True,
         **metadata
     ):
         metadata.setdefault("copy", "deep")
@@ -66,13 +63,6 @@ class List(TraitType):
             value = []
 
         self.item_trait = trait_from(trait)
-        self.minlen = max(0, minlen)
-        self.maxlen = max(minlen, maxlen)
-        self.has_items = items
-
-        if self.item_trait.instance_handler == "_instance_changed_handler":
-            metadata.setdefault("instance_handler", "_list_changed_handler")
-
         super(List, self).__init__(value, **metadata)
 
     def validate(self, object, name, value):
@@ -84,13 +74,8 @@ class List(TraitType):
             :meth:`~traits.trait_handlers.TraitType.clone`)
 
         """
-        if isinstance(value, list) and (
-            self.minlen <= len(value) <= self.maxlen
-        ):
-            if object is None:
-                return value
-
-            return TraitListObject(self, object, name, value)
+        if isinstance(value, list):
+            return NewTraitListObject(object, name, value)
 
         self.error(object, name, value)
 

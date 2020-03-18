@@ -13,11 +13,11 @@ from trait_observer_notifier import (
     ListObserverEvent,
     TraitObserverNotifier,
 )
-from trait_list_object import TraitListObject
+from trait_list_object import NewTraitListObject
 
 
 # Mega hack for POC: Register the TraitListObject again to the global points...
-ctraits._list_classes(TraitListObject, TraitSetObject, TraitDictObject)
+ctraits._list_classes(NewTraitListObject, TraitSetObject, TraitDictObject)
 
 
 # We need to identify objects which has this `_notifiers` methods
@@ -74,6 +74,7 @@ def add_notifiers(object, callback, dispatch, path):
     listener = path.node
     if listener.notify:
         for target in listener.iter_this_targets(object):
+            print("Adding notifier for ", object, callback, dispatch, listener)
             add_notifier(
                 object, callback, dispatch, listener.event_factory,
             )

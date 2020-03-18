@@ -815,11 +815,50 @@ class TraitListObject(TraitList):
         else:
             return 1
 
-    # Addd the following for the POC
+
+class NewTraitListObject(TraitList):
+
+    def __init__(self, object, name, value):
+
+        self.object = ref(object)
+        self.name = name
+        from traits.trait_types import Event
+        self._event_ctrait = Event().as_ctrait()
+
+        super().__init__(
+            value=value,
+            validator=None,   # for now
+            notifiers=[self.notifier]
+        )
+
+    def notifier(self, trait_list, index, removed, added):
+        """ Converts and consolidates the parameters to a TraitListEvent and
+        then fires the event.
+
+        Parameters
+        ----------
+        trait_list : list
+            The list
+        index : int or slice
+            Index or slice that was modified
+        removed : value or list of values
+            Value or list of values that were removed
+        added : value or list of values
+            Value or list of values that were added
+
+        """
+        object = self.object()
+        if object is None:
+            return
+        # Is this right?
+        event = TraitListEvent(index, removed, added)
+        for notifier in self._notifiers(True):
+            notifier(object, self.name, None, event)
+
     def _notifiers(self, force_create):
-        return self.trait.items_event()._notifiers(force_create)
+        return self._event_ctrait._notifiers(force_create)
 
 
 from interfaces import INotifiableObject
 
-INotifiableObject.register(TraitListObject)
+INotifiableObject.register(NewTraitListObject)
