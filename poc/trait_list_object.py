@@ -435,12 +435,12 @@ class TraitList(list):
         added = self.validate(index, removed, [])
         norm_index = self._normalize_index(index)
 
-        removed = super().pop(index)
-
+        removed_item = super().pop(index)
+        removed = [removed_item]
         if self._should_notify(removed, added):
             self.notify(norm_index, removed, added)
 
-        return removed
+        return removed_item
 
     def remove(self, value):
         """ Remove first occurrence of value.

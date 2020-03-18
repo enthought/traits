@@ -74,12 +74,12 @@ def add_notifiers(object, callback, dispatch, path):
     listener = path.node
     for target in listener.iter_this_targets(object):
         if listener.notify:
-            print("Adding notifier for ", target, callback, dispatch, listener)
+            print("Adding notifier for ", object, target, callback, dispatch, listener)
             add_notifier(
                 target, callback, dispatch, listener.event_factory,
             )
         else:
-            print("Silencing notifier for ", target, callback, dispatch, listener)
+            print("Silencing notifier for ", object, target, callback, dispatch, listener)
 
         if path.next is not None:
 
@@ -97,7 +97,7 @@ def handle_list_item_changed(event, callback, dispatch, path):
     list_ = getattr(event.object, event.name)
     print(event.object, event.name, list_)
 
-    removed = set(event.removed) ^ set(list_)
+    removed = set(event.removed) - set(list_)
     for item in removed:
         if has_notifiers(item):
             remove_notifiers(item, callback, path)
@@ -129,6 +129,7 @@ def add_notifier(object, callback, dispatch, event_factory):
 def remove_notifer(object, callback):
     if object is Undefined:
         return
+    print("Removing notifier for ", object, callback)
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers[:]:
         if other.equals(callback):
