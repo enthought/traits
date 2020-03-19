@@ -46,11 +46,9 @@ class TestList(unittest.TestCase):
 
     def test_observer_is_quiet(self):
         # The callback is not called when we merely add an observer
-        item_path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="l", notify=False),
-            next=observe.ListenerPath(
-                node=observe.ListItemListener(notify=True)
-            )
+        item_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=True),
         )
         f = self.Foo(l=[])
         mock_obj = mock.Mock()
@@ -65,15 +63,10 @@ class TestList(unittest.TestCase):
         mock_obj.assert_not_called()
 
     def test_mutate_nested_attribute(self):
-        age_path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="l", notify=False),
-            next=observe.ListenerPath(
-                node=observe.ListItemListener(notify=False),
-                next=observe.ListenerPath(
-                    node=observe.RequiredTraitListener(
-                        name="age", notify=True),
-                )
-            )
+        age_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="age", notify=True),
         )
         f = self.Foo(l=[self.Bar()])
         mock_obj = mock.Mock()
@@ -94,11 +87,9 @@ class TestList(unittest.TestCase):
         self.assertEqual(event.new, 20)
 
     def test_append_list(self):
-        item_path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="l", notify=False),
-            next=observe.ListenerPath(
-                node=observe.ListItemListener(notify=True)
-            )
+        item_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=True),
         )
         f = self.Foo(l=[])
         mock_obj = mock.Mock()
@@ -123,11 +114,9 @@ class TestList(unittest.TestCase):
         self.assertEqual(event.added, [bar])
 
     def test_extend_list(self):
-        item_path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="l", notify=False),
-            next=observe.ListenerPath(
-                node=observe.ListItemListener(notify=True)
-            )
+        item_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=True),
         )
         f = self.Foo(l=[])
         mock_obj = mock.Mock()
@@ -153,15 +142,10 @@ class TestList(unittest.TestCase):
     def test_mutate_object_added_later(self):
         # Test when a nested object is appened to the list after registering
         # the observer.
-        age_path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="l", notify=False),
-            next=observe.ListenerPath(
-                node=observe.ListItemListener(notify=False),
-                next=observe.ListenerPath(
-                    node=observe.RequiredTraitListener(
-                        name="age", notify=True),
-                )
-            )
+        age_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="age", notify=True),
         )
         f = self.Foo(l=[])
         mock_obj = mock.Mock()
@@ -193,15 +177,10 @@ class TestList(unittest.TestCase):
 
     def test_multiple_identical_object_in_list(self):
         # enthought/traits#237
-        age_path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="l", notify=False),
-            next=observe.ListenerPath(
-                node=observe.ListItemListener(notify=False),
-                next=observe.ListenerPath(
-                    node=observe.RequiredTraitListener(
-                        name="age", notify=True),
-                )
-            )
+        age_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="age", notify=True),
         )
         f = self.Foo(l=[])
         mock_obj = mock.Mock()
@@ -243,15 +222,10 @@ class TestList(unittest.TestCase):
     def test_mutate_removed_object(self):
         # Test when an object is removed from the list,
         # no change events are fired
-        age_path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="l", notify=False),
-            next=observe.ListenerPath(
-                node=observe.ListItemListener(notify=False),
-                next=observe.ListenerPath(
-                    node=observe.RequiredTraitListener(
-                        name="age", notify=True),
-                )
-            )
+        age_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="age", notify=True),
         )
         bar = self.Bar()
         f = self.Foo(l=[])
@@ -280,15 +254,10 @@ class TestList(unittest.TestCase):
         mock_obj.assert_not_called()
 
     def test_newly_assigned_list(self):
-        age_path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="l", notify=False),
-            next=observe.ListenerPath(
-                node=observe.ListItemListener(notify=False),
-                next=observe.ListenerPath(
-                    node=observe.RequiredTraitListener(
-                        name="age", notify=True),
-                )
-            )
+        age_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="age", notify=True),
         )
 
         foo = self.Foo()
@@ -349,18 +318,11 @@ class TestListOfList(unittest.TestCase):
 
     def test_nested_list_of_list_of_list(self):
         # notify changes on the most nested list, but not anything else.
-        path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="bars", notify=False),
-            next=observe.ListenerPath(
-                node=observe.ListItemListener(notify=False),
-                next=observe.ListenerPath(
-                    node=observe.ListItemListener(notify=False),
-                    next=observe.ListenerPath(
-                        node=observe.ListItemListener(notify=True),
-                        next=None,
-                    )
-                )
-            )
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="bars", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.ListItemListener(notify=False),
+            observe.ListItemListener(notify=True),
         )
 
         foo = self.Foo()
@@ -400,16 +362,10 @@ class TestIssue538(unittest.TestCase):
 
             children = List(Instance(Child))
 
-        path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="children", notify=False),
-            next=observe.ListenerPath(
-                node=observe.ListItemListener(notify=False),
-                next=observe.ListenerPath(
-                    node=observe.RequiredTraitListener(
-                        name="value", notify=True),
-                    next=None,
-                )
-            )
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="children", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="value", notify=True),
         )
 
         parent = Parent()
@@ -447,8 +403,8 @@ class TestIssue537(unittest.TestCase):
         )
 
         mock_obj = mock.Mock()
-        values_path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="values", notify=True),
+        values_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="values", notify=True),
         )
         observe.observe(
             object=parent,
@@ -457,11 +413,9 @@ class TestIssue537(unittest.TestCase):
             remove=False,
             dispatch="same",
         )
-        child_values_path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="child", notify=True),
-            next=observe.ListenerPath(
-                node=observe.RequiredTraitListener(name="values", notify=True),
-            )
+        child_values_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="child", notify=True),
+            observe.RequiredTraitListener(name="values", notify=True),
         )
         observe.observe(
             object=parent,
@@ -506,23 +460,12 @@ class TestIssue237(unittest.TestCase):
                 Bar(bazs=[baz]),
             ]
         )
-        path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(
-                name="bars", notify=False),
-            next=observe.ListenerPath(
-                node=observe.ListItemListener(notify=False),
-                next=observe.ListenerPath(
-                    node=observe.RequiredTraitListener(
-                        name="bazs", notify=False),
-                    next=observe.ListenerPath(
-                        node=observe.ListItemListener(notify=False),
-                        next=observe.ListenerPath(
-                            node=observe.RequiredTraitListener(
-                                name="value", notify=True)
-                        )
-                    )
-                )
-            )
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="bars", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="bazs", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="value", notify=True),
         )
         mock_obj = mock.Mock()
         observe.observe(
