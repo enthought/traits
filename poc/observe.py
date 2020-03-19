@@ -137,7 +137,7 @@ def remove_notifer(object, callback, target):
             break
 
 
-def remove_notifiers(object, callback, path, target=None):
+def remove_notifiers(object, callback, path, target):
     listener = path.node
     if listener.notify:
         for this_target in listener.iter_this_targets(object):
