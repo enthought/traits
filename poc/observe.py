@@ -92,6 +92,25 @@ def add_notifiers(object, callback, dispatch, path, target):
                 add_notifiers(next_target, callback, dispatch, path.next, target=object)
 
 
+def call_notifiers(object, callback, dispatch, path):
+    """ Call the notifiers once without registering them.
+    """
+    listener = path.node
+    for event in listener.iter_new_events(object):
+        if listener.notify:
+            #: TODO: We need to care about dispatch here.
+            #: Could we move dispatch out of the TraitObserverNotifer
+            #: so that we can reuse it like this: ``dispatch(callable, event)``
+            callback(event)
+
+        if path.next is not None:
+            for next_target in listener.iter_next_targets(object):
+                call_notifiers(
+                    object=next_target, callback=callback,
+                    dispatch=dispatch, path=path.next,
+                )
+
+
 def add_notifier(object, callback, dispatch, event_factory, target):
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers:
@@ -163,6 +182,10 @@ class BaseListener:
         """
         raise NotImplementedError()
 
+    def iter_new_events(self, object):
+        # Yield an event for when a new target emerges.
+        yield from ()
+
 
 class AnyTraitListener(BaseListener):
 
@@ -232,6 +255,21 @@ class NamedTraitListener(BaseListener):
             path=path,
             target=target,
         )
+        call_notifiers(
+            object=event.new,
+            callback=callback,
+            dispatch=dispatch,
+            path=path,
+        )
+
+    def iter_new_events(self, object):
+        if self.name in object.__dict__:
+            yield self.event_factory(
+                object=object,
+                name=self.name,
+                old=Undefined,
+                new=getattr(object, self.name),
+            )
 
 
 OptionalTraitListener = partial(NamedTraitListener, optional=True)
@@ -274,6 +312,12 @@ class ListItemListener(BaseListener):
                     dispatch=dispatch,
                     path=path,
                     target=target,
+                )
+                call_notifiers(
+                    object=item,
+                    callback=callback,
+                    dispatch=dispatch,
+                    path=path,
                 )
 
 

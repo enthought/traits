@@ -4,7 +4,7 @@ from unittest import mock
 
 import observe
 
-from traits.api import HasTraits, Int
+from traits.api import HasTraits, Int, Instance
 from trait_types import List
 
 
@@ -360,6 +360,47 @@ class TestListOfList(unittest.TestCase):
         mock_obj.assert_called_once()
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.added, [1])
+
+
+class Child(HasTraits):
+
+    value = Int()
+
+
+class Parent(HasTraits):
+
+    children = List(Instance(Child))
+
+
+class TestIssue538(unittest.TestCase):
+
+    def test_issue_538(self):
+        path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="children", notify=False),
+            next=observe.ListenerPath(
+                node=observe.ListItemListener(notify=False),
+                next=observe.ListenerPath(
+                    node=observe.RequiredTraitListener(
+                        name="value", notify=True),
+                    next=None,
+                )
+            )
+        )
+
+        parent = Parent()
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=parent,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        parent.children = [Child()]
+        parent.children.append(Child(value=2))
+
+        mock_obj.assert_called_once()
 
 
 if __name__ == "__main__":
