@@ -315,5 +315,52 @@ class TestList(unittest.TestCase):
         mock_obj.assert_called_once()
 
 
+class TestListOfList(unittest.TestCase):
+
+    class Foo(HasTraits):
+
+        bars = List(List(List()))
+
+    def test_nested_list_of_list_of_list(self):
+        # notify changes on the most nested list, but not anything else.
+        path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="bars", notify=False),
+            next=observe.ListenerPath(
+                node=observe.ListItemListener(notify=False),
+                next=observe.ListenerPath(
+                    node=observe.ListItemListener(notify=False),
+                    next=observe.ListenerPath(
+                        node=observe.ListItemListener(notify=True),
+                        next=None,
+                    )
+                )
+            )
+        )
+
+        foo = self.Foo()
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        foo.bars = [[[]]]
+
+        # then
+        mock_obj.assert_not_called()
+
+        # when
+        foo.bars[0][0].append(1)
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.added, [1])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -80,8 +80,8 @@ def add_notifiers(object, callback, dispatch, path, target=None):
 
         if path.next is not None:
 
-            adder = partial(add_notifiers, callback=callback, dispatch=dispatch, path=path.next)
-            remover = partial(remove_notifiers, callback=callback, path=path.next)
+            adder = partial(add_notifiers, callback=callback, dispatch=dispatch, path=path.next, target=object)
+            remover = partial(remove_notifiers, callback=callback, path=path.next, target=object)
             next_callback = partial(listener.change_callback, notifier_remover=remover, notifier_adder=adder)
             # TODO: Remove this callback in remove_notifiers?
             add_notifier(this_target, next_callback, dispatch, listener.event_factory)
@@ -219,7 +219,8 @@ class NamedTraitListener(BaseListener):
             yield value
 
     def change_callback(self, event, notifier_remover, notifier_adder):
-        notifier_remover(event.old)
+        if event.old is not Uninitialized and event.old is not Undefined:
+            notifier_remover(event.old)
         notifier_adder(event.new)
 
 
@@ -245,10 +246,10 @@ class ListItemListener(BaseListener):
                 yield item
 
     def change_callback(self, event, notifier_remover, notifier_adder):
-        list_ = getattr(event.object, event.name)
-        removed = set(event.removed) - set(list_)
-        for item in removed:
-            if has_notifiers(item):
+        list_ = event.new
+        for item in event.removed:
+            #: TODO: Would checking containment here be a performance hit?
+            if item not in list_ and has_notifiers(item):
                 notifier_remover(item)
         for item in event.added:
             if has_notifiers(item):

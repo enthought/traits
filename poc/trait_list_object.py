@@ -831,9 +831,23 @@ class NewTraitListObject(TraitList):
 
         super().__init__(
             value=value,
-            validator=None,   # for now
+            validator=self.validator,
             notifiers=[self.notifier]
         )
+
+    def validator(self, trait_list, index, removed, added):
+        cls = type(self)
+        new_added = []
+        for value in added:
+            if isinstance(value, list):
+                value = cls(
+                    trait=self.trait.item_trait,
+                    object=self,
+                    name="",   # Hmm...
+                    value=value,
+                )
+            new_added.append(value)
+        return new_added
 
     def notifier(self, trait_list, index, removed, added):
         """ Converts and consolidates the parameters to a TraitListEvent and
