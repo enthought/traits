@@ -91,8 +91,7 @@ class TraitObserverNotifier(object):
         This adapts the underlying CTrait notifier signature to an event
         object that is expected by observers.
         """
-        if old is not Uninitialized:
-            self.notify_observer(object, name, old, new)
+        self.notify_observer(object, name, old, new)
 
     def dispatch(self, observer, object, name, old, new):
         """ Create an event and call the observer.

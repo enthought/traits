@@ -287,7 +287,32 @@ class TestList(unittest.TestCase):
         self.assertEqual(event.old, 0)
         self.assertEqual(event.new, 10)
 
+    def test_implicit_default_list(self):
+        # Test when a list attribute is accessed the first time,
+        # the default list created will also receive the notifiers.
+        list_path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="l", notify=True),
+        )
 
+        foo = self.Foo()
+        # The list is not defined explicitly. It is still undefined at
+        # this point.
+        self.assertNotIn("l", foo.__dict__)
+
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=list_path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        foo.l   # implicitly created the list.
+
+        # then
+        mock_obj.assert_called_once()
 
 
 if __name__ == "__main__":
