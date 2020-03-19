@@ -85,7 +85,7 @@ def add_notifiers(object, callback, dispatch, path, target):
             next_callback = partial(
                 listener.change_callback, callback=callback, dispatch=dispatch,
                 path=path.next, target=object)
-            # TODO: Remove this callback in remove_notifiers?
+            # TODO: We need this callback to be removed once right after it is called.
             add_notifier(this_target, next_callback, dispatch, listener.event_factory, target=object)
 
             for next_target in listener.iter_next_targets(object):
