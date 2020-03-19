@@ -75,7 +75,7 @@ class List(TraitType):
 
         """
         if isinstance(value, list):
-            return NewTraitListObject(object, name, value)
+            return NewTraitListObject(self, object, name, value)
 
         self.error(object, name, value)
 

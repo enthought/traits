@@ -818,7 +818,11 @@ class TraitListObject(TraitList):
 
 class NewTraitListObject(TraitList):
 
-    def __init__(self, object, name, value):
+    def __init__(self, trait, object, name, value):
+
+        # cTrait is calling __init__ with 5 arguments
+        # Do we need this?
+        self.trait = trait
 
         self.object = ref(object)
         self.name = name
