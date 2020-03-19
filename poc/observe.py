@@ -80,9 +80,9 @@ def add_notifiers(object, callback, dispatch, path, target=None):
 
         if path.next is not None:
 
-            adder = partial(add_notifiers, callback=callback, dispatch=dispatch, path=path.next, target=object)
-            remover = partial(remove_notifiers, callback=callback, path=path.next, target=object)
-            next_callback = partial(listener.change_callback, notifier_remover=remover, notifier_adder=adder)
+            next_callback = partial(
+                listener.change_callback, callback=callback, dispatch=dispatch,
+                path=path.next, target=object)
             # TODO: Remove this callback in remove_notifiers?
             add_notifier(this_target, next_callback, dispatch, listener.event_factory)
 
@@ -150,17 +150,14 @@ class BaseListener:
         # For walking down the path of Listeners
         yield from ()
 
-    def change_callback(self, event, notifier_remover, notifier_adder):
+    def change_callback(self, event, callback, dispatch, path, target):
         """ Handle the removal/addition of notifiers a target changes.
 
         Parameters
         ----------
         event : event_factory
             An instance created by the event_factory of this listener.
-        notifier_remover : callable(item)
-            Callable provided for removing notifiers.
-        notifier_adder : callable(item)
-            Callable provided for adding notifiers.
+        ...
         """
         raise NotImplementedError()
 
@@ -218,10 +215,21 @@ class NamedTraitListener(BaseListener):
         if is_notifiable(value):
             yield value
 
-    def change_callback(self, event, notifier_remover, notifier_adder):
+    def change_callback(self, event, callback, dispatch, path, target):
         if event.old is not Uninitialized and event.old is not Undefined:
-            notifier_remover(event.old)
-        notifier_adder(event.new)
+            remove_notifiers(
+                object=event.old,
+                callback=callback,
+                path=path,
+                target=target,
+            )
+        add_notifiers(
+            object=event.new,
+            callback=callback,
+            dispatch=dispatch,
+            path=path,
+            target=target,
+        )
 
 
 OptionalTraitListener = partial(NamedTraitListener, optional=True)
@@ -245,15 +253,26 @@ class ListItemListener(BaseListener):
             if is_notifiable(item):
                 yield item
 
-    def change_callback(self, event, notifier_remover, notifier_adder):
+    def change_callback(self, event, callback, dispatch, path, target):
         list_ = event.new
         for item in event.removed:
             #: TODO: Would checking containment here be a performance hit?
             if item not in list_ and is_notifiable(item):
-                notifier_remover(item)
+                remove_notifiers(
+                    object=item,
+                    callback=callback,
+                    path=path,
+                    target=target,
+                )
         for item in event.added:
             if is_notifiable(item):
-                notifier_adder(item)
+                add_notifiers(
+                    object=item,
+                    callback=callback,
+                    dispatch=dispatch,
+                    path=path,
+                    target=target,
+                )
 
 
 class DictValueListener(BaseListener):
