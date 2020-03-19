@@ -2789,7 +2789,7 @@ class Map(TraitType):
 
             >>> class Person(HasTraits):
             ...     married = Map({'yes': 1, 'no': 0 }, default_value="yes")
-            >>>
+            ...
             >>> bob = Person()
             >>> print(bob.married)
             yes
