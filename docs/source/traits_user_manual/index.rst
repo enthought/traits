@@ -13,6 +13,8 @@ Traits 6 User Manual
     advanced.rst
     testing.rst
     debugging.rst
+    internals.rst
+
 
 Indices and tables
 ==================
