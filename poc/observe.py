@@ -156,8 +156,19 @@ class BaseListener:
         # For walking down the path of Listeners
         yield from ()
 
-    def change_callback(self, event, remove_notifiers, add_notifiers):
-        pass
+    def change_callback(self, event, notifier_remover, notifier_adder):
+        """ Handle the removal/addition of notifiers a target changes.
+
+        Parameters
+        ----------
+        event : event_factory
+            An instance created by the event_factory of this listener.
+        notifier_remover : callable(item)
+            Callable provided for removing notifiers.
+        notifier_adder : callable(item)
+            Callable provided for adding notifiers.
+        """
+        raise NotImplementedError()
 
 
 class AnyTraitListener(BaseListener):
@@ -212,6 +223,10 @@ class NamedTraitListener(BaseListener):
         value = object.__dict__.get(self.name, Undefined)
         if has_notifiers(value):
             yield value
+
+    def change_callback(self, event, notifier_remover, notifier_adder):
+        notifier_remover(event.old)
+        notifier_adder(event.new)
 
 
 OptionalTraitListener = partial(NamedTraitListener, optional=True)

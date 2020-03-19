@@ -253,6 +253,42 @@ class TestList(unittest.TestCase):
         # then
         mock_obj.assert_not_called()
 
+    def test_newly_assigned_list(self):
+        age_path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="l", notify=False),
+            next=observe.ListenerPath(
+                node=observe.ListItemListener(notify=False),
+                next=observe.ListenerPath(
+                    node=observe.RequiredTraitListener(
+                        name="age", notify=True),
+                )
+            )
+        )
+
+        foo = self.Foo()
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=age_path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        # New assignment after observe is called
+        bar = self.Bar()
+        foo.l = [bar]
+        bar.age = 10
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.old, 0)
+        self.assertEqual(event.new, 10)
+
+
+
 
 if __name__ == "__main__":
     unittest.main()
