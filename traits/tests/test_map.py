@@ -64,5 +64,4 @@ class TestMap(unittest.TestCase):
         self.assertEqual(reconstituted.validate(p, "married", "yes"), "yes")
 
         with self.assertRaises(TraitError):
-            self.assertEqual(reconstituted.validate(p, "married", "uknown"),
-                             "unknown")
+            reconstituted.validate(p, "married", "uknown")
