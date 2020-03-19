@@ -126,7 +126,7 @@ def remove_notifiers(object, callback, path, target=None):
             remove_notifiers(next_target, callback, path, target=object)
 
 
-def has_notifiers(object):
+def is_notifiable(object):
     return isinstance(object, INotifiableObject)
 
 
@@ -173,7 +173,7 @@ class AnyTraitListener(BaseListener):
     def iter_next_targets(self, object):
         for name in object.trait_names():
             value = object.__dict__.get(name, Undefined)
-            if has_notifiers(value):
+            if is_notifiable(value):
                 yield value
 
 
@@ -193,7 +193,7 @@ class FilteredTraitListener(BaseListener):
         for name, trait in object.traits().items():
             if self.filter(trait):
                 value = object.__dict__.get(name, Undefined)
-                if has_notifiers(value):
+                if is_notifiable(value):
                     yield value
 
 
@@ -215,7 +215,7 @@ class NamedTraitListener(BaseListener):
 
     def iter_next_targets(self, object):
         value = object.__dict__.get(self.name, Undefined)
-        if has_notifiers(value):
+        if is_notifiable(value):
             yield value
 
     def change_callback(self, event, notifier_remover, notifier_adder):
@@ -242,17 +242,17 @@ class ListItemListener(BaseListener):
 
     def iter_next_targets(self, object):
         for item in object:
-            if has_notifiers(item):
+            if is_notifiable(item):
                 yield item
 
     def change_callback(self, event, notifier_remover, notifier_adder):
         list_ = event.new
         for item in event.removed:
             #: TODO: Would checking containment here be a performance hit?
-            if item not in list_ and has_notifiers(item):
+            if item not in list_ and is_notifiable(item):
                 notifier_remover(item)
         for item in event.added:
-            if has_notifiers(item):
+            if is_notifiable(item):
                 notifier_adder(item)
 
 
