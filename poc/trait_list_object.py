@@ -341,7 +341,7 @@ class TraitList(list):
             index = slice(len(self), None, 1)
 
         removed = []
-        added = self.validate(index, removed, iterable)
+        added = self.validate(index, removed, list(iterable))
 
         super().extend(added)
 

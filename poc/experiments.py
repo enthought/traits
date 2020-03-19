@@ -1,4 +1,5 @@
 import contextlib
+import unittest
 from unittest import mock
 
 import observe
@@ -6,115 +7,252 @@ import observe
 from traits.api import HasTraits, Int
 from trait_types import List
 
-CALL = mock.MagicMock()
 
+class TestList(unittest.TestCase):
 
-@contextlib.contextmanager
-def check_call_count(expected):
-    CALL.reset_mock()
-    try:
-        yield
-    finally:
-        assert CALL.call_count == expected
+    class Bar(HasTraits):
 
+        age = Int()
 
-class Bar(HasTraits):
+    class Foo(HasTraits):
 
-    age = Int()
+        l = List()
 
-
-class Foo(HasTraits):
-
-    l = List(Bar())
-
-
-def callback(event):
-    print("**** Fire ****", event.__dict__)
-    CALL()
-
-
-f = Foo(l=[Bar()])
-item_path = observe.ListenerPath(
-    node=observe.RequiredTraitListener(name="l", notify=False),
-    next=observe.ListenerPath(
-        node=observe.ListItemListener(notify=True)
-    )
-)
-observe.observe(object=f, callback=callback, path=item_path, remove=False, dispatch="same")
-
-age_path = observe.ListenerPath(
-    node=observe.RequiredTraitListener(name="l", notify=False),
-    next=observe.ListenerPath(
-        node=observe.ListItemListener(notify=True),
-        next=observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="age", notify=True),
+    def test_observer_is_quiet(self):
+        # The callback is not called when we merely add an observer
+        item_path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="l", notify=False),
+            next=observe.ListenerPath(
+                node=observe.ListItemListener(notify=True)
+            )
         )
-    )
-)
-observe.observe(object=f, callback=callback, path=age_path, remove=False, dispatch="same")
+        f = self.Foo(l=[])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=item_path,
+            remove=False,
+            dispatch="same",
+        )
+        mock_obj.assert_not_called()
+
+    def test_mutate_nested_attribute(self):
+        age_path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="l", notify=False),
+            next=observe.ListenerPath(
+                node=observe.ListItemListener(notify=False),
+                next=observe.ListenerPath(
+                    node=observe.RequiredTraitListener(
+                        name="age", notify=True),
+                )
+            )
+        )
+        f = self.Foo(l=[self.Bar()])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=age_path,
+            remove=False,
+            dispatch="same",
+        )
+
+        f.l[0].age = 20
+
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.old, 0)
+        self.assertEqual(event.new, 20)
+
+    def test_append_list(self):
+        item_path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="l", notify=False),
+            next=observe.ListenerPath(
+                node=observe.ListItemListener(notify=True)
+            )
+        )
+        f = self.Foo(l=[])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=item_path,
+            remove=False,
+            dispatch="same",
+        )
+
+        bar = self.Bar()
+        f.l.append(bar)
+
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertIs(event.old, f.l)
+        self.assertIs(event.new, f.l)
+        self.assertEqual(event.index, 0)
+        self.assertEqual(event.removed, [])
+        self.assertEqual(event.added, [bar])
+
+    def test_extend_list(self):
+        item_path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="l", notify=False),
+            next=observe.ListenerPath(
+                node=observe.ListItemListener(notify=True)
+            )
+        )
+        f = self.Foo(l=[])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=item_path,
+            remove=False,
+            dispatch="same",
+        )
+
+        bar = self.Bar()
+        f.l.extend((bar, bar))
+
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertIs(event.old, f.l)
+        self.assertIs(event.new, f.l)
+        self.assertEqual(event.removed, [])
+        self.assertEqual(event.added, [bar, bar])
+
+    def test_mutate_object_added_later(self):
+        # Test when a nested object is appened to the list after registering
+        # the observer.
+        age_path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="l", notify=False),
+            next=observe.ListenerPath(
+                node=observe.ListItemListener(notify=False),
+                next=observe.ListenerPath(
+                    node=observe.RequiredTraitListener(
+                        name="age", notify=True),
+                )
+            )
+        )
+        f = self.Foo(l=[])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=age_path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        bar = self.Bar()
+        f.l.append(bar)
+
+        # then
+        # There are no notifiers for these changes
+        mock_obj.assert_not_called()
+
+        # when
+        bar.age = 20
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.old, 0)
+        self.assertEqual(event.new, 20)
+
+    def test_multiple_identical_object_in_list(self):
+        # enthought/traits#237
+        age_path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="l", notify=False),
+            next=observe.ListenerPath(
+                node=observe.ListItemListener(notify=False),
+                next=observe.ListenerPath(
+                    node=observe.RequiredTraitListener(
+                        name="age", notify=True),
+                )
+            )
+        )
+        f = self.Foo(l=[])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=age_path,
+            remove=False,
+            dispatch="same",
+        )
+
+        bar = self.Bar()
+        f.l.extend((bar, bar))
+        mock_obj.assert_not_called()
+
+        # when
+        bar.age = 20
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.old, 0)
+        self.assertEqual(event.new, 20)
+
+        # when
+        # pop one item, the same object is still in the list
+        mock_obj.reset_mock()
+        f.l.pop()
+        bar.age = 21
+
+        # then
+        self.assertIn(bar, f.l)
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.old, 20)
+        self.assertEqual(event.new, 21)
+
+    def test_mutate_removed_object(self):
+        # Test when an object is removed from the list,
+        # no change events are fired
+        age_path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="l", notify=False),
+            next=observe.ListenerPath(
+                node=observe.ListItemListener(notify=False),
+                next=observe.ListenerPath(
+                    node=observe.RequiredTraitListener(
+                        name="age", notify=True),
+                )
+            )
+        )
+        bar = self.Bar()
+        f = self.Foo(l=[])
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=age_path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        f.l.append(bar)
+        bar.age = 10
+
+        # then
+        mock_obj.assert_called_once()
+
+        # when
+        mock_obj.reset_mock()
+        f.l.pop()
+        bar.age = 11
+
+        # then
+        mock_obj.assert_not_called()
 
 
-print("-----------")
-print("Mutate nested trait on the first item")
-with check_call_count(1):
-    f.l[0].age = 10
-
-print("-----------")
-print("Mutate list")
-with check_call_count(1):
-    f.l.append(Bar())
-
-print("-----------")
-print("Mutate nested trait on the first item")
-with check_call_count(1):
-    f.l[0].age = 20
-
-print("-----------")
-print("Mutate nested trait on the second item")
-with check_call_count(1):
-    f.l[1].age = 10
-
-print("-----------")
-print("Append the same object")
-with check_call_count(1):
-    f.l.append(f.l[1])
-
-print("-----------")
-print("Mutate the second object (same object as the third)")
-with check_call_count(1):
-    f.l[1].age = 12
-
-print("-----------")
-print("Pop the last object, but the same object is still there")
-with check_call_count(1):
-    item = f.l.pop()
-
-print("-----------")
-print("Mutate the popped item that still lives in the list, which still causes the event to fire")
-with check_call_count(1):
-    item.age = 13
-
-print("----------")
-print("Pop the last item, now it does not exist in the list")
-with check_call_count(1):
-    item = f.l.pop()
-
-print("----------")
-print("Mutating this item should not fire")
-with check_call_count(0):
-    item.age = 14
-
-
-print("----------")
-print("Two lists sharing the same object")
-f1 = Foo()
-f2 = Foo()
-bar = Bar()
-f1.l = [bar]
-f2.l = [bar]
-observe.observe(object=f1, callback=callback, path=age_path, remove=False, dispatch="same")
-observe.observe(object=f2, callback=callback, path=age_path, remove=False, dispatch="same")
-print("Mutating the object")
-print("Should we fire once, or twice?")
-with check_call_count(2):
-    bar.age = 12
+if __name__ == "__main__":
+    unittest.main()
