@@ -175,50 +175,6 @@ class TestList(unittest.TestCase):
         self.assertEqual(event.old, 0)
         self.assertEqual(event.new, 20)
 
-    def test_multiple_identical_object_in_list(self):
-        # enthought/traits#237
-        age_path = observe.ListenerPath.from_nodes(
-            observe.RequiredTraitListener(name="l", notify=False),
-            observe.ListItemListener(notify=False),
-            observe.RequiredTraitListener(name="age", notify=True),
-        )
-        f = self.Foo(l=[])
-        mock_obj = mock.Mock()
-
-        observe.observe(
-            object=f,
-            callback=mock_obj,
-            path=age_path,
-            remove=False,
-            dispatch="same",
-        )
-
-        bar = self.Bar()
-        f.l.extend((bar, bar))
-        mock_obj.assert_not_called()
-
-        # when
-        bar.age = 20
-
-        # then
-        mock_obj.assert_called_once()
-        ((event, ), _), = mock_obj.call_args_list
-        self.assertEqual(event.old, 0)
-        self.assertEqual(event.new, 20)
-
-        # when
-        # pop one item, the same object is still in the list
-        mock_obj.reset_mock()
-        f.l.pop()
-        bar.age = 21
-
-        # then
-        self.assertIn(bar, f.l)
-        mock_obj.assert_called_once()
-        ((event, ), _), = mock_obj.call_args_list
-        self.assertEqual(event.old, 20)
-        self.assertEqual(event.new, 21)
-
     def test_mutate_removed_object(self):
         # Test when an object is removed from the list,
         # no change events are fired
@@ -438,6 +394,57 @@ class TestIssue537(unittest.TestCase):
 
 
 class TestIssue237(unittest.TestCase):
+
+    def test_multiple_identical_object_in_list(self):
+        # enthought/traits#237
+
+        class Bar(HasTraits):
+            age = Int()
+
+        class Foo(HasTraits):
+            l = List(Instance(Bar))
+
+        age_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="age", notify=True),
+        )
+        f = Foo(l=[])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=age_path,
+            remove=False,
+            dispatch="same",
+        )
+
+        bar = Bar()
+        f.l.extend((bar, bar))
+        mock_obj.assert_not_called()
+
+        # when
+        bar.age = 20
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.old, 0)
+        self.assertEqual(event.new, 20)
+
+        # when
+        # pop one item, the same object is still in the list
+        mock_obj.reset_mock()
+        f.l.pop()
+        bar.age = 21
+
+        # then
+        self.assertIn(bar, f.l)
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.old, 20)
+        self.assertEqual(event.new, 21)
 
     def test_issue_237_list_of_list_of_instance(self):
 
