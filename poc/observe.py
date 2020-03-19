@@ -1,7 +1,7 @@
 from functools import partial
 
 from traits import ctraits
-from traits.trait_base import Undefined
+from traits.trait_base import Undefined, Uninitialized
 from traits.ctrait import CTrait
 from traits.trait_dict_object import TraitDictObject
 from traits.trait_set_object import TraitSetObject
@@ -94,10 +94,6 @@ def add_notifiers(object, callback, dispatch, path, target=None):
 
 
 def add_notifier(object, callback, dispatch, event_factory, target=None):
-    if object is Undefined:
-        # TODO: Do something to defer adding a notifier
-        return
-
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers:
         if other.equals(callback, target):
