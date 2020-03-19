@@ -51,6 +51,7 @@ def observe(object, callback, path, remove, dispatch):
             path=path,
             object=object,
             callback=callback,
+            target=object,
         )
     else:
         add_notifiers(
@@ -58,6 +59,7 @@ def observe(object, callback, path, remove, dispatch):
             object=object,
             callback=callback,
             dispatch=dispatch,
+            target=object,
         )
 
 
@@ -70,7 +72,7 @@ WRAPPERS = {
 }
 
 
-def add_notifiers(object, callback, dispatch, path, target=None):
+def add_notifiers(object, callback, dispatch, path, target):
     listener = path.node
     for this_target in listener.iter_this_targets(object):
         if listener.notify:
@@ -84,13 +86,13 @@ def add_notifiers(object, callback, dispatch, path, target=None):
                 listener.change_callback, callback=callback, dispatch=dispatch,
                 path=path.next, target=object)
             # TODO: Remove this callback in remove_notifiers?
-            add_notifier(this_target, next_callback, dispatch, listener.event_factory)
+            add_notifier(this_target, next_callback, dispatch, listener.event_factory, target=object)
 
             for next_target in listener.iter_next_targets(object):
                 add_notifiers(next_target, callback, dispatch, path.next, target=object)
 
 
-def add_notifier(object, callback, dispatch, event_factory, target=None):
+def add_notifier(object, callback, dispatch, event_factory, target):
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers:
         if other.equals(callback, target):
@@ -105,7 +107,7 @@ def add_notifier(object, callback, dispatch, event_factory, target=None):
         observer_notifiers.append(new_notifier)
 
 
-def remove_notifer(object, callback, target=None):
+def remove_notifer(object, callback, target):
     if object is Undefined:
         return
     observer_notifiers = object._notifiers(True)
