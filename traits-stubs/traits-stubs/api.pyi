@@ -56,6 +56,8 @@ from .trait_types import (
     Set as Set,
     CSet as CSet,
     Dict as Dict,
+    Map as Map,
+    PrefixMap as PrefixMap,
     Instance as Instance,
     AdaptedTo as AdaptedTo,
     AdaptsTo as AdaptsTo,

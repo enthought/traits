@@ -452,6 +452,23 @@ class Dict(_Dict[_S, _T]):
     ...
 
 
+class _Map(_TraitType[_S, _T]):
+    def __init__(
+            self,
+            map: _DictType[_S, _T],
+            **metadata: _Any
+    ) -> None:
+        ...
+
+
+class Map(_Map):
+    ...
+
+
+class PrefixMap(_Map):
+    ...
+
+
 class _BaseClass(_TraitType[_Union[_T, str, None], _Union[_T, str, None]]):
     ...
 
