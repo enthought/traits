@@ -7,6 +7,32 @@ import observe
 from traits.api import HasTraits, Int, Instance
 from trait_types import List
 
+import logging
+
+
+@contextlib.contextmanager
+def set_logger():
+    logger = logging.getLogger()
+    level = logger.level
+    handlers = list(logger.handlers)
+
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.DEBUG)
+    logger.handlers = [handler]
+    logger.setLevel(logging.DEBUG)
+    try:
+        yield
+    finally:
+        logger.setLevel(level)
+        logger.handlers = handlers
+
+
+def log_all(f):
+    def wrapped(*args, **kwargs):
+        with set_logger():
+            return f(*args, **kwargs)
+    return wrapped
+
 
 class TestList(unittest.TestCase):
 
@@ -455,6 +481,159 @@ class TestIssue537(unittest.TestCase):
 
         # then
         mock_obj.assert_not_called()
+
+
+class TestIssue237(unittest.TestCase):
+
+    def test_issue_237_list_of_list_of_instance(self):
+
+        class Baz(HasTraits):
+
+            value = Int()
+
+        class Bar(HasTraits):
+
+            bazs = List(Instance(Baz))
+
+        class Foo(HasTraits):
+
+            bars = List(Instance(Bar))
+
+        baz = Baz(value=0)
+        foo = Foo(
+            bars=[
+                Bar(bazs=[baz]),
+                Bar(bazs=[baz]),
+            ]
+        )
+        path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(
+                name="bars", notify=False),
+            next=observe.ListenerPath(
+                node=observe.ListItemListener(notify=False),
+                next=observe.ListenerPath(
+                    node=observe.RequiredTraitListener(
+                        name="bazs", notify=False),
+                    next=observe.ListenerPath(
+                        node=observe.ListItemListener(notify=False),
+                        next=observe.ListenerPath(
+                            node=observe.RequiredTraitListener(
+                                name="value", notify=True)
+                        )
+                    )
+                )
+            )
+        )
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        baz.value = 2
+        self.assertEqual(mock_obj.call_count, 1)
+
+        foo.bars[0].bazs.pop()
+
+        mock_obj.reset_mock()
+        baz.value = 3
+        self.assertEqual(mock_obj.call_count, 1)
+
+        foo.bars[1].bazs.pop()
+
+        mock_obj.reset_mock()
+        baz.value = 4
+        mock_obj.assert_not_called()
+
+    def test_issue_237_different_level_of_nesting(self):
+
+        class Baz(HasTraits):
+
+            value = Int()
+
+        class Bar(HasTraits):
+
+            bazs = List(Instance(Baz))
+
+        class Spam(HasTraits):
+
+            bars = List(Instance(Bar))
+
+        class Foo(HasTraits):
+
+            bars = List(Instance(Bar))
+
+            spams = List(Instance(Spam))
+
+        baz = Baz(value=1)
+        foo = Foo(
+            bars=[
+                Bar(bazs=[baz]),
+                Bar(bazs=[baz]),
+            ],
+            spams=[
+                Spam(
+                    bars=[
+                        Bar(bazs=[baz]),
+                        Bar(bazs=[baz]),
+                    ]
+                )
+            ]
+        )
+        mock_obj = mock.Mock()
+        # "bars:bazs:value"
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="bars", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="bazs", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="value", notify=True)
+        )
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        mock_obj.reset_mock()
+        baz.value += 1
+
+        # then
+        mock_obj.assert_called_once()
+
+        # when
+        # Add one more listener... which walks a different path!
+        # "spams:bars:bazs:value"
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="spams", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="bars", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="bazs", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="value", notify=True)
+        )
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        mock_obj.reset_mock()
+        baz.value += 1
+
+        # then
+        # It is the same callback
+        mock_obj.assert_called_once()
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
 from functools import partial
+import logging
 
 from traits import ctraits
 from traits.trait_base import Undefined, Uninitialized
@@ -27,6 +28,8 @@ ctraits._list_classes(NewTraitListObject, TraitSetObject, TraitDictObject)
 
 INotifiableObject.register(CTrait)
 INotifiableObject.register(ctraits.CHasTraits)
+
+logger = logging.getLogger()
 
 
 def observe(object, callback, path, remove, dispatch):
@@ -84,12 +87,12 @@ def add_notifiers(object, callback, dispatch, path, target):
 
             next_callback = partial(
                 listener.change_callback, callback=callback, dispatch=dispatch,
-                path=path.next, target=object)
+                path=path.next, target=target)
             # TODO: We need this callback to be removed once right after it is called.
-            add_notifier(this_target, next_callback, dispatch, listener.event_factory, target=object)
+            add_notifier(this_target, next_callback, dispatch, listener.event_factory, target=target)
 
             for next_target in listener.iter_next_targets(object):
-                add_notifiers(next_target, callback, dispatch, path.next, target=object)
+                add_notifiers(next_target, callback, dispatch, path.next, target=target)
 
 
 def call_notifiers(object, callback, dispatch, path):
@@ -114,9 +117,14 @@ def call_notifiers(object, callback, dispatch, path):
 def add_notifier(object, callback, dispatch, event_factory, target):
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers:
-        if other.equals(callback, target):
+        if other.equals(callback) and other.has_target(target):
+            # should we compare dispatch as well?
+            logger.debug("ADD: adding target %r", target)
+            other.increment_target_count(target)
             break
+
     else:
+        logger.debug("ADD: adding notifier %r", target)
         new_notifier = WRAPPERS[dispatch](
             observer=callback,
             owner=observer_notifiers,
@@ -131,9 +139,11 @@ def remove_notifer(object, callback, target):
         return
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers[:]:
-        if other.equals(callback, target):
-            observer_notifiers.remove(other)
-            other.dispose()
+        if other.equals(callback) and other.has_target(target):
+            other.decrement_target_count(target)
+            if other.target_count == 0:
+                observer_notifiers.remove(other)
+                other.dispose()
             break
 
 
@@ -144,7 +154,7 @@ def remove_notifiers(object, callback, path, target):
             remove_notifer(this_target, callback, target=target)
     if path.next is not None:
         for next_target in listener.iter_next_targets(object):
-            remove_notifiers(next_target, callback, path, target=object)
+            remove_notifiers(next_target, callback, path, target=target)
 
 
 def is_notifiable(object):
@@ -294,10 +304,8 @@ class ListItemListener(BaseListener):
                 yield item
 
     def change_callback(self, event, callback, dispatch, path, target):
-        list_ = event.new
         for item in event.removed:
-            #: TODO: Would checking containment here be a performance hit?
-            if item not in list_ and is_notifiable(item):
+            if is_notifiable(item):
                 remove_notifiers(
                     object=item,
                     callback=callback,
@@ -334,6 +342,16 @@ class ListenerPath:
     def __init__(self, node, next=None):
         self.node = node
         self.next = next
+
+    @classmethod
+    def from_nodes(cls, node, *nodes):
+        nodes = iter(nodes)
+        root = path = cls(node=node)
+        for node in nodes:
+            next_path = cls(node=node)
+            path.next = next_path
+            path = next_path
+        return root
 
 
 # "inst.attr"

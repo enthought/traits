@@ -2,12 +2,13 @@
 # Copy from enthought/traits#931
 #####
 
-
+import logging
 from types import MethodType
 import weakref
 
 from traits.trait_base import Uninitialized
 
+logger = logging.getLogger()
 
 class BaseObserverEvent(object):
     pass
@@ -78,10 +79,12 @@ class TraitObserverNotifier(object):
 
         self.owner = owner
 
-        if target is not None:
-            self.target = weakref.ref(target, self.observer_deleted)
-        else:
+        if target is None:
             self.target = None
+            self.target_count = 0
+        else:
+            self.target = weakref.ref(target, self.target_deleted)
+            self.target_count = 1
 
         self.event_factory = event_factory
 
@@ -107,7 +110,7 @@ class TraitObserverNotifier(object):
         event = self.event_factory(object, name, old, new)
         observer(event)
 
-    def equals(self, observer, target):
+    def equals(self, observer):
         """ Check if equal to either self or the observer callback.
 
         Parameters
@@ -121,16 +124,30 @@ class TraitObserverNotifier(object):
             return False
 
         if isinstance(self.observer, weakref.WeakMethod):
-            this_observer = self.observer()
+            return self.observer() is observer
         else:
-            this_observer = self.observer
+            return self.observer is observer
 
-        if self.target is not None:
-            return this_observer is observer and target is self.target()
-        else:
-            return this_observer is observer
+    def increment_target_count(self, target):
+        if not self.has_target(target):
+            raise ValueError("Unknown target.")
+        self.target_count += 1
 
-    def observer_deleted(self, ref=None):
+    def decrement_target_count(self, target):
+        if not self.has_target(target):
+            raise ValueError("Unknown target.")
+        self.target_count -= 1
+        if self.target_count < 0:
+            raise ValueError("Too many decrement.")
+
+    def has_target(self, target):
+        if target is None:
+            return False
+        if self.target is None:
+            return False
+        return self.target() is target
+
+    def target_deleted(self, ref=None):
         """ Callback to remove this from the list of notifiers.
 
         Parameters
@@ -148,6 +165,7 @@ class TraitObserverNotifier(object):
         except ValueError:
             pass
         self.owner = None
+        self.target_count = 0
 
     def dispose(self):
         """ Perform clean-up when no longer in use.
