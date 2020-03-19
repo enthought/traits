@@ -95,13 +95,15 @@ class TraitListObject(list):
         mutated.
     """
 
-    def __init__(self, trait, object, name, value):
+    def __init__(self, trait, object, name, value, is_root_container=True):
         self.trait = trait
         self.object = ref(object)
         self.name = name
         self.name_items = None
         if trait.has_items:
             self.name_items = name + "_items"
+
+        self.is_root_container = is_root_container
 
         # Do the validated 'setslice' assignment without raising an
         # 'items_changed' event:
@@ -124,6 +126,9 @@ class TraitListObject(list):
     def _send_trait_items_event(self, name, event, items_event=None):
         """ Send a TraitListEvent to the owning object if there is one.
         """
+        if not self.is_root_container:
+            return
+
         object = self.object()
         if object is not None:
             if items_event is None and hasattr(self, "trait"):

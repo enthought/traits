@@ -98,7 +98,7 @@ class TraitDictObject(dict):
         mutated.
     """
 
-    def __init__(self, trait, object, name, value):
+    def __init__(self, trait, object, name, value, is_root_container=True):
         self.trait = trait
         self.object = ref(object)
         self.name = name
@@ -106,12 +106,17 @@ class TraitDictObject(dict):
         if trait.has_items:
             self.name_items = name + "_items"
 
+        self.is_root_container = is_root_container
+
         if len(value) > 0:
             dict.update(self, self._validate_dic(value))
 
     def _send_trait_items_event(self, name, event, items_event=None):
         """ Send a TraitDictEvent to the owning object if there is one.
         """
+        if not self.is_root_container:
+            return
+
         object = self.object()
         if object is not None:
             if items_event is None and hasattr(self, "trait"):

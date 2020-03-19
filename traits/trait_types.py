@@ -159,6 +159,14 @@ def default_text_editor(trait, type=None):
     return TextEditor(auto_set=auto_set, enter_set=enter_set, evaluate=type)
 
 
+def mark_as_child_container(trait):
+    try:
+        if hasattr(trait, 'is_root_container'):
+            trait.is_root_container = False
+    except Exception:
+        pass
+
+
 # Generic validators
 
 def _validate_int(value):
@@ -2335,6 +2343,9 @@ class List(TraitType):
     ):
         metadata.setdefault("copy", "deep")
 
+        self.is_root_container = True
+        mark_as_child_container(trait)
+
         if isinstance(trait, SequenceTypes):
             trait, value = value, list(trait)
 
@@ -2366,7 +2377,8 @@ class List(TraitType):
             if object is None:
                 return value
 
-            return TraitListObject(self, object, name, value)
+            return TraitListObject(self, object, name, value,
+                                   self.is_root_container)
 
         self.error(object, name, value)
 
@@ -2567,6 +2579,9 @@ class Set(TraitType):
     def __init__(self, trait=None, value=None, items=True, **metadata):
         metadata.setdefault("copy", "deep")
 
+        self.is_root_container = True
+        mark_as_child_container(trait)
+
         if isinstance(trait, SetTypes):
             trait, value = value, set(trait)
 
@@ -2591,7 +2606,8 @@ class Set(TraitType):
             if object is None:
                 return value
 
-            return TraitSetObject(self, object, name, value)
+            return TraitSetObject(self, object, name, value,
+                                  self.is_root_container)
 
         self.error(object, name, value)
 
@@ -2692,6 +2708,11 @@ class Dict(TraitType):
         items=True,
         **metadata
     ):
+
+        self.is_root_container = True
+        mark_as_child_container(key_trait)
+        mark_as_child_container(value_trait)
+
         if isinstance(key_trait, dict):
             key_trait, value_trait, value = value_trait, value, key_trait
 
@@ -2721,7 +2742,8 @@ class Dict(TraitType):
         if isinstance(value, dict):
             if object is None:
                 return value
-            return TraitDictObject(self, object, name, value)
+            return TraitDictObject(self, object, name, value,
+                                   self.is_root_container)
 
         self.error(object, name, value)
 
@@ -3741,6 +3763,8 @@ class Union(TraitType):
         for trait in traits:
             if trait is None:
                 trait = NoneTrait
+
+            mark_as_child_container(trait)
             ctrait_instance = trait_cast(trait)
             if ctrait_instance is None:
                 raise ValueError("Union trait declaration expects a trait "
