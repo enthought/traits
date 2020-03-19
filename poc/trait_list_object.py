@@ -248,11 +248,16 @@ class TraitList(list):
         if isinstance(index, slice):
             if len(removed) != len(value) and index.step not in {1, None}:
                 raise ValueError
+        if not isinstance(index, slice):
+            added = [value]
 
-        added = self.validate(index, removed, value)
+        added = self.validate(index, removed, added)
         norm_index = self._normalize(index)
 
-        super().__setitem__(index, added)
+        if not isinstance(index, slice):
+            value, = added
+
+        super().__setitem__(index, value)
 
         if self._should_notify(removed, added):
             self.notify(norm_index, removed, added)

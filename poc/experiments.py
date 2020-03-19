@@ -362,19 +362,18 @@ class TestListOfList(unittest.TestCase):
         self.assertEqual(event.added, [1])
 
 
-class Child(HasTraits):
-
-    value = Int()
-
-
-class Parent(HasTraits):
-
-    children = List(Instance(Child))
-
-
 class TestIssue538(unittest.TestCase):
 
     def test_issue_538(self):
+
+        class Child(HasTraits):
+
+            value = Int()
+
+        class Parent(HasTraits):
+
+            children = List(Instance(Child))
+
         path = observe.ListenerPath(
             node=observe.RequiredTraitListener(name="children", notify=False),
             next=observe.ListenerPath(
@@ -401,6 +400,61 @@ class TestIssue538(unittest.TestCase):
         parent.children.append(Child(value=2))
 
         mock_obj.assert_called_once()
+
+
+class TestIssue537(unittest.TestCase):
+
+    def test_issue_537(self):
+
+        class Child(HasTraits):
+
+            values = List(Int)
+
+        class Parent(HasTraits):
+
+            child = Instance(Child)
+            values = List(Int)
+
+        parent = Parent(
+            child=Child(values=[1, 2, 3]),
+            values=[4, 5, 6],
+        )
+
+        mock_obj = mock.Mock()
+        values_path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="values", notify=True),
+        )
+        observe.observe(
+            object=parent,
+            callback=mock_obj,
+            path=values_path,
+            remove=False,
+            dispatch="same",
+        )
+        child_values_path = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="child", notify=True),
+            next=observe.ListenerPath(
+                node=observe.RequiredTraitListener(name="values", notify=True),
+            )
+        )
+        observe.observe(
+            object=parent,
+            callback=mock_obj,
+            path=child_values_path,
+            remove=False,
+            dispatch="same",
+        )
+        # when
+        parent.values[0] = 100
+
+        # then
+        mock_obj.assert_not_called()
+
+        # when
+        parent.child.values[0] = 100
+
+        # then
+        mock_obj.assert_not_called()
 
 
 if __name__ == "__main__":
