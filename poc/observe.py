@@ -72,14 +72,11 @@ WRAPPERS = {
 
 def add_notifiers(object, callback, dispatch, path, target=None):
     listener = path.node
-    print(listener)
     for this_target in listener.iter_this_targets(object):
         if listener.notify:
             add_notifier(
                 this_target, callback, dispatch, listener.event_factory, target=target
             )
-        else:
-            print("Silencing notifier for ", object, this_target, callback, dispatch, listener)
 
         if path.next is not None:
 
@@ -97,10 +94,8 @@ def add_notifier(object, callback, dispatch, event_factory, target=None):
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers:
         if other.equals(callback, target):
-            print(other)
             break
     else:
-        print("Adding notifier for ", object, callback, dispatch, event_factory)
         new_notifier = WRAPPERS[dispatch](
             observer=callback,
             owner=observer_notifiers,
@@ -113,7 +108,6 @@ def add_notifier(object, callback, dispatch, event_factory, target=None):
 def remove_notifer(object, callback, target=None):
     if object is Undefined:
         return
-    print("Removing notifier for ", object, callback)
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers[:]:
         if other.equals(callback, target):
