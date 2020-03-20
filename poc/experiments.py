@@ -829,6 +829,66 @@ class TestFilteredTrait(unittest.TestCase):
         self.assertEqual(event.old, "male")
         self.assertEqual(event.new, "unknown")
 
+    def test_filter_metadata_nested_attribute(self):
+
+        class Person(HasTraits):
+            name = Str(public=True)
+            age = Int(public=False)
+
+        class Foo(HasTraits):
+            guardian = Instance(Person, public=True)
+            mother = Instance(Person, public=True)
+
+        path = observe.ListenerPath.from_nodes(
+            observe.FilteredTraitListener(notify=False, filter=lambda _, trait: trait.public),
+            observe.FilteredTraitListener(notify=True, filter=lambda _, trait: trait.public),
+        )
+        foo = Foo(
+            guardian=Person(name="John", age=40),
+            mother=Person(name="Mother", age=35),
+        )
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        foo.guardian.age = 41
+
+        # then
+        mock_obj.assert_not_called()
+
+        # when
+        foo.guardian.name = "Jim"
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertIs(event.object, foo.guardian)
+        self.assertEqual(event.name, "name")
+        self.assertEqual(event.old, "John")
+        self.assertEqual(event.new, "Jim")
+
+        # when
+        mock_obj.reset_mock()
+        foo.mother.age = 31
+
+        # then
+        mock_obj.assert_not_called()
+
+        # when
+        mock_obj.reset_mock()
+        foo.mother.name = "Holly"
+
+        # then
+        # FIXME: We are not listening to changes to foo.mother
+        with self.assertRaises(AssertionError):
+            mock_obj.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()
