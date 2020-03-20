@@ -268,12 +268,13 @@ class TestList(unittest.TestCase):
 
 class TestListOfList(unittest.TestCase):
 
-    class Foo(HasTraits):
-
-        bars = List(List(List()))
-
     def test_nested_list_of_list_of_list(self):
         # notify changes on the most nested list, but not anything else.
+
+        class Foo(HasTraits):
+
+            bars = List(List(List()))
+
         path = observe.ListenerPath.from_nodes(
             observe.RequiredTraitListener(name="bars", notify=False),
             observe.ListItemListener(notify=False),
@@ -281,7 +282,7 @@ class TestListOfList(unittest.TestCase):
             observe.ListItemListener(notify=True),
         )
 
-        foo = self.Foo()
+        foo = Foo()
         mock_obj = mock.Mock()
         observe.observe(
             object=foo,
