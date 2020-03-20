@@ -78,23 +78,17 @@ class TraitObserverNotifier(object):
             self.notify_observer = self._notify_function_observer
 
         self.owner = owner
-
+        self.target = target
         if target is not None:
-            self.target = weakref.ref(target, self.observer_deleted)
             self.target_count = 1
         else:
-            self.target = None
             self.target_count = 0
 
         self.event_factory = event_factory
 
     def __repr__(self):
-        if self.target is not None:
-            target = self.target()
-        else:
-            target = None
         return "<TraitObserverNotifier target={!r} event_factory={!r}>".format(
-            target,
+            self.target,
             self.event_factory
         )
 
@@ -115,10 +109,7 @@ class TraitObserverNotifier(object):
         """
         if self.target is not None:
             # keep a reference to the target while handling callback
-            target = self.target()
-            if target is None:
-                # observer is no longer valid; do nothing
-                return
+            target = self.target
         else:
             target = None
         event = self.event_factory(object, name, old, new)
@@ -143,23 +134,29 @@ class TraitObserverNotifier(object):
             return self.observer is observer
 
     def increment_target_count(self, target):
-        if not self.has_target(target):
+        if self.target is not target:
             raise ValueError("Unknown target.")
         self.target_count += 1
 
     def decrement_target_count(self, target):
-        if not self.has_target(target):
+        if self.target is not target:
             raise ValueError("Unknown target.")
         self.target_count -= 1
         if self.target_count < 0:
             raise ValueError("Too many decrement.")
 
-    def has_target(self, target):
-        if target is None:
-            return False
-        if self.target is None:
-            return False
-        return self.target() is target
+    @property
+    def target(self):
+        if self._target is not None:
+            return self._target()
+        return self._target
+
+    @target.setter
+    def target(self, value):
+        if value is not None:
+            self._target = weakref.ref(value, self.observer_deleted)
+        else:
+            self._target = value
 
     def observer_deleted(self, ref=None):
         """ Callback to remove this from the list of notifiers.

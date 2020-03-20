@@ -99,7 +99,7 @@ def add_notifiers(object, callback, dispatch, path, target):
 def add_notifier(object, callback, dispatch, event_factory, target):
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers:
-        if other.equals(callback) and other.has_target(target):
+        if other.equals(callback) and other.target is target:
             # should we compare dispatch as well?
             logger.debug("ADD: adding target %r", target)
             other.increment_target_count(target)
@@ -121,7 +121,7 @@ def remove_notifer(object, callback, target):
         return
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers[:]:
-        if other.equals(callback) and other.has_target(target):
+        if other.equals(callback) and other.target is target:
             other.decrement_target_count(target)
             if other.target_count == 0:
                 observer_notifiers.remove(other)
