@@ -79,12 +79,12 @@ class TraitObserverNotifier(object):
 
         self.owner = owner
 
-        if target is None:
+        if target is not None:
+            self.target = weakref.ref(target, self.observer_deleted)
+            self.target_count = 1
+        else:
             self.target = None
             self.target_count = 0
-        else:
-            self.target = weakref.ref(target, self.target_deleted)
-            self.target_count = 1
 
         self.event_factory = event_factory
 
@@ -159,7 +159,7 @@ class TraitObserverNotifier(object):
             return False
         return self.target() is target
 
-    def target_deleted(self, ref=None):
+    def observer_deleted(self, ref=None):
         """ Callback to remove this from the list of notifiers.
 
         Parameters
