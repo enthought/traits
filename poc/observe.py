@@ -85,11 +85,11 @@ def add_notifiers(object, callback, dispatch, path, target):
 
         if path.next is not None:
 
+            # FIXME: Can we not use partial
+            # This holds a strong reference to the callback, is it okay?
             next_callback = partial(
                 listener.change_callback, callback=callback, dispatch=dispatch,
                 path=path.next, target=target)
-            # TODO: We need this callback to be removed once right after it is called.
-            # TODO: We also need to be able to remove this in ``remove_notifiers``.`
             add_notifier(this_target, next_callback, dispatch, listener.event_factory, target=target)
 
             for next_target in listener.iter_next_targets(object):
@@ -99,7 +99,7 @@ def add_notifiers(object, callback, dispatch, path, target):
 def add_notifier(object, callback, dispatch, event_factory, target):
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers:
-        if other.equals(callback) and other.target is target:
+        if other.observer is callback and other.target is target:
             # should we compare dispatch as well?
             logger.debug("ADD: adding target %r", target)
             other.increment_target_count(target)
@@ -116,12 +116,27 @@ def add_notifier(object, callback, dispatch, event_factory, target):
         observer_notifiers.append(new_notifier)
 
 
-def remove_notifer(object, callback, target):
+def remove_notifier(object, callback, target):
     if object is Undefined:
         return
     observer_notifiers = object._notifiers(True)
+    logger.debug("Removing from %r", observer_notifiers)
     for other in observer_notifiers[:]:
-        if other.equals(callback) and other.target is target:
+        observer = other.observer
+        logger.debug("%r, %r", observer, callback)
+        if isinstance(observer, partial) and isinstance(callback, partial):  # FIXME: Code smell!
+            same_callback = (
+                observer.func is callback.func
+                and observer.keywords["callback"] is callback.keywords["callback"]
+            )
+            logger.debug("other func: %r", observer.func)
+            logger.debug("this func: %r", callback.func)
+            logger.debug("other callback: %r", observer.keywords["callback"])
+            logger.debug("this callback: %r", callback.keywords["callback"])
+        else:
+            same_callback = observer is callback
+
+        if same_callback and other.target is target:
             other.decrement_target_count(target)
             if other.target_count == 0:
                 observer_notifiers.remove(other)
@@ -131,12 +146,14 @@ def remove_notifer(object, callback, target):
 
 def remove_notifiers(object, callback, path, target):
     listener = path.node
-    if listener.notify:
-        for this_target in listener.iter_this_targets(object):
-            remove_notifer(this_target, callback, target=target)
-    if path.next is not None:
-        for next_target in listener.iter_next_targets(object):
-            remove_notifiers(next_target, callback, path, target=target)
+    for this_target in listener.iter_this_targets(object):
+        if listener.notify:
+            remove_notifier(this_target, callback, target=target)
+
+        if path.next is not None:
+            remove_notifier(this_target, partial(listener.change_callback, callback=callback), target=target)
+            for next_target in listener.iter_next_targets(object):
+                remove_notifiers(next_target, callback, path.next, target=target)
 
 
 def is_notifiable(object):

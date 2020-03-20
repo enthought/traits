@@ -947,5 +947,48 @@ class TestFilteredTrait(unittest.TestCase):
         mock_obj.assert_not_called()
 
 
+class TestRemoveNotifier(unittest.TestCase):
+
+    def test_notifer_removed_for_removed_object(self):
+
+        class Baz(HasTraits):
+            value = Int()
+
+        class Bar(HasTraits):
+            baz = Instance(Baz)
+
+        class Foo(HasTraits):
+            bar = Instance(Bar)
+
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="bar", notify=False),
+            observe.RequiredTraitListener(name="baz", notify=False),
+            observe.RequiredTraitListener(name="value", notify=True),
+        )
+        foo = Foo(bar=Bar(baz=Baz(value=10)))
+
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        bar = foo.bar
+        foo.bar = Bar(baz=Baz(value=11))
+
+        # then
+        mock_obj.assert_not_called()
+
+        # when
+        bar.baz.value += 1
+
+        # then
+        mock_obj.assert_not_called()
+
+
 if __name__ == "__main__":
     unittest.main()

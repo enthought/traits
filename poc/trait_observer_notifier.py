@@ -71,10 +71,10 @@ class TraitObserverNotifier(object):
     def __init__(self, observer, owner, target=None, event_factory=ObserverEvent):
         if isinstance(observer, MethodType):
             # allow observing object methods to be garbage collected
-            self.observer = weakref.WeakMethod(observer, self.observer_deleted)
+            self._observer = weakref.WeakMethod(observer, self.observer_deleted)
             self.notify_observer = self._notify_weak_observer
         else:
-            self.observer = observer
+            self._observer = observer
             self.notify_observer = self._notify_function_observer
 
         self.owner = owner
@@ -115,24 +115,6 @@ class TraitObserverNotifier(object):
         event = self.event_factory(object, name, old, new)
         observer(event)
 
-    def equals(self, observer):
-        """ Check if equal to either self or the observer callback.
-
-        Parameters
-        ----------
-        observer : callable
-            The observer we are comparing to.
-        """
-        if observer is self:
-            return True
-        elif observer is None:
-            return False
-
-        if isinstance(self.observer, weakref.WeakMethod):
-            return self.observer() is observer
-        else:
-            return self.observer is observer
-
     def increment_target_count(self, target):
         if self.target is not target:
             raise ValueError("Unknown target.")
@@ -157,6 +139,12 @@ class TraitObserverNotifier(object):
             self._target = weakref.ref(value, self.observer_deleted)
         else:
             self._target = value
+
+    @property
+    def observer(self):
+        if isinstance(self._observer, weakref.WeakMethod):
+            return self._observer()
+        return self._observer
 
     def observer_deleted(self, ref=None):
         """ Callback to remove this from the list of notifiers.
@@ -188,6 +176,6 @@ class TraitObserverNotifier(object):
         self.dispatch(self.observer, object, name, old, new)
 
     def _notify_method_observer(self, object, name, old, new):
-        observer = self.observer()
+        observer = self.observer
         if observer is not None:
             self.dispatch(observer, object, name, old, new)
