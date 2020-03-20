@@ -106,7 +106,7 @@ def add_notifier(object, callback, dispatch, event_factory, target):
             break
 
     else:
-        logger.debug("ADD: adding notifier %r", target)
+        logger.debug("ADD: adding notifier for object %r targeting %r", object, target)
         new_notifier = WRAPPERS[dispatch](
             observer=callback,
             owner=observer_notifiers,
@@ -280,6 +280,11 @@ class ListItemListener(BaseListener):
                 yield item
 
     def change_callback(self, event, callback, dispatch, path, target):
+        logger.debug(
+            "Handling list change. "
+            "({!r})".format(
+                (event.old, event.new, event.removed, event.added, path.node)
+        ))
         for item in event.removed:
             if is_notifiable(item):
                 remove_notifiers(
