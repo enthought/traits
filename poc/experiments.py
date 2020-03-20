@@ -837,7 +837,7 @@ class TestFilteredTrait(unittest.TestCase):
 
         class Foo(HasTraits):
             guardian = Instance(Person, public=True)
-            mother = Instance(Person, public=True)
+            mother = Instance(Person, public=False)
 
         path = observe.ListenerPath.from_nodes(
             observe.FilteredTraitListener(notify=False, filter=lambda _, trait: trait.public),
@@ -885,9 +885,7 @@ class TestFilteredTrait(unittest.TestCase):
         foo.mother.name = "Holly"
 
         # then
-        # FIXME: We are not listening to changes to foo.mother
-        with self.assertRaises(AssertionError):
-            mock_obj.assert_not_called()
+        mock_obj.assert_not_called()
 
 
 if __name__ == "__main__":
