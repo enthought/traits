@@ -104,6 +104,8 @@ class TraitObserverNotifier(object):
         This adapts the underlying CTrait notifier signature to an event
         object that is expected by observers.
         """
+        if self.target is not None and self.target_count == 0:
+            raise ValueError("I should have been removed!")
         if old is not Uninitialized:
             logger.debug("Notifier is called: {!r} with {!r}".format(self, (object, name, old, new)))
             self.notify_observer(object, name, old, new)
@@ -177,6 +179,7 @@ class TraitObserverNotifier(object):
         except ValueError:
             pass
         self.owner = None
+        self.target = None
         self.target_count = 0
 
     def dispose(self):
