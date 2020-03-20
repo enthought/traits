@@ -784,12 +784,13 @@ class TestFilteredTrait(unittest.TestCase):
 
             age = Int(public=False)
             name = Str(public=True)
+            gender = Str(public=True)
 
         path = observe.ListenerPath.from_nodes(
             observe.FilteredTraitListener(notify=True, filter=lambda _, trait: trait.public),
         )
 
-        foo = Foo(age=1, name="John")
+        foo = Foo(age=1, name="John", gender="male")
         mock_obj = mock.Mock()
         observe.observe(
             object=foo,
@@ -815,6 +816,18 @@ class TestFilteredTrait(unittest.TestCase):
         self.assertEqual(event.name, "name")
         self.assertEqual(event.old, "John")
         self.assertEqual(event.new, "Jim")
+
+        # when
+        mock_obj.reset_mock()
+        foo.gender = "unknown"
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertIs(event.object, foo)
+        self.assertEqual(event.name, "gender")
+        self.assertEqual(event.old, "male")
+        self.assertEqual(event.new, "unknown")
 
 
 if __name__ == "__main__":
