@@ -250,6 +250,8 @@ class TraitList(list):
                 raise ValueError
         if not isinstance(index, slice):
             added = [value]
+        else:
+            added = value
 
         added = self.validate(index, removed, added)
         norm_index = self._normalize(index)

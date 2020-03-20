@@ -391,6 +391,49 @@ class TestListOfList(unittest.TestCase):
         with self.assertRaises(AssertionError):
             mock_obj.assert_called_once()
 
+    def test_nested_list_of_list_of_list_reassigned(self):
+
+        class Foo(HasTraits):
+
+            bars = List(List(List()))
+
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="bars", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.ListItemListener(notify=False),
+            observe.ListItemListener(notify=True),
+        )
+
+        foo = Foo(bars=[[[]]])
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        foo.bars[0][0].append(1)
+
+        # then
+        mock_obj.assert_called_once()
+
+        # when
+        # Reassign to a new list that compares equal.
+        self.assertEqual(foo.bars[0], [[1]])
+        foo.bars[slice(0, 0)] = [[[1]]]
+        self.assertEqual(foo.bars[0], [[1]])
+
+        mock_obj.reset_mock()
+        foo.bars[0][0].append(2)
+
+        # then
+        # FIXME: One notification should be fired
+        with self.assertRaises(AssertionError):
+            mock_obj.assert_called_once()
+
 
 class TestIssue538(unittest.TestCase):
 
