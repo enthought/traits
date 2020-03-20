@@ -306,6 +306,67 @@ class TestListOfList(unittest.TestCase):
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.added, [1])
 
+    def test_nested_list_of_list_reassigned(self):
+
+        class Foo(HasTraits):
+
+            bars = List(List())
+
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="bars", notify=False),
+            observe.ListItemListener(notify=False),
+            observe.ListItemListener(notify=True),
+        )
+
+        foo = Foo()
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        foo.bars = []
+
+        # then
+        mock_obj.assert_not_called()
+
+        # when
+        foo.bars = [[[]]]
+
+        # then
+        # the new values are the same as the default
+        mock_obj.assert_not_called()
+
+        # when
+        foo.bars[0].append([])
+
+        # then
+        mock_obj.assert_called_once()
+
+        # when
+        mock_obj.reset_mock()
+        foo.bars = [[[], []]]
+
+        # then
+        #: FIXME: Not sure how we could fire an event for this.
+        #: the lists are constructed before being assigned to `bars`.
+        with self.assertRaises(AssertionError):
+            mock_obj.assert_called_once()
+
+        # when
+        mock_obj.reset_mock()
+        foo.bars[0] = [1, 2]
+
+        # then
+        #: FIXME: Not sure how we could fire an event for this.
+        #: the lists are constructed before being assigned to `bars`.
+        with self.assertRaises(AssertionError):
+            mock_obj.assert_called_once()
+
 
 class TestIssue538(unittest.TestCase):
 
