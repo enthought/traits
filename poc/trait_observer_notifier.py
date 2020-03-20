@@ -88,13 +88,25 @@ class TraitObserverNotifier(object):
 
         self.event_factory = event_factory
 
+    def __repr__(self):
+        if self.target is not None:
+            target = self.target()
+        else:
+            target = None
+        return "<TraitObserverNotifier target={!r} event_factory={!r}>".format(
+            target,
+            self.event_factory
+        )
+
     def __call__(self, object, name, old, new):
         """ Notifier for observers.
 
         This adapts the underlying CTrait notifier signature to an event
         object that is expected by observers.
         """
-        self.notify_observer(object, name, old, new)
+        if old is not Uninitialized:
+            logger.debug("Notifier is called: {!r} with {!r}".format(self, (object, name, old, new)))
+            self.notify_observer(object, name, old, new)
 
     def dispatch(self, observer, object, name, old, new):
         """ Create an event and call the observer.

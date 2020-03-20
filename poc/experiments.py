@@ -260,10 +260,10 @@ class TestList(unittest.TestCase):
         )
 
         # when
-        foo.l   # implicitly created the list.
+        foo.l   # implicitly created the list, which is the default
 
         # then
-        mock_obj.assert_called_once()
+        mock_obj.assert_not_called()
 
 
 class TestListOfList(unittest.TestCase):
