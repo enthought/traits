@@ -379,7 +379,8 @@ class TestListOfList(unittest.TestCase):
         foo.bars = [[3]]
 
         # then
-        # The value is actually the same
+        # The values compared equal, despite the inner list being a
+        # a different list
         mock_obj.assert_not_called()
 
         # FIXME: Now the new list does not have the expected notifiers!
