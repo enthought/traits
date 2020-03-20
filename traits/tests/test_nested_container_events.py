@@ -11,8 +11,20 @@
 
 import unittest
 
-from traits.api import (HasTraits, List, Dict, Set, Str, Union, TraitDictEvent,
-                        TraitSetObject, TraitListEvent, TraitListObject)
+from traits.api import (
+    HasTraits,
+    List,
+    Dict,
+    Set,
+    Str,
+    Union,
+    TraitDictEvent,
+    TraitSetObject,
+    TraitListEvent,
+    TraitListObject,
+    Either,
+    Int
+)
 
 
 class TestClass(HasTraits):
@@ -23,6 +35,8 @@ class TestClass(HasTraits):
     list_of_list_of_list = List(List(List()))
 
     dict_str_list_or_set = Dict(Str(), Union(Set(), List()))
+
+    maybe_set = Either(Set(Int), None)
 
     events_list = List()
 
@@ -114,3 +128,22 @@ class TestNestedContainers(unittest.TestCase):
         for k, v in event.added.items():
             self.assertIsInstance(k, str)
             self.assertIsInstance(v, TraitSetObject)
+
+    def test_either_set_none(self):
+        # Issue #359
+        obj = TestClass(maybe_set={1, 2, 3})
+        # Following should not raise an error
+        obj.maybe_set |= {4, 5, 6}
+
+        # Ensure that no notification is fired
+        self.assertListEqual(obj.events_list, [])
+
+    def test_add_dict_to_list(self):
+        # Issue #25
+        class A(HasTraits):
+            # Note: Will not work with bare trait eg: foo = List(Dict)
+            foo = List(Dict())
+
+        a = A()
+        a.foo.append(dict(x=10))
+        a.foo[0]['x'] = 20

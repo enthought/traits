@@ -159,11 +159,19 @@ def default_text_editor(trait, type=None):
     return TextEditor(auto_set=auto_set, enter_set=enter_set, evaluate=type)
 
 
-def mark_as_child_container(trait):
+def mark_as_child_container(*traits):
+    for trait in traits:
+        try:
+            if trait.is_root_container:
+                trait.is_root_container = False
+        except AttributeError:
+            pass
+
+
+def mark_as_parent_container(trait):
     try:
-        if hasattr(trait, 'is_root_container'):
-            trait.is_root_container = False
-    except Exception:
+        trait.is_root_container = True
+    except AttributeError:
         pass
 
 
@@ -850,8 +858,8 @@ class BaseCallable(TraitType):
 class Callable(BaseCallable):
     """ A fast-validating trait type whose value must be a Python callable.
     """
-    def __init__(self, value=None, allow_none=True, **metadata):
 
+    def __init__(self, value=None, allow_none=True, **metadata):
         self.fast_validate = (ValidateTrait.callable, allow_none)
 
         default_value = metadata.pop("default_value", value)
@@ -2343,7 +2351,7 @@ class List(TraitType):
     ):
         metadata.setdefault("copy", "deep")
 
-        self.is_root_container = True
+        mark_as_parent_container(self)
         mark_as_child_container(trait)
 
         if isinstance(trait, SequenceTypes):
@@ -2579,7 +2587,7 @@ class Set(TraitType):
     def __init__(self, trait=None, value=None, items=True, **metadata):
         metadata.setdefault("copy", "deep")
 
-        self.is_root_container = True
+        mark_as_parent_container(self)
         mark_as_child_container(trait)
 
         if isinstance(trait, SetTypes):
@@ -2709,7 +2717,7 @@ class Dict(TraitType):
         **metadata
     ):
 
-        self.is_root_container = True
+        mark_as_parent_container(self)
         mark_as_child_container(key_trait)
         mark_as_child_container(value_trait)
 
@@ -3718,6 +3726,8 @@ class Either(TraitType):
         self.trait_maker = _TraitMaker(
             metadata.pop("default", None), *traits, **metadata
         )
+        mark_as_parent_container(self)
+        mark_as_child_container(*traits)
 
     def as_ctrait(self):
         """ Returns a CTrait corresponding to the trait defined by this class.
@@ -3760,11 +3770,13 @@ class Union(TraitType):
         if not traits:
             traits = (NoneTrait,)
 
+        mark_as_parent_container(self)
+        mark_as_child_container(*traits)
+
         for trait in traits:
             if trait is None:
                 trait = NoneTrait
 
-            mark_as_child_container(trait)
             ctrait_instance = trait_cast(trait)
             if ctrait_instance is None:
                 raise ValueError("Union trait declaration expects a trait "

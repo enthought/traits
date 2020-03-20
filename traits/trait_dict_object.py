@@ -106,7 +106,8 @@ class TraitDictObject(dict):
         if trait.has_items:
             self.name_items = name + "_items"
 
-        self.is_root_container = is_root_container
+        if not hasattr(self, 'is_root_container'):
+            self.is_root_container = is_root_container
 
         if len(value) > 0:
             dict.update(self, self._validate_dic(value))
@@ -133,6 +134,7 @@ class TraitDictObject(dict):
             lambda: None,
             self.name,
             dict(copy.deepcopy(x, memo) for x in self.items()),
+            self.is_root_container,
         )
 
         return result
