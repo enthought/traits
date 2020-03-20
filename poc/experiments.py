@@ -309,6 +309,9 @@ class TestListOfList(unittest.TestCase):
 class TestIssue538(unittest.TestCase):
 
     def test_issue_538(self):
+        # It seems that the issue stamps from the implicit "_items"
+        # when `children` is a list
+        # Here, the listeners are made explicit.
 
         class Child(HasTraits):
 
@@ -320,7 +323,7 @@ class TestIssue538(unittest.TestCase):
 
         path = observe.ListenerPath.from_nodes(
             observe.RequiredTraitListener(name="children", notify=False),
-            observe.ListItemListener(notify=False),
+            observe.ListItemListener(notify=True),
             observe.RequiredTraitListener(name="value", notify=True),
         )
 
@@ -346,14 +349,21 @@ class TestIssue538(unittest.TestCase):
         parent.children.append(second_child)
 
         # then
-        mock_obj.assert_not_called()
+        mock_obj.assert_called_once()
 
         # when
         mock_obj.reset_mock()
         parent.children.append(second_child)
 
         # then
-        mock_obj.assert_not_called()
+        mock_obj.assert_called_once()
+
+        # when
+        mock_obj.reset_mock()
+        second_child.value += 1
+
+        # then
+        mock_obj.assert_called_once()
 
 
 class TestIssue537(unittest.TestCase):
