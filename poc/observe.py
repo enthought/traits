@@ -1,5 +1,6 @@
 from functools import partial
 import logging
+import threading
 
 from traits import ctraits
 from traits.trait_base import Undefined, Uninitialized
@@ -66,12 +67,18 @@ def observe(object, callback, path, remove, dispatch):
         )
 
 
+def dispatch_same(callback, event):
+    callback(event)
+
+
+def dispatch_new_thread(callback, event):
+    threading.Thread(target=callback, args=(event, )).start()
+
+
 WRAPPERS = {
-    # These are placeholders.
-    # The values are supposed to be different.
-    "extended": TraitObserverNotifier,
-    "same": TraitObserverNotifier,
-    "ui": TraitObserverNotifier,
+    "extended": partial(TraitObserverNotifier, dispatcher=dispatch_same),
+    "same": partial(TraitObserverNotifier, dispatcher=dispatch_same),
+    "new": partial(TraitObserverNotifier, dispatcher=dispatch_new_thread),
 }
 
 

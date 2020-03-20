@@ -3,12 +3,22 @@
 #####
 
 import logging
+import threading
 from types import MethodType
 import weakref
 
 from traits.trait_base import Uninitialized
 
 logger = logging.getLogger()
+
+
+def dispatch_same(callback, event):
+    callback(event)
+
+
+def dispatch_new_thread(callback, event):
+    threading.Thread(target=callback, args=(event, )).start()
+
 
 class BaseObserverEvent(object):
     pass
@@ -52,6 +62,9 @@ class TraitObserverNotifier(object):
         provided, then only a weak reference is held to this object.
     event_factory : callable
         A factory function or class that creates appropriate event objects.
+    dispatcher : callable(callable, BaseObserverEvent)
+        Callable to eventually dispatch an event, e.g. to the same thread
+        or a different thread.
 
     Parameters
     ----------
@@ -68,22 +81,23 @@ class TraitObserverNotifier(object):
         A factory function or class that creates appropriate event objects.
     """
 
-    def __init__(self, observer, owner, target=None, event_factory=ObserverEvent):
+    def __init__(
+            self, observer, owner, target=None, event_factory=ObserverEvent,
+            dispatcher=dispatch_same):
         if isinstance(observer, MethodType):
             # allow observing object methods to be garbage collected
             self._observer = weakref.WeakMethod(observer, self.observer_deleted)
-            self.notify_observer = self._notify_weak_observer
         else:
             self._observer = observer
-            self.notify_observer = self._notify_function_observer
+
+        if target is not None:
+            self._target = weakref.ref(target, self.observer_deleted)
+        else:
+            self._target = target
 
         self.owner = owner
-        self.target = target
-        if target is not None:
-            self.target_count = 1
-        else:
-            self.target_count = 0
-
+        self.dispatcher = dispatcher
+        self.target_count = 1
         self.event_factory = event_factory
 
     def __repr__(self):
@@ -98,21 +112,29 @@ class TraitObserverNotifier(object):
         This adapts the underlying CTrait notifier signature to an event
         object that is expected by observers.
         """
-        if self.target is not None and self.target_count == 0:
-            raise ValueError("I should have been removed!")
-        if old is not Uninitialized:
-            logger.debug("Notifier is called: {!r} with {!r}".format(self, (object, name, old, new)))
-            self.notify_observer(object, name, old, new)
+        if old is Uninitialized:
+            return
 
-    def dispatch(self, observer, object, name, old, new):
-        """ Create an event and call the observer.
-        """
-        if self.target is not None:
-            # keep a reference to the target while handling callback
-            target = self.target
-        else:
-            target = None
+        if self.target_count <= 0:
+            raise ValueError("I should have been removed!")
+
         event = self.event_factory(object, name, old, new)
+
+        logger.debug("Notifier is called: {!r} with {!r}".format(self, (object, name, old, new)))
+        self.dispatcher(self.dispatch, event)
+
+    def dispatch(self, event):
+        # keep a reference to the observer while handling callback
+        observer = self.observer
+        # keep a reference to the target while handling callback
+        target = self.target    # noqa: F841
+
+        if observer is None:
+            return
+
+        if self._target is not None and target is None:
+            return
+
         observer(event)
 
     def increment_target_count(self, target):
@@ -133,18 +155,18 @@ class TraitObserverNotifier(object):
             return self._target()
         return self._target
 
-    @target.setter
-    def target(self, value):
-        if value is not None:
-            self._target = weakref.ref(value, self.observer_deleted)
-        else:
-            self._target = value
-
     @property
     def observer(self):
         if isinstance(self._observer, weakref.WeakMethod):
             return self._observer()
         return self._observer
+
+    def equals(self, other):
+        if other is self:
+            return True
+        if type(other) is not type(self):
+            return False
+        return other.observer is self.observer and other.target is self.target
 
     def observer_deleted(self, ref=None):
         """ Callback to remove this from the list of notifiers.
@@ -164,18 +186,10 @@ class TraitObserverNotifier(object):
         except ValueError:
             pass
         self.owner = None
-        self.target = None
+        self._target = None
         self.target_count = 0
 
     def dispose(self):
         """ Perform clean-up when no longer in use.
         """
         pass
-
-    def _notify_function_observer(self, object, name, old, new):
-        self.dispatch(self.observer, object, name, old, new)
-
-    def _notify_method_observer(self, object, name, old, new):
-        observer = self.observer
-        if observer is not None:
-            self.dispatch(observer, object, name, old, new)
