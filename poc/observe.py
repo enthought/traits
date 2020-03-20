@@ -200,12 +200,12 @@ class FilteredTraitListener(BaseListener):
     def iter_this_targets(self, object):
         # object must be an instance of HasTraits
         for name, trait in object.traits().items():
-            if self.filter(trait):
+            if self.filter(name, trait):
                 yield object._trait(name, 2)
 
     def iter_next_targets(self, object):
         for name, trait in object.traits().items():
-            if self.filter(trait):
+            if self.filter(name, trait):
                 value = object.__dict__.get(name, Undefined)
                 if is_notifiable(value):
                     yield value
@@ -457,7 +457,7 @@ path = ListenerPath(
 # Listen to all traits with a metadata 'updated'
 path = ListenerPath(
     node=FilteredTraitListener(
-        filter=lambda trait: "updated" in trait.__dict__,
+        filter=lambda _, trait: "updated" in trait.__dict__,
         notify=True,
     ),
     next=None,

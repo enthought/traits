@@ -4,7 +4,7 @@ from unittest import mock
 
 import observe
 
-from traits.api import HasTraits, Int, Instance
+from traits.api import HasTraits, Int, Instance, Str
 from trait_types import List
 
 import logging
@@ -774,6 +774,47 @@ class TestIssue237(unittest.TestCase):
         # then
         # It is the same callback
         mock_obj.assert_called_once()
+
+
+class TestFilteredTrait(unittest.TestCase):
+
+    def test_filter_metadata(self):
+
+        class Foo(HasTraits):
+
+            age = Int(public=False)
+            name = Str(public=True)
+
+        path = observe.ListenerPath.from_nodes(
+            observe.FilteredTraitListener(notify=True, filter=lambda _, trait: trait.public),
+        )
+
+        foo = Foo(age=1, name="John")
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        foo.age = 2
+
+        # then
+        mock_obj.assert_not_called()
+
+        # when
+        foo.name = "Jim"
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertIs(event.object, foo)
+        self.assertEqual(event.name, "name")
+        self.assertEqual(event.old, "John")
+        self.assertEqual(event.new, "Jim")
 
 
 if __name__ == "__main__":
