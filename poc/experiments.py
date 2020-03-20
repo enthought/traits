@@ -335,8 +335,19 @@ class TestIssue538(unittest.TestCase):
         )
 
         parent.children = [Child()]
-        parent.children.append(Child(value=2))
 
+        # when
+        second_child = Child(value=2)
+        parent.children.append(second_child)
+
+        # then
+        mock_obj.assert_called_once()
+
+        # when
+        mock_obj.reset_mock()
+        parent.children.append(second_child)
+
+        # then
         mock_obj.assert_called_once()
 
 
