@@ -83,17 +83,17 @@ def add_notifiers(object, callback, dispatch, path, target):
                 this_target, callback, dispatch, listener.event_factory, target=target
             )
 
-        if path.next is not None:
+        for next_path in path.nexts:
 
             # FIXME: Can we not use partial
             # This holds a strong reference to the callback, is it okay?
             next_callback = partial(
                 listener.change_callback, callback=callback, dispatch=dispatch,
-                path=path.next, target=target)
+                path=next_path, target=target)
             add_notifier(this_target, next_callback, dispatch, listener.event_factory, target=target)
 
             for next_target in listener.iter_next_targets(object):
-                add_notifiers(next_target, callback, dispatch, path.next, target=target)
+                add_notifiers(next_target, callback, dispatch, next_path, target=target)
 
 
 def add_notifier(object, callback, dispatch, event_factory, target):
@@ -150,10 +150,10 @@ def remove_notifiers(object, callback, path, target):
         if listener.notify:
             remove_notifier(this_target, callback, target=target)
 
-        if path.next is not None:
+        for next_path in path.nexts:
             remove_notifier(this_target, partial(listener.change_callback, callback=callback), target=target)
             for next_target in listener.iter_next_targets(object):
-                remove_notifiers(next_target, callback, path.next, target=target)
+                remove_notifiers(next_target, callback, next_path, target=target)
 
 
 def is_notifiable(object):
@@ -347,9 +347,9 @@ class DictValueListener(BaseListener):
 
 class ListenerPath:
 
-    def __init__(self, node, next=None):
+    def __init__(self, node, nexts=()):
         self.node = node
-        self.next = next
+        self.nexts = nexts
 
     @classmethod
     def from_nodes(cls, node, *nodes):
@@ -357,7 +357,7 @@ class ListenerPath:
         root = path = cls(node=node)
         for node in nodes:
             next_path = cls(node=node)
-            path.next = next_path
+            path.nexts = [next_path]
             path = next_path
         return root
 
@@ -366,10 +366,12 @@ class ListenerPath:
 # fire if inst is changed, or inst.attr is changed
 path = ListenerPath(
     node=RequiredTraitListener(name="inst", notify=True),
-    next=ListenerPath(
-        node=RequiredTraitListener(name="attr", notify=True),
-        next=None,
-    )
+    nexts=[
+        ListenerPath(
+            node=RequiredTraitListener(name="attr", notify=True),
+            nexts=(),
+        )
+    ],
 )
 
 # "inst:attr"
@@ -378,83 +380,79 @@ path = ListenerPath(
 # inst.attr is changed)
 path = ListenerPath(
     node=RequiredTraitListener(name="inst", notify=False),
-    next=ListenerPath(
-        node=RequiredTraitListener(name="attr", notify=True),
-        next=None,
-    ),
+    nexts=[
+        ListenerPath(
+            node=RequiredTraitListener(name="attr", notify=True),
+            nexts=(),
+        )
+    ],
 )
 
 # "[inst1, inst2].attr"
 # This is equivalent to having two paths
 paths = [
-    ListenerPath(
-        node=RequiredTraitListener(name="inst1", notify=True),
-        next=ListenerPath(
-            node=RequiredTraitListener(name="attr", notify=True),
-            next=None,
-        )
+    ListenerPath.from_nodes(
+        RequiredTraitListener(name="inst1", notify=True),
+        RequiredTraitListener(name="attr", notify=True),
     ),
-    # path2
-    ListenerPath(
-        node=RequiredTraitListener(name="inst2", notify=True),
-        next=ListenerPath(
-            node=RequiredTraitListener(name="attr", notify=True),
-            next=None,
-        )
+    ListenerPath.from_nodes(
+        RequiredTraitListener(name="inst2", notify=True),
+        RequiredTraitListener(name="attr", notify=True),
     ),
 ]
 
 # "inst.container"
-path = ListenerPath(
-    node=RequiredTraitListener(name="inst", notify=True),
-    next=ListenerPath(
-        node=RequiredTraitListener(name="constainer", notify=True),
-    ),
+path = ListenerPath.from_nodes(
+    RequiredTraitListener(name="inst", notify=True),
+    RequiredTraitListener(name="constainer", notify=True),
 )
 
+
 # "inst.container_items"
-path = ListenerPath(
-    node=RequiredTraitListener(name="inst", notify=True),
-    next=ListenerPath(
-        node=RequiredTraitListener(name="constainer", notify=False),
-        next=ListenerPath(
-            node=ListItemListener(notify=True),
-            next=None,
-        ),
-    ),
+path = ListenerPath.from_nodes(
+    RequiredTraitListener(name="inst", notify=True),
+    RequiredTraitListener(name="constainer", notify=False),
+    ListItemListener(notify=True),
 )
 
 # "inst.[inst1, inst2].attr"
+# option 1: Two separate paths
 paths = [
-    ListenerPath(
-        node=RequiredTraitListener(name="inst", notify=True),
-        next=ListenerPath(
-            node=RequiredTraitListener(name="inst1", notify=True),
-            next=ListenerPath(
-                node=RequiredTraitListener(name="attr", notify=True),
-                next=None,
-            )
-        ),
+    ListenerPath.from_nodes(
+        RequiredTraitListener(name="inst", notify=True),
+        RequiredTraitListener(name="inst1", notify=True),
+        RequiredTraitListener(name="attr", notify=True),
     ),
-    ListenerPath(
-        node=RequiredTraitListener(name="inst", notify=True),
-        next=ListenerPath(
-            node=RequiredTraitListener(name="inst2", notify=True),
-            next=ListenerPath(
-                node=RequiredTraitListener(name="attr", notify=True),
-                next=None,
-            ),
-        ),
+    ListenerPath.from_nodes(
+        RequiredTraitListener(name="inst", notify=True),
+        RequiredTraitListener(name="inst2", notify=True),
+        RequiredTraitListener(name="attr", notify=True),
     ),
 ]
 
-# "inst.attr?"
+# option 2: Two items in `nexts`
+inst_node = RequiredTraitListener(name="inst", notify=True)
+inst1_node = RequiredTraitListener(name="inst1", notify=True)
+inst2_node = RequiredTraitListener(name="inst2", notify=True)
+attr_node = RequiredTraitListener(name="attr", notify=True)
 path = ListenerPath(
-    node=RequiredTraitListener(name="inst", notify=True),
-    next=ListenerPath(
-        node=OptionalTraitListener(name="attr", notify=True),
-        next=None,
-    )
+    node=inst_node,
+    nexts=[
+        ListenerPath(
+            node=inst1_node,
+            nexts=[ListenerPath(node=attr_node)],
+        ),
+        ListenerPath(
+            node=inst2_node,
+            nexts=[ListenerPath(node=attr_node)],
+        ),
+    ]
+)
+
+# "inst.attr?"
+path = ListenerPath.from_nodes(
+    RequiredTraitListener(name="inst", notify=True),
+    OptionalTraitListener(name="attr", notify=True),
 )
 
 # "inst.attr*"
@@ -464,27 +462,36 @@ path = ListenerPath(node=OptionalTraitListener(name="inst", notify=True))
 path.next = path
 
 
-# "inst1?.inst2?.attr"
+# "inst.attr*.value"
+# Example matches:
+#    inst.attr.value
+#    inst.attr.attr.value
+#    inst.attr.attr.attr.value
+value_path = ListenerPath(
+    node=RequiredTraitListener(name="value", notify=True))
+attr_path = ListenerPath(
+    node=RequiredTraitListener(name="attr", notify=True))
+attr_path.nexts = [
+    attr_path,
+    value_path,
+]
 path = ListenerPath(
-    node=OptionalTraitListener(name="inst1", notify=True),
-    next=ListenerPath(
-        node=OptionalTraitListener(name="inst1", notify=True),
-        next=ListenerPath(
-            node=RequiredTraitListener(name="attr", notify=True),
-            next=None,
-        ),
-    )
+    node=RequiredTraitListener(name="inst", notify=True),
+    nexts=[attr_path],
+)
+
+# "inst1?.inst2?.attr"
+path = ListenerPath.from_nodes(
+    OptionalTraitListener(name="inst1", notify=True),
+    OptionalTraitListener(name="inst1", notify=True),
+    RequiredTraitListener(name="attr", notify=True),
 )
 
 # Listen to changes to the items in the values of Dict(Str(), List())
-path = ListenerPath(
-    node=RequiredTraitListener(name="mapping", notify=True),
-    next=ListenerPath(
-        node=DictValueListener(notify=True),
-        next=ListenerPath(
-            node=ListItemListener(notify=True),
-        )
-    )
+path = ListenerPath.from_nodes(
+    RequiredTraitListener(name="mapping", notify=True),
+    DictValueListener(notify=True),
+    ListItemListener(notify=True),
 )
 
 # Listen to all traits with a metadata 'updated'
@@ -493,13 +500,13 @@ path = ListenerPath(
         filter=lambda _, trait: "updated" in trait.__dict__,
         notify=True,
     ),
-    next=None,
+    nexts=(),
 )
 
 
 # Listen to any traits, then any traits of each of these traits...
 path = ListenerPath(
     node=AnyTraitListener(),
-    next=None,
+    nexts=(),
 )
-path.next = path
+path.nexts = [path]
