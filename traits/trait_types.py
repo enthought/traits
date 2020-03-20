@@ -2787,13 +2787,13 @@ class Map(TraitType):
 
         The following example defines a ``Person`` class::
 
-            >>>class Person(HasTraits):
-            ...    married = Map({'yes': 1, 'no': 0 }, default_value="yes")
-            >>>
-            >>>bob = Person()
-            >>>print(bob.married)
+            >>> class Person(HasTraits):
+            ...     married = Map({'yes': 1, 'no': 0 }, default_value="yes")
+            ...
+            >>> bob = Person()
+            >>> print(bob.married)
             yes
-            >>>print(bob.married_)
+            >>> print(bob.married_)
             1
 
         In this example, the default value of the ``married`` attribute of the
