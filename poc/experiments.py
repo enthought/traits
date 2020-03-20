@@ -887,6 +887,65 @@ class TestFilteredTrait(unittest.TestCase):
         # then
         mock_obj.assert_not_called()
 
+    def test_filter_metadata_parent_changed(self):
+
+        class Person(HasTraits):
+            name = Str(public=True)
+            age = Int(public=False)
+
+        class Foo(HasTraits):
+            guardian = Instance(Person, public=True)
+            mother = Instance(Person, public=False)
+
+        path = observe.ListenerPath.from_nodes(
+            observe.FilteredTraitListener(notify=False, filter=lambda _, trait: trait.public),
+            observe.FilteredTraitListener(notify=True, filter=lambda _, trait: trait.public),
+        )
+        foo = Foo(
+            guardian=Person(name="John", age=40),
+            mother=Person(name="Mother", age=35),
+        )
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        foo.guardian = Person(name="Jim", age=41)
+
+        # then
+        # notify is False
+        mock_obj.assert_not_called()
+
+        # when
+        foo.guardian.name = "Terry"
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertIs(event.object, foo.guardian)
+        self.assertEqual(event.name, "name")
+        self.assertEqual(event.old, "Jim")
+        self.assertEqual(event.new, "Terry")
+
+        # when
+        mock_obj.reset_mock()
+        foo.mother = Person(name="Mary", age=50)
+
+        # then
+        mock_obj.assert_not_called()
+
+        # when
+        foo.mother.name = "Wendy"
+
+        # then
+        # mother is not public info
+        mock_obj.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()
