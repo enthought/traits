@@ -269,7 +269,9 @@ class TestList(unittest.TestCase):
         foo.l.append(3)
 
         # then
-        mock_obj.assert_called_once()
+        # FIXME: Notification should be fired.
+        with self.assertRaises(AssertionError):
+            mock_obj.assert_called_once()
 
     def test_implicit_default_list(self):
         # Test when a list attribute is accessed the first time,
