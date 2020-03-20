@@ -96,6 +96,25 @@ def add_notifiers(object, callback, dispatch, path, target):
                 add_notifiers(next_target, callback, dispatch, path.next, target=target)
 
 
+def call_notifiers(object, callback, dispatch, path):
+    """ Call the notifiers once without registering them.
+    """
+    listener = path.node
+    for event in listener.iter_new_events(object):
+        if listener.notify:
+            #: TODO: We need to care about dispatch here.
+            #: Could we move dispatch out of the TraitObserverNotifer
+            #: so that we can reuse it like this: ``dispatch(callable, event)``
+            callback(event)
+
+        if path.next is not None:
+            for next_target in listener.iter_next_targets(object):
+                call_notifiers(
+                    object=next_target, callback=callback,
+                    dispatch=dispatch, path=path.next,
+                )
+
+
 def add_notifier(object, callback, dispatch, event_factory, target):
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers:
