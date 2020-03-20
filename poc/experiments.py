@@ -313,8 +313,8 @@ class TestListOfList(unittest.TestCase):
             bars = List(List())
 
         path = observe.ListenerPath.from_nodes(
-            observe.RequiredTraitListener(name="bars", notify=False),
-            observe.ListItemListener(notify=False),
+            observe.RequiredTraitListener(name="bars", notify=True),
+            observe.ListItemListener(notify=True),
             observe.ListItemListener(notify=True),
         )
 
@@ -329,41 +329,64 @@ class TestListOfList(unittest.TestCase):
         )
 
         # when
-        foo.bars = []
+        foo.bars = [[1, 2]]
 
         # then
-        mock_obj.assert_not_called()
+        # for the new assignment of foo.bars
+        # Note that the implicit default for foo.bars before assignment was `[]`
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertIs(event.object, foo)
+        self.assertEqual(event.name, "bars")
+        self.assertEqual(event.old, [])
+        self.assertEqual(event.new, [[1, 2]])
 
         # when
-        foo.bars = [[[]]]
+        mock_obj.reset_mock()
+        foo.bars[0].append(3)
 
         # then
-        # the new values are the same as the default
-        mock_obj.assert_not_called()
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        # TODO: Is this the right object?
+        self.assertEqual(event.object, foo.bars)
+        # TODO: Bogus filler, can we remove it?
+        self.assertEqual(event.name, "")
+        # TODO: Bogus filler again, can we remove it?
+        self.assertIs(event.old, foo.bars[0])
+
+        self.assertIs(event.new, foo.bars[0])
+        self.assertEqual(event.index, 2)
+        self.assertEqual(foo.bars, [[1, 2, 3]])
 
         # when
-        foo.bars[0].append([])
+        mock_obj.reset_mock()
+        foo.bars = [[1, 2]]
 
         # then
         mock_obj.assert_called_once()
 
         # when
         mock_obj.reset_mock()
-        foo.bars = [[[], []]]
+        foo.bars[0] = [3]
 
         # then
-        #: FIXME: Not sure how we could fire an event for this.
-        #: the lists are constructed before being assigned to `bars`.
-        with self.assertRaises(AssertionError):
-            mock_obj.assert_called_once()
+        mock_obj.assert_called_once()
 
         # when
+        self.assertEqual(foo.bars, [[3]])
         mock_obj.reset_mock()
-        foo.bars[0] = [1, 2]
+        foo.bars = [[3]]
 
         # then
-        #: FIXME: Not sure how we could fire an event for this.
-        #: the lists are constructed before being assigned to `bars`.
+        # The value is actually the same
+        mock_obj.assert_not_called()
+
+        # FIXME: Now the new list does not have the expected notifiers!
+        # when
+        foo.bars[0] = [4]
+
+        # then
         with self.assertRaises(AssertionError):
             mock_obj.assert_called_once()
 
