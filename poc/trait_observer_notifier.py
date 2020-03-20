@@ -164,8 +164,6 @@ class TraitObserverNotifier(object):
     def equals(self, other):
         if other is self:
             return True
-        if type(other) is not type(self):
-            return False
         return other.observer is self.observer and other.target is self.target
 
     def observer_deleted(self, ref=None):

@@ -19,3 +19,11 @@ class INotifier(abc.ABC):
 
     def decrement_target_count(target):
         pass
+
+    @property
+    def target(self):
+        pass
+
+    @property
+    def observer(self):
+        pass
