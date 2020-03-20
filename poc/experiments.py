@@ -238,6 +238,39 @@ class TestList(unittest.TestCase):
         self.assertEqual(event.old, 0)
         self.assertEqual(event.new, 10)
 
+    def test_newly_assigned_list_append(self):
+        # Test appending to a new list assigned to a trait
+        item_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=True),
+        )
+
+        foo = self.Foo()
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=item_path,
+            remove=False,
+            dispatch="same",
+        )
+
+        foo.l = [1, 2]
+
+        # when
+        # assign to a new list that compares equal does not fire events
+        mock_obj.reset_mock()
+        foo.l = [1, 2]
+
+        # then
+        mock_obj.assert_not_called()
+
+        # when
+        foo.l.append(3)
+
+        # then
+        mock_obj.assert_called_once()
+
     def test_implicit_default_list(self):
         # Test when a list attribute is accessed the first time,
         # the default list created will also receive the notifiers.
