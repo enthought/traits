@@ -266,12 +266,6 @@ class NamedTraitListener(BaseListener):
             path=path,
             target=target,
         )
-        call_notifiers(
-            object=event.new,
-            callback=callback,
-            dispatch=dispatch,
-            path=path,
-        )
 
     def iter_new_events(self, object):
         if self.name in object.__dict__:
@@ -321,12 +315,6 @@ class ListItemListener(BaseListener):
                     dispatch=dispatch,
                     path=path,
                     target=target,
-                )
-                call_notifiers(
-                    object=item,
-                    callback=callback,
-                    dispatch=dispatch,
-                    path=path,
                 )
 
 

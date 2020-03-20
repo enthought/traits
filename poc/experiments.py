@@ -334,21 +334,26 @@ class TestIssue538(unittest.TestCase):
             dispatch="same",
         )
 
-        parent.children = [Child()]
+        # when
+        parent.children = [Child(value=1)]
+
+        # then
+        mock_obj.assert_not_called()
 
         # when
+        mock_obj.reset_mock()
         second_child = Child(value=2)
         parent.children.append(second_child)
 
         # then
-        mock_obj.assert_called_once()
+        mock_obj.assert_not_called()
 
         # when
         mock_obj.reset_mock()
         parent.children.append(second_child)
 
         # then
-        mock_obj.assert_called_once()
+        mock_obj.assert_not_called()
 
 
 class TestIssue537(unittest.TestCase):
