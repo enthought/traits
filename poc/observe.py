@@ -210,6 +210,22 @@ class FilteredTraitListener(BaseListener):
                 if is_notifiable(value):
                     yield value
 
+    def change_callback(self, event, callback, dispatch, path, target):
+        if event.old is not Uninitialized and event.old is not Undefined:
+            remove_notifiers(
+                object=event.old,
+                callback=callback,
+                path=path,
+                target=target,
+            )
+        add_notifiers(
+            object=event.new,
+            callback=callback,
+            dispatch=dispatch,
+            path=path,
+            target=target,
+        )
+
 
 class NamedTraitListener(BaseListener):
 
