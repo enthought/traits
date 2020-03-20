@@ -35,7 +35,7 @@ class TestClass(HasTraits):
     def _dict_str_list_or_set_items_changed(self, event):
         self.events_list.append(event)
 
-    def _list_of_list_of_list_changed(self, event):
+    def _list_of_list_of_list_items_changed(self, event):
         self.events_list.append(event)
 
 
@@ -80,17 +80,16 @@ class TestNestedContainers(unittest.TestCase):
         self.assertEqual(1, len(event.added))
         self.assertIsInstance(event.added[0], TraitListObject)
 
-    @unittest.skip("TODO: Why isn't this working?")
     def test_list_of_list_of_list(self):
-        obj = TestClass()
-
-        obj.list_of_list_of_list = [[[1, 2]]]
+        obj = TestClass(list_of_list_of_list=[[[1, 2]]])
+        # Ensure that no notification is fired
+        self.assertListEqual([], obj.events_list)
 
         # Add an item to the innermost list
         obj.list_of_list_of_list[0][0].append(2)
 
         # Ensure that no notification is fired
-        self.assertListEqual(obj.events_list, [])
+        self.assertListEqual([], obj.events_list)
 
     def test_dict_str_to_list(self):
         obj = TestClass()
