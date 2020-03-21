@@ -2854,7 +2854,7 @@ class Map(TraitType):
         return EnumEditor(values=self, cols=trait.cols or 3)
 
 
-class PrefixMap(Map):
+class PrefixMap(TraitType):
     """ A cross between the PrefixList and Map classes.
 
     Like Map, PrefixMap is created using a dictionary, but in this
@@ -2888,17 +2888,17 @@ class PrefixMap(Map):
         trait attribute, and whose corresponding values are the values for
         the shadow trait attribute.
     """
+    is_mapped = True
 
     def __init__(self, map, **metadata):
         self.map = map
-        self._map = _map = {}
+        self._map = {}
         for key in map.keys():
-            _map[key] = key
-        self.fast_validate = (ValidateTrait.prefix_map, _map, self.validate)
+            self._map[key] = key
 
         default_value = metadata.pop("default_value", Undefined)
 
-        super(Map, self).__init__(default_value, **metadata)
+        super().__init__(default_value, **metadata)
 
     def validate(self, object, name, value):
         try:
@@ -2920,8 +2920,21 @@ class PrefixMap(Map):
         self._map[value] = match
         return self._map[value]
 
+    def mapped_value(self, value):
+        """ Get the mapped value for a value. """
+        return self.map[value]
+
+    def post_setattr(self, object, name, value):
+        setattr(object, name + "_", self.mapped_value(value))
+
     def info(self):
-        return super().info() + " (or any unique prefix)"
+        keys = sorted(repr(x) for x in self.map.keys())
+        return " or ".join(keys) + " (or any unique prefix)"
+
+    def get_editor(self, trait):
+        from traitsui.api import EnumEditor
+
+        return EnumEditor(values=self, cols=trait.cols or 3)
 
 
 class BaseClass(TraitType):

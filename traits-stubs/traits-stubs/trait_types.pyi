@@ -465,7 +465,16 @@ class Map(_Map):
     ...
 
 
-class PrefixMap(_Map):
+class _PrefixMap(_TraitType[_S, _T]):
+    def __init__(
+            self,
+            map: _DictType[_S, _T],
+            **metadata: _Any
+    ) -> None:
+        ...
+
+
+class PrefixMap(_PrefixMap):
     ...
 
 
