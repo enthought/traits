@@ -146,4 +146,6 @@ class TestNestedContainers(unittest.TestCase):
 
         a = A()
         a.foo.append(dict(x=10))
+
+        # Ensure that no exception is thrown.
         a.foo[0]['x'] = 20

@@ -66,6 +66,8 @@ class TraitSetObject(set):
         The name of the attribute on the object.
     value : set
         The set of values to initialize the TraitSetObject with.
+    is_root_container : bool
+        True if the container has no children.
 
     Attributes
     ----------
@@ -87,10 +89,9 @@ class TraitSetObject(set):
         self.object = ref(object)
         self.name = name
         self.name_items = None
+        self.is_root_container = is_root_container
         if trait.has_items:
             self.name_items = name + "_items"
-
-        self.is_root_container = is_root_container
 
         # Validate and assign the initial set value:
         try:
@@ -126,6 +127,7 @@ class TraitSetObject(set):
             lambda: None,
             self.name,
             [copy.deepcopy(x, memo) for x in self],
+            self.is_root_container,
         )
 
         return result

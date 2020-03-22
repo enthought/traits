@@ -3776,7 +3776,6 @@ class Union(TraitType):
         for trait in traits:
             if trait is None:
                 trait = NoneTrait
-
             ctrait_instance = trait_cast(trait)
             if ctrait_instance is None:
                 raise ValueError("Union trait declaration expects a trait "

@@ -82,6 +82,8 @@ class TraitDictObject(dict):
         The name of the attribute on the object.
     value : dict
         The dict of values to initialize the TraitDictObject with.
+    is_root_container : bool
+        True if the container has no children.
 
     Attributes
     ----------
@@ -103,11 +105,9 @@ class TraitDictObject(dict):
         self.object = ref(object)
         self.name = name
         self.name_items = None
+        self.is_root_container = is_root_container
         if trait.has_items:
             self.name_items = name + "_items"
-
-        if not hasattr(self, 'is_root_container'):
-            self.is_root_container = is_root_container
 
         if len(value) > 0:
             dict.update(self, self._validate_dic(value))

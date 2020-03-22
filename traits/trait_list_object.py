@@ -79,6 +79,8 @@ class TraitListObject(list):
         The name of the attribute on the object.
     value : list
         The list of values to initialize the TraitListObject with.
+    is_root_container : bool
+        True if the container has no children.
 
     Attributes
     ----------
@@ -100,10 +102,9 @@ class TraitListObject(list):
         self.object = ref(object)
         self.name = name
         self.name_items = None
+        self.is_root_container = is_root_container
         if trait.has_items:
             self.name_items = name + "_items"
-
-        self.is_root_container = is_root_container
 
         # Do the validated 'setslice' assignment without raising an
         # 'items_changed' event:
@@ -145,6 +146,7 @@ class TraitListObject(list):
             lambda: None,
             self.name,
             [copy.deepcopy(x, memo) for x in self],
+            self.is_root_container
         )
 
         return result
