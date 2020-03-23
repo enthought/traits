@@ -19,7 +19,6 @@ from os.path import dirname, exists, join
 from weakref import ref
 
 from .etsconfig.api import ETSConfig
-from .constants import ValidateTrait
 
 # backwards compatibility: trait_base used to provide a patched enumerate
 enumerate = enumerate
@@ -161,12 +160,6 @@ def strx(arg):
 # Constants
 
 StringTypes = (str, int, float, complex)
-
-# Mapping of coercable types.
-CoercableTypes = {
-    float: (ValidateTrait.coerce, float, int),
-    complex: (ValidateTrait.coerce, complex, float, int),
-}
 
 
 def safe_contains(value, container):

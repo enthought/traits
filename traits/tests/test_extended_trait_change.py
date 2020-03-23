@@ -117,6 +117,12 @@ class ArgCheckDecorator(ArgCheckBase):
         self.tc.assertEqual(new, self.value)
 
 
+class ArgCheckDecoratorTrailingComma(ArgCheckDecorator):
+    @on_trait_change("int1, int2,")
+    def arg_check(self, object, name, old, new):
+        pass
+
+
 class BaseInstance(HasTraits):
 
     #: An instance with a value trait we want to listen to.
@@ -468,12 +474,22 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(ac.calls, (3 * 5))
         self.assertEqual(ac.value, (2 * 3))
 
+    def test_arg_check_trailing_comma(self):
+        ac = ArgCheckSimple(tc=self)
+
+        with self.assertRaises(TraitError):
+            ac.on_trait_change(ac.arg_check0, "int1, int2,")
+
     def test_arg_check_decorator(self):
         ac = ArgCheckDecorator(tc=self)
         for i in range(3):
             ac.value += 1
         self.assertEqual(ac.calls, (3 * 5))
         self.assertEqual(ac.value, 3)
+
+    def test_arg_check_decorator_trailing_comma(self):
+        with self.assertRaises(TraitError):
+            ArgCheckDecoratorTrailingComma(tc=self)
 
     def test_instance_simple_value(self):
         inst = InstanceSimpleValue(tc=self)
@@ -518,7 +534,6 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(inst.calls, {x: 3 for x in range(5)})
         self.assertEqual(inst.ref.value, 3)
 
-    @unittest.expectedFailure  # Github issue #537
     def test_instance_list_value(self):
         inst = InstanceListValue(tc=self)
 
@@ -557,13 +572,28 @@ class OnTraitChangeTest(unittest.TestCase):
             exp_new=[0, 1, 2, 3],
             dst_new=[0, 1, 2, 3],
         )
-        inst.ref.value.append(3)
-        self.assertEqual(
-            inst.calls, {0: 1, 1: 0, 2: 0, 3: 0, 4: 0}
-        )
+        with self.assertRaises(
+                AssertionError,
+                msg="Behavior of a bug (#537) is not reproduced."):
+            # Expected failure, see enthought/traits#537
+            # InstanceValueListener.arg_check1 receives a TraitListEvent
+            # as `new` instead of the expected `[0, 1, 2, 3]`
+            inst.ref.value.append(3)
+
+        # Expected failure
+        # See enthought/traits#537
+        with self.assertRaises(
+                AssertionError,
+                msg="Behavior of a bug (#537) is not reproduced."):
+            # Handlers with arguments are unexpectedly called, but one of the
+            # handlers fails, leading to the rest of the handlers
+            # not to be called. Actual behavior depends on dictionary ordering
+            # (Python <3.6) or the order of handlers defined in
+            # InstanceValueListener (Python >= 3.6)
+            self.assertEqual(inst.calls, {0: 1, 1: 0, 2: 0, 3: 0, 4: 0})
+
         self.assertEqual(inst.ref.value, [0, 1, 2, 3])
 
-    @unittest.expectedFailure  # Github issue #537
     def test_instance_dict_value(self):
         inst = InstanceDictValue(tc=self)
 
@@ -602,8 +632,26 @@ class OnTraitChangeTest(unittest.TestCase):
             exp_new={0: 0, 1: 1, 2: 2, 3: 3},
             dst_new={0: 0, 1: 1, 2: 2, 3: 3},
         )
-        inst.ref.value[3] = 3
-        self.assertEqual(inst.calls, {0: 1, 1: 0, 2: 0, 3: 0, 4: 0})
+        with self.assertRaises(
+                AssertionError,
+                msg="Behavior of a bug (#537) is not reproduced."):
+            # Expected failure, see enthought/traits#537
+            # InstanceValueListener.arg_check1 receives a TraitDictEvent
+            # as `new` instead of the expected `{0: 0, 1: 1, 2: 2, 3: 3}`
+            inst.ref.value[3] = 3
+
+        # Expected failure
+        # See enthought/traits#537
+        with self.assertRaises(
+                AssertionError,
+                msg="Behavior of a bug (#537) is not reproduced."):
+            # Handlers with arguments are unexpectedly called, but one of the
+            # handlers fails, leading to the rest of the handlers
+            # not to be called. Actual behavior depends on dictionary ordering
+            # (Python <3.6) or the order of handlers defined in
+            # InstanceValueListener (Python >= 3.6)
+            self.assertEqual(inst.calls, {0: 1, 1: 0, 2: 0, 3: 0, 4: 0})
+
         self.assertEqual(inst.ref.value, {0: 0, 1: 1, 2: 2, 3: 3})
 
     def test_instance_value_list_listener(self):
@@ -680,7 +728,6 @@ class OnTraitChangeTest(unittest.TestCase):
         )
         self.assertEqual(inst.ref.value, [0, 1, 2, 3])
 
-    @unittest.expectedFailure  # Github issue #538
     def test_list1(self):
         l1 = List1(tc=self)
         for i in range(3):
@@ -693,7 +740,15 @@ class OnTraitChangeTest(unittest.TestCase):
                 type_new=TraitListEvent,
             )
             l1.refs.append(ac)
-        self.assertEqual(l1.calls, {0: 3, 3: 3, 4: 3})
+
+        # Behavior of an existing bug.
+        # The expected value should be {0: 3, 3: 3, 4: 3}
+        # See enthought/traits#538
+        self.assertEqual(
+            l1.calls, {0: 3, 3: 0, 4: 0},
+            "Behavior of a bug (#538) is not reproduced."
+        )
+
         for i in range(3):
             self.assertEqual(l1.refs[i].value, 0)
 
@@ -734,7 +789,6 @@ class OnTraitChangeTest(unittest.TestCase):
     def test_list3(self):
         self.check_list(List3(tc=self))
 
-    @unittest.expectedFailure  # Github issue #538
     def test_dict1(self):
         d1 = Dict1(tc=self)
         for i in range(3):
@@ -747,7 +801,15 @@ class OnTraitChangeTest(unittest.TestCase):
                 type_new=TraitDictEvent,
             )
             d1.refs[i] = ac
-        self.assertEqual(d1.calls, {0: 3, 3: 3, 4: 3})
+
+        # Behavior of an existing bug.
+        # The expected value should be {0: 3, 3: 3, 4: 3}
+        # See enthought/traits#538
+        self.assertEqual(
+            d1.calls, {0: 3, 3: 0, 4: 0},
+            "Behavior of a bug (#538) is not reproduced."
+        )
+
         for i in range(3):
             self.assertEqual(d1.refs[i].value, 0)
 

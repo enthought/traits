@@ -25,7 +25,6 @@ from .constants import DefaultValue, ValidateTrait
 from .trait_base import (
     SequenceTypes,
     TypeTypes,
-    CoercableTypes,
     class_of,
 )
 from .trait_base import RangeTypes  # noqa: F401, used by TraitsUI
@@ -44,6 +43,12 @@ logger = logging.getLogger(__name__)
 # Constants
 
 CallableTypes = (FunctionType, MethodType)
+
+# Mapping of coercable types.
+CoercableTypes = {
+    float: (ValidateTrait.coerce, float, int),
+    complex: (ValidateTrait.coerce, complex, float, int),
+}
 
 _WARNING_FORMAT_STR = ("'{handler}' trait handler has been deprecated. "
                        "Use {replacement} instead.")
@@ -201,15 +206,15 @@ class TraitCastType(TraitCoerceType):
     To understand the difference between TraitCoerceType and TraitCastType (and
     also between Float and CFloat), consider the following example::
 
-        >>>class Person(HasTraits):
-        ...    weight = Float
-        ...    cweight = CFloat
-        >>>
-        >>>bill = Person()
-        >>>bill.weight = 180    # OK, coerced to 180.0
-        >>>bill.cweight = 180   # OK, cast to 180.0
-        >>>bill.weight = '180'  # Error, invalid coercion
-        >>>bill.cweight = '180' # OK, cast to float('180')
+        >>> class Person(HasTraits):
+        ...     weight = Float
+        ...     cweight = CFloat
+        ...
+        >>> bill = Person()
+        >>> bill.weight = 180    # OK, coerced to 180.0
+        >>> bill.cweight = 180   # OK, cast to 180.0
+        >>> bill.weight = '180'  # Error, invalid coercion
+        >>> bill.cweight = '180' # OK, cast to float('180')
 
     Parameters
     ----------
@@ -634,13 +639,13 @@ class TraitMap(TraitHandler):
 
     The following example defines a ``Person`` class::
 
-        >>>class Person(HasTraits):
-        ...    married = Trait('yes', TraitMap({'yes': 1, 'no': 0 })
-        >>>
-        >>>bob = Person()
-        >>>print bob.married
+        >>> class Person(HasTraits):
+        ...     married = Trait('yes', TraitMap({'yes': 1, 'no': 0 })
+        ...
+        >>> bob = Person()
+        >>> print bob.married
         yes
-        >>>print bob.married_
+        >>> print bob.married_
         1
 
     In this example, the default value of the ``married`` attribute of the

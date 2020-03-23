@@ -69,8 +69,6 @@ class ETSConfig(object):
         self._kiva_backend = None
         self._user_data = None
 
-        return
-
     ###########################################################################
     # 'ETSConfig' interface.
     ###########################################################################
@@ -116,8 +114,6 @@ class ETSConfig(object):
         """
 
         self._application_data = application_data
-
-        return
 
     def get_application_home(self, create=False):
         """ Return the application home directory path.
@@ -177,8 +173,6 @@ class ETSConfig(object):
 
         self._application_home = application_home
 
-        return
-
     application_home = property(_get_application_home, _set_application_home)
 
     def _get_company(self):
@@ -199,8 +193,6 @@ class ETSConfig(object):
         """
 
         self._company = company
-
-        return
 
     company = property(_get_company, _set_company)
 
@@ -266,8 +258,6 @@ class ETSConfig(object):
 
         self._toolkit = toolkit
 
-        return
-
     toolkit = property(_get_toolkit, _set_toolkit)
 
     def _get_enable_toolkit(self):
@@ -297,8 +287,6 @@ class ETSConfig(object):
         from warnings import warn
 
         warn("Use of the enable_toolkit attribute is deprecated.")
-
-        return
 
     enable_toolkit = property(_get_enable_toolkit, _set_enable_toolkit)
 
@@ -360,8 +348,6 @@ class ETSConfig(object):
         """
 
         self._user_data = user_data
-
-        return
 
     user_data = property(_get_user_data, _set_user_data)
 

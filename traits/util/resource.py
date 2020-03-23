@@ -160,7 +160,7 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
         # script is called directly from the command line using
         # 'python %SOMEPATH%/<script>'
         if alt_path is None:
-            return
+            return None
         if return_path:
             return os.path.join(sys.path[0], alt_path)
 
@@ -168,7 +168,7 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
         try:
             return open(os.path.join(sys.path[0], alt_path), "rb")
         except:
-            return
+            return None
 
 
 def store_resource(project, resource_path, filename):
