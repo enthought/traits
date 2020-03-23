@@ -139,6 +139,257 @@ class TestList(unittest.TestCase):
         self.assertEqual(event.removed, [])
         self.assertEqual(event.added, [bar, bar])
 
+    def test_list_setitem_many(self):
+
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=True),
+            # Need this listener so we exercise logic for
+            # propagating listeners to extended attributes when
+            # the list is mutated.
+            observe.RequiredTraitListener(name="age", notify=True),
+        )
+        f = self.Foo(l=[self.Bar(), self.Bar(), self.Bar()])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        new_bars = [self.Bar(), self.Bar()]
+        old_bars = list(f.l[::2])
+        f.l[::2] = new_bars
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.removed, old_bars)
+        self.assertEqual(event.added, new_bars)
+
+    def test_list_setitem_one(self):
+
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=True),
+            # Need this listener so we exercise logic for
+            # propagating listeners to extended attributes when
+            # the list is mutated.
+            observe.RequiredTraitListener(name="age", notify=True),
+        )
+        f = self.Foo(l=[self.Bar(), self.Bar(), self.Bar()])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        new_bar = self.Bar()
+        old_bars = [f.l[0]]
+        f.l[0] = new_bar
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.removed, old_bars)
+        self.assertEqual(event.added, [new_bar])
+
+    def test_list_delitem_one(self):
+
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=True),
+            # Need this listener so we exercise logic for
+            # propagating listeners to extended attributes when
+            # the list is mutated.
+            observe.RequiredTraitListener(name="age", notify=True),
+        )
+        f = self.Foo(l=[self.Bar(), self.Bar(), self.Bar()])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        old_bars = [f.l[0]]
+
+        # when
+        # Delete all items
+        del f.l[0]
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.removed, old_bars)
+        self.assertEqual(event.added, [])
+
+    def test_list_delitem_many(self):
+
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=True),
+            # Need this listener so we exercise logic for
+            # propagating listeners to extended attributes when
+            # the list is mutated.
+            observe.RequiredTraitListener(name="age", notify=True),
+        )
+        f = self.Foo(l=[self.Bar(), self.Bar(), self.Bar()])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        old_bars = list(f.l)
+
+        # when
+        # Delete all items
+        del f.l[:]
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.removed, old_bars)
+        self.assertEqual(event.added, [])
+
+    def test_list_insert(self):
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=True),
+            # Need this listener so we exercise logic for
+            # propagating listeners to extended attributes when
+            # the list is mutated.
+            observe.RequiredTraitListener(name="age", notify=True),
+        )
+        f = self.Foo(l=[self.Bar(), self.Bar(), self.Bar()])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        new_bar = self.Bar()
+        f.l.insert(1, new_bar)
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.removed, [])
+        self.assertEqual(event.added, [new_bar])
+
+    def test_list_clear(self):
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=True),
+            # Need this listener so we exercise logic for
+            # propagating listeners to extended attributes when
+            # the list is mutated.
+            observe.RequiredTraitListener(name="age", notify=True),
+        )
+        f = self.Foo(l=[self.Bar(), self.Bar(), self.Bar()])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        old_bars = list(f.l)
+
+        # when
+        f.l.clear()
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.removed, old_bars)
+        self.assertEqual(event.added, [])
+
+    def test_list_pop(self):
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=True),
+            # Need this listener so we exercise logic for
+            # propagating listeners to extended attributes when
+            # the list is mutated.
+            observe.RequiredTraitListener(name="age", notify=True),
+        )
+        f = self.Foo(l=[self.Bar(), self.Bar(), self.Bar()])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        popped = f.l.pop()
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.removed, [popped])
+        self.assertEqual(event.added, [])
+
+    def test_list_remove(self):
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=False),
+            observe.ListItemListener(notify=True),
+            # Need this listener so we exercise logic for
+            # propagating listeners to extended attributes when
+            # the list is mutated.
+            observe.RequiredTraitListener(name="age", notify=True),
+        )
+        f = self.Foo(l=[self.Bar(), self.Bar(), self.Bar()])
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=f,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        bar_to_be_removed = f.l[1]
+
+        # when
+        f.l.remove(bar_to_be_removed)
+
+        # then
+        mock_obj.assert_called_once()
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.removed, [bar_to_be_removed])
+        self.assertEqual(event.added, [])
+
     def test_mutate_object_added_later(self):
         # Test when a nested object is appened to the list after registering
         # the observer.

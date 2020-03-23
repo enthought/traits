@@ -248,6 +248,7 @@ class TraitList(list):
         if isinstance(index, slice):
             if len(removed) != len(value) and index.step not in {1, None}:
                 raise ValueError
+
         if not isinstance(index, slice):
             added = [value]
         else:
@@ -378,10 +379,11 @@ class TraitList(list):
 
         """
         removed = []
-        added = self.validate(index, removed, object)
+        added = self.validate(index, removed, [object])
         norm_index = self._normalize_index(index)
 
-        super().insert(index, added)
+        object, = added
+        super().insert(index, object)
 
         if self._should_notify(removed, added):
             self.notify(norm_index, removed, added)
@@ -402,7 +404,7 @@ class TraitList(list):
 
         """
         index = slice(0, len(self), None)
-        removed = [copy.copy(x) for x in self]
+        removed = self.copy()
         added = self.validate(index, removed, [])
         super().clear()
 
@@ -474,8 +476,8 @@ class TraitList(list):
 
         """
         index = self.index(value)
-        added = self.validate(index, value, [])
-        removed = value
+        removed = [value]
+        added = self.validate(index, removed, [])
 
         super().remove(value)
 
@@ -590,10 +592,10 @@ class TraitList(list):
 
     def _get_removed(self, index):
         """ Compute removed values given index. """
-        try:
+        if isinstance(index, slice):
             return self[index]
-        except IndexError:
-            return []
+        else:
+            return [self[index]]
 
     def _normalize(self, index):
         if isinstance(index, slice):
