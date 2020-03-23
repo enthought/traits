@@ -80,7 +80,7 @@ class TraitListObject(list):
     value : list
         The list of values to initialize the TraitListObject with.
     is_root_container : bool
-        True if the container has no children.
+        True if the container is a top level container.
 
     Attributes
     ----------

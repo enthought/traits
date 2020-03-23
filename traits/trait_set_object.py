@@ -67,7 +67,7 @@ class TraitSetObject(set):
     value : set
         The set of values to initialize the TraitSetObject with.
     is_root_container : bool
-        True if the container has no children.
+        True if the container is a top level container.
 
     Attributes
     ----------

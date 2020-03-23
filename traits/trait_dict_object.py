@@ -83,7 +83,7 @@ class TraitDictObject(dict):
     value : dict
         The dict of values to initialize the TraitDictObject with.
     is_root_container : bool
-        True if the container has no children.
+        True if the container is a top level container.
 
     Attributes
     ----------
