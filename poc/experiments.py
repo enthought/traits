@@ -989,6 +989,60 @@ class TestRemoveNotifier(unittest.TestCase):
         # then
         mock_obj.assert_not_called()
 
+    def test_remove_notifier_manually(self):
+
+        class Bar(HasTraits):
+            value = Int()
+
+        class Foo(HasTraits):
+            bar = Instance(Bar)
+
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="bar", notify=True),
+            observe.RequiredTraitListener(name="value", notify=True),
+        )
+        foo = Foo(bar=Bar())
+
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # verify the notifiers are set...
+        foo.bar = Bar()
+        mock_obj.assert_called_once()
+        mock_obj.reset_mock()
+        foo.bar.value += 1
+        mock_obj.assert_called_once()
+
+        # when
+        # define a new path, make sure we don't depend on
+        # the same ListenerPath object.
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="bar", notify=True),
+            observe.RequiredTraitListener(name="value", notify=True),
+        )
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=path,
+            remove=True,
+            dispatch="same",
+        )
+
+        # then
+        mock_obj.reset_mock()
+        foo.bar.value += 1
+        mock_obj.assert_not_called()
+
+        mock_obj.reset_mock()
+        foo.bar = Bar()
+        mock_obj.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()
