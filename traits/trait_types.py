@@ -2512,22 +2512,18 @@ class PrefixList(BaseStr):
         super().__init__(default, **metadata)
 
     def validate(self, object, name, value):
-        try:
-            if value not in self.values_:
-                match = None
-                n = len(value)
-                for key in self.values:
-                    if value == key[:n]:
-                        if match is not None:
-                            match = None
-                            break
-                        match = key
-                if match is None:
-                    self.error(object, name, value)
-                self.values_[value] = match
-            return self.values_[value]
-        except:
+        if not isinstance(value, str):
             self.error(object, name, value)
+
+        if value in self.values_:
+            return self.values_[value]
+
+        matches = [key for key in self.values if key.startswith(value)]
+        if len(matches) == 1:
+            self.values_[value] = match = matches[0]
+            return match
+
+        self.error(object, name, value)
 
     def info(self):
         return (
@@ -2901,24 +2897,18 @@ class PrefixMap(TraitType):
         super().__init__(default_value, **metadata)
 
     def validate(self, object, name, value):
-        try:
-            if value in self._map:
-                return self._map[value]
-        except TypeError:
+        if not isinstance(value, str):
             self.error(object, name, value)
 
-        match = None
-        n = len(value)
-        for key in self.map.keys():
-            if value == key[:n]:
-                if match is not None:
-                    match = None
-                    break
-                match = key
-        if match is None:
-            self.error(object, name, value)
-        self._map[value] = match
-        return self._map[value]
+        if value in self._map:
+            return self._map[value]
+
+        matches = [key for key in self.map if key.startswith(value)]
+        if len(matches) == 1:
+            self._map[value] = match = matches[0]
+            return match
+
+        self.error(object, name, value)
 
     def mapped_value(self, value):
         """ Get the mapped value for a value. """
