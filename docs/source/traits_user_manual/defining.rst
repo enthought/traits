@@ -207,7 +207,7 @@ casting traits::
     >>> class Person ( HasTraits ):
     ...    weight  = Float
     ...    cweight = CFloat
-    >>>
+    ...
     >>> bill = Person()
     >>> bill.weight  = 180    # OK, coerced to 180.0
     >>> bill.cweight = 180    # OK, cast to float(180)
@@ -219,7 +219,7 @@ casting traits::
     >>> bill.cweight = '180'  # OK, cast to float('180')
     >>> print(bill.cweight)
     180.0
-    >>>
+
 
 .. _other-predefined-traits:
 
@@ -529,7 +529,7 @@ The following example illustrates the difference between `Either` and `Union`::
     >>> i = IntegerClass(primes=4)
     traits.trait_errors.TraitError: The 'primes' trait of an IntegerClass instance must be 2 or None or 5 or 7 or 11 or '3', but a value of 4 <class 'int'> was specified.
     >>>
-    >>> # But Union does not allow such declerations.
+    >>> # But Union does not allow such declarations.
     >>> class IntegerClass(HasTraits):
     ...     primes = Union([2], None, {'3':6}, 5, 7, 11)
     ValueError: Union trait declaration expects a trait type or an instance of trait type or None, but got [2] instead

@@ -96,6 +96,8 @@ from .trait_types import (  # noqa: F401
     Set,
     CSet,
     Dict,
+    Map,
+    PrefixMap,
     Instance,
     AdaptedTo,
     AdaptsTo,
