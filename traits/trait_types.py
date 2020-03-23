@@ -1970,10 +1970,13 @@ class BaseEnum(TraitType):
                     self.values = {self.values}
 
             elif len(args) == 2:
-                if is_excluded_collection(args[1]):
-                    self.values = tuple(args)
-                elif is_collection(args[1]):
+                # If 2 args, the first is default, second is allowed values.
+                allowed_vals = args[1]
+                excluded_collection = is_excluded_collection(allowed_vals)
+                if is_collection(allowed_vals) and not excluded_collection:
                     self.values = args[1]
+                else:
+                    self.values = tuple(args)
             else:
                 self.values = tuple(args)
 
@@ -2089,6 +2092,10 @@ class Enum(BaseEnum):
 
     def init_fast_validate(self, *args):
         """ Set up C-level fast validation. """
+        # Don't use fast validation if second arg is not a tuple.
+        if len(args) == 2 and not isinstance(args[1], tuple):
+            return
+
         self.fast_validate = args
 
 

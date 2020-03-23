@@ -4185,7 +4185,10 @@ _trait_set_validate(trait_object *trait, PyObject *args)
 
                 case 5: /* Enumerated item check: */
                     if (n == 2) {
-                        goto done;
+                        v1 = PyTuple_GET_ITEM(validate, 1);
+                        if (PyTuple_CheckExact(v1)) {
+                            goto done;
+                        }
                     }
                     break;
 

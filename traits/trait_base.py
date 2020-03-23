@@ -83,6 +83,7 @@ class _Uninitialized(object):
 #: assignment, and treat it specially.
 Uninitialized = _Uninitialized()
 
+
 Undefined = None
 
 
@@ -397,12 +398,15 @@ def is_str(value):
 
 
 def is_excluded_collection(value):
-    if isinstance(value, (str, bytes, bytearray)):
-        return True
-    return False
+    """ Values of type str, bytes or bytearray can be
+    iterated over and are therefore collections, however,
+    we want to treat these as discrete units.
+    This is used by logic inside the Enum trait"""
+    return isinstance(value, (str, bytes, bytearray))
 
 
 def is_collection(value):
+    """ Returns true if the value can be iterated over. """
     try:
         iter(value)
         return True

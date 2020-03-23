@@ -8,11 +8,6 @@
 #
 # Thanks for using Enthought open source!
 
-try:
-    from collections.abc import Collection
-except ImportError:
-    # Python3.5 and below does not have Collection
-    from collections import Container as Collection
 import enum
 import unittest
 
@@ -39,7 +34,7 @@ class ExampleModel(HasTraits):
         return ["model1", "model2", "model3"]
 
 
-class CustomCollection(Collection):
+class CustomCollection:
 
     def __init__(self, *data):
         self.data = tuple(data)
@@ -104,6 +99,8 @@ class EnumCollectionExample(HasTraits):
     correct_int_set_enum = Enum([1, {1, 2}])
 
     yes_no = Enum("yes", "no")
+
+    digits = Enum(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 
 
 class EnumTestCase(unittest.TestCase):
@@ -223,3 +220,9 @@ class EnumTestCase(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             collection_enum.correct_int_set_enum = 2
+
+        for i in range(10):
+            collection_enum.digits = i
+
+        with self.assertRaises(TraitError):
+            collection_enum.digits = 10
