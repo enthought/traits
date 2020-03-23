@@ -58,7 +58,7 @@ def observe(object, callback, path, remove, dispatch):
     """
     Parameters
     ----------
-    object : HasTrait or CTrait
+    object : HasTrait
         An object that implements `_notifiers` for returning a list for
         adding or removing notifiers
     callback : callable(object, name, old, new)
@@ -90,6 +90,23 @@ def observe(object, callback, path, remove, dispatch):
 
 
 def add_notifiers(object, callback, path, target, dispatcher):
+    """ Add notifiers for a ListenerPath
+
+    Parameters
+    ----------
+    object : HasTrait
+        An object that implements `_notifiers` for returning a list for
+        adding or removing notifiers
+    callback : callable(object, name, old, new)
+        A callable conforming to the notifier signature.
+    path : ListenerPath
+        Path for listening to extended traits.
+    remove : boolean
+        Whether to remove the observer.
+    dispatcher : callable(callable, args, kwargs)
+        Callable for dispatching the callback, i.e. dispatching
+        callback on a different thread.
+    """
     listener = path.node
     for this_target in listener.iter_this_targets(object):
         if listener.notify:
@@ -124,6 +141,14 @@ def add_notifiers(object, callback, path, target, dispatcher):
 
 
 def add_notifier(object, notifier):
+    """ Add a notifier to an notifiable object.
+
+    Parameters
+    ----------
+    object : INotifiableObject
+    notifier : INotifier
+
+    """
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers:
         # Rename ``observer`` (passive) to ``callback`` (active)!
@@ -142,6 +167,14 @@ def add_notifier(object, notifier):
 
 
 def remove_notifier(object, notifier):
+    """ Remove a notifier from an notifiable object.
+
+    Parameters
+    ----------
+    object : INotifiableObject
+    notifier : INotifier
+    """
+
     observer_notifiers = object._notifiers(True)
     logger.debug("Removing from %r", observer_notifiers)
     for other in observer_notifiers[:]:
@@ -153,8 +186,7 @@ def remove_notifier(object, notifier):
                 other.dispose()
             break
     else:
-        # This function is idempotent.
-        # In fact, we can't raise here to be defensive.
+        # We can't raise here to be defensive.
         # If a trait has an implicit default, when the trait is
         # assigned a new value, the event's old value is filled
         # with this implicit default, which does not have
@@ -163,6 +195,23 @@ def remove_notifier(object, notifier):
 
 
 def remove_notifiers(object, callback, path, target, dispatcher):
+    """ Remove notifiers for a ListenerPath
+
+    Parameters
+    ----------
+    object : HasTrait
+        An object that implements `_notifiers` for returning a list for
+        adding or removing notifiers
+    callback : callable(object, name, old, new)
+        A callable conforming to the notifier signature.
+    path : ListenerPath
+        Path for listening to extended traits.
+    remove : boolean
+        Whether to remove the observer.
+    dispatcher : callable(callable, args, kwargs)
+        Callable for dispatching the callback, i.e. dispatching
+        callback on a different thread.
+    """
     listener = path.node
     for this_target in listener.iter_this_targets(object):
         if listener.notify:
