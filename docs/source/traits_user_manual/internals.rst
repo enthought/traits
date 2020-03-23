@@ -41,23 +41,21 @@ attribute set and attribute deletion operations.
 
 To support trait get and set operations, a |HasTraits| object (that is, in
 normal use, an instance of a user-defined subclass of |HasTraits|) has two key
-pieces of
-state: a dictionary of **class traits**, and a second dictionary of **instance
-traits**. Each dictionary is a mapping from trait attribute names to |CTrait| objects. A
-|CTrait| object encapsulates the rules for getting and setting the
-corresponding attribute, as well as providing an attachment point for
-trait notifications.
+pieces of state: a dictionary of **class traits**, and a second dictionary of
+**instance traits**. Each dictionary is a mapping from trait attribute names to
+|CTrait| objects. A |CTrait| object encapsulates the rules for getting and
+setting the corresponding attribute, as well as providing an attachment point
+for trait notifications.
 
 In addition to these two dictionaries, a |HasTraits| object has a ``__dict__``
 that stores attribute values for that object in the normal way.
 
 Analogously to class variables and instance variables in a normal Python class,
-the class traits
-dictionary for a given |HasTraits| subclass is shared between instances of that class,
-while the instance traits dictionary is specific to a particular |HasTraits|
-instance. (As an internal optimization, the instance traits dictionary is
-created on demand when first needed, while the class traits dictionary is
-always present for each instance.)
+the class traits dictionary for a given |HasTraits| subclass is shared between
+instances of that class, while the instance traits dictionary is specific to a
+particular |HasTraits| instance. (As an internal optimization, the instance
+traits dictionary is created on demand when first needed, while the class
+traits dictionary is always present for each instance.)
 
 For introspection and debugging purposes, both of these dictionaries can
 be retrieved directly, using the |_instance_traits| and |_class_traits|
@@ -116,10 +114,11 @@ A |CTrait| object has two main purposes:
   a |HasTraits| object.
 - It provides an attachment point for trait notifiers.
 
-For attribute access, the C structure underlying each |CTrait| instance
-(see the ``trait_object`` struct in the C source) has three relevant fields: ``getattr``, ``setattr``
-and ``post_setattr``. These fields contain C function pointers, and are invoked
-during attribute get and set operations, as described below.
+For attribute access, the C structure underlying each |CTrait| instance (see
+the ``trait_object`` struct in the C source) has three relevant fields:
+``getattr``, ``setattr`` and ``post_setattr``. These fields contain C function
+pointers, and are invoked during attribute get and set operations, as described
+below.
 
 
 Attribute retrieval
@@ -160,10 +159,12 @@ The starting point is ``has_traits_setattro`` in the source.
   and retrieve the corresponding ``CTrait`` instance if present.
 - If no matching entry is found, we then look in ``obj``s class traits
   dictionary, and again retrieve the corresponding ``CTrait``.
+
 - If still not found, we invoke the **prefix trait** machinery to get a new
-  ``CTrait`` object. By default, this goes through the ``HasTraits.__prefix_trait__``
-  method (which is implemented in Python), and this may still fail with
-  an exception.
+  ``CTrait`` object. By default, this goes through the
+  ``HasTraits.__prefix_trait__`` method (which is implemented in Python), and
+  this may still fail with an exception.
+
 - If one of the above steps succeeded, we now have a ``CTrait`` object, and
   its ``setattr`` function is invoked (passing along the trait object,
   ``obj``, ``name`` and ``value``) to perform the actual attribute set
