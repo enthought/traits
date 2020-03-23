@@ -16,7 +16,7 @@ from trait_observer_notifier import (
     TraitObserverNotifier,
 )
 from trait_list_object import NewTraitListObject
-
+from listener_change_notifier import ListenerChangeNotifier
 
 # Mega hack for POC: Register the TraitListObject again to the global points...
 ctraits._list_classes(NewTraitListObject, TraitSetObject, TraitDictObject)
@@ -31,6 +31,27 @@ INotifiableObject.register(CTrait)
 INotifiableObject.register(ctraits.CHasTraits)
 
 logger = logging.getLogger()
+
+
+def dispatch_same(callback, args=(), kwargs=None):
+    if kwargs is None:
+        kwargs = {}
+    callback(*args, **kwargs)
+
+
+def dispatch_new_thread(callback, args=(), kwargs=None):
+    if kwargs is None:
+        kwargs = {}
+    threading.Thread(
+        target=callback, args=args, kwargs=kwargs).start()
+
+
+# These are user-facing notifier factories...
+DISPATCHERS = {
+    "extended": dispatch_same,
+    "same": dispatch_same,
+    "new": dispatch_new_thread,
+}
 
 
 def observe(object, callback, path, remove, dispatch):
@@ -56,111 +77,122 @@ def observe(object, callback, path, remove, dispatch):
             object=object,
             callback=callback,
             target=object,
+            dispatcher=DISPATCHERS[dispatch],
         )
     else:
         add_notifiers(
             path=path,
             object=object,
             callback=callback,
-            dispatch=dispatch,
             target=object,
+            dispatcher=DISPATCHERS[dispatch],
         )
 
 
-def dispatch_same(callback, event):
-    callback(event)
-
-
-def dispatch_new_thread(callback, event):
-    threading.Thread(target=callback, args=(event, )).start()
-
-
-WRAPPERS = {
-    "extended": partial(TraitObserverNotifier, dispatcher=dispatch_same),
-    "same": partial(TraitObserverNotifier, dispatcher=dispatch_same),
-    "new": partial(TraitObserverNotifier, dispatcher=dispatch_new_thread),
-}
-
-
-def add_notifiers(object, callback, dispatch, path, target):
+def add_notifiers(object, callback, path, target, dispatcher):
     listener = path.node
     for this_target in listener.iter_this_targets(object):
         if listener.notify:
-            add_notifier(
-                this_target, callback, dispatch, listener.event_factory, target=target
+            # TODO: Move this to the listener interface?
+            notifier = TraitObserverNotifier(
+                observer=callback,
+                owner=this_target._notifiers(True),
+                target=target,
+                event_factory=listener.event_factory,
+                dispatcher=dispatcher,
             )
+            add_notifier(object=this_target, notifier=notifier)
 
         for next_path in path.nexts:
 
-            # FIXME: Can we not use partial
-            # This holds a strong reference to the callback, is it okay?
-            next_callback = partial(
-                listener.change_callback, callback=callback, dispatch=dispatch,
-                path=next_path, target=target)
-            add_notifier(this_target, next_callback, dispatch, listener.event_factory, target=target)
+            change_notifier = listener.get_change_notifier(
+                callback=callback,
+                path=next_path,
+                target=target,
+                dispatcher=dispatcher,
+            )
+            add_notifier(object=this_target, notifier=change_notifier)
 
             for next_target in listener.iter_next_targets(object):
-                add_notifiers(next_target, callback, dispatch, next_path, target=target)
+                add_notifiers(
+                    object=next_target,
+                    callback=callback,
+                    path=next_path,
+                    target=target,
+                    dispatcher=dispatcher,
+                )
 
 
-def add_notifier(object, callback, dispatch, event_factory, target):
+def add_notifier(object, notifier):
     observer_notifiers = object._notifiers(True)
     for other in observer_notifiers:
-        if other.observer is callback and other.target is target:
+        # Rename ``observer`` (passive) to ``callback`` (active)!
+        if other.equals(notifier):
             # should we compare dispatch as well?
-            logger.debug("ADD: adding target %r", target)
-            other.increment_target_count(target)
+            logger.debug("ADD: Incrementing notifier %r", other)
+            other.increment()
             break
 
     else:
-        logger.debug("ADD: adding notifier for object %r targeting %r", object, target)
-        new_notifier = WRAPPERS[dispatch](
-            observer=callback,
-            owner=observer_notifiers,
-            target=target,
-            event_factory=event_factory,
+        logger.debug(
+            "ADD: adding notifier %r for object %r",
+            notifier, object
         )
-        observer_notifiers.append(new_notifier)
+        observer_notifiers.append(notifier)
 
 
-def remove_notifier(object, callback, target):
-    if object is Undefined:
-        return
+def remove_notifier(object, notifier):
     observer_notifiers = object._notifiers(True)
     logger.debug("Removing from %r", observer_notifiers)
     for other in observer_notifiers[:]:
-        observer = other.observer
-        logger.debug("%r, %r", observer, callback)
-        if isinstance(observer, partial) and isinstance(callback, partial):  # FIXME: Code smell!
-            same_callback = (
-                observer.func is callback.func
-                and observer.keywords["callback"] is callback.keywords["callback"]
-            )
-            logger.debug("other func: %r", observer.func)
-            logger.debug("this func: %r", callback.func)
-            logger.debug("other callback: %r", observer.keywords["callback"])
-            logger.debug("this callback: %r", callback.keywords["callback"])
-        else:
-            same_callback = observer is callback
-
-        if same_callback and other.target is target:
-            other.decrement_target_count(target)
-            if other.target_count == 0:
+        if other.equals(notifier):
+            other.decrement()
+            if other.can_be_removed():
+                # TODO: Always do this on the main thread!
                 observer_notifiers.remove(other)
                 other.dispose()
             break
+    else:
+        # This function is idempotent.
+        # In fact, we can't raise here to be defensive.
+        # If a trait has an implicit default, when the trait is
+        # assigned a new value, the event's old value is filled
+        # with this implicit default, which does not have
+        # any notifiers.
+        pass
 
 
-def remove_notifiers(object, callback, path, target):
+def remove_notifiers(object, callback, path, target, dispatcher):
     listener = path.node
     for this_target in listener.iter_this_targets(object):
         if listener.notify:
-            remove_notifier(this_target, callback, target=target)
+            notifier = TraitObserverNotifier(
+                observer=callback,
+                owner=this_target._notifiers(True),
+                target=target,
+                event_factory=listener.event_factory,
+                dispatcher=dispatcher,
+            )
+            remove_notifier(this_target, notifier)
 
         for next_path in path.nexts:
-            remove_notifier(this_target, partial(listener.change_callback, callback=callback), target=target)
+
+            change_notifier = listener.get_change_notifier(
+                callback=callback,
+                path=next_path,
+                target=target,
+                dispatcher=dispatcher,
+            )
+            remove_notifier(object=this_target, notifier=change_notifier)
+
             for next_target in listener.iter_next_targets(object):
-                remove_notifiers(next_target, callback, next_path, target=target)
+                remove_notifiers(
+                    object=next_target,
+                    callback=callback,
+                    path=next_path,
+                    target=target,
+                    dispatcher=dispatcher,
+                )
 
 
 def is_notifiable(object):
@@ -187,20 +219,11 @@ class BaseListener:
         # For walking down the path of Listeners
         yield from ()
 
-    def change_callback(self, event, callback, dispatch, path, target):
-        """ Handle the removal/addition of notifiers a target changes.
-
-        Parameters
-        ----------
-        event : event_factory
-            An instance created by the event_factory of this listener.
-        ...
+    def get_change_notifier(self, callback, path, target, dispatcher):
+        """ Return a notifier for removing/propagating listeners
+        for the 'next' targets.
         """
         raise NotImplementedError()
-
-    def iter_new_events(self, object):
-        # Yield an event for when a new target emerges.
-        yield from ()
 
 
 class AnyTraitListener(BaseListener):
@@ -234,20 +257,32 @@ class FilteredTraitListener(BaseListener):
                 if is_notifiable(value):
                     yield value
 
-    def change_callback(self, event, callback, dispatch, path, target):
+    def get_change_notifier(self, callback, path, target, dispatcher):
+        return ListenerChangeNotifier(
+            listener_callback=self.change_callback,
+            actual_callback=callback,
+            path=path,
+            target=target,
+            event_factory=self.event_factory,
+            dispatcher=dispatcher,
+        )
+
+    @staticmethod
+    def change_callback(event, callback, path, target, dispatcher):
         if event.old is not Uninitialized and event.old is not Undefined:
             remove_notifiers(
                 object=event.old,
                 callback=callback,
                 path=path,
                 target=target,
+                dispatcher=dispatcher,
             )
         add_notifiers(
             object=event.new,
             callback=callback,
-            dispatch=dispatch,
             path=path,
             target=target,
+            dispatcher=dispatcher,
         )
 
 
@@ -272,30 +307,33 @@ class NamedTraitListener(BaseListener):
         if is_notifiable(value):
             yield value
 
-    def change_callback(self, event, callback, dispatch, path, target):
+    def get_change_notifier(self, callback, path, target, dispatcher):
+        return ListenerChangeNotifier(
+            listener_callback=self.change_callback,
+            actual_callback=callback,
+            path=path,
+            target=target,
+            event_factory=self.event_factory,
+            dispatcher=dispatcher,
+        )
+
+    @staticmethod
+    def change_callback(event, callback, path, target, dispatcher):
         if event.old is not Uninitialized and event.old is not Undefined:
             remove_notifiers(
                 object=event.old,
                 callback=callback,
                 path=path,
                 target=target,
+                dispatcher=dispatcher,
             )
         add_notifiers(
             object=event.new,
             callback=callback,
-            dispatch=dispatch,
             path=path,
             target=target,
+            dispatcher=dispatcher,
         )
-
-    def iter_new_events(self, object):
-        if self.name in object.__dict__:
-            yield self.event_factory(
-                object=object,
-                name=self.name,
-                old=Undefined,
-                new=getattr(object, self.name),
-            )
 
 
 OptionalTraitListener = partial(NamedTraitListener, optional=True)
@@ -319,12 +357,23 @@ class ListItemListener(BaseListener):
             if is_notifiable(item):
                 yield item
 
-    def change_callback(self, event, callback, dispatch, path, target):
+    def get_change_notifier(self, callback, path, target, dispatcher):
+        return ListenerChangeNotifier(
+            listener_callback=self.change_callback,
+            actual_callback=callback,
+            path=path,
+            target=target,
+            event_factory=self.event_factory,
+            dispatcher=dispatcher,
+        )
+
+    @staticmethod
+    def change_callback(event, callback, path, target, dispatcher):
         logger.debug(
             "Handling list change. "
             "({!r})".format(
-                (event.old, event.new, event.removed, event.added, path.node)
-        ))
+                (event.old, event.new, event.removed, event.added, path.node))
+        )
         for item in event.removed:
             if is_notifiable(item):
                 remove_notifiers(
@@ -332,15 +381,16 @@ class ListItemListener(BaseListener):
                     callback=callback,
                     path=path,
                     target=target,
+                    dispatcher=dispatcher,
                 )
         for item in event.added:
             if is_notifiable(item):
                 add_notifiers(
                     object=item,
                     callback=callback,
-                    dispatch=dispatch,
                     path=path,
                     target=target,
+                    dispatcher=dispatcher,
                 )
 
 

@@ -121,7 +121,7 @@ class TraitObserverNotifier(object):
         event = self.event_factory(object, name, old, new)
 
         logger.debug("Notifier is called: {!r} with {!r}".format(self, (object, name, old, new)))
-        self.dispatcher(self.dispatch, event)
+        self.dispatcher(self.dispatch, args=(event, ))
 
     def dispatch(self, event):
         # keep a reference to the observer while handling callback
@@ -137,17 +137,16 @@ class TraitObserverNotifier(object):
 
         observer(event)
 
-    def increment_target_count(self, target):
-        if self.target is not target:
-            raise ValueError("Unknown target.")
+    def increment(self):
         self.target_count += 1
 
-    def decrement_target_count(self, target):
-        if self.target is not target:
-            raise ValueError("Unknown target.")
+    def decrement(self):
         self.target_count -= 1
         if self.target_count < 0:
             raise ValueError("Too many decrement.")
+
+    def can_be_removed(self):
+        return self.target_count <= 0
 
     @property
     def target(self):
@@ -162,8 +161,8 @@ class TraitObserverNotifier(object):
         return self._observer
 
     def equals(self, other):
-        if other is self:
-            return True
+        if type(other) is not type(self):
+            return False
         return other.observer is self.observer and other.target is self.target
 
     def observer_deleted(self, ref=None):

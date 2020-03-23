@@ -10,20 +10,24 @@ class INotifiableObject(abc.ABC):
 
 class INotifier(abc.ABC):
 
-    # FIXME: observer should be renamed to callback!
-    def __init__(self, observer, owner, target, event_factory):
-        pass
+    def __call__(self, object, name, old, new):
+        raise NotImplementedError()
 
-    def increment_target_count(target):
-        pass
+    def increment(self):
+        raise NotImplementedError()
 
-    def decrement_target_count(target):
-        pass
+    def decrement(self):
+        raise NotImplementedError()
 
-    @property
-    def target(self):
-        pass
+    def can_be_removed(self):
+        # return true or false.
+        raise NotImplementedError()
 
-    @property
-    def observer(self):
-        pass
+    def dispose(self):
+        # clean up tasks **after** this notifier is removed from
+        # the notifiable object.
+        raise NotImplementedError()
+
+    def equals(self, other):
+        # Return true or false
+        raise NotImplementedError()
