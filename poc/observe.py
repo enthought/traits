@@ -290,6 +290,16 @@ class AnyTraitListener(BaseListener):
 class FilteredTraitListener(BaseListener):
 
     def __init__(self, notify, filter):
+        """
+        Parameters
+        ----------
+        notify : boolean
+            Whether to notify for changes.
+        filter : callable(name, trait) -> boolean
+            Callable that receives a named trait and returns
+            a boolean as for whether the trait is being
+            listened to.
+        """
         self.filter = filter
         self.notify = notify
 
