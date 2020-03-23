@@ -1044,5 +1044,67 @@ class TestRemoveNotifier(unittest.TestCase):
         mock_obj.assert_not_called()
 
 
+class TestTraitAdded(unittest.TestCase):
+
+    def test_add_trait_with_name(self):
+
+        class Foo(HasTraits):
+            pass
+
+        foo = Foo()
+
+        mock_obj = mock.Mock()
+
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath(
+                observe.OptionalTraitListener(name="a", notify=True),
+            ),
+            remove=False,
+            dispatch="same",
+        )
+        foo.add_trait("a", Str())
+        mock_obj.assert_not_called()
+
+        foo.a = "1"
+
+        mock_obj.assert_called_once()
+        mock_obj.reset_mock()
+
+        # The observer is for `foo` only
+        foo2 = Foo()
+        foo2.add_trait("a", Str())
+        foo2.a = "2"
+        mock_obj.assert_not_called()
+
+    def test_add_trait_with_metadata(self):
+
+        class Foo(HasTraits):
+            pass
+
+        foo = Foo()
+
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.FilteredTraitListener(
+                    notify=True,
+                    filter=lambda name, trait: getattr(trait, "public", False),
+                )
+            ),
+            remove=False,
+            dispatch="same",
+        )
+
+        foo.add_trait("a", Str(public=True))
+        foo.a = "abc"
+
+        # TODO: This test is failing and needs to be fixed.
+        mock_obj.assert_called_once()
+
+
 if __name__ == "__main__":
     unittest.main()
