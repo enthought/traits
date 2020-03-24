@@ -521,9 +521,7 @@ class TestList(unittest.TestCase):
         foo.l.append(3)
 
         # then
-        # FIXME: Notification should be fired.
-        with self.assertRaises(AssertionError):
-            mock_obj.assert_called_once()
+        mock_obj.assert_called_once()
 
     def test_implicit_default_list(self):
         # Test when a list attribute is accessed the first time,
@@ -673,17 +671,16 @@ class TestListOfList(unittest.TestCase):
         foo.bars = [[3]]
 
         # then
-        # The values compared equal, despite the inner list being a
-        # a different list
-        mock_obj.assert_not_called()
+        # TODO: This is a change from existing behaviour.
+        # Old list does not fire event for this.
+        mock_obj.assert_called_once()
+        mock_obj.reset_mock()
 
-        # FIXME: Now the new list does not have the expected notifiers!
         # when
         foo.bars[0] = [4]
 
         # then
-        with self.assertRaises(AssertionError):
-            mock_obj.assert_called_once()
+        mock_obj.assert_called_once()
 
     def test_nested_list_of_list_of_list_reassigned(self):
 

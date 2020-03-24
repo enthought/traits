@@ -1,6 +1,6 @@
 import sys
 
-from traits.constants import DefaultValue
+from traits.constants import ComparisonMode, DefaultValue
 from traits.trait_converters import trait_from
 from traits.trait_base import SequenceTypes
 from traits.trait_type import TraitType
@@ -95,3 +95,8 @@ class List(TraitType):
         """ Returns the *inner trait* (or traits) for this trait.
         """
         return (self.item_trait,)
+
+    def as_ctrait(self):
+        trait = super(List, self).as_ctrait()
+        trait.comparison_mode = ComparisonMode.identity
+        return trait
