@@ -292,7 +292,7 @@ class AnyTraitListener(BaseListener):
                 yield value
 
 
-class FilteredTraitListener(BaseListener):
+class _FilteredTraitListener(BaseListener):
 
     def __init__(self, notify, filter):
         """
@@ -304,9 +304,22 @@ class FilteredTraitListener(BaseListener):
             Callable that receives a named trait and returns
             a boolean as for whether the trait is being
             listened to.
+            It is the developers' responsibility to ensure two
+            equivalent ``filter`` compare equal.
+            i.e. this class should not be exposed to the users.
         """
         self.filter = filter
         self.notify = notify
+
+    def __eq__(self, other):
+        if other is self:
+            return True
+        if type(other) is not type(self):
+            return False
+        return (
+            (self.filter, self.notify)
+            == (other.filter, other.notify)
+        )
 
     def iter_this_targets(self, object):
         # object must be an instance of HasTraits
@@ -348,6 +361,54 @@ class FilteredTraitListener(BaseListener):
             target=target,
             dispatcher=dispatcher,
         )
+
+
+class _MetadataFilter:
+    """ Callable as a filter in `FilteredTraitListener` for
+    listening to traits with/without a given metadata.
+    """
+
+    def __init__(self, metadata_name, include):
+        """
+        metadata_name : str
+            Name of metadata.
+        incude : boolean
+            If true, listen to the trait that **have** the metadata.
+            If false, listen to the trait that **do not have** the
+            metadata.
+        """
+        self.metadata_name = metadata_name
+        self.include = include
+
+    def __call__(self, _, trait):
+        return hasattr(trait, self.metadata_name) is self.include
+
+    def __eq__(self, other):
+        if self is other:
+            return True
+        if type(self) is not type(self):
+            return False
+        return (
+            (self.metadata_name, self.include)
+            == (other.metadata_name, other.include)
+        )
+
+
+def MetadataTraitListener(metadata_name, notify, include):
+    """
+    notify : boolean
+        Whether to notify for changes.
+    metadata_name : str
+        Name of metadata.
+    incude : boolean
+        If true, listen to the trait that **have** the metadata.
+        If false, listen to the trait that **do not have** the
+        metadata.
+    """
+    return _FilteredTraitListener(
+        notify=notify,
+        filter=_MetadataFilter(metadata_name=metadata_name, include=include)
+    )
 
 
 class NamedTraitListener(BaseListener):
@@ -647,7 +708,7 @@ path = ListenerPath.from_nodes(
 
 # Listen to all traits with a metadata 'updated'
 path = ListenerPath(
-    node=FilteredTraitListener(
+    node=_FilteredTraitListener(
         filter=lambda _, trait: "updated" in trait.__dict__,
         notify=True,
     ),

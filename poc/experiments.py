@@ -1038,7 +1038,7 @@ class TestFilteredTrait(unittest.TestCase):
             gender = Str(public=True)
 
         path = observe.ListenerPath.from_nodes(
-            observe.FilteredTraitListener(notify=True, filter=lambda _, trait: trait.public),
+            observe._FilteredTraitListener(notify=True, filter=lambda _, trait: trait.public),
         )
 
         foo = Foo(age=1, name="John", gender="male")
@@ -1091,8 +1091,10 @@ class TestFilteredTrait(unittest.TestCase):
             mother = Instance(Person, public=False)
 
         path = observe.ListenerPath.from_nodes(
-            observe.FilteredTraitListener(notify=False, filter=lambda _, trait: trait.public),
-            observe.FilteredTraitListener(notify=True, filter=lambda _, trait: trait.public),
+            observe._FilteredTraitListener(
+                notify=False, filter=lambda _, trait: trait.public),
+            observe._FilteredTraitListener(
+                notify=True, filter=lambda _, trait: trait.public),
         )
         foo = Foo(
             guardian=Person(name="John", age=40),
@@ -1149,8 +1151,10 @@ class TestFilteredTrait(unittest.TestCase):
             mother = Instance(Person, public=False)
 
         path = observe.ListenerPath.from_nodes(
-            observe.FilteredTraitListener(notify=False, filter=lambda _, trait: trait.public),
-            observe.FilteredTraitListener(notify=True, filter=lambda _, trait: trait.public),
+            observe._FilteredTraitListener(
+                notify=False, filter=lambda _, trait: trait.public),
+            observe._FilteredTraitListener(
+                notify=True, filter=lambda _, trait: trait.public),
         )
         foo = Foo(
             guardian=Person(name="John", age=40),
@@ -1292,6 +1296,72 @@ class TestRemoveNotifier(unittest.TestCase):
 
         mock_obj.reset_mock()
         foo.bar = Bar()
+        mock_obj.assert_not_called()
+
+    def test_remove_path_with_metadata_filter(self):
+        # test cleaning up paths involving metadata file.
+
+        class Bar(HasTraits):
+
+            age = Int(public=True)
+
+        class Foo(HasTraits):
+
+            bar = Instance(Bar())
+
+        foo = Foo(bar=Bar())
+
+        # add two paths
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.RequiredTraitListener(name="bar", notify=False),
+                observe.MetadataTraitListener(
+                    notify=True,
+                    metadata_name="public",
+                    include=True,
+                ),
+            ),
+            remove=False,
+            dispatch="same",
+        )
+
+        # sanity check
+        foo.bar.age += 1
+        mock_obj.assert_called_once()
+        mock_obj.reset_mock()
+
+        # Remove the path, but create a new instance of `ListenerPath`
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.RequiredTraitListener(name="bar", notify=False),
+                observe.MetadataTraitListener(
+                    notify=True,
+                    metadata_name="public",
+                    include=True,
+                ),
+            ),
+            remove=True,
+            dispatch="same",
+        )
+
+        # when
+        foo.bar.age += 1
+
+        # then
+        mock_obj.assert_not_called()
+
+        # when
+        foo.bar = Bar()
+        foo.bar.age += 1
+
+        # then
+        # This tests the ListenerChangeNotifier is cleaned up
+        # properly.
         mock_obj.assert_not_called()
 
 
@@ -1533,7 +1603,7 @@ class TestTraitAdded(unittest.TestCase):
             object=foo,
             callback=mock_obj,
             path=observe.ListenerPath.from_nodes(
-                observe.FilteredTraitListener(
+                observe._FilteredTraitListener(
                     notify=True,
                     filter=lambda name, trait: getattr(trait, "public", False),
                 )
