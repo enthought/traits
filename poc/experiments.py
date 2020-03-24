@@ -1295,9 +1295,9 @@ class TestRemoveNotifier(unittest.TestCase):
         mock_obj.assert_not_called()
 
 
-class TestPersistListener(unittest.TestCase):
-    # Test listeners being persisted when a parent object
-    # changes.
+class TestMaintainingListener(unittest.TestCase):
+    # Test listeners being persisted for new objects, and removed
+    # for old objects.
 
     def test_two_paths_from_same_item(self):
 
