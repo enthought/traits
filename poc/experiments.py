@@ -5,6 +5,7 @@ from unittest import mock
 import observe
 
 from traits.api import HasTraits, Int, Instance, Str
+from traits.trait_base import Undefined
 from trait_types import List
 
 import logging
@@ -637,7 +638,7 @@ class TestListOfList(unittest.TestCase):
         # TODO: Is this the right object?
         self.assertEqual(event.object, foo.bars)
         # TODO: Bogus filler, can we remove it?
-        self.assertEqual(event.name, "")
+        self.assertEqual(event.name, Undefined)
         # TODO: Bogus filler again, can we remove it?
         self.assertIs(event.old, foo.bars[0])
 

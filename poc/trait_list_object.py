@@ -852,7 +852,7 @@ class NewTraitListObject(TraitList):
                 value = cls(
                     trait=self.trait.item_trait,
                     object=self,
-                    name="",   # Hmm...
+                    name=Undefined,
                     value=value,
                 )
             new_added.append(value)
