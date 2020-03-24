@@ -247,6 +247,9 @@ def remove_notifiers(object, callback, path, target, dispatcher):
 
 
 def is_notifiable(object):
+    """ Return true if an object conforms to the expected
+    interface for a notifiable object.
+    """
     return isinstance(object, INotifiableObject)
 
 
@@ -255,6 +258,9 @@ class BaseListener:
     event_factory = ObserverEvent
 
     def __eq__(self, other):
+        """ Return true if a given instance is equivalent to this
+        one. Needed for comparing paths and cleaning up listeners.
+        """
         raise NotImplementedError()
 
     @property
@@ -267,14 +273,20 @@ class BaseListener:
         self._notify = value
 
     def iter_this_targets(self, object):
+        """ Yield (notifiable) objects for attaching notifiers for this
+        listener.
+        """
         yield from ()
 
     def iter_next_targets(self, object):
+        """ Yield (notifiable) objects for attaching notifiers for the
+        next listener following this one in a ListenerPath.
+        """
         # For walking down the path of Listeners
         yield from ()
 
     def get_change_notifier(self, callback, path, target, dispatcher):
-        """ Return a notifier for removing/propagating listeners
+        """ Return a ListenerChangeNotifier for removing/propagating listeners
         for the 'next' targets.
         """
         raise NotImplementedError()
@@ -544,6 +556,8 @@ class ListenerPath:
         self.nexts = nexts
 
     def __eq__(self, other):
+        """ Return true if a given ListenerPath is equivalent to this one.
+        """
 
         # FIXME: The following is a draft.
         # We need to handle cycles!
@@ -565,6 +579,9 @@ class ListenerPath:
 
     @classmethod
     def from_nodes(cls, node, *nodes):
+        """ Convenient factory function for creating a ListenerPath
+        with no branches.
+        """
         nodes = iter(nodes)
         root = path = cls(node=node)
         for node in nodes:
