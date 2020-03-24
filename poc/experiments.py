@@ -1026,6 +1026,86 @@ class TestIssue237(unittest.TestCase):
         # It is the same callback
         mock_obj.assert_called_once()
 
+    def test_issue_237_different_level_of_nesting_different_target(self):
+
+        class Bar(HasTraits):
+            age = Int()
+
+        class Foo(HasTraits):
+            l = List(Instance(Bar))
+
+        class Baz(HasTraits):
+
+            value = Int()
+
+        class Bar(HasTraits):
+
+            bazs = List(Instance(Baz))
+
+        class Spam(HasTraits):
+
+            bars = List(Instance(Bar))
+
+        class Foo(HasTraits):
+
+            bars = List(Instance(Bar))
+
+            spams = List(Instance(Spam))
+
+        baz = Baz(value=1)
+        foo = Foo(
+            bars=[
+                Bar(bazs=[baz]),
+                Bar(bazs=[baz]),
+            ],
+            spams=[
+                Spam(
+                    bars=[
+                        Bar(bazs=[baz]),
+                        Bar(bazs=[baz]),
+                    ]
+                )
+            ]
+        )
+
+        spam = foo.spams[0]
+
+        # Listen to change in `Spam`
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=spam,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.RequiredTraitListener(name="bars", notify=False),
+                observe.ListItemListener(notify=False),
+                observe.RequiredTraitListener(name="bazs", notify=False),
+                observe.ListItemListener(notify=False),
+                observe.RequiredTraitListener(name="value", notify=True)
+            ),
+            remove=False,
+            dispatch="same",
+        )
+
+        # Listen to change on Foo.bars
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.RequiredTraitListener(name="bars", notify=False),
+                observe.ListItemListener(notify=False),
+                observe.RequiredTraitListener(name="bazs", notify=False),
+                observe.ListItemListener(notify=False),
+                observe.RequiredTraitListener(name="value", notify=True)
+            ),
+            remove=False,
+            dispatch="same",
+        )
+
+        # Modifying the shared baz will cause both notifiers to fire.
+        baz.value += 1
+
+        self.assertEqual(mock_obj.call_count, 2)
+
 
 class TestFilteredTrait(unittest.TestCase):
 
