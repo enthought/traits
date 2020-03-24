@@ -62,6 +62,7 @@ class TraitObserverNotifier(object):
         provided, then only a weak reference is held to this object.
     event_factory : callable
         A factory function or class that creates appropriate event objects.
+        If the factory returns None, the event is silenced.
     dispatcher : callable(callable, BaseObserverEvent)
         Callable to eventually dispatch an event, e.g. to the same thread
         or a different thread.
@@ -79,6 +80,7 @@ class TraitObserverNotifier(object):
         provided, then only a weak reference is held to this object.
     event_factory : callable
         A factory function or class that creates appropriate event objects.
+        If the factory returns None, the event is silenced.
     """
 
     def __init__(
@@ -119,6 +121,9 @@ class TraitObserverNotifier(object):
             raise ValueError("I should have been removed!")
 
         event = self.event_factory(object, name, old, new)
+        if event is None:
+            logger.debug("Event is silenced for %r", (object, name, old, new))
+            return
 
         logger.debug("Notifier is called: {!r} with {!r}".format(self, (object, name, old, new)))
         self.dispatcher(self.dispatch, args=(event, ))

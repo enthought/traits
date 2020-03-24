@@ -60,11 +60,6 @@ class ListenerChangeNotifier(INotifier):
 
     def __call__(self, object, name, old, new):
         event = self.event_factory(object, name, old, new)
-        logger.debug(
-            "ListenerChangeNotifier is called for %s(%r)",
-            type(event).__name__,
-            (event.__dict__),
-        )
         #: TODO: Should we use the same dispatcher?
         self.listener_callback(
             event=event,

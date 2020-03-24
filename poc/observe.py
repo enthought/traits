@@ -4,6 +4,7 @@ import logging
 import threading
 
 from traits import ctraits
+from traits.constants import ComparisonMode
 from traits.trait_base import Undefined, Uninitialized
 from traits.ctrait import CTrait
 from traits.trait_dict_object import TraitDictObject
@@ -254,7 +255,8 @@ def is_notifiable(object):
 
 class BaseListener:
 
-    event_factory = ObserverEvent
+    def event_factory(self, object, name, old, new):
+        raise NotImplementedError()
 
     def __eq__(self, other):
         """ Return true if a given instance is equivalent to this
@@ -321,6 +323,9 @@ class _FilteredTraitListener(BaseListener):
         """
         self.filter = filter
         self.notify = notify
+
+    def event_factory(self, object, name, old, new):
+        return ObserverEvent(object, name, old, new)
 
     def __eq__(self, other):
         if other is self:
@@ -424,10 +429,32 @@ def MetadataTraitListener(metadata_name, notify, include):
 
 class NamedTraitListener(BaseListener):
 
-    def __init__(self, name, notify, optional):
+    def __init__(
+            self, name, notify, optional, comparison_mode=None):
+        """
+        Parameters
+        ----------
+        name : str
+            Name of the trait to listen to.
+        notify : boolean
+            Whether to notify for changes.
+        optional : boolean
+            Whether the trait is optional. If false and the trait
+            is not found, an exception will be raised.
+        comparison_mode : ComparisonMode or None
+            Whether to modify the default comparison behaviour.
+        """
         self.name = name
         self.notify = notify
         self.optional = optional
+        self.comparison_mode = comparison_mode
+
+    def event_factory(self, object, name, old, new):
+        if (self.comparison_mode is ComparisonMode.equality
+                and old == new):
+            return None
+
+        return ObserverEvent(object, name, old, new)
 
     def __eq__(self, other):
         if other is self:
@@ -435,8 +462,8 @@ class NamedTraitListener(BaseListener):
         if type(other) is not type(self):
             return False
         return (
-            (self.name, self.notify, self.optional)
-            == (other.name, other.notify, other.optional)
+            (self.name, self.notify, self.optional, self.comparison_mode)
+            == (other.name, other.notify, other.optional, other.comparison_mode)
         )
 
     def iter_this_targets(self, object):
@@ -459,7 +486,7 @@ class NamedTraitListener(BaseListener):
             actual_callback=callback,
             path=path,
             target=target,
-            event_factory=self.event_factory,
+            event_factory=ObserverEvent,
             dispatcher=dispatcher,
         )
 
@@ -489,10 +516,11 @@ RequiredTraitListener = partial(NamedTraitListener, optional=False)
 
 class ListItemListener(BaseListener):
 
-    event_factory = ListObserverEvent
-
     def __init__(self, notify):
         self.notify = notify
+
+    def event_factory(self, object, name, old, new):
+        return ListObserverEvent(object, name, old, new)
 
     def iter_this_targets(self, object):
         # object should be a TraitListObject

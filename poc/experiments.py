@@ -5,6 +5,7 @@ from unittest import mock
 import observe
 
 from traits.api import HasTraits, Int, Instance, Str
+from traits.constants import ComparisonMode
 from traits.trait_base import Undefined
 from trait_types import List
 
@@ -555,6 +556,47 @@ class TestList(unittest.TestCase):
         foo.l.append(3)
 
         # then
+        mock_obj.assert_called_once()
+
+    def test_resurrect_existing_behaviour_compare_equal(self):
+        # We may not need to silence event when the new list
+        # compares equally to the old list after all?
+        # Let's see if we could!
+        list_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=True),
+            observe.ListItemListener(notify=True),
+        )
+
+        foo = self.Foo(l=[1, 2, 3])
+
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.RequiredTraitListener(
+                    name="l",
+                    notify=True,
+                    comparison_mode=ComparisonMode.equality,
+                ),
+                observe.ListItemListener(notify=True),
+            ),
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        # Compares equally to the old list...
+        foo.l = [1, 2, 3]
+
+        # then
+        mock_obj.assert_not_called()
+
+        # when
+        foo.l.append(4)
+
+        # then
+        # should still fire for mutation.
         mock_obj.assert_called_once()
 
 
