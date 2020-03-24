@@ -714,7 +714,7 @@ class TestListOfList(unittest.TestCase):
         # when
         # Reassign to a new list that compares equal.
         self.assertEqual(foo.bars[0], [[1]])
-        foo.bars[slice(0, 0)] = [[[1]]]
+        foo.bars[slice(0, 1)] = [[[1]]]
         self.assertEqual(foo.bars[0], [[1]])
 
         mock_obj.reset_mock()
