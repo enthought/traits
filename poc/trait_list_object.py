@@ -259,6 +259,8 @@ class TraitList(list):
 
         if not isinstance(index, slice):
             value, = added
+        else:
+            value = added
 
         super().__setitem__(index, value)
 

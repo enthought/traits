@@ -721,9 +721,7 @@ class TestListOfList(unittest.TestCase):
         foo.bars[0][0].append(2)
 
         # then
-        # FIXME: One notification should be fired
-        with self.assertRaises(AssertionError):
-            mock_obj.assert_called_once()
+        mock_obj.assert_called_once()
 
 
 class TestIssue538(unittest.TestCase):
