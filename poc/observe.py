@@ -129,8 +129,7 @@ def add_notifiers(object, callback, path, target, dispatcher):
                 target=target,
                 dispatcher=dispatcher,
             )
-            this_target._notifiers(True).append(change_notifier)
-            # add_notifier(object=this_target, notifier=change_notifier)
+            add_notifier(object=this_target, notifier=change_notifier)
 
             for next_target in listener.iter_next_targets(object):
                 add_notifiers(
