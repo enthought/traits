@@ -29,10 +29,6 @@ class ListenerChangeNotifier(INotifier):
             ``callback`` is the same as ``actual_callback`` (see below).
             ``path``, ``target``, ``dispatcher`` are passed directly from
             the values given to this initializer.
-            ``path`` (see ).
-            ``target`` is an notifiable object that sets the context for
-            the callback. See ``target`` in ``TraitObserverNotifier``.
-            ``dispatcher`` is a callable for dispatching the ``callback``.
         actual_callback : callable(BaseEvent)
             The actual callable the listeners are created for.
             i.e. it is the callback provided by the user via ``observe``.
