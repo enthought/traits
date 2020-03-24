@@ -107,14 +107,3 @@ class List(TraitType):
         """ Returns the *inner trait* (or traits) for this trait.
         """
         return (self.item_trait,)
-
-    # -- Private Methods ------------------------------------------------------
-
-    def items_event(self):
-        cls = self.__class__
-        if cls._items_event is None:
-            cls._items_event = Event(
-                TraitListEvent, is_base=False
-            ).as_ctrait()
-
-        return cls._items_event
