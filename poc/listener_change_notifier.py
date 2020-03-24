@@ -65,4 +65,5 @@ class ListenerChangeNotifier(INotifier):
         return (
             self.listener_callback is other.listener_callback
             and self.actual_callback is other.actual_callback
+            and self.path == other.path
         )

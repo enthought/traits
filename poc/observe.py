@@ -1,4 +1,5 @@
 from functools import partial
+import itertools
 import logging
 import threading
 
@@ -128,7 +129,8 @@ def add_notifiers(object, callback, path, target, dispatcher):
                 target=target,
                 dispatcher=dispatcher,
             )
-            add_notifier(object=this_target, notifier=change_notifier)
+            this_target._notifiers(True).append(change_notifier)
+            # add_notifier(object=this_target, notifier=change_notifier)
 
             for next_target in listener.iter_next_targets(object):
                 add_notifiers(
@@ -252,6 +254,9 @@ class BaseListener:
 
     event_factory = ObserverEvent
 
+    def __eq__(self, other):
+        raise NotImplementedError()
+
     @property
     def notify(self):
         """ Whether to call notifiers for changes on this item."""
@@ -351,6 +356,16 @@ class NamedTraitListener(BaseListener):
         self.name = name
         self.notify = notify
         self.optional = optional
+
+    def __eq__(self, other):
+        if other is self:
+            return True
+        if type(other) is not type(self):
+            return False
+        return (
+            (self.name, self.notify, self.optional)
+            == (other.name, other.notify, other.optional)
+        )
 
     def iter_this_targets(self, object):
         # object must be an instance of HasTraits
@@ -466,6 +481,26 @@ class ListenerPath:
     def __init__(self, node, nexts=()):
         self.node = node
         self.nexts = nexts
+
+    def __eq__(self, other):
+
+        # FIXME: The following is a draft.
+        # We need to handle cycles!
+
+        if other is self:
+            return True
+        if type(other) is not type(self):
+            return False
+        if self.node != other.node:
+            return False
+        if self.nexts == other.nexts:
+            return True
+        if len(self.nexts) != len(other.nexts):
+            return False
+        for nexts in itertools.permutations(other.nexts, len(other.nexts)):
+            if all(n1 == n2 for n1, n2 in zip(self.nexts, nexts)):
+                return True
+        return False
 
     @classmethod
     def from_nodes(cls, node, *nodes):

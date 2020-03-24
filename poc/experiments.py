@@ -1295,6 +1295,198 @@ class TestRemoveNotifier(unittest.TestCase):
         mock_obj.assert_not_called()
 
 
+class TestPersistListener(unittest.TestCase):
+    # Test listeners being persisted when a parent object
+    # changes.
+
+    def test_two_paths_from_same_item(self):
+
+        class Bar(HasTraits):
+
+            age = Int()
+
+            score = Int()
+
+        class Foo(HasTraits):
+
+            bar = Instance(Bar())
+
+        foo = Foo(bar=Bar())
+
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.RequiredTraitListener(name="bar", notify=False),
+                observe.RequiredTraitListener(name="age", notify=True),
+            ),
+            remove=False,
+            dispatch="same",
+        )
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.RequiredTraitListener(name="bar", notify=False),
+                observe.RequiredTraitListener(name="score", notify=True),
+            ),
+            remove=False,
+            dispatch="same",
+        )
+
+        # sanity check...
+        foo.bar.age += 1
+        mock_obj.assert_called_once()
+        mock_obj.reset_mock()
+        foo.bar.score += 1
+        mock_obj.assert_called_once()
+
+        # when
+        foo.bar = Bar()
+
+        # then
+        mock_obj.reset_mock()
+        foo.bar.age += 1
+        mock_obj.assert_called_once()
+        mock_obj.reset_mock()
+        foo.bar.score += 1
+        mock_obj.assert_called_once()
+
+    def test_two_paths_remove_nested_listener(self):
+
+        class Baz(HasTraits):
+
+            age = Int()
+
+            score = Int()
+
+        class Bar(HasTraits):
+
+            baz = Instance(Baz())
+
+        class Foo(HasTraits):
+
+            bar = Instance(Bar())
+
+        foo = Foo(bar=Bar(baz=Baz()))
+
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.RequiredTraitListener(name="bar", notify=False),
+                observe.RequiredTraitListener(name="baz", notify=False),
+                observe.RequiredTraitListener(name="age", notify=True),
+            ),
+            remove=False,
+            dispatch="same",
+        )
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.RequiredTraitListener(name="bar", notify=False),
+                observe.RequiredTraitListener(name="baz", notify=False),
+                observe.RequiredTraitListener(name="score", notify=True),
+            ),
+            remove=False,
+            dispatch="same",
+        )
+
+        # sanity check
+        foo.bar.baz.age += 1
+        mock_obj.assert_called_once()
+        mock_obj.reset_mock()
+        foo.bar.baz.score += 1
+        mock_obj.assert_called_once()
+        mock_obj.reset_mock()
+
+        # when
+        old_bar = foo.bar
+        foo.bar = Bar(baz=Baz())
+
+        # then... when
+        old_bar.baz.age += 1
+        old_bar.baz.score += 1
+        old_bar.baz = Baz()
+        old_bar.baz.age += 1
+        old_bar.baz.score += 1
+
+        # then
+        mock_obj.assert_not_called()
+
+    def test_two_paths_remove_change_notifier(self):
+        # test when a listener path is removed, replacing
+        # a parent object does not resurrect the nested
+        # listeners.
+        class Bar(HasTraits):
+
+            age = Int()
+
+            score = Int()
+
+        class Foo(HasTraits):
+
+            bar = Instance(Bar())
+
+        foo = Foo(bar=Bar())
+
+        # add two paths
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.RequiredTraitListener(name="bar", notify=False),
+                observe.RequiredTraitListener(name="age", notify=True),
+            ),
+            remove=False,
+            dispatch="same",
+        )
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.RequiredTraitListener(name="bar", notify=False),
+                observe.RequiredTraitListener(name="score", notify=True),
+            ),
+            remove=False,
+            dispatch="same",
+        )
+
+        # remove the last one, with a new instance of ListenerPath that
+        # compares equal to the last one.
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.RequiredTraitListener(name="bar", notify=False),
+                observe.RequiredTraitListener(name="score", notify=True),
+            ),
+            remove=True,
+            dispatch="same",
+        )
+        # sanity check...
+        foo.bar.age += 1
+        mock_obj.assert_called_once()
+        mock_obj.reset_mock()
+        foo.bar.score += 1
+        mock_obj.assert_not_called()
+
+        # when
+        foo.bar = Bar()
+
+        # then
+        foo.bar.age += 1
+        mock_obj.assert_called_once()
+        mock_obj.reset_mock()
+
+        foo.bar.score += 1
+        mock_obj.assert_not_called()
+
+
 class TestTraitAdded(unittest.TestCase):
 
     def test_add_trait_with_name(self):
@@ -1355,6 +1547,48 @@ class TestTraitAdded(unittest.TestCase):
 
         # TODO: This test is failing and needs to be fixed.
         mock_obj.assert_called_once()
+
+
+class TestPathEqual(unittest.TestCase):
+
+    def test_simple_named_path(self):
+
+        path1 = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="a", notify=False),
+            observe.OptionalTraitListener(name="b", notify=True),
+        )
+        path2 = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="a", notify=False),
+            observe.OptionalTraitListener(name="b", notify=True),
+        )
+        self.assertEqual(path1, path2)
+
+    def test_simple_branched_named_path(self):
+        path1 = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="a", notify=False),
+            nexts=[
+                observe.ListenerPath(
+                    observe.OptionalTraitListener(name="b", notify=True)
+                ),
+                observe.ListenerPath(
+                    observe.OptionalTraitListener(name="c", notify=True)
+                ),
+            ],
+        )
+        # The nexts are in different order
+        path2 = observe.ListenerPath(
+            node=observe.RequiredTraitListener(name="a", notify=False),
+            nexts=[
+                observe.ListenerPath(
+                    observe.OptionalTraitListener(name="c", notify=True)
+                ),
+                observe.ListenerPath(
+                    observe.OptionalTraitListener(name="b", notify=True)
+                ),
+            ],
+        )
+
+        self.assertEqual(path1, path2)
 
 
 if __name__ == "__main__":
