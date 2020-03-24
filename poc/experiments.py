@@ -1027,12 +1027,8 @@ class TestIssue237(unittest.TestCase):
         mock_obj.assert_called_once()
 
     def test_issue_237_different_level_of_nesting_different_target(self):
-
-        class Bar(HasTraits):
-            age = Int()
-
-        class Foo(HasTraits):
-            l = List(Instance(Bar))
+        # Test when the observer is called different objects, the same
+        # callback is attached more than once.
 
         class Baz(HasTraits):
 
@@ -1086,7 +1082,7 @@ class TestIssue237(unittest.TestCase):
             dispatch="same",
         )
 
-        # Listen to change on Foo.bars
+        # Listen to change on `Foo`
         observe.observe(
             object=foo,
             callback=mock_obj,
