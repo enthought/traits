@@ -2385,8 +2385,9 @@ class List(TraitType):
             if object is None:
                 return value
 
+            is_root_container = getattr(self, 'is_root_container', True)
             return TraitListObject(self, object, name, value,
-                                   self.is_root_container)
+                                   is_root_container)
 
         self.error(object, name, value)
 
@@ -2614,8 +2615,9 @@ class Set(TraitType):
             if object is None:
                 return value
 
+            is_root_container = getattr(self, 'is_root_container', True)
             return TraitSetObject(self, object, name, value,
-                                  self.is_root_container)
+                                  is_root_container)
 
         self.error(object, name, value)
 
@@ -2750,8 +2752,9 @@ class Dict(TraitType):
         if isinstance(value, dict):
             if object is None:
                 return value
+            is_root_container = getattr(self, 'is_root_container', True)
             return TraitDictObject(self, object, name, value,
-                                   self.is_root_container)
+                                   is_root_container)
 
         self.error(object, name, value)
 

@@ -12,18 +12,18 @@
 import unittest
 
 from traits.api import (
-    HasTraits,
-    List,
     Dict,
+    Either,
+    HasTraits,
+    Int,
+    List,
     Set,
     Str,
-    Union,
     TraitDictEvent,
-    TraitSetObject,
     TraitListEvent,
     TraitListObject,
-    Either,
-    Int
+    TraitSetObject,
+    Union,
 )
 
 
