@@ -618,12 +618,7 @@ class TraitList(list):
         return slice(*index.indices(len(self)))
 
     def _should_notify(self, removed, added):
-        try:
-            if added == removed:
-                return False
-            return True
-        except Exception:
-            return True
+        return True
 
 
 class TraitListObject(TraitList):
