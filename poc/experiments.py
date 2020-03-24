@@ -528,8 +528,9 @@ class TestList(unittest.TestCase):
     def test_implicit_default_list(self):
         # Test when a list attribute is accessed the first time,
         # the default list created will also receive the notifiers.
-        list_path = observe.ListenerPath(
-            node=observe.RequiredTraitListener(name="l", notify=True),
+        list_path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="l", notify=True),
+            observe.ListItemListener(notify=True),
         )
 
         foo = self.Foo()
@@ -551,6 +552,12 @@ class TestList(unittest.TestCase):
 
         # then
         mock_obj.assert_not_called()
+
+        # when
+        foo.l.append(3)
+
+        # then
+        mock_obj.assert_called_once()
 
 
 class TestListOfList(unittest.TestCase):
