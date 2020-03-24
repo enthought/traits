@@ -11,15 +11,6 @@ from traits.trait_base import Uninitialized
 
 logger = logging.getLogger()
 
-
-def dispatch_same(callback, event):
-    callback(event)
-
-
-def dispatch_new_thread(callback, event):
-    threading.Thread(target=callback, args=(event, )).start()
-
-
 class BaseObserverEvent(object):
     pass
 
@@ -84,8 +75,7 @@ class TraitObserverNotifier(object):
     """
 
     def __init__(
-            self, observer, owner, target=None, event_factory=ObserverEvent,
-            dispatcher=dispatch_same):
+            self, observer, owner, target, event_factory, dispatcher):
         if isinstance(observer, MethodType):
             # allow observing object methods to be garbage collected
             self._observer = weakref.WeakMethod(observer, self.observer_deleted)
