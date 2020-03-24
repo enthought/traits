@@ -62,7 +62,7 @@ def observe(object, callback, path, remove, dispatch):
     object : HasTrait
         An object that implements `_notifiers` for returning a list for
         adding or removing notifiers
-    callback : callable(object, name, old, new)
+    callback : callable(BaseObserverEvent)
         A callable conforming to the notifier signature.
     path : ListenerPath
         Path for listening to extended traits.
