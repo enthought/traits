@@ -23,12 +23,6 @@ class List(TraitType):
         can contain items of any type.
     value : list
         Default value for the list.
-    minlen : integer
-        The minimum length of a list that can be assigned to the trait.
-    maxlen : integer
-        The maximum length of a list that can be assigned to the trait.
-    items : bool
-        Whether there is a corresponding `<name>_items` trait.
     **metadata
         Trait metadata for the trait.
 
@@ -36,12 +30,6 @@ class List(TraitType):
     ----------
     item_trait : trait
         The type of item that the list contains.
-    minlen : integer
-        The minimum length of a list that can be assigned to the trait.
-    maxlen : integer
-        The maximum length of a list that can be assigned to the trait.
-    has_items : bool
-        Whether there is a corresponding `<name>_items` trait.
     """
 
     info_trait = None
