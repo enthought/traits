@@ -134,21 +134,22 @@ class TraitList(list):
         ----------
         index : int or slice
             The indices being modified by the operation.
-        removed : object or list
-            The item or items to be removed.
-        added : object or iterable
-            The new item or items being added to the list.
+        removed : list
+            The items to be removed.
+        added : list
+            The new items being added to the list.
 
         Returns
         -------
-        values : object or list
-            The validated values
+        values : list
+            The validated values that must be added to the list.
 
         Raises
         ------
         TraitError
             If validation fails.
         """
+
         # Use getattr as pickle can call `extend` before validator is set.
         if getattr(self, 'validator', None) is None:
             return added
@@ -243,11 +244,10 @@ class TraitList(list):
         Notification:
             index : int
                 The index of the value.
-            added : Any
-                The value that is set.
-            removed : Any
-                The removed value or Undefined if no value was previously
-                present at the index.
+            added : list
+                The value that is set, as a list.
+            removed : list
+                The value that is removed, as a list.
 
         """
         removed = self._get_removed(index)
@@ -256,11 +256,17 @@ class TraitList(list):
             if len(removed) != len(value) and index.step not in {1, None}:
                 raise ValueError
 
+        value, unwrap_value = self._as_list(index, value)
+
         added = self.validate(index, removed, value)
 
-        norm_index = self._normalize(index)
+        if unwrap_value:
+            item = added[0]
+        else:
+            item = added
 
-        super().__setitem__(index, added)
+        norm_index = self._normalize(index)
+        super().__setitem__(index, item)
 
         if self._should_notify(removed, added):
             self.notify(norm_index, removed, added)
@@ -279,15 +285,15 @@ class TraitList(list):
             index : int
                 The index of the value that is deleted.
             added : list
-            removed : value
-                The removed value or Undefined if no value was previously
-                present at the index.
+            removed : list
+                The removed value, as a list.
 
         """
+        added = []
         removed = self._get_removed(index)
-        added = self.validate(index, removed, [])
-        norm_index = self._normalize(index)
+        self.validate(index, removed, added)
 
+        norm_index = self._normalize(index)
         super().__delitem__(index)
 
         if self._should_notify(removed, added):
@@ -307,17 +313,24 @@ class TraitList(list):
         Notification:
             index : int
                 The index of the newly appended item.
-            added : Any
-                The new item
+            added : list
+                The new item, as a list
             removed : list
                 Will be []
 
         """
         index = len(self)
+
         removed = []
+        object, unwrap_object = self._as_list(index, object)
         added = self.validate(index, removed, object)
 
-        super().append(added)
+        if unwrap_object:
+            object = added[0]
+        else:
+            object = added
+
+        super().append(object)
 
         if self._should_notify(removed, added):
             self.notify(index, removed, added)
@@ -349,9 +362,15 @@ class TraitList(list):
             index = slice(len(self), None, 1)
 
         removed = []
+        iterable, unwrap_iterable = self._as_list(index, iterable)
         added = self.validate(index, removed, iterable)
 
-        super().extend(added)
+        if unwrap_iterable:
+            value = added[0]
+        else:
+            value = added
+
+        super().extend(value)
 
         if self._should_notify(removed, added):
             self.notify(index, removed, added)
@@ -372,17 +391,23 @@ class TraitList(list):
         Notification:
             index : int
                 The index before which the item was inserted.
-            added : item
-                The newly added items
+            added : list
+                The newly added item(s) as a list.
             removed : list
                 Will be []
 
         """
         removed = []
+        object, unwrap_object = self._as_list(index, object)
         added = self.validate(index, removed, object)
-        norm_index = self._normalize_index(index)
 
-        super().insert(index, added)
+        if unwrap_object:
+            added_value = added[0]
+        else:
+            added_value = added
+
+        norm_index = self._normalize_index(index)
+        super().insert(index, added_value)
 
         if self._should_notify(removed, added):
             self.notify(norm_index, removed, added)
@@ -403,7 +428,7 @@ class TraitList(list):
 
         """
         index = slice(0, len(self), None)
-        removed = [copy.copy(x) for x in self]
+        removed = self.copy()
         self.validate(index, removed, [])
         super().clear()
 
@@ -434,21 +459,22 @@ class TraitList(list):
                 The normalized index between 0 and len(self).
             added : list
                 Will be []
-            removed : item
-                The removed item
+            removed : list
+                The removed item, as a list.
 
         """
 
+        added = []
         removed = self._get_removed(index)
-        added = self.validate(index, removed, [])
-        norm_index = self._normalize_index(index)
+        self.validate(index, removed, added)
 
-        removed = super().pop(index)
+        norm_index = self._normalize_index(index)
+        removed_item = super().pop(index)
 
         if self._should_notify(removed, added):
             self.notify(norm_index, removed, added)
 
-        return removed
+        return removed_item
 
     def remove(self, value):
         """ Remove first occurrence of value.
@@ -469,14 +495,15 @@ class TraitList(list):
             index : int
                 The index between 0 and len(self).
             added : list
-                Will be []
-            removed : item
-                The removed item.
+                Will be [].
+            removed : list
+                The removed item, as a list.
 
         """
         index = self.index(value)
-        self.validate(index, value, [])
-        removed = value
+        removed, _ = self._as_list(index, value)
+
+        self.validate(index, removed, [])
 
         super().remove(value)
 
@@ -502,17 +529,16 @@ class TraitList(list):
             index : slice
                 The slice between 0 and len(self)
             added : list
-                Will be [].
+                A copy of the list after sorting elements.
             removed : list
-                Will be []
+                A copy of the list before sorting elements.
 
         """
 
+        removed = self[:]
         self[:] = sorted(self, key=key, reverse=reverse)
-
+        added = self[:]
         index = slice(0, len(self), None)
-        added = []
-        removed = []
 
         self.notify(index, removed, added)
 
@@ -525,16 +551,16 @@ class TraitList(list):
             index : slice
                 The slice between 0 and len(self).
             added : list
-                Will be []
+                A copy of the list after reversing the order of items.
             removed : list.
-                Will be []
+                A copy of the list before reversing the order of items.
 
         """
+        removed = self[:]
         self[:] = self[::-1]
+        added = self[:]
 
         index = slice(0, len(self), None)
-        added = []
-        removed = []
 
         self.notify(index, removed, added)
 
@@ -592,7 +618,10 @@ class TraitList(list):
     def _get_removed(self, index):
         """ Compute removed values given index. """
         try:
-            return self[index]
+            if not isinstance(index, slice):
+                return [self[index]]
+            else:
+                return self[index]
         except IndexError:
             return []
 
@@ -612,6 +641,11 @@ class TraitList(list):
 
     def _normalize_slice(self, index):
         """ Normalize slice start and stop to range 0 to len (inclusive). """
+
+        # Do not normalize if step is negative.
+        if index.step is not None and index.step < 0:
+            return index
+
         if index.step is None or index.step > 0:
             if index.start is not None:
                 start = self._normalize_index(index.start)
@@ -640,6 +674,11 @@ class TraitList(list):
             return True
         except Exception:
             return True
+
+    def _as_list(self, index, value):
+        if not isinstance(index, slice):
+            return [value], True
+        return value, False
 
 
 class TraitListObject(TraitList):
@@ -699,7 +738,7 @@ class TraitListObject(TraitList):
             Index or slice corresponding to the values added/removed.
         removed : list
             values that are removed.
-        added : value or list of values
+        added : list
             value or list of values that are added.
 
         Returns
@@ -714,6 +753,7 @@ class TraitListObject(TraitList):
         """
         object = self.object()
         trait = self.trait
+
         if object is None or trait is None:
             return added
 
@@ -733,17 +773,27 @@ class TraitListObject(TraitList):
                 )
             )
 
+        added_value = added
+        if not isinstance(index, slice):
+            if len(added) > 0:
+                added_value = added[0]
+
         # validate the new value(s)
         validate = trait.item_trait.handler.validate
         if validate is None or added == []:
-            return added
+            if not isinstance(index, slice):
+                if not isinstance(added_value, list):
+                    return [added_value]
+            return added_value
 
         try:
             if isinstance(index, slice):
                 return [
-                    validate(object, self.name, item) for item in added
+                    validate(object, self.name, item) for item in added_value
                 ]
-            return validate(object, self.name, added)
+
+            return [validate(object, self.name, added_value)]
+
         except TraitError as excp:
             excp.set_prefix("Each element of the")
             raise excp
@@ -774,10 +824,12 @@ class TraitListObject(TraitList):
             return
 
         # bug-for-bug conversion of parameters to TraitListEvent
-        if not isinstance(added, list):
-            added = [added]
-        if not isinstance(removed, list):
-            removed = [removed]
+        if not isinstance(index, slice):
+            if not isinstance(added, list):
+                added = [added]
+
+            if not isinstance(removed, list):
+                removed = [removed]
 
         if isinstance(index, slice):
             if index.step in {1, None}:

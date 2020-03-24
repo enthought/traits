@@ -71,9 +71,9 @@ class TestTraitList(unittest.TestCase):
 
         self.assertListEqual(tl, [5, 2, 3])
         self.assertIs(self.trait_list, tl)
-        self.assertEqual(self.index, 0)
-        self.assertEqual(self.removed, 1)
-        self.assertEqual(self.added, 5)
+        self.assertEqual(0, self.index)
+        self.assertEqual([1], self.removed)
+        self.assertEqual([5], self.added)
 
     def test_deepcopy(self):
         tl = TraitList([1, 2, 3],
@@ -94,9 +94,9 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl[1] = 5
-        self.assertEqual(self.index, 1)
-        self.assertEqual(self.removed, 2)
-        self.assertEqual(self.added, 5)
+        self.assertEqual(1, self.index)
+        self.assertEqual([2], self.removed)
+        self.assertEqual([5], self.added)
 
         tl[:] = [1, 2, 3, 4, 5]
         self.assertEqual(slice(0, 3, None), self.index)
@@ -110,7 +110,7 @@ class TestTraitList(unittest.TestCase):
 
         del tl[2]
         self.assertEqual(2, self.index)
-        self.assertEqual(3, self.removed)
+        self.assertEqual([3], self.removed)
         self.assertEqual([], self.added)
 
         del tl[:]
@@ -154,7 +154,7 @@ class TestTraitList(unittest.TestCase):
         tl.append(2)
         self.assertEqual(1, self.index)
         self.assertEqual([], self.removed)
-        self.assertEqual(2, self.added)
+        self.assertEqual([2], self.added)
 
     def test_extend(self):
         tl = TraitList([1],
@@ -174,12 +174,12 @@ class TestTraitList(unittest.TestCase):
         tl.insert(0, 1)  # [1,2]
         self.assertEqual(0, self.index)
         self.assertEqual([], self.removed)
-        self.assertEqual(1, self.added)
+        self.assertEqual([1], self.added)
 
         tl.insert(-1, 3)  # [1,3,2]
         self.assertEqual(1, self.index)
         self.assertEqual([], self.removed)
-        self.assertEqual(3, self.added)
+        self.assertEqual([3], self.added)
 
     def test_pop(self):
         tl = TraitList([1, 2, 3, 4, 5],
@@ -188,18 +188,18 @@ class TestTraitList(unittest.TestCase):
 
         tl.pop()
         self.assertEqual(4, self.index)
-        self.assertEqual(5, self.removed)
+        self.assertEqual([5], self.removed)
         self.assertEqual([], self.added)
 
         tl.pop(0)
         self.assertEqual(0, self.index)
-        self.assertEqual(1, self.removed)
+        self.assertEqual([1], self.removed)
         self.assertEqual([], self.added)
 
         # tl is now [2,3,4]
         tl.pop(-2)
         self.assertEqual(1, self.index)
-        self.assertEqual(3, self.removed)
+        self.assertEqual([3], self.removed)
         self.assertEqual([], self.added)
 
     def test_remove(self):
@@ -209,7 +209,7 @@ class TestTraitList(unittest.TestCase):
 
         tl.remove(3)
         self.assertEqual(2, self.index)
-        self.assertEqual(3, self.removed)
+        self.assertEqual([3], self.removed)
         self.assertEqual([], self.added)
 
         with self.assertRaises(ValueError):
@@ -233,8 +233,8 @@ class TestTraitList(unittest.TestCase):
 
         self.assertEqual([0, 1, 2, 3, 4, 5], tl)
         self.assertEqual(slice(0, 6, None), self.index)
-        self.assertEqual([], self.removed)
-        self.assertEqual([], self.added)
+        self.assertEqual([2, 3, 1, 4, 5, 0], self.removed)
+        self.assertEqual([0, 1, 2, 3, 4, 5], self.added)
 
     def test_reverse(self):
         tl = TraitList([1, 2, 3, 4, 5],
@@ -244,8 +244,8 @@ class TestTraitList(unittest.TestCase):
         tl.reverse()
         self.assertEqual([5, 4, 3, 2, 1], tl)
         self.assertEqual(slice(0, 5, None), self.index)
-        self.assertEqual([], self.removed)
-        self.assertEqual([], self.added)
+        self.assertEqual([1, 2, 3, 4, 5], self.removed)
+        self.assertEqual([5, 4, 3, 2, 1], self.added)
 
     def test_pickle(self):
         tl = TraitList([1, 2, 3, 4, 5],
