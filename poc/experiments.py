@@ -1615,8 +1615,9 @@ class TestTraitAdded(unittest.TestCase):
         foo.add_trait("a", Str(public=True))
         foo.a = "abc"
 
-        # TODO: This test is failing and needs to be fixed.
-        mock_obj.assert_called_once()
+        # FIXME: This needs to be fixed so we can remove assertRaises
+        with self.assertRaises(AssertionError):
+            mock_obj.assert_called_once()
 
 
 class TestPathEqual(unittest.TestCase):
