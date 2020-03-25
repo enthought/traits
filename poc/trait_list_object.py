@@ -662,12 +662,7 @@ class TraitList(list):
         return slice(start, stop, index.step)
 
     def _should_notify(self, removed, added):
-        try:
-            if added == removed:
-                return False
-            return True
-        except Exception:
-            return True
+        return True
 
     def _as_list(self, index, value):
         if not isinstance(index, slice):
