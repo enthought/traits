@@ -416,7 +416,7 @@ class _FilteredTraitListener(BaseListener):
         )
 
     def is_matched_trait(self, name, trait):
-        return True
+        return self.filter(name, trait)
 
 
 class _MetadataFilter:
