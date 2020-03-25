@@ -144,7 +144,7 @@ class TestTraitList(unittest.TestCase):
         with self.assertRaises(TypeError):
             tl *= 2.5
 
-        tl *= 0
+        tl *= -1
         self.assertEqual(slice(0, 4, None), self.index)
         self.assertEqual([1, 2, 1, 2], self.removed)
         self.assertEqual([], self.added)
@@ -290,6 +290,7 @@ class TestTraitList(unittest.TestCase):
         # It now works!
         tl_2 = TraitList([], validator=list_bool_validator)
         tl_2.extend([True, False, True])
+        tl_2.insert(0, True)
 
         # Decorate with list adaptor
         @adapt_trait_validator

@@ -152,7 +152,7 @@ class TraitList(list):
 
         Raises
         ------
-        TraitError
+        TraitError : Exception
             If validation fails.
         """
 
@@ -291,6 +291,7 @@ class TraitList(list):
             index : int
                 The index of the value that is deleted.
             added : list
+                The empty list [].
             removed : list
                 The removed value, as a list.
 
@@ -312,7 +313,6 @@ class TraitList(list):
         ----------
         object : Any
             The item to append to the list.
-
 
         Notes
         -----
@@ -342,7 +342,6 @@ class TraitList(list):
         ----------
         iterable : iterable
             Any iterable type
-
 
         Notes
         -----
@@ -593,10 +592,15 @@ class TraitList(list):
                 The empty list [].
 
         """
-        if count > 1:
-            self.extend(self * (count - 1))
-        elif count == 0:
-            self[:] = []
+        if isinstance(count, int):
+            if count > 1:
+                self.extend(self * (count - 1))
+            elif count <= 0:
+                self.clear()
+        else:
+            raise TypeError(
+                "{} object cannot be interpreted as an integer".format(
+                    type(count)))
         return self
 
     # ------------------------------------------------------------------------
@@ -662,11 +666,6 @@ class TraitList(list):
             return True
         except Exception:
             return True
-
-    def _as_list(self, index, value):
-        if not isinstance(index, slice):
-            return [value], True
-        return value, False
 
 
 class TraitListObject(TraitList):
@@ -778,10 +777,10 @@ class TraitListObject(TraitList):
             The list
         index : int or slice
             Index or slice that was modified
-        removed : value or list of values
-            Value or list of values that were removed
-        added : value or list of values
-            Value or list of values that were added
+        removed : list
+            Values that were removed
+        added : list
+            Values that were added
 
         """
         is_trait_none = self.trait is None
