@@ -202,6 +202,12 @@ Traits
 .. autoclass:: Dict
    :show-inheritance:
 
+.. autoclass:: Map
+   :show-inheritance:
+
+.. autoclass:: PrefixMap
+   :show-inheritance:
+
 .. autoclass:: BaseClass
    :show-inheritance:
 

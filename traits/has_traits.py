@@ -869,14 +869,14 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     **add_trait()**.
     For example::
 
-        >>>class Person(HasTraits):
-        ...    name = Str
-        ...    age  = Int
-        ...    temp_ = Any
-        >>>bob = Person()
-        >>>bob.temp_lunch = 'sandwich'
-        >>>bob.add_trait('favorite_sport', Str('football'))
-        >>>print(bob.trait_names())
+        >>> class Person(HasTraits):
+        ...     name = Str
+        ...     age  = Int
+        ...     temp_ = Any
+        >>> bob = Person()
+        >>> bob.temp_lunch = 'sandwich'
+        >>> bob.add_trait('favorite_sport', Str('football'))
+        >>> print(bob.trait_names())
         ['trait_added', 'age', 'name']
 
     In this example, the trait_names() method returns only the *age* and
