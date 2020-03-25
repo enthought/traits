@@ -18,11 +18,12 @@ import unittest
 from traits.api import HasTraits, TraitError, PrefixMap, Undefined
 
 
+class Person(HasTraits):
+    married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+
+
 class TestPrefixMap(unittest.TestCase):
     def test_assignment(self):
-        class Person(HasTraits):
-            married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
-
         person = Person()
 
         self.assertEqual(Undefined, person.married)
@@ -47,8 +48,14 @@ class TestPrefixMap(unittest.TestCase):
         with self.assertRaises(TraitError):
             person.married = "ye"
 
-        with self.assertRaises(TraitError):
-            person.married = []
+    def test_bad_types(self):
+        person = Person()
+
+        wrong_type = [[], (1, 2, 3), 1j, 2.3, 23, b"not a string", None]
+        for value in wrong_type:
+            with self.subTest(value=value):
+                with self.assertRaises(TraitError):
+                    person.married = value
 
     def test_default(self):
         class Person(HasTraits):
