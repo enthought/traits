@@ -355,13 +355,10 @@ class TraitList(list):
                 Will be []
 
         """
-        try:
-            index = slice(len(self), len(self) + len(iterable))
-        except TypeError:
-            index = slice(len(self), None, 1)
-
+        iterable = list(iterable)
+        index = slice(len(self), len(self) + len(iterable))
         removed = []
-        added = self.validate(index, removed, list(iterable))
+        added = self.validate(index, removed, iterable)
 
         super().extend(added)
 
