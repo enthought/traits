@@ -350,6 +350,7 @@ class TraitList(list):
                 Will be []
 
         """
+        iterable = list(iterable)
         try:
             index = slice(len(self), len(self) + len(iterable))
         except TypeError:
@@ -674,7 +675,6 @@ class TraitListObject(TraitList):
     """ A specialization of TraitList with a default validator and notifier
     which provide bug-for-bug compatibility with the TraitsListObject from
     Traits versions before 6.0.
-
     Parameters
     ----------
     trait : CTrait
@@ -687,7 +687,6 @@ class TraitListObject(TraitList):
         The initial value of the list.
     notifiers : list
         Additional notifiers for the list.
-
     Attributes
     ----------
     trait : CTrait
@@ -711,14 +710,19 @@ class TraitListObject(TraitList):
         if trait.has_items:
             self.name_items = name + "_items"
 
+        # ------------------------------
+        # Added for observer
+        from traits.trait_types import Event
+        self._event_ctrait = Event().as_ctrait()
+        # ------------------------------
+
         super().__init__(value, validator=self.validator,
                          notifiers=[self.notifier] + notifiers)
 
-    def validator(self, trait_list, index, removed, value):
+    def validator(self, trait_list, index, removed, added):
         """ Validates the value by calling the inner trait's validate method
         and also ensures that the size of the list is within the specified
         bounds.
-
         Parameters
         ----------
         trait_list : list
@@ -727,28 +731,26 @@ class TraitListObject(TraitList):
             Index or slice corresponding to the values added/removed.
         removed : list
             values that are removed.
-        value : value or list of values
+        added : list
             value or list of values that are added.
-
         Returns
         -------
         value : validated value or list of validated values.
-
         Raises
         ------
-        TraitError
+        TraitError : Exception
             On validation failure for the inner trait or if the size of the
             list exceeds the specified bounds
-
         """
         object = self.object()
         trait = self.trait
+
         if object is None or trait is None:
-            return value
+            return added
 
         # check that length is within bounds
         new_len = len(trait_list) - self._get_length(
-            removed) + self._get_length(value)
+            removed) + self._get_length(added)
         if not trait.minlen <= new_len <= trait.maxlen:
             raise TraitError(
                 "The '%s' trait of %s instance must be %s, "
@@ -762,17 +764,27 @@ class TraitListObject(TraitList):
                 )
             )
 
+        added_value = added
+        if not isinstance(index, slice):
+            if len(added) > 0:
+                added_value = added[0]
+
         # validate the new value(s)
         validate = trait.item_trait.handler.validate
-        if validate is None or value == []:
-            return value
+        if validate is None or added == []:
+            if not isinstance(index, slice):
+                if not isinstance(added_value, list):
+                    return [added_value]
+            return added_value
 
         try:
             if isinstance(index, slice):
                 return [
-                    validate(object, self.name, item) for item in value
+                    validate(object, self.name, item) for item in added_value
                 ]
-            return validate(object, self.name, value)
+
+            return [validate(object, self.name, added_value)]
+
         except TraitError as excp:
             excp.set_prefix("Each element of the")
             raise excp
@@ -780,7 +792,6 @@ class TraitListObject(TraitList):
     def notifier(self, trait_list, index, removed, added):
         """ Converts and consolidates the parameters to a TraitListEvent and
         then fires the event.
-
         Parameters
         ----------
         trait_list : list
@@ -791,7 +802,6 @@ class TraitListObject(TraitList):
             Value or list of values that were removed
         added : value or list of values
             Value or list of values that were added
-
         """
         is_trait_none = self.trait is None
         is_name_items_none = self.name_items is None
@@ -803,10 +813,6 @@ class TraitListObject(TraitList):
             return
 
         # bug-for-bug conversion of parameters to TraitListEvent
-        if not isinstance(added, list):
-            added = [added]
-        if not isinstance(removed, list):
-            removed = [removed]
 
         if isinstance(index, slice):
             if index.step in {1, None}:
@@ -816,9 +822,24 @@ class TraitListObject(TraitList):
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
 
+        # -------------------------------------------
+        # Added for observer
+
+        # Is this right?
+        event = (trait_list, index, removed, added)
+        for notifier in self._notifiers(True):
+            # We don't actually have the old copy of the list
+            notifier(object, self.name, trait_list, event)
+        # -------------------------------------------
+
+    # -------------------------------------------
+    # Added for observer
+    def _notifiers(self, force_create):
+        return self._event_ctrait._notifiers(force_create)
+    # -------------------------------------------
+
     def __deepcopy__(self, memo):
         """ Perform a deepcopy operation.
-
         Notifiers are transient and should not be copied.
         """
         id_self = id(self)
@@ -836,7 +857,6 @@ class TraitListObject(TraitList):
 
     def __getstate__(self):
         """ Get the state of the object for serialization.
-
         Notifiers are transient and should not be serialized.
         """
         result = super().__getstate__()
@@ -847,7 +867,6 @@ class TraitListObject(TraitList):
 
     def __setstate__(self, state):
         """ Restore the state of the object after serialization.
-
         Notifiers are transient and are restored to the empty list.
         """
         super().__setstate__(state)
@@ -871,68 +890,6 @@ class TraitListObject(TraitList):
             return 1
 
 
-class NewTraitListObject(TraitList):
-
-    def __init__(self, trait, object, name, value):
-
-        # cTrait is calling __init__ with 5 arguments
-        # Do we need this?
-        self.trait = trait
-
-        self.object = ref(object)
-        self.name = name
-        from traits.trait_types import Event
-        self._event_ctrait = Event().as_ctrait()
-
-        super().__init__(
-            value=value,
-            validator=self.validator,
-            notifiers=[self.notifier]
-        )
-
-    def validator(self, trait_list, index, removed, added):
-        cls = type(self)
-        new_added = []
-        for value in added:
-            if isinstance(value, list):
-                value = cls(
-                    trait=self.trait.item_trait,
-                    object=self,
-                    name=Undefined,
-                    value=value,
-                )
-            new_added.append(value)
-        return new_added
-
-    def notifier(self, trait_list, index, removed, added):
-        """ Converts and consolidates the parameters to a TraitListEvent and
-        then fires the event.
-
-        Parameters
-        ----------
-        trait_list : list
-            The list
-        index : int or slice
-            Index or slice that was modified
-        removed : value or list of values
-            Value or list of values that were removed
-        added : value or list of values
-            Value or list of values that were added
-
-        """
-        object = self.object()
-        if object is None:
-            return
-        # Is this right?
-        event = (trait_list, index, removed, added)
-        for notifier in self._notifiers(True):
-            # We don't actually have the old copy of the list
-            notifier(object, self.name, trait_list, event)
-
-    def _notifiers(self, force_create):
-        return self._event_ctrait._notifiers(force_create)
-
-
 from interfaces import INotifiableObject
 
-INotifiableObject.register(NewTraitListObject)
+INotifiableObject.register(TraitListObject)

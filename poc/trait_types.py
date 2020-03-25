@@ -6,7 +6,7 @@ from traits.trait_base import SequenceTypes
 from traits.trait_type import TraitType
 from traits.trait_types import Event
 
-from trait_list_object import NewTraitListObject, TraitListEvent
+from trait_list_object import TraitListObject, TraitListEvent
 
 
 class List(TraitType):
@@ -23,6 +23,12 @@ class List(TraitType):
         can contain items of any type.
     value : list
         Default value for the list.
+    minlen : integer
+        The minimum length of a list that can be assigned to the trait.
+    maxlen : integer
+        The maximum length of a list that can be assigned to the trait.
+    items : bool
+        Whether there is a corresponding `<name>_items` trait.
     **metadata
         Trait metadata for the trait.
 
@@ -30,6 +36,12 @@ class List(TraitType):
     ----------
     item_trait : trait
         The type of item that the list contains.
+    minlen : integer
+        The minimum length of a list that can be assigned to the trait.
+    maxlen : integer
+        The maximum length of a list that can be assigned to the trait.
+    has_items : bool
+        Whether there is a corresponding `<name>_items` trait.
     """
 
     info_trait = None
@@ -40,6 +52,9 @@ class List(TraitType):
         self,
         trait=None,
         value=None,
+        minlen=0,
+        maxlen=sys.maxsize,
+        items=True,
         **metadata
     ):
         metadata.setdefault("copy", "deep")
@@ -51,6 +66,13 @@ class List(TraitType):
             value = []
 
         self.item_trait = trait_from(trait)
+        self.minlen = max(0, minlen)
+        self.maxlen = max(minlen, maxlen)
+        self.has_items = items
+
+        if self.item_trait.instance_handler == "_instance_changed_handler":
+            metadata.setdefault("instance_handler", "_list_changed_handler")
+
         super(List, self).__init__(value, **metadata)
 
     def validate(self, object, name, value):
@@ -62,8 +84,13 @@ class List(TraitType):
             :meth:`~traits.trait_handlers.TraitType.clone`)
 
         """
-        if isinstance(value, list):
-            return NewTraitListObject(self, object, name, value)
+        if isinstance(value, list) and (
+            self.minlen <= len(value) <= self.maxlen
+        ):
+            if object is None:
+                return value
+
+            return TraitListObject(self, object, name, value)
 
         self.error(object, name, value)
 
@@ -95,6 +122,21 @@ class List(TraitType):
         """ Returns the *inner trait* (or traits) for this trait.
         """
         return (self.item_trait,)
+
+    # -- Private Methods ------------------------------------------------------
+
+    def items_event(self):
+        cls = self.__class__
+        if cls._items_event is None:
+            cls._items_event = Event(
+                TraitListEvent, is_base=False
+            ).as_ctrait()
+
+        return cls._items_event
+
+    # ---------------------------
+    # Added for observe
+    # ---------------------------
 
     def as_ctrait(self):
         trait = super(List, self).as_ctrait()

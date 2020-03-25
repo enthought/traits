@@ -683,9 +683,9 @@ class TestListOfList(unittest.TestCase):
         mock_obj.assert_called_once()
         ((event, ), _), = mock_obj.call_args_list
         # TODO: Is this the right object?
-        self.assertEqual(event.object, foo.bars)
-        # TODO: Bogus filler, can we remove it?
-        self.assertEqual(event.name, Undefined)
+        self.assertEqual(event.object, foo)
+        # TODO: Is this the right name?
+        self.assertEqual(event.name, "bars")
         # TODO: Bogus filler again, can we remove it?
         self.assertIs(event.old, foo.bars[0])
 
