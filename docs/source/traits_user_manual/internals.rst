@@ -155,20 +155,17 @@ The rules for setting an attribute (evaluating ``obj.name = value`` for a
 ``HasTraits`` object ``obj``) are analogous to those for attribute retrieval.
 The starting point is ``has_traits_setattro`` in the source.
 
-- First we look for the name ``name`` in ``obj``s instance traits dictionary,
+- First we look for the name ``name`` in ``obj._instance_traits()``,
   and retrieve the corresponding ``CTrait`` instance if present.
-- If no matching entry is found, we then look in ``obj``s class traits
-  dictionary, and again retrieve the corresponding ``CTrait``.
-
+- If no matching entry is found, we then look up ``name`` in
+  ``obj._class_traits()``, and again retrieve the corresponding ``CTrait``.
 - If still not found, we invoke the **prefix trait** machinery to get a new
   ``CTrait`` object. By default, this goes through the
   ``HasTraits.__prefix_trait__`` method (which is implemented in Python), and
   this may still fail with an exception.
-
 - If one of the above steps succeeded, we now have a ``CTrait`` object, and
-  its ``setattr`` function is invoked (passing along the trait object,
-  ``obj``, ``name`` and ``value``) to perform the actual attribute set
-  operation.
+  its ``setattr`` function is invoked (passing along the trait object, ``obj``,
+  ``name`` and ``value``) to perform the actual attribute set operation.
 
 
 Attribute deletion
