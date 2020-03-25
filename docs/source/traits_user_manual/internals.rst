@@ -13,7 +13,7 @@ Fundamentals
 
 The runtime behavior of Traits is governed by two key classes: |CTrait| and
 |HasTraits|. Each of these classes inherits from a superclass implemented in
-the |ctraits| extension module: |CTrait| inherits from |cTrait|, while
+the |ctraits| C extension module: |CTrait| inherits from |cTrait|, while
 |HasTraits| inherits from |CHasTraits|.
 
 The |CHasTraits| and |cTrait| base classes are not intended for direct use and
