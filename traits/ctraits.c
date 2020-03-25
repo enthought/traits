@@ -852,7 +852,10 @@ has_traits_getattro(has_traits_object *obj, PyObject *name)
         return trait->getattr(trait, obj, name);
     }
 
-    if ((value = PyObject_GenericGetAttr((PyObject *)obj, name)) != NULL) {
+    /* Try normal Python attribute access, but if it fails with an
+       AttributeError then get a prefix trait. */
+    value = PyObject_GenericGetAttr((PyObject *)obj, name);
+    if (value != NULL || !PyErr_ExceptionMatches(PyExc_AttributeError)) {
         return value;
     }
 
