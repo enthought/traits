@@ -87,6 +87,23 @@ def observe(object, callback, path, remove, dispatch):
         )
 
 
+def trait_added_callback(event, callback, path, target, dispatcher):
+    name = event.new
+    trait = event.object.trait(name=name)
+    listener = path.node
+    if listener.is_matched_trait(name, trait):
+        add_notifiers(
+            object=event.object,
+            callback=callback,
+            path=ListenerPath(
+                node=RequiredTraitListener(name=name, notify=listener.notify),
+                nexts=path.nexts,
+            ),
+            target=target,
+            dispatcher=dispatcher,
+        )
+
+
 def add_notifiers(object, callback, path, target, dispatcher):
     """ Add notifiers for a ListenerPath
 
@@ -105,6 +122,27 @@ def add_notifiers(object, callback, path, target, dispatcher):
         Callable for dispatching the callback, i.e. dispatching
         callback on a different thread.
     """
+
+    # FIXME: This is ugly!
+    # Take this down in remove_notifiers
+    try:
+        trait_added = object._trait("trait_added", 2)
+    except AttributeError:
+        pass
+    else:
+        trait_added_notifier = ListenerChangeNotifier(
+            listener_callback=trait_added_callback,
+            actual_callback=callback,
+            path=path,
+            target=target,
+            event_factory=ObserverEvent,
+            dispatcher=dispatcher,
+        )
+        add_notifier(
+            object=trait_added,
+            notifier=trait_added_notifier,
+        )
+
     listener = path.node
     for this_target in listener.iter_this_targets(object):
         if listener.notify:
@@ -288,6 +326,9 @@ class BaseListener:
         """
         raise NotImplementedError()
 
+    def is_matched_trait(self, name, trait):
+        return False
+
 
 class AnyTraitListener(BaseListener):
 
@@ -373,6 +414,9 @@ class _FilteredTraitListener(BaseListener):
             target=target,
             dispatcher=dispatcher,
         )
+
+    def is_matched_trait(self, name, trait):
+        return True
 
 
 class _MetadataFilter:

@@ -1735,9 +1735,13 @@ class TestTraitAdded(unittest.TestCase):
         foo.add_trait("a", Str(public=True))
         foo.a = "abc"
 
-        # FIXME: This needs to be fixed so we can remove assertRaises
-        with self.assertRaises(AssertionError):
-            mock_obj.assert_called_once()
+        mock_obj.assert_called_once()
+        mock_obj.reset_mock()
+
+        foo.add_trait("b", Str(public=True))
+        foo.b = "abc"
+
+        mock_obj.assert_called_once()
 
 
 class TestPathEqual(unittest.TestCase):
