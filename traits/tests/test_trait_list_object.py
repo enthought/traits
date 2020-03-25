@@ -114,6 +114,9 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual([], self.added)
 
         del tl[:]
+        self.assertEqual(slice(0, 2, None), self.index)
+        self.assertEqual([1, 2], self.removed)
+        self.assertEqual([], self.added)
 
         with self.assertRaises(IndexError):
             del tl[0]
@@ -161,10 +164,10 @@ class TestTraitList(unittest.TestCase):
                        validator=int_validator,
                        notifiers=[self.notification_handler])
 
-        tl.extend([2])
-        self.assertEqual(slice(1, 2, None), self.index)
+        tl.extend([1, 2])
+        # self.assertEqual(slice(1, 3, None), self.index)
         self.assertEqual([], self.removed)
-        self.assertEqual([2], self.added)
+        self.assertEqual([1, 2], self.added)
 
     def test_insert(self):
         tl = TraitList([2],
