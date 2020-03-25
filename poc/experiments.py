@@ -4,10 +4,9 @@ from unittest import mock
 
 import observe
 
-from traits.api import HasTraits, Int, Instance, Str
+from traits.api import HasTraits, Int, Instance, Str, List
 from traits.constants import ComparisonMode
 from traits.trait_base import Undefined
-from trait_types import List
 
 import logging
 

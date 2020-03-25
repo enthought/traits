@@ -2410,6 +2410,12 @@ class List(TraitType):
 
         return cls._items_event
 
+    def as_ctrait(self):
+        from traits.constants import ComparisonMode
+        trait = super(List, self).as_ctrait()
+        trait.comparison_mode = ComparisonMode.identity
+        return trait
+
 
 class CList(List):
     """ A coercing trait type for a list of values of the specified type.

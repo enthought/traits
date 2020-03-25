@@ -17,18 +17,14 @@ from trait_observer_notifier import (
     ListObserverEvent,
     TraitObserverNotifier,
 )
-from trait_list_object import TraitListObject
 from listener_change_notifier import ListenerChangeNotifier
-
-# Mega hack for POC: Register the TraitListObject again to the global points...
-ctraits._list_classes(TraitListObject, TraitSetObject, TraitDictObject)
-
 
 # We need to identify objects which has this `_notifiers` methods
 # We could do the easy-to-ask-forgiveness-than-permission way.
 # Or we could do the leap-before-you-leap way.
 # Here is the LBYL way
-
+from traits.trait_list_object import TraitListObject
+INotifiableObject.register(TraitListObject)
 INotifiableObject.register(CTrait)
 INotifiableObject.register(ctraits.CHasTraits)
 
