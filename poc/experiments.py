@@ -2,7 +2,7 @@ import contextlib
 import unittest
 from unittest import mock
 
-import observe
+import poc.observe as observe
 
 from traits.api import HasTraits, Int, Instance, Str, List
 from traits.constants import ComparisonMode

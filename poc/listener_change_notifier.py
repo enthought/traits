@@ -1,6 +1,6 @@
 import logging
 
-from interfaces import INotifier
+from poc.interfaces import INotifier
 
 
 logger = logging.getLogger(__name__)

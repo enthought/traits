@@ -245,7 +245,12 @@ def test(edm, runtime, verbose, environment):
     environ["PYTHONUNBUFFERED"] = "1"
 
     options = "--verbose " if verbose else ""
+
     commands = [
+        "{edm} run -e {environment} -- coverage run -p -m "
+        "unittest " + options + "poc.experiments",
+    ]
+    commands += [
         "{edm} run -e {environment} -- coverage run -p -m "
         "unittest discover " + options + "traits",
     ]

@@ -316,7 +316,7 @@ setuptools.setup(
     license="BSD",
     maintainer="ETS Developers",
     maintainer_email="enthought-dev@enthought.com",
-    packages=setuptools.find_packages(include=["traits", "traits.*"]),
+    packages=setuptools.find_packages(include=["traits", "traits.*", "poc", "poc.*"]),
     python_requires=">=3.5",
     zip_safe=False,
 )

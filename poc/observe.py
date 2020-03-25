@@ -11,13 +11,13 @@ from traits.trait_dict_object import TraitDictObject
 from traits.trait_set_object import TraitSetObject
 
 
-from interfaces import INotifiableObject
-from trait_observer_notifier import (
+from poc.interfaces import INotifiableObject
+from poc.trait_observer_notifier import (
     ObserverEvent,
     ListObserverEvent,
     TraitObserverNotifier,
 )
-from listener_change_notifier import ListenerChangeNotifier
+from poc.listener_change_notifier import ListenerChangeNotifier
 
 # We need to identify objects which has this `_notifiers` methods
 # We could do the easy-to-ask-forgiveness-than-permission way.
