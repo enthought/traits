@@ -114,11 +114,14 @@ A |CTrait| object has two main purposes:
   a |HasTraits| object.
 - It provides an attachment point for trait notifiers.
 
-For attribute access, the C structure underlying each |CTrait| instance (see
-the ``trait_object`` struct in the C source) has three relevant fields:
-``getattr``, ``setattr`` and ``post_setattr``. These fields contain C function
-pointers, and are invoked during attribute get and set operations, as described
-below.
+The hidden state for a |CTrait| instance is encapsulated in the
+``trait_object`` C ``struct`` in the |ctraits| source. There are several
+interesting fields, not all of which are exposed at Python level.
+
+Of particular interest are the ``getattr`` and ``setattr`` fields, which
+hold pointers to C functions that act as the entry points for attribute
+access via the given trait. See below for a fuller description of attribute
+access mechanics.
 
 
 Attribute retrieval
