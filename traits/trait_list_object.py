@@ -258,14 +258,15 @@ class TraitList(list):
 
         value, unwrap_value = self._as_list(index, value)
 
-        added = self.validate(index, removed, value)
+        norm_index = self._normalize(index)
+
+        added = self.validate(norm_index, removed, value)
 
         if unwrap_value:
             item = added[0]
         else:
             item = added
 
-        norm_index = self._normalize(index)
         super().__setitem__(index, item)
 
         if self._should_notify(removed, added):
@@ -291,9 +292,9 @@ class TraitList(list):
         """
         added = []
         removed = self._get_removed(index)
-        self.validate(index, removed, added)
-
         norm_index = self._normalize(index)
+        self.validate(norm_index, removed, added)
+
         super().__delitem__(index)
 
         if self._should_notify(removed, added):
@@ -399,14 +400,14 @@ class TraitList(list):
         """
         removed = []
         object, unwrap_object = self._as_list(index, object)
-        added = self.validate(index, removed, object)
+        norm_index = self._normalize_index(index)
+        added = self.validate(norm_index, removed, object)
 
         if unwrap_object:
             added_value = added[0]
         else:
             added_value = added
 
-        norm_index = self._normalize_index(index)
         super().insert(index, added_value)
 
         if self._should_notify(removed, added):
@@ -466,9 +467,9 @@ class TraitList(list):
 
         added = []
         removed = self._get_removed(index)
-        self.validate(index, removed, added)
-
         norm_index = self._normalize_index(index)
+        self.validate(norm_index, removed, added)
+
         removed_item = super().pop(index)
 
         if self._should_notify(removed, added):
