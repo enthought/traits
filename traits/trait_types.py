@@ -31,7 +31,6 @@ from .trait_base import (
     get_module_name,
     HandleWeakRef,
     class_of,
-    enum_default,
     EnumTypes,
     RangeTypes,
     safe_contains,
@@ -1914,10 +1913,13 @@ class BaseEnum(TraitType):
         The enumeration of all legal values for the trait.  The expected
         signatures are either:
 
-        - a single list, enum.Enum, tuple or a collection.  The default value
-          is the first item in the collection. The collection should conform to
-          the collections.abc.Collection interface. That is, it at least
-          provides the __contains__, len and __iter__ methods.
+        - a collection.  The default value is the first item in the
+          collection. The collection should conform to the
+          collections.abc.Collection interface. That is, it at least
+          provides the __contains__, __len__ and __iter__ methods.
+          Note that although the types str, bytes, and bytearray are
+          conform to the collection interface, these are handled
+          as discrete units.
         - a single default value, combined with the values keyword
           argument.
         - a default value, followed by a single list enum.Enum, tuple or
@@ -1925,8 +1927,10 @@ class BaseEnum(TraitType):
         - arbitrary positional arguments each giving a valid value.
     values : str
         The name of a trait holding the legal values.  A default value may
-        be provided via a positional argument, otherwise it is the first
-        item stored in the .
+        be provided via a positional argument, otherwise the first item in
+        the collection is used as the default value. Note that if the
+        collection does not have a notion of order like a set, the default
+        value will be an arbitrary element from the set.
     **metadata
         Trait metadata for the trait.
 
@@ -1961,18 +1965,21 @@ class BaseEnum(TraitType):
                 raise TraitError("Enum trait requires at "
                                  "least 1 argument.")
 
-            if len(args) == 1:
+            elif len(args) == 1:
                 arg = args[0]
                 if isinstance(arg, EnumTypes):
-                    default_value = enum_default(arg)
+                    default_value = next(iter(arg), None)
                     self.values = tuple(arg)
 
+                # Treat str, bytes and bytearray as discrete units,
+                # and not as a collection.
                 elif isinstance(arg, (str, bytes, bytearray)):
                     default_value = arg
                     self.values = {arg}
 
+                # Handle a collection
                 else:
-                    default_value = enum_default(arg)
+                    default_value = next(iter(arg), None)
                     self.values = arg
 
             elif len(args) == 2:
@@ -2048,7 +2055,7 @@ class BaseEnum(TraitType):
         value = self.get_value(object, name, trait)
         values = xgetattr(object, self.name)
         if not safe_contains(value, values):
-            value = enum_default(values)
+            value = next(iter(values), None)
         return value
 
     def _set(self, object, name, value):
