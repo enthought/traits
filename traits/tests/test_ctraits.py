@@ -9,7 +9,7 @@
 # Thanks for using Enthought open source!
 
 import sys
-import unittest.mock
+import unittest
 import warnings
 import weakref
 
@@ -35,7 +35,6 @@ def setter(value):
 def validator(value):
     """ Trivial validator. """
     return value
-
 
 
 class TestCTrait(unittest.TestCase):
