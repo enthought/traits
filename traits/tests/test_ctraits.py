@@ -9,7 +9,7 @@
 # Thanks for using Enthought open source!
 
 import sys
-import unittest
+import unittest.mock
 import warnings
 import weakref
 
@@ -35,6 +35,7 @@ def setter(value):
 def validator(value):
     """ Trivial validator. """
     return value
+
 
 
 class TestCTrait(unittest.TestCase):
@@ -278,6 +279,24 @@ class TestCTrait(unittest.TestCase):
         self.assertEqual(foo.bar, "baz")
         self.assertEqual(len(foo.bar_changed), 1)
         self.assertEqual(foo.bar_changed[0], "baz")
+
+    def test_failed_attribute_access(self):
+        ctrait = CTrait(0)
+        self.assertIsNone(ctrait.non_existent)
+
+    def test_exception_from_attribute_access(self):
+        # Regression test for enthought/traits#946.
+
+        # Check that we're not touching an attribute that actually exists.
+        self.assertFalse(hasattr(CTrait, "badattr_test"))
+
+        CTrait.badattr_test = property(lambda self: 1 / 0)
+        try:
+            ctrait = CTrait(0)
+            with self.assertRaises(ZeroDivisionError):
+                ctrait.badattr_test
+        finally:
+            del CTrait.badattr_test
 
 
 class TestCTraitNotifiers(unittest.TestCase):

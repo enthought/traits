@@ -2972,7 +2972,7 @@ static PyObject *
 trait_getattro(trait_object *obj, PyObject *name)
 {
     PyObject *value = PyObject_GenericGetAttr((PyObject *)obj, name);
-    if (value != NULL) {
+    if (value != NULL || !PyErr_ExceptionMatches(PyExc_AttributeError)) {
         return value;
     }
 
