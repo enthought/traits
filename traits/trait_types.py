@@ -1987,10 +1987,14 @@ class BaseEnum(TraitType):
                 default_value = args[0]
                 allowed_vals = args[1]
 
+                # Treat str, bytes and bytearray as discrete units,
+                # and not as a collection.
                 if isinstance(allowed_vals, (str, bytes, bytearray)):
                     self.values = tuple(args)
+
                 elif is_collection(allowed_vals):
                     self.values = allowed_vals
+
                 else:
                     self.values = tuple(args)
             else:
