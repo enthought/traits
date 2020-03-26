@@ -1843,6 +1843,35 @@ class TestTraitAdded(unittest.TestCase):
         # should not fire as listener is removed
         mock_obj.assert_not_called()
 
+    def test_trait_added_listener_with_metadata(self):
+        # Test collaboration with remove_trait
+
+        class Foo(HasTraits):
+            pass
+
+        foo = Foo()
+        mock_obj = mock.Mock()
+
+        # Add the listener
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.MetadataTraitListener(
+                    metadata_name="updated",
+                    notify=True,
+                    include=True,
+                ),
+            ),
+            remove=False,
+            dispatch="same",
+        )
+
+        foo.add_trait("age", Int(updated=True))
+        mock_obj.assert_not_called()
+        foo.age += 1
+        mock_obj.assert_called_once()
+
 
 class TestPathEqual(unittest.TestCase):
 

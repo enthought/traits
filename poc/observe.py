@@ -404,8 +404,8 @@ class _MetadataFilter:
         self.metadata_name = metadata_name
         self.include = include
 
-    def __call__(self, _, trait):
-        return hasattr(trait, self.metadata_name) is self.include
+    def __call__(self, name, trait):
+        return getattr(trait, self.metadata_name, False) is self.include
 
     def __eq__(self, other):
         if self is other:
