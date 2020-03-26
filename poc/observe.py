@@ -88,15 +88,18 @@ def observe(object, callback, path, remove, dispatch):
 
 
 def trait_added_callback(event, callback, path, target, dispatcher):
+    logger.debug(
+        "trait_added: Adding notifiers for %r, trait %r",
+        event.object,
+        event.new,
+    )
     listener = path.node
     add_notifiers(
         object=event.object,
         callback=callback,
         path=ListenerPath(
             node=RequiredTraitListener(
-                name=event.new,
-                notify=listener.notify,
-            ),
+                name=event.new, notify=listener.notify),
             nexts=path.nexts,
         ),
         target=target,
@@ -104,7 +107,7 @@ def trait_added_callback(event, callback, path, target, dispatcher):
     )
 
 
-def add_notifiers(object, callback, path, target, dispatcher):
+def add_notifiers(object, callback, path, target, dispatcher, trait_added=True):
     """ Add notifiers for a ListenerPath
 
     Parameters
