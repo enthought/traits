@@ -238,3 +238,9 @@ class EnumTestCase(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             collection_enum.correct_int_set_enum = 20
+
+    def test_empty_enum(self):
+        with self.assertRaises(TraitError):
+            class EmptyEnum(HasTraits):
+                a = Enum()
+            EmptyEnum()

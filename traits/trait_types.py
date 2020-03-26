@@ -1983,6 +1983,10 @@ class BaseEnum(TraitType):
                 else:
                     self.values = tuple(args)
             else:
+                if len(args) < 1:
+                    raise TraitError("Enum trait requires at "
+                                     "least 1 argument.")
+
                 default_value = args[0]
                 self.values = tuple(args)
 
