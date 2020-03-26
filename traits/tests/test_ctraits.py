@@ -9,7 +9,7 @@
 # Thanks for using Enthought open source!
 
 import sys
-import unittest
+import unittest.mock
 import warnings
 import weakref
 
