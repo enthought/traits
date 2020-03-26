@@ -1745,9 +1745,6 @@ class TestTraitAdded(unittest.TestCase):
 
     def test_add_trait_in_nested_object(self):
 
-        class Bar(HasTraits):
-            pass
-
         class Foo(HasTraits):
             pass
 
@@ -1759,35 +1756,36 @@ class TestTraitAdded(unittest.TestCase):
             callback=mock_obj,
             path=observe.ListenerPath.from_nodes(
                 observe.OptionalTraitListener(name="bar", notify=True),
+                observe.OptionalTraitListener(name="baz", notify=True),
                 observe.OptionalTraitListener(name="age", notify=True),
             ),
             remove=False,
             dispatch="same",
         )
 
-        foo.add_trait("bar", Instance(Bar, ()))
+        foo.add_trait("bar", Instance(Foo, ()))
         mock_obj.assert_not_called()
 
-        foo.bar = Bar()
+        foo.bar = Foo()
         mock_obj.assert_called_once()
         mock_obj.reset_mock()
 
-        foo.bar.add_trait("age", Int())
+        foo.bar.add_trait("baz", Instance(Foo, ()))
         mock_obj.assert_not_called()
 
-        foo.bar.age += 1
+        foo.bar.baz.add_trait("age", Int())
+        mock_obj.assert_not_called()
+
+        foo.bar.baz.age += 1
         mock_obj.assert_called_once()
         ((event, ), _), = mock_obj.call_args_list
-        self.assertIs(event.object, foo.bar)
+        self.assertIs(event.object, foo.bar.baz)
         self.assertEqual(event.name, "age")
         self.assertEqual(event.old, 0)
         self.assertEqual(event.new, 1)
 
     def test_remove_trait_added_listeners(self):
 
-        class Bar(HasTraits):
-            pass
-
         class Foo(HasTraits):
             pass
 
@@ -1799,11 +1797,20 @@ class TestTraitAdded(unittest.TestCase):
             callback=mock_obj,
             path=observe.ListenerPath.from_nodes(
                 observe.OptionalTraitListener(name="bar", notify=True),
+                observe.OptionalTraitListener(name="baz", notify=True),
                 observe.OptionalTraitListener(name="age", notify=True),
             ),
             remove=False,
             dispatch="same",
         )
+
+        # Now add one of the traits.
+        foo.add_trait("bar", Instance(Foo, ()))
+        foo.bar.add_trait("baz", Instance(Foo, ()))
+        mock_obj.assert_not_called()
+        foo.bar.baz = Foo()
+        mock_obj.assert_called_once()
+        mock_obj.reset_mock()
 
         # Now remove the listener.
         observe.observe(
@@ -1811,26 +1818,26 @@ class TestTraitAdded(unittest.TestCase):
             callback=mock_obj,
             path=observe.ListenerPath.from_nodes(
                 observe.OptionalTraitListener(name="bar", notify=True),
+                observe.OptionalTraitListener(name="baz", notify=True),
                 observe.OptionalTraitListener(name="age", notify=True),
             ),
             remove=True,
             dispatch="same",
         )
 
-        # Now add the traits
-        foo.add_trait("bar", Instance(Bar, ()))
-        foo.bar.add_trait("age", Int())
+        # Now add the rest of the traits
+        foo.bar.baz.add_trait("age", Int())
         mock_obj.assert_not_called()
 
         # when
-        foo.bar.age += 1
+        foo.bar.baz.age += 1
 
         # then
         # should not fire as listener is removed
         mock_obj.assert_not_called()
 
         # when
-        foo.bar = Bar()
+        foo.bar.baz = Foo()
 
         # then
         # should not fire as listener is removed

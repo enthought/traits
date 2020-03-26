@@ -87,27 +87,7 @@ def observe(object, callback, path, remove, dispatch):
         )
 
 
-def trait_added_callback(event, callback, path, target, dispatcher):
-    logger.debug(
-        "trait_added: Adding notifiers for %r, trait %r",
-        event.object,
-        event.new,
-    )
-    listener = path.node
-    add_notifiers(
-        object=event.object,
-        callback=callback,
-        path=ListenerPath(
-            node=RequiredTraitListener(
-                name=event.new, notify=listener.notify),
-            nexts=path.nexts,
-        ),
-        target=target,
-        dispatcher=dispatcher,
-    )
-
-
-def add_notifiers(object, callback, path, target, dispatcher, trait_added=True):
+def add_notifiers(object, callback, path, target, dispatcher):
     """ Add notifiers for a ListenerPath
 
     Parameters
@@ -127,18 +107,6 @@ def add_notifiers(object, callback, path, target, dispatcher, trait_added=True):
     """
 
     listener = path.node
-    trait_added_notifier = listener.get_trait_added_notifier(
-        callback=callback,
-        path=path,
-        target=target,
-        dispatcher=dispatcher,
-    )
-    if trait_added_notifier is not None:
-        add_notifier(
-            object=object._trait("trait_added", 2),
-            notifier=trait_added_notifier,
-        )
-
     for this_target in listener.iter_this_targets(object):
         if listener.notify:
             # TODO: Move this to the listener interface?
@@ -169,6 +137,17 @@ def add_notifiers(object, callback, path, target, dispatcher, trait_added=True):
                     target=target,
                     dispatcher=dispatcher,
                 )
+    if type(listener) is not TraitAddedListener:
+        add_notifiers(
+            object=object,
+            callback=callback,
+            path=ListenerPath(
+                node=TraitAddedListener(),
+                nexts=[path],
+            ),
+            target=target,
+            dispatcher=dispatcher,
+        )
 
 
 def add_notifier(object, notifier):
@@ -321,15 +300,6 @@ class BaseListener:
         """
         raise NotImplementedError()
 
-    def get_trait_added_notifier(self, callback, path, target, dispatcher):
-        """ Return ListenerChangeNotifier for propagating listeners
-        on a dynamically added trait.
-
-        Return None if this listener should not be concerned with
-        trait_added events.
-        """
-        raise NotImplementedError()
-
 
 class AnyTraitListener(BaseListener):
 
@@ -415,25 +385,6 @@ class _FilteredTraitListener(BaseListener):
             target=target,
             dispatcher=dispatcher,
         )
-
-    def get_trait_added_notifier(self, callback, path, target, dispatcher):
-        return ListenerChangeNotifier(
-            listener_callback=trait_added_callback,
-            actual_callback=callback,
-            path=path,
-            target=target,
-            event_factory=self.trait_added_event_factory,
-            dispatcher=dispatcher,
-        )
-
-    def trait_added_event_factory(self, object, name, old, new):
-        trait = object.trait(name=new)
-        if self.filter(name, trait):
-            return ObserverEvent(
-                object=object, name=name, old=old, new=new
-            )
-        else:
-            return None
 
 
 class _MetadataFilter:
@@ -565,33 +516,65 @@ class NamedTraitListener(BaseListener):
             dispatcher=dispatcher,
         )
 
-    def get_trait_added_notifier(self, callback, path, target, dispatcher):
-        return ListenerChangeNotifier(
-            listener_callback=trait_added_callback,
-            actual_callback=callback,
-            path=path,
-            target=target,
-            event_factory=self.trait_added_event_factory,
-            dispatcher=dispatcher,
-        )
-
-    def trait_added_event_factory(self, object, name, old, new):
-        if new != self.name:
-            return None
-        return ObserverEvent(
-            object=object, name=name, old=old, new=new
-        )
-
 
 OptionalTraitListener = partial(NamedTraitListener, optional=True)
 
 RequiredTraitListener = partial(NamedTraitListener, optional=False)
 
 
+class TraitAddedListener(BaseListener):
+    """ Listener for handling trait_added event.
+    """
+
+    def __init__(self):
+        self.notify = False
+
+    def __eq__(self, other):
+        return type(self) is type(other)
+
+    def iter_this_targets(self, object):
+        try:
+            yield object._trait("trait_added", 2)
+        except AttributeError:
+            pass
+
+    def iter_next_targets(self, object):
+        yield from ()
+
+    def get_change_notifier(self, callback, path, target, dispatcher):
+        return ListenerChangeNotifier(
+            listener_callback=self.change_callback,
+            actual_callback=callback,
+            path=path,
+            target=target,
+            event_factory=ObserverEvent,
+            dispatcher=dispatcher,
+        )
+
+    @staticmethod
+    def change_callback(event, callback, path, target, dispatcher):
+        # The event comes from trait_added
+        listener = path.node
+        add_notifiers(
+            object=event.object,
+            callback=callback,
+            path=ListenerPath(
+                node=RequiredTraitListener(
+                    name=event.new, notify=listener.notify),
+                nexts=path.nexts
+            ),
+            target=target,
+            dispatcher=dispatcher,
+        )
+
+
 class ListItemListener(BaseListener):
 
     def __init__(self, notify):
         self.notify = notify
+
+    def __eq__(self, other):
+        return type(self) is type(other) and self.notify == other.notify
 
     def event_factory(self, object, name, old, new):
         return ListObserverEvent(object, name, old, new)
@@ -640,9 +623,6 @@ class ListItemListener(BaseListener):
                     target=target,
                     dispatcher=dispatcher,
                 )
-
-    def get_trait_added_notifier(self, callback, path, target, dispatcher):
-        return None
 
 
 class DictValueListener(BaseListener):
