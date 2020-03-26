@@ -401,7 +401,7 @@ class TestHasTraits(unittest.TestCase):
 
         # Exercise the code path where the PyObject_GenericGetAttr call raises
         # AttributeError. In this case, we catch the error but the prefix trait
-        # machinery re-raises.
+        # machinery raises a new AttributeError.
         with self.assertRaises(AttributeError):
             a.veg
 
