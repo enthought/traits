@@ -187,42 +187,54 @@ class EnumTestCase(unittest.TestCase):
 
     def test_enum_collection(self):
         collection_enum = EnumCollectionExample()
+
+        # Test the default values.
         self.assertEqual("red", collection_enum.rgb)
         self.assertEqual("r", collection_enum.rgb_char)
         self.assertEqual("one", collection_enum.numbers)
         self.assertEqual("abcdefg", collection_enum.letters)
+        self.assertEqual("yes", collection_enum.yes_no)
+        self.assertEqual(0, collection_enum.digits)
+        self.assertEqual(1, collection_enum.int_set_enum)
 
+        # Test assigning valid values
         collection_enum.rgb = "blue"
         self.assertEqual("blue", collection_enum.rgb)
 
         collection_enum.rgb_char = 'g'
         self.assertEqual("g", collection_enum.rgb_char)
 
+        collection_enum.yes_no = "no"
+        self.assertEqual("no", collection_enum.yes_no)
+
+        for i in range(10):
+            collection_enum.digits = i
+            self.assertEqual(i, collection_enum.digits)
+
+        # Test assigning invalid values
         with self.assertRaises(TraitError):
             collection_enum.rgb = "two"
 
         with self.assertRaises(TraitError):
             collection_enum.letters = 'b'
 
-        collection_enum.yes_no = "no"
         with self.assertRaises(TraitError):
             collection_enum.yes_no = "n"
 
-        self.assertEqual(1, collection_enum.int_set_enum)
+        with self.assertRaises(TraitError):
+            collection_enum.digits = 10
+
         # Fixing issue #835 introduces the following behaviour, which would
         # have otherwise not thrown a TraitError
         with self.assertRaises(TraitError):
             collection_enum.int_set_enum = {1, 2}
 
-        # But the behaviour can be fixed, as seen below
+        # But the behaviour can be fixed
+        # by defining it like correct_int_set_enum
         self.assertEqual(1, collection_enum.correct_int_set_enum)
+
+        # No more error on assignment
         collection_enum.correct_int_set_enum = {1, 2}
 
         with self.assertRaises(TraitError):
-            collection_enum.correct_int_set_enum = 2
-
-        for i in range(10):
-            collection_enum.digits = i
-
-        with self.assertRaises(TraitError):
-            collection_enum.digits = 10
+            collection_enum.correct_int_set_enum = 20
