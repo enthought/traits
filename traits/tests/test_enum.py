@@ -102,6 +102,8 @@ class EnumCollectionExample(HasTraits):
 
     digits = Enum(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 
+    two_digits = Enum(1, 2)
+
 
 class EnumTestCase(unittest.TestCase):
     def test_valid_enum(self):
@@ -196,6 +198,7 @@ class EnumTestCase(unittest.TestCase):
         self.assertEqual("yes", collection_enum.yes_no)
         self.assertEqual(0, collection_enum.digits)
         self.assertEqual(1, collection_enum.int_set_enum)
+        self.assertEqual(1, collection_enum.two_digits)
 
         # Test assigning valid values
         collection_enum.rgb = "blue"
@@ -210,6 +213,9 @@ class EnumTestCase(unittest.TestCase):
         for i in range(10):
             collection_enum.digits = i
             self.assertEqual(i, collection_enum.digits)
+
+        collection_enum.two_digits = 2
+        self.assertEqual(2, collection_enum.two_digits)
 
         # Test assigning invalid values
         with self.assertRaises(TraitError):
@@ -243,4 +249,5 @@ class EnumTestCase(unittest.TestCase):
         with self.assertRaises(TraitError):
             class EmptyEnum(HasTraits):
                 a = Enum()
+
             EmptyEnum()
