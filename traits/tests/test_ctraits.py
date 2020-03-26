@@ -286,7 +286,8 @@ class TestCTrait(unittest.TestCase):
     def test_exception_from_attribute_access(self):
         # Regression test for enthought/traits#946.
 
-        # Check that we're not touching an attribute that actually exists.
+        # Danger: we're (temporarily) mutating global state here! Check that
+        # we're not touching an attribute that actually exists.
         self.assertFalse(hasattr(CTrait, "badattr_test"))
 
         CTrait.badattr_test = property(lambda self: 1 / 0)
