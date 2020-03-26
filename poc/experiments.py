@@ -1849,7 +1849,7 @@ class TestTraitAdded(unittest.TestCase):
         mock_obj.assert_not_called()
 
     def test_trait_added_listener_with_metadata(self):
-        # Test collaboration with remove_trait
+        # Test trait_added with metadata listener
 
         class Foo(HasTraits):
             pass
