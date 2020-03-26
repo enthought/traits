@@ -390,12 +390,24 @@ class TestHasTraits(unittest.TestCase):
         class A(HasTraits):
             fruit = PropertyLike()
 
+            banana_ = Int(1729)
+
         a = A()
 
         # The exception raised on the first attribute access should be
         # propagated.
         with self.assertRaises(ZeroDivisionError):
             a.fruit
+
+        # Exercise the code path where the PyObject_GenericGetAttr call raises
+        # AttributeError. In this case, we catch the error but the prefix trait
+        # machinery re-raises.
+        with self.assertRaises(AttributeError):
+            a.veg
+
+        # Exercise the case where the prefix traits machinery goes on to
+        # produce a valid result.
+        self.assertEqual(a.banananana, 1729)
 
 
 class TestObjectNotifiers(unittest.TestCase):
