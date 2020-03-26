@@ -1796,17 +1796,23 @@ class TestTraitAdded(unittest.TestCase):
             object=foo,
             callback=mock_obj,
             path=observe.ListenerPath.from_nodes(
-                observe.OptionalTraitListener(name="bar", notify=True),
-                observe.OptionalTraitListener(name="baz", notify=True),
-                observe.OptionalTraitListener(name="age", notify=True),
+                observe.MetadataTraitListener(
+                    metadata_name="public", notify=True, include=True
+                ),
+                observe.MetadataTraitListener(
+                    metadata_name="public", notify=True, include=True
+                ),
+                observe.MetadataTraitListener(
+                    metadata_name="public", notify=True, include=True
+                ),
             ),
             remove=False,
             dispatch="same",
         )
 
         # Now add one of the traits.
-        foo.add_trait("bar", Instance(Foo, ()))
-        foo.bar.add_trait("baz", Instance(Foo, ()))
+        foo.add_trait("bar", Instance(Foo, (), public=True))
+        foo.bar.add_trait("baz", Instance(Foo, (), public=True))
         mock_obj.assert_not_called()
         foo.bar.baz = Foo()
         mock_obj.assert_called_once()
@@ -1817,27 +1823,26 @@ class TestTraitAdded(unittest.TestCase):
             object=foo,
             callback=mock_obj,
             path=observe.ListenerPath.from_nodes(
-                observe.OptionalTraitListener(name="bar", notify=True),
-                observe.OptionalTraitListener(name="baz", notify=True),
-                observe.OptionalTraitListener(name="age", notify=True),
+                observe.MetadataTraitListener(
+                    metadata_name="public", notify=True, include=True
+                ),
+                observe.MetadataTraitListener(
+                    metadata_name="public", notify=True, include=True
+                ),
+                observe.MetadataTraitListener(
+                    metadata_name="public", notify=True, include=True
+                ),
             ),
             remove=True,
             dispatch="same",
         )
 
         # Now add the rest of the traits
-        foo.bar.baz.add_trait("age", Int())
+        foo.bar.baz.add_trait("age", Int(public=True))
         mock_obj.assert_not_called()
 
         # when
         foo.bar.baz.age += 1
-
-        # then
-        # should not fire as listener is removed
-        mock_obj.assert_not_called()
-
-        # when
-        foo.bar.baz = Foo()
 
         # then
         # should not fire as listener is removed

@@ -252,7 +252,17 @@ def remove_notifiers(object, callback, path, target, dispatcher):
                     target=target,
                     dispatcher=dispatcher,
                 )
-
+    if type(listener) is not TraitAddedListener:
+        remove_notifiers(
+            object=object,
+            callback=callback,
+            path=ListenerPath(
+                node=TraitAddedListener(),
+                nexts=[path],
+            ),
+            target=target,
+            dispatcher=dispatcher,
+        )
 
 def is_notifiable(object):
     """ Return true if an object conforms to the expected
