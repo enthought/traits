@@ -187,7 +187,7 @@ def enum_default(values):
 
     Parameters
     ----------
-    values : tuple, list or enum.Enum
+    values : tuple, list, collection or enum.Enum
         The collection of valid values for an enum trait.
 
     Returns
@@ -195,13 +195,8 @@ def enum_default(values):
     default : any
         The first valid value, or None if the collection is empty.
     """
-    if isinstance(values, enum.EnumMeta):
+    if isinstance(values, enum.EnumMeta) or is_collection(values):
         default = next(iter(values), None)
-    elif is_collection(values):
-        if is_excluded_collection(values):
-            default = values
-        else:
-            default = next(iter(values))
     elif len(values) > 0:
         default = values[0]
     else:
@@ -395,14 +390,6 @@ def not_event(value):
 
 def is_str(value):
     return isinstance(value, str)
-
-
-def is_excluded_collection(value):
-    """ Values of type str, bytes or bytearray can be
-    iterated over and are therefore collections, however,
-    we want to treat these as discrete units.
-    This is used by logic inside the Enum trait"""
-    return isinstance(value, (str, bytes, bytearray))
 
 
 def is_collection(value):

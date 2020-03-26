@@ -41,7 +41,6 @@ from .trait_base import (
     TraitsCache,
     xgetattr,
     is_collection,
-    is_excluded_collection,
 )
 from .trait_converters import trait_from, trait_cast
 from .trait_dict_object import TraitDictEvent, TraitDictObject
@@ -1958,26 +1957,33 @@ class BaseEnum(TraitType):
                     "when using the 'values' keyword"
                 )
         else:
-            default_value = args[0]
             if len(args) == 1:
-                self.values = args[0]
-                default_value = enum_default(self.values)
+                arg = args[0]
+                if isinstance(arg, EnumTypes):
+                    default_value = enum_default(arg)
+                    self.values = tuple(arg)
 
-                # If values is not a Collection, treat them differently
-                if isinstance(self.values, EnumTypes):
-                    self.values = tuple(self.values)
-                elif is_excluded_collection(self.values):
-                    self.values = {self.values}
+                elif isinstance(arg, (str, bytes, bytearray)):
+                    default_value = arg
+                    self.values = {arg}
+
+                else:
+                    default_value = enum_default(arg)
+                    self.values = arg
 
             elif len(args) == 2:
                 # If 2 args, the first is default, second is allowed values.
+                default_value = args[0]
                 allowed_vals = args[1]
-                excluded_collection = is_excluded_collection(allowed_vals)
-                if is_collection(allowed_vals) and not excluded_collection:
-                    self.values = args[1]
+
+                if isinstance(allowed_vals, (str, bytes, bytearray)):
+                    self.values = tuple(args)
+                elif is_collection(allowed_vals):
+                    self.values = allowed_vals
                 else:
                     self.values = tuple(args)
             else:
+                default_value = args[0]
                 self.values = tuple(args)
 
             if isinstance(args, enum.EnumMeta):
