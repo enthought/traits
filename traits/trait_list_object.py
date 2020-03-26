@@ -40,15 +40,11 @@ def adapt_trait_validator(trait_validator, name="items"):
 
     def validator(trait_list, index, removed, value):
         try:
-            if isinstance(index, slice):
-                return [
-                    trait_validator(trait_list, name, item)
-                    for item in value
-                ]
-            else:
-                return [
-                    trait_validator(trait_list, name, item) for item in value
-                ]
+            return [
+                trait_validator(trait_list, name, item)
+                for item in value
+            ]
+
         except TraitError as excp:
             excp.set_prefix("Each element of the")
             raise excp
@@ -101,23 +97,39 @@ class TraitList(list):
     ----------
     value : list
         The value for the list
-    validator : callable
-        Called to validate items in the list
-    notifiers : list of callable
+    validator : callable, optional
+        Called to validate items in the list.
+        With the signature::
+
+        validator(current_list, index, removed, added)
+
+        If the validator is not provided, all values added to the list
+        are considered to be valid.
+
+    notifiers : list of callable, optional
         A list of callables with the signature::
 
-         notifier(trait_list, index, removed, added)
+        notifier(trait_list, index, removed, added)
+
+        If a notifier is not provided, no notification fired
 
     Attributes
     ----------
-    value : list
-        The value for the list
-    validator : callable
+    validator : callable, optional
         Called to validate items in the list
-    notifiers : list of callable
+        With the signature::
+
+        validator(current_list, index, removed, added)
+
+        If the validator is not provided, all values added to the list
+        are considered to be valid.
+
+    notifiers : list of callable, optional
         A list of callables with the signature::
 
-         notifier(trait_list, index, removed, added)
+        notifier(trait_list, index, removed, added)
+
+        If a notifier is not provided, no notification fired
 
     """
 
@@ -133,8 +145,7 @@ class TraitList(list):
 
             validator(trait_list, index, removed, added)
 
-        and return a validated added value or list of added values
-        or raise a TraitError.
+        and return a list of added values or raise a TraitError.
 
         Parameters
         ----------
@@ -152,7 +163,7 @@ class TraitList(list):
 
         Raises
         ------
-        TraitError : Exception
+        TraitError
             If validation fails.
         """
 
@@ -247,9 +258,9 @@ class TraitList(list):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             index : int
-                The index of the value.
+                The index at which the value is set.
             added : list
                 The value that is set, as a list.
             removed : list
@@ -257,11 +268,13 @@ class TraitList(list):
 
         """
         removed = self._get_removed(index, default=[])
-        is_index_slice = isinstance(index, slice)
+        index_is_slice = isinstance(index, slice)
 
-        if is_index_slice:
+        if index_is_slice:
             if len(removed) != len(value) and index.step not in {1, None}:
-                raise ValueError
+                raise ValueError("attempt to assign sequence of size {} "
+                                 "to extended slice of size "
+                                 "{}".format(len(value), len(removed)))
         else:
             value = [value]
 
@@ -269,7 +282,7 @@ class TraitList(list):
 
         added = item = self.validate(norm_index, removed, value)
 
-        if not is_index_slice:
+        if not index_is_slice:
             item = added[0]
 
         super().__setitem__(index, item)
@@ -287,7 +300,7 @@ class TraitList(list):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             index : int
                 The index of the value that is deleted.
             added : list
@@ -316,7 +329,7 @@ class TraitList(list):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             index : int
                 The index of the newly appended item.
             added : list
@@ -345,7 +358,7 @@ class TraitList(list):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             index : slice
                 The slice(current_length,new_length) if successful if
                 the iterable supports len() else the slice(current_len,None,1).
@@ -378,7 +391,7 @@ class TraitList(list):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             index : int
                 The index before which the item was inserted.
             added : list
@@ -402,7 +415,7 @@ class TraitList(list):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             index : slice
                 The range of the slice will be 0 to len(self).
             added : list
@@ -411,7 +424,7 @@ class TraitList(list):
                 The removed items.
 
         """
-        index = slice(0, len(self), None)
+        index = slice(0, len(self))
         removed = self.copy()
         self.validate(index, removed, [])
         super().clear()
@@ -434,11 +447,11 @@ class TraitList(list):
         Raises
         ------
         IndexError
-            If list is empty or index is out of range.
+            If the index is out of range.
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             index : int
                 The normalized index between 0 and len(self).
             added : list
@@ -475,7 +488,7 @@ class TraitList(list):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             index : int
                 The index between 0 and len(self).
             added : list
@@ -509,7 +522,7 @@ class TraitList(list):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             index : slice
                 The slice between 0 and len(self)
             added : list
@@ -522,7 +535,7 @@ class TraitList(list):
         removed = self[:]
         self[:] = sorted(self, key=key, reverse=reverse)
         added = self[:]
-        index = slice(0, len(self), None)
+        index = slice(0, len(self))
 
         self.notify(index, removed, added)
 
@@ -531,7 +544,7 @@ class TraitList(list):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             index : slice
                 The slice between 0 and len(self).
             added : list
@@ -544,7 +557,7 @@ class TraitList(list):
         self[:] = self[::-1]
         added = self[:]
 
-        index = slice(0, len(self), None)
+        index = slice(0, len(self))
 
         self.notify(index, removed, added)
 
@@ -558,7 +571,7 @@ class TraitList(list):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             index : slice
                 Slice ranging from current_length to new_length.
             added : list
@@ -580,7 +593,7 @@ class TraitList(list):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             index : slice
                 Slice ranging from current_length to new_length.
             added : list
@@ -731,7 +744,7 @@ class TraitListObject(TraitList):
 
         Raises
         ------
-        TraitError : Exception
+        TraitError
             On validation failure for the inner trait or if the size of the
             list exceeds the specified bounds
         """
