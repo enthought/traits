@@ -133,6 +133,21 @@ class TraitList(list):
 
     """
 
+    def __new__(cls, *args, **kwargs):
+        obj = super().__new__(cls)
+        obj.validator = kwargs.get('validator', None)
+        obj.notifiers = kwargs.get('notifiers', [])
+        return obj
+
+    def __init__(self, value=(), *, validator=None, notifiers=()):
+        self.validator = validator
+        self.notifiers = list(notifiers)
+        value = self.validate(slice(0, 0), [], value)
+        super().__init__(value)
+
+    def __getnewargs_ex__(self):
+        return (), {"validator": None, "notifiers": []}
+
     # ------------------------------------------------------------------------
     # TraitList interface
     # ------------------------------------------------------------------------
@@ -167,8 +182,7 @@ class TraitList(list):
             If validation fails.
         """
 
-        # Use getattr as pickle can call `extend` before validator is set.
-        if getattr(self, 'validator', None) is None:
+        if self.validator is None:
             return added
         else:
             return self.validator(self, index, removed, added)
@@ -192,24 +206,12 @@ class TraitList(list):
         added : list
             The items being added to the list.
         """
-        # Use getattr as pickle can call `extend` before notifiers are set.
-        for notifier in getattr(self, 'notifiers', []):
+        for notifier in self.notifiers:
             notifier(self, index, removed, added)
-
-    def object(self):
-        """ Stub method to pass persistence tests. """
-        # XXX fix persistence tests to not introspect this!
-        return None
 
     # ------------------------------------------------------------------------
     # list interface
     # ------------------------------------------------------------------------
-
-    def __init__(self, value=(), *, validator=None, notifiers=()):
-        self.validator = validator
-        self.notifiers = list(notifiers)
-        value = self.validate(slice(0, 0), [], value)
-        super().__init__(value)
 
     def __deepcopy__(self, memo):
         """ Perform a deepcopy operation.
@@ -287,7 +289,7 @@ class TraitList(list):
 
         super().__setitem__(index, item)
 
-        if self._should_notify(removed, added):
+        if added != removed:
             self.notify(norm_index, removed, added)
 
     def __delitem__(self, index):
@@ -316,7 +318,7 @@ class TraitList(list):
 
         super().__delitem__(index)
 
-        if self._should_notify(removed, added):
+        if added != removed:
             self.notify(norm_index, removed, added)
 
     def append(self, object):
@@ -345,7 +347,7 @@ class TraitList(list):
 
         super().append(added[0])
 
-        if self._should_notify(removed, added):
+        if added != removed:
             self.notify(index, removed, added)
 
     def extend(self, iterable):
@@ -375,7 +377,7 @@ class TraitList(list):
 
         super().extend(added)
 
-        if self._should_notify(removed, added):
+        if added != removed:
             self.notify(index, removed, added)
 
     def insert(self, index, object):
@@ -406,7 +408,7 @@ class TraitList(list):
 
         super().insert(index, added[0])
 
-        if self._should_notify(removed, added):
+        if added != removed:
             self.notify(norm_index, removed, added)
 
     def clear(self):
@@ -426,10 +428,11 @@ class TraitList(list):
         """
         index = slice(0, len(self))
         removed = self.copy()
-        self.validate(index, removed, [])
+        added = []
+        self.validate(index, removed, added)
         super().clear()
 
-        if self._should_notify(removed, []):
+        if added != removed:
             self.notify(index, removed, [])
 
     def pop(self, index=-1):
@@ -468,7 +471,7 @@ class TraitList(list):
 
         removed_item = super().pop(index)
 
-        if self._should_notify(removed, added):
+        if added != removed:
             self.notify(norm_index, removed, added)
 
         return removed_item
@@ -499,13 +502,14 @@ class TraitList(list):
         """
         index = self.index(value)
         removed = [value]
+        added = []
 
-        self.validate(index, removed, [])
+        self.validate(index, removed, added)
 
         super().remove(value)
 
-        if self._should_notify(removed, []):
-            self.notify(index, removed, [])
+        if added != removed:
+            self.notify(index, removed, added)
 
     def sort(self, key=None, reverse=False):
         """ Sort the items in the list in ascending order, *IN PLACE*.
@@ -533,7 +537,7 @@ class TraitList(list):
         """
 
         removed = self[:]
-        self[:] = sorted(self, key=key, reverse=reverse)
+        super().sort(key=key, reverse=reverse)
         added = self[:]
         index = slice(0, len(self))
 
@@ -669,14 +673,6 @@ class TraitList(list):
 
         return slice(start, stop, index.step)
 
-    def _should_notify(self, removed, added):
-        try:
-            if added == removed:
-                return False
-            return True
-        except Exception:
-            return True
-
 
 class TraitListObject(TraitList):
     """ A specialization of TraitList with a default validator and notifier
@@ -719,10 +715,10 @@ class TraitListObject(TraitList):
         if trait.has_items:
             self.name_items = name + "_items"
 
-        super().__init__(value, validator=self.validator,
+        super().__init__(value, validator=self.trait_validator,
                          notifiers=[self.notifier] + notifiers)
 
-    def validator(self, trait_list, index, removed, added):
+    def trait_validator(self, trait_list, index, removed, added):
         """ Validates the value by calling the inner trait's validate method
         and also ensures that the size of the list is within the specified
         bounds.
@@ -748,11 +744,13 @@ class TraitListObject(TraitList):
             On validation failure for the inner trait or if the size of the
             list exceeds the specified bounds
         """
-        object = self.object()
-        trait = self.trait
+        object_ref = getattr(self, 'object', None)
+        trait = getattr(self, 'trait', None)
 
-        if object is None or trait is None:
+        if object_ref is None or trait is None:
             return added
+
+        object = object_ref()
 
         # check that length is within bounds
         new_len = len(trait_list) - len(removed) + len(added)
