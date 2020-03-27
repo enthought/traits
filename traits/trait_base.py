@@ -182,28 +182,6 @@ def safe_contains(value, container):
         return False
 
 
-def enum_default(values):
-    """ Get a default value from the valid values of an Enum trait.
-
-    Parameters
-    ----------
-    values : tuple, list or enum.Enum
-        The collection of valid values for an enum trait.
-
-    Returns
-    -------
-    default : any
-        The first valid value, or None if the collection is empty.
-    """
-    if isinstance(values, enum.EnumMeta):
-        default = next(iter(values), None)
-    elif len(values) > 0:
-        default = values[0]
-    else:
-        default = None
-    return default
-
-
 def class_of(object):
     """ Returns a string containing the class name of an object with the
     correct indefinite article ('a' or 'an') preceding it (e.g., 'an Image',
@@ -390,3 +368,12 @@ def not_event(value):
 
 def is_str(value):
     return isinstance(value, str)
+
+
+def is_collection(value):
+    """ Returns true if the value can be iterated over. """
+    try:
+        iter(value)
+        return True
+    except TypeError:
+        return False

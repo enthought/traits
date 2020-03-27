@@ -31,7 +31,6 @@ from .trait_base import (
     get_module_name,
     HandleWeakRef,
     class_of,
-    enum_default,
     EnumTypes,
     RangeTypes,
     safe_contains,
@@ -40,6 +39,7 @@ from .trait_base import (
     Undefined,
     TraitsCache,
     xgetattr,
+    is_collection,
 )
 from .trait_converters import trait_from, trait_cast
 from .trait_dict_object import TraitDictEvent, TraitDictObject
@@ -1913,16 +1913,24 @@ class BaseEnum(TraitType):
         The enumeration of all legal values for the trait.  The expected
         signatures are either:
 
-        - a single list, enum.Enum or tuple.  The default value is the first
-          item in the collection.
+        - a collection.  The default value is the first item in the
+          collection. The collection should conform to the
+          collections.abc.Collection interface. That is, it at least
+          provides the __contains__, __len__ and __iter__ methods.
+          Note that although the types str, bytes, and bytearray
+          conform to the collection interface, these are handled
+          as discrete units.
         - a single default value, combined with the values keyword
           argument.
-        - a default value, followed by a single list enum.Enum or tuple.
+        - a default value, followed by a single list enum.Enum, tuple or
+          collection conforming to collections.abc.Collection
         - arbitrary positional arguments each giving a valid value.
     values : str
         The name of a trait holding the legal values.  A default value may
-        be provided via a positional argument, otherwise it is the first
-        item stored in the .
+        be provided via a positional argument, otherwise the first item in
+        the collection is used as the default value. Note that if the
+        collection does not have a notion of order like a set, the default
+        value will be an arbitrary element from the set.
     **metadata
         Trait metadata for the trait.
 
@@ -1953,19 +1961,51 @@ class BaseEnum(TraitType):
                     "when using the 'values' keyword"
                 )
         else:
-            default_value = args[0]
-            if (len(args) == 1) and isinstance(default_value, EnumTypes):
-                args = default_value
-                default_value = enum_default(args)
-            elif (len(args) == 2) and isinstance(args[1], EnumTypes):
-                args = args[1]
+            if len(args) < 1:
+                raise TraitError("Enum trait requires at "
+                                 "least 1 argument.")
+
+            elif len(args) == 1:
+                arg = args[0]
+                if isinstance(arg, EnumTypes):
+                    default_value = next(iter(arg), None)
+                    self.values = tuple(arg)
+
+                # Treat str, bytes and bytearray as discrete units,
+                # and not as a collection.
+                elif isinstance(arg, (str, bytes, bytearray)):
+                    default_value = arg
+                    self.values = (arg,)
+
+                # Handle a collection
+                else:
+                    default_value = next(iter(arg), None)
+                    self.values = arg
+
+            elif len(args) == 2:
+                # If 2 args, the first is default, second is allowed values.
+                default_value = args[0]
+                allowed_vals = args[1]
+
+                # Treat str, bytes and bytearray as discrete units,
+                # and not as a collection.
+                if isinstance(allowed_vals, (str, bytes, bytearray)):
+                    self.values = tuple(args)
+
+                elif is_collection(allowed_vals):
+                    self.values = tuple(allowed_vals)
+
+                else:
+                    self.values = tuple(args)
+            else:
+                default_value = args[0]
+                self.values = tuple(args)
 
             if isinstance(args, enum.EnumMeta):
                 metadata.setdefault('format_func', operator.attrgetter('name'))
                 metadata.setdefault('evaluate', args)
 
             self.name = ""
-            self.values = tuple(args)
             self.init_fast_validate(ValidateTrait.enum, self.values)
 
             super(BaseEnum, self).__init__(default_value, **metadata)
@@ -2019,7 +2059,7 @@ class BaseEnum(TraitType):
         value = self.get_value(object, name, trait)
         values = xgetattr(object, self.name)
         if not safe_contains(value, values):
-            value = enum_default(values)
+            value = next(iter(values), None)
         return value
 
     def _set(self, object, name, value):
@@ -2044,17 +2084,24 @@ class Enum(BaseEnum):
         The enumeration of all legal values for the trait.  The expected
         signatures are either:
 
-        - a single list, enum.Enum or tuple.  The default value is the first
-          item in the collection.
+        - a single list, enum.Enum, tuple or a collection.  The default value
+          is the first item in the collection. The collection should conform to
+          the collections.abc.Collection interface. That is, it at least
+          provides the __contains__, __len__ and __iter__ methods.
+          Note that although the types str, bytes, and bytearray
+          conform to the collection interface, these are handled
+          as discrete units.
         - a single default value, combined with the values keyword
           argument.
-        - a default value, followed by a single list enum.Enum or tuple.
+        - a default value, followed by a single list enum.Enum, tuple or
+          collection conforming to collections.abc.Collection
         - arbitrary positional arguments each giving a valid value.
-
     values : str
         The name of a trait holding the legal values.  A default value may
-        be provided via a positional argument, otherwise it is the first
-        item stored in the .
+        be provided via a positional argument, otherwise the first item in
+        the collection is used as the default value. Note that if the
+        collection does not have a notion of order like a set, the default
+        value will be an arbitrary element from the set.
     **metadata
         Trait metadata for the trait.
 
@@ -2070,6 +2117,10 @@ class Enum(BaseEnum):
 
     def init_fast_validate(self, *args):
         """ Set up C-level fast validation. """
+        # Don't use fast validation if second arg is not a tuple.
+        if len(args) == 2 and not isinstance(args[1], tuple):
+            return
+
         self.fast_validate = args
 
 
