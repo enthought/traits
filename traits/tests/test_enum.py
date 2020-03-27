@@ -104,6 +104,8 @@ class EnumCollectionExample(HasTraits):
 
     two_digits = Enum(1, 2)
 
+    single_digit = Enum(8)
+
 
 class EnumTestCase(unittest.TestCase):
     def test_valid_enum(self):
@@ -199,6 +201,7 @@ class EnumTestCase(unittest.TestCase):
         self.assertEqual(0, collection_enum.digits)
         self.assertEqual(1, collection_enum.int_set_enum)
         self.assertEqual(1, collection_enum.two_digits)
+        self.assertEqual(8, collection_enum.single_digit)
 
         # Test assigning valid values
         collection_enum.rgb = "blue"
@@ -229,6 +232,12 @@ class EnumTestCase(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             collection_enum.digits = 10
+
+        with self.assertRaises(TraitError):
+            collection_enum.single_digit = 9
+
+        with self.assertRaises(TraitError):
+            collection_enum.single_digit = None
 
         # Fixing issue #835 introduces the following behaviour, which would
         # have otherwise not thrown a TraitError
