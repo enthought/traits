@@ -1899,6 +1899,17 @@ class Range(BaseRange):
         self.fast_validate = args
 
 
+# XXX Need test for case of Enum(3); if Enum("bob") is
+# allowed, then Enum(3) should be.
+
+# XXX identify safe/recommended signatures in docstring:
+# those are the ones where the collection is given
+# explicitly.
+
+# XXX Consider not turning collections into tuples
+# unnecessarily.
+
+
 class BaseEnum(TraitType):
     """ A trait type whose value is one of a set of values.
 
@@ -1963,35 +1974,20 @@ class BaseEnum(TraitType):
                 raise TraitError("Enum trait requires at "
                                  "least 1 argument.")
 
-            elif nargs == 1:
-                arg = args[0]
+            # If we have either 1 or 2 arguments and the last argument is a
+            # collection, then that collection provides the values of the
+            # enumeration.
+            have_collection_arg = (
+                nargs <= 2
+                and is_collection(args[-1])
+                and not isinstance(args[-1], (str, bytes, bytearray))
+            )
 
-                # Treat str, bytes and bytearray as discrete units,
-                # and not as a collection.
-                if is_collection(arg) and not isinstance(arg, (str, bytes, bytearray)):
-                    self.values = tuple(arg)
-                    default_value = next(iter(arg), None)
-                else:
-                    self.values = args
-                    default_value = arg
-
-            elif nargs == 2:
-                # If 2 args, the first is default, second is allowed values.
+            self.values = tuple(args[-1]) if have_collection_arg else args
+            if have_collection_arg and nargs == 2:
                 default_value = args[0]
-                allowed_vals = args[1]
-
-                # Treat str, bytes and bytearray as discrete units,
-                # and not as a collection.
-                if is_collection(allowed_vals) and not isinstance(allowed_vals, (str, bytes, bytearray)):
-                    self.values = tuple(allowed_vals)
-                    default_value = args[0]
-                else:
-                    self.values = args
-                    default_value = next(iter(args), None)
-
             else:
-                self.values = args
-                default_value = next(iter(args), None)
+                default_value = next(iter(self.values), None)
 
             if isinstance(args, enum.EnumMeta):
                 metadata.setdefault('format_func', operator.attrgetter('name'))
