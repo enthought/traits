@@ -111,7 +111,8 @@ class TraitList(list):
 
             notifier(trait_list, index, removed, added)
 
-        If a notifier is not provided, no notification fired
+        If a notifier is not provided, an empty list of notifiers is
+        used.
 
     Attributes
     ----------
@@ -129,7 +130,8 @@ class TraitList(list):
 
             notifier(trait_list, index, removed, added)
 
-        If a notifier is not provided, no notification fired
+        If a notifier is not provided, an empty list of notifiers is
+        used.
 
     """
 
