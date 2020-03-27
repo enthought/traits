@@ -82,7 +82,7 @@ class TestList(unittest.TestCase):
 
         f.l[0].age = 20
 
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.old, 0)
         self.assertEqual(event.new, 20)
@@ -106,7 +106,7 @@ class TestList(unittest.TestCase):
         bar = self.Bar()
         f.l.append(bar)
 
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertIs(event.old, f.l)
         self.assertIs(event.new, f.l)
@@ -133,7 +133,7 @@ class TestList(unittest.TestCase):
         bar = self.Bar()
         f.l.extend((bar, bar))
 
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertIs(event.old, f.l)
         self.assertIs(event.new, f.l)
@@ -167,7 +167,7 @@ class TestList(unittest.TestCase):
         f.l[::2] = new_bars
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.removed, old_bars)
         self.assertEqual(event.added, new_bars)
@@ -199,7 +199,7 @@ class TestList(unittest.TestCase):
         f.l[0] = new_bar
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.removed, old_bars)
         self.assertEqual(event.added, [new_bar])
@@ -232,7 +232,7 @@ class TestList(unittest.TestCase):
         del f.l[0]
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.removed, old_bars)
         self.assertEqual(event.added, [])
@@ -265,7 +265,7 @@ class TestList(unittest.TestCase):
         del f.l[:]
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.removed, old_bars)
         self.assertEqual(event.added, [])
@@ -295,7 +295,7 @@ class TestList(unittest.TestCase):
         f.l.insert(1, new_bar)
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.removed, [])
         self.assertEqual(event.added, [new_bar])
@@ -326,7 +326,7 @@ class TestList(unittest.TestCase):
         f.l.clear()
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.removed, old_bars)
         self.assertEqual(event.added, [])
@@ -355,7 +355,7 @@ class TestList(unittest.TestCase):
         popped = f.l.pop()
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.removed, [popped])
         self.assertEqual(event.added, [])
@@ -386,7 +386,7 @@ class TestList(unittest.TestCase):
         f.l.remove(bar_to_be_removed)
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.removed, [bar_to_be_removed])
         self.assertEqual(event.added, [])
@@ -422,7 +422,7 @@ class TestList(unittest.TestCase):
         bar.age = 20
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.old, 0)
         self.assertEqual(event.new, 20)
@@ -451,7 +451,7 @@ class TestList(unittest.TestCase):
         bar.age = 10
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
         # when
         mock_obj.reset_mock()
@@ -485,7 +485,7 @@ class TestList(unittest.TestCase):
         bar.age = 10
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.old, 0)
         self.assertEqual(event.new, 10)
@@ -521,7 +521,7 @@ class TestList(unittest.TestCase):
         foo.l.append(3)
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
     def test_implicit_default_list(self):
         # Test when a list attribute is accessed the first time,
@@ -555,7 +555,7 @@ class TestList(unittest.TestCase):
         foo.l.append(3)
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
     def test_resurrect_existing_behaviour_compare_equal(self):
         # We may not need to silence event when the new list
@@ -596,7 +596,7 @@ class TestList(unittest.TestCase):
 
         # then
         # should still fire for mutation.
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
 
 class TestListOfList(unittest.TestCase):
@@ -635,7 +635,7 @@ class TestListOfList(unittest.TestCase):
         foo.bars[0][0].append(1)
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.added, [1])
 
@@ -667,7 +667,7 @@ class TestListOfList(unittest.TestCase):
         # then
         # for the new assignment of foo.bars
         # Note that the implicit default for foo.bars before assignment was `[]`
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertIs(event.object, foo)
         self.assertEqual(event.name, "bars")
@@ -679,7 +679,7 @@ class TestListOfList(unittest.TestCase):
         foo.bars[0].append(3)
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         # TODO: Is this the right object?
         self.assertEqual(event.object, foo)
@@ -697,14 +697,14 @@ class TestListOfList(unittest.TestCase):
         foo.bars = [[1, 2]]
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
         # when
         mock_obj.reset_mock()
         foo.bars[0] = [3]
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
         # when
         self.assertEqual(foo.bars, [[3]])
@@ -714,14 +714,14 @@ class TestListOfList(unittest.TestCase):
         # then
         # TODO: This is a change from existing behaviour.
         # Old list does not fire event for this.
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
 
         # when
         foo.bars[0] = [4]
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
     def test_nested_list_of_list_of_list_reassigned(self):
 
@@ -750,7 +750,7 @@ class TestListOfList(unittest.TestCase):
         foo.bars[0][0].append(1)
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
         # when
         # Reassign to a new list that compares equal.
@@ -762,7 +762,7 @@ class TestListOfList(unittest.TestCase):
         foo.bars[0][0].append(2)
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
 
 class TestIssue538(unittest.TestCase):
@@ -808,21 +808,21 @@ class TestIssue538(unittest.TestCase):
         parent.children.append(second_child)
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
         # when
         mock_obj.reset_mock()
         parent.children.append(second_child)
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
         # when
         mock_obj.reset_mock()
         second_child.value += 1
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
 
 class TestIssue537(unittest.TestCase):
@@ -913,7 +913,7 @@ class TestIssue237(unittest.TestCase):
         bar.age = 20
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.old, 0)
         self.assertEqual(event.new, 20)
@@ -926,7 +926,7 @@ class TestIssue237(unittest.TestCase):
 
         # then
         self.assertIn(bar, f.l)
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertEqual(event.old, 20)
         self.assertEqual(event.new, 21)
@@ -1040,7 +1040,7 @@ class TestIssue237(unittest.TestCase):
         baz.value += 1
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
         # when
         # Add one more listener... which walks a different path!
@@ -1068,7 +1068,7 @@ class TestIssue237(unittest.TestCase):
 
         # then
         # It is the same callback
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
     def test_issue_237_different_level_of_nesting_different_target(self):
         # Test when the observer is called different objects, the same
@@ -1181,7 +1181,7 @@ class TestFilteredTrait(unittest.TestCase):
         foo.name = "Jim"
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertIs(event.object, foo)
         self.assertEqual(event.name, "name")
@@ -1193,7 +1193,7 @@ class TestFilteredTrait(unittest.TestCase):
         foo.gender = "unknown"
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertIs(event.object, foo)
         self.assertEqual(event.name, "gender")
@@ -1239,7 +1239,7 @@ class TestFilteredTrait(unittest.TestCase):
         foo.guardian.name = "Jim"
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertIs(event.object, foo.guardian)
         self.assertEqual(event.name, "name")
@@ -1300,7 +1300,7 @@ class TestFilteredTrait(unittest.TestCase):
         foo.guardian.name = "Terry"
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertIs(event.object, foo.guardian)
         self.assertEqual(event.name, "name")
@@ -1389,10 +1389,10 @@ class TestRemoveNotifier(unittest.TestCase):
 
         # verify the notifiers are set...
         foo.bar = Bar()
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
         foo.bar.value += 1
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
         # when
         # define a new path, make sure we don't depend on
@@ -1450,7 +1450,7 @@ class TestRemoveNotifier(unittest.TestCase):
 
         # sanity check
         foo.bar.age += 1
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
 
         # Remove the path, but create a new instance of `ListenerPath`
@@ -1527,10 +1527,10 @@ class TestMaintainingListener(unittest.TestCase):
 
         # sanity check...
         foo.bar.age += 1
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
         foo.bar.score += 1
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
         # when
         foo.bar = Bar()
@@ -1538,10 +1538,10 @@ class TestMaintainingListener(unittest.TestCase):
         # then
         mock_obj.reset_mock()
         foo.bar.age += 1
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
         foo.bar.score += 1
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
     def test_two_paths_remove_nested_listener(self):
 
@@ -1587,10 +1587,10 @@ class TestMaintainingListener(unittest.TestCase):
 
         # sanity check
         foo.bar.baz.age += 1
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
         foo.bar.baz.score += 1
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
 
         # when
@@ -1660,7 +1660,7 @@ class TestMaintainingListener(unittest.TestCase):
         )
         # sanity check...
         foo.bar.age += 1
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
         foo.bar.score += 1
         mock_obj.assert_not_called()
@@ -1670,7 +1670,7 @@ class TestMaintainingListener(unittest.TestCase):
 
         # then
         foo.bar.age += 1
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
 
         foo.bar.score += 1
@@ -1702,7 +1702,7 @@ class TestTraitAdded(unittest.TestCase):
 
         foo.a = "1"
 
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
 
         # The observer is for `foo` only
@@ -1735,13 +1735,13 @@ class TestTraitAdded(unittest.TestCase):
         foo.add_trait("a", Str(public=True))
         foo.a = "abc"
 
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
 
         foo.add_trait("b", Str(public=True))
         foo.b = "abc"
 
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
     def test_add_trait_in_nested_object(self):
 
@@ -1767,7 +1767,7 @@ class TestTraitAdded(unittest.TestCase):
         mock_obj.assert_not_called()
 
         foo.bar = Foo()
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
 
         foo.bar.add_trait("baz", Instance(Foo, ()))
@@ -1777,7 +1777,7 @@ class TestTraitAdded(unittest.TestCase):
         mock_obj.assert_not_called()
 
         foo.bar.baz.age += 1
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
         self.assertIs(event.object, foo.bar.baz)
         self.assertEqual(event.name, "age")
@@ -1815,7 +1815,7 @@ class TestTraitAdded(unittest.TestCase):
         foo.bar.add_trait("baz", Instance(Foo, (), public=True))
         mock_obj.assert_not_called()
         foo.bar.baz = Foo()
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
 
         # Now remove the listener.
@@ -1875,7 +1875,7 @@ class TestTraitAdded(unittest.TestCase):
         foo.add_trait("age", Int(updated=True))
         mock_obj.assert_not_called()
         foo.age += 1
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
 
     def test_add_trait_selective(self):
         # Test filtering on the added trait
@@ -1942,7 +1942,7 @@ class TestTraitAdded(unittest.TestCase):
         bar.age += 1
 
         # then
-        mock_obj.assert_called_once()
+        self.assertEqual(mock_obj.call_count, 1)
         mock_obj.reset_mock()
 
         # when
