@@ -605,15 +605,12 @@ class TraitList(list):
                 The empty list [].
 
         """
-        if isinstance(count, int):
-            if count > 1:
-                self.extend(self * (count - 1))
-            elif count <= 0:
-                self.clear()
+        extension = self * count
+        if count <= 0:
+            self.clear()
         else:
-            raise TypeError(
-                "{} object cannot be interpreted as an integer".format(
-                    type(count)))
+            self.extend(extension[:-len(self)])
+
         return self
 
     # ------------------------------------------------------------------------

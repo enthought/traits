@@ -132,10 +132,19 @@ class TestTraitList(unittest.TestCase):
                        validator=int_validator,
                        notifiers=[self.notification_handler])
 
+        tl *= 1
+        self.assertListEqual([1, 2], tl)
+        self.assertEqual(None, self.index)
+        self.assertEqual(None, self.removed)
+        self.assertEqual(None, self.added)
+
         tl *= 2
         self.assertEqual(slice(2, 4, None), self.index)
         self.assertEqual([], self.removed)
         self.assertEqual([1, 2], self.added)
+
+        with self.assertRaises(TypeError):
+            tl *= "5"
 
         with self.assertRaises(TypeError):
             tl *= 2.5
