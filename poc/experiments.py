@@ -1905,6 +1905,55 @@ class TestTraitAdded(unittest.TestCase):
 
         mock_obj.assert_not_called()
 
+    def test_add_trait_with_list(self):
+
+        class Bar(HasTraits):
+            pass
+
+        class Foo(HasTraits):
+            pass
+
+        foo = Foo()
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.OptionalTraitListener(
+                    name="bars", notify=False,
+                ),
+                observe.ListItemListener(notify=False),
+                observe.OptionalTraitListener(
+                    name="age", notify=True,
+                )
+            ),
+            remove=False,
+            dispatch="same",
+        )
+
+        # now add traits
+        foo.add_trait("bars", List(Bar()))
+        bar = Bar()
+        foo.bars = [bar]
+        bar.add_trait("age", Int())
+        mock_obj.assert_not_called()
+
+        # when
+        bar.age += 1
+
+        # then
+        mock_obj.assert_called_once()
+        mock_obj.reset_mock()
+
+        # when
+        # this trait is not listened to
+        bar.add_trait("name", Str())
+        bar.name = "Joe"
+
+        # then
+        mock_obj.assert_not_called()
+
+
 
 class TestPathEqual(unittest.TestCase):
 
