@@ -101,7 +101,7 @@ class TraitList(list):
         Called to validate items in the list.
         With the signature::
 
-        validator(current_list, index, removed, added)
+            validator(current_list, index, removed, added)
 
         If the validator is not provided, all values added to the list
         are considered to be valid.
@@ -109,7 +109,7 @@ class TraitList(list):
     notifiers : list of callable, optional
         A list of callables with the signature::
 
-        notifier(trait_list, index, removed, added)
+            notifier(trait_list, index, removed, added)
 
         If a notifier is not provided, no notification fired
 
@@ -119,7 +119,7 @@ class TraitList(list):
         Called to validate items in the list
         With the signature::
 
-        validator(current_list, index, removed, added)
+            validator(current_list, index, removed, added)
 
         If the validator is not provided, all values added to the list
         are considered to be valid.
@@ -127,26 +127,23 @@ class TraitList(list):
     notifiers : list of callable, optional
         A list of callables with the signature::
 
-        notifier(trait_list, index, removed, added)
+            notifier(trait_list, index, removed, added)
 
         If a notifier is not provided, no notification fired
 
     """
 
     def __new__(cls, *args, **kwargs):
-        obj = super().__new__(cls)
-        obj.validator = kwargs.get('validator', None)
-        obj.notifiers = kwargs.get('notifiers', [])
-        return obj
+        instance = super().__new__(cls)
+        instance.validator = None
+        instance.notifiers = []
+        return instance
 
     def __init__(self, value=(), *, validator=None, notifiers=()):
         self.validator = validator
         self.notifiers = list(notifiers)
         value = self.validate(slice(0, 0), [], value)
         super().__init__(value)
-
-    def __getnewargs_ex__(self):
-        return (), {"validator": None, "notifiers": []}
 
     # ------------------------------------------------------------------------
     # TraitList interface

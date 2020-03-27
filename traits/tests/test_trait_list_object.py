@@ -18,18 +18,14 @@ from traits.trait_types import _validate_int
 
 
 def int_validator(trait_list, index, removed, added):
-    if isinstance(index, slice):
-        return [_validate_int(item) for item in added]
-    else:
-        if isinstance(added, list):
-            return [_validate_int(item) for item in added]
-        else:
-            return _validate_int(added)
+    return [_validate_int(item) for item in added]
 
 
 def list_validator(trait_list, index, removed, added):
-    if isinstance(added, list):
-        return added
+    for itm in added:
+        if not isinstance(itm, list):
+            raise TraitError
+    return added
 
 
 class TestTraitList(unittest.TestCase):
