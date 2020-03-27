@@ -250,15 +250,16 @@ class TestTraitList(unittest.TestCase):
         tl = TraitList([1, 2, 3, 4, 5],
                        validator=int_validator,
                        notifiers=[self.notification_handler])
-        serialized = pickle.dumps(tl)
+        for protocol in range(pickle.HIGHEST_PROTOCOL + 1):
+            serialized = pickle.dumps(tl, protocol=protocol)
 
-        tl_unpickled = pickle.loads(serialized)
+            tl_unpickled = pickle.loads(serialized)
 
-        self.assertIs(tl_unpickled.validator, tl.validator)
-        self.assertEqual([], tl_unpickled.notifiers)
+            self.assertIs(tl_unpickled.validator, tl.validator)
+            self.assertEqual([], tl_unpickled.notifiers)
 
-        for i, j in zip(tl, tl_unpickled):
-            self.assertIs(i, j)
+            for i, j in zip(tl, tl_unpickled):
+                self.assertIs(i, j)
 
     def test_invalid_entry(self):
         tl = TraitList([1, 2, 3, 4, 5],
