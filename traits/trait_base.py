@@ -27,8 +27,6 @@ enumerate = enumerate
 
 SequenceTypes = (list, tuple)
 
-EnumTypes = (list, tuple, enum.EnumMeta)
-
 ComplexTypes = (float, int)
 
 RangeTypes = (int, float)

@@ -31,7 +31,6 @@ from .trait_base import (
     get_module_name,
     HandleWeakRef,
     class_of,
-    EnumTypes,
     RangeTypes,
     safe_contains,
     SequenceTypes,
@@ -1966,20 +1965,15 @@ class BaseEnum(TraitType):
 
             elif nargs == 1:
                 arg = args[0]
-                if isinstance(arg, EnumTypes):
-                    default_value = next(iter(arg), None)
-                    self.values = tuple(arg)
 
                 # Treat str, bytes and bytearray as discrete units,
                 # and not as a collection.
-                elif isinstance(arg, (str, bytes, bytearray)):
-                    default_value = arg
-                    self.values = (arg,)
-
-                # Handle a collection
-                else:
+                if is_collection(arg) and not isinstance(arg, (str, bytes, bytearray)):
+                    self.values = tuple(arg)
                     default_value = next(iter(arg), None)
-                    self.values = arg
+                else:
+                    self.values = args
+                    default_value = arg
 
             elif nargs == 2:
                 # If 2 args, the first is default, second is allowed values.
@@ -1988,17 +1982,16 @@ class BaseEnum(TraitType):
 
                 # Treat str, bytes and bytearray as discrete units,
                 # and not as a collection.
-                if isinstance(allowed_vals, (str, bytes, bytearray)):
-                    self.values = tuple(args)
-
-                elif is_collection(allowed_vals):
+                if is_collection(allowed_vals) and not isinstance(allowed_vals, (str, bytes, bytearray)):
                     self.values = tuple(allowed_vals)
-
+                    default_value = args[0]
                 else:
-                    self.values = tuple(args)
+                    self.values = args
+                    default_value = next(iter(args), None)
+
             else:
-                default_value = args[0]
-                self.values = tuple(args)
+                self.values = args
+                default_value = next(iter(args), None)
 
             if isinstance(args, enum.EnumMeta):
                 metadata.setdefault('format_func', operator.attrgetter('name'))
