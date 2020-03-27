@@ -226,6 +226,9 @@ class TraitListObject(list):
             if self.name_items is not None:
                 if not removed and not values:
                     return
+                if delta == 0 and all(
+                        item1 is item2 for item1, item2 in zip(removed, values)):
+                    return
                 self._send_trait_items_event(
                     self.name_items, TraitListEvent(index, removed, values)
                 )
