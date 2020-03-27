@@ -1976,14 +1976,16 @@ class BaseEnum(TraitType):
 
             # If we have either 1 or 2 arguments and the last argument is a
             # collection, then that collection provides the values of the
-            # enumeration.
+            # enumeration. Otherwise, args itself is the collection.
             have_collection_arg = (
                 nargs <= 2
                 and is_collection(args[-1])
                 and not isinstance(args[-1], (str, bytes, bytearray))
             )
-
             self.values = tuple(args[-1]) if have_collection_arg else args
+
+            # In the two-argument collection case, the first argument is
+            # the default. Otherwise, we take the first element of self.values.
             if have_collection_arg and nargs == 2:
                 default_value = args[0]
             else:
