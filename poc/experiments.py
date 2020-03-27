@@ -1877,6 +1877,34 @@ class TestTraitAdded(unittest.TestCase):
         foo.age += 1
         mock_obj.assert_called_once()
 
+    def test_add_trait_selective(self):
+        # Test filtering on the added trait
+
+        class Foo(HasTraits):
+            pass
+
+        foo = Foo()
+        mock_obj = mock.Mock()
+
+        # Add the listener
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=observe.ListenerPath.from_nodes(
+                observe.MetadataTraitListener(
+                    metadata_name="name", notify=True, include=True)
+            ),
+            remove=False,
+            dispatch="same",
+        )
+
+        # Not the listened trait
+        foo.add_trait("age", Int(updated=True))
+
+        foo.age += 1
+
+        mock_obj.assert_not_called()
+
 
 class TestPathEqual(unittest.TestCase):
 

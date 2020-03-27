@@ -310,6 +310,11 @@ class BaseListener:
         """
         raise NotImplementedError()
 
+    def trait_added_matched(self, object, name, trait):
+        """ Return true if an added trait should be handled by this listener
+        """
+        raise NotImplementedError()
+
 
 class AnyTraitListener(BaseListener):
 
@@ -395,6 +400,11 @@ class _FilteredTraitListener(BaseListener):
             target=target,
             dispatcher=dispatcher,
         )
+
+    def trait_added_matched(self, object, name, trait):
+        """ Return true if an added trait should be handled by this listener
+        """
+        return self.filter(name, trait)
 
 
 class _MetadataFilter:
@@ -526,6 +536,11 @@ class NamedTraitListener(BaseListener):
             dispatcher=dispatcher,
         )
 
+    def trait_added_matched(self, object, name, trait):
+        """ Return true if an added trait should be handled by this listener
+        """
+        return name == self.name
+
 
 OptionalTraitListener = partial(NamedTraitListener, optional=True)
 
@@ -565,17 +580,21 @@ class TraitAddedListener(BaseListener):
     def change_callback(event, callback, path, target, dispatcher):
         # The event comes from trait_added
         listener = path.node
-        add_notifiers(
-            object=event.object,
-            callback=callback,
-            path=ListenerPath(
-                node=RequiredTraitListener(
-                    name=event.new, notify=listener.notify),
-                nexts=path.nexts
-            ),
-            target=target,
-            dispatcher=dispatcher,
-        )
+        object = event.object
+        name = event.new
+        trait = object.trait(name=name)
+        if listener.trait_added_matched(object, name, trait):
+            add_notifiers(
+                object=object,
+                callback=callback,
+                path=ListenerPath(
+                    node=RequiredTraitListener(
+                        name=name, notify=listener.notify),
+                    nexts=path.nexts
+                ),
+                target=target,
+                dispatcher=dispatcher,
+            )
 
 
 class ListItemListener(BaseListener):
@@ -633,6 +652,11 @@ class ListItemListener(BaseListener):
                     target=target,
                     dispatcher=dispatcher,
                 )
+
+    def trait_added_matched(self, object, name, trait):
+        """ Return true if an added trait should be handled by this listener
+        """
+        return False
 
 
 class DictValueListener(BaseListener):
