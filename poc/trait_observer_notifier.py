@@ -30,11 +30,10 @@ class ListObserverEvent(BaseObserverEvent):
         self.object = object
         self.name = name
         self.old = old
-        trait_list, index, removed, added = new
-        self.new = trait_list
-        self.added = added
-        self.removed = removed
-        self.index = index
+        self.new = old
+        self.added = new.added
+        self.removed = new.removed
+        self.index = new.index
 
 
 class TraitObserverNotifier(object):
