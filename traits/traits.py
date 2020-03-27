@@ -55,7 +55,6 @@ from .trait_converters import (
 
 from .trait_handler import TraitHandler
 from .trait_type import (
-    _arg_count,
     _infer_default_value_type,
     _read_only,
     _write_only,
@@ -624,15 +623,9 @@ def Property(
     ):
         metadata.setdefault("cached", True)
 
-    n = 0
     trait = CTrait(TraitKind.property)
     trait.__dict__ = metadata.copy()
-    if fvalidate is not None:
-        n = _arg_count(fvalidate)
-
-    trait.property(
-        fget, _arg_count(fget), fset, _arg_count(fset), fvalidate, n
-    )
+    trait.property(fget, fset, fvalidate)
     trait.handler = handler
 
     return trait

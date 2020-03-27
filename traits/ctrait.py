@@ -16,6 +16,8 @@ validate as well as maintining a list of notifiers and calling them when
 values are modified.
 """
 
+import inspect
+
 from . import ctraits
 from .constants import ComparisonMode, DefaultValue, default_value_map
 from .trait_base import SequenceTypes, Undefined
@@ -108,6 +110,34 @@ class CTrait(ctraits.cTrait):
     @comparison_mode.setter
     def comparison_mode(self, value):
         ctraits.cTrait.comparison_mode.__set__(self, value)
+
+    def property(self, *args):
+        """ Gets or sets the fget, fset, and fvalidate callables
+        for the property.
+
+        Returns a tuple (fget, fset, fvalidate) if this method
+        is called with no arguments.
+
+        If the arguments fget, fset and fvalidate are provided,
+        these values are set for the property.
+        """
+
+        if len(args) == 0:
+            # Get the values
+            return self._get_property()
+
+        else:
+            # Set values
+            func_arg_counts = []
+            for arg in args:
+                if arg is None:
+                    func_arg_counts.extend([None, 0])
+                else:
+                    sig = inspect.signature(arg)
+                    pararm_count = len(sig.parameters)
+                    func_arg_counts.extend([arg, pararm_count])
+
+            self._set_property(*func_arg_counts)
 
     def is_trait_type(self, trait_type):
         """ Returns whether or not this trait is of a specified trait type.

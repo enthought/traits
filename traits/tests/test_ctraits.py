@@ -85,7 +85,7 @@ class TestCTrait(unittest.TestCase):
 
         self.assertFalse(trait.is_property)
 
-        trait.property(getter, 0, setter, 1, validator, 1)
+        trait.property(getter, setter, validator)
 
         self.assertTrue(trait.is_property)
 

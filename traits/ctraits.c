@@ -4520,6 +4520,29 @@ _get_trait_comparison_mode_int(trait_object *trait, void *closure)
 }
 
 /*-----------------------------------------------------------------------------
+|  Get the 'property' value fields of a CTrait instance:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_get_property(trait_object *trait, PyObject *args)
+{
+    if (PyTuple_GET_SIZE(args) != 0) {
+        PyErr_SetString(PyExc_ValueError, "Invalid number of arguments.");
+        return NULL;
+    }
+
+    if (trait->flags & TRAIT_PROPERTY) {
+        return PyTuple_Pack(
+            3, trait->delegate_name, trait->delegate_prefix,
+            trait->py_validate);
+    }
+    else {
+        Py_INCREF(Py_None);
+        return Py_None;
+    }
+}
+
+/*-----------------------------------------------------------------------------
 |  Sets the 'property' value fields of a CTrait instance:
 +----------------------------------------------------------------------------*/
 
@@ -4529,21 +4552,14 @@ static trait_setattr setattr_property_handlers[] = {
     (trait_setattr)post_setattr_trait_python, NULL};
 
 static PyObject *
-_trait_property(trait_object *trait, PyObject *args)
+_set_property(trait_object *trait, PyObject *args)
 {
     PyObject *get, *set, *validate;
     int get_n, set_n, validate_n;
 
-    if (PyTuple_GET_SIZE(args) == 0) {
-        if (trait->flags & TRAIT_PROPERTY) {
-            return PyTuple_Pack(
-                3, trait->delegate_name, trait->delegate_prefix,
-                trait->py_validate);
-        }
-        else {
-            Py_INCREF(Py_None);
-            return Py_None;
-        }
+    if (PyTuple_GET_SIZE(args) != 6) {
+        PyErr_SetString(PyExc_ValueError, "Invalid number of arguments.");
+        return NULL;
     }
 
     if (!PyArg_ParseTuple(
@@ -5107,20 +5123,23 @@ PyDoc_STRVAR(
     "    is modified.\n");
 
 PyDoc_STRVAR(
-    property_doc,
-    "property()\n"
-    "property(get, get_n, set, set_n, validate, validate_n)\n"
+    _get_property_doc,
+    "_get_property()\n"
     "\n"
-    "Get or set property fields for this trait.\n"
+    "Get the property fields for this trait.\n"
     "\n"
     "When called with no arguments on a property trait, this method returns a\n"
     "tuple (get, set, validate) of length 3 containing the getter, setter and\n"
     "validator for this property trait.\n"
     "\n"
     "When called with no arguments on a non-property trait, this method\n"
-    "returns *None*.\n"
+    "returns *None*.\n");
+
+PyDoc_STRVAR(
+    _set_property_doc,
+    "_set_property(get, get_n, set, set_n, validate, validate_n)\n"
     "\n"
-    "Otherwise, the *property* method expects six arguments, and uses these\n"
+    "The *property* method expects six arguments, and uses these\n"
     "arguments to set the get, set and validation for the trait. It also\n"
     "sets the property flag on the trait.\n"
     "\n"
@@ -5223,8 +5242,10 @@ static PyMethodDef trait_methods[] = {
     {"validate", (PyCFunction)_trait_validate, METH_VARARGS, validate_doc},
     {"delegate", (PyCFunction)_trait_delegate, METH_VARARGS,
      delegate_doc},
-    {"property", (PyCFunction)_trait_property, METH_VARARGS,
-     property_doc},
+    {"_get_property", (PyCFunction)_get_property, METH_VARARGS,
+     _get_property_doc},
+    {"_set_property", (PyCFunction)_set_property, METH_VARARGS,
+     _set_property_doc},
     {"clone", (PyCFunction)_trait_clone, METH_VARARGS,
      clone_doc},
     {"_notifiers", (PyCFunction)_trait_notifiers, METH_VARARGS,

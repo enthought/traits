@@ -16,7 +16,6 @@ traits, and provides a richer API than the old-style traits derived from
 ``TraitHandler``.
 """
 
-from types import MethodType
 import warnings
 
 from .base_trait_handler import BaseTraitHandler
@@ -67,14 +66,6 @@ def _read_only(object, name, value):
         "The '%s' trait of %s instance is 'read only'."
         % (name, class_of(object))
     )
-
-
-def _arg_count(func):
-    """ Returns the correct argument count for a specified function or method.
-    """
-    if (type(func) is MethodType) and (func.__self__ is not None):
-        return func.__code__.co_argcount - 1
-    return func.__code__.co_argcount
 
 
 # Create a singleton object for use in the TraitType constructor:
@@ -381,17 +372,11 @@ class TraitType(BaseTraitHandler):
                 setter = _read_only
                 metadata.setdefault("transient", True)
             trait = CTrait(TraitKind.property)
-            n = 0
             validate = getattr(self, "validate", None)
-            if validate is not None:
-                n = _arg_count(validate)
             trait.property(
                 getter,
-                _arg_count(getter),
                 setter,
-                _arg_count(setter),
                 validate,
-                n,
             )
             metadata.setdefault("type", "property")
         else:
