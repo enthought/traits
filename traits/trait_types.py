@@ -1925,7 +1925,7 @@ class BaseEnum(TraitType):
         - a default value, followed by a single list enum.Enum, tuple or
           collection conforming to collections.abc.Collection
         - arbitrary positional arguments each giving a valid value.
-    values : str
+    values : str, optional
         The name of a trait holding the legal values.  A default value may
         be provided via a positional argument, otherwise the first item in
         the collection is used as the default value. Note that if the
@@ -1944,9 +1944,8 @@ class BaseEnum(TraitType):
         unused.
     """
 
-    def __init__(self, *args, **metadata):
-        values = metadata.pop("values", None)
-        if isinstance(values, str):
+    def __init__(self, *args, values=None, **metadata):
+        if values is not None:
             self.name = values
             self.get, self.set, self.validate = self._get, self._set, None
             n = len(args)
@@ -2096,7 +2095,7 @@ class Enum(BaseEnum):
         - a default value, followed by a single list enum.Enum, tuple or
           collection conforming to collections.abc.Collection
         - arbitrary positional arguments each giving a valid value.
-    values : str
+    values : str, optional
         The name of a trait holding the legal values.  A default value may
         be provided via a positional argument, otherwise the first item in
         the collection is used as the default value. Note that if the
