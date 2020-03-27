@@ -1945,13 +1945,13 @@ class BaseEnum(TraitType):
     """
 
     def __init__(self, *args, values=None, **metadata):
+        nargs = len(args)
         if values is not None:
             self.name = values
             self.get, self.set, self.validate = self._get, self._set, None
-            n = len(args)
-            if n == 0:
+            if nargs == 0:
                 super(BaseEnum, self).__init__(**metadata)
-            elif n == 1:
+            elif nargs == 1:
                 default_value = args[0]
                 super(BaseEnum, self).__init__(default_value, **metadata)
             else:
@@ -1960,11 +1960,11 @@ class BaseEnum(TraitType):
                     "when using the 'values' keyword"
                 )
         else:
-            if len(args) < 1:
+            if nargs == 0:
                 raise TraitError("Enum trait requires at "
                                  "least 1 argument.")
 
-            elif len(args) == 1:
+            elif nargs == 1:
                 arg = args[0]
                 if isinstance(arg, EnumTypes):
                     default_value = next(iter(arg), None)
@@ -1981,7 +1981,7 @@ class BaseEnum(TraitType):
                     default_value = next(iter(arg), None)
                     self.values = arg
 
-            elif len(args) == 2:
+            elif nargs == 2:
                 # If 2 args, the first is default, second is allowed values.
                 default_value = args[0]
                 allowed_vals = args[1]
