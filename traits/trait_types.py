@@ -1989,10 +1989,6 @@ class BaseEnum(TraitType):
             else:
                 default_value = next(iter(self.values), None)
 
-            if isinstance(args, enum.EnumMeta):
-                metadata.setdefault('format_func', operator.attrgetter('name'))
-                metadata.setdefault('evaluate', args)
-
             self.name = ""
             self.init_fast_validate(ValidateTrait.enum, self.values)
 
