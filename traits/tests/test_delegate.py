@@ -29,12 +29,10 @@ class Foo(HasTraits):
     def _s_changed(self, name, old, new):
         global foo_s_handler_self
         foo_s_handler_self = self
-        return
 
     def _t_changed(self, name, old, new):
         global foo_t_handler_self
         foo_t_handler_self = self
-        return
 
 
 class Bar(HasTraits):
@@ -52,22 +50,18 @@ class BazModify(HasTraits):
         # should never be called
         global baz_s_handler_self
         baz_s_handler_self = self
-        return
 
     def _sd_changed(self, name, old, new):
         global baz_sd_handler_self
         baz_sd_handler_self = self
-        return
 
     def _t_changed(self, name, old, new):
         global baz_t_handler_self
         baz_t_handler_self = self
-        return
 
     def _u_changed(self, name, old, new):
         global baz_u_handler_self
         baz_u_handler_self = self
-        return
 
 
 class BazNoModify(HasTraits):
@@ -79,22 +73,18 @@ class BazNoModify(HasTraits):
     def _s_changed(self, name, old, new):
         global baz_s_handler_self
         baz_s_handler_self = self
-        return
 
     def _sd_changed(self, name, old, new):
         global baz_sd_handler_self
         baz_sd_handler_self = self
-        return
 
     def _t_changed(self, name, old, new):
         global baz_t_handler_self
         baz_t_handler_self = self
-        return
 
     def _u_changed(self, name, old, new):
         global baz_u_handler_self
         baz_u_handler_self = self
-        return
 
 
 class DelegateTestCase(unittest.TestCase):
@@ -133,7 +123,6 @@ class DelegateTestCase(unittest.TestCase):
         # really testing for.
         del b.s
         self.assertEqual(f.s, b.s)
-        return
 
     # Below are 8 tests to check the calling of change notification handlers.
     # There are 8 cases for the 2x2x2 matrix with axes:
@@ -155,7 +144,6 @@ class DelegateTestCase(unittest.TestCase):
 
         # Do expect '_sd_changed' to be called with b as self
         self.assertEqual(baz_sd_handler_self, b)
-        return
 
     def test_modify_prefix_handler_on_delegatee(self):
         f = Foo()
@@ -168,7 +156,6 @@ class DelegateTestCase(unittest.TestCase):
 
         # Foo expects its '_s_changed' handler to be called with f as self
         self.assertEqual(foo_s_handler_self, f)
-        return
 
     def test_no_modify_prefix_handler_on_delegator(self):
         f = Foo()
@@ -185,7 +172,6 @@ class DelegateTestCase(unittest.TestCase):
 
         # Do expect '_sd_changed' to be called with b as self
         self.assertEqual(baz_sd_handler_self, b)
-        return
 
     def test_no_modify_prefix_handler_on_delegatee_not_called(self):
         f = Foo()
@@ -198,7 +184,6 @@ class DelegateTestCase(unittest.TestCase):
 
         # Foo expects its '_s_changed' handler to be called with f as self
         self.assertEqual(foo_s_handler_self, None)
-        return
 
     def test_modify_handler_on_delegator(self):
         f = Foo()
@@ -211,7 +196,6 @@ class DelegateTestCase(unittest.TestCase):
 
         # Do expect '_t_changed' to be called with b as self
         self.assertEqual(baz_t_handler_self, b)
-        return
 
     def test_modify_handler_on_delegatee(self):
         f = Foo()
@@ -224,7 +208,6 @@ class DelegateTestCase(unittest.TestCase):
 
         # Foo t did change so '_t_changed' handler should be called
         self.assertEqual(foo_t_handler_self, f)
-        return
 
     def test_no_modify_handler_on_delegator(self):
         f = Foo()
@@ -237,7 +220,6 @@ class DelegateTestCase(unittest.TestCase):
 
         # Do expect '_t_changed' to be called with b as self
         self.assertEqual(baz_t_handler_self, b)
-        return
 
     def test_no_modify_handler_on_delegatee_not_called(self):
         f = Foo()
@@ -250,7 +232,6 @@ class DelegateTestCase(unittest.TestCase):
 
         # Foo t did not change so '_t_changed' handler should not be called
         self.assertEqual(foo_t_handler_self, None)
-        return
 
     # Below are 4 tests for notification when the delegated trait is changed
     # directly rather than through the delegator.
@@ -265,7 +246,6 @@ class DelegateTestCase(unittest.TestCase):
 
         # Foo t did change so '_t_changed' handler should be called
         self.assertEqual(foo_t_handler_self, f)
-        return
 
     def test_no_modify_handler_on_delegator_direct_change(self):
         f = Foo()
@@ -278,7 +258,6 @@ class DelegateTestCase(unittest.TestCase):
 
         # Do expect '_t_changed' to be called with b as self
         self.assertEqual(baz_t_handler_self, b)
-        return
 
     def test_modify_handler_on_delegatee_direct_change(self):
         f = Foo()
@@ -291,7 +270,6 @@ class DelegateTestCase(unittest.TestCase):
 
         # Foo t did change so '_t_changed' handler should be called
         self.assertEqual(foo_t_handler_self, f)
-        return
 
     def test_modify_handler_on_delegator_direct_change(self):
         f = Foo()
@@ -304,7 +282,6 @@ class DelegateTestCase(unittest.TestCase):
 
         # Do expect '_t_changed' to be called with b as self
         self.assertEqual(baz_t_handler_self, b)
-        return
 
     # Below are tests which check that we can turn off listenableness.
     def test_modify_handler_not_listenable(self):
@@ -318,7 +295,6 @@ class DelegateTestCase(unittest.TestCase):
 
         # Do not expect '_u_changed' to be called.
         self.assertEqual(baz_u_handler_self, None)
-        return
 
     def test_no_modify_handler_not_listenable(self):
         f = Foo()
@@ -331,4 +307,3 @@ class DelegateTestCase(unittest.TestCase):
 
         # Do not expect '_u_changed' to be called.
         self.assertEqual(baz_u_handler_self, None)
-        return

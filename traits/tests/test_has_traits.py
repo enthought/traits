@@ -311,6 +311,47 @@ class TestHasTraits(unittest.TestCase):
         target.event = event
         self.assertEqual(target.event_count, old_count + 1)
 
+    def test__object_notifiers_vetoed(self):
+
+        class SomeEvent(HasTraits):
+            event_id = Int()
+
+        class Target(HasTraits):
+            event = Event(Instance(SomeEvent))
+
+            event_count = Int(0)
+
+        target = Target()
+        event = SomeEvent(event_id=9)
+
+        def object_handler(object, name, old, new):
+            if name == "event":
+                object.event_count += 1
+
+        target.on_trait_change(object_handler, name="anytrait")
+
+        # Default state is not vetoed.
+        self.assertFalse(event._trait_notifications_vetoed())
+
+        # Firing the event increments the count.
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count + 1)
+
+        # Now veto the event. Firing the event won't affect the count.
+        event._trait_veto_notify(True)
+        self.assertTrue(event._trait_notifications_vetoed())
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count)
+
+        # Unveto the event.
+        event._trait_veto_notify(False)
+        self.assertFalse(event._trait_notifications_vetoed())
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count + 1)
+
     def test_traits_inited(self):
         foo = HasTraits()
 
@@ -324,6 +365,158 @@ class TestHasTraits(unittest.TestCase):
         foo._trait_set_inited()
 
         self.assertTrue(foo.traits_inited())
+
+    def test_generic_getattr_exception(self):
+        # Regression test for enthought/traits#946.
+
+        class PropertyLike:
+            """
+            Data descriptor giving a property-like object that produces
+            successive reciprocals on __get__. This means that it raises
+            on first access, but not on subsequent accesses.
+            """
+            def __init__(self):
+                self.n = 0
+
+            def __get__(self, obj, type=None):
+                old_n = self.n
+                self.n += 1
+                return 1 / old_n
+
+            # Need a __set__ method to make this a data descriptor.
+            def __set__(self, obj, value):
+                raise AttributeError("Read-only descriptor")
+
+        class A(HasTraits):
+            fruit = PropertyLike()
+
+            banana_ = Int(1729)
+
+        a = A()
+
+        # The exception raised on the first attribute access should be
+        # propagated.
+        with self.assertRaises(ZeroDivisionError):
+            a.fruit
+
+        # Exercise the code path where the PyObject_GenericGetAttr call raises
+        # AttributeError. In this case, we catch the error but the prefix trait
+        # machinery raises a new AttributeError.
+        with self.assertRaises(AttributeError):
+            a.veg
+
+        # Exercise the case where the prefix traits machinery goes on to
+        # produce a valid result.
+        self.assertEqual(a.banananana, 1729)
+
+
+class TestObjectNotifiers(unittest.TestCase):
+    """ Test calling object notifiers. """
+
+    def test_notifiers_empty(self):
+
+        class Foo(HasTraits):
+            x = Int()
+
+        foo = Foo(x=1)
+        self.assertEqual(foo._notifiers(True), [])
+
+    def test_notifiers_on_object(self):
+
+        class Foo(HasTraits):
+            x = Int()
+
+        foo = Foo(x=1)
+        self.assertEqual(foo._notifiers(True), [])
+
+        # when
+        def handler():
+            pass
+
+        foo.on_trait_change(handler, name="anytrait")
+
+        # then
+        notifiers = foo._notifiers(True)
+        self.assertEqual(len(notifiers), 1)
+        onotifier, = notifiers
+        self.assertEqual(onotifier.handler, handler)
+
+
+class TestCallNotifiers(unittest.TestCase):
+
+    def test_trait_and_object_notifiers_called(self):
+
+        side_effects = []
+
+        class Foo(HasTraits):
+            x = Int()
+            y = Int()
+
+            def _x_changed(self):
+                side_effects.append("x")
+
+        def object_handler():
+            side_effects.append("object")
+
+        foo = Foo()
+        foo.on_trait_change(object_handler, name="anytrait")
+
+        # when
+        side_effects.clear()
+        foo.x = 3
+
+        # then
+        self.assertEqual(side_effects, ["x", "object"])
+
+        # when
+        side_effects.clear()
+        foo.y = 4
+
+        # then
+        self.assertEqual(side_effects, ["object"])
+
+    def test_trait_notifier_modify_object_notifier(self):
+        # Test when a trait notifier has a side effect of adding
+        # an object notifier
+
+        side_effects = []
+
+        def object_handler1():
+            side_effects.append("object1")
+
+        def object_handler2():
+            side_effects.append("object2")
+
+        class Foo(HasTraits):
+            x = Int()
+            y = Int()
+
+            def _x_changed(self):
+                side_effects.append("x")
+
+                # add the second object notifier
+                self.on_trait_change(object_handler2, name="anytrait")
+
+        # Add an object handler so that the list is created for mutation.
+        foo = Foo()
+        foo.on_trait_change(object_handler1, name="anytrait")
+
+        # when
+        side_effects.clear()
+        foo.x = 1
+
+        # then
+        # the second object notifier is not called.
+        self.assertEqual(side_effects, ["x", "object1"])
+
+        # But the object notifier is added and will be used the next time
+        # when
+        side_effects.clear()
+        foo.y = 2
+
+        # then
+        # the second object notifier is called.
+        self.assertEqual(side_effects, ["object1", "object2"])
 
 
 class TestDeprecatedHasTraits(unittest.TestCase):

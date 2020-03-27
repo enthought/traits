@@ -132,8 +132,6 @@ class ETSConfigTestCase(unittest.TestCase):
         self.assertEqual(os.path.exists(dirname), True)
         self.assertEqual(os.path.isdir(dirname), True)
 
-        return
-
     def test_set_application_data(self):
         """
         set application data
@@ -148,8 +146,6 @@ class ETSConfigTestCase(unittest.TestCase):
         self.ETSConfig.application_data = old
         self.assertEqual(old, self.ETSConfig.application_data)
 
-        return
-
     def test_application_data_is_idempotent(self):
         """
         application data is idempotent
@@ -159,8 +155,6 @@ class ETSConfigTestCase(unittest.TestCase):
         # Just do the previous test again!
         self.test_application_data()
         self.test_application_data()
-
-        return
 
     def test_write_to_application_data_directory(self):
         """
@@ -186,8 +180,6 @@ class ETSConfigTestCase(unittest.TestCase):
 
         self.assertEqual(data, result)
 
-        return
-
     def test_default_company(self):
         """
         default company
@@ -195,8 +187,6 @@ class ETSConfigTestCase(unittest.TestCase):
         """
 
         self.assertEqual(self.ETSConfig.company, "Enthought")
-
-        return
 
     def test_set_company(self):
         """
@@ -211,8 +201,6 @@ class ETSConfigTestCase(unittest.TestCase):
 
         self.ETSConfig.company = old
         self.assertEqual(old, self.ETSConfig.company)
-
-        return
 
     def _test_default_application_home(self):
         """
@@ -317,8 +305,6 @@ class ETSConfigTestCase(unittest.TestCase):
         self.assertEqual(os.path.exists(dirname), True)
         self.assertEqual(os.path.isdir(dirname), True)
 
-        return
-
     def test_set_user_data(self):
         """
         set user data
@@ -333,8 +319,6 @@ class ETSConfigTestCase(unittest.TestCase):
         self.ETSConfig.user_data = old
         self.assertEqual(old, self.ETSConfig.user_data)
 
-        return
-
     def test_user_data_is_idempotent(self):
         """
         user data is idempotent
@@ -343,8 +327,6 @@ class ETSConfigTestCase(unittest.TestCase):
 
         # Just do the previous test again!
         self.test_user_data()
-
-        return
 
     def test_write_to_user_data_directory(self):
         """
@@ -369,8 +351,6 @@ class ETSConfigTestCase(unittest.TestCase):
         os.remove(path)
 
         self.assertEqual(data, result)
-
-        return
 
 
 # For running as an individual set of tests.

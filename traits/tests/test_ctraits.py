@@ -9,7 +9,7 @@
 # Thanks for using Enthought open source!
 
 import sys
-import unittest
+import unittest.mock
 import warnings
 import weakref
 
@@ -19,7 +19,7 @@ from traits.constants import (
 )
 from traits.ctrait import CTrait
 from traits.trait_errors import TraitError
-from traits.trait_types import Any, List
+from traits.trait_types import Any, Int, List
 
 
 def getter():
@@ -278,3 +278,52 @@ class TestCTrait(unittest.TestCase):
         self.assertEqual(foo.bar, "baz")
         self.assertEqual(len(foo.bar_changed), 1)
         self.assertEqual(foo.bar_changed[0], "baz")
+
+    def test_failed_attribute_access(self):
+        ctrait = CTrait(0)
+        self.assertIsNone(ctrait.non_existent)
+
+    def test_exception_from_attribute_access(self):
+        # Regression test for enthought/traits#946.
+
+        # Danger: we're (temporarily) mutating global state here! Check that
+        # we're not touching an attribute that actually exists.
+        self.assertFalse(hasattr(CTrait, "badattr_test"))
+
+        CTrait.badattr_test = property(lambda self: 1 / 0)
+        try:
+            ctrait = CTrait(0)
+            with self.assertRaises(ZeroDivisionError):
+                ctrait.badattr_test
+        finally:
+            del CTrait.badattr_test
+
+
+class TestCTraitNotifiers(unittest.TestCase):
+    """ Test calling trait notifiers and object notifiers. """
+
+    def test_notifiers_empty(self):
+
+        class Foo(HasTraits):
+            x = Int()
+
+        foo = Foo(x=1)
+        x_ctrait = foo.trait("x")
+
+        self.assertEqual(x_ctrait._notifiers(True), [])
+
+    def test_notifiers_on_trait(self):
+
+        class Foo(HasTraits):
+            x = Int()
+
+            def _x_changed(self):
+                pass
+
+        foo = Foo(x=1)
+        x_ctrait = foo.trait("x")
+
+        tnotifiers = x_ctrait._notifiers(True)
+        self.assertEqual(len(tnotifiers), 1)
+        notifier, = tnotifiers
+        self.assertEqual(notifier.handler, Foo._x_changed)

@@ -43,5 +43,3 @@ class ArrayTestCase(unittest.TestCase):
 
         # Confirm that the static trait handler was invoked.
         self.assertEqual(f.event_fired, True)
-
-        return

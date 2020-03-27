@@ -33,13 +33,11 @@ class UndefinedTestCase(unittest.TestCase):
     def test_initial_value(self):
         b = Bar()
         self.assertEqual(b.name, Undefined)
-        return
 
     def test_name_change(self):
         b = Bar()
         b.name = "first"
         self.assertEqual(b.name, "first")
-        return
 
     def test_read_only_write_once(self):
         f = Foo()
@@ -55,8 +53,6 @@ class UndefinedTestCase(unittest.TestCase):
         self.assertEqual(f.name, "second")
         self.assertEqual(f.original_name, "first")
 
-        return
-
     def test_read_only_write_once_from_constructor(self):
         f = Foo(name="first")
 
@@ -67,5 +63,3 @@ class UndefinedTestCase(unittest.TestCase):
         f.name = "second"
         self.assertEqual(f.name, "second")
         self.assertEqual(f.original_name, "first")
-
-        return

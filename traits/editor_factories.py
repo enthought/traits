@@ -151,16 +151,20 @@ def _datetime_str_to_datetime(datetime_str, format="%Y-%m-%dT%H:%M:%S"):
 
     Raises a ValueError if datetime_str does not match the format.
     """
-    if datetime_str is not None:
-        return datetime.datetime.strptime(datetime_str, format)
+    # Allow the empty string to be translated to None.
+    if not datetime_str:
+        return None
+    return datetime.datetime.strptime(datetime_str, format)
 
 
 def _datetime_to_datetime_str(datetime_obj, format="%Y-%m-%dT%H:%M:%S"):
     """ Returns a string representation for a datetime object in the specified
     format (default ISO format).
     """
-    if datetime_obj is not None:
-        return datetime.date.strftime(datetime_obj, format)
+    # A Datetime trait can contain None. We translate that to an empty string.
+    if datetime_obj is None:
+        return ""
+    return datetime.date.strftime(datetime_obj, format)
 
 
 def datetime_editor():
