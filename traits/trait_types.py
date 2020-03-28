@@ -1998,8 +1998,7 @@ class BaseEnum(TraitType):
         else:
             # Static enumeration
             if nargs == 0:
-                raise TraitError("Enum trait requires at "
-                                 "least 1 argument.")
+                raise TraitError("Enum trait requires at least 1 argument.")
 
             # If we have either 1 or 2 arguments and the last argument is a
             # collection, then that collection provides the values of the
