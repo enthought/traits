@@ -12,7 +12,6 @@
 """
 
 import datetime
-import enum
 from importlib import import_module
 import operator
 import re
