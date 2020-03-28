@@ -1975,7 +1975,6 @@ class BaseEnum(TraitType):
         For a dynamic enumeration, this is the name of a trait holding
         the collection of valid values. For a static enumeration, this is
         None.
-
     """
 
     def __init__(self, *args, values=None, **metadata):
@@ -2091,44 +2090,79 @@ class Enum(BaseEnum):
     """ A fast-validating trait type whose value is an element of a finite
     collection.
 
-    The default value is the first positional argument, or the first item of
-    the list, tuple or enum.Enum if that is the only argument or if the valid
-    values are provided dynamically.
+    This trait type can be either *static*, with the collection of valid values
+    specified directly in the constructor, or *dynamic*, with the collection
+    provided by the value of another trait attribute.
+
+    For both static and dynamic enumerations, a default value can be provided
+    as a positional argument. If no default is provided, the default is the
+    first item (in iteration order) of the underlying collection.
+
+    Notes
+    -----
+
+    1. If the enumeration is based on an unordered collection like a
+       ``set``, and no explicit default is given, the default used will
+       effectively be arbitrary (the first element of the set in iteration
+       order). It's recommended that a default be given explicitly in this
+       case.
+
+    2. Instances of ``str``, ``bytes`` and ``bytearray`` are not treated
+       as collections for the purposes of this trait type, both for pragmatic
+       reasons (it's more likely that a user wants to use a string as an
+       element in a collection than as a collection in its own right), and
+       because the behavior of the ``in`` operator for those types does not
+       express the usual membership semantics (for example, ``"bc" in "abc"``
+       is ``True``).
 
     Parameters
     ----------
     *args
-        The enumeration of all legal values for the trait.  The expected
-        signatures are either:
+        The enumeration of all valid values for the trait. For a static
+        enumeration trait (where the *values* keyword argument is not given)
+        the supported signatures for ``args`` are as follows:
 
-        - a single list, enum.Enum, tuple or a collection.  The default value
-          is the first item in the collection. The collection should conform to
-          the collections.abc.Collection interface. That is, it at least
-          provides the __contains__, __len__ and __iter__ methods.
-          Note that although the types str, bytes, and bytearray
-          conform to the collection interface, these are handled
-          as discrete units.
-        - a single default value, combined with the values keyword
-          argument.
-        - a default value, followed by a single list enum.Enum, tuple or
-          collection conforming to collections.abc.Collection
-        - arbitrary positional arguments each giving a valid value.
+        (collection,)
+            The collection of valid values. The default is the first item
+            of the collection, in iteration order.
+        (default, collection)
+            The default value, followed by the collection of valid values.
+        (item1, item2, ..., itemn)
+            One or more items giving the valid values for the collection.
+            The default is *item1*.
+
+        For a dynamic enumeration trait, where the *values* keyword argument
+        is given, the supported signatures for ``args`` are:
+
+        ()
+            No arguments given. In this case the default is the first item
+            of the collection, in iteration order.
+        (default,)
+            The default value for the collection.
+
+        For the static case, the ambiguity in the signatures is resolved
+        as follows: if ``args`` has length ``1`` or ``2``, ``arg[-1]`` can be
+        iterated over, and ``arg[-1]`` is not an instance of ``str``, ``bytes``
+        or ``bytearray``, then ``arg[-1]`` is assumed to give the collection
+        of values. Otherwise, all elements of ``args`` are assumed to be
+        items in the collection. Thus the first two signatures are safe
+        from ambiguity, and it's recommended to use one of these two signatures
+        in preference to the third form.
     values : str, optional
-        The name of a trait holding the legal values.  A default value may
-        be provided via a positional argument, otherwise the first item in
-        the collection is used as the default value. Note that if the
-        collection does not have a notion of order like a set, the default
-        value will be an arbitrary element from the set.
+        The name of a trait holding the valid values. If given, this is
+        a dynamic enumeration, otherwise it's a static numeration.
     **metadata
-        Trait metadata for the trait.
+        Metadata for the trait.
 
     Attributes
     ----------
-    values : tuple
-        A tuple holding the legal values.
-    name : str
-        The name of a trait holding the legal values, or the empty string if
-        unused.
+    values : tuple or None
+        For a static enumeration, this is a tuple holding the valid values.
+        For a dynamic enumeration, this is None.
+    name : str or None
+        For a dynamic enumeration, this is the name of a trait holding
+        the collection of valid values. For a static enumeration, this is
+        None.
     """
 
     def init_fast_validate(self, *args):
