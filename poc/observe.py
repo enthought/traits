@@ -632,7 +632,7 @@ class ListItemListener(BaseListener):
         logger.debug(
             "Handling list change. "
             "({!r})".format(
-                (event.old, event.new, event.removed, event.added, path.node))
+                (event.new, event.removed, event.added, path.node))
         )
         for item in event.removed:
             if is_notifiable(item):

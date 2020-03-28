@@ -11,8 +11,19 @@ from traits.trait_base import Uninitialized
 
 logger = logging.getLogger()
 
+
 class BaseObserverEvent(object):
-    pass
+
+    def __init__(self, arg1, arg2, arg3, arg4):
+        raise NotImplementedError()
+
+    @property
+    def new(self):
+        return self._new
+
+    @new.setter
+    def new(self, value):
+        self._new = value
 
 
 class ObserverEvent(BaseObserverEvent):
@@ -26,14 +37,11 @@ class ObserverEvent(BaseObserverEvent):
 
 class ListObserverEvent(BaseObserverEvent):
 
-    def __init__(self, object, name, old, new):
-        self.object = object
-        self.name = name
-        self.old = old
-        self.new = old
-        self.added = new.added
-        self.removed = new.removed
-        self.index = new.index
+    def __init__(self, trait_list, index, removed, added):
+        self.new = trait_list
+        self.added = added
+        self.removed = removed
+        self.index = index
 
 
 class TraitObserverNotifier(object):

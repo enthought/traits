@@ -108,7 +108,6 @@ class TestList(unittest.TestCase):
 
         self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
-        self.assertIs(event.old, f.l)
         self.assertIs(event.new, f.l)
         self.assertEqual(event.index, 0)
         self.assertEqual(event.removed, [])
@@ -135,7 +134,6 @@ class TestList(unittest.TestCase):
 
         self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
-        self.assertIs(event.old, f.l)
         self.assertIs(event.new, f.l)
         self.assertEqual(event.removed, [])
         self.assertEqual(event.added, [bar, bar])
@@ -681,13 +679,6 @@ class TestListOfList(unittest.TestCase):
         # then
         self.assertEqual(mock_obj.call_count, 1)
         ((event, ), _), = mock_obj.call_args_list
-        # TODO: Is this the right object?
-        self.assertEqual(event.object, foo)
-        # TODO: Is this the right name?
-        self.assertEqual(event.name, "bars")
-        # TODO: Bogus filler again, can we remove it?
-        self.assertIs(event.old, foo.bars[0])
-
         self.assertIs(event.new, foo.bars[0])
         self.assertEqual(event.index, 2)
         self.assertEqual(foo.bars, [[1, 2, 3]])

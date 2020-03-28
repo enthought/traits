@@ -104,8 +104,7 @@ class TraitListObject(list):
             self.name_items = name + "_items"
 
         # Added for observer
-        from traits.trait_types import Event
-        self._event_ctrait = Event().as_ctrait()
+        self._observer_notifiers = []
 
         # Do the validated 'setslice' assignment without raising an
         # 'items_changed' event:
@@ -143,14 +142,14 @@ class TraitListObject(list):
             if event.added is None:
                 event.added = []
             for notifier in self._notifiers(True):
-                # We don't actually have the old copy of the list
-                notifier(object, self.name, self, event)
+                notifier(
+                    self, event.index, event.removed, event.added)
             # -------------------------------------------
 
     # -------------------------------------------
     # Added for observer
     def _notifiers(self, force_create):
-        return self._event_ctrait._notifiers(force_create)
+        return self._observer_notifiers
     # -------------------------------------------
 
     def __deepcopy__(self, memo):
