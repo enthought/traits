@@ -2107,10 +2107,6 @@ class Enum(BaseEnum):
 
     def init_fast_validate(self, *args):
         """ Set up C-level fast validation. """
-        # Don't use fast validation if second arg is not a tuple.
-        if len(args) == 2 and not isinstance(args[1], tuple):
-            return
-
         self.fast_validate = args
 
 
