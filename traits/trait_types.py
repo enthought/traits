@@ -1997,7 +1997,7 @@ class BaseEnum(TraitType):
         else:
             # Static enumeration
             if nargs == 0:
-                raise TraitError("Enum trait requires at least 1 argument.")
+                raise TraitError("Enum trait requires at least 1 argument")
 
             # If we have either 1 or 2 arguments and the last argument is a
             # collection, then that collection provides the values of the
@@ -2009,7 +2009,7 @@ class BaseEnum(TraitType):
             )
             self.values = tuple(args[-1]) if have_collection_arg else args
             if not self.values:
-                raise TraitError("Enum collection should be nonempty.")
+                raise TraitError("Enum collection should be nonempty")
 
             # In the two-argument collection case, the first argument is
             # the default. Otherwise, we take the first element of self.values.
