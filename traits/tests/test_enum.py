@@ -261,6 +261,10 @@ class EnumTestCase(unittest.TestCase):
 
             EmptyEnum()
 
+    def test_too_many_arguments_for_dynamic_enum(self):
+        with self.assertRaises(TraitError):
+            Enum("red", "green", values="values")
+
     def test_attributes(self):
         static_enum = Enum(1, 2, 3)
         self.assertEqual(static_enum.values, (1, 2, 3))
