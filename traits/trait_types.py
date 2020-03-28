@@ -1946,12 +1946,14 @@ class BaseEnum(TraitType):
 
     Attributes
     ----------
-    values : tuple
-        A tuple holding the legal values.
+    values : tuple or None
+        For a static enumeration, this is a tuple holding the legal values.
+        For a dynamic enumeration, it's None.
 
     name : str
-        The name of a trait holding the legal values, or the empty string if
-        unused.
+        For a dynamic enumeration, this is the name of a trait holding
+        the collection of legal values. For a static enumeration, this is
+        None.
     """
 
     def __init__(self, *args, values=None, **metadata):
@@ -1991,7 +1993,6 @@ class BaseEnum(TraitType):
             else:
                 default_value = next(iter(self.values), None)
 
-            self.name = ""
             self.init_fast_validate(ValidateTrait.enum, self.values)
 
             super(BaseEnum, self).__init__(default_value, **metadata)
@@ -2014,7 +2015,7 @@ class BaseEnum(TraitType):
     def full_info(self, object, name, value):
         """ Returns a description of the trait.
         """
-        if self.name == "":
+        if self.name is None:
             values = self.values
         else:
             values = xgetattr(object, self.name)
@@ -2026,13 +2027,16 @@ class BaseEnum(TraitType):
         """
         from traitsui.api import EnumEditor
 
-        values = self
-        if self.name != "":
+        if self.name is None:
+            values = self
+            name = ""
+        else:
             values = None
+            name = self.name
 
         return EnumEditor(
             values=values,
-            name=self.name,
+            name=name,
             cols=self.cols or 3,
             evaluate=self.evaluate,
             format_func=self.format_func,

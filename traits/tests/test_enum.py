@@ -260,3 +260,12 @@ class EnumTestCase(unittest.TestCase):
                 a = Enum()
 
             EmptyEnum()
+
+    def test_attributes(self):
+        static_enum = Enum(1, 2, 3)
+        self.assertEqual(static_enum.values, (1, 2, 3))
+        self.assertIsNone(static_enum.name, None)
+
+        dynamic_enum = Enum(values="values")
+        self.assertIsNone(dynamic_enum.values)
+        self.assertEqual(dynamic_enum.name, "values")
