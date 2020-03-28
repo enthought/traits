@@ -95,7 +95,7 @@ def add_notifiers(object, callback, path, target, dispatcher):
     object : HasTrait
         An object that implements `_notifiers` for returning a list for
         adding or removing notifiers
-    callback : callable(object, name, old, new)
+    callback : callable(arg1, arg2, arg3, arg4)
         A callable conforming to the notifier signature.
     path : ListenerPath
         Path for listening to extended traits.
@@ -264,6 +264,7 @@ def remove_notifiers(object, callback, path, target, dispatcher):
             dispatcher=dispatcher,
         )
 
+
 def is_notifiable(object):
     """ Return true if an object conforms to the expected
     interface for a notifiable object.
@@ -273,7 +274,7 @@ def is_notifiable(object):
 
 class BaseListener:
 
-    def event_factory(self, object, name, old, new):
+    def event_factory(self, arg1, arg2, arg3, arg4):
         raise NotImplementedError()
 
     def __eq__(self, other):
@@ -348,6 +349,8 @@ class _FilteredTraitListener(BaseListener):
         self.notify = notify
 
     def event_factory(self, object, name, old, new):
+        if old is Uninitialized:
+            return None
         return ObserverEvent(object, name, old, new)
 
     def __eq__(self, other):
@@ -478,6 +481,9 @@ class NamedTraitListener(BaseListener):
         self.comparison_mode = comparison_mode
 
     def event_factory(self, object, name, old, new):
+        if old is Uninitialized:
+            return None
+
         if (self.comparison_mode is ComparisonMode.equality
                 and old == new):
             return None
@@ -605,8 +611,8 @@ class ListItemListener(BaseListener):
     def __eq__(self, other):
         return type(self) is type(other) and self.notify == other.notify
 
-    def event_factory(self, object, name, old, new):
-        return ListObserverEvent(object, name, old, new)
+    def event_factory(self, trait_list, index, removed, added):
+        return ListObserverEvent(trait_list, index, removed, added)
 
     def iter_this_targets(self, object):
         # object should be a TraitListObject

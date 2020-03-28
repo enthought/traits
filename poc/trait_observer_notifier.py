@@ -105,24 +105,23 @@ class TraitObserverNotifier(object):
             self.event_factory
         )
 
-    def __call__(self, object, name, old, new):
+    def __call__(self, arg1, arg2, arg3, arg4):
         """ Notifier for observers.
 
         This adapts the underlying CTrait notifier signature to an event
         object that is expected by observers.
         """
-        if old is Uninitialized:
-            return
-
         if self.target_count <= 0:
             raise ValueError("I should have been removed!")
 
-        event = self.event_factory(object, name, old, new)
+        event = self.event_factory(arg1, arg2, arg3, arg4)
         if event is None:
-            logger.debug("Event is silenced for %r", (object, name, old, new))
+            logger.debug("Event is silenced for %r", (arg1, arg2, arg3, arg4))
             return
 
-        logger.debug("Notifier is called: {!r} with {!r}".format(self, (object, name, old, new)))
+        logger.debug(
+            "Notifier is called: {!r} with {!r}".format(
+                self, (arg1, arg2, arg3, arg4)))
         self.dispatcher(self.dispatch, args=(event, ))
 
     def dispatch(self, event):

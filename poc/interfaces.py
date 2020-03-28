@@ -15,7 +15,7 @@ class INotifier(abc.ABC):
     """ Interface for a notifier.
     """
 
-    def __call__(self, object, name, old, new):
+    def __call__(self, arg1, arg2, arg3, arg4):
         """ Called by ctraits. """
         raise NotImplementedError()
 

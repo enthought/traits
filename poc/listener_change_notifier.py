@@ -58,8 +58,8 @@ class ListenerChangeNotifier(INotifier):
         self.path = path
         self.event_factory = event_factory
 
-    def __call__(self, object, name, old, new):
-        event = self.event_factory(object, name, old, new)
+    def __call__(self, arg1, arg2, arg3, arg4):
+        event = self.event_factory(arg1, arg2, arg3, arg4)
         if event is None:
             return
         #: TODO: Should we use the same dispatcher?
