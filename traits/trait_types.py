@@ -2008,15 +2008,15 @@ class BaseEnum(TraitType):
                 and not isinstance(args[-1], (str, bytes, bytearray))
             )
             self.values = tuple(args[-1]) if have_collection_arg else args
+            if not self.values:
+                raise TraitError("Enum collection should be nonempty.")
 
             # In the two-argument collection case, the first argument is
             # the default. Otherwise, we take the first element of self.values.
             if have_collection_arg and nargs == 2:
                 default_value = args[0]
-            elif self.values:
-                default_value = self.values[0]
             else:
-                default_value = None
+                default_value = self.values[0]
 
             self.init_fast_validate(ValidateTrait.enum, self.values)
 
