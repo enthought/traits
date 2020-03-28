@@ -11,6 +11,7 @@
 """ Core Trait definitions.
 """
 
+import collections.abc
 import datetime
 from importlib import import_module
 import operator
@@ -37,7 +38,6 @@ from .trait_base import (
     Undefined,
     TraitsCache,
     xgetattr,
-    is_collection,
 )
 from .trait_converters import trait_from, trait_cast
 from .trait_dict_object import TraitDictEvent, TraitDictObject
@@ -2006,8 +2006,8 @@ class BaseEnum(TraitType):
             # enumeration. Otherwise, args itself is the collection.
             have_collection_arg = (
                 nargs <= 2
-                and is_collection(args[-1])
                 and not isinstance(args[-1], (str, bytes, bytearray))
+                and isinstance(args[-1], collections.abc.Iterable)
             )
             self.values = tuple(args[-1]) if have_collection_arg else args
             if not self.values:
