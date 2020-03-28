@@ -279,10 +279,13 @@ class EnumTestCase(unittest.TestCase):
 
     def test_explicit_collection_with_no_elements(self):
         class A(HasTraits):
-            enum = Enum([])
+            empty_enum = Enum([])
+
+            empty_enum_with_default = Enum(3.5, [])
 
         a = A()
-        self.assertIsNone(a.enum)
+        self.assertIsNone(a.empty_enum)
+        self.assertEqual(a.empty_enum_with_default, 3.5)
 
     def test_base_enum(self):
         # Minimal tests for BaseEnum, sufficient to cover the validation
