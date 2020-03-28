@@ -277,6 +277,13 @@ class EnumTestCase(unittest.TestCase):
         self.assertIsNone(dynamic_enum.values)
         self.assertEqual(dynamic_enum.name, "values")
 
+    def test_explicit_collection_with_no_elements(self):
+        class A(HasTraits):
+            enum = Enum([])
+
+        a = A()
+        self.assertIsNone(a.enum)
+
     def test_base_enum(self):
         # Minimal tests for BaseEnum, sufficient to cover the validation
         # for the static case.

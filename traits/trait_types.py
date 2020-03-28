@@ -2013,8 +2013,10 @@ class BaseEnum(TraitType):
             # the default. Otherwise, we take the first element of self.values.
             if have_collection_arg and nargs == 2:
                 default_value = args[0]
+            elif self.values:
+                default_value = self.values[0]
             else:
-                default_value = next(iter(self.values), None)
+                default_value = None
 
             self.init_fast_validate(ValidateTrait.enum, self.values)
 
