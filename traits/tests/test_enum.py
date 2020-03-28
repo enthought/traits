@@ -11,7 +11,8 @@
 import enum
 import unittest
 
-from traits.api import Any, Enum, HasTraits, List, Property, TraitError
+from traits.api import (
+    Any, BaseEnum, Enum, HasTraits, List, Property, TraitError)
 
 
 class FooEnum(enum.Enum):
@@ -105,6 +106,8 @@ class EnumCollectionExample(HasTraits):
     two_digits = Enum(1, 2)
 
     single_digit = Enum(8)
+
+    slow_enum = BaseEnum("yes", "no", "maybe")
 
 
 class EnumTestCase(unittest.TestCase):
@@ -273,3 +276,16 @@ class EnumTestCase(unittest.TestCase):
         dynamic_enum = Enum(values="values")
         self.assertIsNone(dynamic_enum.values)
         self.assertEqual(dynamic_enum.name, "values")
+
+    def test_base_enum(self):
+        # Minimal tests for BaseEnum, sufficient to cover the validation
+        # for the static case.
+        obj = EnumCollectionExample()
+
+        self.assertEqual(obj.slow_enum, "yes")
+        obj.slow_enum = "no"
+        self.assertEqual(obj.slow_enum, "no")
+
+        with self.assertRaises(TraitError):
+            obj.slow_enum = "perhaps"
+        self.assertEqual(obj.slow_enum, "no")
