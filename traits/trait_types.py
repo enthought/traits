@@ -2031,7 +2031,7 @@ class BaseEnum(TraitType):
         """ Validates that the value is one of the enumerated set of valid
         values.
         """
-        if safe_contains(value, self.values):
+        if value in self.values:
             return value
 
         self.error(object, name, value)
