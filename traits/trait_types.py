@@ -1934,10 +1934,12 @@ class BaseEnum(TraitType):
         the supported signatures for ``args`` are as follows:
 
         (collection,)
-            The collection of valid values. The default is the first item
-            of the collection, in iteration order.
+            A nonempty collection of valid values. The default is the first
+            element of the collection, in iteration order.
         (default, collection)
-            The default value, followed by the collection of valid values.
+            The default value, followed by a nonempty collection of valid
+            values. The default should be an element of the collection, but
+            this is not checked.
         (item1, item2, ..., itemn)
             One or more items giving the valid values for the collection.
             The default is *item1*.
@@ -2123,10 +2125,12 @@ class Enum(BaseEnum):
         the supported signatures for ``args`` are as follows:
 
         (collection,)
-            The collection of valid values. The default is the first item
-            of the collection, in iteration order.
+            A nonempty collection of valid values. The default is the first
+            element of the collection, in iteration order.
         (default, collection)
-            The default value, followed by the collection of valid values.
+            The default value, followed by a nonempty collection of valid
+            values. The default should be an element of the collection, but
+            this is not checked.
         (item1, item2, ..., itemn)
             One or more items giving the valid values for the collection.
             The default is *item1*.
