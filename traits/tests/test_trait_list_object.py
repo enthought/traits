@@ -13,8 +13,12 @@ import pickle
 import unittest
 
 from traits.trait_errors import TraitError
-from traits.trait_list_object import adapt_trait_validator, TraitList
-from traits.trait_types import _validate_int
+from traits.trait_list_object import (
+    adapt_trait_validator,
+    TraitList,
+    TraitListObject,
+)
+from traits.trait_types import _validate_int, List
 
 
 def int_validator(trait_list, index, removed, added):
@@ -319,3 +323,28 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl.append([2])
+
+    def test_list_of_lists_pickle_with_notifier(self):
+        class Foo:
+            pass
+
+        tl = TraitListObject(
+            trait=List(),
+            object=Foo(),
+            name="foo",
+            value=(),
+        )
+
+        self.assertEqual(
+            tl.notifiers,
+            [tl.notifier],
+        )
+
+        serialized = pickle.dumps(tl)
+
+        tl_deserialized = pickle.loads(serialized)
+
+        self.assertEqual(
+            tl_deserialized.notifiers,
+            [tl_deserialized.notifier]
+        )

@@ -839,8 +839,8 @@ class TraitListObject(TraitList):
 
         Notifiers are transient and are restored to the empty list.
         """
-        super().__setstate__(state)
         name = state.setdefault("name", "")
+        state["notifiers"] = [self.notifier]
         object = state.pop("object", None)
         if object is not None:
             state['object'] = ref(object)
