@@ -66,6 +66,19 @@ class Expression:
 
         e.g. ``t("child").t("age")`` matches ``child.age`` on an object,
         and is equivalent to ``t("child").then(t("age"))``
+
+        Parameters
+        ----------
+        name : str
+            Name of the trait to match.
+        notify : boolean, optional
+            Whether to notify for changes.
+        optional : boolean, optional
+            Whether this trait is optional on an object.
+
+        Returns
+        -------
+        new_expression : Expression
         """
         return self._new_with_paths([
             ListenerPath(
@@ -186,8 +199,35 @@ class Expression:
 
 
 def t(name, notify=True, optional=False):
+    """ Create a new expression for matching a trait with the exact name
+    given.
+
+    Parameters
+    ----------
+    name : str
+        Name of the trait to match.
+    notify : boolean, optional
+        Whether to notify for changes.
+    optional : boolean, optional
+        Whether this trait is optional on an object.
+
+    Returns
+    -------
+    expression : Expression
+    """
     return Expression().t(name=name, notify=notify, optional=optional)
 
 
 def anytrait(notify=True):
+    """ Create a new expression for matching anytrait on an object.
+
+    Parameters
+    ----------
+    notify : boolean, optional
+        Whether to notify for changes.
+
+    Returns
+    -------
+    expression : Expression
+    """
     return Expression().anytrait(notify=notify)
