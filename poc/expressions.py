@@ -146,6 +146,9 @@ class Expression:
         ----------
         filter : callable(str, TraitType) -> boolean
             Return true if a trait is to be observed.
+            Note that if this expression is used for removing
+            observers, the given filter must compare equally to the
+            filter used for putting up the observer in the first place.
         notify : boolean, optional
             Whether to notify for changes.
 
