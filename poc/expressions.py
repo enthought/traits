@@ -1,6 +1,5 @@
 
 import copy
-from itertools import chain
 from poc.observe import (
     ListenerPath,
     NamedTraitListener,
@@ -109,10 +108,6 @@ class Expression:
 
 def t(name, notify=True, optional=False):
     return Expression().t(name=name, notify=notify, optional=optional)
-
-
-def parse(text):
-    return Expression()
 
 
 def anytrait(notify=True):
