@@ -105,6 +105,15 @@ class Expression:
 
         e.g. ``t("containers").list_items().t("value")`` for observing
         the trait ``value`` on any items in the list ``containers``.
+
+        Parameters
+        ----------
+        notify : boolean, optional
+            Whether to notify for changes.
+
+        Returns
+        -------
+        new_expression : Expression
         """
         return self._new_with_paths([
             ListenerPath(
