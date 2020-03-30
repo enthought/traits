@@ -229,6 +229,35 @@ class Expression:
         """
         return self.filter(filter=_anytrait_filter, notify=notify)
 
+    def metadata(self, metadata_name, filter, notify=True):
+        """ Return a new expression that matches traits based on
+        metadata filters, after the current expression matches.
+
+        e.g. ``metadata("age", filter=lambda value: value is not None)``
+        matches traits with metadata whose values are not None.
+
+        Parameters
+        ----------
+        metadata_name : str
+            Name of the metadata to filter traits with.
+        filter : callable(value) -> boolean
+            Return true if a trait is to be observed.
+            ``value`` is the value of the metadata, if defined on a trait.
+        notify : boolean, optional
+            Whether to notify for changes.
+
+        Returns
+        -------
+        new_expression : Expression
+
+        See also
+        --------
+        HasTraits.traits
+        """
+        # Something that makes use of
+        # HasTraits.traits(**{metadata_name: filter})
+        raise NotImplementedError()
+
     def _new_with_paths(self, others):
         if not self._paths:
             return type(self)(paths=copy.deepcopy(others))
