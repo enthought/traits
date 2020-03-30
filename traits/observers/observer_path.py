@@ -7,6 +7,7 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
+import itertools
 
 
 class ObserverPath:
@@ -25,6 +26,9 @@ class ObserverPath:
             return False
         if self.node != other.node:
             return False
-
-        if all(n1 == n2 for n1, n2 in zip(self.nexts, other.nexts)):
-            return True
+        if len(self.nexts) != len(other.nexts):
+            return False
+        for nexts in itertools.permutations(other.nexts, len(other.nexts)):
+            if all(n1 == n2 for n1, n2 in zip(self.nexts, nexts)):
+                return True
+        return False

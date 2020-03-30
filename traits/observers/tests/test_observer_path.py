@@ -31,3 +31,26 @@ class TestObserverPath(unittest.TestCase):
     def test_equality_different_type(self):
         path1 = path_from_nodes(1, 2, 3)
         self.assertNotEqual(path1, 1)
+
+    def test_equality_different_length_nexts(self):
+        path1 = ObserverPath(
+            node=1,
+            nexts=[path_from_nodes(2), path_from_nodes(3)],
+        )
+        path2 = ObserverPath(
+            node=1,
+            nexts=[path_from_nodes(2)],
+        )
+        self.assertNotEqual(path1, path2)
+
+    def test_equality_order_of_nexts(self):
+        # The order of items in nexts does not matter
+        path1 = ObserverPath(
+            node=1,
+            nexts=[path_from_nodes(2), path_from_nodes(3)],
+        )
+        path2 = ObserverPath(
+            node=1,
+            nexts=[path_from_nodes(3), path_from_nodes(2)],
+        )
+        self.assertEqual(path1, path2)
