@@ -65,6 +65,47 @@ class Expression:
             paths=self.as_paths() + expression.as_paths()
         )
 
+    def then(self, expression):
+        """ Create a new expression by extending this expression with
+        the given expression.
+
+        e.g. ``t("child").then( t("age") | t("number") )`` on an object
+        matches ``child.age`` or ``child.number`` on the object.
+
+        This example is equivalent to
+        ``t("child").t("age") | t("child").t("number")``
+
+        Parameters
+        ----------
+        expression : Expression
+
+        Returns
+        -------
+        new_expression : Expression
+        """
+        return self._new_with_paths(expression.as_paths())
+
+    def recursive(self, expression):
+        """ Create a new expression by adding a recursive path to
+        this expression.
+
+        e.g. ``t("root").recursive(t("left") | t("left")).t("value")``
+        will match ``root.left.value``, ``root.left.left.value``,
+        ``root.left.right.left.value`` and so on.
+
+        Parameters
+        ----------
+        expression : Expression
+
+        Returns
+        -------
+        new_expression : Expression
+        """
+        others = copy.deepcopy(expression.as_paths())
+        for other in others:
+            _add_paths(other, others)
+        return self._new_with_paths(others)
+
     def as_paths(self):
         """ Return the list of ListenerPath for the observer.
         """
@@ -187,47 +228,6 @@ class Expression:
         new_expression : Expression
         """
         return self.filter(filter=_anytrait_filter, notify=notify)
-
-    def then(self, expression):
-        """ Create a new expression by extending this expression with
-        the given expression.
-
-        e.g. ``t("child").then( t("age") | t("number") )`` on an object
-        matches ``child.age`` or ``child.number`` on the object.
-
-        This example is equivalent to
-        ``t("child").t("age") | t("child").t("number")``
-
-        Parameters
-        ----------
-        expression : Expression
-
-        Returns
-        -------
-        new_expression : Expression
-        """
-        return self._new_with_paths(expression.as_paths())
-
-    def recursive(self, expression):
-        """ Create a new expression by adding a recursive path to
-        this expression.
-
-        e.g. ``t("root").recursive(t("left") | t("left")).t("value")``
-        will match ``root.left.value``, ``root.left.left.value``,
-        ``root.left.right.left.value`` and so on.
-
-        Parameters
-        ----------
-        expression : Expression
-
-        Returns
-        -------
-        new_expression : Expression
-        """
-        others = copy.deepcopy(expression.as_paths())
-        for other in others:
-            _add_paths(other, others)
-        return self._new_with_paths(others)
 
     def _new_with_paths(self, others):
         if not self._paths:
