@@ -8,20 +8,24 @@
 #
 # Thanks for using Enthought open source!
 
+import collections.abc
 import copy
 import copyreg
 from weakref import ref
 
-from traits.trait_base import Undefined
 from traits.trait_errors import TraitError
 
 
-def adapt_trait_validator(trait_validator):
+def adapt_trait_validator(trait_validator, name="items"):
     """ Adapt a trait validator to work as a trait set validator.
 
     Parameters
     ----------
     trait_validator : callable
+        A callable validator.
+    name : str
+        The name of the trait on the object.
+
     The trait validator is expected to have the signature::
 
         validator(object, name, value)
@@ -34,10 +38,10 @@ def adapt_trait_validator(trait_validator):
 
     """
 
-    def validator(trait_set, value):
+    def validator(obj, value):
         try:
             return {
-                trait_validator(trait_set, "items", item)
+                trait_validator(obj, name, item)
                 for item in value
             }
         except TraitError as excp:
@@ -52,29 +56,21 @@ class TraitSetEvent(object):
 
     Parameters
     ----------
-    added : dict or None
-        New values added to the set, or optionally None if nothing was added.
-    removed : dict or None
-        Old values that were removed, or optionally None if nothing was
-        removed.
+    added : set
+        New values added to the set
+    removed : set
+        Old values that were removed from the set.
 
     Attributes
     ----------
-    added : dict
-        New values added to the set. If nothing was added this is an empty
-        set.
-    removed : dict
-        Old values that were removed. If nothing was removed this is an empty
-        set.
+    added : set
+        New values added to the set
+    removed : set
+        Old values that were removed from the set.
     """
 
-    def __init__(self, removed=None, added=None):
-        if removed is None:
-            removed = set()
+    def __init__(self, removed=set(), added=set()):
         self.removed = removed
-
-        if added is None:
-            added = set()
         self.added = added
 
 
@@ -90,7 +86,7 @@ class TraitSet(set):
     notifiers : list of callable
         A list of callables with the signature::
 
-         notifier(trait_set, removed, added)
+            notifier(removed, added)
 
     Attributes
     ----------
@@ -101,9 +97,21 @@ class TraitSet(set):
     notifiers : list of callable
         A list of callables with the signature::
 
-         notifier(trait_set, removed, added)
+            notifier(removed, added)
 
     """
+
+    def __new__(cls, *args, **kwargs):
+        instance = super().__new__(cls)
+        instance.validator = None
+        instance.notifiers = []
+        return instance
+
+    def __init__(self, value=None, *, validator=None, notifiers=()):
+        self.validator = validator
+        self.notifiers = list(notifiers)
+        value = self.validate(value)
+        super().__init__(value)
 
     # ------------------------------------------------------------------------
     # TraitSet interface
@@ -115,14 +123,14 @@ class TraitSet(set):
         This simply calls the validator provided by the class, if any.
         The validator is expected to have the signature::
 
-            validator(value)
+            validator(value_set)
 
         and return a set of validated values or raise TraitError.
 
         Parameters
         ----------
         value : set
-            The new item or items being added to the set.
+            The new items being added to the set.
 
         Returns
         -------
@@ -136,17 +144,22 @@ class TraitSet(set):
         """
 
         if not isinstance(value, set):
-            if self._is_non_str_iterable(value):
+
+            # Treat str, bytes, bytearray as a single unit.
+            is_iterable = (
+                    isinstance(value, collections.abc.Iterable) and
+                    not isinstance(value, (str, bytes, bytearray))
+            )
+
+            if is_iterable:
                 value = set(value)
             else:
                 value = {value}
 
-        # Use getattr as pickle can call `extend` before validator is set.
-        validator = getattr(self, 'validator', None)
-        if validator is None:
+        if self.validator is None:
             return value
         else:
-            return validator(self, value)
+            return self.validator(self, value)
 
     def notify(self, removed, added):
         """ Call all notifiers.
@@ -165,33 +178,12 @@ class TraitSet(set):
         added : set
             The new items being added to the set.
         """
-        if removed == added:
-            return
-
-        if removed is Undefined:
-            removed = set()
-
-        if added is Undefined:
-            added = set()
-
-        # Use getattr as pickle can call `extend` before notifiers are set.
-        for notifier in getattr(self, 'notifiers', []):
+        for notifier in self.notifiers:
             notifier(removed, added)
-
-    def object(self):
-        """ Stub method to pass persistence tests. """
-        # XXX fix persistence tests to not introspect this!
-        return None
 
     # ------------------------------------------------------------------------
     # set interface
     # ------------------------------------------------------------------------
-
-    def __init__(self, value=(), *, validator=None, notifiers=()):
-        self.validator = validator
-        self.notifiers = list(notifiers)
-        value = self.validate(value)
-        super().__init__(value)
 
     def __deepcopy__(self, memo):
         """ Perform a deepcopy operation.
@@ -236,26 +228,28 @@ class TraitSet(set):
 
         Parameters
         ----------
-        value : Any
+        value : any
             The value to add to the set.
 
         Notes
         -----
-        Notification:
-            removed : Undefined
-                Will be Undefined.
+        Parameters in the notification:
+            removed : set
+                An empty set.
             added : set
                 A set containing the added value.
 
         """
         validated_values = self.validate(value)
         if len(validated_values) > 1:
-            raise TypeError()
+            raise ValueError("Validator returned {} values "
+                             "where 1 value is "
+                             "expected".format(len(validated_values)))
 
-        value = validated_values.pop()
+        value = next(iter(validated_values))
         if value not in self:
             super().add(value)
-            self.notify(Undefined, {value})
+            self.notify(set(), validated_values)
 
     def remove(self, value):
         """ Remove an element from a set; it must be a member.
@@ -264,30 +258,32 @@ class TraitSet(set):
 
         Parameters
         ----------
-        value : Any
+        value : any
             An element in the set
 
         Raises
         ------
-        KeyError : Exception
+        KeyError
             If the value is not found in the set.
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             removed : set
                 A set containing the removed value.
-            added : Undefined
-                Will be Undefined.
+            added : set
+                An empty set.
 
         """
         validated_values = self.validate(value)
         if len(validated_values) > 1:
-            raise TypeError()
+            raise ValueError("Validator returned {} values "
+                             "where 1 value is "
+                             "expected".format(len(validated_values)))
 
-        value = validated_values.pop()
+        value = next(iter(validated_values))
         super().remove(value)
-        self.notify({value}, Undefined)
+        self.notify(validated_values, set())
 
     def update(self, value):
         """ Update a set with the union of itself and others.
@@ -299,9 +295,9 @@ class TraitSet(set):
 
         Notes
         -----
-        Notification:
-            removed : Undefined
-                Will be Undefined.
+        Parameters in the notification:
+            removed : set
+                An empty set.
             added : set
                 A set containing the added values.
 
@@ -310,9 +306,8 @@ class TraitSet(set):
         added = validated_values.difference(self)
 
         if len(added) > 0:
-            self.notify(Undefined, added)
-
-        super().update(added)
+            super().update(added)
+            self.notify(set(), added)
 
     def difference_update(self, value):
         """  Remove all elements of another set from this set.
@@ -324,19 +319,19 @@ class TraitSet(set):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             removed : set
                 A set containing the removed values.
-            added : Undefined
-                Will be Undefined.
+            added : set
+                An empty set.
 
         """
         validated_values = self.validate(value)
         removed = self.intersection(value)
-        super().difference_update(validated_values)
 
         if len(removed) > 0:
-            self.notify(removed, Undefined)
+            super().difference_update(validated_values)
+            self.notify(removed, set())
 
     def intersection_update(self, value):
         """  Remove all elements of set which are not common to another set.
@@ -348,19 +343,19 @@ class TraitSet(set):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             removed : set
                 A set containing the removed values.
-            added : Undefined
-                Will be Undefined.
+            added : set
+                An empty set.
 
 
         """
         validated_values = self.validate(value)
         removed = self.difference(self.intersection(validated_values))
-        super().intersection_update(validated_values)
         if len(removed) > 0:
-            self.notify(removed, Undefined)
+            super().intersection_update(validated_values)
+            self.notify(removed, set())
 
     def symmetric_difference_update(self, value):
         """ Return the symmetric difference of two sets as a new set.
@@ -373,7 +368,7 @@ class TraitSet(set):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             removed : set
                 A set containing the removed values.
             added : set
@@ -385,9 +380,8 @@ class TraitSet(set):
         removed = self.intersection(validated_values)
         added = validated_values.difference(self)
 
-        super().symmetric_difference_update(validated_values)
-
-        if len(removed) + len(added) > 0:
+        if removed or added:
+            super().symmetric_difference_update(validated_values)
             self.notify(removed, added)
 
     def discard(self, value):
@@ -397,23 +391,23 @@ class TraitSet(set):
 
         Parameters
         ----------
-        value : Any
+        value : any
             An item in the set
+
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             Fired if a value is removed.
 
             removed : set
                 A set containing the removed values.
-            added : Undefined
-                Will be Undefined.
+            added : set
+                An empty set.
 
         """
-        try:
+        if value in self:
             self.remove(value)
-        except KeyError:
-            pass
+            self.notify({value}, set())
 
     def pop(self):
         """ Remove and return an arbitrary set element.
@@ -421,36 +415,36 @@ class TraitSet(set):
 
         Returns
         -------
-        item : Any
+        item : any
             An element from the set.
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             removed : set
                 A set containing the removed values.
-            added : Undefined
-                Will be Undefined.
+            added : set
+                An empty set.
 
         """
         removed = super().pop()
-        self.notify({removed}, Undefined)
+        self.notify({removed}, set())
         return removed
 
     def clear(self):
         """ Remove all elements from this set.
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             removed : set
                 A set containing the removed values.
-            added : Undefined
-                Will be Undefined.
+            added : set
+                An empty set.
 
         """
         removed = set(self)
         super().clear()
-        self.notify(removed, Undefined)
+        self.notify(removed, set())
 
     def __reduce_ex__(self, protocol=None):
         """ Overridden to make sure we call our custom __getstate__.
@@ -466,7 +460,7 @@ class TraitSet(set):
 
         Parameters
         ----------
-        value : Any
+        value : any
             A value.
 
         Returns
@@ -476,9 +470,9 @@ class TraitSet(set):
 
         Notes
         -----
-        Notification:
-            removed : Undefined
-                Will be Undefined.
+        Parameters in the notification:
+            removed : set
+                An empty set.
             added : set
                 Set of added values.
 
@@ -491,7 +485,7 @@ class TraitSet(set):
 
         Parameters
         ----------
-        value : Any
+        value : any
             A value.
 
         Returns
@@ -501,11 +495,11 @@ class TraitSet(set):
 
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             removed : set
                 A set containing the removed values.
-            added : Undefined
-                Will be Undefined.
+            added : set
+                An empty set.
 
 
         """
@@ -517,16 +511,17 @@ class TraitSet(set):
 
         Parameters
         ----------
-        value : Any
+        value : any
             A value.
 
         Returns
         -------
         self : set
             The updated set.
+
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             removed : set
                 A set containing the removed values.
             added : set
@@ -541,16 +536,17 @@ class TraitSet(set):
 
         Parameters
         ----------
-        value : Any
+        value : any
             A value.
 
         Returns
         -------
         self : set
             The updated set.
+
         Notes
         -----
-        Notification:
+        Parameters in the notification:
             removed : set
                 A set containing the removed values.
             added : Undefined
@@ -559,28 +555,6 @@ class TraitSet(set):
         """
         self.difference_update(value)
         return self
-
-    def _is_non_str_iterable(self, value):
-        """ Returns True if the value is an iterable, but is not a string.
-
-        Parameters
-        ----------
-        value : Any
-            The value to test.
-
-        Returns
-        -------
-        is_iterable : bool
-            True if not a str type and is a iterable.
-
-        """
-        if isinstance(value, str):
-            return False
-        try:
-            iter(value)
-            return True
-        except TypeError:
-            return False
 
 
 class TraitSetObject(TraitSet):
@@ -650,25 +624,21 @@ class TraitSetObject(TraitSet):
             list exceeds the specified bounds.
 
         """
-        object = self.object()
-        trait = self.trait
-        if object is None or trait is None:
+        object_ref = getattr(self, 'object', None)
+        trait = getattr(self, 'trait', None)
+
+        if object_ref is None or trait is None:
             return value
+
+        object = object_ref()
 
         # validate the new value(s)
         validate = trait.item_trait.handler.validate
         if validate is None:
             return value
 
-        try:
-            if value is Undefined:
-                return Undefined
-            else:
-                return {validate(object, self.name, item) for item in value}
-
-        except TraitError as excp:
-            excp.set_prefix("Each element of the")
-            raise excp
+        validate = adapt_trait_validator(validate, name=self.name)
+        return validate(object, value)
 
     def notifier(self, removed, added):
         """ Converts and consolidates the parameters to a TraitSetEvent and
@@ -694,12 +664,6 @@ class TraitSetObject(TraitSet):
         object = self.object()
         if object is None:
             return
-
-        if added is Undefined:
-            added = set()
-
-        if removed is Undefined:
-            removed = set()
 
         event = TraitSetEvent(removed, added)
         items_event = self.trait.items_event()
