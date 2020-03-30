@@ -179,7 +179,7 @@ class Expression:
             | self.set_items(notify=notify)
         )
 
-    def filter(self, filter, notify=True):
+    def filter_(self, filter, notify=True):
         """ Create a new expression that matches traits using the
         given filter after the current expression returns a match.
 
@@ -227,7 +227,7 @@ class Expression:
         -------
         new_expression : Expression
         """
-        return self.filter(filter=_anytrait_filter, notify=notify)
+        return self.filter_(filter=_anytrait_filter, notify=notify)
 
     def metadata(self, metadata_name, filter, notify=True):
         """ Return a new expression that matches traits based on
@@ -301,3 +301,24 @@ def anytrait(notify=True):
     expression : Expression
     """
     return Expression().anytrait(notify=notify)
+
+
+def filter_(filter, notify=True):
+    """ Create a new expression for matching traits with a given
+    filter.
+
+    Parameters
+    ----------
+    filter : callable(str, TraitType) -> boolean
+        Return true if a trait is to be observed.
+        Note that if this expression is used for removing
+        observers, the given filter must compare equally to the
+        filter used for putting up the observer in the first place.
+    notify : boolean, optional
+        Whether to notify for changes.
+
+    Returns
+    -------
+    expression : Expression
+    """
+    return Expression().filter_(filter=filter, notify=notify)
