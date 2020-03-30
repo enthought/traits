@@ -138,6 +138,31 @@ class Expression:
             | self.set_items(notify=notify)
         )
 
+    def filter(self, filter, notify=True):
+        """ Create a new expression that matches traits using the
+        given filter after the current expression returns a match.
+
+        Parameters
+        ----------
+        filter : callable(str, TraitType) -> boolean
+            Return true if a trait is to be observed.
+        notify : boolean, optional
+            Whether to notify for changes.
+
+        Returns
+        -------
+        new_expression : Expression
+        """
+        return self._new_with_paths([
+            ListenerPath(
+                node=_FilteredTraitListener(
+                    notify=notify,
+                    filter=filter,
+                ),
+                nexts=[]
+            )
+        ])
+
     def anytrait(self, notify=True):
         """ Create a new expression that matches anytrait after
         the current expresion returns a match.
@@ -145,16 +170,20 @@ class Expression:
         e.g. ``t("child").anytrait()`` with match anytrait on
         the trait ``child`` on a given object, such as ``child.age``,
         ``child.name``, ``child.mother`` and so on.
+
+        Equivalent to ``filter(filter=anytrait_filter)`` where
+        ``anyrait_filter`` always returns True.
+
+        Parameters
+        ----------
+        notify : boolean, optional
+            Whether to notify for changes.
+
+        Returns
+        -------
+        new_expression : Expression
         """
-        return self._new_with_paths([
-            ListenerPath(
-                node=_FilteredTraitListener(
-                    notify=notify,
-                    filter=_anytrait_filter,
-                ),
-                nexts=[]
-            )
-        ])
+        return self.filter(filter=_anytrait_filter, notify=notify)
 
     def then(self, expression):
         """ Create a new expression by extending this expression with
