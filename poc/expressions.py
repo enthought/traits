@@ -46,19 +46,29 @@ class Expression:
     def __init__(self, paths=None):
         self._paths = [] if paths is None else paths
 
+    def __or__(self, expression):
+        """ Create a new expression that matches this expression OR
+        the given expression.
+
+        e.g. ``t("age") | t("number")`` will match either trait `age`
+        or trait `number` on an object.
+
+        Parameters
+        ----------
+        expression : Expression
+
+        Returns
+        -------
+        new_expression : Expression
+        """
+        return Expression(
+            paths=self.as_paths() + expression.as_paths()
+        )
+
     def as_paths(self):
         """ Return the list of ListenerPath for the observer.
         """
         return self._paths
-
-    def _new_with_paths(self, others):
-        if not self._paths:
-            return type(self)(paths=copy.deepcopy(others))
-
-        paths = copy.deepcopy(self._paths)
-        for path in paths:
-            _add_paths(path, copy.deepcopy(others))
-        return type(self)(paths=paths)
 
     def t(self, name, notify=True, optional=False):
         """ Create a new expression that matches the current
@@ -137,25 +147,6 @@ class Expression:
             )
         ])
 
-    def __or__(self, expression):
-        """ Create a new expression that matches this expression OR
-        the given expression.
-
-        e.g. ``t("age") | t("number")`` will match either trait `age`
-        or trait `number` on an object.
-
-        Parameters
-        ----------
-        expression : Expression
-
-        Returns
-        -------
-        new_expression : Expression
-        """
-        return Expression(
-            paths=self.as_paths() + expression.as_paths()
-        )
-
     def then(self, expression):
         """ Create a new expression by extending this expression with
         the given expression.
@@ -196,6 +187,15 @@ class Expression:
         for other in others:
             _add_paths(other, others)
         return self._new_with_paths(others)
+
+    def _new_with_paths(self, others):
+        if not self._paths:
+            return type(self)(paths=copy.deepcopy(others))
+
+        paths = copy.deepcopy(self._paths)
+        for path in paths:
+            _add_paths(path, copy.deepcopy(others))
+        return type(self)(paths=paths)
 
 
 def t(name, notify=True, optional=False):
