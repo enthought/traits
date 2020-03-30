@@ -90,20 +90,64 @@ class Expression:
         ])
 
     def __or__(self, expression):
+        """ Create a new expression that matches this expression OR
+        the given expression.
+
+        e.g. ``t("age") | t("number")`` will match either trait `age`
+        or trait `number` on an object.
+
+        Parameters
+        ----------
+        expression : Expression
+
+        Returns
+        -------
+        new_expression : Expression
+        """
         return Expression(
             paths=self.as_paths() + expression.as_paths()
         )
 
-    def __call__(self, expression):
+    def then(self, expression):
+        """ Create a new expression by extending this expression with
+        the given expression.
+
+        e.g. ``t("child").then( t("age") | t("number") )`` on an object
+        matches ``child.age`` or ``child.number`` on the object.
+
+        This example is equivalent to
+        ``t("child").t("age") | t("child").t("number")``
+
+        Parameters
+        ----------
+        expression : Expression
+
+        Returns
+        -------
+        new_expression : Expression
+        """
         return self._new_with_paths(expression.as_paths())
 
-    def recursive(self, name, notify=True, optional=True):
-        node = NamedTraitListener(
-            name=name, notify=notify, optional=optional,
-        )
-        path = ListenerPath(node=node, nexts=[])
-        path.nexts.append(path)
-        return self._new_with_paths([path])
+    def recursive(self, expression):
+        """ Create a new expression by adding a recursive path to
+        this expression.
+
+        e.g. ``t("root").recursive(t("left") | t("left")).t("value")``
+        will match ``root.left.value``, ``root.left.left.value``,
+        ``root.left.right.left.value`` and so on.
+
+        Parameters
+        ----------
+        expression : Expression
+
+        Returns
+        -------
+        new_expression : Expression
+        """
+        others = copy.deepcopy(expression.as_paths())
+        for other in others:
+            _add_paths(other, others)
+        return self._new_with_paths(others)
 
 
 def t(name, notify=True, optional=False):
