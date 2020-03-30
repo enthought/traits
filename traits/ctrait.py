@@ -115,11 +115,11 @@ class CTrait(ctraits.cTrait):
         """ Gets or sets the fget, fset, and fvalidate callables
         for the property.
 
-        Returns a tuple (fget, fset, fvalidate) if this method
-        is called with no arguments.
+        If this method is called with no arguments, it returns
+        a tuple (fget, fset, fvalidate).
 
-        If the arguments fget, fset and fvalidate are provided,
-        these values are set for the property.
+        If this method is called with the arguments fget, fset, fvalidate,
+        these values are set and None is returned.
         """
 
         if len(args) == 0:
@@ -127,15 +127,19 @@ class CTrait(ctraits.cTrait):
             return self._get_property()
 
         else:
-            # Set values
+            # Set the values
             func_arg_counts = []
             for arg in args:
                 if arg is None:
                     func_arg_counts.extend([None, 0])
                 else:
-                    sig = inspect.signature(arg)
-                    pararm_count = len(sig.parameters)
-                    func_arg_counts.extend([arg, pararm_count])
+                    try:
+                        sig = inspect.signature(arg)
+                    except TypeError:
+                        raise ValueError("Expecting a tuple of "
+                                         "callables (fget, fset, validate)"
+                                         " but got {}".format(args))
+                    func_arg_counts.extend([arg, len(sig.parameters)])
 
             self._set_property(*func_arg_counts)
 

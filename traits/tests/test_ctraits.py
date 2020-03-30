@@ -92,6 +92,36 @@ class TestCTrait(unittest.TestCase):
         with self.assertRaises(AttributeError):
             trait.is_property = False
 
+    def test_get_set_property(self):
+        trait = CTrait(TraitKind.trait)
+
+        # Get the property, ensure None
+        self.assertIsNone(trait.property())
+
+        def value_get(self):
+            return self.__dict__.get("_value", 0)
+
+        def value_set(self, value):
+            old_value = self.__dict__.get("_value", 0)
+            if value != old_value:
+                self._value = value
+                self.trait_property_changed("value", old_value, value)
+
+        # Set the callables
+        trait.property(value_get, value_set, None)
+
+        fget, fset, validate = trait.property()
+
+        self.assertIs(fget, value_get)
+        self.assertIs(fset, value_set)
+        self.assertIsNone(validate)
+
+        with self.assertRaises(ValueError):
+            trait.property(value_get, 0, value_set, 1, None, 0)
+
+        with self.assertRaises(ValueError):
+            trait.property(value_get)
+
     def test_modify_delegate(self):
         trait = CTrait(TraitKind.trait)
 
@@ -303,7 +333,6 @@ class TestCTraitNotifiers(unittest.TestCase):
     """ Test calling trait notifiers and object notifiers. """
 
     def test_notifiers_empty(self):
-
         class Foo(HasTraits):
             x = Int()
 
@@ -313,7 +342,6 @@ class TestCTraitNotifiers(unittest.TestCase):
         self.assertEqual(x_ctrait._notifiers(True), [])
 
     def test_notifiers_on_trait(self):
-
         class Foo(HasTraits):
             x = Int()
 

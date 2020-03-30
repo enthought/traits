@@ -4526,11 +4526,6 @@ _get_trait_comparison_mode_int(trait_object *trait, void *closure)
 static PyObject *
 _get_property(trait_object *trait, PyObject *args)
 {
-    if (PyTuple_GET_SIZE(args) != 0) {
-        PyErr_SetString(PyExc_ValueError, "Invalid number of arguments.");
-        return NULL;
-    }
-
     if (trait->flags & TRAIT_PROPERTY) {
         return PyTuple_Pack(
             3, trait->delegate_name, trait->delegate_prefix,
@@ -4557,16 +4552,13 @@ _set_property(trait_object *trait, PyObject *args)
     PyObject *get, *set, *validate;
     int get_n, set_n, validate_n;
 
-    if (PyTuple_GET_SIZE(args) != 6) {
-        PyErr_SetString(PyExc_ValueError, "Invalid number of arguments.");
-        return NULL;
-    }
-
     if (!PyArg_ParseTuple(
             args, "OiOiOi", &get, &get_n, &set, &set_n, &validate,
             &validate_n)) {
+        PyErr_SetString(PyExc_ValueError, "Invalid arguments.");
         return NULL;
     }
+
     if (!PyCallable_Check(get) || !PyCallable_Check(set)
         || ((validate != Py_None) && !PyCallable_Check(validate))
         || (get_n < 0) || (get_n > 3) || (set_n < 0) || (set_n > 3)
