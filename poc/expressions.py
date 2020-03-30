@@ -9,11 +9,18 @@ from poc.observe import (
 
 
 def _anytrait_filter(name, trait):
+    """ Filter for matching any traits."""
     return True
 
 
 def _add_paths(path, others, seen=None):
+    """ Extend the given ListenerPath with another list
+    of paths.
 
+    If the leaf nodes are all cycles, add the new paths as
+    new branches from these cycles. Otherwise, extend the
+    subtrees.
+    """
     if seen is None:
         seen = []
     else:
@@ -40,6 +47,8 @@ class Expression:
         self._paths = [] if paths is None else paths
 
     def as_paths(self):
+        """ Return the list of ListenerPath for the observer.
+        """
         return self._paths
 
     def _new_with_paths(self, others):
@@ -52,6 +61,12 @@ class Expression:
         return type(self)(paths=paths)
 
     def t(self, name, notify=True, optional=False):
+        """ Create a new expression that matches the current
+        expression and then a trait with the exact name given.
+
+        e.g. ``t("child").t("age")`` matches ``child.age`` on an object,
+        and is equivalent to ``t("child").then(t("age"))``
+        """
         return self._new_with_paths([
             ListenerPath(
                 node=NamedTraitListener(name, notify, optional),
@@ -60,6 +75,14 @@ class Expression:
         ])
 
     def list_items(self, notify=True):
+        """ Create a new expression for observing items inside a list.
+
+        e.g. ``t("containers").list_items()`` for observing to mutations
+        to a list named ``containers``.
+
+        e.g. ``t("containers").list_items().t("value")`` for observing
+        the trait ``value`` on any items in the list ``containers``.
+        """
         return self._new_with_paths([
             ListenerPath(
                 node=ListItemListener(notify=notify),
@@ -68,17 +91,29 @@ class Expression:
         ])
 
     def dict_items(self, notify=True):
-        pass
+        # Should be similar to list_items but for dict
+        raise NotImplementedError()
 
     def set_items(self, notify=True):
-        pass
+        # Should be similar to list_items but for set
+        raise NotImplementedError()
 
     def items(self, notify=True):
-        # equivalent to list_items or dict_items or set_items
         # this complicates the code path, so maybe not introduce this?
-        pass
+        return (
+            self.list_items(notify=notify)
+            | self.dict_items(notify=notify)
+            | self.set_items(notify=notify)
+        )
 
     def anytrait(self, notify=True):
+        """ Create a new expression that matches anytrait after
+        the current expresion returns a match.
+
+        e.g. ``t("child").anytrait()`` with match anytrait on
+        the trait ``child`` on a given object, such as ``child.age``,
+        ``child.name``, ``child.mother`` and so on.
+        """
         return self._new_with_paths([
             ListenerPath(
                 node=_FilteredTraitListener(
