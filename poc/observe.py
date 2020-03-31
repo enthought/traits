@@ -320,18 +320,6 @@ class BaseListener:
         raise NotImplementedError()
 
 
-class AnyTraitListener(BaseListener):
-
-    def iter_this_targets(self, object):
-        yield object
-
-    def iter_next_targets(self, object):
-        for name in object.trait_names():
-            value = object.__dict__.get(name, Undefined)
-            if is_notifiable(value):
-                yield value
-
-
 class _FilteredTraitListener(BaseListener):
 
     def __init__(self, notify, filter):
