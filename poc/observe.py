@@ -230,6 +230,11 @@ class BaseListener:
         """
         raise NotImplementedError()
 
+    def prevent_event(self, event):
+        """ Return true if the event should be silenced.
+        """
+        raise NotImplementedError()
+
     def __eq__(self, other):
         """ Return true if a given instance is equivalent to this
         one. Needed for comparing paths and cleaning up listeners.
@@ -294,14 +299,14 @@ class _FilteredTraitListener(BaseListener):
             observer=callback,
             owner=object._notifiers(True),
             target=target,
-            event_factory=self.event_factory,
             dispatcher=dispatcher,
+            prevent_event=self.prevent_event,
         )
 
-    def event_factory(self, object, name, old, new):
-        if old is Uninitialized:
-            return None
-        return CTraitObserverEvent(object, name, old, new)
+    def prevent_event(self, event):
+        """ Return true if the event should be silenced.
+        """
+        return event.old is Uninitialized
 
     def __eq__(self, other):
         if other is self:
@@ -332,7 +337,6 @@ class _FilteredTraitListener(BaseListener):
             actual_callback=callback,
             path=path,
             target=target,
-            event_factory=CTraitObserverEvent,
             dispatcher=dispatcher,
         )
 
@@ -435,19 +439,18 @@ class NamedTraitListener(BaseListener):
             observer=callback,
             owner=object._notifiers(True),
             target=target,
-            event_factory=self.event_factory,
             dispatcher=dispatcher,
+            prevent_event=self.prevent_event,
         )
 
-    def event_factory(self, object, name, old, new):
-        if old is Uninitialized:
-            return None
-
-        if (self.comparison_mode is ComparisonMode.equality
-                and old == new):
-            return None
-
-        return CTraitObserverEvent(object, name, old, new)
+    def prevent_event(self, event):
+        return (
+            event.old is Uninitialized
+            or (
+                self.comparison_mode is ComparisonMode.equality
+                and event.old == event.new
+            )
+        )
 
     def __eq__(self, other):
         if other is self:
@@ -479,7 +482,6 @@ class NamedTraitListener(BaseListener):
             actual_callback=callback,
             path=path,
             target=target,
-            event_factory=CTraitObserverEvent,
             dispatcher=dispatcher,
         )
 
@@ -537,7 +539,6 @@ class TraitAddedListener(BaseListener):
             actual_callback=callback,
             path=path,
             target=target,
-            event_factory=CTraitObserverEvent,
             dispatcher=dispatcher,
         )
 
@@ -570,17 +571,19 @@ class ListItemListener(BaseListener):
     def __eq__(self, other):
         return type(self) is type(other) and self.notify == other.notify
 
+    def prevent_event(self, event):
+        """ Return true if the event should be silenced.
+        """
+        return False
+
     def create_user_notifier(self, object, callback, target, dispatcher):
         return ListNotifier(
             observer=callback,
             owner=object._notifiers(True),
             target=target,
-            event_factory=self.event_factory,
             dispatcher=dispatcher,
+            prevent_event=self.prevent_event,
         )
-
-    def event_factory(self, trait_list, event):
-        return ListObserverEvent(trait_list, event)
 
     def iter_this_targets(self, object):
         # object should be a TraitListObject
@@ -597,7 +600,6 @@ class ListItemListener(BaseListener):
             actual_callback=callback,
             path=path,
             target=target,
-            event_factory=self.event_factory,
             dispatcher=dispatcher,
         )
 

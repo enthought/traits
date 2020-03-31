@@ -1,12 +1,13 @@
 import logging
 
-from poc.interfaces import INotifier
+from poc.events import CTraitObserverEvent, ListObserverEvent
+from poc.interfaces import INotifier, ICTraitNotifier, IListNotifier
 
 
 logger = logging.getLogger(__name__)
 
 
-class ListenerChangeNotifier(INotifier):
+class BaseListenerChangeNotifier:
     """ Notifier for maintaining nested listeners when a trait has
     changed.
 
@@ -18,7 +19,7 @@ class ListenerChangeNotifier(INotifier):
 
     def __init__(
             self, listener_callback, actual_callback, path,
-            target, event_factory, dispatcher):
+            target, dispatcher):
         """
         Parameters
         ----------
@@ -40,9 +41,6 @@ class ListenerChangeNotifier(INotifier):
             will be seen by users as the "owner" of the notifier.
             Strictly speaking, this object sets the context for the notifier
             and does not have to be a notifiable object.
-        event_factory : callable
-            Factory function for creating the event to be passed to
-            ``listener_callback``.
         dispatcher : callable(args, kwargs)
             Callable for dispatching the ``actual_callback``.
         """
@@ -56,13 +54,8 @@ class ListenerChangeNotifier(INotifier):
 
         self.dispatcher = dispatcher
         self.path = path
-        self.event_factory = event_factory
 
-    def __call__(self, *args):
-        event = self.event_factory(*args)
-        if event is None:
-            return
-        #: TODO: Should we use the same dispatcher?
+    def dispatch(self, event):
         self.listener_callback(
             event=event,
             callback=self.actual_callback,
@@ -120,15 +113,16 @@ class ListenerChangeNotifier(INotifier):
         )
 
 
-class CTraitListenerChangeNotifier(ListenerChangeNotifier):
+class CTraitListenerChangeNotifier(
+        BaseListenerChangeNotifier, ICTraitNotifier):
 
     def __call__(self, object, name, old, new):
-        super(CTraitListenerChangeNotifier, self).__call__(
-            object, name, old, new)
+        event = CTraitObserverEvent(object, name, old, new)
+        self.dispatch(event)
 
 
-class ListListenerChangeNotifier(ListenerChangeNotifier):
+class ListListenerChangeNotifier(BaseListenerChangeNotifier, IListNotifier):
 
-    def __call__(self, trait_list, event):
-        super(ListListenerChangeNotifier, self).__call__(
-            trait_list, event)
+    def __call__(self, trait_list, trait_list_event):
+        event = ListObserverEvent(trait_list, trait_list_event)
+        self.dispatch(event)

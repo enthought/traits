@@ -9,47 +9,14 @@ import weakref
 
 from traits.trait_base import Uninitialized
 
+from poc.events import CTraitObserverEvent, ListObserverEvent
+from poc.interfaces import INotifier, ICTraitNotifier, IListNotifier
+
 logger = logging.getLogger()
 
 
-class CTraitObserverEvent:
-
-    def __init__(self, object, name, old, new):
-        self.object = object
-        self.name = name
-        self.old = old
-        self.new = new
-
-
-class ListObserverEvent:
-
-    def __init__(self, trait_list, trait_list_event):
-        self.new = trait_list
-        self.added = trait_list_event.added
-        self.removed = trait_list_event.removed
-        self.index = trait_list_event.index
-
-
-class TraitObserverNotifier(object):
+class BaseTraitObserverNotifier:
     """ Observer for a trait on a HasTraits instance.
-
-    Attributes
-    ----------
-    observer : callable or WeakMethod
-        The observer callback or a weak reference to it if it is a method.
-    notifier_observer : method
-        The method to use for dispatch, either
-    owner : list of callables
-        The list of notifiers that this is part of.
-    target : optional HasTraits instance
-        An optional object which is required for the observer to function.  If
-        provided, then only a weak reference is held to this object.
-    event_factory : callable
-        A factory function or class that creates appropriate event objects.
-        If the factory returns None, the event is silenced.
-    dispatcher : callable(callable, BaseObserverEvent)
-        Callable to eventually dispatch an event, e.g. to the same thread
-        or a different thread.
 
     Parameters
     ----------
@@ -62,16 +29,17 @@ class TraitObserverNotifier(object):
     target : optional HasTraits instance
         An optional object which is required for the observer to function.  If
         provided, then only a weak reference is held to this object.
-    event_factory : callable
-        A factory function or class that creates appropriate event objects.
-        If the factory returns None, the event is silenced.
+    prevent_event : callable(object) -> boolean
+        A callable to return true if an event should be silenced before
+        being dispatched.
     """
 
     def __init__(
-            self, observer, owner, target, event_factory, dispatcher):
+            self, observer, owner, target, dispatcher, prevent_event):
         if isinstance(observer, MethodType):
             # allow observing object methods to be garbage collected
-            self._observer = weakref.WeakMethod(observer, self.observer_deleted)
+            self._observer = weakref.WeakMethod(
+                observer, self.observer_deleted)
         else:
             self._observer = observer
 
@@ -83,34 +51,12 @@ class TraitObserverNotifier(object):
         self.owner = owner
         self.dispatcher = dispatcher
         self.target_count = 0
-        self.event_factory = event_factory
+        self.prevent_event = prevent_event
 
     def __repr__(self):
-        return "<TraitObserverNotifier target={!r} event_factory={!r}>".format(
+        return "<TraitObserverNotifier target={!r}>".format(
             self.target,
-            self.event_factory
         )
-
-    def __call__(self, *args):
-        """ Called by INotifiableObject when it reports changes.
-
-        It adaptes varying notifier signatures into event objects to be
-        sent to the callback such that the callback only receives one
-        argument.
-        """
-
-        if self.target_count <= 0:
-            raise ValueError("I should have been removed!")
-
-        event = self.event_factory(*args)
-        if event is None:
-            logger.debug("Event is silenced for %r", args)
-            return
-
-        logger.debug(
-            "Notifier is called: {!r} with {!r}".format(
-                self, args))
-        self.dispatcher(self.dispatch, args=(event, ))
 
     def add_to(self, object):
         """ Add this notifier to an INotifiableObject
@@ -155,6 +101,14 @@ class TraitObserverNotifier(object):
             pass
 
     def dispatch(self, event):
+        """ Dispatch the event.
+        Expected to be called by subclass's __call__
+        """
+        if self.prevent_event(event):
+            return
+        self.dispatcher(self._notify, args=(event, ))
+
+    def _notify(self, event):
         # keep a reference to the observer while handling callback
         observer = self.observer
         # keep a reference to the target while handling callback
@@ -213,18 +167,20 @@ class TraitObserverNotifier(object):
         pass
 
 
-class CTraitNotifier(TraitObserverNotifier):
+class CTraitNotifier(BaseTraitObserverNotifier, ICTraitNotifier):
 
     def __call__(self, object, name, old, new):
         """ Called by an instance of HasTraits.
         See ``call_notifier`` in ctraits.c
         """
-        super(CTraitNotifier, self).__call__(object, name, old, new)
+        event = CTraitObserverEvent(object, name, old, new)
+        self.dispatch(event)
 
 
-class ListNotifier(TraitObserverNotifier):
+class ListNotifier(BaseTraitObserverNotifier, IListNotifier):
 
-    def __call__(self, trait_list, event):
+    def __call__(self, trait_list, trait_list_event):
         """ Called by an instance of TraitListObject.
         """
-        super(ListNotifier, self).__call__(trait_list, event)
+        event = ListObserverEvent(trait_list, trait_list_event)
+        self.dispatch(event)

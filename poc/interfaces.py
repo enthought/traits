@@ -26,7 +26,10 @@ class INotifier:
     """
 
     def __call__(self, *args):
-        """ Called by INotifiableObject. """
+        """ Called by INotifiableObject.
+        Subclass should specify the exact call signature expected
+        by the INotifiableObject.
+        """
         raise NotImplementedError()
 
     def add_to(self, object):
@@ -49,4 +52,16 @@ class INotifier:
         """ Return true if this notifier is considered equivalent to
         a given notifier.
         """
+        raise NotImplementedError()
+
+
+class ICTraitNotifier(INotifier):
+
+    def __call__(self, object, name, old, new):
+        raise NotImplementedError()
+
+
+class IListNotifier(INotifier):
+
+    def __call__(self, trait_list, trait_list_event):
         raise NotImplementedError()
