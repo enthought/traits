@@ -11,7 +11,8 @@
 import enum
 import unittest
 
-from traits.api import Any, Enum, HasTraits, List, Property, TraitError
+from traits.api import (
+    Any, BaseEnum, Enum, HasTraits, List, Property, TraitError)
 
 
 class FooEnum(enum.Enum):
@@ -103,6 +104,10 @@ class EnumCollectionExample(HasTraits):
     digits = Enum(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 
     two_digits = Enum(1, 2)
+
+    single_digit = Enum(8)
+
+    slow_enum = BaseEnum("yes", "no", "maybe")
 
 
 class EnumTestCase(unittest.TestCase):
@@ -199,6 +204,7 @@ class EnumTestCase(unittest.TestCase):
         self.assertEqual(0, collection_enum.digits)
         self.assertEqual(1, collection_enum.int_set_enum)
         self.assertEqual(1, collection_enum.two_digits)
+        self.assertEqual(8, collection_enum.single_digit)
 
         # Test assigning valid values
         collection_enum.rgb = "blue"
@@ -230,6 +236,12 @@ class EnumTestCase(unittest.TestCase):
         with self.assertRaises(TraitError):
             collection_enum.digits = 10
 
+        with self.assertRaises(TraitError):
+            collection_enum.single_digit = 9
+
+        with self.assertRaises(TraitError):
+            collection_enum.single_digit = None
+
         # Fixing issue #835 introduces the following behaviour, which would
         # have otherwise not thrown a TraitError
         with self.assertRaises(TraitError):
@@ -251,3 +263,36 @@ class EnumTestCase(unittest.TestCase):
                 a = Enum()
 
             EmptyEnum()
+
+    def test_too_many_arguments_for_dynamic_enum(self):
+        with self.assertRaises(TraitError):
+            Enum("red", "green", values="values")
+
+    def test_attributes(self):
+        static_enum = Enum(1, 2, 3)
+        self.assertEqual(static_enum.values, (1, 2, 3))
+        self.assertIsNone(static_enum.name, None)
+
+        dynamic_enum = Enum(values="values")
+        self.assertIsNone(dynamic_enum.values)
+        self.assertEqual(dynamic_enum.name, "values")
+
+    def test_explicit_collection_with_no_elements(self):
+        with self.assertRaises(TraitError):
+            Enum([])
+
+        with self.assertRaises(TraitError):
+            Enum(3.5, [])
+
+    def test_base_enum(self):
+        # Minimal tests for BaseEnum, sufficient to cover the validation
+        # for the static case.
+        obj = EnumCollectionExample()
+
+        self.assertEqual(obj.slow_enum, "yes")
+        obj.slow_enum = "no"
+        self.assertEqual(obj.slow_enum, "no")
+
+        with self.assertRaises(TraitError):
+            obj.slow_enum = "perhaps"
+        self.assertEqual(obj.slow_enum, "no")

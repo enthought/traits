@@ -27,8 +27,6 @@ enumerate = enumerate
 
 SequenceTypes = (list, tuple)
 
-EnumTypes = (list, tuple, enum.EnumMeta)
-
 ComplexTypes = (float, int)
 
 RangeTypes = (int, float)
@@ -368,12 +366,3 @@ def not_event(value):
 
 def is_str(value):
     return isinstance(value, str)
-
-
-def is_collection(value):
-    """ Returns true if the value can be iterated over. """
-    try:
-        iter(value)
-        return True
-    except TypeError:
-        return False
