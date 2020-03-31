@@ -20,7 +20,9 @@ class INotifiableObject(abc.ABC):
 
 
 class INotifier:
-    """ Interface for a notifier.
+    """ A callable to be added to the list of notifiers returned
+    by an INotifiableObject. Implements methods required for adding, removing
+    and book-keeping notifiers inside such list.
     """
 
     def __call__(self, *args):
