@@ -142,8 +142,7 @@ class TraitListObject(list):
             if event.added is None:
                 event.added = []
             for notifier in self._notifiers(True):
-                notifier(
-                    self, event.index, event.removed, event.added)
+                notifier(self, event)
             # -------------------------------------------
 
     # -------------------------------------------
