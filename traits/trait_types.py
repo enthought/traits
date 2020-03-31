@@ -1955,10 +1955,10 @@ class BaseEnum(TraitType):
 
         For the static case, the ambiguity in the signatures is resolved
         as follows: if ``args`` has length ``1`` or ``2``, ``args[-1]`` can be
-        iterated over, and ``args[-1]`` is not an instance of ``str``, ``bytes``
-        or ``bytearray``, then ``args[-1]`` is assumed to give the collection
-        of values. Otherwise, all elements of ``args`` are assumed to be
-        items in the collection. Thus the first two signatures are safe
+        iterated over, and ``args[-1]`` is not an instance of ``str``,
+        ``bytes`` or ``bytearray``, then ``args[-1]`` is assumed to give the
+        collection of values. Otherwise, all elements of ``args`` are assumed
+        to be items in the collection. Thus the first two signatures are safe
         from ambiguity, and it's recommended to use one of these two signatures
         in preference to the third form.
     values : str, optional
@@ -2146,10 +2146,10 @@ class Enum(BaseEnum):
 
         For the static case, the ambiguity in the signatures is resolved
         as follows: if ``args`` has length ``1`` or ``2``, ``args[-1]`` can be
-        iterated over, and ``args[-1]`` is not an instance of ``str``, ``bytes``
-        or ``bytearray``, then ``args[-1]`` is assumed to give the collection
-        of values. Otherwise, all elements of ``args`` are assumed to be
-        items in the collection. Thus the first two signatures are safe
+        iterated over, and ``args[-1]`` is not an instance of ``str``,
+        ``bytes`` or ``bytearray``, then ``args[-1]`` is assumed to give the
+        collection of values. Otherwise, all elements of ``args`` are assumed
+        to be items in the collection. Thus the first two signatures are safe
         from ambiguity, and it's recommended to use one of these two signatures
         in preference to the third form.
     values : str, optional
