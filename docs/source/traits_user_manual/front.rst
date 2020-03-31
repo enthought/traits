@@ -33,9 +33,10 @@ All trademarks and registered trademarks are the property of their respective
 owners.
 
 | Enthought, Inc.
-| 515 Congress Avenue
-| Suite 2100
-| Austin TX 78701
+| 200 W Cesar Chavez
+| Suite 202
+| Austin, TX 78701
+| United States
 | 1.512.536.1057 (voice)
 | 1.512.536.1059 (fax)
 | http://www.enthought.com
