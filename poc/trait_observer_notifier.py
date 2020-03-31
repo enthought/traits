@@ -105,23 +105,25 @@ class TraitObserverNotifier(object):
             self.event_factory
         )
 
-    def __call__(self, arg1, arg2, arg3, arg4):
-        """ Notifier for observers.
+    def __call__(self, *args):
+        """ Called by INotifiableObject when it reports changes.
 
-        This adapts the underlying CTrait notifier signature to an event
-        object that is expected by observers.
+        It adaptes varying notifier signatures into event objects to be
+        sent to the callback such that the callback only receives one
+        argument.
         """
+
         if self.target_count <= 0:
             raise ValueError("I should have been removed!")
 
-        event = self.event_factory(arg1, arg2, arg3, arg4)
+        event = self.event_factory(*args)
         if event is None:
-            logger.debug("Event is silenced for %r", (arg1, arg2, arg3, arg4))
+            logger.debug("Event is silenced for %r", args)
             return
 
         logger.debug(
             "Notifier is called: {!r} with {!r}".format(
-                self, (arg1, arg2, arg3, arg4)))
+                self, args))
         self.dispatcher(self.dispatch, args=(event, ))
 
     def dispatch(self, event):
@@ -191,3 +193,20 @@ class TraitObserverNotifier(object):
         """ Perform clean-up when no longer in use.
         """
         pass
+
+
+class CTraitNotifier(TraitObserverNotifier):
+
+    def __call__(self, object, name, old, new):
+        """ Called by an instance of HasTraits.
+        See ``call_notifier`` in ctraits.c
+        """
+        super(CTraitNotifier, self).__call__(object, name, old, new)
+
+
+class ListNotifier(TraitObserverNotifier):
+
+    def __call__(self, trait_list, event):
+        """ Called by an instance of TraitListObject.
+        """
+        super(ListNotifier, self).__call__(trait_list, event)

@@ -58,8 +58,8 @@ class ListenerChangeNotifier(INotifier):
         self.path = path
         self.event_factory = event_factory
 
-    def __call__(self, arg1, arg2, arg3, arg4):
-        event = self.event_factory(arg1, arg2, arg3, arg4)
+    def __call__(self, *args):
+        event = self.event_factory(*args)
         if event is None:
             return
         #: TODO: Should we use the same dispatcher?
@@ -95,3 +95,17 @@ class ListenerChangeNotifier(INotifier):
             and self.actual_callback is other.actual_callback
             and self.path == other.path
         )
+
+
+class CTraitListenerChangeNotifier(ListenerChangeNotifier):
+
+    def __call__(self, object, name, old, new):
+        super(CTraitListenerChangeNotifier, self).__call__(
+            object, name, old, new)
+
+
+class ListListenerChangeNotifier(ListenerChangeNotifier):
+
+    def __call__(self, trait_list, event):
+        super(ListListenerChangeNotifier, self).__call__(
+            trait_list, event)

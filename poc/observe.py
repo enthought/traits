@@ -15,9 +15,13 @@ from poc.interfaces import INotifiableObject
 from poc.trait_observer_notifier import (
     ObserverEvent,
     ListObserverEvent,
-    TraitObserverNotifier,
+    CTraitNotifier,
+    ListNotifier,
 )
-from poc.listener_change_notifier import ListenerChangeNotifier
+from poc.listener_change_notifier import (
+    CTraitListenerChangeNotifier,
+    ListListenerChangeNotifier,
+)
 
 # We need to identify objects which has this `_notifiers` methods
 # We could do the easy-to-ask-forgiveness-than-permission way.
@@ -109,12 +113,10 @@ def add_notifiers(object, callback, path, target, dispatcher):
     listener = path.node
     for this_target in listener.iter_this_targets(object):
         if listener.notify:
-            # TODO: Move this to the listener interface?
-            notifier = TraitObserverNotifier(
-                observer=callback,
-                owner=this_target._notifiers(True),
+            notifier = listener.create_user_notifier(
+                object=this_target,
+                callback=callback,
                 target=target,
-                event_factory=listener.event_factory,
                 dispatcher=dispatcher,
             )
             add_notifier(object=this_target, notifier=notifier)
@@ -225,11 +227,10 @@ def remove_notifiers(object, callback, path, target, dispatcher):
     listener = path.node
     for this_target in listener.iter_this_targets(object):
         if listener.notify:
-            notifier = TraitObserverNotifier(
-                observer=callback,
-                owner=this_target._notifiers(True),
+            notifier = listener.create_user_notifier(
+                object=this_target,
+                callback=callback,
                 target=target,
-                event_factory=listener.event_factory,
                 dispatcher=dispatcher,
             )
             remove_notifier(this_target, notifier)
@@ -274,7 +275,9 @@ def is_notifiable(object):
 
 class BaseListener:
 
-    def event_factory(self, arg1, arg2, arg3, arg4):
+    def create_user_notifier(self, object, callback, target, dispatcher):
+        """ Return an INotifier for calling user-defined callback.
+        """
         raise NotImplementedError()
 
     def __eq__(self, other):
@@ -348,6 +351,15 @@ class _FilteredTraitListener(BaseListener):
         self.filter = filter
         self.notify = notify
 
+    def create_user_notifier(self, object, callback, target, dispatcher):
+        return CTraitNotifier(
+            observer=callback,
+            owner=object._notifiers(True),
+            target=target,
+            event_factory=self.event_factory,
+            dispatcher=dispatcher,
+        )
+
     def event_factory(self, object, name, old, new):
         if old is Uninitialized:
             return None
@@ -377,7 +389,7 @@ class _FilteredTraitListener(BaseListener):
                     yield value
 
     def get_change_notifier(self, callback, path, target, dispatcher):
-        return ListenerChangeNotifier(
+        return CTraitListenerChangeNotifier(
             listener_callback=self.change_callback,
             actual_callback=callback,
             path=path,
@@ -480,6 +492,15 @@ class NamedTraitListener(BaseListener):
         self.optional = optional
         self.comparison_mode = comparison_mode
 
+    def create_user_notifier(self, object, callback, target, dispatcher):
+        return CTraitNotifier(
+            observer=callback,
+            owner=object._notifiers(True),
+            target=target,
+            event_factory=self.event_factory,
+            dispatcher=dispatcher,
+        )
+
     def event_factory(self, object, name, old, new):
         if old is Uninitialized:
             return None
@@ -515,7 +536,7 @@ class NamedTraitListener(BaseListener):
             yield value
 
     def get_change_notifier(self, callback, path, target, dispatcher):
-        return ListenerChangeNotifier(
+        return CTraitListenerChangeNotifier(
             listener_callback=self.change_callback,
             actual_callback=callback,
             path=path,
@@ -573,7 +594,7 @@ class TraitAddedListener(BaseListener):
         yield from ()
 
     def get_change_notifier(self, callback, path, target, dispatcher):
-        return ListenerChangeNotifier(
+        return CTraitListenerChangeNotifier(
             listener_callback=self.change_callback,
             actual_callback=callback,
             path=path,
@@ -611,8 +632,17 @@ class ListItemListener(BaseListener):
     def __eq__(self, other):
         return type(self) is type(other) and self.notify == other.notify
 
-    def event_factory(self, trait_list, index, removed, added):
-        return ListObserverEvent(trait_list, index, removed, added)
+    def create_user_notifier(self, object, callback, target, dispatcher):
+        return ListNotifier(
+            observer=callback,
+            owner=object._notifiers(True),
+            target=target,
+            event_factory=self.event_factory,
+            dispatcher=dispatcher,
+        )
+
+    def event_factory(self, trait_list, event):
+        return ListObserverEvent(trait_list, event)
 
     def iter_this_targets(self, object):
         # object should be a TraitListObject
@@ -624,7 +654,7 @@ class ListItemListener(BaseListener):
                 yield item
 
     def get_change_notifier(self, callback, path, target, dispatcher):
-        return ListenerChangeNotifier(
+        return ListListenerChangeNotifier(
             listener_callback=self.change_callback,
             actual_callback=callback,
             path=path,
