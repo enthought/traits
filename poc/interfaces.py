@@ -7,6 +7,15 @@ class INotifiableObject(abc.ABC):
     """
 
     def _notifiers(self, force_create):
+        """ Return a list for notifiers to be added or removed from.
+
+        Parameters
+        ----------
+        force_create : boolean
+            Kept for compatibility with ctraits. Maybe removed in
+            the future. Other classes implementing this interface
+            should not use this flag.
+        """
         raise NotImplementedError()
 
 
