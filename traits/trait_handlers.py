@@ -574,6 +574,8 @@ class TraitPrefixList(TraitHandler):
         Enumeration of all legal values for a trait.
     """
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitPrefixList", replacement="PrefixList"))
     def __init__(self, *values):
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
@@ -671,6 +673,8 @@ class TraitMap(TraitHandler):
 
     is_mapped = True
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitMap", replacement="Map"))
     def __init__(self, map):
         self.map = map
         self.fast_validate = (ValidateTrait.map, map)
@@ -741,6 +745,8 @@ class TraitPrefixMap(TraitMap):
         the shadow trait attribute.
     """
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitPrefixMap", replacement="PrefixMap"))
     def __init__(self, map):
         self.map = map
         self._map = _map = {}

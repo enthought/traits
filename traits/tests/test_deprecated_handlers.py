@@ -14,6 +14,9 @@ import warnings
 from traits.api import (
     TraitDict,
     TraitList,
+    TraitMap,
+    TraitPrefixList,
+    TraitPrefixMap,
     TraitTuple,
 )
 
@@ -24,14 +27,21 @@ class TestTraitHandlerDeprecatedWarnings(unittest.TestCase):
         handlers = {
             "TraitDict": TraitDict,
             "TraitList": TraitList,
-            "TraitTuple": TraitTuple
+            "TraitTuple": TraitTuple,
+            "TraitMap": [TraitMap, {}],
+            "TraitPrefixList": [TraitPrefixList, "one", "two"],
+            "TraitPrefixMap": [TraitPrefixMap, {}],
         }
 
-        for name, handler_factory in handlers.items():
+        for name, handler in handlers.items():
             with self.subTest(handler=name):
                 with warnings.catch_warnings(record=True):
                     warnings.simplefilter("error", DeprecationWarning)
 
                     with self.assertRaises(DeprecationWarning) as cm:
-                        handler_factory()
+                        args = []
+                        if isinstance(handler, list) and len(handler) > 0:
+                            args = handler[1:]
+                            handler = handler[0]
+                        handler(*args)
                 self.assertIn(name, str(cm.exception))

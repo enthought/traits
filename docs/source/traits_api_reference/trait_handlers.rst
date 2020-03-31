@@ -17,12 +17,6 @@ Classes
 
 .. autoclass:: TraitEnum
 
-.. autoclass:: TraitPrefixList
-
-.. autoclass:: TraitMap
-
-.. autoclass:: TraitPrefixMap
-
 .. autoclass:: TraitCompound
 
 Private Functions
@@ -45,3 +39,10 @@ and may be removed in a future version of Traits.
 .. autodata:: TraitList
 
 .. autodata:: TraitTuple
+
+.. autoclass:: TraitPrefixList
+
+.. autoclass:: TraitMap
+
+.. autoclass:: TraitPrefixMap
+
