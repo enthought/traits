@@ -6,12 +6,11 @@ class INotifiableObject(abc.ABC):
     notifiers can be added / removed.
     """
 
-    @abc.abstractmethod
     def _notifiers(self, force_create):
-        return []
+        raise NotImplementedError()
 
 
-class INotifier(abc.ABC):
+class INotifier:
     """ Interface for a notifier.
     """
 
