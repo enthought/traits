@@ -82,7 +82,7 @@ class TraitObserverNotifier(object):
 
         self.owner = owner
         self.dispatcher = dispatcher
-        self.target_count = 1
+        self.target_count = 0
         self.event_factory = event_factory
 
     def __repr__(self):
@@ -112,6 +112,48 @@ class TraitObserverNotifier(object):
                 self, args))
         self.dispatcher(self.dispatch, args=(event, ))
 
+    def add_to(self, object):
+        """ Add this notifier to an INotifiableObject
+        """
+        observer_notifiers = object._notifiers(True)
+        for other in observer_notifiers:
+            if other.equals(self):
+                logger.debug("ADD: Incrementing notifier %r", other)
+                other.target_count += 1
+                break
+
+        else:
+            logger.debug(
+                "ADD: adding notifier %r for object %r",
+                self, object
+            )
+            observer_notifiers.append(self)
+            self.target_count += 1
+
+    def remove_from(self, object):
+        """ Remove this notifier from an INotifiableObject
+        """
+        observer_notifiers = object._notifiers(True)
+        logger.debug("Removing from %r", observer_notifiers)
+        for other in observer_notifiers[:]:
+            if other.equals(self):
+                other.target_count -= 1
+
+                if other.target_count < 0:
+                    raise ValueError("Race condition: Count becomes negative.")
+
+                if other.target_count == 0:
+                    observer_notifiers.remove(other)
+                    other.dispose()
+                break
+        else:
+            # We can't raise here to be defensive.
+            # If a trait has an implicit default, when the trait is
+            # assigned a new value, the event's old value is filled
+            # with this implicit default, which does not have
+            # any notifiers.
+            pass
+
     def dispatch(self, event):
         # keep a reference to the observer while handling callback
         observer = self.observer
@@ -126,17 +168,6 @@ class TraitObserverNotifier(object):
 
         observer(event)
 
-    def increment(self):
-        self.target_count += 1
-
-    def decrement(self):
-        self.target_count -= 1
-        if self.target_count < 0:
-            raise ValueError("Too many decrement.")
-
-    def can_be_removed(self):
-        return self.target_count <= 0
-
     @property
     def target(self):
         if self._target is not None:
@@ -150,6 +181,7 @@ class TraitObserverNotifier(object):
         return self._observer
 
     def equals(self, other):
+        #: TODO: Shall we compare dispatch as well?
         if type(other) is not type(self):
             return False
         return other.observer is self.observer and other.target is self.target

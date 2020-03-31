@@ -123,7 +123,7 @@ def add_notifiers(object, callback, path, target, dispatcher):
                 target=target,
                 dispatcher=dispatcher,
             )
-            add_notifier(object=this_target, notifier=notifier)
+            notifier.add_to(object=this_target)
 
         for next_path in path.nexts:
 
@@ -133,7 +133,7 @@ def add_notifiers(object, callback, path, target, dispatcher):
                 target=target,
                 dispatcher=dispatcher,
             )
-            add_notifier(object=this_target, notifier=change_notifier)
+            change_notifier.add_to(object=this_target)
 
             for next_target in listener.iter_next_targets(object):
                 add_notifiers(
@@ -154,60 +154,6 @@ def add_notifiers(object, callback, path, target, dispatcher):
             target=target,
             dispatcher=dispatcher,
         )
-
-
-def add_notifier(object, notifier):
-    """ Add a notifier to an notifiable object.
-
-    Parameters
-    ----------
-    object : INotifiableObject
-    notifier : INotifier
-
-    """
-    observer_notifiers = object._notifiers(True)
-    for other in observer_notifiers:
-        # Rename ``observer`` (passive) to ``callback`` (active)!
-        if other.equals(notifier):
-            # should we compare dispatch as well?
-            logger.debug("ADD: Incrementing notifier %r", other)
-            other.increment()
-            break
-
-    else:
-        logger.debug(
-            "ADD: adding notifier %r for object %r",
-            notifier, object
-        )
-        observer_notifiers.append(notifier)
-
-
-def remove_notifier(object, notifier):
-    """ Remove a notifier from an notifiable object.
-
-    Parameters
-    ----------
-    object : INotifiableObject
-    notifier : INotifier
-    """
-
-    observer_notifiers = object._notifiers(True)
-    logger.debug("Removing from %r", observer_notifiers)
-    for other in observer_notifiers[:]:
-        if other.equals(notifier):
-            other.decrement()
-            if other.can_be_removed():
-                # TODO: Always do this on the main thread!
-                observer_notifiers.remove(other)
-                other.dispose()
-            break
-    else:
-        # We can't raise here to be defensive.
-        # If a trait has an implicit default, when the trait is
-        # assigned a new value, the event's old value is filled
-        # with this implicit default, which does not have
-        # any notifiers.
-        pass
 
 
 def remove_notifiers(object, callback, path, target, dispatcher):
@@ -237,7 +183,7 @@ def remove_notifiers(object, callback, path, target, dispatcher):
                 target=target,
                 dispatcher=dispatcher,
             )
-            remove_notifier(this_target, notifier)
+            notifier.remove_from(this_target)
 
         for next_path in path.nexts:
 
@@ -247,7 +193,7 @@ def remove_notifiers(object, callback, path, target, dispatcher):
                 target=target,
                 dispatcher=dispatcher,
             )
-            remove_notifier(object=this_target, notifier=change_notifier)
+            change_notifier.remove_from(object=this_target)
 
             for next_target in listener.iter_next_targets(object):
                 remove_notifiers(

@@ -3,11 +3,11 @@ import abc
 
 class INotifiableObject(abc.ABC):
     """ A notifiable object is an object which has a list to/from which
-    notifiers can be added / removed.
+    INotifier can be added / removed.
     """
 
     def _notifiers(self, force_create):
-        """ Return a list for notifiers to be added or removed from.
+        """ Return a list of INotifier to be added or removed from.
 
         Parameters
         ----------
@@ -29,23 +29,14 @@ class INotifier:
         """ Called by INotifiableObject. """
         raise NotImplementedError()
 
-    def increment(self):
-        """ Increment an internal reference count.
-        Subclass can ignore if reference counting is not required.
+    def add_to(self, object):
+        """ Add this notifier to an INotifiableObject
         """
         raise NotImplementedError()
 
-    def decrement(self):
-        """ Decrement an internal reference count.
-        Subclass can ignore if reference counting is not required.
+    def remove_from(self, object):
+        """ Remove this notifier from an INotifiableObject
         """
-        raise NotImplementedError()
-
-    def can_be_removed(self):
-        """ Return true if this notifier can be removed from a
-        notifiable object.
-        """
-        # return true or false.
         raise NotImplementedError()
 
     def dispose(self):

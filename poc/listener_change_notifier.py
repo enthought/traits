@@ -71,15 +71,38 @@ class ListenerChangeNotifier(INotifier):
             dispatcher=self.dispatcher,
         )
 
-    def increment(self):
-        pass
+    def add_to(self, object):
+        """ Add this notifier to an INotifiableObject
+        """
+        observer_notifiers = object._notifiers(True)
+        for other in observer_notifiers:
+            if other.equals(self):
+                break
 
-    def decrement(self):
-        pass
+        else:
+            logger.debug(
+                "ADD: adding notifier %r for object %r",
+                self, object
+            )
+            observer_notifiers.append(self)
 
-    def can_be_removed(self):
-        # return true or false.
-        return True
+    def remove_from(self, object):
+        """ Remove this notifier from an INotifiableObject
+        """
+        observer_notifiers = object._notifiers(True)
+        logger.debug("Removing from %r", observer_notifiers)
+        for other in observer_notifiers[:]:
+            if other.equals(self):
+                observer_notifiers.remove(other)
+                other.dispose()
+                break
+        else:
+            # We can't raise here to be defensive.
+            # If a trait has an implicit default, when the trait is
+            # assigned a new value, the event's old value is filled
+            # with this implicit default, which does not have
+            # any notifiers.
+            pass
 
     def dispose(self):
         # clean up tasks **after** this notifier is removed from
