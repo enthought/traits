@@ -332,7 +332,7 @@ class _FilteredTraitListener(BaseListener):
             actual_callback=callback,
             path=path,
             target=target,
-            event_factory=self.event_factory,
+            event_factory=CTraitObserverEvent,
             dispatcher=dispatcher,
         )
 
