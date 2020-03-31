@@ -13,7 +13,7 @@ from traits.trait_set_object import TraitSetObject
 
 from poc.interfaces import INotifiableObject
 from poc.trait_observer_notifier import (
-    ObserverEvent,
+    CTraitObserverEvent,
     ListObserverEvent,
     CTraitNotifier,
     ListNotifier,
@@ -63,8 +63,12 @@ def observe(object, callback, path, remove, dispatch):
     object : HasTrait
         An object that implements `_notifiers` for returning a list for
         adding or removing notifiers
-    callback : callable(BaseObserverEvent)
-        A callable conforming to the notifier signature.
+    callback : callable(object)
+        A callable which will receive an event object with information
+        about a change. The type and interface of this event object
+        depends on the type of events. For example, a change to a simple
+        trait will emit CTraitObserverEvent. A mutation to a list
+        will emit ListObserverEvent.
     path : ListenerPath
         Path for listening to extended traits.
     remove : boolean
@@ -351,7 +355,7 @@ class _FilteredTraitListener(BaseListener):
     def event_factory(self, object, name, old, new):
         if old is Uninitialized:
             return None
-        return ObserverEvent(object, name, old, new)
+        return CTraitObserverEvent(object, name, old, new)
 
     def __eq__(self, other):
         if other is self:
@@ -497,7 +501,7 @@ class NamedTraitListener(BaseListener):
                 and old == new):
             return None
 
-        return ObserverEvent(object, name, old, new)
+        return CTraitObserverEvent(object, name, old, new)
 
     def __eq__(self, other):
         if other is self:
@@ -529,7 +533,7 @@ class NamedTraitListener(BaseListener):
             actual_callback=callback,
             path=path,
             target=target,
-            event_factory=ObserverEvent,
+            event_factory=CTraitObserverEvent,
             dispatcher=dispatcher,
         )
 
@@ -587,7 +591,7 @@ class TraitAddedListener(BaseListener):
             actual_callback=callback,
             path=path,
             target=target,
-            event_factory=ObserverEvent,
+            event_factory=CTraitObserverEvent,
             dispatcher=dispatcher,
         )
 
