@@ -54,3 +54,18 @@ class TestObserverPath(unittest.TestCase):
             nexts=[path_from_nodes(3), path_from_nodes(2)],
         )
         self.assertEqual(path1, path2)
+
+    def test_equality_with_cycle(self):
+        path1 = ObserverPath(
+            node=1,
+            nexts=[path_from_nodes(2)]
+        )
+        path1.nexts.append(path1)   # cycle
+
+        path2 = ObserverPath(
+            node=1,
+            nexts=[path_from_nodes(2)],
+        )
+        path2.nexts.append(path2)
+
+        self.assertEqual(path1, path2)
