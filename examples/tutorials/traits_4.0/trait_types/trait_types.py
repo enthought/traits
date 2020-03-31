@@ -122,7 +122,7 @@ class OddInt(BaseInt):
 # --[Test Class]---------------------------------------------------------------
 class Test(HasTraits):
 
-    any_int = Int
+    any_int = BaseInt
     odd_int = OddInt
 
 
