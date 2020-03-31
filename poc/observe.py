@@ -338,7 +338,7 @@ class _FilteredTraitListener(BaseListener):
 
     @staticmethod
     def change_callback(event, callback, path, target, dispatcher):
-        if event.old is not Uninitialized and event.old is not Undefined:
+        if is_notifiable(event.old):
             remove_notifiers(
                 object=event.old,
                 callback=callback,

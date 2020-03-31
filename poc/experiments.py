@@ -1312,6 +1312,47 @@ class TestFilteredTrait(unittest.TestCase):
         # mother is not public info
         mock_obj.assert_not_called()
 
+    def test_filter_metadata_parent_uninitialized(self):
+
+        class Person(HasTraits):
+            name = Str(public=True)
+            age = Int(public=False)
+
+        class Foo(HasTraits):
+            guardian = Instance(Person, public=True)
+            mother = Instance(Person, public=False)
+
+        path = observe.ListenerPath.from_nodes(
+            observe._FilteredTraitListener(
+                notify=False, filter=lambda _, trait: trait.public),
+            observe._FilteredTraitListener(
+                notify=True, filter=lambda _, trait: trait.public),
+        )
+
+        # The instances are not initialized, and will have a value None.
+        foo = Foo()
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            callback=mock_obj,
+            path=path,
+            remove=False,
+            dispatch="same",
+        )
+
+        # when
+        foo.guardian = Person(name="Jim", age=41)
+
+        # then
+        # notify is False
+        mock_obj.assert_not_called()
+
+        # when
+        foo.guardian.name = "Terry"
+
+        # then
+        self.assertEqual(mock_obj.call_count, 1)
+
 
 class TestRemoveNotifier(unittest.TestCase):
 
