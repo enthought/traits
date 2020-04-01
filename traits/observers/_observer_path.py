@@ -41,6 +41,9 @@ class ObserverPath:
     after mutating ``nexts`` for constructing branches) and is ready to be
     used against an instance of ``HasTraits``, it should not be mutated again.
 
+    Since ``ObserverPath`` is not supposed to be mutated when it is used,
+    ``ObserverPath`` supports hashing for performance reasons.
+
     An ``ObserverPath`` does not keep states regarding the HasTraits instances
     and the user callbacks it was used with. An ``ObserverPath`` can be
     reused multiple times on different ``HasTraits`` instance and with
@@ -65,11 +68,15 @@ class ObserverPath:
         self.nexts = set(nexts) if nexts is not None else set()
 
     def __hash__(self):
+        """ Return the hash of this ObserverPath."""
         return hash(
             (type(self), self.node, hash(frozenset(self.nexts)))
         )
 
     def __eq__(self, other):
+        """ Return true if another object is an ObserverPath with the
+        same content.
+        """
         if other is self:
             return True
         if type(self) is not type(other):
@@ -84,4 +91,5 @@ class ObserverPath:
         other_nexts = set(path for path in other.nexts if path is not other)
         if len(self_nexts) != len(other_nexts):
             return False
+        # Paths are hashable.
         return self_nexts == other_nexts
