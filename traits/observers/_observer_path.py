@@ -34,15 +34,12 @@ class ObserverPath:
     loops.
 
     In order to (1) avoid hooking up a user callback with the same observer
-    twice, and (2) remove an observer when they are not needed, an instance of
-    ``ObserverPath`` supports equality comparison.
-
-    Because of this, once an ``ObserverPath`` object is constructed (e.g.
+    twice, and (2) remove an observer when they are not needed, once an ``ObserverPath`` object is constructed (e.g.
     after mutating ``nexts`` for constructing branches) and is ready to be
     used against an instance of ``HasTraits``, it should not be mutated again.
 
-    Since ``ObserverPath`` is not supposed to be mutated when it is used,
-    ``ObserverPath`` supports hashing for performance reasons.
+    For the same reason, ``ObserverPath`` implements ``__hash__`` and ``__eq__``
+    and requires its nodes to also support these methods.
 
     An ``ObserverPath`` does not keep states regarding the HasTraits instances
     and the user callbacks it was used with. An ``ObserverPath`` can be
