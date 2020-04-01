@@ -314,7 +314,7 @@ the table.
 +------------------+----------------------------------------------------------+
 | List             | List([*trait* = None, *value* = None, *minlen* = 0,      |
 +------------------+----------------------------------------------------------+
-| Map              | Map( [*map* = Undefined, \*\*\ *metadata*] )             |
+| Map              | Map( *map*\ [, \*\*\ *metadata*] )                       |
 +------------------+----------------------------------------------------------+
 | Method           | Method ([\*\*\ *metadata*] )                             |
 +------------------+----------------------------------------------------------+
@@ -325,7 +325,7 @@ the table.
 +------------------+----------------------------------------------------------+
 | PrefixList       | PrefixList( [*values* = None, \*\*\ *metadata*] )        |
 +------------------+----------------------------------------------------------+
-| PrefixMap        | PrefixMap( [*map* = Undefined, \*\*\ *metadata*] )       |
+| PrefixMap        | PrefixMap( *map*\ [, \*\*\ *metadata*] )                 |
 +------------------+----------------------------------------------------------+
 | Property         | Property( [*fget* = None, *fset* = None, *fvalidate* =   |
 |                  | None, *force* = False, *handler* = None, *trait* = None, |
@@ -457,7 +457,7 @@ The following is an example of using Map::
         married = Map({'yes': 1, 'no': 0 }, default_value="yes")
 
 This example defines a Person class which has a **married** trait
-attributute which accepts values "yes" and "no". The default value
+attribute which accepts values "yes" and "no". The default value
 is set to "yes". The name of the shadow attribute is the name of
 the Map attribute followed by an underscore, i.e ``married_``
 Instantiating the class produces the following::
@@ -494,7 +494,7 @@ The following is an example of using PrefixMap::
         married = PrefixMap({'yes': 1, 'no': 0 }, default_value="yes")
 
 This example defines a Person class which has a **married** trait
-attributute which accepts values "yes" and "no" or any unique
+attribute which accepts values "yes" and "no" or any unique
 prefix. The default value is set to "yes". The name of the shadow attribute
 is the name of the PrefixMap attribute followed by an underscore, i.e ``married_``
 Instantiating the class produces the following::
@@ -519,9 +519,9 @@ PrefixList
 Ensures that a value assigned to the attribute is a member of a list of
 specified string values, or is a unique prefix of one of those values.
 The values that can be assigned to a trait attribute of type PrefixList
-type is the set of all strings supplied to the PrefixList constructor,
-as well as any unique prefix of those strings. The actual value assigned
-to the trait is limited to the set of complete strings assigned to the
+is the set of all strings supplied to the PrefixList constructor, as well
+as any unique prefix of those strings. The actual value assigned to the
+trait is limited to the set of complete strings assigned to the
 PrefixList constructor.
 
 .. index::
@@ -537,7 +537,7 @@ The following is an example of using PrefixList::
         married = PrefixList("yes", "no")
 
 This example defines a Person class which has a **married** trait
-attributute which accepts values "yes" and "no" or any unique
+attribute which accepts values "yes" and "no" or any unique
 prefix. Instantiating the class produces the following::
 
     >>> bob = Person()
