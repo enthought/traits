@@ -71,9 +71,9 @@ class TestTraitList(unittest.TestCase):
 
         self.assertListEqual(tl, [5, 2, 3])
         self.assertIs(self.trait_list, tl)
-        self.assertEqual(0, self.index)
-        self.assertEqual([1], self.removed)
-        self.assertEqual([5], self.added)
+        self.assertEqual(self.index, 0)
+        self.assertEqual(self.removed, [1])
+        self.assertEqual(self.added, [5])
 
     def test_deepcopy(self):
         tl = TraitList([1, 2, 3],
@@ -85,7 +85,7 @@ class TestTraitList(unittest.TestCase):
         for itm, itm_cpy in zip(tl, tl_copy):
             self.assertEqual(itm, itm_cpy)
 
-        self.assertEqual([], tl_copy.notifiers)
+        self.assertEqual(tl_copy.notifiers, [])
         self.assertEqual(tl.validator, tl_copy.validator)
 
     def test_setitem(self):
@@ -94,14 +94,14 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl[1] = 5
-        self.assertEqual(1, self.index)
-        self.assertEqual([2], self.removed)
-        self.assertEqual([5], self.added)
+        self.assertEqual(self.index, 1)
+        self.assertEqual(self.removed, [2])
+        self.assertEqual(self.added, [5])
 
         tl[:] = [1, 2, 3, 4, 5]
-        self.assertEqual(slice(0, 3, None), self.index)
-        self.assertEqual([1, 5, 3], self.removed)
-        self.assertEqual([1, 2, 3, 4, 5], self.added)
+        self.assertEqual(self.index, slice(0, 3, None))
+        self.assertEqual(self.removed, [1, 5, 3])
+        self.assertEqual(self.added, [1, 2, 3, 4, 5])
 
     def test_delitem(self):
         tl = TraitList([1, 2, 3],
@@ -109,14 +109,14 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         del tl[2]
-        self.assertEqual(2, self.index)
-        self.assertEqual([3], self.removed)
-        self.assertEqual([], self.added)
+        self.assertEqual(self.index, 2)
+        self.assertEqual(self.removed, [3])
+        self.assertEqual(self.added, [])
 
         del tl[:]
-        self.assertEqual(slice(0, 2, None), self.index)
-        self.assertEqual([1, 2], self.removed)
-        self.assertEqual([], self.added)
+        self.assertEqual(self.index, slice(0, 2, None))
+        self.assertEqual(self.removed, [1, 2])
+        self.assertEqual(self.added, [])
 
         with self.assertRaises(IndexError):
             del tl[0]
@@ -127,9 +127,9 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl += [6, 7]
-        self.assertEqual(slice(2, 4, None), self.index)
-        self.assertEqual([], self.removed)
-        self.assertEqual([6, 7], self.added)
+        self.assertEqual(self.index, slice(2, 4, None))
+        self.assertEqual(self.removed, [])
+        self.assertEqual(self.added, [6, 7])
 
     def test_imul(self):
         tl = TraitList([1, 2],
@@ -137,15 +137,15 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl *= 1
-        self.assertListEqual([1, 2], tl)
-        self.assertEqual(None, self.index)
-        self.assertEqual(None, self.removed)
-        self.assertEqual(None, self.added)
+        self.assertListEqual(tl, [1, 2])
+        self.assertEqual(self.index, None)
+        self.assertEqual(self.removed, None)
+        self.assertEqual(self.added, None)
 
         tl *= 2
-        self.assertEqual(slice(2, 4, None), self.index)
-        self.assertEqual([], self.removed)
-        self.assertEqual([1, 2], self.added)
+        self.assertEqual(self.index, slice(2, 4, None))
+        self.assertEqual(self.removed, [])
+        self.assertEqual(self.added, [1, 2])
 
         with self.assertRaises(TypeError):
             tl *= "5"
@@ -154,9 +154,9 @@ class TestTraitList(unittest.TestCase):
             tl *= 2.5
 
         tl *= -1
-        self.assertEqual(slice(0, 4, None), self.index)
-        self.assertEqual([1, 2, 1, 2], self.removed)
-        self.assertEqual([], self.added)
+        self.assertEqual(self.index, slice(0, 4, None))
+        self.assertEqual(self.removed, [1, 2, 1, 2])
+        self.assertEqual(self.added, [])
 
     def test_append(self):
         tl = TraitList([1],
@@ -164,9 +164,9 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl.append(2)
-        self.assertEqual(1, self.index)
-        self.assertEqual([], self.removed)
-        self.assertEqual([2], self.added)
+        self.assertEqual(self.index, 1)
+        self.assertEqual(self.removed, [])
+        self.assertEqual(self.added, [2])
 
     def test_extend(self):
         tl = TraitList([1],
@@ -175,8 +175,8 @@ class TestTraitList(unittest.TestCase):
 
         tl.extend([1, 2])
         # self.assertEqual(slice(1, 3, None), self.index)
-        self.assertEqual([], self.removed)
-        self.assertEqual([1, 2], self.added)
+        self.assertEqual(self.removed, [])
+        self.assertEqual(self.added, [1, 2])
 
     def test_insert(self):
         tl = TraitList([2],
@@ -184,14 +184,14 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl.insert(0, 1)  # [1,2]
-        self.assertEqual(0, self.index)
-        self.assertEqual([], self.removed)
-        self.assertEqual([1], self.added)
+        self.assertEqual(self.index, 0)
+        self.assertEqual(self.removed, [])
+        self.assertEqual(self.added, [1])
 
         tl.insert(-1, 3)  # [1,3,2]
-        self.assertEqual(1, self.index)
-        self.assertEqual([], self.removed)
-        self.assertEqual([3], self.added)
+        self.assertEqual(self.index, 1)
+        self.assertEqual(self.removed, [])
+        self.assertEqual(self.added, [3])
 
     def test_pop(self):
         tl = TraitList([1, 2, 3, 4, 5],
@@ -199,20 +199,20 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl.pop()
-        self.assertEqual(4, self.index)
-        self.assertEqual([5], self.removed)
-        self.assertEqual([], self.added)
+        self.assertEqual(self.index, 4)
+        self.assertEqual(self.removed, [5])
+        self.assertEqual(self.added, [])
 
         tl.pop(0)
-        self.assertEqual(0, self.index)
-        self.assertEqual([1], self.removed)
-        self.assertEqual([], self.added)
+        self.assertEqual(self.index, 0)
+        self.assertEqual(self.removed, [1])
+        self.assertEqual(self.added, [])
 
         # tl is now [2,3,4]
         tl.pop(-2)
-        self.assertEqual(1, self.index)
-        self.assertEqual([3], self.removed)
-        self.assertEqual([], self.added)
+        self.assertEqual(self.index, 1)
+        self.assertEqual(self.removed, [3])
+        self.assertEqual(self.added, [])
 
     def test_remove(self):
         tl = TraitList([1, 2, 3, 4, 5],
@@ -220,9 +220,9 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl.remove(3)
-        self.assertEqual(2, self.index)
-        self.assertEqual([3], self.removed)
-        self.assertEqual([], self.added)
+        self.assertEqual(self.index, 2)
+        self.assertEqual(self.removed, [3])
+        self.assertEqual(self.added, [])
 
         with self.assertRaises(ValueError):
             tl.remove(3)
@@ -232,9 +232,9 @@ class TestTraitList(unittest.TestCase):
                        validator=int_validator,
                        notifiers=[self.notification_handler])
         tl.clear()
-        self.assertEqual(slice(0, 5, None), self.index)
-        self.assertEqual([1, 2, 3, 4, 5], self.removed)
-        self.assertEqual([], self.added)
+        self.assertEqual(self.index, slice(0, 5, None))
+        self.assertEqual(self.removed, [1, 2, 3, 4, 5])
+        self.assertEqual(self.added, [])
 
     def test_sort(self):
         tl = TraitList([2, 3, 1, 4, 5, 0],
@@ -243,10 +243,10 @@ class TestTraitList(unittest.TestCase):
 
         tl.sort()
 
-        self.assertEqual([0, 1, 2, 3, 4, 5], tl)
-        self.assertEqual(slice(0, 6, None), self.index)
-        self.assertEqual([2, 3, 1, 4, 5, 0], self.removed)
-        self.assertEqual([0, 1, 2, 3, 4, 5], self.added)
+        self.assertEqual(tl, [0, 1, 2, 3, 4, 5])
+        self.assertEqual(self.index, slice(0, 6, None))
+        self.assertEqual(self.removed, [2, 3, 1, 4, 5, 0])
+        self.assertEqual(self.added, [0, 1, 2, 3, 4, 5])
 
     def test_reverse(self):
         tl = TraitList([1, 2, 3, 4, 5],
@@ -254,10 +254,10 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl.reverse()
-        self.assertEqual([5, 4, 3, 2, 1], tl)
-        self.assertEqual(slice(0, 5, None), self.index)
-        self.assertEqual([1, 2, 3, 4, 5], self.removed)
-        self.assertEqual([5, 4, 3, 2, 1], self.added)
+        self.assertEqual(tl, [5, 4, 3, 2, 1])
+        self.assertEqual(self.index, slice(0, 5, None))
+        self.assertEqual(self.removed, [1, 2, 3, 4, 5])
+        self.assertEqual(self.added, [5, 4, 3, 2, 1])
 
     def test_pickle(self):
         tl = TraitList([1, 2, 3, 4, 5],
