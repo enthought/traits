@@ -141,7 +141,7 @@ class TraitList(list):
         instance.notifiers = []
         return instance
 
-    def __init__(self, value=(), *, validator=None, notifiers=()):
+    def __init__(self, value=None, *, validator=None, notifiers=()):
         self.validator = validator
         self.notifiers = list(notifiers)
         value = self.validate(slice(0, 0), [], value)
@@ -510,7 +510,7 @@ class TraitList(list):
         if added != removed:
             self.notify(index, removed, added)
 
-    def sort(self, key=None, reverse=False):
+    def sort(self, *, key=None, reverse=False):
         """ Sort the items in the list in ascending order, *IN PLACE*.
         A custom key function can be supplied to customize
         the sort order, and the reverse flag can be set to request the result
