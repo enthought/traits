@@ -39,3 +39,15 @@ class TestNamedTraitObserver(unittest.TestCase):
         imposter.name = "foo"
         imposter.notify = True
         self.assertNotEqual(observer, imposter)
+
+    def test_name_not_mutable(self):
+        observer = NamedTraitObserver(name="foo", notify=True)
+        with self.assertRaises(AttributeError) as exception_context:
+            observer.name = "bar"
+        self.assertEqual(str(exception_context.exception), "can't set attribute")
+
+    def test_notify_not_mutable(self):
+        observer = NamedTraitObserver(name="foo", notify=True)
+        with self.assertRaises(AttributeError) as exception_context:
+            observer.notify = False
+        self.assertEqual(str(exception_context.exception), "can't set attribute")

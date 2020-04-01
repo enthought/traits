@@ -19,15 +19,21 @@ class BaseObserver:
     ``ObserverPath``, ``BaseObserver`` needs to be hashable
     and it needs to support comparison for equality.
 
-
     This class will have more meaningful methods later
     when the ``observe`` mechanism is implemented.
     (enthought/traits#???)
     """
-    pass
+
+    @property
+    def notify(self):
+        """ A boolean for whether this observer will notify
+        for changes.
+        """
+        raise NotImplementedError(
+            "Subclass should implement this property.")
 
 
-class NamedTraitObserver:
+class NamedTraitObserver(BaseObserver):
     """ Observer for observing changes on a named trait
     on an instance of HasTraits.
     """
@@ -43,8 +49,19 @@ class NamedTraitObserver:
         notify : boolean
             Whether to notify for changes.
         """
-        self.name = name
-        self.notify = notify
+        self._name = name
+        self._notify = notify
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def notify(self):
+        """ A boolean for whether this observer will notify
+        for changes.
+        """
+        return self._notify
 
     def __eq__(self, other):
         return (
