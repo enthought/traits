@@ -516,7 +516,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
         # Merge base traits:
         for name, value in base_dict.get(BaseTraits).items():
             if name not in base_traits:
-                property_info = value.property()
+                property_info = value.property
                 if property_info is not None:
                     key = id(value)
                     migrated_properties[key] = value = migrate_property(
@@ -527,7 +527,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
         # Merge class traits:
         for name, value in base_dict.get(ClassTraits).items():
             if name not in class_traits:
-                property_info = value.property()
+                property_info = value.property
                 if property_info is not None:
                     new_value = migrated_properties.get(id(value))
                     if new_value is not None:

@@ -16,6 +16,7 @@ validate as well as maintining a list of notifiers and calling them when
 values are modified.
 """
 
+import builtins
 import inspect
 
 from . import ctraits
@@ -55,17 +56,17 @@ class CTrait(ctraits.cTrait):
     def default(self):
         kind, value = self.default_value()
         if kind in (
-            DefaultValue.object,
-            DefaultValue.callable_and_args,
-            DefaultValue.callable,
+                DefaultValue.object,
+                DefaultValue.callable_and_args,
+                DefaultValue.callable,
         ):
             return Undefined
         elif kind in (
-            DefaultValue.dict_copy,
-            DefaultValue.trait_dict_object,
-            DefaultValue.trait_set_object,
-            DefaultValue.list_copy,
-            DefaultValue.trait_list_object,
+                DefaultValue.dict_copy,
+                DefaultValue.trait_dict_object,
+                DefaultValue.trait_set_object,
+                DefaultValue.list_copy,
+                DefaultValue.trait_list_object,
         ):
             return value.copy()
         elif kind in {DefaultValue.constant, DefaultValue.missing}:
@@ -111,37 +112,36 @@ class CTrait(ctraits.cTrait):
     def comparison_mode(self, value):
         ctraits.cTrait.comparison_mode.__set__(self, value)
 
-    def property(self, *args):
-        """ Gets or sets the fget, fset, and fvalidate callables
-        for the property.
+    @property
+    def property(self):
+        """ Return a tuple of callables (fget, fset, validate) for the
+        property trait."""
+        return self._get_property()
 
-        If this method is called with no arguments, it returns
-        a tuple (fget, fset, fvalidate).
+    @property.setter
+    def property(self, value):
+        """ Set the fget, fset, validate callables for the property.
 
-        If this method is called with the arguments fget, fset, fvalidate,
-        these values are set and None is returned.
+        Parameters
+        ----------
+        value : tuple
+            Value should be the tuple of callables (fget, fset, validate).
+
         """
+        func_arg_counts = []
 
-        if len(args) == 0:
-            # Get the values
-            return self._get_property()
+        for arg in value:
+            if arg is None:
+                func_arg_counts.extend([None, 0])
+            else:
+                try:
+                    sig = inspect.signature(arg)
+                except TypeError:
+                    raise ValueError("Expecting a callable "
+                                     "but got {} instead".format(arg))
+                func_arg_counts.extend([arg, len(sig.parameters)])
 
-        else:
-            # Set the values
-            func_arg_counts = []
-            for arg in args:
-                if arg is None:
-                    func_arg_counts.extend([None, 0])
-                else:
-                    try:
-                        sig = inspect.signature(arg)
-                    except TypeError:
-                        raise ValueError("Expecting a tuple of "
-                                         "callables (fget, fset, validate)"
-                                         " but got {}".format(args))
-                    func_arg_counts.extend([arg, len(sig.parameters)])
-
-            self._set_property(*func_arg_counts)
+        self._set_property(*func_arg_counts)
 
     def is_trait_type(self, trait_type):
         """ Returns whether or not this trait is of a specified trait type.

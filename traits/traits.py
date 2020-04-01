@@ -625,7 +625,7 @@ def Property(
 
     trait = CTrait(TraitKind.property)
     trait.__dict__ = metadata.copy()
-    trait.property(fget, fset, fvalidate)
+    trait.property = (fget, fset, fvalidate)
     trait.handler = handler
 
     return trait

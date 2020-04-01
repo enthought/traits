@@ -5120,12 +5120,10 @@ PyDoc_STRVAR(
     "\n"
     "Get the property fields for this trait.\n"
     "\n"
-    "When called with no arguments on a property trait, this method returns a\n"
-    "tuple (get, set, validate) of length 3 containing the getter, setter and\n"
-    "validator for this property trait.\n"
+    "This method returns a tuple (get, set, validate) of length 3 containing\n"
+    "the getter, setter and validator for this property trait.\n"
     "\n"
-    "When called with no arguments on a non-property trait, this method\n"
-    "returns *None*.\n");
+    "When called a non-property trait, this method returns *None*.\n");
 
 PyDoc_STRVAR(
     _set_property_doc,
