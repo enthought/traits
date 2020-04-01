@@ -54,6 +54,7 @@ class NamedTraitObserver(BaseObserver):
 
     @property
     def name(self):
+        """ Name of trait to observe on any given HasTraits object."""
         return self._name
 
     @property
