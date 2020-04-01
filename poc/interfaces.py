@@ -42,12 +42,6 @@ class INotifier:
         """
         raise NotImplementedError()
 
-    def dispose(self):
-        """ Clean up tasks **after** this notifier is removed from
-        the notifiable object.
-        """
-        raise NotImplementedError()
-
     def equals(self, other):
         """ Return true if this notifier is considered equivalent to
         a given notifier.
