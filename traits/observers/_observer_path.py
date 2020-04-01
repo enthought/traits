@@ -52,7 +52,7 @@ class ObserverPath:
     given higher-level wrappers for creating ``ObserverPath`` objects.
     """
 
-    def __init__(self, node, nexts=None):
+    def __init__(self, *, node, nexts=None):
         """
         Parameters
         ----------
