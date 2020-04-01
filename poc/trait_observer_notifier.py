@@ -92,7 +92,6 @@ class TraitObserverNotifier:
 
                 if other.target_count == 0:
                     observer_notifiers.remove(other)
-                    other.dispose()
                 break
         else:
             # We can't raise here to be defensive.
@@ -167,7 +166,3 @@ class TraitObserverNotifier:
         self._target = None
         self.target_count = 0
 
-    def dispose(self):
-        """ Perform clean-up when no longer in use.
-        """
-        pass

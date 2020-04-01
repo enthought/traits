@@ -91,7 +91,6 @@ class ListenerChangeNotifier:
         for other in observer_notifiers[:]:
             if other.equals(self):
                 observer_notifiers.remove(other)
-                other.dispose()
                 break
         else:
             # We can't raise here to be defensive.
@@ -100,11 +99,6 @@ class ListenerChangeNotifier:
             # with this implicit default, which does not have
             # any notifiers.
             pass
-
-    def dispose(self):
-        # clean up tasks **after** this notifier is removed from
-        # the notifiable object.
-        pass
 
     def equals(self, other):
         # Return true or false
