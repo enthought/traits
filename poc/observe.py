@@ -653,6 +653,15 @@ class DictValueListener(BaseListener):
 class ListenerPath:
 
     def __init__(self, node, nexts=()):
+        """
+        Parameters
+        ----------
+        node : BaseListener
+            A context specific listener, e.g. listening to changes
+            on a named trait.
+        nexts : list of ListenerPath
+            Branches of the path.
+        """
         self.node = node
         self.nexts = nexts
 
