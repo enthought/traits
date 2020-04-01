@@ -34,11 +34,11 @@ Deprecated Handlers
 The following :class:`~.TraitHandler` classes and instances are deprecated,
 and may be removed in a future version of Traits.
 
-.. autodata:: TraitDict
+.. autoclass:: TraitDict
 
-.. autodata:: TraitList
+.. autoclass:: TraitList
 
-.. autodata:: TraitTuple
+.. autoclass:: TraitTuple
 
 .. deprecated:: 6.1.0
 
