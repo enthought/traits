@@ -83,5 +83,5 @@ class TestObserverPathIntegrateNamedTraitObserver(unittest.TestCase):
                 ),
             ],
         )
-        # This tests __eq__
+        # This tests __eq__ and __hash__
         self.assertEqual(path1, path2)
