@@ -11,16 +11,13 @@ from traits.trait_dict_object import TraitDictObject
 from traits.trait_set_object import TraitSetObject
 
 
+from poc.events import CTraitObserverEvent, ListObserverEvent
 from poc.interfaces import INotifiableObject
 from poc.trait_observer_notifier import (
-    CTraitObserverEvent,
-    ListObserverEvent,
-    CTraitNotifier,
-    ListNotifier,
+    TraitObserverNotifier,
 )
 from poc.listener_change_notifier import (
-    CTraitListenerChangeNotifier,
-    ListListenerChangeNotifier,
+    ListenerChangeNotifier,
 )
 
 # We need to identify objects which has this `_notifiers` methods
@@ -295,12 +292,13 @@ class _FilteredTraitListener(BaseListener):
         self.notify = notify
 
     def create_user_notifier(self, object, callback, target, dispatcher):
-        return CTraitNotifier(
+        return TraitObserverNotifier(
             observer=callback,
             owner=object._notifiers(True),
             target=target,
             dispatcher=dispatcher,
             prevent_event=self.prevent_event,
+            event_factory=CTraitObserverEvent,
         )
 
     def prevent_event(self, event):
@@ -332,12 +330,13 @@ class _FilteredTraitListener(BaseListener):
                     yield value
 
     def get_change_notifier(self, callback, path, target, dispatcher):
-        return CTraitListenerChangeNotifier(
+        return ListenerChangeNotifier(
             listener_callback=self.change_callback,
             actual_callback=callback,
             path=path,
             target=target,
             dispatcher=dispatcher,
+            event_factory=CTraitObserverEvent,
         )
 
     @staticmethod
@@ -435,12 +434,13 @@ class NamedTraitListener(BaseListener):
         self.comparison_mode = comparison_mode
 
     def create_user_notifier(self, object, callback, target, dispatcher):
-        return CTraitNotifier(
+        return TraitObserverNotifier(
             observer=callback,
             owner=object._notifiers(True),
             target=target,
             dispatcher=dispatcher,
             prevent_event=self.prevent_event,
+            event_factory=CTraitObserverEvent,
         )
 
     def prevent_event(self, event):
@@ -477,12 +477,13 @@ class NamedTraitListener(BaseListener):
             yield value
 
     def get_change_notifier(self, callback, path, target, dispatcher):
-        return CTraitListenerChangeNotifier(
+        return ListenerChangeNotifier(
             listener_callback=self.change_callback,
             actual_callback=callback,
             path=path,
             target=target,
             dispatcher=dispatcher,
+            event_factory=CTraitObserverEvent,
         )
 
     @staticmethod
@@ -534,12 +535,13 @@ class TraitAddedListener(BaseListener):
         yield from ()
 
     def get_change_notifier(self, callback, path, target, dispatcher):
-        return CTraitListenerChangeNotifier(
+        return ListenerChangeNotifier(
             listener_callback=self.change_callback,
             actual_callback=callback,
             path=path,
             target=target,
             dispatcher=dispatcher,
+            event_factory=CTraitObserverEvent,
         )
 
     @staticmethod
@@ -577,12 +579,13 @@ class ListItemListener(BaseListener):
         return False
 
     def create_user_notifier(self, object, callback, target, dispatcher):
-        return ListNotifier(
+        return TraitObserverNotifier(
             observer=callback,
             owner=object._notifiers(True),
             target=target,
             dispatcher=dispatcher,
             prevent_event=self.prevent_event,
+            event_factory=ListObserverEvent,
         )
 
     def iter_this_targets(self, object):
@@ -595,12 +598,13 @@ class ListItemListener(BaseListener):
                 yield item
 
     def get_change_notifier(self, callback, path, target, dispatcher):
-        return ListListenerChangeNotifier(
+        return ListenerChangeNotifier(
             listener_callback=self.change_callback,
             actual_callback=callback,
             path=path,
             target=target,
             dispatcher=dispatcher,
+            event_factory=ListObserverEvent,
         )
 
     @staticmethod

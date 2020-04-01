@@ -9,17 +9,15 @@ import weakref
 
 from traits.trait_base import Uninitialized
 
-from poc.events import CTraitObserverEvent, ListObserverEvent
-
 logger = logging.getLogger()
 
 
-class BaseTraitObserverNotifier:
+class TraitObserverNotifier:
     """ Observer for a trait on a HasTraits instance.
 
     Parameters
     ----------
-    observer : callable
+    observer : callable(event)
         The observer callback.  This should accept a single ObserverEvent
         instance as an argument.  If the callable is a method, only a weak
         reference to the method will be used.
@@ -31,10 +29,14 @@ class BaseTraitObserverNotifier:
     prevent_event : callable(object) -> boolean
         A callable to return true if an event should be silenced before
         being dispatched.
+    event_factory : callable(*args) -> event
+        A callable that receives all arguments given when a notifier is called,
+        and return an event object to be passed to the user callback.
     """
 
     def __init__(
-            self, observer, owner, target, dispatcher, prevent_event):
+            self, observer, owner, target, dispatcher, prevent_event,
+            event_factory):
         if isinstance(observer, MethodType):
             # allow observing object methods to be garbage collected
             self._observer = weakref.WeakMethod(
@@ -51,6 +53,7 @@ class BaseTraitObserverNotifier:
         self.dispatcher = dispatcher
         self.target_count = 0
         self.prevent_event = prevent_event
+        self.event_factory = event_factory
 
     def __repr__(self):
         return "<TraitObserverNotifier target={!r}>".format(
@@ -98,6 +101,10 @@ class BaseTraitObserverNotifier:
             # with this implicit default, which does not have
             # any notifiers.
             pass
+
+    def __call__(self, *args):
+        """ Called by the notifiable object."""
+        self.dispatch(self.event_factory(*args))
 
     def dispatch(self, event):
         """ Dispatch the event.
@@ -164,24 +171,3 @@ class BaseTraitObserverNotifier:
         """ Perform clean-up when no longer in use.
         """
         pass
-
-
-class CTraitNotifier(BaseTraitObserverNotifier):
-    """ Implements INotifier for notifications from CTrait"""
-
-    def __call__(self, object, name, old, new):
-        """ Called by an instance of HasTraits.
-        See ``call_notifier`` in ctraits.c
-        """
-        event = CTraitObserverEvent(object, name, old, new)
-        self.dispatch(event)
-
-
-class ListNotifier(BaseTraitObserverNotifier):
-    """ Implement INotifier for notifications from TraitListObject."""
-
-    def __call__(self, trait_list, trait_list_event):
-        """ Called by an instance of TraitListObject.
-        """
-        event = ListObserverEvent(trait_list, trait_list_event)
-        self.dispatch(event)

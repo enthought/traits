@@ -1,12 +1,9 @@
 import logging
 
-from poc.events import CTraitObserverEvent, ListObserverEvent
-
-
 logger = logging.getLogger(__name__)
 
 
-class BaseListenerChangeNotifier:
+class ListenerChangeNotifier:
     """ Notifier for maintaining nested listeners when a trait has
     changed.
 
@@ -18,7 +15,7 @@ class BaseListenerChangeNotifier:
 
     def __init__(
             self, listener_callback, actual_callback, path,
-            target, dispatcher):
+            target, dispatcher, event_factory):
         """
         Parameters
         ----------
@@ -42,6 +39,10 @@ class BaseListenerChangeNotifier:
             and does not have to be a notifiable object.
         dispatcher : callable(args, kwargs)
             Callable for dispatching the ``actual_callback``.
+        event_factory : callable(*args) -> event
+            A callable that receives all arguments given when a notifier is
+            called, and return an event object to be passed to the
+            listener callback.
         """
         self.listener_callback = listener_callback
 
@@ -53,6 +54,10 @@ class BaseListenerChangeNotifier:
 
         self.dispatcher = dispatcher
         self.path = path
+        self.event_factory = event_factory
+
+    def __call__(self, *args):
+        self.dispatch(self.event_factory(*args))
 
     def dispatch(self, event):
         self.listener_callback(
@@ -110,23 +115,3 @@ class BaseListenerChangeNotifier:
             and self.actual_callback is other.actual_callback
             and self.path == other.path
         )
-
-
-class CTraitListenerChangeNotifier(BaseListenerChangeNotifier):
-    """ Implement INotifier for maintaining listeners and notifiers on
-    CTrait.
-    """
-
-    def __call__(self, object, name, old, new):
-        event = CTraitObserverEvent(object, name, old, new)
-        self.dispatch(event)
-
-
-class ListListenerChangeNotifier(BaseListenerChangeNotifier):
-    """ Implement INotifier for maintaining listeners and notifiers on
-    TraitListObject.
-    """
-
-    def __call__(self, trait_list, trait_list_event):
-        event = ListObserverEvent(trait_list, trait_list_event)
-        self.dispatch(event)
