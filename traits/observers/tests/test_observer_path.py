@@ -10,7 +10,6 @@
 import unittest
 
 from traits.observers._observer_path import ObserverPath
-from traits.observers._observers import NamedTraitObserver
 
 
 def path_from_nodes(node, *nodes):
@@ -72,30 +71,3 @@ class TestObserverPath(unittest.TestCase):
 
         self.assertEqual(path1, path2)
         self.assertEqual(hash(path1), hash(path2))
-
-
-class TestObserverPathIntegrateNamedTraitObserver(unittest.TestCase):
-    """ Test integrating ObserverPath with NamedTraitObserver as nodes.
-    """
-
-    def test_observer_path_hash_with_named_listener(self):
-        # Test equality + hashing using set passes.
-
-        path1 = ObserverPath(
-            node=NamedTraitObserver(name="foo", notify=True),
-            nexts=[
-                ObserverPath(
-                    node=NamedTraitObserver(name="bar", notify=True),
-                ),
-            ],
-        )
-        path2 = ObserverPath(
-            node=NamedTraitObserver(name="foo", notify=True),
-            nexts=[
-                ObserverPath(
-                    node=NamedTraitObserver(name="bar", notify=True),
-                ),
-            ],
-        )
-        # This tests __eq__
-        self.assertEqual(path1, path2)

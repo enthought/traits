@@ -14,6 +14,7 @@ from unittest import mock
 from traits.observers._observers import (
     NamedTraitObserver,
 )
+from traits.observers._observer_path import ObserverPath
 
 
 class TestNamedTraitObserver(unittest.TestCase):
@@ -55,3 +56,30 @@ class TestNamedTraitObserver(unittest.TestCase):
         with self.assertRaises(AttributeError) as exception_context:
             observer.notify = False
         self.assertEqual(str(exception_context.exception), "can't set attribute")
+
+
+class TestObserverPathIntegrateNamedTraitObserver(unittest.TestCase):
+    """ Test integrating ObserverPath with NamedTraitObserver as nodes.
+    """
+
+    def test_observer_path_hash_with_named_listener(self):
+        # Test equality + hashing using set passes.
+
+        path1 = ObserverPath(
+            node=NamedTraitObserver(name="foo", notify=True),
+            nexts=[
+                ObserverPath(
+                    node=NamedTraitObserver(name="bar", notify=True),
+                ),
+            ],
+        )
+        path2 = ObserverPath(
+            node=NamedTraitObserver(name="foo", notify=True),
+            nexts=[
+                ObserverPath(
+                    node=NamedTraitObserver(name="bar", notify=True),
+                ),
+            ],
+        )
+        # This tests __eq__
+        self.assertEqual(path1, path2)
