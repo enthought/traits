@@ -58,8 +58,10 @@ class ObserverPath:
         """
         Parameters
         ----------
-        node : BaseObserver
+        node : any
             A context specific observer.
+            It must be a hashable object. In practice, this will be
+            an instance that implements ``IObserver``.
         nexts : iterable of ObserverPath
             Branches on this path.
         """

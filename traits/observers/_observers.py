@@ -7,33 +7,10 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
+from traits.observers._interfaces import IObserver
 
 
-class BaseObserver:
-    """ Base class for all observers.
-
-    Each instance of ``BaseObserver`` can be a node in the
-    ``ObserverPath``. These objects are considered
-    low-level objects not to be instantiated directly by the
-    user. In order to support equality and hashing on the
-    ``ObserverPath``, ``BaseObserver`` needs to be hashable
-    and it needs to support comparison for equality.
-
-    This class will have more meaningful methods later
-    when the ``observe`` mechanism is implemented.
-    (enthought/traits#???)
-    """
-
-    @property
-    def notify(self):
-        """ A boolean for whether this observer will notify
-        for changes.
-        """
-        raise NotImplementedError(
-            "Subclass should implement this property.")
-
-
-class NamedTraitObserver(BaseObserver):
+class NamedTraitObserver(IObserver):
     """ Observer for observing changes on a named trait
     on an instance of HasTraits.
     """
