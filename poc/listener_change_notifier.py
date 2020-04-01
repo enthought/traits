@@ -7,6 +7,8 @@ class ListenerChangeNotifier:
     """ Notifier for maintaining nested listeners when a trait has
     changed.
 
+    Implements ``INotifier``.
+
     For example, when ``foo.bar.baz`` is being listened to and
     ``foo`` is changed, this notifier is fired such that listeners
     attached to the old ``foo`` 's nested attributes are removed,
@@ -101,6 +103,9 @@ class ListenerChangeNotifier:
             pass
 
     def equals(self, other):
+        """ Return true if the given object is considered the same
+        as this one.
+        """
         # Return true or false
         if type(other) is not type(self):
             return False

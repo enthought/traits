@@ -13,7 +13,10 @@ logger = logging.getLogger()
 
 
 class TraitObserverNotifier:
-    """ Observer for a trait on a HasTraits instance.
+    """ Wrapper for the user's change handler. An instance is a callable
+    to be called by an INotifiableObject.
+
+    Implements ``INotifier``.
 
     Parameters
     ----------
@@ -23,9 +26,15 @@ class TraitObserverNotifier:
         reference to the method will be used.
     owner : list of callables
         The list of notifiers that this is part of.
-    target : optional HasTraits instance
-        An optional object which is required for the observer to function.  If
-        provided, then only a weak reference is held to this object.
+    target : Any
+        Sets the context for the observer. In practice, it is
+        the HasTrait instance on which the listener path is defined and
+        will be seen by users as the "owner" of the notifier.
+        Strictly speaking, this object sets the context for the notifier
+        and does not have to be a notifiable object.
+    dispatcher : callable(callable, args, kwargs)
+        Callable to eventually invoke the user's change handler.
+        e.g. invoke the handler in the main thread.
     prevent_event : callable(object) -> boolean
         A callable to return true if an event should be silenced before
         being dispatched.
@@ -140,6 +149,10 @@ class TraitObserverNotifier:
         return self._observer
 
     def equals(self, other):
+        """ Return true if another notifier is the same as this one.
+        This is for preventing the same change handler from being
+        called twice in the same context.
+        """
         #: TODO: Shall we compare dispatch as well?
         if type(other) is not type(self):
             return False

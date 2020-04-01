@@ -58,8 +58,8 @@ def observe(object, callback, path, remove, dispatch):
     Parameters
     ----------
     object : HasTrait
-        An object that implements `_notifiers` for returning a list for
-        adding or removing notifiers
+        An object on which trait changes are observed based on the given
+        (attribute) path.
     callback : callable(object)
         A callable which will receive an event object with information
         about a change. The type and interface of this event object
@@ -97,15 +97,21 @@ def add_notifiers(object, callback, path, target, dispatcher):
 
     Parameters
     ----------
-    object : HasTrait
+    object : INotifiableObject
         An object that implements `_notifiers` for returning a list for
-        adding or removing notifiers
-    callback : callable(arg1, arg2, arg3, arg4)
-        A callable conforming to the notifier signature.
+        adding notifiers
+    callback : callable(event)
+        A callable conforming to the notifier signature. ``event`` is
+        an object representing the change to notify about. Its type
+        and content depends on the change.
     path : ListenerPath
         Path for listening to extended traits.
-    remove : boolean
-        Whether to remove the observer.
+    target : Any
+        Sets the context for the (actual) callback. In practice, it is
+        the HasTrait instance on which the listener path is defined and
+        will be seen by users as the "owner" of the notifier.
+        Strictly speaking, this object sets the context for the notifier
+        and does not have to be a notifiable object.
     dispatcher : callable(callable, args, kwargs)
         Callable for dispatching the callback, i.e. dispatching
         callback on a different thread.
@@ -158,15 +164,21 @@ def remove_notifiers(object, callback, path, target, dispatcher):
 
     Parameters
     ----------
-    object : HasTrait
+    object : INotifiableObject
         An object that implements `_notifiers` for returning a list for
-        adding or removing notifiers
-    callback : callable(object, name, old, new)
-        A callable conforming to the notifier signature.
+        removing notifiers
+    callback : callable(event)
+        A callable conforming to the notifier signature. ``event`` is
+        an object representing the change to notify about. Its type
+        and content depends on the change.
     path : ListenerPath
         Path for listening to extended traits.
-    remove : boolean
-        Whether to remove the observer.
+    target : Any
+        Sets the context for the (actual) callback. In practice, it is
+        the HasTrait instance on which the listener path is defined and
+        will be seen by users as the "owner" of the notifier.
+        Strictly speaking, this object sets the context for the notifier
+        and does not have to be a notifiable object.
     dispatcher : callable(callable, args, kwargs)
         Callable for dispatching the callback, i.e. dispatching
         callback on a different thread.
