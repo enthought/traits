@@ -85,8 +85,8 @@ This provides the exact same functionality as the previous definition of
 
   * As a subclass of **BaseInt**, it is related to **BaseInt**, which can be
     important both from a documentation and programming point of view. The
-    original definition of **OddInt** was related to **BaseInt** only in that their
-    names were similar.
+    original definition of **OddInt** was related to **BaseInt** only in that
+    their names were similar.
 
 - The default value and trait description information are declared as class
   constants. Although there are more dynamic techniques that allow computing
