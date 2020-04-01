@@ -37,11 +37,16 @@ class TestObserverPath(unittest.TestCase):
     def test_equality_different_length_nexts(self):
         path1 = ObserverPath(
             node=1,
-            nexts=[path_from_nodes(2), path_from_nodes(3)],
+            nexts=[
+                ObserverPath(node=2),
+                ObserverPath(node=3),
+            ],
         )
         path2 = ObserverPath(
             node=1,
-            nexts=[path_from_nodes(2)],
+            nexts=[
+                ObserverPath(node=2),
+            ],
         )
         self.assertNotEqual(path1, path2)
         self.assertNotEqual(hash(path1), hash(path2))
@@ -50,11 +55,17 @@ class TestObserverPath(unittest.TestCase):
         # The order of items in nexts does not matter
         path1 = ObserverPath(
             node=1,
-            nexts=[path_from_nodes(2), path_from_nodes(3)],
+            nexts=[
+                ObserverPath(node=2),
+                ObserverPath(node=3),
+            ],
         )
         path2 = ObserverPath(
             node=1,
-            nexts=[path_from_nodes(3), path_from_nodes(2)],
+            nexts=[
+                ObserverPath(node=3),
+                ObserverPath(node=2),
+            ],
         )
         self.assertEqual(path1, path2)
         self.assertEqual(hash(path1), hash(path2))
