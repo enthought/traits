@@ -27,11 +27,3 @@ class IObserver:
     def __eq__(self, other):
         """ Return true if this observer is equal to the given one."""
         raise NotImplementedError("Subclass must implement __eq__.")
-
-    @property
-    def notify(self):
-        """ A boolean for whether this observer will notify
-        for changes.
-        """
-        raise NotImplementedError(
-            "Subclass should implement this property.")
