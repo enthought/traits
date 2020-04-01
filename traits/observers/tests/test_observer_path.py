@@ -27,6 +27,7 @@ class TestObserverPath(unittest.TestCase):
         path1 = path_from_nodes(1, 2, 3)
         path2 = path_from_nodes(1, 2, 3)
         self.assertEqual(path1, path2)
+        self.assertEqual(hash(path1), hash(path2))
 
     def test_equality_different_type(self):
         path1 = path_from_nodes(1, 2, 3)
@@ -42,6 +43,7 @@ class TestObserverPath(unittest.TestCase):
             nexts=[path_from_nodes(2)],
         )
         self.assertNotEqual(path1, path2)
+        self.assertNotEqual(hash(path1), hash(path2))
 
     def test_equality_order_of_nexts(self):
         # The order of items in nexts does not matter
@@ -54,6 +56,7 @@ class TestObserverPath(unittest.TestCase):
             nexts=[path_from_nodes(3), path_from_nodes(2)],
         )
         self.assertEqual(path1, path2)
+        self.assertEqual(hash(path1), hash(path2))
 
     def test_equality_with_loop(self):
         path1 = ObserverPath(
@@ -66,3 +69,4 @@ class TestObserverPath(unittest.TestCase):
         path2.nexts.add(path2)
 
         self.assertEqual(path1, path2)
+        self.assertEqual(hash(path1), hash(path2))
