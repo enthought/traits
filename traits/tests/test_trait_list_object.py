@@ -83,10 +83,10 @@ class TestTraitList(unittest.TestCase):
         tl_copy = copy.deepcopy(tl)
 
         for itm, itm_cpy in zip(tl, tl_copy):
-            self.assertEqual(itm, itm_cpy)
+            self.assertEqual(itm_cpy, itm)
 
         self.assertEqual(tl_copy.notifiers, [])
-        self.assertEqual(tl.validator, tl_copy.validator)
+        self.assertEqual(tl_copy.validator, tl.validator)
 
     def test_setitem(self):
         tl = TraitList([1, 2, 3],
@@ -174,7 +174,7 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl.extend([1, 2])
-        # self.assertEqual(slice(1, 3, None), self.index)
+        self.assertEqual(self.index, slice(1, 3, None))
         self.assertEqual(self.removed, [])
         self.assertEqual(self.added, [1, 2])
 
@@ -269,7 +269,7 @@ class TestTraitList(unittest.TestCase):
             tl_unpickled = pickle.loads(serialized)
 
             self.assertIs(tl_unpickled.validator, tl.validator)
-            self.assertEqual([], tl_unpickled.notifiers)
+            self.assertEqual(tl_unpickled.notifiers, [])
 
             for i, j in zip(tl, tl_unpickled):
                 self.assertIs(i, j)
@@ -336,8 +336,8 @@ class TestTraitList(unittest.TestCase):
         )
 
         self.assertEqual(
-            tl.notifiers,
             [tl.notifier],
+            tl.notifiers
         )
 
         serialized = pickle.dumps(tl)
@@ -345,6 +345,6 @@ class TestTraitList(unittest.TestCase):
         tl_deserialized = pickle.loads(serialized)
 
         self.assertEqual(
-            tl_deserialized.notifiers,
-            [tl_deserialized.notifier]
+            [tl_deserialized.notifier],
+            tl_deserialized.notifiers
         )

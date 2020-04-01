@@ -254,7 +254,7 @@ class TraitList(list):
         ----------
         index : int
             Index at which the value will be set.
-        value : Any
+        value : any
             The value to set at the index.
 
         Notes
@@ -325,7 +325,7 @@ class TraitList(list):
 
         Parameters
         ----------
-        object : Any
+        object : any
             The item to append to the list.
 
         Notes
@@ -386,7 +386,7 @@ class TraitList(list):
         ----------
         index : int
             The index before which to insert the object.
-        object : Any
+        object : any
             The object to insert.
 
 
@@ -480,7 +480,7 @@ class TraitList(list):
 
         Parameters
         ----------
-        value : Any
+        value : any
             A value contained in the list.
 
         Raises
@@ -518,7 +518,7 @@ class TraitList(list):
 
         Parameters
         ----------
-        key : Callable
+        key : callable
             Custom function.
         reverse : bool
             If true, the resulting list will be sorted in descending order.
@@ -569,7 +569,7 @@ class TraitList(list):
 
         Parameters
         ----------
-        other : Any
+        other : any
             The item to add to the list.
 
         Notes
@@ -798,7 +798,7 @@ class TraitListObject(TraitList):
 
         # bug-for-bug conversion of parameters to TraitListEvent
         if isinstance(index, slice):
-            if index.step in {1, None}:
+            if index.step is None or index.step == 1:
                 index = min(index.start, index.stop)
 
         event = TraitListEvent(index, removed, added)
