@@ -38,18 +38,9 @@ def dispatch_same(callback, args=(), kwargs=None):
     callback(*args, **kwargs)
 
 
-def dispatch_new_thread(callback, args=(), kwargs=None):
-    if kwargs is None:
-        kwargs = {}
-    threading.Thread(
-        target=callback, args=args, kwargs=kwargs).start()
-
-
 # These are user-facing notifier factories...
 DISPATCHERS = {
-    "extended": dispatch_same,
     "same": dispatch_same,
-    "new": dispatch_new_thread,
 }
 
 
