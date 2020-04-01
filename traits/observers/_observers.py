@@ -64,6 +64,9 @@ class NamedTraitObserver(BaseObserver):
         """
         return self._notify
 
+    def __hash__(self):
+        return hash((type(self), self.name, self.notify))
+
     def __eq__(self, other):
         return (
             type(self) is type(other)

@@ -22,16 +22,19 @@ class TestNamedTraitObserver(unittest.TestCase):
         observer1 = NamedTraitObserver(name="foo", notify=True)
         observer2 = NamedTraitObserver(name="foo", notify=False)
         self.assertNotEqual(observer1, observer2)
+        self.assertNotEqual(hash(observer1), hash(observer2))
 
     def test_not_equal_name(self):
         observer1 = NamedTraitObserver(name="foo", notify=True)
         observer2 = NamedTraitObserver(name="bar", notify=True)
         self.assertNotEqual(observer1, observer2)
+        self.assertNotEqual(hash(observer1), hash(observer2))
 
     def test_equal_observers(self):
         observer1 = NamedTraitObserver(name="foo", notify=True)
         observer2 = NamedTraitObserver(name="foo", notify=True)
         self.assertEqual(observer1, observer2)
+        self.assertEqual(hash(observer1), hash(observer2))
 
     def test_not_equal_type(self):
         observer = NamedTraitObserver(name="foo", notify=True)
@@ -39,6 +42,7 @@ class TestNamedTraitObserver(unittest.TestCase):
         imposter.name = "foo"
         imposter.notify = True
         self.assertNotEqual(observer, imposter)
+        self.assertNotEqual(hash(observer), hash(imposter))
 
     def test_name_not_mutable(self):
         observer = NamedTraitObserver(name="foo", notify=True)
