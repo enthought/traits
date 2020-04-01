@@ -40,6 +40,8 @@ and may be removed in a future version of Traits.
 
 .. autodata:: TraitTuple
 
+.. deprecated:: 6.1.0
+
 .. autoclass:: TraitPrefixList
 
 .. autoclass:: TraitMap

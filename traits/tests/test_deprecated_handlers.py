@@ -28,20 +28,16 @@ class TestTraitHandlerDeprecatedWarnings(unittest.TestCase):
             "TraitDict": TraitDict,
             "TraitList": TraitList,
             "TraitTuple": TraitTuple,
-            "TraitMap": [TraitMap, {}],
-            "TraitPrefixList": [TraitPrefixList, "one", "two"],
-            "TraitPrefixMap": [TraitPrefixMap, {}],
+            "TraitMap": lambda: TraitMap({}),
+            "TraitPrefixList": lambda: TraitPrefixList("one", "two"),
+            "TraitPrefixMap": lambda: TraitPrefixMap({}),
         }
 
-        for name, handler in handlers.items():
+        for name, handler_factory in handlers.items():
             with self.subTest(handler=name):
                 with warnings.catch_warnings(record=True):
                     warnings.simplefilter("error", DeprecationWarning)
 
                     with self.assertRaises(DeprecationWarning) as cm:
-                        args = []
-                        if isinstance(handler, list) and len(handler) > 0:
-                            args = handler[1:]
-                            handler = handler[0]
-                        handler(*args)
+                        handler_factory()
                 self.assertIn(name, str(cm.exception))
