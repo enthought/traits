@@ -9,14 +9,14 @@
 # Thanks for using Enthought open source!
 import unittest
 
-from traits.observers.observer_path import ObserverPath
+from traits.observers._observer_path import ObserverPath
 
 
 def path_from_nodes(node, *nodes):
     root = path = ObserverPath(node=node)
     for node in nodes:
         next_path = ObserverPath(node=node)
-        path.nexts = [next_path]
+        path.nexts.add(next_path)
         path = next_path
     return root
 
@@ -57,15 +57,12 @@ class TestObserverPath(unittest.TestCase):
 
     def test_equality_with_cycle(self):
         path1 = ObserverPath(
-            node=1,
-            nexts=[path_from_nodes(2)]
-        )
-        path1.nexts.append(path1)   # cycle
+            node=1, nexts=[ObserverPath(node=2)])
+        path1.nexts.add(path1)  # cycle
 
         path2 = ObserverPath(
-            node=1,
-            nexts=[path_from_nodes(2)],
+            node=1, nexts=[ObserverPath(node=2)]
         )
-        path2.nexts.append(path2)
+        path2.nexts.add(path2)
 
         self.assertEqual(path1, path2)
