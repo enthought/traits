@@ -53,15 +53,3 @@ class INotifier:
         a given notifier.
         """
         raise NotImplementedError()
-
-
-class ICTraitNotifier(INotifier):
-
-    def __call__(self, object, name, old, new):
-        raise NotImplementedError()
-
-
-class IListNotifier(INotifier):
-
-    def __call__(self, trait_list, trait_list_event):
-        raise NotImplementedError()

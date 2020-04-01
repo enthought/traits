@@ -10,7 +10,6 @@ import weakref
 from traits.trait_base import Uninitialized
 
 from poc.events import CTraitObserverEvent, ListObserverEvent
-from poc.interfaces import INotifier, ICTraitNotifier, IListNotifier
 
 logger = logging.getLogger()
 
@@ -167,7 +166,8 @@ class BaseTraitObserverNotifier:
         pass
 
 
-class CTraitNotifier(BaseTraitObserverNotifier, ICTraitNotifier):
+class CTraitNotifier(BaseTraitObserverNotifier):
+    """ Implements INotifier for notifications from CTrait"""
 
     def __call__(self, object, name, old, new):
         """ Called by an instance of HasTraits.
@@ -177,7 +177,8 @@ class CTraitNotifier(BaseTraitObserverNotifier, ICTraitNotifier):
         self.dispatch(event)
 
 
-class ListNotifier(BaseTraitObserverNotifier, IListNotifier):
+class ListNotifier(BaseTraitObserverNotifier):
+    """ Implement INotifier for notifications from TraitListObject."""
 
     def __call__(self, trait_list, trait_list_event):
         """ Called by an instance of TraitListObject.

@@ -1,7 +1,6 @@
 import logging
 
 from poc.events import CTraitObserverEvent, ListObserverEvent
-from poc.interfaces import INotifier, ICTraitNotifier, IListNotifier
 
 
 logger = logging.getLogger(__name__)
@@ -113,15 +112,20 @@ class BaseListenerChangeNotifier:
         )
 
 
-class CTraitListenerChangeNotifier(
-        BaseListenerChangeNotifier, ICTraitNotifier):
+class CTraitListenerChangeNotifier(BaseListenerChangeNotifier):
+    """ Implement INotifier for maintaining listeners and notifiers on
+    CTrait.
+    """
 
     def __call__(self, object, name, old, new):
         event = CTraitObserverEvent(object, name, old, new)
         self.dispatch(event)
 
 
-class ListListenerChangeNotifier(BaseListenerChangeNotifier, IListNotifier):
+class ListListenerChangeNotifier(BaseListenerChangeNotifier):
+    """ Implement INotifier for maintaining listeners and notifiers on
+    TraitListObject.
+    """
 
     def __call__(self, trait_list, trait_list_event):
         event = ListObserverEvent(trait_list, trait_list_event)
