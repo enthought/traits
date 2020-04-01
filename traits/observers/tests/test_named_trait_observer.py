@@ -11,7 +11,7 @@
 import unittest
 from unittest import mock
 
-from traits.observers._observers import (
+from traits.observers._named_trait_observer import (
     NamedTraitObserver,
 )
 from traits.observers._observer_path import ObserverPath
