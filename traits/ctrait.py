@@ -136,8 +136,8 @@ class CTrait(ctraits.cTrait):
                 try:
                     sig = inspect.signature(arg)
                 except TypeError:
-                    raise ValueError("Expecting a callable "
-                                     "but got {} instead".format(arg))
+                    raise TypeError("Property setter expects a callable "
+                                    "but got {} instead".format(arg))
                 func_arg_counts.extend([arg, len(sig.parameters)])
 
         self._set_property(*func_arg_counts)
