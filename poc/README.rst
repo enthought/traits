@@ -12,7 +12,7 @@ What this PoC does not focus on
 - Naming
 - Module locations
 - Performance
-- End-user experience
+- User friendliness
 - Achieving all the features and catching every corner case
 
 Overview
