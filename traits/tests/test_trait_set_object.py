@@ -46,6 +46,13 @@ class TestTraitSet(unittest.TestCase):
         self.assertIsNone(ts.validator)
         self.assertEqual(ts.notifiers, [])
 
+    def test_init_with_no_input(self):
+        ts = TraitSet()
+
+        self.assertSetEqual(ts, set())
+        self.assertIsNone(ts.validator)
+        self.assertEqual(ts.notifiers, [])
+
     def test_validator(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator)
 
