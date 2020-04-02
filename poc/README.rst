@@ -30,9 +30,8 @@ all components in order to fulfill the same purpose as the existing
 (3) a description on how and what traits are observed
 
 On the item (3), this description is provided via an object called
-``ListenerPath``. This replaces the string ``name`` one used to
-provide to ``on_trait_change``, e.g. ``"obj1.obj2:value"``.
-A ``ListenerPath`` is typically a tree.
+``ListenerPath``. This replaces the ``ListenerItem`` or ``ListenerGroup``
+used for ``on_trait_change``. A ``ListenerPath`` is typically a tree.
 
 As ``observe.observe`` walks down a ``ListenerPath``, it
 retrieves the notifiable objects at each node and adds/removes notifiers
