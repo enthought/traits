@@ -109,6 +109,9 @@ class TraitDictObject(dict):
         if len(value) > 0:
             dict.update(self, self._validate_dic(value))
 
+        # Added for observers
+        self._observer_notifiers = []
+
     def _send_trait_items_event(self, name, event, items_event=None):
         """ Send a TraitDictEvent to the owning object if there is one.
         """
@@ -117,6 +120,20 @@ class TraitDictObject(dict):
             if items_event is None and hasattr(self, "trait"):
                 items_event = self.trait.items_event()
             object.trait_items_event(name, event, items_event)
+
+        event = copy.copy(event)
+        if event.added is None:
+            event.added = {}
+        if event.removed is None:
+            event.removed = {}
+        if event.changed is None:
+            event.changed = {}
+
+        for notifier in self._observer_notifiers:
+            notifier(self, event)
+
+    def _notifiers(self, force_create):
+        return self._observer_notifiers
 
     def __deepcopy__(self, memo):
         id_self = id(self)

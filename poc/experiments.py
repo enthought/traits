@@ -4,7 +4,7 @@ from unittest import mock
 
 import poc.observe as observe
 
-from traits.api import HasTraits, Int, Instance, Str, List
+from traits.api import HasTraits, Int, Instance, Str, List, Dict
 from traits.constants import ComparisonMode
 from traits.trait_base import Undefined
 
@@ -754,6 +754,137 @@ class TestListOfList(unittest.TestCase):
 
         # then
         self.assertEqual(mock_obj.call_count, 1)
+
+
+class TestDict(unittest.TestCase):
+
+    def test_observe_dict_items(self):
+
+        class Foo(HasTraits):
+
+            mapping = Dict()
+
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="mapping", notify=False),
+            observe.DictItemListener(notify=True),
+        )
+        foo = Foo()
+        foo.mapping = {}
+
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            path=path,
+            dispatch="same",
+            callback=mock_obj,
+            remove=False,
+        )
+
+        # when
+        foo.mapping["key"] = 1.0
+
+        # then
+        self.assertEqual(mock_obj.call_count, 1)
+
+    def test_observe_dict_keys(self):
+
+        class Bar(HasTraits):
+            values = List()
+
+        class Foo(HasTraits):
+
+            mapping = Dict(Bar, List)
+
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="mapping", notify=False),
+            observe.DictKeyListener(notify=False),
+            observe.RequiredTraitListener(name="values", notify=False),
+            observe.ListItemListener(notify=True),
+        )
+        foo = Foo()
+        foo.mapping = {}
+
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            path=path,
+            dispatch="same",
+            callback=mock_obj,
+            remove=False,
+        )
+
+        # when
+        bar = Bar()
+        foo.mapping[bar] = []
+        mock_obj.assert_not_called()
+        bar.values.append(1)
+
+        # then
+        self.assertEqual(mock_obj.call_count, 1)
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.new, bar.values)
+        self.assertEqual(event.added, [1])
+
+    def test_observe_dict_values(self):
+
+        class Bar(HasTraits):
+            values = List()
+
+        class Foo(HasTraits):
+
+            mapping = Dict(Str, Bar)
+
+        path = observe.ListenerPath.from_nodes(
+            observe.RequiredTraitListener(name="mapping", notify=False),
+            observe.DictValueListener(notify=False),
+            observe.RequiredTraitListener(name="values", notify=False),
+            observe.ListItemListener(notify=True),
+        )
+        foo = Foo()
+        foo.mapping = {}
+
+        mock_obj = mock.Mock()
+        observe.observe(
+            object=foo,
+            path=path,
+            dispatch="same",
+            callback=mock_obj,
+            remove=False,
+        )
+
+        # when
+        bar = Bar()
+        foo.mapping["key"] = bar
+        mock_obj.assert_not_called()
+        bar.values.append(1)
+
+        # then
+        self.assertEqual(mock_obj.call_count, 1)
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.new, bar.values)
+        self.assertEqual(event.added, [1])
+
+        # when
+        # value changes
+        mock_obj.reset_mock()
+        new_bar = Bar()
+        foo.mapping["key"] = new_bar
+        mock_obj.assert_not_called()
+        new_bar.values.append(1)
+
+        # then
+        self.assertEqual(mock_obj.call_count, 1)
+        ((event, ), _), = mock_obj.call_args_list
+        self.assertEqual(event.new, bar.values)
+        self.assertEqual(event.added, [1])
+
+        # when
+        # modifying removed value should not fire event
+        mock_obj.reset_mock()
+        bar.values.append(1)
+
+        # then
+        mock_obj.assert_not_called()
 
 
 class TestIssue538(unittest.TestCase):

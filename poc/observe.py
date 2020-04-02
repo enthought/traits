@@ -11,7 +11,11 @@ from traits.trait_dict_object import TraitDictObject
 from traits.trait_set_object import TraitSetObject
 
 
-from poc.events import CTraitObserverEvent, ListObserverEvent
+from poc.events import (
+    CTraitObserverEvent,
+    DictItemObserverEvent,
+    ListObserverEvent,
+)
 from poc.interfaces import INotifiableObject
 from poc.trait_observer_notifier import (
     TraitObserverNotifier,
@@ -25,7 +29,9 @@ from poc.listener_change_notifier import (
 # Or we could do the leap-before-you-leap way.
 # Here is the LBYL way
 from traits.trait_list_object import TraitListObject
+from traits.trait_dict_object import TraitDictObject
 INotifiableObject.register(TraitListObject)
+INotifiableObject.register(TraitDictObject)
 INotifiableObject.register(CTrait)
 INotifiableObject.register(ctraits.CHasTraits)
 
@@ -725,6 +731,261 @@ class DictValueListener(BaseListener):
 
     def __init__(self, notify):
         self.notify = notify
+
+    def __eq__(self, other):
+        return type(self) is type(other) and self.notify == other.notify
+
+    def iter_this_targets(self, object):
+        """ Yield (notifiable) objects for attaching notifiers for this
+        listener.
+        """
+        if not isinstance(object, dict):
+            # Be defensive if the user uses this listener with the wrong
+            # thing.
+            raise ValueError("Not a dict!")
+        yield object
+
+    def iter_next_targets(self, object):
+        """ Yield (notifiable) objects for attaching notifiers for the
+        next listener following this one in a ListenerPath.
+        """
+        for value in object.values():
+            if is_notifiable(value):
+                yield value
+
+    def prevent_event(self, event):
+        """ Return true if the event should be silenced.
+        """
+        return False
+
+    def create_user_notifier(self, object, callback, target, dispatcher):
+        return TraitObserverNotifier(
+            observer=callback,
+            owner=object._notifiers(True),
+            target=target,
+            dispatcher=dispatcher,
+            prevent_event=self.prevent_event,
+            event_factory=DictItemObserverEvent,
+        )
+
+    def get_change_notifier(self, callback, path, target, dispatcher):
+        return ListenerChangeNotifier(
+            listener_callback=self.change_callback,
+            actual_callback=callback,
+            path=path,
+            target=target,
+            dispatcher=dispatcher,
+            event_factory=DictItemObserverEvent,
+        )
+
+    @staticmethod
+    def change_callback(event, callback, path, target, dispatcher):
+        old = itertools.chain.from_iterable((
+            event.removed.values(),
+            event.changed.values(),
+        ))
+        for item in old:
+            if is_notifiable(item):
+                remove_notifiers(
+                    object=item,
+                    callback=callback,
+                    path=path,
+                    target=target,
+                    dispatcher=dispatcher,
+                )
+        new = itertools.chain.from_iterable((
+            (event.new[key] for key in event.changed),
+            event.added.values(),
+        ))
+        for item in new:
+            if is_notifiable(item):
+                add_notifiers(
+                    object=item,
+                    callback=callback,
+                    path=path,
+                    target=target,
+                    dispatcher=dispatcher,
+                )
+
+    def trait_added_matched(self, object, name, trait):
+        """ Return true if an added trait should be handled by this listener
+        """
+        return False
+
+    def get_static_paths(self, path):
+        """ Return new ListenerPath(s) to be added/removed in addition to
+        this listener.
+
+        Parameters
+        ----------
+        path : ListenerPath
+            The current listener path when this listener is the root.
+
+        Returns
+        -------
+        paths: list of ListenerPath
+        """
+        return []
+
+
+class DictItemListener(BaseListener):
+    """ Listener for ``TraitDictObject.items()``
+    """
+
+    def __init__(self, notify):
+        self.notify = notify
+
+    def __eq__(self, other):
+        return type(self) is type(other) and self.notify == other.notify
+
+    def iter_this_targets(self, object):
+        """ Yield (notifiable) objects for attaching notifiers for this
+        listener.
+        """
+        if not isinstance(object, dict):
+            # Be defensive if the user uses this listener with the wrong
+            # thing.
+            raise ValueError("Not a dict!")
+        yield object
+
+    def iter_next_targets(self, object):
+        """ Yield (notifiable) objects for attaching notifiers for the
+        next listener following this one in a ListenerPath.
+        """
+        raise ValueError(
+            "items cannot be further listened to. "
+            "Consider observing keys or values specifically."
+        )
+
+    def prevent_event(self, event):
+        """ Return true if the event should be silenced.
+        """
+        return False
+
+    def create_user_notifier(self, object, callback, target, dispatcher):
+        return TraitObserverNotifier(
+            observer=callback,
+            owner=object._notifiers(True),
+            target=target,
+            dispatcher=dispatcher,
+            prevent_event=self.prevent_event,
+            event_factory=DictItemObserverEvent,
+        )
+
+    def get_change_notifier(self, callback, path, target, dispatcher):
+        raise ValueError(
+            "Dict items listener cannot be followed by another listener. "
+            "Consider using listener on keys or values of the dict."
+        )
+
+    def get_static_paths(self, path):
+        """ Return new ListenerPath(s) to be added/removed in addition to
+        this listener.
+
+        Parameters
+        ----------
+        path : ListenerPath
+            The current listener path when this listener is the root.
+
+        Returns
+        -------
+        paths: list of ListenerPath
+        """
+        return []
+
+
+class DictKeyListener(BaseListener):
+    """ Listener on ``TraitDictObject.keys()`` """
+
+    def __init__(self, notify):
+        self.notify = notify
+
+    def __eq__(self, other):
+        return type(self) is type(other) and self.notify == other.notify
+
+    def iter_this_targets(self, object):
+        """ Yield (notifiable) objects for attaching notifiers for this
+        listener.
+        """
+        if not isinstance(object, dict):
+            # Be defensive if the user uses this listener with the wrong
+            # thing.
+            raise ValueError("Not a dict!")
+        yield object
+
+    def iter_next_targets(self, object):
+        """ Yield (notifiable) objects for attaching notifiers for the
+        next listener following this one in a ListenerPath.
+        """
+        for key in object.keys():
+            if is_notifiable(key):
+                yield key
+
+    def prevent_event(self, event):
+        """ Return true if the event should be silenced.
+        """
+        return False
+
+    def create_user_notifier(self, object, callback, target, dispatcher):
+        return TraitObserverNotifier(
+            observer=callback,
+            owner=object._notifiers(True),
+            target=target,
+            dispatcher=dispatcher,
+            prevent_event=self.prevent_event,
+            event_factory=DictItemObserverEvent,
+        )
+
+    def get_change_notifier(self, callback, path, target, dispatcher):
+        return ListenerChangeNotifier(
+            listener_callback=self.change_callback,
+            actual_callback=callback,
+            path=path,
+            target=target,
+            dispatcher=dispatcher,
+            event_factory=DictItemObserverEvent,
+        )
+
+    @staticmethod
+    def change_callback(event, callback, path, target, dispatcher):
+        for item in event.removed:
+            if is_notifiable(item):
+                remove_notifiers(
+                    object=item,
+                    callback=callback,
+                    path=path,
+                    target=target,
+                    dispatcher=dispatcher,
+                )
+        for item in event.added:
+            if is_notifiable(item):
+                add_notifiers(
+                    object=item,
+                    callback=callback,
+                    path=path,
+                    target=target,
+                    dispatcher=dispatcher,
+                )
+
+    def trait_added_matched(self, object, name, trait):
+        """ Return true if an added trait should be handled by this listener
+        """
+        return False
+
+    def get_static_paths(self, path):
+        """ Return new ListenerPath(s) to be added/removed in addition to
+        this listener.
+
+        Parameters
+        ----------
+        path : ListenerPath
+            The current listener path when this listener is the root.
+
+        Returns
+        -------
+        paths: list of ListenerPath
+        """
+        return []
 
 
 class ListenerPath:

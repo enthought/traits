@@ -42,3 +42,14 @@ class ListObserverEvent:
         self.added = trait_list_event.added
         self.removed = trait_list_event.removed
         self.index = trait_list_event.index
+
+
+class DictItemObserverEvent:
+    """ Event object to represent changes on dict items.
+    """
+
+    def __init__(self, trait_dict, trait_dict_event):
+        self.new = trait_dict
+        self.added = trait_dict_event.added
+        self.changed = trait_dict_event.changed
+        self.removed = trait_dict_event.removed
