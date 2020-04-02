@@ -12,9 +12,8 @@ import copy
 import pickle
 import unittest
 
-from traits.trait_errors import TraitError
-from traits.trait_base import Undefined
 from traits.trait_dict_object import TraitDict
+from traits.trait_errors import TraitError
 
 
 def str_validator(value):

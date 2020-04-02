@@ -78,7 +78,8 @@ class TraitDict(dict):
         instance.notifiers = []
         return instance
 
-    def __init__(self, value={}, *, key_validator=None, value_validator=None, notifiers=None):
+    def __init__(self, value={}, *, key_validator=None,
+                 value_validator=None, notifiers=None):
         self.key_validator = key_validator
         self.value_validator = value_validator
 
@@ -134,7 +135,8 @@ class TraitDict(dict):
         TraitError
             If the value cannot be validated.
         """
-        return self._validate(self.value_validator, value, msg="Each value of the")
+        return self._validate(self.value_validator, value,
+                              msg="Each value of the")
 
     def notifiy(self, added={}, changed={}, removed={}):
         """ Call all notifiers.
