@@ -66,10 +66,10 @@ class TestTraitSet(unittest.TestCase):
             TraitSet({}, validator=bool_validator)
 
         # Attach the adaptor
-        list_bool_validator = adapt_trait_validator(bool_validator)
+        set_bool_validator = adapt_trait_validator(bool_validator)
 
         # It now works!
-        ts_2 = TraitSet({}, validator=list_bool_validator)
+        ts_2 = TraitSet({}, validator=set_bool_validator)
         ts_2.update([True, False, True])
 
         # Decorate with set adaptor
@@ -101,15 +101,15 @@ class TestTraitSet(unittest.TestCase):
         ts.add(5)
 
         self.assertSetEqual(ts, {1, 2, 3, 5})
-        self.assertEqual(set(), self.removed)
-        self.assertEqual({5}, self.added)
+        self.assertEqual(self.removed, set())
+        self.assertEqual(self.added, {5})
 
         ts = TraitSet({"one", "two", "three"}, validator=string_validator,
                       notifiers=[self.notification_handler])
         ts.add("four")
         self.assertSetEqual(ts, {"one", "two", "three", "four"})
-        self.assertEqual(set(), self.removed)
-        self.assertEqual({"four"}, self.added)
+        self.assertEqual(self.removed, set())
+        self.assertEqual(self.added, {"four"})
 
     def test_remove(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
@@ -117,8 +117,8 @@ class TestTraitSet(unittest.TestCase):
         ts.remove(3)
 
         self.assertSetEqual(ts, {1, 2})
-        self.assertEqual({3}, self.removed)
-        self.assertEqual(set(), self.added)
+        self.assertEqual(self.removed, {3})
+        self.assertEqual(self.added, set())
 
         with self.assertRaises(KeyError):
             ts.remove(3)
@@ -129,8 +129,8 @@ class TestTraitSet(unittest.TestCase):
         ts.discard(3)
 
         self.assertSetEqual(ts, {1, 2})
-        self.assertEqual({3}, self.removed)
-        self.assertEqual(set(), self.added)
+        self.assertEqual(self.removed, {3})
+        self.assertEqual(self.added, set())
 
         # No error is raised
         ts.discard(3)
@@ -141,32 +141,32 @@ class TestTraitSet(unittest.TestCase):
         val = ts.pop()
 
         self.assertIn(val, {1, 2, 3})
-        self.assertEqual({val}, self.removed)
-        self.assertEqual(set(), self.added)
+        self.assertEqual(self.removed, {val})
+        self.assertEqual(self.added, set())
 
     def test_clear(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
         ts.clear()
 
-        self.assertEqual({1, 2, 3}, self.removed)
-        self.assertEqual(set(), self.added)
+        self.assertEqual(self.removed, {1, 2, 3})
+        self.assertEqual(self.added, set())
 
     def test_ior(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
         ts |= {4, 5}
 
-        self.assertEqual(set(), self.removed)
-        self.assertEqual({4, 5}, self.added)
+        self.assertEqual(self.removed, set())
+        self.assertEqual(self.added, {4, 5})
 
         ts2 = TraitSet({6, 7}, validator=int_validator,
                        notifiers=[self.notification_handler])
 
         ts |= ts2
 
-        self.assertEqual(set(), self.removed)
-        self.assertEqual({6, 7}, self.added)
+        self.assertEqual(self.removed, set())
+        self.assertEqual(self.added, {6, 7})
 
     def test_iand(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
@@ -178,23 +178,23 @@ class TestTraitSet(unittest.TestCase):
         self.assertIsNone(self.added)
 
         ts &= {1, 2}
-        self.assertEqual({3}, self.removed)
-        self.assertEqual(set(), self.added)
+        self.assertEqual(self.removed, {3})
+        self.assertEqual(self.added, set())
 
     def test_ixor(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
         ts ^= {1, 2, 3, 5}
 
-        self.assertEqual({1, 2, 3}, self.removed)
-        self.assertEqual({5}, self.added)
-        self.assertSetEqual({5}, ts)
+        self.assertEqual(self.removed, {1, 2, 3})
+        self.assertEqual(self.added, {5})
+        self.assertSetEqual(ts, {5})
 
     def test_isub(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
         ts -= {2, 3, 5}
 
-        self.assertEqual({2, 3}, self.removed)
-        self.assertEqual(set(), self.added)
-        self.assertSetEqual({1}, ts)
+        self.assertEqual(self.removed, {2, 3})
+        self.assertEqual(self.added, set())
+        self.assertSetEqual(ts, {1})
