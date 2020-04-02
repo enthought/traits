@@ -216,24 +216,6 @@ class TraitList(list):
     # list interface
     # ------------------------------------------------------------------------
 
-            # -------------------------------------------
-            # Added for observer
-
-            # Is this right?
-            if event.removed is None:
-                event.removed = []
-            if event.added is None:
-                event.added = []
-            for notifier in self._notifiers(True):
-                notifier(self, event)
-            # -------------------------------------------
-
-    # -------------------------------------------
-    # Added for observer
-    def _notifiers(self, force_create):
-        return self._observer_notifiers
-    # -------------------------------------------
-
     def __deepcopy__(self, memo):
         """ Perform a deepcopy operation.
 
@@ -310,7 +292,8 @@ class TraitList(list):
 
         super().__setitem__(index, item)
 
-        if added != removed:
+        if (len(added) != len(removed)
+                or any(i1 is not i2 for i1, i2 in zip(added, removed))):
             self.notify(norm_index, removed, added)
 
     def __delitem__(self, index):
@@ -822,6 +805,10 @@ class TraitListObject(TraitList):
         event = TraitListEvent(index, removed, added)
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
+
+    # Added for observer
+    def _notifiers(self, force_create):
+        return self.notifiers
 
     def __deepcopy__(self, memo):
         """ Perform a deepcopy operation.

@@ -75,7 +75,7 @@ class ListenerChangeNotifier:
         """
         observer_notifiers = object._notifiers(True)
         for other in observer_notifiers:
-            if other.equals(self):
+            if self.equals(other):
                 break
 
         else:
@@ -91,7 +91,7 @@ class ListenerChangeNotifier:
         observer_notifiers = object._notifiers(True)
         logger.debug("Removing from %r", observer_notifiers)
         for other in observer_notifiers[:]:
-            if other.equals(self):
+            if self.equals(other):
                 observer_notifiers.remove(other)
                 break
         else:

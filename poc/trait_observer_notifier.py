@@ -74,7 +74,7 @@ class TraitObserverNotifier:
         """
         observer_notifiers = object._notifiers(True)
         for other in observer_notifiers:
-            if other.equals(self):
+            if self.equals(other):
                 logger.debug("ADD: Incrementing notifier %r", other)
                 other.target_count += 1
                 break
@@ -93,7 +93,7 @@ class TraitObserverNotifier:
         observer_notifiers = object._notifiers(True)
         logger.debug("Removing from %r", observer_notifiers)
         for other in observer_notifiers[:]:
-            if other.equals(self):
+            if self.equals(other):
                 other.target_count -= 1
 
                 if other.target_count < 0:

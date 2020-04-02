@@ -37,11 +37,11 @@ class ListObserverEvent:
         Values removed from the list.
     """
 
-    def __init__(self, trait_list, trait_list_event):
+    def __init__(self, trait_list, index, removed, added):
         self.new = trait_list
-        self.added = trait_list_event.added
-        self.removed = trait_list_event.removed
-        self.index = trait_list_event.index
+        self.added = added
+        self.removed = removed
+        self.index = index
 
 
 class DictItemObserverEvent:
