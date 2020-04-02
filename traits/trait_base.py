@@ -27,8 +27,6 @@ enumerate = enumerate
 
 SequenceTypes = (list, tuple)
 
-EnumTypes = (list, tuple, enum.EnumMeta)
-
 ComplexTypes = (float, int)
 
 RangeTypes = (int, float)
@@ -180,28 +178,6 @@ def safe_contains(value, container):
         return value in container
     except TypeError:
         return False
-
-
-def enum_default(values):
-    """ Get a default value from the valid values of an Enum trait.
-
-    Parameters
-    ----------
-    values : tuple, list or enum.Enum
-        The collection of valid values for an enum trait.
-
-    Returns
-    -------
-    default : any
-        The first valid value, or None if the collection is empty.
-    """
-    if isinstance(values, enum.EnumMeta):
-        default = next(iter(values), None)
-    elif len(values) > 0:
-        default = values[0]
-    else:
-        default = None
-    return default
 
 
 def class_of(object):

@@ -253,6 +253,6 @@ class ListEventTestCase(unittest.TestCase):
 
         self.assertEqual(len(foo.l_events), 1)
         event, = foo.l_events
-        self.assertEqual(event.index, slice(None, None, 2))
+        self.assertEqual(event.index, slice(0, 3, 2))
         self.assertEqual(event.added, [3, 4])
         self.assertEqual(event.removed, [1, 3])

@@ -11,7 +11,8 @@
 import enum
 import unittest
 
-from traits.api import Any, Enum, HasTraits, List, Property, TraitError
+from traits.api import (
+    Any, BaseEnum, Enum, HasTraits, List, Property, TraitError)
 
 
 class FooEnum(enum.Enum):
@@ -34,8 +35,22 @@ class ExampleModel(HasTraits):
         return ["model1", "model2", "model3"]
 
 
-class EnumListExample(HasTraits):
+class CustomCollection:
 
+    def __init__(self, *data):
+        self.data = data
+
+    def __len__(self):
+        return len(self.data)
+
+    def __iter__(self):
+        return iter(self.data)
+
+    def __contains__(self, x):
+        return x in self.data
+
+
+class EnumListExample(HasTraits):
     values = Any(['foo', 'bar', 'baz'])
 
     value = Enum(['foo', 'bar', 'baz'])
@@ -48,7 +63,6 @@ class EnumListExample(HasTraits):
 
 
 class EnumTupleExample(HasTraits):
-
     values = Any(('foo', 'bar', 'baz'))
 
     value = Enum(('foo', 'bar', 'baz'))
@@ -61,7 +75,6 @@ class EnumTupleExample(HasTraits):
 
 
 class EnumEnumExample(HasTraits):
-
     values = Any(FooEnum)
 
     value = Enum(FooEnum)
@@ -71,6 +84,30 @@ class EnumEnumExample(HasTraits):
     value_name = Enum(values='values')
 
     value_name_default = Enum(FooEnum.bar, values='values')
+
+
+class EnumCollectionExample(HasTraits):
+    rgb = Enum("red", CustomCollection("red", "green", "blue"))
+
+    rgb_char = Enum("r", "g", "b")
+
+    numbers = Enum(CustomCollection("one", "two", "three"))
+
+    letters = Enum("abcdefg")
+
+    int_set_enum = Enum(1, {1, 2})
+
+    correct_int_set_enum = Enum([1, {1, 2}])
+
+    yes_no = Enum("yes", "no")
+
+    digits = Enum(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+
+    two_digits = Enum(1, 2)
+
+    single_digit = Enum(8)
+
+    slow_enum = BaseEnum("yes", "no", "maybe")
 
 
 class EnumTestCase(unittest.TestCase):
@@ -154,3 +191,108 @@ class EnumTestCase(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             example.value_name = FooEnum.bar
+
+    def test_enum_collection(self):
+        collection_enum = EnumCollectionExample()
+
+        # Test the default values.
+        self.assertEqual("red", collection_enum.rgb)
+        self.assertEqual("r", collection_enum.rgb_char)
+        self.assertEqual("one", collection_enum.numbers)
+        self.assertEqual("abcdefg", collection_enum.letters)
+        self.assertEqual("yes", collection_enum.yes_no)
+        self.assertEqual(0, collection_enum.digits)
+        self.assertEqual(1, collection_enum.int_set_enum)
+        self.assertEqual(1, collection_enum.two_digits)
+        self.assertEqual(8, collection_enum.single_digit)
+
+        # Test assigning valid values
+        collection_enum.rgb = "blue"
+        self.assertEqual("blue", collection_enum.rgb)
+
+        collection_enum.rgb_char = 'g'
+        self.assertEqual("g", collection_enum.rgb_char)
+
+        collection_enum.yes_no = "no"
+        self.assertEqual("no", collection_enum.yes_no)
+
+        for i in range(10):
+            collection_enum.digits = i
+            self.assertEqual(i, collection_enum.digits)
+
+        collection_enum.two_digits = 2
+        self.assertEqual(2, collection_enum.two_digits)
+
+        # Test assigning invalid values
+        with self.assertRaises(TraitError):
+            collection_enum.rgb = "two"
+
+        with self.assertRaises(TraitError):
+            collection_enum.letters = 'b'
+
+        with self.assertRaises(TraitError):
+            collection_enum.yes_no = "n"
+
+        with self.assertRaises(TraitError):
+            collection_enum.digits = 10
+
+        with self.assertRaises(TraitError):
+            collection_enum.single_digit = 9
+
+        with self.assertRaises(TraitError):
+            collection_enum.single_digit = None
+
+        # Fixing issue #835 introduces the following behaviour, which would
+        # have otherwise not thrown a TraitError
+        with self.assertRaises(TraitError):
+            collection_enum.int_set_enum = {1, 2}
+
+        # But the behaviour can be fixed
+        # by defining it like correct_int_set_enum
+        self.assertEqual(1, collection_enum.correct_int_set_enum)
+
+        # No more error on assignment
+        collection_enum.correct_int_set_enum = {1, 2}
+
+        with self.assertRaises(TraitError):
+            collection_enum.correct_int_set_enum = 20
+
+    def test_empty_enum(self):
+        with self.assertRaises(TraitError):
+            class EmptyEnum(HasTraits):
+                a = Enum()
+
+            EmptyEnum()
+
+    def test_too_many_arguments_for_dynamic_enum(self):
+        with self.assertRaises(TraitError):
+            Enum("red", "green", values="values")
+
+    def test_attributes(self):
+        static_enum = Enum(1, 2, 3)
+        self.assertEqual(static_enum.values, (1, 2, 3))
+        self.assertIsNone(static_enum.name, None)
+
+        dynamic_enum = Enum(values="values")
+        self.assertIsNone(dynamic_enum.values)
+        self.assertEqual(dynamic_enum.name, "values")
+
+    def test_explicit_collection_with_no_elements(self):
+        with self.assertRaises(TraitError):
+            Enum([])
+
+        with self.assertRaises(TraitError):
+            Enum(3.5, [])
+
+    def test_base_enum(self):
+        # Minimal tests for BaseEnum, sufficient to cover the validation
+        # for the static case.
+        obj = EnumCollectionExample()
+
+        self.assertEqual(obj.slow_enum, "yes")
+        obj.slow_enum = "no"
+        self.assertEqual(obj.slow_enum, "no")
+
+        with self.assertRaises(TraitError):
+            obj.slow_enum = "perhaps"
+        self.assertEqual(obj.slow_enum, "no")
