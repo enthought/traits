@@ -16,7 +16,6 @@ validate as well as maintining a list of notifiers and calling them when
 values are modified.
 """
 
-import builtins
 import inspect
 
 from . import ctraits
@@ -56,17 +55,17 @@ class CTrait(ctraits.cTrait):
     def default(self):
         kind, value = self.default_value()
         if kind in (
-                DefaultValue.object,
-                DefaultValue.callable_and_args,
-                DefaultValue.callable,
+            DefaultValue.object,
+            DefaultValue.callable_and_args,
+            DefaultValue.callable,
         ):
             return Undefined
         elif kind in (
-                DefaultValue.dict_copy,
-                DefaultValue.trait_dict_object,
-                DefaultValue.trait_set_object,
-                DefaultValue.list_copy,
-                DefaultValue.trait_list_object,
+            DefaultValue.dict_copy,
+            DefaultValue.trait_dict_object,
+            DefaultValue.trait_set_object,
+            DefaultValue.list_copy,
+            DefaultValue.trait_list_object,
         ):
             return value.copy()
         elif kind in {DefaultValue.constant, DefaultValue.missing}:
