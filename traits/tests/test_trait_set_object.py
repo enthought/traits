@@ -79,7 +79,7 @@ class TestTraitSet(unittest.TestCase):
                 raise TraitError
 
         # Fail without adaptor
-        with self.assertRaises(TypeError):
+        with self.assertRaises(TraitError):
             TraitSet({}, validator=bool_validator)
 
         # Attach the adaptor

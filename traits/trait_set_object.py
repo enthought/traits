@@ -38,7 +38,7 @@ def adapt_trait_validator(trait_validator, name="items"):
 
     """
 
-    def validator(obj, value):
+    def validator(obj, removed, value):
         try:
             return {
                 trait_validator(obj, name, item)
@@ -114,20 +114,20 @@ class TraitSet(set):
             notifiers = []
         self.notifiers = list(notifiers)
 
-        value = self.validate(set(value))
+        value = self.validate(set(), set(value))
         super().__init__(value)
 
     # ------------------------------------------------------------------------
     # TraitSet interface
     # ------------------------------------------------------------------------
 
-    def validate(self, value):
+    def validate(self, removed, value):
         """ Validate the set of values.
 
         This simply calls the validator provided by the class, if any.
         The validator is expected to have the signature::
 
-            validator(value_set)
+            validator(original_set, removed, added)
 
         and return a set of validated values or raise TraitError.
 
@@ -163,7 +163,7 @@ class TraitSet(set):
         if self.validator is None:
             return value
         else:
-            return self.validator(self, value)
+            return self.validator(self, removed, value)
 
     def notify(self, removed, added):
         """ Call all notifiers.
@@ -244,7 +244,7 @@ class TraitSet(set):
                 A set containing the added value.
 
         """
-        validated_values = self.validate(set([value]))
+        validated_values = self.validate(set(), set([value]))
         if len(validated_values) > 1:
             raise ValueError("Validator returned {} values "
                              "where 1 value is "
@@ -279,15 +279,9 @@ class TraitSet(set):
                 An empty set.
 
         """
-        validated_values = self.validate(set([value]))
-        if len(validated_values) > 1:
-            raise ValueError("Validator returned {} values "
-                             "where 1 value is "
-                             "expected".format(len(validated_values)))
-
-        value = next(iter(validated_values))
+        self.validate(set([value]), set())
         super().remove(value)
-        self.notify(validated_values, set())
+        self.notify(set([value]), set())
 
     def update(self, value):
         """ Update a set with the union of itself and others.
@@ -306,7 +300,7 @@ class TraitSet(set):
                 A set containing the added values.
 
         """
-        validated_values = self.validate(value)
+        validated_values = self.validate(set(), value)
         added = validated_values.difference(self)
 
         if len(added) > 0:
@@ -330,7 +324,7 @@ class TraitSet(set):
                 An empty set.
 
         """
-        validated_values = self.validate(value)
+        validated_values = self.validate(set(), value)
         removed = self.intersection(value)
 
         if len(removed) > 0:
@@ -355,7 +349,7 @@ class TraitSet(set):
 
 
         """
-        validated_values = self.validate(value)
+        validated_values = self.validate(set(), value)
         removed = self.difference(self.intersection(validated_values))
         if len(removed) > 0:
             super().intersection_update(validated_values)
@@ -379,7 +373,7 @@ class TraitSet(set):
                 A set containing the added values.
 
         """
-        validated_values = self.validate(value)
+        validated_values = self.validate(set(), value)
 
         removed = self.intersection(validated_values)
         added = validated_values.difference(self)
