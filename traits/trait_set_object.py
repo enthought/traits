@@ -147,8 +147,8 @@ class TraitSet(set):
 
             # Treat str, bytes, bytearray as a single unit.
             is_iterable = (
-                    isinstance(value, collections.abc.Iterable) and
-                    not isinstance(value, (str, bytes, bytearray))
+                isinstance(value, collections.abc.Iterable)
+                and not isinstance(value, (str, bytes, bytearray))
             )
 
             if is_iterable:
@@ -433,6 +433,7 @@ class TraitSet(set):
 
     def clear(self):
         """ Remove all elements from this set.
+
         Notes
         -----
         Parameters in the notification:
@@ -656,9 +657,10 @@ class TraitSetObject(TraitSet):
         None
 
         """
-        is_trait_none = self.trait is None
-        is_name_items_none = self.name_items is None
-        if not hasattr(self, "trait") or is_trait_none or is_name_items_none:
+        is_trait_none = getattr(self, 'trait', None) is None
+        is_name_items_none = getattr(self, 'name_items', None) is None
+        is_object_ref_none = getattr(self, 'object', None) is None
+        if is_trait_none or is_name_items_none or is_object_ref_none:
             return
 
         object = self.object()
