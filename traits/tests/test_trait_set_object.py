@@ -126,6 +126,8 @@ class TestTraitSet(unittest.TestCase):
         ts = TraitSet()
         ts.add(iterable)
 
+        # iterable has not been exhausted
+        next(iterable)
         self.assertEqual(ts, python_set)
 
     def test_add_unhashable(self):
