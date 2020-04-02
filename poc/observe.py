@@ -137,14 +137,11 @@ def add_notifiers(object, callback, path, target, dispatcher):
                     target=target,
                     dispatcher=dispatcher,
                 )
-    if type(listener) is not TraitAddedListener:
+    for static_path in listener.get_static_paths(path):
         add_notifiers(
             object=object,
             callback=callback,
-            path=ListenerPath(
-                node=TraitAddedListener(),
-                nexts=[path],
-            ),
+            path=static_path,
             target=target,
             dispatcher=dispatcher,
         )
@@ -203,14 +200,11 @@ def remove_notifiers(object, callback, path, target, dispatcher):
                     target=target,
                     dispatcher=dispatcher,
                 )
-    if type(listener) is not TraitAddedListener:
+    for static_path in listener.get_static_paths(path):
         remove_notifiers(
             object=object,
             callback=callback,
-            path=ListenerPath(
-                node=TraitAddedListener(),
-                nexts=[path],
-            ),
+            path=static_path,
             target=target,
             dispatcher=dispatcher,
         )
@@ -271,6 +265,21 @@ class BaseListener:
 
     def trait_added_matched(self, object, name, trait):
         """ Return true if an added trait should be handled by this listener
+        """
+        raise NotImplementedError()
+
+    def get_static_paths(self, path):
+        """ Return new ListenerPath(s) to be added/removed in addition to
+        this listener.
+
+        Parameters
+        ----------
+        path : ListenerPath
+            The current listener path when this listener is the root.
+
+        Returns
+        -------
+        paths: list of ListenerPath
         """
         raise NotImplementedError()
 
@@ -364,6 +373,23 @@ class _FilteredTraitListener(BaseListener):
         """ Return true if an added trait should be handled by this listener
         """
         return self.filter(name, trait)
+
+    def get_static_paths(self, path):
+        """ Return new ListenerPath(s) to be added/removed in addition to
+        this listener.
+
+        Parameters
+        ----------
+        path : ListenerPath
+            The current listener path when this listener is the root.
+
+        Returns
+        -------
+        paths: list of ListenerPath
+        """
+        return [
+            ListenerPath(node=TraitAddedListener(), nexts=[path])
+        ]
 
 
 class _MetadataFilter:
@@ -512,6 +538,23 @@ class NamedTraitListener(BaseListener):
         """
         return name == self.name
 
+    def get_static_paths(self, path):
+        """ Return new ListenerPath(s) to be added/removed in addition to
+        this listener.
+
+        Parameters
+        ----------
+        path : ListenerPath
+            The current listener path when this listener is the root.
+
+        Returns
+        -------
+        paths: list of ListenerPath
+        """
+        return [
+            ListenerPath(node=TraitAddedListener(), nexts=[path])
+        ]
+
 
 OptionalTraitListener = partial(NamedTraitListener, optional=True)
 
@@ -566,6 +609,21 @@ class TraitAddedListener(BaseListener):
                 target=target,
                 dispatcher=dispatcher,
             )
+
+    def get_static_paths(self, path):
+        """ Return new ListenerPath(s) to be added/removed in addition to
+        this listener.
+
+        Parameters
+        ----------
+        path : ListenerPath
+            The current listener path when this listener is the root.
+
+        Returns
+        -------
+        paths: list of ListenerPath
+        """
+        return []
 
 
 class ListItemListener(BaseListener):
@@ -640,6 +698,21 @@ class ListItemListener(BaseListener):
         """ Return true if an added trait should be handled by this listener
         """
         return False
+
+    def get_static_paths(self, path):
+        """ Return new ListenerPath(s) to be added/removed in addition to
+        this listener.
+
+        Parameters
+        ----------
+        path : ListenerPath
+            The current listener path when this listener is the root.
+
+        Returns
+        -------
+        paths: list of ListenerPath
+        """
+        return []
 
 
 class DictValueListener(BaseListener):
