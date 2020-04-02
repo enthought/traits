@@ -19,7 +19,6 @@ from os.path import dirname, exists, join
 from weakref import ref
 
 from .etsconfig.api import ETSConfig
-from .constants import ValidateTrait
 
 # backwards compatibility: trait_base used to provide a patched enumerate
 enumerate = enumerate
@@ -27,8 +26,6 @@ enumerate = enumerate
 # Constants
 
 SequenceTypes = (list, tuple)
-
-EnumTypes = (list, tuple, enum.EnumMeta)
 
 ComplexTypes = (float, int)
 
@@ -163,12 +160,6 @@ def strx(arg):
 
 StringTypes = (str, int, float, complex)
 
-# Mapping of coercable types.
-CoercableTypes = {
-    float: (ValidateTrait.coerce, float, int),
-    complex: (ValidateTrait.coerce, complex, float, int),
-}
-
 
 def safe_contains(value, container):
     """ Perform "in" containment check, allowing for TypeErrors.
@@ -187,28 +178,6 @@ def safe_contains(value, container):
         return value in container
     except TypeError:
         return False
-
-
-def enum_default(values):
-    """ Get a default value from the valid values of an Enum trait.
-
-    Parameters
-    ----------
-    values : tuple, list or enum.Enum
-        The collection of valid values for an enum trait.
-
-    Returns
-    -------
-    default : any
-        The first valid value, or None if the collection is empty.
-    """
-    if isinstance(values, enum.EnumMeta):
-        default = next(iter(values), None)
-    elif len(values) > 0:
-        default = values[0]
-    else:
-        default = None
-    return default
 
 
 def class_of(object):

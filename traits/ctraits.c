@@ -582,19 +582,12 @@ call_class(
     PyObject *name, PyObject *value)
 {
     PyObject *result;
+    PyObject *args;
 
-    PyObject *args = PyTuple_New(4);
+    args = PyTuple_Pack(4, trait->handler, (PyObject *)obj, name, value);
     if (args == NULL) {
         return NULL;
     }
-    PyTuple_SET_ITEM(args, 0, trait->handler);
-    PyTuple_SET_ITEM(args, 1, (PyObject *)obj);
-    PyTuple_SET_ITEM(args, 2, name);
-    PyTuple_SET_ITEM(args, 3, value);
-    Py_INCREF(trait->handler);
-    Py_INCREF(obj);
-    Py_INCREF(name);
-    Py_INCREF(value);
     result = PyObject_Call(class, args, NULL);
     Py_DECREF(args);
     return result;
@@ -859,7 +852,10 @@ has_traits_getattro(has_traits_object *obj, PyObject *name)
         return trait->getattr(trait, obj, name);
     }
 
-    if ((value = PyObject_GenericGetAttr((PyObject *)obj, name)) != NULL) {
+    /* Try normal Python attribute access, but if it fails with an
+       AttributeError then get a prefix trait. */
+    value = PyObject_GenericGetAttr((PyObject *)obj, name);
+    if (value != NULL || !PyErr_ExceptionMatches(PyExc_AttributeError)) {
         return value;
     }
 
@@ -1812,11 +1808,10 @@ default_value_for(trait_object *trait, has_traits_object *obj, PyObject *name)
             return PyObject_Call(
                 PyTuple_GET_ITEM(dv, 0), PyTuple_GET_ITEM(dv, 1), kw);
         case CALLABLE_DEFAULT_VALUE:
-            if ((tuple = PyTuple_New(1)) == NULL) {
+            tuple = PyTuple_Pack(1, (PyObject *)obj);
+            if (tuple == NULL) {
                 return NULL;
             }
-            PyTuple_SET_ITEM(tuple, 0, (PyObject *)obj);
-            Py_INCREF(obj);
             result = PyObject_Call(trait->default_value, tuple, NULL);
             Py_DECREF(tuple);
             if ((result != NULL) && (trait->validate != NULL)) {
@@ -2177,6 +2172,27 @@ setattr_generic(
 
 /*-----------------------------------------------------------------------------
 |  Call all notifiers for a specified trait:
+|
+|  Parameters
+|  ----------
+|  tnotifiers : NULL or a list of callables.
+|     Notifiers attached to the trait.
+|  onotifiers : NULL or a list of callables.
+|     Notifiers attached to the HasTraits instance.
+|  obj : instance of HasTraits
+|     Instance on which the trait changed.
+|  name : str
+|     Name of the trait changed.
+|  old_value : any
+|     Value of the trait before the change.
+|  new_value : any
+|     Value of the trait after the change.
+|
+|  Returns
+|  -------
+|  return_code : int
+|      0 indicates success.
+|     -1 indicates unexpected errors.
 +----------------------------------------------------------------------------*/
 
 static int
@@ -2184,99 +2200,70 @@ call_notifiers(
     PyListObject *tnotifiers, PyListObject *onotifiers, has_traits_object *obj,
     PyObject *name, PyObject *old_value, PyObject *new_value)
 {
-    int i, n, new_value_has_traits;
-    PyObject *result, *item, *temp;
-
+    Py_ssize_t i, t_len, o_len;
+    int new_value_has_traits;
+    PyObject *result, *item, *all_notifiers, *args;
     int rc = 0;
 
-    PyObject *args = PyTuple_New(4);
+    // Do nothing if the user has explicitly requested no traits notifications
+    // to be sent.
+    if (obj->flags & HASTRAITS_NO_NOTIFY) {
+        return rc;
+    }
+
+    args = PyTuple_Pack(4, (PyObject *)obj, name, old_value, new_value);
     if (args == NULL) {
         return -1;
     }
 
     new_value_has_traits = PyHasTraits_Check(new_value);
-    PyTuple_SET_ITEM(args, 0, (PyObject *)obj);
-    PyTuple_SET_ITEM(args, 1, name);
-    PyTuple_SET_ITEM(args, 2, old_value);
-    PyTuple_SET_ITEM(args, 3, new_value);
-    Py_INCREF(obj);
-    Py_INCREF(name);
-    Py_INCREF(old_value);
-    Py_INCREF(new_value);
-
-    // Do nothing if the user has explicitly requested no traits notifications
-    // to be sent.
-    if ((obj->flags & HASTRAITS_NO_NOTIFY)) {
-        goto exit2;
-    }
 
     if (tnotifiers != NULL) {
-        n = PyList_GET_SIZE(tnotifiers);
-        temp = NULL;
-        if (n > 1) {
-            temp = PyList_New(n);
-            if (temp == NULL) {
-                rc = -1;
-                goto exit2;
-            }
-            for (i = 0; i < n; i++) {
-                item = PyList_GET_ITEM(tnotifiers, i);
-                PyList_SET_ITEM(temp, i, item);
-                Py_INCREF(item);
-            }
-            tnotifiers = (PyListObject *)temp;
-        }
-        for (i = 0; i < n; i++) {
-            if (new_value_has_traits
-                && (((has_traits_object *)new_value)->flags
-                    & HASTRAITS_VETO_NOTIFY)) {
-                goto exit;
-            }
-            result = PyObject_Call(PyList_GET_ITEM(tnotifiers, i), args, NULL);
-            if (result == NULL) {
-                rc = -1;
-                goto exit;
-            }
-            Py_DECREF(result);
-        }
-        Py_XDECREF(temp);
+        t_len = PyList_GET_SIZE(tnotifiers);
+    } else {
+        t_len = 0;
     }
-
-    temp = NULL;
     if (onotifiers != NULL) {
-        n = PyList_GET_SIZE(onotifiers);
-        if (n > 1) {
-            temp = PyList_New(n);
-            if (temp == NULL) {
-                rc = -1;
-                goto exit2;
-            }
-            for (i = 0; i < n; i++) {
-                item = PyList_GET_ITEM(onotifiers, i);
-                PyList_SET_ITEM(temp, i, item);
-                Py_INCREF(item);
-            }
-            onotifiers = (PyListObject *)temp;
-        }
-        for (i = 0; i < n; i++) {
-            if (new_value_has_traits
-                && (((has_traits_object *)new_value)->flags
-                    & HASTRAITS_VETO_NOTIFY)) {
-                break;
-            }
-            result = PyObject_Call(PyList_GET_ITEM(onotifiers, i), args, NULL);
-            if (result == NULL) {
-                rc = -1;
-                goto exit;
-            }
-            Py_DECREF(result);
-        }
+        o_len = PyList_GET_SIZE(onotifiers);
+    } else {
+        o_len = 0;
     }
-exit:
-    Py_XDECREF(temp);
-exit2:
-    Py_DECREF(args);
 
+    // Concatenating trait notifiers and object notifiers.
+    // Notifier lists are copied in order to prevent run-time modifications.
+    all_notifiers = PyList_New(t_len + o_len);
+    if (all_notifiers == NULL) {
+        rc = -1;
+        goto exit;
+    }
+    for (i = 0; i < t_len; i++) {
+        item = PyList_GET_ITEM(tnotifiers, i);
+        PyList_SET_ITEM(all_notifiers, i, item);
+        Py_INCREF(item);
+    }
+    for (i = 0; i < o_len; i++) {
+        item = PyList_GET_ITEM(onotifiers, i);
+        PyList_SET_ITEM(all_notifiers, i + t_len, item);
+        Py_INCREF(item);
+    }
+
+    for (i = 0; i < t_len + o_len; i++) {
+        if (new_value_has_traits
+            && ((has_traits_object *)new_value)->flags
+                & HASTRAITS_VETO_NOTIFY) {
+            break;
+        }
+        result = PyObject_Call(PyList_GET_ITEM(all_notifiers, i), args, NULL);
+        if (result == NULL) {
+            rc = -1;
+            break;
+        }
+        Py_DECREF(result);
+    }
+    Py_DECREF(all_notifiers);
+
+exit:
+    Py_DECREF(args);
     return rc;
 }
 
@@ -2988,7 +2975,7 @@ static PyObject *
 trait_getattro(trait_object *obj, PyObject *name)
 {
     PyObject *value = PyObject_GenericGetAttr((PyObject *)obj, name);
-    if (value != NULL) {
+    if (value != NULL || !PyErr_ExceptionMatches(PyExc_AttributeError)) {
         return value;
     }
 
@@ -3093,18 +3080,12 @@ validate_trait_python(
     PyObject *value)
 {
     PyObject *result;
+    PyObject *args;
 
-    PyObject *args = PyTuple_New(3);
+    args = PyTuple_Pack(3, (PyObject *)obj, name, value);
     if (args == NULL) {
         return NULL;
     }
-
-    Py_INCREF(obj);
-    Py_INCREF(name);
-    Py_INCREF(value);
-    PyTuple_SET_ITEM(args, 0, (PyObject *)obj);
-    PyTuple_SET_ITEM(args, 1, name);
-    PyTuple_SET_ITEM(args, 2, value);
     result = PyObject_Call(trait->py_validate, args, NULL);
     Py_DECREF(args);
 
@@ -3121,18 +3102,12 @@ call_validator(
     PyObject *value)
 {
     PyObject *result;
+    PyObject *args;
 
-    PyObject *args = PyTuple_New(3);
+    args = PyTuple_Pack(3, (PyObject *)obj, name, value);
     if (args == NULL) {
         return NULL;
     }
-
-    PyTuple_SET_ITEM(args, 0, (PyObject *)obj);
-    PyTuple_SET_ITEM(args, 1, name);
-    PyTuple_SET_ITEM(args, 2, value);
-    Py_INCREF(obj);
-    Py_INCREF(name);
-    Py_INCREF(value);
     result = PyObject_Call(validator, args, NULL);
     Py_DECREF(args);
 
@@ -3140,21 +3115,19 @@ call_validator(
 }
 
 /*-----------------------------------------------------------------------------
-|  Calls the specified type convertor:
+|  Calls the specified type converter:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
 type_converter(PyObject *type, PyObject *value)
 {
     PyObject *result;
+    PyObject *args;
 
-    PyObject *args = PyTuple_New(1);
+    args = PyTuple_Pack(1, value);
     if (args == NULL) {
         return NULL;
     }
-
-    PyTuple_SET_ITEM(args, 0, value);
-    Py_INCREF(value);
     result = PyObject_Call(type, args, NULL);
     Py_DECREF(args);
 
@@ -4376,18 +4349,12 @@ post_setattr_trait_python(
     PyObject *value)
 {
     PyObject *result;
+    PyObject *args;
 
-    PyObject *args = PyTuple_New(3);
+    args = PyTuple_Pack(3, (PyObject *)obj, name, value);
     if (args == NULL) {
         return -1;
     }
-
-    Py_INCREF(obj);
-    Py_INCREF(name);
-    Py_INCREF(value);
-    PyTuple_SET_ITEM(args, 0, (PyObject *)obj);
-    PyTuple_SET_ITEM(args, 1, name);
-    PyTuple_SET_ITEM(args, 2, value);
     result = PyObject_Call(trait->py_post_setattr, args, NULL);
     Py_DECREF(args);
 
@@ -4564,22 +4531,14 @@ static trait_setattr setattr_property_handlers[] = {
 static PyObject *
 _trait_property(trait_object *trait, PyObject *args)
 {
-    PyObject *get, *set, *validate, *result, *temp;
+    PyObject *get, *set, *validate;
     int get_n, set_n, validate_n;
 
     if (PyTuple_GET_SIZE(args) == 0) {
         if (trait->flags & TRAIT_PROPERTY) {
-            result = PyTuple_New(3);
-            if (result != NULL) {
-                PyTuple_SET_ITEM(result, 0, temp = trait->delegate_name);
-                Py_INCREF(temp);
-                PyTuple_SET_ITEM(result, 1, temp = trait->delegate_prefix);
-                Py_INCREF(temp);
-                PyTuple_SET_ITEM(result, 2, temp = trait->py_validate);
-                Py_INCREF(temp);
-                return result;
-            }
-            return NULL;
+            return PyTuple_Pack(
+                3, trait->delegate_name, trait->delegate_prefix,
+                trait->py_validate);
         }
         else {
             Py_INCREF(Py_None);
@@ -5536,6 +5495,7 @@ PyInit_ctraits(void)
     PyObject *module;
     PyObject *trait_base;
     PyObject *trait_errors;
+    int error;
 
     module = PyModule_Create(&ctraitsmodule);
     if (module == NULL) {
@@ -5615,6 +5575,97 @@ PyInit_ctraits(void)
         return NULL;
     }
     Py_DECREF(trait_errors);
+
+    /* Export default-value constants, so that they can be re-used in
+       the DefaultValue enumeration. */
+    error = PyModule_AddIntConstant(
+        module,
+        "_CONSTANT_DEFAULT_VALUE",
+        CONSTANT_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_MISSING_DEFAULT_VALUE",
+        MISSING_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_OBJECT_DEFAULT_VALUE",
+        OBJECT_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_LIST_COPY_DEFAULT_VALUE",
+        LIST_COPY_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_DICT_COPY_DEFAULT_VALUE",
+        DICT_COPY_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_TRAIT_LIST_OBJECT_DEFAULT_VALUE",
+        TRAIT_LIST_OBJECT_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_TRAIT_DICT_OBJECT_DEFAULT_VALUE",
+        TRAIT_DICT_OBJECT_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_TRAIT_SET_OBJECT_DEFAULT_VALUE",
+        TRAIT_SET_OBJECT_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_CALLABLE_DEFAULT_VALUE",
+        CALLABLE_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_CALLABLE_AND_ARGS_DEFAULT_VALUE",
+        CALLABLE_AND_ARGS_DEFAULT_VALUE
+    );
+    if (error < 0) {
+        return NULL;
+    }
+    error = PyModule_AddIntConstant(
+        module,
+        "_MAXIMUM_DEFAULT_VALUE_TYPE",
+        MAXIMUM_DEFAULT_VALUE_TYPE
+    );
+    if (error < 0) {
+        return NULL;
+    }
 
     return module;
 }
