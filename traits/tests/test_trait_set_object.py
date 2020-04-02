@@ -118,6 +118,28 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(self.removed, set())
         self.assertEqual(self.added, {"four"})
 
+    def test_add_iterable(self):
+        python_set = set()
+        iterable = (i for i in range(4))
+        python_set.add(iterable)
+
+        ts = TraitSet()
+        ts.add(iterable)
+
+        self.assertEqual(ts, python_set)
+
+    def test_add_unhashable(self):
+        with self.assertRaises(TypeError) as python_e:
+            set().add([])
+
+        with self.assertRaises(TypeError) as trait_e:
+            TraitSet().add([])
+
+        self.assertEqual(
+            str(trait_e.exception),
+            str(python_e.exception),
+        )
+
     def test_remove(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
