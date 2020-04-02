@@ -15,11 +15,11 @@ from traits.trait_set_object import TraitSet, adapt_trait_validator
 from traits.trait_types import _validate_int
 
 
-def int_validator(current_set, value):
+def int_validator(current_set, removed, value):
     return {_validate_int(v) for v in value}
 
 
-def string_validator(current_set, value):
+def string_validator(current_set, removed, value):
     ret = set()
     for v in value:
         if isinstance(v, str):
@@ -27,6 +27,16 @@ def string_validator(current_set, value):
         else:
             raise TraitError
     return ret
+
+
+class ValueWrapper:
+
+    def __init__(self, value):
+        self.value = value
+
+
+def validator_to_instance(current_set, removed, value):
+    return set(ValueWrapper(val) for val in value)
 
 
 class TestTraitSet(unittest.TestCase):
@@ -163,6 +173,19 @@ class TestTraitSet(unittest.TestCase):
 
         # when
         ts.remove(iterable)
+
+        # then
+        self.assertEqual(ts, set())
+
+    def test_remove_with_validator_transform(self):
+        # Test when the validator also transform the value
+        ts = TraitSet(validator=validator_to_instance)
+        ts.add("123")
+
+        value, = ts
+
+        # when
+        ts.remove(value)
 
         # then
         self.assertEqual(ts, set())
