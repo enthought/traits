@@ -31,6 +31,18 @@ class TestPrefixList(unittest.TestCase):
         with self.assertRaises(TraitError):
             a.foo = ''
 
+    def test_bad_types(self):
+        class A(HasTraits):
+            foo = PrefixList("zero", "one", "two", default_value="one")
+
+        a = A()
+
+        wrong_type = [[], (1, 2, 3), 1j, 2.3, 23, b"zero", None]
+        for value in wrong_type:
+            with self.subTest(value=value):
+                with self.assertRaises(TraitError):
+                    a.foo = value
+
     def test_repeated_prefix(self):
         class A(HasTraits):
             foo = PrefixList("abc1", "abc2")

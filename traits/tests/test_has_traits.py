@@ -366,6 +366,49 @@ class TestHasTraits(unittest.TestCase):
 
         self.assertTrue(foo.traits_inited())
 
+    def test_generic_getattr_exception(self):
+        # Regression test for enthought/traits#946.
+
+        class PropertyLike:
+            """
+            Data descriptor giving a property-like object that produces
+            successive reciprocals on __get__. This means that it raises
+            on first access, but not on subsequent accesses.
+            """
+            def __init__(self):
+                self.n = 0
+
+            def __get__(self, obj, type=None):
+                old_n = self.n
+                self.n += 1
+                return 1 / old_n
+
+            # Need a __set__ method to make this a data descriptor.
+            def __set__(self, obj, value):
+                raise AttributeError("Read-only descriptor")
+
+        class A(HasTraits):
+            fruit = PropertyLike()
+
+            banana_ = Int(1729)
+
+        a = A()
+
+        # The exception raised on the first attribute access should be
+        # propagated.
+        with self.assertRaises(ZeroDivisionError):
+            a.fruit
+
+        # Exercise the code path where the PyObject_GenericGetAttr call raises
+        # AttributeError. In this case, we catch the error but the prefix trait
+        # machinery raises a new AttributeError.
+        with self.assertRaises(AttributeError):
+            a.veg
+
+        # Exercise the case where the prefix traits machinery goes on to
+        # produce a valid result.
+        self.assertEqual(a.banananana, 1729)
+
 
 class TestObjectNotifiers(unittest.TestCase):
     """ Test calling object notifiers. """

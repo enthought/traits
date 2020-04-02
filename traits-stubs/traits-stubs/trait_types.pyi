@@ -27,7 +27,6 @@ from uuid import UUID as _UUID
 
 from .trait_type import _TraitType
 
-MutableTypes: _Any
 SetTypes: _Any
 int_fast_validate: _Any
 float_fast_validate: _Any
@@ -450,6 +449,32 @@ class _Dict(_TraitType[_DictType[_S, _T], _DictType[_S, _T]]):
 
 
 class Dict(_Dict[_S, _T]):
+    ...
+
+
+class _Map(_TraitType[_S, _T]):
+    def __init__(
+            self,
+            map: _DictType[_S, _T],
+            **metadata: _Any
+    ) -> None:
+        ...
+
+
+class Map(_Map):
+    ...
+
+
+class _PrefixMap(_TraitType[_S, _T]):
+    def __init__(
+            self,
+            map: _DictType[_S, _T],
+            **metadata: _Any
+    ) -> None:
+        ...
+
+
+class PrefixMap(_PrefixMap):
     ...
 
 

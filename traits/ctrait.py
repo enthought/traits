@@ -62,13 +62,10 @@ class CTrait(ctraits.cTrait):
             DefaultValue.dict_copy,
             DefaultValue.trait_dict_object,
             DefaultValue.trait_set_object,
-        ):
-            return value.copy()
-        elif kind in (
             DefaultValue.list_copy,
             DefaultValue.trait_list_object,
         ):
-            return value[:]
+            return value.copy()
         elif kind in {DefaultValue.constant, DefaultValue.missing}:
             return value
         else:
