@@ -107,10 +107,14 @@ class TraitSet(set):
         instance.notifiers = []
         return instance
 
-    def __init__(self, value=None, *, validator=None, notifiers=()):
+    def __init__(self, value=(), *, validator=None, notifiers=None):
         self.validator = validator
+
+        if notifiers is None:
+            notifiers = []
         self.notifiers = list(notifiers)
-        value = self.validate(value)
+
+        value = self.validate(set(value))
         super().__init__(value)
 
     # ------------------------------------------------------------------------
