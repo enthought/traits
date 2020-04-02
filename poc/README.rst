@@ -6,6 +6,8 @@ What this PoC focuses on
 - What components are needed and what do they do
 - How these components interact and relate to each other
 - Confirm that the features we need **can** be achieved
+- Confirm we can resolve existing issues
+  (e.g. enthought/traits#538, enthought/traits#237)
 
 What this PoC does not focus on
 -------------------------------
@@ -82,7 +84,7 @@ Currently there are two concrete implementation of ``INotifier``:
     This wraps the user change handler. It keeps a reference count in order
     to address situations where a same object is repeated inside a container
     and one would not want to fire the same change handler multiple times
-    (see enthought/traits#538)
+    (see enthought/traits#237)
 - ``ListenerChangeNotifier``
     This serves the purpose of maintaining downstream listener when a
     container object is changed. For example, it removes downstream notifiers
