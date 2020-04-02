@@ -129,14 +129,16 @@ def add_notifiers(object, callback, path, target, dispatcher):
             )
             change_notifier.add_to(object=this_target)
 
-            for next_target in listener.iter_next_targets(object):
-                add_notifiers(
-                    object=next_target,
-                    callback=callback,
-                    path=next_path,
-                    target=target,
-                    dispatcher=dispatcher,
-                )
+    for next_path in path.nexts:
+        for next_target in listener.iter_next_targets(object):
+            add_notifiers(
+                object=next_target,
+                callback=callback,
+                path=next_path,
+                target=target,
+                dispatcher=dispatcher,
+            )
+
     for static_path in listener.get_static_paths(path):
         add_notifiers(
             object=object,
@@ -192,14 +194,16 @@ def remove_notifiers(object, callback, path, target, dispatcher):
             )
             change_notifier.remove_from(object=this_target)
 
-            for next_target in listener.iter_next_targets(object):
-                remove_notifiers(
-                    object=next_target,
-                    callback=callback,
-                    path=next_path,
-                    target=target,
-                    dispatcher=dispatcher,
-                )
+    for next_path in path.nexts:
+        for next_target in listener.iter_next_targets(object):
+            remove_notifiers(
+                object=next_target,
+                callback=callback,
+                path=next_path,
+                target=target,
+                dispatcher=dispatcher,
+            )
+
     for static_path in listener.get_static_paths(path):
         remove_notifiers(
             object=object,
