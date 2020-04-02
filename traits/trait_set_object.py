@@ -244,7 +244,7 @@ class TraitSet(set):
                 A set containing the added value.
 
         """
-        validated_values = self.validate(value)
+        validated_values = self.validate(set([value]))
         if len(validated_values) > 1:
             raise ValueError("Validator returned {} values "
                              "where 1 value is "
