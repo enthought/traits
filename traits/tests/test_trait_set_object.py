@@ -154,6 +154,19 @@ class TestTraitSet(unittest.TestCase):
         with self.assertRaises(KeyError):
             ts.remove(3)
 
+    def test_remove_iterable(self):
+        iterable = (i for i in range(4))
+
+        ts = TraitSet()
+        ts.add(iterable)
+        self.assertIn(iterable, ts)
+
+        # when
+        ts.remove(iterable)
+
+        # then
+        self.assertEqual(ts, set())
+
     def test_discard(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
