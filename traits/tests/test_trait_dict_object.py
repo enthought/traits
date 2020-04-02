@@ -18,8 +18,6 @@ from traits.trait_dict_object import TraitDict
 
 
 def str_validator(value):
-    if value is Undefined:
-        return Undefined
     if type(value) is str:
         return value
     else:
@@ -27,8 +25,6 @@ def str_validator(value):
 
 
 def int_validator(value):
-    if value is Undefined:
-        return Undefined
     if type(value) is int:
         return value
     else:
@@ -53,7 +49,7 @@ class TestTraitList(unittest.TestCase):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
                        value_validator=int_validator)
         self.assertDictEqual(td, {"a": 1, "b": 2})
-        self.assertEqual([], td.notifiers)
+        self.assertEqual(td.notifiers, [])
 
     def test_notification(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
@@ -61,9 +57,9 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
         td["c"] = 5
 
-        self.assertEqual({"c": 5}, self.added)
-        self.assertEqual({}, self.changed)
-        self.assertEqual({}, self.removed)
+        self.assertEqual(self.added, {"c": 5})
+        self.assertEqual(self.changed, {})
+        self.assertEqual(self.removed, {})
 
     def test_deepcopy(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
@@ -72,11 +68,11 @@ class TestTraitList(unittest.TestCase):
         td_copy = copy.deepcopy(td)
 
         for itm, itm_cpy in zip(td.items(), td_copy.items()):
-            self.assertTupleEqual(itm, itm_cpy)
+            self.assertTupleEqual(itm_cpy, itm)
 
-        self.assertEqual([], td_copy.notifiers)
-        self.assertEqual(td.value_validator, td_copy.value_validator)
-        self.assertEqual(td.key_validator, td_copy.key_validator)
+        self.assertEqual(td_copy.notifiers, [])
+        self.assertEqual(td_copy.value_validator, td.value_validator)
+        self.assertEqual(td_copy.key_validator, td.key_validator)
 
     def test_setitem(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
@@ -84,9 +80,9 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
         td["a"] = 5
 
-        self.assertEqual({}, self.added)
-        self.assertEqual({"a": 1}, self.changed)
-        self.assertEqual({}, self.removed)
+        self.assertEqual(self.added, {})
+        self.assertEqual(self.changed, {"a": 1})
+        self.assertEqual(self.removed, {})
 
         with self.assertRaises(TraitError):
             td[5] = "a"
@@ -97,9 +93,9 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
         del td["a"]
 
-        self.assertEqual({}, self.added)
-        self.assertEqual({}, self.changed)
-        self.assertEqual({"a": 1}, self.removed)
+        self.assertEqual(self.added, {})
+        self.assertEqual(self.changed, {})
+        self.assertEqual(self.removed, {"a": 1})
 
     def test_update(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
@@ -108,9 +104,9 @@ class TestTraitList(unittest.TestCase):
 
         td.update({"a": 2, "b": 4, "c": 5})
 
-        self.assertEqual({"c": 5}, self.added)
-        self.assertEqual({"a": 1, "b": 2}, self.changed)
-        self.assertEqual({}, self.removed)
+        self.assertEqual(self.added, {"c": 5})
+        self.assertEqual(self.changed, {"a": 1, "b": 2})
+        self.assertEqual(self.removed, {})
 
     def test_clear(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
@@ -119,9 +115,9 @@ class TestTraitList(unittest.TestCase):
 
         td.clear()
 
-        self.assertEqual({}, self.added)
-        self.assertEqual({}, self.changed)
-        self.assertEqual({"a": 1, "b": 2}, self.removed)
+        self.assertEqual(self.added, {})
+        self.assertEqual(self.changed, {})
+        self.assertEqual(self.removed, {"a": 1, "b": 2})
 
     def test_invalid_key(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
@@ -145,9 +141,9 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         result = td.setdefault("c", 3)
-        self.assertEqual(3, result)
+        self.assertEqual(result, 3)
 
-        self.assertEqual(1, td.setdefault("a", 5))
+        self.assertEqual(td.setdefault("a", 5), 1)
 
     def test_pop(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
@@ -156,11 +152,11 @@ class TestTraitList(unittest.TestCase):
 
         td.pop("b", "X")
 
-        self.assertEqual({"b": 2}, self.removed)
+        self.assertEqual(self.removed, {"b": 2})
 
         res = td.pop("x", "X")
-        self.assertEqual({"b": 2}, self.removed)
-        self.assertEqual("X", res)
+        self.assertEqual(self.removed, {"b": 2})
+        self.assertEqual(res, "X")
 
     def test_popitem(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
