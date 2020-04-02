@@ -141,10 +141,14 @@ class TraitList(list):
         instance.notifiers = []
         return instance
 
-    def __init__(self, value=None, *, validator=None, notifiers=()):
+    def __init__(self, value=(), *, validator=None, notifiers=None):
         self.validator = validator
+
+        if notifiers is None:
+            notifiers = []
         self.notifiers = list(notifiers)
-        value = self.validate(slice(0, 0), [], value)
+
+        value = self.validate(slice(0, 0), [], list(value))
         super().__init__(value)
 
     # ------------------------------------------------------------------------
@@ -685,8 +689,6 @@ class TraitListObject(TraitList):
         The name of the trait on the object.
     value : iterable
         The initial value of the list.
-    notifiers : list
-        Additional notifiers for the list.
 
     Attributes
     ----------
@@ -698,11 +700,9 @@ class TraitListObject(TraitList):
         The name of the trait on the object.
     value : iterable
         The initial value of the list.
-    notifiers : list
-        Additional notifiers for the list.
     """
 
-    def __init__(self, trait, object, name, value, notifiers=[]):
+    def __init__(self, trait, object, name, value):
 
         self.trait = trait
         self.object = ref(object)
@@ -712,7 +712,7 @@ class TraitListObject(TraitList):
             self.name_items = name + "_items"
 
         super().__init__(value, validator=self.trait_validator,
-                         notifiers=[self.notifier] + notifiers)
+                         notifiers=[self.notifier])
 
     def trait_validator(self, trait_list, index, removed, added):
         """ Validates the value by calling the inner trait's validate method

@@ -53,6 +53,13 @@ class TestTraitList(unittest.TestCase):
         self.assertIsNone(tl.validator)
         self.assertEqual(tl.notifiers, [])
 
+    def test_init_iterable(self):
+        tl = TraitList("abcde")
+
+        self.assertListEqual(tl, ['a', 'b', 'c', 'd', 'e'])
+        self.assertIsNone(tl.validator)
+        self.assertEqual(tl.notifiers, [])
+
     def test_validator(self):
         tl = TraitList([1, 2, 3], validator=int_validator)
 
