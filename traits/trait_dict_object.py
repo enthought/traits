@@ -121,16 +121,12 @@ class TraitDictObject(dict):
                 items_event = self.trait.items_event()
             object.trait_items_event(name, event, items_event)
 
-        event = copy.copy(event)
-        if event.added is None:
-            event.added = {}
-        if event.removed is None:
-            event.removed = {}
-        if event.changed is None:
-            event.changed = {}
-
         for notifier in self._observer_notifiers:
-            notifier(self, event)
+            notifier(self, TraitDictEvent(
+                added={} if event.added is None else event.added,
+                changed={} if event.changed is None else event.changed,
+                removed={} if event.removed is None else event.removed,
+            ))
 
     def _notifiers(self, force_create):
         return self._observer_notifiers
