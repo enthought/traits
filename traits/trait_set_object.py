@@ -301,7 +301,7 @@ class TraitSet(set):
                 A set containing the added values.
 
         """
-        validated_values = self.validate(set(), value)
+        validated_values = self.validate(set(), set(value))
         added = validated_values.difference(self)
 
         if len(added) > 0:

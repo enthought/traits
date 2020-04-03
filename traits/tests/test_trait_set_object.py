@@ -190,6 +190,21 @@ class TestTraitSet(unittest.TestCase):
         # then
         self.assertEqual(ts, set())
 
+    def test_update_with_non_iterable(self):
+
+        python_set = set()
+        with self.assertRaises(TypeError) as python_exc:
+            python_set.update(None)
+
+        ts = TraitSet()
+        with self.assertRaises(TypeError) as trait_exc:
+            ts.update(None)
+
+        self.assertEqual(
+            str(trait_exc.exception),
+            str(python_exc.exception),
+        )
+
     def test_discard(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
