@@ -126,7 +126,7 @@ class TraitSet(set):
         This simply calls the validator provided by the class, if any.
         The validator is expected to have the signature::
 
-            validator(original_set, added)
+            validator(original_set, value_set)
 
         and return a set of validated values or raise TraitError.
 
