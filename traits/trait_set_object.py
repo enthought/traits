@@ -8,7 +8,6 @@
 #
 # Thanks for using Enthought open source!
 
-import collections.abc
 import copy
 import copyreg
 from weakref import ref
