@@ -341,6 +341,16 @@ class TestTraitSet(unittest.TestCase):
         # then
         self.assertEqual(ts_1, python_set1)
 
+    def test_ixor_no_nofications_for_no_change(self):
+        notifier = mock.Mock()
+        ts_1 = TraitSet([1, 2], notifiers=[notifier])
+
+        # when
+        ts_1 ^= set()
+
+        # then
+        notifier.assert_not_called()
+
     def test_isub(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
