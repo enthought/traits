@@ -7,10 +7,11 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
-
+import pickle
 import unittest
 from unittest import mock
 
+from traits.api import HasTraits, Set
 from traits.trait_errors import TraitError
 from traits.trait_set_object import TraitSet, adapt_trait_validator
 from traits.trait_types import _validate_int
@@ -427,3 +428,24 @@ class TestTraitSet(unittest.TestCase):
         ts.difference_update()
 
         self.assertEqual(ts, python_set)
+
+
+class Foo(HasTraits):
+
+    values = Set()
+
+
+def notifier(removed, added):
+    pass
+
+
+class TestTraitSetObject(unittest.TestCase):
+
+    def test_get_state(self):
+        foo = Foo(values={1, 2, 3})
+        self.assertEqual(
+            foo.values.notifiers, [foo.values.notifier])
+
+        states = foo.values.__getstate__()
+        self.assertNotIn("notifiers", states)
+

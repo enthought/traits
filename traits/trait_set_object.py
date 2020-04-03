@@ -677,7 +677,7 @@ class TraitSetObject(TraitSet):
 
         Notifiers are transient and should not be serialized.
         """
-        result = self.__dict__.copy()
+        result = super().__getstate__()
         result.pop("object", None)
         result.pop("trait", None)
 
