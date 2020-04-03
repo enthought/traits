@@ -449,3 +449,20 @@ class TestTraitSetObject(unittest.TestCase):
         states = foo.values.__getstate__()
         self.assertNotIn("notifiers", states)
 
+    def test_pickle_with_notifier(self):
+        foo = Foo(values={1, 2, 3})
+        foo.values.notifiers.append(notifier)
+
+        protocols = range(pickle.HIGHEST_PROTOCOL + 1)
+
+        for protocol in protocols:
+            with self.subTest(protocol=protocol):
+                serialized = pickle.dumps(
+                    foo.values, protocol=protocol)
+                deserialized = pickle.loads(serialized)
+
+                # Transient notifiers are gone.
+                self.assertEqual(
+                    deserialized.notifiers,
+                    [deserialized.notifier],
+                )

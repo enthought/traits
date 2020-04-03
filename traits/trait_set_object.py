@@ -688,15 +688,8 @@ class TraitSetObject(TraitSet):
 
         Notifiers are transient and are restored to the empty list.
         """
-        name = state.setdefault("name", "")
-        object = state.pop("object", None)
-        if object is not None:
-            state['object'] = ref(object)
-            trait = self.object()._trait(name, 0)
-            if trait is not None:
-                state['trait'] = trait.handler
-        else:
-            state['object'] = lambda: None
-            state['trait'] = None
-
+        state.setdefault("name", "")
+        state["notifiers"] = [self.notifier]
+        state["object"] = lambda: None
+        state["trait"] = None
         self.__dict__.update(state)
