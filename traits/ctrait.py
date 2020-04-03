@@ -112,13 +112,13 @@ class CTrait(ctraits.cTrait):
         ctraits.cTrait.comparison_mode.__set__(self, value)
 
     @property
-    def property(self):
+    def property_fields(self):
         """ Return a tuple of callables (fget, fset, validate) for the
         property trait."""
         return self._get_property()
 
-    @property.setter
-    def property(self, value):
+    @property_fields.setter
+    def property_fields(self, value):
         """ Set the fget, fset, validate callables for the property.
 
         Parameters
@@ -130,15 +130,14 @@ class CTrait(ctraits.cTrait):
         func_arg_counts = []
 
         for arg in value:
+
             if arg is None:
-                func_arg_counts.extend([None, 0])
+                nargs = 0
             else:
-                try:
-                    sig = inspect.signature(arg)
-                except TypeError:
-                    raise TypeError("Property setter expects a callable "
-                                    "but got {} instead".format(arg))
-                func_arg_counts.extend([arg, len(sig.parameters)])
+                sig = inspect.signature(arg)
+                nargs = len(sig.parameters)
+
+            func_arg_counts.extend([arg, nargs])
 
         self._set_property(*func_arg_counts)
 

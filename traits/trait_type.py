@@ -373,7 +373,7 @@ class TraitType(BaseTraitHandler):
                 metadata.setdefault("transient", True)
             trait = CTrait(TraitKind.property)
             validate = getattr(self, "validate", None)
-            trait.property = (getter, setter, validate)
+            trait.property_fields = (getter, setter, validate)
             metadata.setdefault("type", "property")
         else:
             type = getattr(self, "ctrait_type", None)

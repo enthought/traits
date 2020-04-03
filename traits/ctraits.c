@@ -4524,7 +4524,7 @@ _get_trait_comparison_mode_int(trait_object *trait, void *closure)
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_get_property(trait_object *trait, PyObject *args)
+_trait_get_property(trait_object *trait, PyObject *Py_UNUSED(ignored))
 {
     if (trait->flags & TRAIT_PROPERTY) {
         return PyTuple_Pack(
@@ -4546,7 +4546,7 @@ static trait_setattr setattr_property_handlers[] = {
     (trait_setattr)post_setattr_trait_python, NULL};
 
 static PyObject *
-_set_property(trait_object *trait, PyObject *args)
+_trait_set_property(trait_object *trait, PyObject *args)
 {
     PyObject *get, *set, *validate;
     int get_n, set_n, validate_n;
@@ -4554,7 +4554,6 @@ _set_property(trait_object *trait, PyObject *args)
     if (!PyArg_ParseTuple(
             args, "OiOiOi", &get, &get_n, &set, &set_n, &validate,
             &validate_n)) {
-        PyErr_SetString(PyExc_ValueError, "Invalid arguments.");
         return NULL;
     }
 
@@ -5114,23 +5113,23 @@ PyDoc_STRVAR(
     "    is modified.\n");
 
 PyDoc_STRVAR(
-    _get_property_doc,
-    "_get_property()\n"
+    _trait_get_property_doc,
+    "_trait_get_property()\n"
     "\n"
     "Get the property fields for this trait.\n"
     "\n"
     "This method returns a tuple (get, set, validate) of length 3 containing\n"
     "the getter, setter and validator for this property trait.\n"
     "\n"
-    "When called a non-property trait, this method returns *None*.\n");
+    "When called on a non-property trait, this method returns *None*.\n");
 
 PyDoc_STRVAR(
-    _set_property_doc,
-    "_set_property(get, get_n, set, set_n, validate, validate_n)\n"
+    _trait_set_property_doc,
+    "_trait_set_property(get, get_n, set, set_n, validate, validate_n)\n"
     "\n"
-    "The *property* method expects six arguments, and uses these\n"
-    "arguments to set the get, set and validation for the trait. It also\n"
-    "sets the property flag on the trait.\n"
+    "This method expects six arguments, and uses these arguments to set the\n"
+    "get, set and validation for the trait. It also sets the property flag \n"
+    "on the trait.\n"
     "\n"
     "Parameters\n"
     "----------\n"
@@ -5231,10 +5230,10 @@ static PyMethodDef trait_methods[] = {
     {"validate", (PyCFunction)_trait_validate, METH_VARARGS, validate_doc},
     {"delegate", (PyCFunction)_trait_delegate, METH_VARARGS,
      delegate_doc},
-    {"_get_property", (PyCFunction)_get_property, METH_VARARGS,
-     _get_property_doc},
-    {"_set_property", (PyCFunction)_set_property, METH_VARARGS,
-     _set_property_doc},
+    {"_get_property", (PyCFunction)_trait_get_property, METH_NOARGS,
+     _trait_get_property_doc},
+    {"_set_property", (PyCFunction)_trait_set_property, METH_VARARGS,
+     _trait_set_property_doc},
     {"clone", (PyCFunction)_trait_clone, METH_VARARGS,
      clone_doc},
     {"_notifiers", (PyCFunction)_trait_notifiers, METH_VARARGS,

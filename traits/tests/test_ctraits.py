@@ -85,7 +85,7 @@ class TestCTrait(unittest.TestCase):
 
         self.assertFalse(trait.is_property)
 
-        trait.property = (getter, setter, validator)
+        trait.property_fields = (getter, setter, validator)
 
         self.assertTrue(trait.is_property)
 
@@ -96,7 +96,7 @@ class TestCTrait(unittest.TestCase):
         trait = CTrait(TraitKind.trait)
 
         # Get the property, ensure None
-        self.assertIsNone(trait.property)
+        self.assertIsNone(trait.property_fields)
 
         def value_get(self):
             return self.__dict__.get("_value", 0)
@@ -108,9 +108,9 @@ class TestCTrait(unittest.TestCase):
                 self.trait_property_changed("value", old_value, value)
 
         # Set the callables
-        trait.property = (value_get, value_set, None)
+        trait.property_fields = (value_get, value_set, None)
 
-        fget, fset, validate = trait.property
+        fget, fset, validate = trait.property_fields
 
         self.assertIs(fget, value_get)
         self.assertIs(fset, value_set)
