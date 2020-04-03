@@ -504,7 +504,7 @@ class TraitList(list):
 
         """
         index = self.index(value)
-        removed = [value]
+        removed = self._get_removed(index)
         added = []
 
         self.validate(index, removed, added)
