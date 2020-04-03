@@ -325,11 +325,10 @@ class TraitSet(set):
                 An empty set.
 
         """
-        validated_values = self.validate(set(), value)
         removed = self.intersection(value)
 
         if len(removed) > 0:
-            super().difference_update(validated_values)
+            super().difference_update(removed)
             self.notify(removed, set())
 
     def intersection_update(self, value):

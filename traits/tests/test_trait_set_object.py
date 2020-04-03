@@ -296,3 +296,11 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(self.removed, {2, 3})
         self.assertEqual(self.added, set())
         self.assertSetEqual(ts, {1})
+
+    def test_isub_with_validation_transform(self):
+        ts = TraitSet({1, 2, 3}, validator=validator_to_instance)
+        values = list(ts)
+
+        ts -= values
+
+        self.assertEqual(ts, set())
