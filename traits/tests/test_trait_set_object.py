@@ -279,6 +279,19 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(self.removed, {3})
         self.assertEqual(self.added, set())
 
+    def test_iand_with_validation_transform(self):
+        ts = TraitSet({1, 2, 3}, validator=validator_to_instance)
+        values = list(ts)
+
+        python_set = set(ts)
+        python_set &= set(values[:2])
+
+        # when
+        ts &= set(values[:2])
+
+        # then
+        self.assertEqual(ts, python_set)
+
     def test_ixor(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])

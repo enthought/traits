@@ -349,10 +349,9 @@ class TraitSet(set):
 
 
         """
-        validated_values = self.validate(set(), value)
-        removed = self.difference(self.intersection(validated_values))
+        removed = self.difference(self.intersection(value))
         if len(removed) > 0:
-            super().intersection_update(validated_values)
+            super().intersection_update(value)
             self.notify(removed, set())
 
     def symmetric_difference_update(self, value):
