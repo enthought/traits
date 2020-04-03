@@ -308,7 +308,7 @@ class TraitSet(set):
             super().update(added)
             self.notify(set(), added)
 
-    def difference_update(self, value):
+    def difference_update(self, value=()):
         """  Remove all elements of another set from this set.
 
         Parameters

@@ -342,3 +342,12 @@ class TestTraitSet(unittest.TestCase):
         # then
         self.assertEqual(ts, python_set)
         notifier.assert_not_called()
+
+    def test_difference_update_with_no_arguments(self):
+        python_set = set([1, 2, 3])
+        python_set.difference_update()
+
+        ts = TraitSet([1, 2, 3])
+        ts.difference_update()
+
+        self.assertEqual(ts, python_set)
