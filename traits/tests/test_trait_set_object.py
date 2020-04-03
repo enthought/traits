@@ -375,6 +375,28 @@ class TestTraitSet(unittest.TestCase):
             (ts, set()),
         )
 
+    def test_ixor_validator_args_with_added(self):
+        # Check the values given to the validator
+        # when symmetric_difference_update is called.
+
+        validator_args = None
+
+        def validator(set_, added):
+            nonlocal validator_args
+            validator_args = (set_, added)
+
+            return set(str(value) for value in added)
+
+        ts = TraitSet([1, 2, 3], validator=validator)
+        self.assertEqual(ts, set(["1", "2", "3"]))
+
+        # when
+        ts ^= set(["2", 3, 4])
+
+        # then
+        self.assertEqual(validator_args, (ts, set([3, 4])))
+        self.assertEqual(ts, set(["1", "4"]))
+
     def test_isub(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
