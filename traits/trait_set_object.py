@@ -349,7 +349,7 @@ class TraitSet(set):
 
 
         """
-        removed = self.difference(self.intersection(value))
+        removed = self.difference(value)
         if len(removed) > 0:
             super().intersection_update(value)
             self.notify(removed, set())
