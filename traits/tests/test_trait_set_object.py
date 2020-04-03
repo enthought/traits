@@ -324,6 +324,14 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(ts, python_set)
         notifier.assert_not_called
 
+    def test_intersection_update_with_iterable(self):
+        python_set = set([1, 2, 3])
+        python_set.intersection_update(i for i in [1, 2])
+
+        ts = TraitSet([1, 2, 3])
+        ts.intersection_update(i for i in [1, 2])
+        self.assertEqual(ts, python_set)
+
     def test_ixor(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
