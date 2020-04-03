@@ -9,6 +9,7 @@
 # Thanks for using Enthought open source!
 
 import unittest
+from unittest import mock
 
 from traits.trait_errors import TraitError
 from traits.trait_set_object import TraitSet, adapt_trait_validator
@@ -204,6 +205,21 @@ class TestTraitSet(unittest.TestCase):
             str(trait_exc.exception),
             str(python_exc.exception),
         )
+
+    def test_update_with_nothing(self):
+        notifier = mock.Mock()
+
+        python_set = set()
+        python_set.update()
+
+        ts = TraitSet(notifiers=[notifier])
+
+        # when
+        ts.update()
+
+        # then
+        notifier.assert_not_called()
+        self.assertEqual(ts, python_set)
 
     def test_discard(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,

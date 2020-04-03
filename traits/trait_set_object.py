@@ -284,7 +284,7 @@ class TraitSet(set):
         super().remove(value)
         self.notify(removed, set())
 
-    def update(self, value):
+    def update(self, value=()):
         """ Update a set with the union of itself and others.
 
         Parameters
