@@ -361,9 +361,11 @@ class TraitSet(set):
         added = values.difference(removed)
         if added:
             added = self.validate(added)
+        added = added.difference(self)
 
         if removed or added:
-            super().symmetric_difference_update(removed | added)
+            super().difference_update(removed)
+            super().update(added)
             self.notify(removed, added)
 
     def discard(self, value):

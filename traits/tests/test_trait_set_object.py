@@ -370,7 +370,11 @@ class TestTraitSet(unittest.TestCase):
 
             return set(str(value) for value in added)
 
-        ts = TraitSet([1, 2, 3], validator=validator)
+        ts = TraitSet(
+            [1, 2, 3],
+            validator=validator,
+            notifiers=[self.notification_handler],
+        )
         self.assertEqual(ts, set(["1", "2", "3"]))
 
         # when
@@ -378,7 +382,9 @@ class TestTraitSet(unittest.TestCase):
 
         # then
         self.assertEqual(validator_args, (ts, set([3, 4])))
-        self.assertEqual(ts, set(["1", "4"]))
+        self.assertEqual(ts, set(["1", "3", "4"]))
+        self.assertEqual(self.added, set(["4"]))
+        self.assertEqual(self.removed, set(["2"]))
 
     def test_isub(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
