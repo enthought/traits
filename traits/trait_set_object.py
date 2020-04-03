@@ -147,19 +147,6 @@ class TraitSet(set):
             If validation fails.
         """
 
-        if not isinstance(value, set):
-
-            # Treat str, bytes, bytearray as a single unit.
-            is_iterable = (
-                isinstance(value, collections.abc.Iterable)
-                and not isinstance(value, (str, bytes, bytearray))
-            )
-
-            if is_iterable:
-                value = set(value)
-            else:
-                value = {value}
-
         if self.validator is None:
             return value
         else:
