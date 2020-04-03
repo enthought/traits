@@ -304,3 +304,17 @@ class TestTraitSet(unittest.TestCase):
         ts -= values
 
         self.assertEqual(ts, set())
+
+    def test_isub_with_no_intersection(self):
+        python_set = set([3, 4, 5])
+        python_set -= set(i for i in range(2))
+
+        notifier = mock.Mock()
+        ts = TraitSet((3, 4, 5), notifiers=[notifier])
+
+        # when
+        ts -= set(i for i in range(2))
+
+        # then
+        self.assertEqual(ts, python_set)
+        notifier.assert_not_called()
