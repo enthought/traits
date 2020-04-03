@@ -16,11 +16,11 @@ from traits.trait_set_object import TraitSet, adapt_trait_validator
 from traits.trait_types import _validate_int
 
 
-def int_validator(current_set, removed, value):
+def int_validator(current_set, value):
     return {_validate_int(v) for v in value}
 
 
-def string_validator(current_set, removed, value):
+def string_validator(current_set, value):
     ret = set()
     for v in value:
         if isinstance(v, str):
@@ -30,20 +30,13 @@ def string_validator(current_set, removed, value):
     return ret
 
 
-def length_validator(current_set, removed, value):
-    new_len = len(current_set) - len(removed) + len(value)
-    if new_len <= 0:
-        raise TraitError("This set cannot be made empty.")
-    return value
-
-
 class ValueWrapper:
 
     def __init__(self, value):
         self.value = value
 
 
-def validator_to_instance(current_set, removed, value):
+def validator_to_instance(current_set, value):
     return set(
         ValueWrapper(val) if not isinstance(val, ValueWrapper)
         else val
@@ -91,7 +84,7 @@ class TestTraitSet(unittest.TestCase):
                 raise TraitError
 
         # Fail without adaptor
-        with self.assertRaises(TraitError):
+        with self.assertRaises(TypeError):
             TraitSet({}, validator=bool_validator)
 
         # Attach the adaptor
@@ -387,12 +380,3 @@ class TestTraitSet(unittest.TestCase):
         ts.difference_update()
 
         self.assertEqual(ts, python_set)
-
-    def test_difference_update_with_length_validator(self):
-        ts = TraitSet([1], validator=length_validator)
-        with self.assertRaises(TraitError) as exception_context:
-            ts.difference_update([1, 2])
-        self.assertEqual(
-            str(exception_context.exception),
-            "This set cannot be made empty."
-        )
