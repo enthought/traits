@@ -358,8 +358,9 @@ class TraitSet(set):
         """
         values = set(value)
         removed = self.intersection(values)
-        to_be_added = values.difference(removed)
-        added = self.validate(to_be_added)
+        added = values.difference(removed)
+        if added:
+            added = self.validate(added)
 
         if removed or added:
             super().symmetric_difference_update(removed | added)

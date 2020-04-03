@@ -356,10 +356,7 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(ts, set())
 
         # No values are being added.
-        self.assertEqual(
-            self.validator_args,
-            (ts, set()),
-        )
+        self.assertIsNone(self.validator_args)
 
     def test_ixor_validator_args_with_added(self):
         # Check the values given to the validator
