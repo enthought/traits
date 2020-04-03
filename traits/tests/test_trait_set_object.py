@@ -35,10 +35,15 @@ class TestTraitSet(unittest.TestCase):
     def setUp(self):
         self.added = None
         self.removed = None
+        self.validator_args = None
 
     def notification_handler(self, removed, added):
         self.removed = removed
         self.added = added
+
+    def validator(self, set_, added):
+        self.validator_args = (set_, added)
+        return added
 
     def test_init(self):
         ts = TraitSet({1, 2, 3})
@@ -182,25 +187,18 @@ class TestTraitSet(unittest.TestCase):
     def test_remove_does_not_call_validator(self):
         # Test validator should not be called with removed
         # items
-        validator_args = None
-
-        def validator(set_, added):
-            nonlocal validator_args
-            validator_args = (set_, added)
-            return added
-
-        ts = TraitSet(validator=validator)
+        ts = TraitSet(validator=self.validator)
         ts.add("123")
 
         value, = ts
 
         # when
-        validator_args = None
+        self.validator_args = None
         ts.remove(value)
 
         # then
         # validator is not called.
-        self.assertIsNone(validator_args)
+        self.assertIsNone(self.validator_args)
 
     def test_update_with_non_iterable(self):
 
@@ -292,27 +290,19 @@ class TestTraitSet(unittest.TestCase):
 
     def test_iand_does_not_call_validator(self):
         # Nothing are added, validator should not be called.
-
-        validator_args = None
-
-        def validator(set_, added):
-            nonlocal validator_args
-            validator_args = (set_, added)
-            return added
-
-        ts = TraitSet({1, 2, 3}, validator=validator)
+        ts = TraitSet({1, 2, 3}, validator=self.validator)
         values = list(ts)
 
         python_set = set(ts)
         python_set &= set(values[:2])
 
         # when
-        validator_args = None
+        self.validator_args = None
         ts &= set(values[:2])
 
         # then
         self.assertEqual(ts, python_set)
-        self.assertIsNone(validator_args)
+        self.assertIsNone(self.validator_args)
 
     def test_intersection_update_with_no_arguments(self):
         python_set = set([1, 2, 3])
@@ -351,20 +341,14 @@ class TestTraitSet(unittest.TestCase):
         python_set ^= set([iterable])
         self.assertEqual(python_set, set())
 
-        validator_args = None
-
-        def validator(set_, added):
-            nonlocal validator_args
-            validator_args = (set_, added)
-            return added
-
-        ts = TraitSet([iterable], validator=validator)
+        ts = TraitSet([iterable], validator=self.validator)
+        self.validator_args = None
         ts ^= [iterable]
         self.assertEqual(ts, set())
 
         # No values are being added.
         self.assertEqual(
-            validator_args,
+            self.validator_args,
             (ts, set()),
         )
 
@@ -402,23 +386,16 @@ class TestTraitSet(unittest.TestCase):
     def test_isub_validator_not_called(self):
         # isub never needs to add items, validator should not
         # be called.
-        validator_args = None
-
-        def validator(set_, added):
-            nonlocal validator_args
-            validator_args = (set_, added)
-            return added
-
-        ts = TraitSet({1, 2, 3}, validator=validator)
+        ts = TraitSet({1, 2, 3}, validator=self.validator)
         values = list(ts)
 
         # when
-        validator_args = None
+        self.validator_args = None
         ts -= values
 
         # then
         # Validator should not be called
-        self.assertIsNone(validator_args)
+        self.assertIsNone(self.validator_args)
 
     def test_isub_with_no_intersection(self):
         python_set = set([3, 4, 5])
