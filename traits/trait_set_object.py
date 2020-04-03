@@ -331,7 +331,7 @@ class TraitSet(set):
             super().difference_update(removed)
             self.notify(removed, set())
 
-    def intersection_update(self, value):
+    def intersection_update(self, value=None):
         """  Update a set with the intersection of itself and another.
 
         Parameters
@@ -349,6 +349,8 @@ class TraitSet(set):
 
 
         """
+        if value is None:
+            return
         removed = self.difference(value)
         if len(removed) > 0:
             super().intersection_update(value)

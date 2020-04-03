@@ -303,6 +303,17 @@ class TestTraitSet(unittest.TestCase):
         # then
         self.assertEqual(ts, python_set)
 
+    def test_intersection_update_with_no_arguments(self):
+        python_set = set([1, 2, 3])
+        python_set.intersection_update()
+
+        notifier = mock.Mock()
+        ts = TraitSet([1, 2, 3], notifiers=[notifier])
+        ts.intersection_update()
+
+        self.assertEqual(ts, python_set)
+        notifier.assert_not_called
+
     def test_ixor(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
