@@ -153,6 +153,17 @@ class TestTraitSet(unittest.TestCase):
             str(python_e.exception),
         )
 
+    def test_add_no_notification_for_no_op(self):
+        # Test adding an existing item triggers no notifications
+        notifier = mock.Mock()
+        ts = TraitSet({1, 2}, notifiers=[notifier])
+
+        # when
+        ts.add(1)
+
+        # then
+        notifier.assert_not_called()
+
     def test_remove(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
