@@ -429,6 +429,18 @@ class TestTraitSet(unittest.TestCase):
 
         self.assertEqual(ts, python_set)
 
+    def test_get_state(self):
+        ts = TraitSet(notifiers=[self.notification_handler])
+
+        states = ts.__getstate__()
+        self.assertNotIn("notifiers", states)
+
+    def test_set_state_exclude_notifiers(self):
+        ts = TraitSet(notifiers=[])
+        ts.__setstate__({"notifiers": [self.notification_handler]})
+
+        self.assertEqual(ts.notifiers, [])
+
 
 class Foo(HasTraits):
 
