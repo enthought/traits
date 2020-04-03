@@ -337,20 +337,6 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(self.added, {5})
         self.assertSetEqual(ts, {5})
 
-    def test_ixor_with_transformed_values(self):
-        ts_1 = TraitSet([1, 2, 3], validator=validator_to_instance)
-        ts_2 = TraitSet([2, 3, 4], validator=validator_to_instance)
-
-        python_set1 = set(ts_1)
-        python_set2 = set(ts_2)
-        python_set1.symmetric_difference_update(python_set2)
-
-        # when
-        ts_1.symmetric_difference_update(ts_2)
-
-        # then
-        self.assertEqual(ts_1, python_set1)
-
     def test_ixor_no_nofications_for_no_change(self):
         notifier = mock.Mock()
         ts_1 = TraitSet([1, 2], notifiers=[notifier])
