@@ -326,6 +326,7 @@ class TraitSet(set):
 
         """
         removed = self.intersection(value)
+        self.validate(removed, set())
 
         if len(removed) > 0:
             super().difference_update(removed)

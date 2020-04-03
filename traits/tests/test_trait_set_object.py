@@ -30,6 +30,13 @@ def string_validator(current_set, removed, value):
     return ret
 
 
+def length_validator(current_set, removed, value):
+    new_len = len(current_set) - len(removed) + len(value)
+    if new_len <= 0:
+        raise TraitError("This set cannot be made empty.")
+    return value
+
+
 class ValueWrapper:
 
     def __init__(self, value):
@@ -362,3 +369,12 @@ class TestTraitSet(unittest.TestCase):
         ts.difference_update()
 
         self.assertEqual(ts, python_set)
+
+    def test_difference_update_with_length_validator(self):
+        ts = TraitSet([1], validator=length_validator)
+        with self.assertRaises(TraitError) as exception_context:
+            ts.difference_update([1, 2])
+        self.assertEqual(
+            str(exception_context.exception),
+            "This set cannot be made empty."
+        )
