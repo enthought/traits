@@ -424,6 +424,8 @@ class TraitSet(set):
                 An empty set.
 
         """
+        if not self:
+            return
         removed = set(self)
         super().clear()
         self.notify(removed, set())

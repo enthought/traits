@@ -259,6 +259,14 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(self.removed, {1, 2, 3})
         self.assertEqual(self.added, set())
 
+    def test_clear_no_notifications_if_already_empty(self):
+        # test no notifications are emitted if the set is already
+        # empty.
+        notifier = mock.Mock()
+        ts = TraitSet(notifiers=[notifier])
+        ts.clear()
+        notifier.assert_not_called()
+
     def test_ior(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
