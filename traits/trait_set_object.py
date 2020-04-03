@@ -357,9 +357,7 @@ class TraitSet(set):
             self.notify(removed, set())
 
     def symmetric_difference_update(self, value):
-        """ Return the symmetric difference of two sets as a new set.
-
-        (i.e. all elements that are in exactly one of the sets.)
+        """ Update a set with the symmetric difference of itself and another.
 
         Parameters
         ----------
