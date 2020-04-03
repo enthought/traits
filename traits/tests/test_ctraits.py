@@ -116,6 +116,10 @@ class TestCTrait(unittest.TestCase):
         self.assertIs(fset, value_set)
         self.assertIsNone(validate)
 
+        # Ensure that _get_property does not accept arguments.
+        with self.assertRaises(TypeError):
+            trait._get_property(fget)
+
     def test_modify_delegate(self):
         trait = CTrait(TraitKind.trait)
 
