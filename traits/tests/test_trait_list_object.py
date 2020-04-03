@@ -234,6 +234,12 @@ class TestTraitList(unittest.TestCase):
         with self.assertRaises(ValueError):
             tl.remove(3)
 
+        tl.remove(2.0)
+        self.assertEqual(self.index, 1)
+        self.assertEqual(self.removed, [2])
+        self.assertIs(self.removed[0], 2)
+        self.assertEqual(self.added, [])
+
     def test_clear(self):
         tl = TraitList([1, 2, 3, 4, 5],
                        validator=int_validator,
