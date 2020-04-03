@@ -279,9 +279,10 @@ class TraitSet(set):
                 An empty set.
 
         """
-        self.validate(set([value]), set())
+        removed = set([value])
+        self.validate(removed, set())
         super().remove(value)
-        self.notify(set([value]), set())
+        self.notify(removed, set())
 
     def update(self, value):
         """ Update a set with the union of itself and others.
