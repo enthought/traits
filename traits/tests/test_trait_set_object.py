@@ -292,6 +292,16 @@ class TestTraitSet(unittest.TestCase):
         # then
         self.assertEqual(ts, python_set)
 
+    def test_iand_no_notify_if_no_intersection(self):
+        notifier = mock.Mock()
+        ts = TraitSet({1, 2, 3}, notifiers=[notifier])
+
+        # when
+        ts &= ts
+
+        # then
+        notifier.assert_not_called()
+
     def test_ixor(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
