@@ -237,7 +237,7 @@ class TestTraitList(unittest.TestCase):
         tl.remove(2.0)
         self.assertEqual(self.index, 1)
         self.assertEqual(self.removed, [2])
-        self.assertIs(self.removed[0], 2)
+        self.assertIsInstance(self.removed[0], int)
         self.assertEqual(self.added, [])
 
     def test_clear(self):
