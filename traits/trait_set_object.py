@@ -332,7 +332,7 @@ class TraitSet(set):
             self.notify(removed, set())
 
     def intersection_update(self, value):
-        """  Remove all elements of set which are not common to another set.
+        """  Update a set with the intersection of itself and another.
 
         Parameters
         ----------
