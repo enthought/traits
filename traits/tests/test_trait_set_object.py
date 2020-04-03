@@ -193,18 +193,28 @@ class TestTraitSet(unittest.TestCase):
         # then
         self.assertEqual(ts, set())
 
-    def test_remove_with_validator_transform(self):
-        # Test when the validator also transform the value
-        ts = TraitSet(validator=validator_to_instance)
+    def test_remove_does_not_call_validator(self):
+        # Test validator should not be called with removed
+        # items
+        validator_args = None
+
+        def validator(set_, added):
+            nonlocal validator_args
+            validator_args = (set_, added)
+            return added
+
+        ts = TraitSet(validator=validator)
         ts.add("123")
 
         value, = ts
 
         # when
+        validator_args = None
         ts.remove(value)
 
         # then
-        self.assertEqual(ts, set())
+        # validator is not called.
+        self.assertIsNone(validator_args)
 
     def test_update_with_non_iterable(self):
 
