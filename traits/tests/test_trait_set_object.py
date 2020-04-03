@@ -49,15 +49,10 @@ class TestTraitSet(unittest.TestCase):
     def setUp(self):
         self.added = None
         self.removed = None
-        self.validator_args = None
 
     def notification_handler(self, removed, added):
         self.removed = removed
         self.added = added
-
-    def validator(self, set_, added):
-        self.validator_args = (set_, added)
-        return added
 
     def test_init(self):
         ts = TraitSet({1, 2, 3})
@@ -363,13 +358,20 @@ class TestTraitSet(unittest.TestCase):
         python_set ^= set([iterable])
         self.assertEqual(python_set, set())
 
-        ts = TraitSet([iterable], validator=self.validator)
+        validator_args = None
+
+        def validator(set_, added):
+            nonlocal validator_args
+            validator_args = (set_, added)
+            return added
+
+        ts = TraitSet([iterable], validator=validator)
         ts ^= [iterable]
         self.assertEqual(ts, set())
 
         # No values are being added.
         self.assertEqual(
-            self.validator_args,
+            validator_args,
             (ts, set()),
         )
 
