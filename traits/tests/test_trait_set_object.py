@@ -30,20 +30,6 @@ def string_validator(current_set, value):
     return ret
 
 
-class ValueWrapper:
-
-    def __init__(self, value):
-        self.value = value
-
-
-def validator_to_instance(current_set, value):
-    return set(
-        ValueWrapper(val) if not isinstance(val, ValueWrapper)
-        else val
-        for val in value
-    )
-
-
 class TestTraitSet(unittest.TestCase):
 
     def setUp(self):
