@@ -49,10 +49,15 @@ class TestTraitSet(unittest.TestCase):
     def setUp(self):
         self.added = None
         self.removed = None
+        self.validator_args = None
 
     def notification_handler(self, removed, added):
         self.removed = removed
         self.added = added
+
+    def validator(self, set_, added):
+        self.validator_args = (set_, added)
+        return added
 
     def test_init(self):
         ts = TraitSet({1, 2, 3})
@@ -350,6 +355,23 @@ class TestTraitSet(unittest.TestCase):
 
         # then
         notifier.assert_not_called()
+
+    def test_ixor_with_iterable_items(self):
+        iterable = range(2)
+
+        python_set = set([iterable])
+        python_set ^= set([iterable])
+        self.assertEqual(python_set, set())
+
+        ts = TraitSet([iterable], validator=self.validator)
+        ts ^= [iterable]
+        self.assertEqual(ts, set())
+
+        # No values are being added.
+        self.assertEqual(
+            self.validator_args,
+            (ts, set()),
+        )
 
     def test_isub(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,

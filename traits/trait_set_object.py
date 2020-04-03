@@ -370,13 +370,13 @@ class TraitSet(set):
                 A set containing the added values.
 
         """
-        validated_values = self.validate(value)
-
-        removed = self.intersection(validated_values)
-        added = validated_values.difference(self)
+        values = set(value)
+        removed = self.intersection(values)
+        to_be_added = values.difference(removed)
+        added = self.validate(to_be_added)
 
         if removed or added:
-            super().symmetric_difference_update(validated_values)
+            super().symmetric_difference_update(removed | added)
             self.notify(removed, added)
 
     def discard(self, value):
