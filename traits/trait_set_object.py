@@ -57,19 +57,19 @@ class TraitSetEvent(object):
     Parameters
     ----------
     added : set
-        New values added to the set
+        New values added to the set or None.
     removed : set
-        Old values that were removed from the set.
+        Old values that were removed from the set or None.
 
     Attributes
     ----------
     added : set
-        New values added to the set
+        New values added to the set or None.
     removed : set
-        Old values that were removed from the set.
+        Old values that were removed from the set or None.
     """
 
-    def __init__(self, removed=set(), added=set()):
+    def __init__(self, removed=None, added=None):
         self.removed = removed
         self.added = added
 
@@ -90,8 +90,6 @@ class TraitSet(set):
 
     Attributes
     ----------
-    value : set
-        The value for the set
     validator : callable
         Called to validate items in the set
     notifiers : list of callable
@@ -590,11 +588,9 @@ class TraitSetObject(TraitSet):
         The name of the trait on the object.
     value : iterable
         The initial value of the list.
-    notifiers : list
-        Additional notifiers for the list.
     """
 
-    def __init__(self, trait, object, name, value, notifiers=[]):
+    def __init__(self, trait, object, name, value):
 
         self.trait = trait
         self.object = ref(object)
@@ -604,7 +600,7 @@ class TraitSetObject(TraitSet):
             self.name_items = name + "_items"
 
         super().__init__(value, validator=self.validator,
-                         notifiers=[self.notifier] + notifiers)
+                         notifiers=[self.notifier])
 
     def validator(self, current_set, value):
         """ Validates the value by calling the inner trait's validate method
