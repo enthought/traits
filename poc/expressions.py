@@ -17,9 +17,60 @@ def observe(object, expression, handler):
         _observe(object=object, path=path, handler=handler)  # noqa: F821
 
 
-def _anytrait_filter(name, trait):
-    """ Filter for matching any traits."""
-    return True
+def t(name, notify=True, optional=False):
+    """ Create a new expression for matching a trait with the exact name
+    given.
+
+    Parameters
+    ----------
+    name : str
+        Name of the trait to match.
+    notify : boolean, optional
+        Whether to notify for changes.
+    optional : boolean, optional
+        Whether this trait is optional on an object.
+
+    Returns
+    -------
+    expression : Expression
+    """
+    return Expression().t(name=name, notify=notify, optional=optional)
+
+
+def anytrait(notify=True):
+    """ Create a new expression for matching anytrait on an object.
+
+    Parameters
+    ----------
+    notify : boolean, optional
+        Whether to notify for changes.
+
+    Returns
+    -------
+    expression : Expression
+    """
+    return Expression().anytrait(notify=notify)
+
+
+def filter_(filter, notify=True):
+    """ Create a new expression for matching traits with a given
+    filter.
+
+    Parameters
+    ----------
+    filter : callable(str, TraitType) -> boolean
+        Return true if a trait is to be observed.
+        Note that if this expression is used for removing
+        observers, the given filter must compare equally to the
+        filter used for putting up the observer in the first place.
+    notify : boolean, optional
+        Whether to notify for changes.
+
+    Returns
+    -------
+    expression : Expression
+    """
+    return Expression().filter_(filter=filter, notify=notify)
 
 
 class Expression:
@@ -282,57 +333,6 @@ class Expression:
         return expression
 
 
-def t(name, notify=True, optional=False):
-    """ Create a new expression for matching a trait with the exact name
-    given.
-
-    Parameters
-    ----------
-    name : str
-        Name of the trait to match.
-    notify : boolean, optional
-        Whether to notify for changes.
-    optional : boolean, optional
-        Whether this trait is optional on an object.
-
-    Returns
-    -------
-    expression : Expression
-    """
-    return Expression().t(name=name, notify=notify, optional=optional)
-
-
-def anytrait(notify=True):
-    """ Create a new expression for matching anytrait on an object.
-
-    Parameters
-    ----------
-    notify : boolean, optional
-        Whether to notify for changes.
-
-    Returns
-    -------
-    expression : Expression
-    """
-    return Expression().anytrait(notify=notify)
-
-
-def filter_(filter, notify=True):
-    """ Create a new expression for matching traits with a given
-    filter.
-
-    Parameters
-    ----------
-    filter : callable(str, TraitType) -> boolean
-        Return true if a trait is to be observed.
-        Note that if this expression is used for removing
-        observers, the given filter must compare equally to the
-        filter used for putting up the observer in the first place.
-    notify : boolean, optional
-        Whether to notify for changes.
-
-    Returns
-    -------
-    expression : Expression
-    """
-    return Expression().filter_(filter=filter, notify=notify)
+def _anytrait_filter(name, trait):
+    """ Filter for matching any traits."""
+    return True
