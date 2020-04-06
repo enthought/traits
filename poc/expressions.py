@@ -1,5 +1,4 @@
 
-import copy
 from poc.observe import (
     ListenerPath,
     NamedTraitListener,
@@ -8,43 +7,45 @@ from poc.observe import (
 )
 
 
+def observe(object, expression, handler):
+    # ``observe`` replaces ``on_trait_change``.
+    # ``expression`` replaces ``name`` in ``on_trait_change``.
+    # This is an example implementation to demonstrate
+    # how the Expression is used. This will fail because
+    # ``_observe`` is not implemented here.
+    for path in expression.as_paths():
+        _observe(object=object, path=path, handler=handler)
+
+
 def _anytrait_filter(name, trait):
     """ Filter for matching any traits."""
     return True
 
 
-def _add_paths(path, others, seen=None):
-    """ Extend the given ListenerPath with another list
-    of paths.
-
-    If the leaf nodes are all cycles, add the new paths as
-    new branches from these cycles. Otherwise, extend the
-    subtrees.
-    """
-    if seen is None:
-        seen = []
-    else:
-        seen = seen.copy()
-    seen.append(path)
-
-    def is_seen(p):
-        return any(p2 is p for p2 in seen)
-
-    unseen_paths = []
-    for p in path.nexts:
-        if not is_seen(p):
-            unseen_paths.append(p)
-
-    for unseen in unseen_paths:
-        _add_paths(unseen, others, seen=seen)
-    if not unseen_paths:
-        path.nexts.extend(others)
-
-
 class Expression:
+    """ A user-facing object for constructing the data structures
+    required by ``observe`` (a future replacement for
+    ``on_trait_change``).
 
-    def __init__(self, paths=None):
-        self._paths = [] if paths is None else paths
+    ``Expression.as_paths()`` creates a new list of ``ListenerPath``
+    objects for ``observe`` to operate on.
+
+    While the object constructor is public facing, users will likely
+    use one of the module-level convenient functions for creating
+    an instance of ``Expression``. Methods on ``Expression``
+    allows the users to extend the ``ListenerPath``.
+    """
+    def __init__(self):
+        # A list of list of ``ListenerPath``.
+        # Each item represents a level of nesting in the tree.
+        # The first item represents the level at the roots.
+        # The last item represents the most nested level.
+        # The number of ``ListenerPath`` in the first item of
+        # this list is the number of rooted trees represented
+        # by this ``Expression``.
+        # e.g. ``t("name") | t("age")`` is translated to
+        # two independent rooted trees.
+        self._levels = []
 
     def __or__(self, expression):
         """ Create a new expression that matches this expression OR
@@ -61,9 +62,11 @@ class Expression:
         -------
         new_expression : Expression
         """
-        return Expression(
-            paths=self.as_paths() + expression.as_paths()
-        )
+        new = Expression()
+        new._levels = [
+            self.as_paths() + expression.as_paths()
+        ]
+        return new
 
     def then(self, expression):
         """ Create a new expression by extending this expression with
@@ -101,15 +104,28 @@ class Expression:
         -------
         new_expression : Expression
         """
-        others = copy.deepcopy(expression.as_paths())
+        others = expression.as_paths()
         for other in others:
-            _add_paths(other, others)
+            other.nexts.update(others)
         return self._new_with_paths(others)
 
     def as_paths(self):
         """ Return the list of ListenerPath for the observer.
         """
-        return self._paths
+        if not self._levels:
+            return []
+
+        inner_paths = self._levels[-1].copy()
+        for outer_paths in self._levels[::-1][1:]:
+            new_paths = []
+            for outer_path in outer_paths:
+                path = ListenerPath(
+                    node=outer_path.node,
+                    nexts=set(inner_paths),
+                )
+                new_paths.append(path)
+            inner_paths = new_paths
+        return inner_paths
 
     def t(self, name, notify=True, optional=False):
         """ Create a new expression that matches the current
@@ -259,13 +275,9 @@ class Expression:
         raise NotImplementedError()
 
     def _new_with_paths(self, others):
-        if not self._paths:
-            return type(self)(paths=copy.deepcopy(others))
-
-        paths = copy.deepcopy(self._paths)
-        for path in paths:
-            _add_paths(path, copy.deepcopy(others))
-        return type(self)(paths=paths)
+        expression = Expression()
+        expression._levels = self._levels + [others]
+        return expression
 
 
 def t(name, notify=True, optional=False):

@@ -71,6 +71,15 @@ class NamedTraitListener(BaseListener):
         self.optional = optional
         self.comparison_mode = comparison_mode
 
+    def __hash__(self):
+        return hash((
+            type(self),
+            self.name,
+            self.notify,
+            self.optional,
+            self.comparison_mode,
+        ))
+
     def __eq__(self, other):
         if other is self:
             return True
@@ -103,7 +112,10 @@ class ListenerPath:
 
     def __init__(self, node, nexts=()):
         self.node = node
-        self.nexts = nexts
+        self.nexts = set(nexts)
+
+    def __hash__(self):
+        return hash((type(self), self.node, frozenset(self.nexts)))
 
     def __eq__(self, other):
         """ Return true if a given ListenerPath is equivalent to this one.
@@ -118,11 +130,6 @@ class ListenerPath:
             return False
         if self.node != other.node:
             return False
-        if self.nexts == other.nexts:
+        if self.nexts is other.nexts:
             return True
-        if len(self.nexts) != len(other.nexts):
-            return False
-        for nexts in itertools.permutations(other.nexts, len(other.nexts)):
-            if all(n1 == n2 for n1, n2 in zip(self.nexts, nexts)):
-                return True
-        return False
+        return self.nexts == other.nexts
