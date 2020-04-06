@@ -22,7 +22,10 @@ from traits.trait_types import _validate_int, List
 
 
 def int_validator(trait_list, index, removed, added):
-    return [_validate_int(item) for item in added]
+    try:
+        return [_validate_int(item) for item in added]
+    except TypeError:
+        raise TraitError
 
 
 def list_validator(trait_list, index, removed, added):
@@ -286,7 +289,7 @@ class TestTraitList(unittest.TestCase):
                        validator=int_validator,
                        notifiers=[self.notification_handler])
 
-        with self.assertRaises(TypeError):
+        with self.assertRaises(TraitError):
             tl.append("A")
 
     def test_adapt_trait_validator(self):
