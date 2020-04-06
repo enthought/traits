@@ -519,7 +519,7 @@ class TraitDictObject(TraitDict):
         mutated.
     """
 
-    def key_validator(self, key):
+    def _key_validator(self, key):
         """ Calls the trait's key_trait.handler.validate.
 
         Parameters
@@ -551,7 +551,7 @@ class TraitDictObject(TraitDict):
 
         return validate(object, self.name, key)
 
-    def value_validator(self, value):
+    def _value_validator(self, value):
         """ Calls the trait's value_handler.validate
 
         Parameters
@@ -625,8 +625,8 @@ class TraitDictObject(TraitDict):
         if trait.has_items:
             self.name_items = name + "_items"
 
-        super().__init__(value, key_validator=self.key_validator,
-                         value_validator=self.value_validator,
+        super().__init__(value, key_validator=self._key_validator,
+                         value_validator=self._value_validator,
                          notifiers=[self.notifier])
 
     def __deepcopy__(self, memo):

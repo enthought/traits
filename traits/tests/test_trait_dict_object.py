@@ -13,8 +13,9 @@ import pickle
 import unittest
 from unittest import mock
 
-from traits.trait_dict_object import TraitDict
+from traits.trait_dict_object import TraitDict, TraitDictObject
 from traits.trait_errors import TraitError
+from traits.trait_types import Dict, Int, Str
 
 
 def str_validator(value):
@@ -242,3 +243,37 @@ class TestTraitList(unittest.TestCase):
                        value_validator=int_validator,
                        notifiers=[self.notification_handler])
         pickle.loads(pickle.dumps(td))
+
+
+class TestTraitDictObject(unittest.TestCase):
+    """ Test TraitDictObject operations."""
+
+    def test_trait_dict_object_validators(self):
+
+        trait_dict = TraitDictObject(
+            trait=Dict(Str),
+            object=mock.Mock(),
+            name="a",
+            value={},
+        )
+        # This is okay
+        trait_dict.validate_key("1")
+
+        # This fails.
+        with self.assertRaises(TraitError):
+            trait_dict.validate_key(1)
+
+    def test_trait_dict_object_validate_value(self):
+
+        trait_dict = TraitDictObject(
+            trait=Dict(Int, Str),
+            object=mock.Mock(),
+            name="a",
+            value={},
+        )
+        # This is okay
+        trait_dict.validate_value("1")
+
+        # This fails.
+        with self.assertRaises(TraitError):
+            trait_dict.validate_value(1)
