@@ -96,6 +96,20 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(self.changed, {})
         self.assertEqual(self.removed, {"a": 1})
 
+    def test_delitem_not_found(self):
+        python_dict = dict()
+        with self.assertRaises(KeyError) as python_e:
+            del python_dict["x"]
+
+        td = TraitDict()
+        with self.assertRaises(KeyError) as trait_e:
+            del td["x"]
+
+        self.assertEqual(
+            str(trait_e.exception),
+            str(python_e.exception),
+        )
+
     def test_update(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
                        value_validator=int_validator,

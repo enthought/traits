@@ -256,10 +256,9 @@ class TraitDict(dict):
                 The dict of the item that was removed.
 
         """
-        if key in self:
-            removed = {key: self[key]}
-            super().__delitem__(key)
-            self.notifiy(removed=removed)
+        removed = {key: self[key]}
+        super().__delitem__(key)
+        self.notifiy(added={}, changed={}, removed=removed)
 
     def clear(self):
         """ Remove all items from the dict.
