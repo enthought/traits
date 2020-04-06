@@ -24,24 +24,24 @@ class TraitDictEvent(object):
     Parameters
     ----------
     added : dict
-        New keys and values.
+        New keys and values or None.
     changed : dict
-        Updated keys and their previous values.
+        Updated keys and their previous values or None.
     removed : dict
-        Old keys and values that were just removed.
+        Old keys and values that were just removed or None.
 
     Attributes
     ----------
     added : dict
-        New keys and values.
+        New keys and values or None.
     changed : dict
-        Updated keys and their previous values.
+        Updated keys and their previous values or None.
     removed : dict
-        Old keys and values that were just removed.
+        Old keys and values that were just removed or None.
 
     """
 
-    def __init__(self, added={}, changed={}, removed={}):
+    def __init__(self, added=None, changed=None, removed=None):
         self.added = added
         self.changed = changed
         self.removed = removed
@@ -256,7 +256,6 @@ class TraitDict(dict):
                 The dict of the item that was removed.
 
         """
-        key = self.validate_key(key)
         if key in self:
             removed = {key: self[key]}
             super().__delitem__(key)
@@ -327,10 +326,9 @@ class TraitDict(dict):
 
         """
 
-        key = self.validate_key(key)
-
         added = None
         if key not in self:
+            key = self.validate_key(key)
             value = self.validate_value(value)
             added = {key: value}
 
@@ -366,7 +364,6 @@ class TraitDict(dict):
                 if the key was present.
 
         """
-        key = self.validate_key(key)
         if key in self:
             removed = {key: self[key]}
             result = super().pop(key)
@@ -658,17 +655,8 @@ class TraitDictObject(TraitDict):
         """ Restore the state of the object after serialization.
         """
 
-        super().__setstate__(state)
-        name = state.setdefault("name", "")
-        object = state.pop("object", None)
-        if object is not None:
-            state[object] = ref(object)
-            trait = object()._trait(name, 0)
-            if trait is not None:
-                state['trait'] = trait.handler
-
-        else:
-            state['object'] = lambda: None
-            state['trait'] = None
-
+        state.setdefault("name", "")
+        state["notifiers"] = [self.notifier]
+        state["object"] = lambda: None
+        state['trait'] = None
         self.__dict__.update(state)
