@@ -11,7 +11,7 @@ import pickle
 import unittest
 from unittest import mock
 
-from traits.api import HasTraits, Set
+from traits.api import HasTraits, Set, Str
 from traits.trait_errors import TraitError
 from traits.trait_set_object import TraitSet, adapt_trait_validator
 from traits.trait_types import _validate_int
@@ -454,7 +454,6 @@ class TestTraitSet(unittest.TestCase):
 
 
 class Foo(HasTraits):
-
     values = Set()
 
 
@@ -489,3 +488,11 @@ class TestTraitSetObject(unittest.TestCase):
                     deserialized.notifiers,
                     [deserialized.notifier],
                 )
+
+    def test_validation(self):
+        class TestSet(HasTraits):
+            letters = Set(Str())
+
+        TestSet(letters={"4"})
+        with self.assertRaises(TraitError):
+            TestSet(letters={4})

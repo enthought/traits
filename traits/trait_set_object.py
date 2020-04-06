@@ -582,10 +582,10 @@ class TraitSetObject(TraitSet):
         if trait.has_items:
             self.name_items = name + "_items"
 
-        super().__init__(value, validator=self.validator,
+        super().__init__(value, validator=self._validator,
                          notifiers=[self.notifier])
 
-    def validator(self, current_set, value):
+    def _validator(self, current_set, value):
         """ Validates the value by calling the inner trait's validate method
         and also ensures that the size of the list is within the specified
         bounds.
