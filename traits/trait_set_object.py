@@ -8,7 +8,6 @@
 #
 # Thanks for using Enthought open source!
 
-import collections.abc
 import copy
 import copyreg
 from weakref import ref
@@ -125,7 +124,7 @@ class TraitSet(set):
         This simply calls the validator provided by the class, if any.
         The validator is expected to have the signature::
 
-            validator(value_set)
+            validator(original_set, value_set)
 
         and return a set of validated values or raise TraitError.
 
@@ -144,19 +143,6 @@ class TraitSet(set):
         TraitError : Exception
             If validation fails.
         """
-
-        if not isinstance(value, set):
-
-            # Treat str, bytes, bytearray as a single unit.
-            is_iterable = (
-                isinstance(value, collections.abc.Iterable)
-                and not isinstance(value, (str, bytes, bytearray))
-            )
-
-            if is_iterable:
-                value = set(value)
-            else:
-                value = {value}
 
         if self.validator is None:
             return value
@@ -242,7 +228,7 @@ class TraitSet(set):
                 A set containing the added value.
 
         """
-        validated_values = self.validate(value)
+        validated_values = self.validate(set([value]))
         if len(validated_values) > 1:
             raise ValueError("Validator returned {} values "
                              "where 1 value is "
@@ -277,17 +263,10 @@ class TraitSet(set):
                 An empty set.
 
         """
-        validated_values = self.validate(value)
-        if len(validated_values) > 1:
-            raise ValueError("Validator returned {} values "
-                             "where 1 value is "
-                             "expected".format(len(validated_values)))
-
-        value = next(iter(validated_values))
         super().remove(value)
-        self.notify(validated_values, set())
+        self.notify(set([value]), set())
 
-    def update(self, value):
+    def update(self, value=()):
         """ Update a set with the union of itself and others.
 
         Parameters
@@ -304,14 +283,14 @@ class TraitSet(set):
                 A set containing the added values.
 
         """
-        validated_values = self.validate(value)
+        validated_values = self.validate(set(value))
         added = validated_values.difference(self)
 
         if len(added) > 0:
             super().update(added)
             self.notify(set(), added)
 
-    def difference_update(self, value):
+    def difference_update(self, value=()):
         """  Remove all elements of another set from this set.
 
         Parameters
@@ -328,15 +307,14 @@ class TraitSet(set):
                 An empty set.
 
         """
-        validated_values = self.validate(value)
         removed = self.intersection(value)
 
         if len(removed) > 0:
-            super().difference_update(validated_values)
+            super().difference_update(removed)
             self.notify(removed, set())
 
-    def intersection_update(self, value):
-        """  Remove all elements of set which are not common to another set.
+    def intersection_update(self, value=None):
+        """  Update a set with the intersection of itself and another.
 
         Parameters
         ----------
@@ -353,16 +331,16 @@ class TraitSet(set):
 
 
         """
-        validated_values = self.validate(value)
-        removed = self.difference(self.intersection(validated_values))
+        if value is None:
+            return
+        value = set(value)
+        removed = self.difference(value)
         if len(removed) > 0:
-            super().intersection_update(validated_values)
+            super().intersection_update(value)
             self.notify(removed, set())
 
     def symmetric_difference_update(self, value):
-        """ Return the symmetric difference of two sets as a new set.
-
-        (i.e. all elements that are in exactly one of the sets.)
+        """ Update a set with the symmetric difference of itself and another.
 
         Parameters
         ----------
@@ -377,13 +355,16 @@ class TraitSet(set):
                 A set containing the added values.
 
         """
-        validated_values = self.validate(value)
-
-        removed = self.intersection(validated_values)
-        added = validated_values.difference(self)
+        values = set(value)
+        removed = self.intersection(values)
+        added = values.difference(removed)
+        if added:
+            added = self.validate(added)
+        added = added.difference(self)
 
         if removed or added:
-            super().symmetric_difference_update(validated_values)
+            super().difference_update(removed)
+            super().update(added)
             self.notify(removed, added)
 
     def discard(self, value):
@@ -445,6 +426,8 @@ class TraitSet(set):
                 An empty set.
 
         """
+        if not self:
+            return
         removed = set(self)
         super().clear()
         self.notify(removed, set())
@@ -694,7 +677,7 @@ class TraitSetObject(TraitSet):
 
         Notifiers are transient and should not be serialized.
         """
-        result = self.__dict__.copy()
+        result = super().__getstate__()
         result.pop("object", None)
         result.pop("trait", None)
 
@@ -705,15 +688,8 @@ class TraitSetObject(TraitSet):
 
         Notifiers are transient and are restored to the empty list.
         """
-        name = state.setdefault("name", "")
-        object = state.pop("object", None)
-        if object is not None:
-            state['object'] = ref(object)
-            trait = self.object()._trait(name, 0)
-            if trait is not None:
-                state['trait'] = trait.handler
-        else:
-            state['object'] = lambda: None
-            state['trait'] = None
-
+        state.setdefault("name", "")
+        state["notifiers"] = [self.notifier]
+        state["object"] = lambda: None
+        state["trait"] = None
         self.__dict__.update(state)
