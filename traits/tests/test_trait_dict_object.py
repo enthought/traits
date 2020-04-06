@@ -160,13 +160,14 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(td.setdefault("a", 5), 1)
 
     def test_setdefault_with_casting(self):
-        # If the validator does transformation, it is ambiguous
-        # whether the key should be transformed first before
-        # containment is checked. This test tests one of the two
-        # options, where the tranformation happens after the
-        # containment is changed.
-        # Regardless of the convention, the notification
-        # should be factual about the actual mutation on the dict.
+        # If the validator does transformation, the containment
+        # is checked before the transformation. This is more
+        # consistent with the description of setdefault, which is
+        # effectively a short-hand for ``__getitem__``,
+        # followed by ``__setitem__`` (if get fails), followed by
+        # another ``__getitem__``.
+        # The notification should be factual about the actual
+        # mutation on the dict.
         notifier = mock.Mock()
         td = TraitDict(
             key_validator=str,
