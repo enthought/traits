@@ -11,6 +11,8 @@
 import enum
 import unittest
 
+from pyface.ui.qt4.util.gui_test_assistant import GuiTestAssistant
+
 from traits.api import (
     Any, BaseEnum, Enum, HasTraits, List, Property, TraitError)
 
@@ -108,6 +110,10 @@ class EnumCollectionExample(HasTraits):
     single_digit = Enum(8)
 
     slow_enum = BaseEnum("yes", "no", "maybe")
+
+
+class EnumCollectionGUIExample(EnumCollectionExample):
+    correct_int_set_enum = int_set_enum = Enum("int", "set")
 
 
 class EnumTestCase(unittest.TestCase):
@@ -296,3 +302,25 @@ class EnumTestCase(unittest.TestCase):
         with self.assertRaises(TraitError):
             obj.slow_enum = "perhaps"
         self.assertEqual(obj.slow_enum, "no")
+
+
+class TestGui(GuiTestAssistant, unittest.TestCase):
+
+    def test_create_editor(self):
+        obj = EnumCollectionGUIExample()
+        traits = obj.class_trait_names()
+        traits.remove("trait_added")
+        traits.remove("trait_modified")
+
+        ui = obj.edit_traits()
+        for t in traits:
+
+            with self.subTest(t=t):
+                editor = getattr(ui.info, t)
+
+                # Try setting all valid values for the Enum trait
+                for value in obj.trait(t).trait_type.values:
+                    with self.assertTraitChangesInEventLoop(
+                            obj, t, lambda instance: getattr(
+                                instance, t) == value, 0, 3):
+                        self.gui.set_trait_later(editor, 'value', value)
