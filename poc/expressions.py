@@ -159,6 +159,12 @@ class Expression:
         """
         others = expression.as_paths()
         for other in others:
+            # FIXME: This only works if the given
+            # expression only has one level of nesting.
+            # The reverse reference should be added
+            # to the most nested level.
+            # This needs to be dealt with specifically inside
+            # ``as_paths``
             other.nexts.update(others)
         return self._new_with_paths(others)
 
