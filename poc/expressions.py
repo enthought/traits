@@ -157,34 +157,21 @@ class Expression:
         -------
         new_expression : Expression
         """
-        others = expression.as_paths()
-        for other in others:
-            # FIXME: This only works if the given
-            # expression only has one level of nesting.
-            # The reverse reference should be added
-            # to the most nested level.
-            # This needs to be dealt with specifically inside
-            # ``as_paths``
-            other.nexts.update(others)
+        levels = expression._levels.copy()
+        levels[-1] = [
+            ListenerPath(node=path.node, nexts=set(path.nexts))
+            for path in levels[-1]
+        ]
+        others = _create_paths_from_levels(levels)
+        most_nested_paths = levels[-1]
+        for most_nested_path in most_nested_paths:
+            most_nested_path.nexts |= set(others)
         return self._new_with_paths(others)
 
     def as_paths(self):
         """ Return the list of ListenerPath for the observer.
         """
-        if not self._levels:
-            return []
-
-        inner_paths = self._levels[-1].copy()
-        for outer_paths in self._levels[::-1][1:]:
-            new_paths = []
-            for outer_path in outer_paths:
-                path = ListenerPath(
-                    node=outer_path.node,
-                    nexts=outer_path.nexts.union(inner_paths),
-                )
-                new_paths.append(path)
-            inner_paths = new_paths
-        return inner_paths
+        return _create_paths_from_levels(self._levels)
 
     def t(self, name, notify=True, optional=False):
         """ Create a new expression that matches the current
@@ -342,3 +329,20 @@ class Expression:
 def _anytrait_filter(name, trait):
     """ Filter for matching any traits."""
     return True
+
+
+def _create_paths_from_levels(levels):
+    if not levels:
+        return []
+
+    inner_paths = levels[-1].copy()
+    for outer_paths in levels[::-1][1:]:
+        new_paths = []
+        for outer_path in outer_paths:
+            path = ListenerPath(
+                node=outer_path.node,
+                nexts=outer_path.nexts.union(inner_paths),
+            )
+            new_paths.append(path)
+        inner_paths = new_paths
+    return inner_paths

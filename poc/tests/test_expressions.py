@@ -133,6 +133,34 @@ class TestExpression(unittest.TestCase):
                 ["left", "right", "value"],
             )
 
+    def test_recursion_multi_level(self):
+        left_then_right = t("left").t("right")
+        expression = (
+            t("root").recursive(left_then_right)
+        )
+        actual, = expression.as_paths()
+
+        # First level, root only
+        self.assertEqual(actual.node.name, "root")
+
+        # Second level, left
+        path, = actual.nexts
+        self.assertEqual(path.node.name, "left")
+
+        # Third level, right
+        path, = path.nexts
+        self.assertEqual(path.node.name, "right")
+
+        # Fourth level, back to left again
+        path, = path.nexts
+        self.assertEqual(path.node.name, "left")
+
+        # The original left_or_right should not be
+        # mutated
+        most_nested_path, = left_then_right._levels[-1]
+        self.assertEqual(most_nested_path.node.name, "right")
+        self.assertEqual(most_nested_path.nexts, set())
+
 
 if __name__ == "__main__":
     unittest.main()
