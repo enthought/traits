@@ -14,7 +14,7 @@ def observe(object, expression, handler):
     # how the Expression is used. This will fail because
     # ``_observe`` is not implemented here.
     for path in expression.as_paths():
-        _observe(object=object, path=path, handler=handler)
+        _observe(object=object, path=path, handler=handler)  # noqa: F821
 
 
 def _anytrait_filter(name, trait):

@@ -1,5 +1,3 @@
-import itertools
-
 
 class BaseListener:
 
@@ -87,7 +85,8 @@ class NamedTraitListener(BaseListener):
             return False
         return (
             (self.name, self.notify, self.optional, self.comparison_mode)
-            == (other.name, other.notify, other.optional, other.comparison_mode)
+            == (other.name, other.notify, other.optional,
+                other.comparison_mode)
         )
 
 
