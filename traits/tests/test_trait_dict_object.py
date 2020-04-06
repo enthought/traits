@@ -204,6 +204,20 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(self.removed, {"b": 2})
         self.assertEqual(res, "X")
 
+    def test_pop_key_error(self):
+        python_dict = {}
+        with self.assertRaises(KeyError) as python_e:
+            python_dict.pop("a")
+
+        td = TraitDict()
+        with self.assertRaises(KeyError) as trait_e:
+            td.pop("a")
+
+        self.assertEqual(
+            str(trait_e.exception),
+            str(python_e.exception),
+        )
+
     def test_popitem(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
                        value_validator=int_validator,

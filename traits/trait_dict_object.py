@@ -12,6 +12,7 @@ import copy
 import logging
 from weakref import ref
 
+from traits.trait_base import Undefined
 from traits.trait_errors import TraitError
 
 # Set up a logger:
@@ -343,7 +344,7 @@ class TraitDict(dict):
 
         return value
 
-    def pop(self, key, default_value=None):
+    def pop(self, key, value=Undefined):
         """ Remove the key from the dict if present and return the key-value
         pair. If key is absent, the default value is returned and the dict
         is left unmodified.
@@ -353,7 +354,7 @@ class TraitDict(dict):
         key : A hashable type.
             Key to the dict item.
 
-        default_value : any
+        value : any
             Value to return if key is absent.
 
         Notes
@@ -368,13 +369,15 @@ class TraitDict(dict):
                 if the key was present.
 
         """
-        if key in self:
-            removed = {key: self[key]}
-            result = super().pop(key)
-            self.notifiy(removed=removed)
-            return result
-        else:
-            return default_value
+        if value is Undefined or key in self:
+            removed = super().pop(key)
+            self.notifiy(
+                added={},
+                changed={},
+                removed={key: removed}
+            )
+            return removed
+        return value
 
     def popitem(self):
         """ Remove and return some(key, value) pair as a tuple. Raise KeyError
