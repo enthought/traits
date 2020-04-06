@@ -36,8 +36,10 @@ class Expression:
     allows the users to extend the ``ListenerPath``.
     """
     def __init__(self):
-        # A list of list of ``ListenerPath``.
-        # Each item represents a level of nesting in the tree.
+        # ``_levels`` is a list of list of ``ListenerPath`` for
+        # representing each level of "branching".
+        # It is used for constructing a new list of ``ListenerPath``
+        # in ``as_paths``.
         # The first item represents the level at the roots.
         # The last item represents the most nested level.
         # The number of ``ListenerPath`` in the first item of
