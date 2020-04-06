@@ -56,19 +56,19 @@ class TraitSetEvent(object):
     Parameters
     ----------
     added : set
-        New values added to the set or None.
+        New values added to the set.
     removed : set
-        Old values that were removed from the set or None.
+        Old values that were removed from the set.
 
     Attributes
     ----------
     added : set
-        New values added to the set or None.
+        New values added to the set.
     removed : set
-        Old values that were removed from the set or None.
+        Old values that were removed from the set.
     """
 
-    def __init__(self, removed=None, added=None):
+    def __init__(self, removed, added):
         self.removed = removed
         self.added = added
 
