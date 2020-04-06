@@ -11,6 +11,7 @@
 import copy
 import pickle
 import unittest
+from unittest import mock
 
 from traits.trait_dict_object import TraitDict
 from traits.trait_errors import TraitError
@@ -157,6 +158,37 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(result, 3)
 
         self.assertEqual(td.setdefault("a", 5), 1)
+
+    def test_setdefault_with_casting(self):
+        # If the validator does transformation, it is ambiguous
+        # whether the key should be transformed first before
+        # containment is checked. This test tests one of the two
+        # options, where the tranformation happens after the
+        # containment is changed.
+        # Regardless of the convention, the notification
+        # should be factual about the actual mutation on the dict.
+        notifier = mock.Mock()
+        td = TraitDict(
+            key_validator=str,
+            value_validator=str,
+            notifiers=[notifier, self.notification_handler],
+        )
+
+        td.setdefault(1, 2)
+        self.assertEqual(td, {"1": "2"})
+        self.assertEqual(notifier.call_count, 1)
+        self.assertEqual(self.removed, {})
+        self.assertEqual(self.added, {"1": "2"})
+        self.assertEqual(self.changed, {})
+
+        notifier.reset_mock()
+        td.setdefault(1, 4)
+        self.assertEqual(td, {"1": "4"})
+        self.assertEqual(notifier.call_count, 1)
+
+        self.assertEqual(self.removed, {})
+        self.assertEqual(self.added, {})
+        self.assertEqual(self.changed, {"1": "2"})
 
     def test_pop(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,

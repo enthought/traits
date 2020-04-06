@@ -324,19 +324,24 @@ class TraitDict(dict):
                 Will be an empty dict.
 
         """
+        if key in self:
+            return self[key]
 
-        added = None
-        if key not in self:
-            key = self.validate_key(key)
-            value = self.validate_value(value)
+        key = self.validate_key(key)
+        value = self.validate_value(value)
+
+        if key in self:
+            changed = {key: self[key]}
+            added = {}
+        else:
+            changed = {}
             added = {key: value}
 
-        result = super().setdefault(key, value)
+        super().__setitem__(key, value)
 
-        if added is not None:
-            self.notifiy(added)
+        self.notifiy(added=added, changed=changed, removed={})
 
-        return result
+        return value
 
     def pop(self, key, default_value=None):
         """ Remove the key from the dict if present and return the key-value
