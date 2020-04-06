@@ -111,6 +111,28 @@ class TestExpression(unittest.TestCase):
         self.assertCountEqual(nexts[0].nexts, set(actual.nexts))
         self.assertCountEqual(nexts[1].nexts, set(actual.nexts))
 
+    def test_recursion_then_extend(self):
+        expression = (
+            t("root").recursive(t("left") | t("right")).t("value")
+        )
+        actual, = expression.as_paths()
+
+        # First level, root only
+        self.assertEqual(actual.node.name, "root")
+
+        # Second level, left or right
+        self.assertCountEqual(
+            [p.node.name for p in actual.nexts],
+            ["left", "right"],
+        )
+
+        # Third level, left or right or value
+        for path in actual.nexts:
+            self.assertCountEqual(
+                [p.node.name for p in path.nexts],
+                ["left", "right", "value"],
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

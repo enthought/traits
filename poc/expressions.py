@@ -121,7 +121,7 @@ class Expression:
             for outer_path in outer_paths:
                 path = ListenerPath(
                     node=outer_path.node,
-                    nexts=set(inner_paths),
+                    nexts=outer_path.nexts.union(inner_paths),
                 )
                 new_paths.append(path)
             inner_paths = new_paths
