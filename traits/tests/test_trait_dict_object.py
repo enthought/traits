@@ -38,10 +38,10 @@ class TestTraitList(unittest.TestCase):
         self.added = None
         self.changed = None
         self.removed = None
-        self.trait_list = None
+        self.trait_dict = None
 
-    def notification_handler(self, trait_list, added, changed, removed):
-        self.trait_list = trait_list
+    def notification_handler(self, trait_dict, added, changed, removed):
+        self.trait_dict = trait_dict
         self.added = added
         self.changed = changed
         self.removed = removed
