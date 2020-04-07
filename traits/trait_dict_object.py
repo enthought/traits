@@ -246,6 +246,11 @@ class TraitDict(dict):
         key : A hashable type.
             The key to be deleted.
 
+        Raises
+        ------
+        KeyError
+            If the key is not found.
+
         Notes
         -----
         Parameters in the notification:
