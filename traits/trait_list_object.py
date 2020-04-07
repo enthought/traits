@@ -256,6 +256,15 @@ class TraitList(list):
             Index of the element(s) to be replaced.
         value : iterable
             Replacement values.
+
+        Raises
+        ------
+        IndexError
+            If key is an integer index and is out of range.
+        ValueError
+            If key is an extended slice (that is, it's a slice whose step
+            is not 1 and not None) and the number of replacement elements
+            doesn't match the number of removed elements.
         """
 
         if isinstance(key, slice):
@@ -601,6 +610,15 @@ class TraitListObject(TraitList):
             Index of the element(s) to be replaced.
         value : iterable
             Replacement values.
+
+        Raises
+        ------
+        IndexError
+            If key is an integer index and is out of range.
+        ValueError
+            If key is an extended slice (that is, it's a slice whose step
+            is not 1 and not None) and the number of replacement elements
+            doesn't match the number of removed elements.
         """
 
         if isinstance(key, slice):
