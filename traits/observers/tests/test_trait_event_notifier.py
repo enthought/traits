@@ -14,28 +14,28 @@ from unittest import mock
 from traits.observers.trait_event_notifier import TraitEventNotifier
 
 
+def basic_dispatcher(function, event):
+    function(event)
+
+
+def not_prevent_event(event):
+    return False
+
+
 class TestTraitEventNotifier(unittest.TestCase):
 
-    def test_init_trait_event_notifier(self):
+    def test_init_and_call(self):
 
         handler = mock.Mock()
-
-        def dispatcher(callable, event):
-            handler(event)
-
-        target = mock.Mock()
-
-        def prevent_event(event):
-            return False
 
         def event_factory(*args, **kwargs):
             return "Event"
 
         notifier = TraitEventNotifier(
             handler=handler,
-            target=target,
-            dispatcher=dispatcher,
-            prevent_event=prevent_event,
+            target=None,
+            dispatcher=basic_dispatcher,
+            prevent_event=not_prevent_event,
             event_factory=event_factory,
         )
 
@@ -46,3 +46,32 @@ class TestTraitEventNotifier(unittest.TestCase):
         self.assertEqual(handler.call_count, 1)
         (args, _), = handler.call_args_list
         self.assertEqual(args, ("Event", ))
+
+    def test_capture_exception(self):
+        # Any exception from the handler will be captured and
+        # logged. This is such that failure in one handler
+        # does not prevent other notifiers to be called.
+
+        def misbehaving_handler(event):
+            raise ZeroDivisionError("lalalala")
+
+        notifier = TraitEventNotifier(
+            handler=misbehaving_handler,
+            target=None,
+            dispatcher=basic_dispatcher,
+            prevent_event=not_prevent_event,
+            event_factory=mock.Mock(),
+        )
+
+        # when
+        with self.assertLogs("traits", level="ERROR") as log_cm:
+            notifier(a=1, b=2)
+
+        # then
+        content, = log_cm.output
+        self.assertIn(
+            "Exception occurred in traits notification handler",
+            content,
+        )
+        # The tracback should be included
+        self.assertIn("ZeroDivisionError", content)

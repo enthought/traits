@@ -8,6 +8,10 @@
 #
 # Thanks for using Enthought open source!
 
+import logging
+
+_trait_logger = logging.getLogger("traits")
+
 
 class TraitEventNotifier:
     """ Wrapper for invoking user's handler for a trait change
@@ -64,4 +68,11 @@ class TraitEventNotifier:
 
     def __call__(self, *args, **kwargs):
         event = self.event_factory(*args, **kwargs)
-        self.dispatcher(self.handler, event=event)
+        try:
+            self.dispatcher(self.handler, event=event)
+        except Exception:
+            _trait_logger.exception(
+                "Exception occurred in traits notification handler "
+                "for event object: %r",
+                event,
+            )
