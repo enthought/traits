@@ -90,7 +90,8 @@ class TraitDict(dict):
 
         self.notifiers = list(notifiers)
 
-        value, _, _ = self._validate_dict(value)
+        value = {self.validate_key(key): self.validate_value(value)
+                 for key, value in value.items()}
 
         super().__init__(value)
 
@@ -229,13 +230,13 @@ class TraitDict(dict):
 
         removed = {}
         validated_key = self.validate_key(key)
+        validated_value = self.validate_value(value)
 
         if key in self:
             changed = {key: self[key]}
             added = {}
         else:
             changed = {}
-            validated_value = self.validate_value(value)
             added = {validated_key: validated_value}
 
         super().__setitem__(validated_key, validated_value)
@@ -307,8 +308,21 @@ class TraitDict(dict):
                 Will be an empty dict.
 
         """
+        validated_dict = {}
+        added = {}
+        changed = {}
 
-        validated_dict, added, changed = self._validate_dict(adict)
+        for key, value in adict.items():
+            validated_key = self.validate_key(key)
+            validated_value = self.validate_value(value)
+
+            if key in self:
+                changed[key] = self[key]
+            else:
+                added[validated_key] = validated_value
+
+            validated_dict[validated_key] = validated_value
+
         super().update(validated_dict)
         self.notify(added=added, changed=changed, removed={})
 
@@ -419,42 +433,6 @@ class TraitDict(dict):
     # ------------------------------------------------------------------------
     # Utility methods
     # ------------------------------------------------------------------------
-
-    def _validate_dict(self, adict):
-        """ A convenience method to validate each of the key value pairs in a
-        dictionary and return the validated dict, a dict of added items and
-        a dict of changed items.
-
-        Parameters
-        ----------
-        adict : dict
-            The dictionary to validate
-
-        Returns
-        -------
-        validated_dict : dict
-            The validated dict.
-        added : dict
-            The added items as a dict.
-        changed : dict
-            The changed items as a dict.
-
-        """
-
-        validated_items = []
-        added = []
-        changed = []
-
-        for key, value in adict.items():
-            key = self.validate_key(key)
-            value = self.validate_value(value)
-            validated_items.append((key, value))
-            if key in self:
-                changed.append((key, self[key]))
-            else:
-                added.append((key, value))
-
-        return dict(validated_items), dict(added), dict(changed)
 
     def _validate(self, validator, value, msg=""):
         """ Calls the validator with the value as an argument and returns
