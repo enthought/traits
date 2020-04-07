@@ -920,3 +920,13 @@ class TestTraitListObject(unittest.TestCase):
         with self.assertRaises(TraitError):
             foo.at_least_two.remove(10)
         self.assertEqual(foo.at_least_two, [1, 2])
+
+    def test_removed_object_reference(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4])
+        list_object = foo.at_most_five
+        del foo
+
+        list_object.append(5)
+        self.assertEqual(list_object, [1, 2, 3, 4, 5])
+        with self.assertRaises(TraitError):
+            list_object.append(4)

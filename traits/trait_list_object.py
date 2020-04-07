@@ -8,8 +8,6 @@
 #
 # Thanks for using Enthought open source!
 
-# XXX Test for "object is None" branch in _item_validator.
-
 # XXX Put notification information back into docstrings? Or not? Should be
 #     possible to interpret it without knowledge of the particular operation
 #     performed, so it doesn't belong in individual docstrings. Instead, put
