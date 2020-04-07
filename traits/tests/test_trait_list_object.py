@@ -14,25 +14,27 @@ import unittest
 
 from traits.trait_errors import TraitError
 from traits.trait_list_object import (
-    adapt_trait_validator,
+    accept_anything,
     TraitList,
     TraitListObject,
 )
 from traits.trait_types import _validate_int, List
 
 
-def int_validator(trait_list, index, removed, added):
+def int_item_validator(item):
     try:
-        return [_validate_int(item) for item in added]
+        return _validate_int(item)
     except TypeError:
-        raise TraitError
+        raise TraitError(
+            "Value {} cannot be interpreted as an integer".format(item))
 
 
-def list_validator(trait_list, index, removed, added):
-    for itm in added:
-        if not isinstance(itm, list):
-            raise TraitError
-    return added
+def list_item_validator(item):
+    if isinstance(item, list):
+        return item
+    else:
+        raise TraitError(
+            "Value {} is not a list instance".format(item))
 
 
 class TestTraitList(unittest.TestCase):
@@ -53,28 +55,28 @@ class TestTraitList(unittest.TestCase):
         tl = TraitList([1, 2, 3])
 
         self.assertListEqual(tl, [1, 2, 3])
-        self.assertIsNone(tl.validator)
+        self.assertIs(tl.item_validator, accept_anything)
         self.assertEqual(tl.notifiers, [])
 
     def test_init_iterable(self):
         tl = TraitList("abcde")
 
         self.assertListEqual(tl, ['a', 'b', 'c', 'd', 'e'])
-        self.assertIsNone(tl.validator)
+        self.assertIs(tl.item_validator, accept_anything)
         self.assertEqual(tl.notifiers, [])
 
     def test_validator(self):
-        tl = TraitList([1, 2, 3], validator=int_validator)
+        tl = TraitList([1, 2, 3], item_validator=int_item_validator)
 
         self.assertListEqual(tl, [1, 2, 3])
-        self.assertEqual(tl.validator, int_validator)
+        self.assertEqual(tl.item_validator, int_item_validator)
         self.assertEqual(tl.notifiers, [])
 
     def test_notification(self):
         tl = TraitList([1, 2, 3], notifiers=[self.notification_handler])
 
         self.assertListEqual(tl, [1, 2, 3])
-        self.assertIsNone(tl.validator)
+        self.assertIs(tl.item_validator, accept_anything)
         self.assertEqual(tl.notifiers, [self.notification_handler])
 
         tl[0] = 5
@@ -87,7 +89,7 @@ class TestTraitList(unittest.TestCase):
 
     def test_deepcopy(self):
         tl = TraitList([1, 2, 3],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
 
         tl_copy = copy.deepcopy(tl)
@@ -96,11 +98,11 @@ class TestTraitList(unittest.TestCase):
             self.assertEqual(itm_cpy, itm)
 
         self.assertEqual(tl_copy.notifiers, [])
-        self.assertEqual(tl_copy.validator, tl.validator)
+        self.assertEqual(tl_copy.item_validator, tl.item_validator)
 
     def test_setitem(self):
         tl = TraitList([1, 2, 3],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
 
         tl[1] = 5
@@ -115,7 +117,7 @@ class TestTraitList(unittest.TestCase):
 
     def test_delitem(self):
         tl = TraitList([1, 2, 3],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
 
         del tl[2]
@@ -133,7 +135,7 @@ class TestTraitList(unittest.TestCase):
 
     def test_iadd(self):
         tl = TraitList([4, 5],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
 
         tl += [6, 7]
@@ -143,7 +145,7 @@ class TestTraitList(unittest.TestCase):
 
     def test_imul(self):
         tl = TraitList([1, 2],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
 
         tl *= 1
@@ -170,7 +172,7 @@ class TestTraitList(unittest.TestCase):
 
     def test_append(self):
         tl = TraitList([1],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
 
         tl.append(2)
@@ -180,7 +182,7 @@ class TestTraitList(unittest.TestCase):
 
     def test_extend(self):
         tl = TraitList([1],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
 
         tl.extend([1, 2])
@@ -190,7 +192,7 @@ class TestTraitList(unittest.TestCase):
 
     def test_insert(self):
         tl = TraitList([2],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
 
         tl.insert(0, 1)  # [1,2]
@@ -205,7 +207,7 @@ class TestTraitList(unittest.TestCase):
 
     def test_pop(self):
         tl = TraitList([1, 2, 3, 4, 5],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
 
         tl.pop()
@@ -226,7 +228,7 @@ class TestTraitList(unittest.TestCase):
 
     def test_remove(self):
         tl = TraitList([1, 2, 3, 4, 5],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
 
         tl.remove(3)
@@ -245,7 +247,7 @@ class TestTraitList(unittest.TestCase):
 
     def test_clear(self):
         tl = TraitList([1, 2, 3, 4, 5],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
         tl.clear()
         self.assertEqual(self.index, slice(0, 5, None))
@@ -254,7 +256,7 @@ class TestTraitList(unittest.TestCase):
 
     def test_sort(self):
         tl = TraitList([2, 3, 1, 4, 5, 0],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
 
         tl.sort()
@@ -266,7 +268,7 @@ class TestTraitList(unittest.TestCase):
 
     def test_reverse(self):
         tl = TraitList([1, 2, 3, 4, 5],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
 
         tl.reverse()
@@ -277,14 +279,14 @@ class TestTraitList(unittest.TestCase):
 
     def test_pickle(self):
         tl = TraitList([1, 2, 3, 4, 5],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
         for protocol in range(pickle.HIGHEST_PROTOCOL + 1):
             serialized = pickle.dumps(tl, protocol=protocol)
 
             tl_unpickled = pickle.loads(serialized)
 
-            self.assertIs(tl_unpickled.validator, tl.validator)
+            self.assertIs(tl_unpickled.item_validator, tl.item_validator)
             self.assertEqual(tl_unpickled.notifiers, [])
 
             for i, j in zip(tl, tl_unpickled):
@@ -292,50 +294,15 @@ class TestTraitList(unittest.TestCase):
 
     def test_invalid_entry(self):
         tl = TraitList([1, 2, 3, 4, 5],
-                       validator=int_validator,
+                       item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
 
         with self.assertRaises(TraitError):
             tl.append("A")
 
-    def test_adapt_trait_validator(self):
-
-        def bool_validator(object, name, value):
-            if isinstance(value, bool):
-                return value
-            else:
-                raise TraitError
-
-        # Fail without adaptor
-        with self.assertRaises(TypeError):
-            tl = TraitList([], validator=bool_validator)
-
-        # Attach the adaptor
-        list_bool_validator = adapt_trait_validator(bool_validator)
-
-        # It now works!
-        tl_2 = TraitList([], validator=list_bool_validator)
-        tl_2.extend([True, False, True])
-        tl_2.insert(0, True)
-
-        # Decorate with list adaptor
-        @adapt_trait_validator
-        def bool_validator(object, name, value):
-            if isinstance(value, bool):
-                return value
-            else:
-                raise TraitError
-
-        # Still working
-        tl = TraitList([], validator=bool_validator)
-        tl.extend([True, False, True])
-
-        with self.assertRaises(TraitError):
-            tl.extend(["invalid"])
-
     def test_list_of_lists(self):
         tl = TraitList([[1]],
-                       validator=list_validator,
+                       item_validator=list_item_validator,
                        notifiers=[self.notification_handler])
 
         tl.append([2])
