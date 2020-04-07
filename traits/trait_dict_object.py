@@ -596,7 +596,7 @@ class TraitDictObject(TraitDict):
 
         object = object_ref()
 
-        if object is None or not hasattr(self, "trait"):
+        if object is None:
             return
 
         event = TraitDictEvent(added, changed, removed)
