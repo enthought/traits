@@ -640,10 +640,7 @@ class TraitSetObject(TraitSet):
         None
 
         """
-        is_trait_none = getattr(self, 'trait', None) is None
-        is_name_items_none = getattr(self, 'name_items', None) is None
-        is_object_ref_none = getattr(self, 'object', None) is None
-        if is_trait_none or is_name_items_none or is_object_ref_none:
+        if self.name_items is None:
             return
 
         object = self.object()
