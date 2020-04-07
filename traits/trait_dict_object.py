@@ -63,8 +63,6 @@ class TraitDict(dict):
 
     Attributes
     ----------
-    value : dict
-        The initial dict.
     key_validator : callable
         Called to validate a key in the dict.
     value_validator : callable
@@ -79,13 +77,16 @@ class TraitDict(dict):
         instance.notifiers = []
         return instance
 
-    def __init__(self, value={}, *, key_validator=None,
+    def __init__(self, value=None, *, key_validator=None,
                  value_validator=None, notifiers=None):
         self.key_validator = key_validator
         self.value_validator = value_validator
 
         if notifiers is None:
             notifiers = []
+
+        if value is None:
+            value = {}
 
         self.notifiers = list(notifiers)
 
@@ -139,7 +140,7 @@ class TraitDict(dict):
         return self._validate(self.value_validator, value,
                               msg="Each value of the")
 
-    def notifiy(self, added={}, changed={}, removed={}):
+    def notify(self, added, changed, removed):
         """ Call all notifiers.
 
         This simply calls all notifiers provided by the class, if any.
@@ -225,18 +226,20 @@ class TraitDict(dict):
                 Will be an empty dict.
 
         """
+
+        removed = {}
         validated_key = self.validate_key(key)
-        validated_value = self.validate_value(value)
 
-        added = changed = removed = {}
-
-        if validated_key in self:
-            changed = {validated_key: self[validated_key]}
+        if key in self:
+            changed = {key: self[key]}
+            added = {}
         else:
+            changed = {}
+            validated_value = self.validate_value(value)
             added = {validated_key: validated_value}
 
         super().__setitem__(validated_key, validated_value)
-        self.notifiy(added, changed, removed)
+        self.notify(added, changed, removed)
 
     def __delitem__(self, key):
         """ Delete the item from the dict indicated by the key.
@@ -264,7 +267,7 @@ class TraitDict(dict):
         """
         removed = {key: self[key]}
         super().__delitem__(key)
-        self.notifiy(added={}, changed={}, removed=removed)
+        self.notify(added={}, changed={}, removed=removed)
 
     def clear(self):
         """ Remove all items from the dict.
@@ -283,7 +286,7 @@ class TraitDict(dict):
         if self != {}:
             removed = self.copy()
             super().clear()
-            self.notifiy(removed=removed)
+            self.notify(added={}, changed={}, removed=removed)
 
     def update(self, adict):
         """ Update the values in the dict by the new dict.
@@ -307,7 +310,7 @@ class TraitDict(dict):
 
         validated_dict, added, changed = self._validate_dict(adict)
         super().update(validated_dict)
-        self.notifiy(added, changed)
+        self.notify(added=added, changed=changed, removed={})
 
     def setdefault(self, key, value=None):
         """ Returns the value if key is present in the dict, else creates the
@@ -345,7 +348,7 @@ class TraitDict(dict):
 
         super().__setitem__(key, value)
 
-        self.notifiy(added=added, changed=changed, removed={})
+        self.notify(added=added, changed=changed, removed={})
 
         return value
 
@@ -376,7 +379,7 @@ class TraitDict(dict):
         """
         if value is Undefined or key in self:
             removed = super().pop(key)
-            self.notifiy(
+            self.notify(
                 added={},
                 changed={},
                 removed={key: removed}
@@ -410,7 +413,7 @@ class TraitDict(dict):
 
         """
         item = super().popitem()
-        self.notifiy(removed=dict([item]))
+        self.notify(added={}, changed={}, removed=dict([item]))
         return item
 
     # ------------------------------------------------------------------------
