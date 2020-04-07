@@ -25,16 +25,14 @@ def int_item_validator(item):
     try:
         return _validate_int(item)
     except TypeError:
-        raise TraitError(
-            "Value {} cannot be interpreted as an integer".format(item))
+        raise TraitError("Value {} is not a valid integer".format(item))
 
 
 def list_item_validator(item):
     if isinstance(item, list):
         return item
     else:
-        raise TraitError(
-            "Value {} is not a list instance".format(item))
+        raise TraitError("Value {} is not a list instance".format(item))
 
 
 class TestTraitList(unittest.TestCase):
