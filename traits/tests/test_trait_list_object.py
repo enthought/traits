@@ -687,6 +687,17 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(self.removed, [1, 2, 3, 4, 5])
         self.assertEqual(self.added, [])
 
+    def test_clear_empty_list(self):
+        tl = TraitList([],
+                       item_validator=int_item_validator,
+                       notifiers=[self.notification_handler])
+
+        tl.clear()
+        self.assertEqual(tl, [])
+        self.assertIsNone(self.index)
+        self.assertIsNone(self.removed)
+        self.assertIsNone(self.added)
+
     def test_sort(self):
         tl = TraitList([2, 3, 1, 4, 5, 0],
                        item_validator=int_item_validator,
