@@ -331,16 +331,7 @@ class TraitList(list):
 
         original_length = len(self)
         super().insert(index, self.item_validator(object))
-        if index < 0:
-            if index < -original_length:
-                normalized_index = 0
-            else:
-                normalized_index = original_length + index
-        else:
-            if index < original_length:
-                normalized_index = index
-            else:
-                normalized_index = original_length
+        normalized_index = _normalize_index(index, original_length)
         self.notify(normalized_index, [], [self[normalized_index]])
 
     def pop(self, index=-1):
@@ -365,10 +356,7 @@ class TraitList(list):
 
         original_length = len(self)
         item = super().pop(index)
-        if index < 0:
-            normalized_index = index + original_length
-        else:
-            normalized_index = index
+        normalized_index = _normalize_index(index, original_length)
         self.notify(normalized_index, [item], [])
         return item
 
