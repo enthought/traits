@@ -846,6 +846,11 @@ class TestTraitListObject(unittest.TestCase):
         )
         self.assertEqual(tl, list(squares(5)))
 
+    def test_delitem(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 23])
+        del foo.at_most_five[1]
+        self.assertEqual(foo.at_most_five, [1])
+
     def test_delitem_single_too_small(self):
         foo = HasLengthConstrainedLists(at_least_two=[1, 2])
         with self.assertRaises(TraitError):
@@ -858,6 +863,11 @@ class TestTraitListObject(unittest.TestCase):
             del foo.at_least_two[:]
         self.assertEqual(foo.at_least_two, [1, 2])
 
+    def test_iadd(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2])
+        foo.at_most_five += [6, 7, 8]
+        self.assertEqual(foo.at_most_five, [1, 2, 6, 7, 8])
+
     def test_iadd_too_large(self):
         foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4])
         with self.assertRaises(TraitError):
@@ -868,6 +878,11 @@ class TestTraitListObject(unittest.TestCase):
         foo = HasLengthConstrainedLists(at_most_five=[1, 2])
         foo.at_most_five += squares(3)
         self.assertEqual(foo.at_most_five, [1, 2, 0, 1, 4])
+
+    def test_imul(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3])
+        foo.at_least_two *= 2
+        self.assertEqual(foo.at_least_two, [1, 2, 3, 1, 2, 3])
 
     def test_imul_too_small(self):
         foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
@@ -880,6 +895,21 @@ class TestTraitListObject(unittest.TestCase):
         with self.assertRaises(TraitError):
             foo.at_most_five *= 2
         self.assertEqual(foo.at_most_five, [1, 2, 3, 4])
+
+    def test_setitem_index(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
+        foo.at_least_two[1] = 7
+        self.assertEqual(foo.at_least_two, [1, 7, 3, 4])
+
+    def test_setitem_slice(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
+        foo.at_least_two[1:] = [6, 7]
+        self.assertEqual(foo.at_least_two, [1, 6, 7])
+
+    def test_setitem_extended_slice(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
+        foo.at_least_two[1::2] = [6, 7]
+        self.assertEqual(foo.at_least_two, [1, 6, 3, 7])
 
     def test_setitem_too_small(self):
         foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
@@ -898,17 +928,38 @@ class TestTraitListObject(unittest.TestCase):
         foo.at_most_five[:1] = squares(4)
         self.assertEqual(foo.at_most_five, [0, 1, 4, 9, 2])
 
+    def test_setitem_extended_slice_bad_length(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
+        with self.assertRaises(ValueError):
+            foo.at_least_two[1::2] = squares(3)
+        self.assertEqual(foo.at_least_two, [1, 2, 3, 4])
+
+    def test_append(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3])
+        foo.at_most_five.append(6)
+        self.assertEqual(foo.at_most_five, [1, 2, 3, 6])
+
     def test_append_too_large(self):
         foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4, 5])
         with self.assertRaises(TraitError):
             foo.at_most_five.append(6)
         self.assertEqual(foo.at_most_five, [1, 2, 3, 4, 5])
 
+    def test_clear(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4])
+        foo.at_most_five.clear()
+        self.assertEqual(foo.at_most_five, [])
+
     def test_clear_too_small(self):
         foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
         with self.assertRaises(TraitError):
             foo.at_least_two.clear()
         self.assertEqual(foo.at_least_two, [1, 2, 3, 4])
+
+    def test_extend(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
+        foo.at_least_two.extend([10, 11])
+        self.assertEqual(foo.at_least_two, [1, 2, 3, 4, 10, 11])
 
     def test_extend_too_large(self):
         foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4])
@@ -921,6 +972,11 @@ class TestTraitListObject(unittest.TestCase):
         foo.at_most_five.extend(squares(3))
         self.assertEqual(foo.at_most_five, [1, 2, 0, 1, 4])
 
+    def test_insert(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
+        foo.at_least_two.insert(3, 16)
+        self.assertEqual(foo.at_least_two, [1, 2, 3, 16, 4])
+
     def test_insert_too_large(self):
         foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4, 5])
         with self.assertRaises(TraitError):
@@ -930,6 +986,11 @@ class TestTraitListObject(unittest.TestCase):
         with self.assertRaises(TraitError):
             foo.at_most_five.insert(10, 16)
         self.assertEqual(foo.at_most_five, [1, 2, 3, 4, 5])
+
+    def test_pop(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 6])
+        foo.at_least_two.pop()
+        self.assertEqual(foo.at_least_two, [1, 2])
 
     def test_pop_too_small(self):
         foo = HasLengthConstrainedLists(at_least_two=[1, 2])
@@ -941,6 +1002,11 @@ class TestTraitListObject(unittest.TestCase):
         with self.assertRaises(TraitError):
             foo.at_least_two.pop(10)
         self.assertEqual(foo.at_least_two, [1, 2])
+
+    def test_remove(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 6, 4])
+        foo.at_least_two.remove(2)
+        self.assertEqual(foo.at_least_two, [1, 6, 4])
 
     def test_remove_too_small(self):
         foo = HasLengthConstrainedLists(at_least_two=[1, 2])
@@ -954,7 +1020,7 @@ class TestTraitListObject(unittest.TestCase):
             foo.at_least_two.remove(10)
         self.assertEqual(foo.at_least_two, [1, 2])
 
-    def test_removed_object_reference(self):
+    def test_dead_object_reference(self):
         foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4])
         list_object = foo.at_most_five
         del foo
