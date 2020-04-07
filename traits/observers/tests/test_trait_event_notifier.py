@@ -22,6 +22,15 @@ def not_prevent_event(event):
     return False
 
 
+class DummyObservable:
+
+    def __init__(self):
+        self.notifiers = []
+
+    def _notifiers(self, force_create):
+        return self.notifiers
+
+
 class TestTraitEventNotifier(unittest.TestCase):
 
     def test_init_and_call(self):
@@ -139,10 +148,59 @@ class TestTraitEventNotifier(unittest.TestCase):
 
     def test_equals_compared_to_different_type(self):
         notifier = TraitEventNotifier(
-            handler=mock.Mock,
+            handler=mock.Mock(),
             target=None,
             event_factory=mock.Mock(),
             prevent_event=not_prevent_event,
             dispatcher=basic_dispatcher,
         )
         self.assertFalse(notifier.equals(float))
+
+    def test_add_to_observable(self):
+        dummy = DummyObservable()
+
+        notifier = TraitEventNotifier(
+            handler=mock.Mock(),
+            target=None,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+
+        # when
+        notifier.add_to(dummy)
+
+        # then
+        self.assertEqual(dummy.notifiers, [notifier])
+
+    def test_add_to_observable_twice_increase_count(self):
+        # Test trying to add the "same" notifier results in
+        # the existing notifier bumping its own reference
+        # count.
+        dummy = DummyObservable()
+
+        def handler(event):
+            pass
+
+        notifier1 = TraitEventNotifier(
+            handler=handler,
+            target=None,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        notifier2 = TraitEventNotifier(
+            handler=handler,
+            target=None,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+
+        # when
+        notifier1.add_to(dummy)
+        notifier2.add_to(dummy)
+
+        # then
+        self.assertEqual(dummy.notifiers, [notifier1])
+        self.assertEqual(notifier1._ref_count, 2)

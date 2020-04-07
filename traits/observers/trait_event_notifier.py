@@ -66,10 +66,16 @@ class TraitEventNotifier:
             thread or on a GUI event loop. ``event`` is the object
             created by the event factory.
         """
-        self.target = target
+        if target is not None:
+            self.target = weakref.ref(target)
+        else:
+            self.target = _return_none
         self.handler = handler
         self.dispatcher = dispatcher
         self.event_factory = event_factory
+        # Reference count to avoid adding multiple notifiers
+        # which are equivalent to the same observable.
+        self._ref_count = 0
 
     def __call__(self, *args, **kwargs):
         event = self.event_factory(*args, **kwargs)
@@ -81,6 +87,29 @@ class TraitEventNotifier:
                 "for event object: %r",
                 event,
             )
+
+    def add_to(self, observable):
+        """ Add this notifier to an observable object.
+
+        If an equivalent notifier exists, the existing notifier's reference
+        count is bumped. Hence this method is not idempotent.
+        N number of calls to this ``add_to`` must be matched by N calls to the
+        ``remove_from`` method in order to completely remove a notifier from
+        an observable.
+
+        Parameters
+        ----------
+        observable : IObservableObject
+            An object for adding this notifier to.
+        """
+        notifiers = observable._notifiers(True)
+        for other in notifiers:
+            if self.equals(other):
+                other._ref_count += 1
+                break
+        else:
+            notifiers.append(self)
+            self._ref_count += 1
 
     def equals(self, other):
         """ Return true if the other notifier is equivalent to this one.
@@ -96,3 +125,7 @@ class TraitEventNotifier:
         self_target = self.target()
         other_target = other.target()
         return self.handler == other.handler and self_target is other_target
+
+
+def _return_none():
+    return None
