@@ -9,6 +9,7 @@
 # Thanks for using Enthought open source!
 
 import copy
+import operator
 import pickle
 import unittest
 
@@ -18,17 +19,53 @@ from traits.trait_list_object import (
     TraitList,
     TraitListObject,
 )
-from traits.trait_types import _validate_int, List
+from traits.trait_types import List
 
 
 def int_item_validator(item):
+    """
+    An item_validator for TraitList that checks that the item is an integer.
+
+    Parameters
+    ----------
+    item : object
+        Proposed item to add to the list.
+
+    Returns
+    -------
+    validated_item : object
+        Actual item to add to the list.
+
+    Raises
+    ------
+    TraitError
+        If the item is not valid.
+    """
     try:
-        return _validate_int(item)
+        return int(operator.index(item))
     except TypeError:
         raise TraitError("Value {} is not a valid integer".format(item))
 
 
 def list_item_validator(item):
+    """
+    An item_validator for TraitList that checks that the item is a list.
+
+    Parameters
+    ----------
+    item : object
+        Proposed item to add to the list.
+
+    Returns
+    -------
+    validated_item : object
+        Actual item to add to the list.
+
+    Raises
+    ------
+    TraitError
+        If the item is not valid.
+    """
     if isinstance(item, list):
         return item
     else:
