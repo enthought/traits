@@ -496,3 +496,20 @@ class TestTraitSetObject(unittest.TestCase):
         TestSet(letters={"4"})
         with self.assertRaises(TraitError):
             TestSet(letters={4})
+
+    def test_notification_silenced_if_has_items_if_false(self):
+
+        class Foo(HasTraits):
+            values = Set(items=False)
+
+        foo = Foo(values=set())
+        # name_items is a on_trait_change feature
+        # Setting items to False effectively switches it off
+        notifier = mock.Mock()
+        foo.on_trait_change(lambda: notifier(), "values_items")
+
+        # when
+        foo.values.add(1)
+
+        # then
+        notifier.assert_not_called()
