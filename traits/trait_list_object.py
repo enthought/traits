@@ -212,7 +212,8 @@ class TraitList(list):
         """
 
         original_length = len(self)
-        extended = super().__iadd__(map(self.item_validator, value))
+        extended = super().__iadd__(
+            [self.item_validator(item) for item in value])
         new_length = len(self)
         if new_length > original_length:
             index = slice(original_length, new_length)
@@ -260,7 +261,7 @@ class TraitList(list):
         """
 
         if isinstance(key, slice):
-            value = list(map(self.item_validator, value))
+            value = [self.item_validator(item) for item in value]
             normalized_index = _normalize_slice(key, len(self))
             added = value
             removed = self[key]
@@ -310,7 +311,7 @@ class TraitList(list):
         """
 
         original_length = len(self)
-        super().extend(map(self.item_validator, iterable))
+        super().extend([self.item_validator(item) for item in iterable])
         new_length = len(self)
         if new_length > original_length:
             index = slice(original_length, new_length)
