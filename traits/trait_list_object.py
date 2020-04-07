@@ -232,7 +232,6 @@ class TraitList(list):
             if removed:
                 self.notify(slice(0, len(removed)), removed, [])
         else:
-            # Values being added.
             original_length = len(self)
             multiplied = super().__imul__(value)
             new_length = len(self)
