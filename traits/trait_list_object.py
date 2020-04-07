@@ -10,12 +10,9 @@
 
 # XXX Need tests for LengthConstrainedTraitList.initialization that breaks
 #     length limits.
-# XXX Check coverage for all branches.
-# XXX Make sure we have a test for x = list(range(10)), x[5:2] = [1, 2, 3]
-# XXX Test LengthConstrainedTraitList.__setitem__ with iterable that doesn't
-#     have a length. Ditto append.
 # XXX Make sure there are tests for clearing a list with a minimum length.
 # XXX Test for "object is None" branch in _item_validator.
+# XXX Test TraitListObject operations with iterables that don't have a length.
 
 # XXX Put notification information back into docstrings? Or not? Should be
 #     possible to interpret it without knowledge of the particular operation
@@ -213,7 +210,8 @@ class TraitList(list):
 
         original_length = len(self)
         extended = super().__iadd__(
-            [self.item_validator(item) for item in value])
+            [self.item_validator(item) for item in value]
+        )
         new_length = len(self)
         if new_length > original_length:
             index = slice(original_length, new_length)
