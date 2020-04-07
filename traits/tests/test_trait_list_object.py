@@ -271,6 +271,17 @@ class TestTraitList(unittest.TestCase):
         self.assertIsNone(self.removed)
         self.assertIsNone(self.added)
 
+    def test_setitem_negative_step(self):
+        tl = TraitList([1, 2, 3, 4, 5],
+                       item_validator=int_item_validator,
+                       notifiers=[self.notification_handler])
+
+        tl[::-2] = [10, 11, 12]
+        self.assertEqual(tl, [12, 2, 11, 4, 10])
+        self.assertEqual(self.index, slice(None, None, -2))
+        self.assertEqual(self.removed, [5, 3, 1])
+        self.assertEqual(self.added, [10, 11, 12])
+
     def test_setitem_index_and_validation_error(self):
         tl = TraitList([1, 2, 3],
                        item_validator=int_item_validator,
@@ -355,6 +366,17 @@ class TestTraitList(unittest.TestCase):
         self.assertIsNone(self.index)
         self.assertIsNone(self.removed)
         self.assertIsNone(self.added)
+
+    def test_delitem_negative_step(self):
+        tl = TraitList([1, 2, 3, 4, 5],
+                       item_validator=int_item_validator,
+                       notifiers=[self.notification_handler])
+
+        del tl[::-2]
+        self.assertEqual(tl, [2, 4])
+        self.assertEqual(self.index, slice(None, None, -2))
+        self.assertEqual(self.removed, [5, 3, 1])
+        self.assertEqual(self.added, [])
 
     def test_iadd(self):
         tl = TraitList([4, 5],
