@@ -331,6 +331,7 @@ class TestCTraitNotifiers(unittest.TestCase):
     """ Test calling trait notifiers and object notifiers. """
 
     def test_notifiers_empty(self):
+
         class Foo(HasTraits):
             x = Int()
 
@@ -340,6 +341,7 @@ class TestCTraitNotifiers(unittest.TestCase):
         self.assertEqual(x_ctrait._notifiers(True), [])
 
     def test_notifiers_on_trait(self):
+
         class Foo(HasTraits):
             x = Int()
 
