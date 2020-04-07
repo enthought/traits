@@ -544,33 +544,32 @@ class TraitSet(set):
 
 
 class TraitSetObject(TraitSet):
-    """ A specialization of TraitList with a default validator and notifier
-    which provide bug-for-bug compatibility with the TraitsListObject from
-    Traits versions before 6.0.
+    """ A specialization of TraitSet with a default validator and notifier
+    for compatibility with Traits versions before 6.0.
 
     Parameters
     ----------
     trait : CTrait
-        The trait that the list has been assigned to.
+        The trait that the set has been assigned to.
     object : HasTraits
-        The object the list belongs to.
+        The object the set belongs to.
     name : str
         The name of the trait on the object.
     value : iterable
-        The initial value of the list.
+        The initial value of the set.
     notifiers : list
-        Additional notifiers for the list.
+        Additional notifiers for the set.
 
     Attributes
     ----------
     trait : CTrait
-        The trait that the list has been assigned to.
+        The trait that the set has been assigned to.
     object : HasTraits
-        The object the list belongs to.
+        The object the set belongs to.
     name : str
         The name of the trait on the object.
     value : iterable
-        The initial value of the list.
+        The initial value of the set.
     """
 
     def __init__(self, trait, object, name, value):
@@ -586,9 +585,7 @@ class TraitSetObject(TraitSet):
                          notifiers=[self.notifier])
 
     def _validator(self, current_set, value):
-        """ Validates the value by calling the inner trait's validate method
-        and also ensures that the size of the list is within the specified
-        bounds.
+        """ Validates the value by calling the inner trait's validate method.
 
         Parameters
         ----------
@@ -604,8 +601,7 @@ class TraitSetObject(TraitSet):
         Raises
         ------
         TraitError
-            On validation failure for the inner trait or if the size of the
-            list exceeds the specified bounds.
+            On validation failure for the inner trait.
 
         """
         object_ref = getattr(self, 'object', None)
