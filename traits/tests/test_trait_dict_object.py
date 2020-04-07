@@ -41,7 +41,7 @@ class TestTraitList(unittest.TestCase):
         self.trait_dict = None
 
     def notification_handler(self, trait_dict, added, changed, removed):
-        self.trait_dict = trait_dict
+        self.trait_list = trait_dict
         self.added = added
         self.changed = changed
         self.removed = removed
@@ -201,8 +201,10 @@ class TestTraitList(unittest.TestCase):
 
         self.assertEqual(self.removed, {"b": 2})
 
+        self.removed = None
         res = td.pop("x", "X")
-        self.assertEqual(self.removed, {"b": 2})
+        # Ensure no notification is fired.
+        self.assertIsNone(self.removed)
         self.assertEqual(res, "X")
 
     def test_pop_key_error(self):
