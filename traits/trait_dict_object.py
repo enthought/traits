@@ -25,24 +25,24 @@ class TraitDictEvent(object):
     Parameters
     ----------
     added : dict
-        New keys and values or None.
+        New keys and values.
     changed : dict
-        Updated keys and their previous values or None.
+        Updated keys and their previous values.
     removed : dict
-        Old keys and values that were just removed or None.
+        Old keys and values that were just removed.
 
     Attributes
     ----------
     added : dict
         New keys and values or None.
     changed : dict
-        Updated keys and their previous values or None.
+        Updated keys and their previous values.
     removed : dict
-        Old keys and values that were just removed or None.
+        Old keys and values that were just removed.
 
     """
 
-    def __init__(self, added=None, changed=None, removed=None):
+    def __init__(self, added, changed, removed):
         self.added = added
         self.changed = changed
         self.removed = removed
