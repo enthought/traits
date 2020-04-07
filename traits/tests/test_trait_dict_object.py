@@ -11,9 +11,11 @@
 import copy
 import pickle
 import unittest
+from unittest import mock
 
-from traits.trait_dict_object import TraitDict
+from traits.trait_dict_object import TraitDict, TraitDictObject
 from traits.trait_errors import TraitError
+from traits.trait_types import Dict, Int, Str
 
 
 def str_validator(value):
@@ -96,6 +98,20 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(self.changed, {})
         self.assertEqual(self.removed, {"a": 1})
 
+    def test_delitem_not_found(self):
+        python_dict = dict()
+        with self.assertRaises(KeyError) as python_e:
+            del python_dict["x"]
+
+        td = TraitDict()
+        with self.assertRaises(KeyError) as trait_e:
+            del td["x"]
+
+        self.assertEqual(
+            str(trait_e.exception),
+            str(python_e.exception),
+        )
+
     def test_update(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
                        value_validator=int_validator,
@@ -144,6 +160,38 @@ class TestTraitList(unittest.TestCase):
 
         self.assertEqual(td.setdefault("a", 5), 1)
 
+    def test_setdefault_with_casting(self):
+        # If the validator does transformation, the containment
+        # is checked before the transformation. This is more
+        # consistent with the description of setdefault, which is
+        # effectively a short-hand for ``__getitem__``,
+        # followed by ``__setitem__`` (if get fails), followed by
+        # another ``__getitem__``.
+        # The notification should be factual about the actual
+        # mutation on the dict.
+        notifier = mock.Mock()
+        td = TraitDict(
+            key_validator=str,
+            value_validator=str,
+            notifiers=[notifier, self.notification_handler],
+        )
+
+        td.setdefault(1, 2)
+        self.assertEqual(td, {"1": "2"})
+        self.assertEqual(notifier.call_count, 1)
+        self.assertEqual(self.removed, {})
+        self.assertEqual(self.added, {"1": "2"})
+        self.assertEqual(self.changed, {})
+
+        notifier.reset_mock()
+        td.setdefault(1, 4)
+        self.assertEqual(td, {"1": "4"})
+        self.assertEqual(notifier.call_count, 1)
+
+        self.assertEqual(self.removed, {})
+        self.assertEqual(self.added, {})
+        self.assertEqual(self.changed, {"1": "2"})
+
     def test_pop(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
                        value_validator=int_validator,
@@ -156,6 +204,20 @@ class TestTraitList(unittest.TestCase):
         res = td.pop("x", "X")
         self.assertEqual(self.removed, {"b": 2})
         self.assertEqual(res, "X")
+
+    def test_pop_key_error(self):
+        python_dict = {}
+        with self.assertRaises(KeyError) as python_e:
+            python_dict.pop("a")
+
+        td = TraitDict()
+        with self.assertRaises(KeyError) as trait_e:
+            td.pop("a")
+
+        self.assertEqual(
+            str(trait_e.exception),
+            str(python_e.exception),
+        )
 
     def test_popitem(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
@@ -181,3 +243,37 @@ class TestTraitList(unittest.TestCase):
                        value_validator=int_validator,
                        notifiers=[self.notification_handler])
         pickle.loads(pickle.dumps(td))
+
+
+class TestTraitDictObject(unittest.TestCase):
+    """ Test TraitDictObject operations."""
+
+    def test_trait_dict_object_validators(self):
+
+        trait_dict = TraitDictObject(
+            trait=Dict(Str),
+            object=mock.Mock(),
+            name="a",
+            value={},
+        )
+        # This is okay
+        trait_dict.validate_key("1")
+
+        # This fails.
+        with self.assertRaises(TraitError):
+            trait_dict.validate_key(1)
+
+    def test_trait_dict_object_validate_value(self):
+
+        trait_dict = TraitDictObject(
+            trait=Dict(Int, Str),
+            object=mock.Mock(),
+            name="a",
+            value={},
+        )
+        # This is okay
+        trait_dict.validate_value("1")
+
+        # This fails.
+        with self.assertRaises(TraitError):
+            trait_dict.validate_value(1)

@@ -12,6 +12,7 @@ import copy
 import logging
 from weakref import ref
 
+from traits.trait_base import Undefined
 from traits.trait_errors import TraitError
 
 # Set up a logger:
@@ -245,6 +246,11 @@ class TraitDict(dict):
         key : A hashable type.
             The key to be deleted.
 
+        Raises
+        ------
+        KeyError
+            If the key is not found.
+
         Notes
         -----
         Parameters in the notification:
@@ -256,10 +262,9 @@ class TraitDict(dict):
                 The dict of the item that was removed.
 
         """
-        if key in self:
-            removed = {key: self[key]}
-            super().__delitem__(key)
-            self.notifiy(removed=removed)
+        removed = {key: self[key]}
+        super().__delitem__(key)
+        self.notifiy(added={}, changed={}, removed=removed)
 
     def clear(self):
         """ Remove all items from the dict.
@@ -325,31 +330,36 @@ class TraitDict(dict):
                 Will be an empty dict.
 
         """
+        if key in self:
+            return self[key]
 
-        added = None
-        if key not in self:
-            key = self.validate_key(key)
-            value = self.validate_value(value)
+        key = self.validate_key(key)
+        value = self.validate_value(value)
+
+        if key in self:
+            changed = {key: self[key]}
+            added = {}
+        else:
+            changed = {}
             added = {key: value}
 
-        result = super().setdefault(key, value)
+        super().__setitem__(key, value)
 
-        if added is not None:
-            self.notifiy(added)
+        self.notifiy(added=added, changed=changed, removed={})
 
-        return result
+        return value
 
-    def pop(self, key, default_value=None):
-        """ Remove the key from the dict if present and return the key-value
-        pair. If key is absent, the default value is returned and the dict
-        is left unmodified.
+    def pop(self, key, value=Undefined):
+        """ Remove specified key and return the corresponding
+        value. If key is not found, the default value is returned
+        if given, otherwise KeyError is raised.
 
         Parameters
         ----------
         key : A hashable type.
             Key to the dict item.
 
-        default_value : any
+        value : any
             Value to return if key is absent.
 
         Notes
@@ -364,13 +374,15 @@ class TraitDict(dict):
                 if the key was present.
 
         """
-        if key in self:
-            removed = {key: self[key]}
-            result = super().pop(key)
-            self.notifiy(removed=removed)
-            return result
-        else:
-            return default_value
+        if value is Undefined or key in self:
+            removed = super().pop(key)
+            self.notifiy(
+                added={},
+                changed={},
+                removed={key: removed}
+            )
+            return removed
+        return value
 
     def popitem(self):
         """ Remove and return some(key, value) pair as a tuple. Raise KeyError
@@ -512,7 +524,7 @@ class TraitDictObject(TraitDict):
         mutated.
     """
 
-    def key_validator(self, key):
+    def _key_validator(self, key):
         """ Calls the trait's key_trait.handler.validate.
 
         Parameters
@@ -544,7 +556,7 @@ class TraitDictObject(TraitDict):
 
         return validate(object, self.name, key)
 
-    def value_validator(self, value):
+    def _value_validator(self, value):
         """ Calls the trait's value_handler.validate
 
         Parameters
@@ -618,8 +630,8 @@ class TraitDictObject(TraitDict):
         if trait.has_items:
             self.name_items = name + "_items"
 
-        super().__init__(value, key_validator=self.key_validator,
-                         value_validator=self.value_validator,
+        super().__init__(value, key_validator=self._key_validator,
+                         value_validator=self._value_validator,
                          notifiers=[self.notifier])
 
     def __deepcopy__(self, memo):
