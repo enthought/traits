@@ -13,6 +13,7 @@ import operator
 import pickle
 import unittest
 
+from traits.api import HasTraits, Int, List
 from traits.testing.optional_dependencies import numpy, requires_numpy
 from traits.trait_errors import TraitError
 from traits.trait_list_object import (
@@ -20,7 +21,6 @@ from traits.trait_list_object import (
     TraitList,
     TraitListObject,
 )
-from traits.trait_types import List
 
 
 def int_item_validator(item):
@@ -740,6 +740,34 @@ class TestTraitList(unittest.TestCase):
 
         tl.append([2])
 
+
+def squares(n):
+    """
+    Generic iterable without a valid len, for testing purposes.
+
+    Parameters
+    ----------
+    n : int
+        Limit for computation.
+
+    Returns
+    -------
+    squares : generator
+        Generator yielding the first n squares.
+    """
+    return (x * x for x in range(n))
+
+
+class HasLengthConstrainedLists(HasTraits):
+    """
+    Test class for testing list length validation.
+    """
+    at_least_two = List(Int, [3, 4], minlen=2)
+
+    at_most_five = List(Int, maxlen=5)
+
+
+class TestTraitListObject(unittest.TestCase):
     def test_list_of_lists_pickle_with_notifier(self):
         class Foo:
             pass
@@ -764,3 +792,119 @@ class TestTraitList(unittest.TestCase):
             [tl_deserialized.notifier],
             tl_deserialized.notifiers
         )
+
+    def test_init_too_small(self):
+        with self.assertRaises(TraitError):
+            HasLengthConstrainedLists(at_least_two=[1])
+
+    def test_init_too_large(self):
+        with self.assertRaises(TraitError):
+            HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4, 5, 6])
+
+    def test_delitem_single_too_small(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2])
+        with self.assertRaises(TraitError):
+            del foo.at_least_two[0]
+        self.assertEqual(foo.at_least_two, [1, 2])
+
+    def test_delitem_slice_too_small(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2])
+        with self.assertRaises(TraitError):
+            del foo.at_least_two[:]
+        self.assertEqual(foo.at_least_two, [1, 2])
+
+    def test_iadd_too_large(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4])
+        with self.assertRaises(TraitError):
+            foo.at_most_five += [6, 7, 8]
+        self.assertEqual(foo.at_most_five, [1, 2, 3, 4])
+
+    def test_iadd_from_iterable(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2])
+        foo.at_most_five += squares(3)
+        self.assertEqual(foo.at_most_five, [1, 2, 0, 1, 4])
+
+    def test_imul_too_small(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
+        with self.assertRaises(TraitError):
+            foo.at_least_two *= 0
+        self.assertEqual(foo.at_least_two, [1, 2, 3, 4])
+
+    def test_imul_too_large(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4])
+        with self.assertRaises(TraitError):
+            foo.at_most_five *= 2
+        self.assertEqual(foo.at_most_five, [1, 2, 3, 4])
+
+    def test_setitem_too_small(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
+        with self.assertRaises(TraitError):
+            foo.at_least_two[1:] = []
+        self.assertEqual(foo.at_least_two, [1, 2, 3, 4])
+
+    def test_setitem_too_large(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4])
+        with self.assertRaises(TraitError):
+            foo.at_most_five[2:] = [10, 11, 12, 13]
+        self.assertEqual(foo.at_most_five, [1, 2, 3, 4])
+
+    def test_setitem_from_iterable(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2])
+        foo.at_most_five[:1] = squares(4)
+        self.assertEqual(foo.at_most_five, [0, 1, 4, 9, 2])
+
+    def test_append_too_large(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4, 5])
+        with self.assertRaises(TraitError):
+            foo.at_most_five.append(6)
+        self.assertEqual(foo.at_most_five, [1, 2, 3, 4, 5])
+
+    def test_clear_too_small(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
+        with self.assertRaises(TraitError):
+            foo.at_least_two.clear()
+        self.assertEqual(foo.at_least_two, [1, 2, 3, 4])
+
+    def test_extend_too_large(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4])
+        with self.assertRaises(TraitError):
+            foo.at_most_five.extend([10, 11, 12])
+        self.assertEqual(foo.at_most_five, [1, 2, 3, 4])
+
+    def test_extend_from_iterable(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2])
+        foo.at_most_five.extend(squares(3))
+        self.assertEqual(foo.at_most_five, [1, 2, 0, 1, 4])
+
+    def test_insert_too_large(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4, 5])
+        with self.assertRaises(TraitError):
+            foo.at_most_five.insert(3, 16)
+        with self.assertRaises(TraitError):
+            foo.at_most_five.insert(-10, 16)
+        with self.assertRaises(TraitError):
+            foo.at_most_five.insert(10, 16)
+        self.assertEqual(foo.at_most_five, [1, 2, 3, 4, 5])
+
+    def test_pop_too_small(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2])
+        with self.assertRaises(TraitError):
+            foo.at_least_two.pop()
+        with self.assertRaises(TraitError):
+            foo.at_least_two.pop(0)
+        # TraitError takes precedence over the IndexError for a bad index.
+        with self.assertRaises(TraitError):
+            foo.at_least_two.pop(10)
+        self.assertEqual(foo.at_least_two, [1, 2])
+
+    def test_remove_too_small(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2])
+        with self.assertRaises(TraitError):
+            foo.at_least_two.remove(1)
+        with self.assertRaises(TraitError):
+            foo.at_least_two.pop(2.0)
+        # TraitError from the length violation takes precedence over
+        # the ValueError for the vad value.
+        with self.assertRaises(TraitError):
+            foo.at_least_two.remove(10)
+        self.assertEqual(foo.at_least_two, [1, 2])
