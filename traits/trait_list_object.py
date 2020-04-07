@@ -84,26 +84,11 @@ def _normalize_slice(index, length):
     if index.step is not None and index.step < 0:
         return index
 
-    if index.step is None or index.step > 0:
-        if index.start is not None:
-            start = _normalize_index(index.start, length)
-        else:
-            start = 0
-        if index.stop is not None:
-            stop = _normalize_index(index.stop, length)
-        else:
-            stop = length
-    else:
-        if index.start is not None:
-            start = _normalize_index(index.start, length)
-        else:
-            start = length
-        if index.stop is not None:
-            stop = _normalize_index(index.stop, length)
-        else:
-            stop = 0
-
-    return slice(start, stop, index.step)
+    return slice(
+        _normalize_index(0 if index.start is None else index.start, length),
+        _normalize_index(length if index.stop is None else index.stop, length),
+        index.step,
+    )
 
 
 # Default item validator for TraitList.
