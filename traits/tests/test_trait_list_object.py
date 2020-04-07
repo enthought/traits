@@ -801,6 +801,18 @@ class TestTraitListObject(unittest.TestCase):
         with self.assertRaises(TraitError):
             HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4, 5, 6])
 
+    def test_init_from_iterable(self):
+        class Foo:
+            pass
+
+        tl = TraitListObject(
+            trait=List(),
+            object=Foo(),
+            name="foo",
+            value=squares(5),
+        )
+        self.assertEqual(tl, list(squares(5)))
+
     def test_delitem_single_too_small(self):
         foo = HasLengthConstrainedLists(at_least_two=[1, 2])
         with self.assertRaises(TraitError):

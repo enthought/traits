@@ -8,11 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-# XXX Need tests for LengthConstrainedTraitList.initialization that breaks
-#     length limits.
-# XXX Make sure there are tests for clearing a list with a minimum length.
 # XXX Test for "object is None" branch in _item_validator.
-# XXX Test TraitListObject operations with iterables that don't have a length.
 
 # XXX Put notification information back into docstrings? Or not? Should be
 #     possible to interpret it without knowledge of the particular operation
