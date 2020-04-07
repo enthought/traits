@@ -75,3 +75,74 @@ class TestTraitEventNotifier(unittest.TestCase):
         )
         # The tracback should be included
         self.assertIn("ZeroDivisionError", content)
+
+    def test_equals_use_handler_and_target(self):
+        # Check the notifier can identify an equivalence
+        # using the handler and the target
+
+        def handler1(event):
+            pass
+
+        def handler2(event):
+            pass
+
+        target1 = mock.Mock()
+        target2 = mock.Mock()
+
+        notifier1 = TraitEventNotifier(
+            handler=handler1,
+            target=target1,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        notifier2 = TraitEventNotifier(
+            handler=handler1,
+            target=target1,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        notifier3 = TraitEventNotifier(
+            handler=handler1,
+            target=target2,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        notifier4 = TraitEventNotifier(
+            handler=handler2,
+            target=target1,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        # then
+        self.assertTrue(
+            notifier1.equals(notifier2),
+            "The two notifiers should consider each other as equal."
+        )
+        self.assertTrue(
+            notifier2.equals(notifier1),
+            "The two notifiers should consider each other as equal."
+        )
+        self.assertFalse(
+            notifier3.equals(notifier1),
+            "Expected the notifiers to be different because targets are "
+            "not identical."
+        )
+        self.assertFalse(
+            notifier4.equals(notifier1),
+            "Expected the notifiers to be different because the handlers "
+            "do not compare equally."
+        )
+
+    def test_equals_compared_to_different_type(self):
+        notifier = TraitEventNotifier(
+            handler=mock.Mock,
+            target=None,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        self.assertFalse(notifier.equals(float))

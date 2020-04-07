@@ -9,6 +9,7 @@
 # Thanks for using Enthought open source!
 
 import logging
+import weakref
 
 _trait_logger = logging.getLogger("traits")
 
@@ -37,10 +38,13 @@ class TraitEventNotifier:
             The event object type and attributes depend on the
             type of change event, e.g. a list mutation event versus
             a HasTraits trait change event.
+            For comparing two notifiers, the handlers are compared using
+            equality.
         target : any
             An object for defining the context of the notifier.
             This is also used for distinguishing one notifier from
-            another notifier wrapping the same handler.
+            another notifier wrapping the same handler. Targets are
+            compared using identity.
             If this target is not None, a weak reference is created for
             the target. If the target is garbage collected, the notifier
             will be muted. This target is typically an instahce of
@@ -62,6 +66,7 @@ class TraitEventNotifier:
             thread or on a GUI event loop. ``event`` is the object
             created by the event factory.
         """
+        self.target = target
         self.handler = handler
         self.dispatcher = dispatcher
         self.event_factory = event_factory
@@ -76,3 +81,18 @@ class TraitEventNotifier:
                 "for event object: %r",
                 event,
             )
+
+    def equals(self, other):
+        """ Return true if the other notifier is equivalent to this one.
+
+        Parameters
+        ----------
+        other : any
+        """
+        if other is self:
+            return True
+        if type(other) is not type(self):
+            return False
+        self_target = self.target()
+        other_target = other.target()
+        return self.handler == other.handler and self_target is other_target
