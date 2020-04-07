@@ -13,6 +13,11 @@ import weakref
 
 _trait_logger = logging.getLogger("traits")
 
+# This flag indicates no targets are being tracked.
+# This differentiates from None value, which indicates a target
+# was tracked but it has been deleted.
+_NOT_TRACKED = "no target tracked"
+
 
 class TraitEventNotifier:
     """ Wrapper for invoking user's handler for a trait change
@@ -67,9 +72,11 @@ class TraitEventNotifier:
             created by the event factory.
         """
         if target is not None:
+            # This is such that the notifier does not prevent
+            # the target from being garbage collected.
             self.target = weakref.ref(target)
         else:
-            self.target = _return_none
+            self.target = _return_not_tracked
         self.handler = handler
         self.dispatcher = dispatcher
         self.event_factory = event_factory
@@ -78,6 +85,10 @@ class TraitEventNotifier:
         self._ref_count = 0
 
     def __call__(self, *args, **kwargs):
+        if self.target() is None:
+            # target is deleted. The notifier is disabled.
+            return
+
         event = self.event_factory(*args, **kwargs)
         try:
             self.dispatcher(self.handler, event=event)
@@ -127,5 +138,5 @@ class TraitEventNotifier:
         return self.handler == other.handler and self_target is other_target
 
 
-def _return_none():
-    return None
+def _return_not_tracked():
+    return _NOT_TRACKED

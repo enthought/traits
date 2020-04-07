@@ -204,3 +204,28 @@ class TestTraitEventNotifier(unittest.TestCase):
         # then
         self.assertEqual(dummy.notifiers, [notifier1])
         self.assertEqual(notifier1._ref_count, 2)
+
+    def test_callable_disabled_if_target_removed(self):
+        target = mock.Mock()
+
+        handler = mock.Mock()
+
+        notifier = TraitEventNotifier(
+            handler=handler,
+            target=target,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+
+        # sanity check
+        notifier(a=1, b=2)
+        self.assertEqual(handler.call_count, 1)
+        handler.reset_mock()
+
+        # when
+        del target
+
+        # then
+        notifier(a=1, b=2)
+        handler.assert_not_called()
