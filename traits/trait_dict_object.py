@@ -345,9 +345,9 @@ class TraitDict(dict):
         return value
 
     def pop(self, key, value=Undefined):
-        """ Remove the key from the dict if present and return the key-value
-        pair. If key is absent, the default value is returned and the dict
-        is left unmodified.
+        """ Remove specified key and return the corresponding
+        value. If key is not found, the default value is returned
+        if given, otherwise KeyError is raised.
 
         Parameters
         ----------
