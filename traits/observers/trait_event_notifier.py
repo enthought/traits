@@ -16,11 +16,6 @@ from traits.observers._exception_handling import handle_exception
 
 _trait_logger = logging.getLogger("traits")
 
-# This flag indicates no targets are being tracked.
-# This differentiates from None value, which indicates a target
-# was tracked but it has been deleted.
-_NOT_TRACKED = "no target tracked"
-
 
 class TraitEventNotifier:
     """ Wrapper for invoking user's handler for a trait change
@@ -43,14 +38,14 @@ class TraitEventNotifier:
             The event object is created by the ``event_factory``.
             Its type and attributes depend on the change,
             e.g. a list mutation event versus a HasTraits trait change event.
-        target : object or None
+        target : object
             An object for defining the context of the notifier.
-            If this target is not None, a weak reference is created for
-            the target. If the target is garbage collected, the notifier
-            will be muted. This target is typically an instance of
-            ``HasTraits`` and will be seen by the user as the "owner" of
-            the change handler. This is also used for distinguishing one
-            notifier from another notifier wrapping the same handler.
+            A weak reference is created for the target.
+            If the target is garbage collected, the notifier will be muted.
+            This target is typically an instance of ``HasTraits`` and will be
+            seen by the user as the "owner" of the change handler.
+            This is also used for distinguishing one notifier from another
+            notifier wrapping the same handler.
         event_factory : callable(*args, **kwargs) -> object
             A factory function for creating the event object to be sent to
             the handler. The call signature must be compatible with the
@@ -67,12 +62,9 @@ class TraitEventNotifier:
             thread or on a GUI event loop. ``event`` is the object
             created by the event factory.
         """
-        if target is not None:
-            # This is such that the notifier does not prevent
-            # the target from being garbage collected.
-            self.target = weakref.ref(target)
-        else:
-            self.target = partial(_return, value=_NOT_TRACKED)
+        # This is such that the notifier does not prevent
+        # the target from being garbage collected.
+        self.target = weakref.ref(target)
 
         if isinstance(handler, types.MethodType):
             self.handler = weakref.WeakMethod(handler)
