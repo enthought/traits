@@ -10,6 +10,7 @@
 
 import unittest
 from unittest import mock
+import weakref
 
 from traits.observers.trait_event_notifier import TraitEventNotifier
 
@@ -294,6 +295,31 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
 
 class TestTraitEventNotifierWeakref(unittest.TestCase):
     """ Test weakref handling in TraitEventNotifier."""
+
+    def test_notifier_does_not_prevent_object_deletion(self):
+        # Typical use case: target is an instance of HasTraits
+        # and the notifier is attached to an internal object
+        # inside the target.
+        # The reverse reference to target should not prevent
+        # the target from being garbage collected when not in use.
+        target = DummyObservable()
+        target.internal_object = DummyObservable()
+        target_ref = weakref.ref(target)
+
+        notifier = TraitEventNotifier(
+            handler=mock.Mock(),
+            target=target,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        notifier.add_to(target.internal_object)
+
+        # when
+        del target
+
+        # then
+        self.assertIsNone(target_ref())
 
     def test_callable_disabled_if_target_removed(self):
         target = mock.Mock()
