@@ -9,7 +9,7 @@
 # Thanks for using Enthought open source!
 
 
-class IObservableObject:
+class IObservable:
     """ Interface for objects that can emit notifications for the observer
     system.
     """

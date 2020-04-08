@@ -110,7 +110,7 @@ class TraitEventNotifier:
 
         Parameters
         ----------
-        observable : IObservableObject
+        observable : IObservable
             An object for adding this notifier to.
         """
         notifiers = observable._notifiers(True)
