@@ -31,6 +31,9 @@ class DummyObservable:
     def _notifiers(self, force_create):
         return self.notifiers
 
+    def handler(self, event):
+        pass
+
 
 class TestTraitEventNotifierCall(unittest.TestCase):
     """ Test calling an instance of TraitEventNotifier. """
@@ -454,11 +457,7 @@ class TestTraitEventNotifierWeakrefHandler(unittest.TestCase):
         # The reference to such a handler should not prevent the
         # object from being garbage collected.
 
-        class DummyObservableWithMethod(DummyObservable):
-            def handler(event):
-                pass
-
-        dummy = DummyObservableWithMethod()
+        dummy = DummyObservable()
         dummy.internal_object = DummyObservable()
         dummy_ref = weakref.ref(dummy)
 
@@ -476,3 +475,31 @@ class TestTraitEventNotifierWeakrefHandler(unittest.TestCase):
 
         # then
         self.assertIsNone(dummy_ref())
+
+    def test_callable_disabled_if_handler_deleted(self):
+
+        dummy = DummyObservable()
+        dummy.internal_object = DummyObservable()
+
+        event_factory = mock.Mock()
+
+        notifier = TraitEventNotifier(
+            handler=dummy.handler,
+            target=None,
+            event_factory=event_factory,
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        notifier.add_to(dummy.internal_object)
+
+        # sanity check
+        notifier(a=1, b=2)
+        self.assertEqual(event_factory.call_count, 1)
+        event_factory.reset_mock()
+
+        # when
+        del dummy
+
+        # then
+        notifier(a=1, b=2)
+        event_factory.assert_not_called()
