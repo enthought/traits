@@ -443,9 +443,9 @@ class TraitList(list):
 
 
 class TraitListObject(TraitList):
-    """ A specialization of LengthConstrainedTraitList with a default
-    validator and notifier which provide bug-for-bug compatibility with the
-    TraitListObject from Traits versions before 6.0.
+    """ A specialization of TraitList with a default validator and notifier
+    which provide bug-for-bug compatibility with the TraitListObject from
+    Traits versions before 6.0.
 
     Parameters
     ----------
@@ -547,7 +547,7 @@ class TraitListObject(TraitList):
 
         Returns
         -------
-        self : LengthConstrainedTraitList
+        self : TraitList
             The modified list.
         """
 
@@ -566,7 +566,7 @@ class TraitListObject(TraitList):
 
         Returns
         -------
-        self : LengthConstrainedTraitList
+        self : TraitList
             The modified list.
         """
 
