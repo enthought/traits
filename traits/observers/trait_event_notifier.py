@@ -98,9 +98,12 @@ class TraitEventNotifier:
             # The instance method is deleted. The notifier is disabled.
             return
 
+        # Hold onto the reference while invoking the handler
+        handler = self.handler()
+
         event = self.event_factory(*args, **kwargs)
         try:
-            self.dispatcher(self.handler(), event=event)
+            self.dispatcher(handler, event=event)
         except Exception:
             handle_exception(event)
 
