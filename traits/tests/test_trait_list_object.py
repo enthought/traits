@@ -26,7 +26,8 @@ from traits.trait_list_object import (
 
 def int_item_validator(item):
     """
-    An item_validator for TraitList that checks that the item is an integer.
+    An item_validator for TraitList that checks that the item is an int
+    or integer-like object (e.g., any object whose type provides __index__).
 
     Parameters
     ----------
