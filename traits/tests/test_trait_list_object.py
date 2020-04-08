@@ -183,6 +183,13 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(tl_copy.notifiers, [])
         self.assertEqual(tl_copy.item_validator, tl.item_validator)
 
+    def test_deepcopy_memoization(self):
+        tl = TraitList([1, 2, 3],
+                       item_validator=int_item_validator,
+                       notifiers=[self.notification_handler])
+        trait_lists_copy = copy.deepcopy([tl, tl])
+        self.assertIs(trait_lists_copy[0], trait_lists_copy[1])
+
     def test_setitem(self):
         tl = TraitList([1, 2, 3],
                        item_validator=int_item_validator,

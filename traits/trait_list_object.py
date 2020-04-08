@@ -419,14 +419,10 @@ class TraitList(list):
 
         Notifiers are transient and should not be copied.
         """
-        id_self = id(self)
-        if id_self not in memo:
-            # notifiers are transient and should not be copied
-            memo[id_self] = type(self)(
-                [copy.deepcopy(x, memo) for x in self],
-                item_validator=copy.deepcopy(self.item_validator, memo),
-            )
-        return memo[id_self]
+        return type(self)(
+            [copy.deepcopy(x, memo) for x in self],
+            item_validator=copy.deepcopy(self.item_validator, memo),
+        )
 
     def __getstate__(self):
         """ Get the state of the object for serialization.
