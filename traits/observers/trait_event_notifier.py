@@ -43,8 +43,6 @@ class TraitEventNotifier:
             The event object type and attributes depend on the
             type of change event, e.g. a list mutation event versus
             a HasTraits trait change event.
-            For comparing two notifiers, the handlers are compared using
-            equality.
         target : object or None
             An object for defining the context of the notifier.
             This is also used for distinguishing one notifier from
@@ -135,7 +133,7 @@ class TraitEventNotifier:
             return False
         self_target = self.target()
         other_target = other.target()
-        return self.handler == other.handler and self_target is other_target
+        return self.handler is other.handler and self_target is other_target
 
 
 def _return_not_tracked():
