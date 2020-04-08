@@ -123,6 +123,10 @@ class TraitEventNotifier:
     def remove_from(self, observable):
         """ Remove this notifier from an observable object.
 
+        If an equivalent notifier exists, the existing notifier's reference
+        count is decremented and the notifier is only removed if
+        the count is reduced to zero.
+
         Parameters
         ----------
         observable : IObservable
@@ -131,7 +135,9 @@ class TraitEventNotifier:
         notifiers = observable._notifiers(True)
         for other in notifiers:
             if self.equals(other):
-                notifiers.remove(other)
+                if other._ref_count == 1:
+                    notifiers.remove(other)
+                other._ref_count -= 1
                 break
         else:
             # We may have to relax this later when dealing with

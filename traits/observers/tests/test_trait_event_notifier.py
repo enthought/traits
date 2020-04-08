@@ -248,6 +248,49 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
         # then
         self.assertEqual(dummy.notifiers, [])
 
+    def test_remove_from_observable_with_ref_count(self):
+        # Test reference counting logic in remove_from
+        dummy = DummyObservable()
+
+        def handler(event):
+            pass
+
+        notifier1 = TraitEventNotifier(
+            handler=handler,
+            target=None,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        notifier2 = TraitEventNotifier(
+            handler=handler,
+            target=None,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+
+        # when
+        # add_to is called twice.
+        notifier1.add_to(dummy)
+        notifier1.add_to(dummy)
+        self.assertEqual(dummy.notifiers, [notifier1])
+
+        # when
+        # removing it once
+        notifier2.remove_from(dummy)
+
+        # then
+        self.assertEqual(dummy.notifiers, [notifier1])
+
+        # when
+        # removing it the second time
+        notifier2.remove_from(dummy)
+
+        # then
+        # will remove the callable.
+        self.assertEqual(dummy.notifiers, [])
+
 
 class TestTraitEventNotifierWeakref(unittest.TestCase):
     """ Test weakref handling in TraitEventNotifier."""
