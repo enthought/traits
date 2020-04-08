@@ -89,12 +89,12 @@ class TraitEventNotifier:
             # target is deleted. The notifier is disabled.
             return
 
-        if self.handler() is None:
-            # The instance method is deleted. The notifier is disabled.
-            return
-
         # Hold onto the reference while invoking the handler
         handler = self.handler()
+
+        if handler is None:
+            # The instance method is deleted. The notifier is disabled.
+            return
 
         event = self.event_factory(*args, **kwargs)
         if self.prevent_event(event):
