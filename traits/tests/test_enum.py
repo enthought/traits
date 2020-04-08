@@ -113,7 +113,10 @@ class EnumCollectionExample(HasTraits):
 
 
 class EnumCollectionGUIExample(EnumCollectionExample):
-    correct_int_set_enum = int_set_enum = Enum("int", "set")
+    # Override attributes that may fail GUI test
+    # until traitsui #781 is fixed.
+    int_set_enum = Enum("int", "set")
+    correct_int_set_enum = Enum("int", "set")
 
 
 class EnumTestCase(unittest.TestCase):
