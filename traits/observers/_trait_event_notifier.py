@@ -151,14 +151,13 @@ class TraitEventNotifier:
             if self.equals(other):
                 if other._ref_count == 1:
                     notifiers.remove(other)
+                other._ref_count -= 1
 
-                if other._ref_count <= 0:
+                if other._ref_count < 0:
                     raise ValueError(
-                        "Reference count unexpectedly non-positive. "
+                        "Reference count is negative. "
                         "Race condition?"
                     )
-
-                other._ref_count -= 1
                 break
         else:
             # We may have to relax this later when dealing with
