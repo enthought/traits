@@ -19,7 +19,8 @@ from traits.observers._exception_handling import (
 from traits.observers._trait_event_notifier import TraitEventNotifier
 
 
-def basic_dispatcher(function, event):
+def dispatch_here(function, event):
+    """ Dispatcher that let the function call through."""
     function(event)
 
 
@@ -52,7 +53,7 @@ def create_notifier(**kwargs):
         target=_DUMMY_TARGET,
         event_factory=mock.Mock(),
         prevent_event=not_prevent_event,
-        dispatcher=basic_dispatcher,
+        dispatcher=dispatch_here,
     )
     values.update(kwargs)
     return TraitEventNotifier(**values)
