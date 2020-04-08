@@ -26,7 +26,7 @@ from traits.has_traits import (
 )
 from traits.ctrait import CTrait
 from traits.traits import ForwardProperty, generic_trait
-from traits.trait_types import Event, Float, Instance, Int
+from traits.trait_types import Event, Float, Instance, Int, Str
 
 
 def _dummy_getter(self):
