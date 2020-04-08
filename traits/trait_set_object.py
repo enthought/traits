@@ -15,50 +15,16 @@ from weakref import ref
 from traits.trait_errors import TraitError
 
 
-def adapt_trait_validator(trait_validator, name="items"):
-    """ Adapt a trait validator to work as a trait set validator.
-
-    Parameters
-    ----------
-    trait_validator : callable
-        A callable validator.
-    name : str
-        The name of the trait on the object.
-
-    The trait validator is expected to have the signature::
-
-        validator(object, name, value)
-
-
-    Returns
-    -------
-    set_trait_validator : callable
-        The trait validator that has been adapted for sets.
-
-    """
-
-    def validator(obj, value):
-        try:
-            return {
-                trait_validator(obj, name, item)
-                for item in value
-            }
-        except TraitError as excp:
-            excp.set_prefix("Each element of the")
-            raise excp
-
-    return validator
-
-
 class TraitSetEvent(object):
     """ An object reporting in-place changes to a traits sets.
 
     Parameters
     ----------
-    added : set
-        New values added to the set.
-    removed : set
-        Old values that were removed from the set.
+    added : set or None
+        New values added to the set, or optionally None if nothing was added.
+    removed : set or None
+        Old values that were removed, or optionally None if nothing was
+        removed.
 
     Attributes
     ----------
@@ -68,7 +34,13 @@ class TraitSetEvent(object):
         Old values that were removed from the set.
     """
 
-    def __init__(self, removed, added):
+    def __init__(self, removed=None, added=None):
+
+        if removed is None:
+            removed = set()
+        if added is None:
+            added = set()
+
         self.removed = removed
         self.added = added
 
@@ -124,7 +96,7 @@ class TraitSet(set):
         This simply calls the validator provided by the class, if any.
         The validator is expected to have the signature::
 
-            validator(original_set, value_set)
+            validator(value_set)
 
         and return a set of validated values or raise TraitError.
 
@@ -147,7 +119,7 @@ class TraitSet(set):
         if self.validator is None:
             return value
         else:
-            return self.validator(self, value)
+            return self.validator(value)
 
     def notify(self, removed, added):
         """ Call all notifiers.
@@ -157,7 +129,9 @@ class TraitSet(set):
 
             notifier(removed, added)
 
-        Any return values are ignored.
+        Any return values are ignored. Any exceptions raised are not
+        handled. Notifiers are therefore not expected to raise any
+        exceptions under normal use.
 
         Parameters
         ----------
@@ -178,12 +152,8 @@ class TraitSet(set):
 
         Notifiers are transient and should not be copied.
         """
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
         # notifiers are transient and should not be copied
-        memo[id_self] = result = TraitSet(
+        result = TraitSet(
             [copy.deepcopy(x, memo) for x in self],
             validator=copy.deepcopy(self.validator, memo),
             notifiers=[],
@@ -198,7 +168,7 @@ class TraitSet(set):
         """
         result = self.__dict__.copy()
         # notifiers are transient and should not be serialized
-        result.pop("notifiers", None)
+        del result["notifiers"]
         return result
 
     def __setstate__(self, state):
@@ -584,13 +554,11 @@ class TraitSetObject(TraitSet):
         super().__init__(value, validator=self._validator,
                          notifiers=[self.notifier])
 
-    def _validator(self, current_set, value):
+    def _validator(self, value):
         """ Validates the value by calling the inner trait's validate method.
 
         Parameters
         ----------
-        current_set : set
-            The current contents of the set.
         value : set
             set of values that need to be validated.
 
@@ -614,11 +582,18 @@ class TraitSetObject(TraitSet):
 
         # validate the new value(s)
         validate = trait.item_trait.handler.validate
+
         if validate is None:
             return value
 
-        validate = adapt_trait_validator(validate, name=self.name)
-        return validate(object, value)
+        try:
+            return {
+                validate(object, self.name, item)
+                for item in value
+            }
+        except TraitError as excp:
+            excp.set_prefix("Each element of the")
+            raise excp
 
     def notifier(self, removed, added):
         """ Converts and consolidates the parameters to a TraitSetEvent and

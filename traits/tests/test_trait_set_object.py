@@ -13,15 +13,15 @@ from unittest import mock
 
 from traits.api import HasTraits, Set, Str
 from traits.trait_errors import TraitError
-from traits.trait_set_object import TraitSet, adapt_trait_validator
+from traits.trait_set_object import TraitSet
 from traits.trait_types import _validate_int
 
 
-def int_validator(current_set, value):
+def int_validator(value):
     return {_validate_int(v) for v in value}
 
 
-def string_validator(current_set, value):
+def string_validator(value):
     ret = set()
     for v in value:
         if isinstance(v, str):
@@ -49,63 +49,29 @@ class TestTraitSet(unittest.TestCase):
     def test_init(self):
         ts = TraitSet({1, 2, 3})
 
-        self.assertSetEqual(ts, {1, 2, 3})
+        self.assertEqual(ts, {1, 2, 3})
         self.assertIsNone(ts.validator)
         self.assertEqual(ts.notifiers, [])
 
     def test_init_with_no_input(self):
         ts = TraitSet()
 
-        self.assertSetEqual(ts, set())
+        self.assertEqual(ts, set())
         self.assertIsNone(ts.validator)
         self.assertEqual(ts.notifiers, [])
 
     def test_validator(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator)
 
-        self.assertSetEqual(ts, {1, 2, 3})
+        self.assertEqual(ts, {1, 2, 3})
         self.assertEqual(ts.validator, int_validator)
         self.assertEqual(ts.notifiers, [])
-
-    def test_adapt_trait_validator(self):
-
-        def bool_validator(object, name, value):
-            if isinstance(value, bool):
-                return value
-            else:
-                raise TraitError
-
-        # Fail without adaptor
-        with self.assertRaises(TypeError):
-            TraitSet({}, validator=bool_validator)
-
-        # Attach the adaptor
-        set_bool_validator = adapt_trait_validator(bool_validator)
-
-        # It now works!
-        ts_2 = TraitSet({}, validator=set_bool_validator)
-        ts_2.update([True, False, True])
-
-        # Decorate with set adaptor
-        @adapt_trait_validator
-        def bool_validator(object, name, value):
-            if isinstance(value, bool):
-                return value
-            else:
-                raise TraitError
-
-        # Still working
-        ts = TraitSet({}, validator=bool_validator)
-        ts.update([True, False, True])
-
-        with self.assertRaises(TraitError):
-            ts.update(["invalid"])
 
     def test_notification(self):
         ts = TraitSet({1, 2, 3}, validator=int_validator,
                       notifiers=[self.notification_handler])
 
-        self.assertSetEqual(ts, {1, 2, 3})
+        self.assertEqual(ts, {1, 2, 3})
         self.assertEqual(ts.validator, int_validator)
         self.assertEqual(ts.notifiers, [self.notification_handler])
 
@@ -114,14 +80,14 @@ class TestTraitSet(unittest.TestCase):
                       notifiers=[self.notification_handler])
         ts.add(5)
 
-        self.assertSetEqual(ts, {1, 2, 3, 5})
+        self.assertEqual(ts, {1, 2, 3, 5})
         self.assertEqual(self.removed, set())
         self.assertEqual(self.added, {5})
 
         ts = TraitSet({"one", "two", "three"}, validator=string_validator,
                       notifiers=[self.notification_handler])
         ts.add("four")
-        self.assertSetEqual(ts, {"one", "two", "three", "four"})
+        self.assertEqual(ts, {"one", "two", "three", "four"})
         self.assertEqual(self.removed, set())
         self.assertEqual(self.added, {"four"})
 
@@ -165,7 +131,7 @@ class TestTraitSet(unittest.TestCase):
                       notifiers=[self.notification_handler])
         ts.remove(3)
 
-        self.assertSetEqual(ts, {1, 2})
+        self.assertEqual(ts, {1, 2})
         self.assertEqual(self.removed, {3})
         self.assertEqual(self.added, set())
 
@@ -202,7 +168,6 @@ class TestTraitSet(unittest.TestCase):
         self.assertIsNone(self.validator_args)
 
     def test_update_with_non_iterable(self):
-
         python_set = set()
         with self.assertRaises(TypeError) as python_exc:
             python_set.update(None)
@@ -236,7 +201,7 @@ class TestTraitSet(unittest.TestCase):
                       notifiers=[self.notification_handler])
         ts.discard(3)
 
-        self.assertSetEqual(ts, {1, 2})
+        self.assertEqual(ts, {1, 2})
         self.assertEqual(self.removed, {3})
         self.assertEqual(self.added, set())
 
@@ -339,7 +304,7 @@ class TestTraitSet(unittest.TestCase):
 
         self.assertEqual(self.removed, {1, 2, 3})
         self.assertEqual(self.added, {5})
-        self.assertSetEqual(ts, {5})
+        self.assertEqual(ts, {5})
 
     def test_ixor_no_nofications_for_no_change(self):
         notifier = mock.Mock()
@@ -401,7 +366,7 @@ class TestTraitSet(unittest.TestCase):
 
         self.assertEqual(self.removed, {2, 3})
         self.assertEqual(self.added, set())
-        self.assertSetEqual(ts, {1})
+        self.assertEqual(ts, {1})
 
     def test_isub_validator_not_called(self):
         # isub never needs to add items, validator should not
@@ -498,7 +463,6 @@ class TestTraitSetObject(unittest.TestCase):
             TestSet(letters={4})
 
     def test_notification_silenced_if_has_items_if_false(self):
-
         class Foo(HasTraits):
             values = Set(items=False)
 
