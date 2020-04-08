@@ -19,12 +19,16 @@ _trait_logger = logging.getLogger("traits")
 
 class TraitEventNotifier:
     """ Wrapper for invoking user's handler for a trait change
-    event.
+    event. It is a callable to be given to an object that will emit change
+    notifications.
 
-    An instance of TraitEventNotifier is a callable to be given to
-    an object that will emit change notifications. The signature
-    of the event factory must be compatible with the notification call
-    signature defined by the object.
+    A ``TraitEventNotifier`` keeps a reference count in order to address
+    situations where a same object is repeated inside a container
+    and one would not want to fire the same change handler multiple times
+    (see enthought/traits#237). For that purpose, a notifier keeps track of
+    the ``HasTraits`` instance on which the user applies the observers. It
+    also needs to determine whether another notifier refers to the same
+    change handler and ``HasTraits`` instance. See the ``equals`` method.
     """
 
     def __init__(
@@ -157,6 +161,10 @@ class TraitEventNotifier:
         Parameters
         ----------
         other : any
+
+        Returns
+        -------
+        boolean
         """
         if other is self:
             return True
