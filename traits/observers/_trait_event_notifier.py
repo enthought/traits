@@ -76,6 +76,7 @@ class TraitEventNotifier:
             self.handler = partial(_return, value=handler)
         self.dispatcher = dispatcher
         self.event_factory = event_factory
+        self.prevent_event = prevent_event
         # Reference count to avoid adding multiple notifiers
         # which are equivalent to the same observable.
         self._ref_count = 0
@@ -96,6 +97,8 @@ class TraitEventNotifier:
         handler = self.handler()
 
         event = self.event_factory(*args, **kwargs)
+        if self.prevent_event(event):
+            return
         try:
             self.dispatcher(handler, event=event)
         except Exception:

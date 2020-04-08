@@ -97,6 +97,27 @@ class TestTraitEventNotifierCall(unittest.TestCase):
         # then
         self.assertEqual(events, ["Event"])
 
+    def test_prevent_event_is_used(self):
+        # Test prevent_event can stop an event from being dispatched.
+
+        def prevent_event(event):
+            return True
+
+        handler = mock.Mock()
+        notifier = TraitEventNotifier(
+            handler=handler,
+            target=_DUMMY_TARGET,
+            dispatcher=basic_dispatcher,
+            prevent_event=prevent_event,
+            event_factory=mock.Mock(),
+        )
+
+        # when
+        notifier(a=1, b=2)
+
+        # then
+        handler.assert_not_called()
+
 
 class TestTraitEventNotifierException(unittest.TestCase):
     """ Test the default exception handling without pushing and
