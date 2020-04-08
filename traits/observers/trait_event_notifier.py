@@ -90,6 +90,9 @@ class TraitEventNotifier:
         self._ref_count = 0
 
     def __call__(self, *args, **kwargs):
+        """ Called by observables. The call signature will vary and will be
+        handled by the event factory.
+        """
         if self.target() is None:
             # target is deleted. The notifier is disabled.
             return
