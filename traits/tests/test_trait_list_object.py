@@ -1078,7 +1078,7 @@ class TestTraitListObject(unittest.TestCase):
         with self.assertRaises(TraitError):
             foo.at_least_two.remove(1)
         with self.assertRaises(TraitError):
-            foo.at_least_two.pop(2.0)
+            foo.at_least_two.remove(2.0)
         # TraitError from the length violation takes precedence over
         # the ValueError for the vad value.
         with self.assertRaises(TraitError):
