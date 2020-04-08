@@ -32,6 +32,8 @@ def not_prevent_event(event):
 
 
 class DummyObservable:
+    """ Dummy implementation of IObservable for testing purposes.
+    """
 
     def __init__(self):
         self.notifiers = []
