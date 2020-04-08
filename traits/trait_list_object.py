@@ -707,18 +707,12 @@ class TraitListObject(TraitList):
 
         Notifiers are transient and should not be copied.
         """
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
-        memo[id_self] = result = TraitListObject(
+        return TraitListObject(
             self.trait,
             lambda: None,
             self.name,
             [copy.deepcopy(x, memo) for x in self],
         )
-
-        return result
 
     def __getstate__(self):
         """ Get the state of the object for serialization.
