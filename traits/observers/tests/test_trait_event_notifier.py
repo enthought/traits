@@ -25,6 +25,9 @@ def dispatch_here(function, event):
 
 
 def not_prevent_event(event):
+    """ An implementation of prevent_event that does not prevent
+    any event from being propagated.
+    """
     return False
 
 
