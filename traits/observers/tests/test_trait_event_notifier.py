@@ -76,6 +76,27 @@ class TestTraitEventNotifierCall(unittest.TestCase):
         (args, _), = handler.call_args_list
         self.assertEqual(args, ("Event", ))
 
+    def test_alternative_dispatcher(self):
+        # Test the dispatch is used
+        events = []
+
+        def dispatcher(handler, event):
+            events.append(event)
+
+        notifier = TraitEventNotifier(
+            handler=mock.Mock(),
+            target=_DUMMY_TARGET,
+            dispatcher=dispatcher,
+            prevent_event=not_prevent_event,
+            event_factory=mock.Mock(return_value="Event"),
+        )
+
+        # when
+        notifier(a=1, b=2)
+
+        # then
+        self.assertEqual(events, ["Event"])
+
 
 class TestTraitEventNotifierException(unittest.TestCase):
     """ Test the default exception handling without pushing and
