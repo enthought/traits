@@ -170,6 +170,19 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(self.removed, [1])
         self.assertEqual(self.added, [5])
 
+    def test_copy(self):
+        tl = TraitList([1, 2, 3],
+                       item_validator=int_item_validator,
+                       notifiers=[self.notification_handler])
+
+        tl_copy = copy.copy(tl)
+
+        for itm, itm_cpy in zip(tl, tl_copy):
+            self.assertEqual(itm_cpy, itm)
+
+        self.assertEqual(tl_copy.notifiers, [])
+        self.assertEqual(tl_copy.item_validator, tl.item_validator)
+
     def test_deepcopy(self):
         tl = TraitList([1, 2, 3],
                        item_validator=int_item_validator,
