@@ -336,6 +336,32 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
 
         self.assertEqual(str(e.exception), "Notifier not found.")
 
+    def test_remove_from_differentiate_not_equal_notifier(self):
+        dummy = DummyObservable()
+        notifier1 = TraitEventNotifier(
+            handler=mock.Mock(),
+            target=None,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        # The handler is different
+        notifier2 = TraitEventNotifier(
+            handler=mock.Mock(),
+            target=None,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+
+        # when
+        notifier1.add_to(dummy)
+        notifier2.add_to(dummy)
+        notifier2.remove_from(dummy)
+
+        # then
+        self.assertEqual(dummy.notifiers, [notifier1])
+
 
 class TestTraitEventNotifierWeakref(unittest.TestCase):
     """ Test weakref handling in TraitEventNotifier."""
