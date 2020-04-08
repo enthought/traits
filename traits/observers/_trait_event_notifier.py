@@ -42,6 +42,9 @@ class TraitEventNotifier:
             The event object is created by the ``event_factory``.
             Its type and attributes depend on the change,
             e.g. a list mutation event versus a HasTraits trait change event.
+            If the handler is an instance method, then a weak reference is
+            created for the method. If the instance is garbage collected,
+            the notifier will be muted.
         target : object
             An object for defining the context of the notifier.
             A weak reference is created for the target.
