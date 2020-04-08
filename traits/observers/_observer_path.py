@@ -89,7 +89,5 @@ class ObserverPath:
         # Remove loops
         self_nexts = set(path for path in self.nexts if path is not self)
         other_nexts = set(path for path in other.nexts if path is not other)
-        if len(self_nexts) != len(other_nexts):
-            return False
         # Paths are hashable.
         return self_nexts == other_nexts
