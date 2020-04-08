@@ -147,7 +147,7 @@ class TraitEventNotifier:
             An object for removing this notifier from.
         """
         notifiers = observable._notifiers(True)
-        for other in notifiers:
+        for other in notifiers[:]:
             if self.equals(other):
                 if other._ref_count == 1:
                     notifiers.remove(other)
