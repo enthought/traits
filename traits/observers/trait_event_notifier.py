@@ -12,6 +12,8 @@ import logging
 import types
 import weakref
 
+from traits.observers._exception_handling import handle_exception
+
 _trait_logger = logging.getLogger("traits")
 
 # This flag indicates no targets are being tracked.
@@ -100,11 +102,7 @@ class TraitEventNotifier:
         try:
             self.dispatcher(self.handler(), event=event)
         except Exception:
-            _trait_logger.exception(
-                "Exception occurred in traits notification handler "
-                "for event object: %r",
-                event,
-            )
+            handle_exception(event)
 
     def add_to(self, observable):
         """ Add this notifier to an observable object.

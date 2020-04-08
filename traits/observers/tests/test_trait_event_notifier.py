@@ -12,6 +12,10 @@ import unittest
 from unittest import mock
 import weakref
 
+from traits.observers._exception_handling import (
+    pop_exception_handler,
+    push_exception_handler,
+)
 from traits.observers.trait_event_notifier import TraitEventNotifier
 
 
@@ -38,6 +42,13 @@ class DummyObservable:
 class TestTraitEventNotifierCall(unittest.TestCase):
     """ Test calling an instance of TraitEventNotifier. """
 
+    def setUp(self):
+        push_exception_handler(reraise_exceptions=True)
+        self.addCleanup(pop_exception_handler)
+
+    def tearDown(self):
+        pass
+
     def test_init_and_call(self):
 
         handler = mock.Mock()
@@ -61,10 +72,21 @@ class TestTraitEventNotifierCall(unittest.TestCase):
         (args, _), = handler.call_args_list
         self.assertEqual(args, ("Event", ))
 
+
+class TestTraitEventNotifierException(unittest.TestCase):
+    """ Test the default exception handling without pushing and
+    popping exception handlers.
+    """
+
     def test_capture_exception(self):
         # Any exception from the handler will be captured and
         # logged. This is such that failure in one handler
         # does not prevent other notifiers to be called.
+
+        # sanity check
+        # there are no exception handlers
+        with self.assertRaises(IndexError):
+            pop_exception_handler()
 
         def misbehaving_handler(event):
             raise ZeroDivisionError("lalalala")
@@ -93,6 +115,13 @@ class TestTraitEventNotifierCall(unittest.TestCase):
 
 class TestTraitEventNotifierEqual(unittest.TestCase):
     """ Test comparing two instances of TraitEventNotifier. """
+
+    def setUp(self):
+        push_exception_handler(reraise_exceptions=True)
+        self.addCleanup(pop_exception_handler)
+
+    def tearDown(self):
+        pass
 
     def test_equals_use_handler_and_target(self):
         # Check the notifier can identify an equivalence
@@ -170,6 +199,13 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
     """ Test TraitEventNotifier capability of adding/removing
     itself to/from an observable.
     """
+
+    def setUp(self):
+        push_exception_handler(reraise_exceptions=True)
+        self.addCleanup(pop_exception_handler)
+
+    def tearDown(self):
+        pass
 
     def test_add_to_observable(self):
         dummy = DummyObservable()
@@ -369,6 +405,13 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
 class TestTraitEventNotifierWeakrefTarget(unittest.TestCase):
     """ Test weakref handling for target in TraitEventNotifier."""
 
+    def setUp(self):
+        push_exception_handler(reraise_exceptions=True)
+        self.addCleanup(pop_exception_handler)
+
+    def tearDown(self):
+        pass
+
     def test_notifier_does_not_prevent_object_deletion(self):
         # Typical use case: target is an instance of HasTraits
         # and the notifier is attached to an internal object
@@ -451,6 +494,13 @@ class TestTraitEventNotifierWeakrefTarget(unittest.TestCase):
 class TestTraitEventNotifierWeakrefHandler(unittest.TestCase):
     """ Test weakref handling for handler in TraitEventNotifier."""
 
+    def setUp(self):
+        push_exception_handler(reraise_exceptions=True)
+        self.addCleanup(pop_exception_handler)
+
+    def tearDown(self):
+        pass
+
     def test_method_as_handler_does_not_prevent_garbage_collect(self):
         # It is a typical use case that the handler is a method
         # of an object.
@@ -503,3 +553,23 @@ class TestTraitEventNotifierWeakrefHandler(unittest.TestCase):
         # then
         notifier(a=1, b=2)
         event_factory.assert_not_called()
+
+    def test_reference_held_when_dispatching(self):
+        # Test when the notifier proceeds to fire, it holds a
+        # strong reference to the handler
+        dummy = DummyObservable()
+
+        def event_factory(*args, **kwargs):
+            nonlocal dummy
+            del dummy
+
+        notifier = TraitEventNotifier(
+            handler=dummy.handler,
+            target=None,
+            event_factory=event_factory,
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        notifier.add_to(dummy)
+
+        notifier(a=1, b=2)
