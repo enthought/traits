@@ -974,6 +974,12 @@ class TestTraitListObject(unittest.TestCase):
             foo.at_least_two[1::2] = squares(3)
         self.assertEqual(foo.at_least_two, [1, 2, 3, 4])
 
+    def test_setitem_item_validation_failure(self):
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
+        with self.assertRaises(TraitError):
+            foo.at_least_two[2:] = [5.0, 6.0]
+        self.assertEqual(foo.at_least_two, [1, 2, 3, 4])
+
     def test_append(self):
         foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3])
         foo.at_most_five.append(6)
