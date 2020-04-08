@@ -142,7 +142,7 @@ class TraitEventNotifier:
         else:
             # We may have to relax this later when dealing with
             # "old" default value that don't have any notifiers.
-            raise ValueError("Unable to remove nonexisting notifier.")
+            raise ValueError("Notifier not found.")
 
     def equals(self, other):
         """ Return true if the other notifier is equivalent to this one.

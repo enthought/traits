@@ -321,6 +321,21 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
         # will remove the callable.
         self.assertEqual(dummy.notifiers, [])
 
+    def test_remove_from_error_if_not_found(self):
+        # We may need to relax this error later
+        dummy = DummyObservable()
+        notifier1 = TraitEventNotifier(
+            handler=mock.Mock(),
+            target=None,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        with self.assertRaises(ValueError) as e:
+            notifier1.remove_from(dummy)
+
+        self.assertEqual(str(e.exception), "Notifier not found.")
+
 
 class TestTraitEventNotifierWeakref(unittest.TestCase):
     """ Test weakref handling in TraitEventNotifier."""
