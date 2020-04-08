@@ -7,8 +7,9 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
-
+from functools import partial
 import logging
+import types
 import weakref
 
 _trait_logger = logging.getLogger("traits")
@@ -74,8 +75,12 @@ class TraitEventNotifier:
             # the target from being garbage collected.
             self.target = weakref.ref(target)
         else:
-            self.target = _return_not_tracked
-        self.handler = handler
+            self.target = partial(_return, value=_NOT_TRACKED)
+
+        if isinstance(handler, types.MethodType):
+            self.handler = weakref.WeakMethod(handler)
+        else:
+            self.handler = partial(_return, value=handler)
         self.dispatcher = dispatcher
         self.event_factory = event_factory
         # Reference count to avoid adding multiple notifiers
@@ -89,7 +94,7 @@ class TraitEventNotifier:
 
         event = self.event_factory(*args, **kwargs)
         try:
-            self.dispatcher(self.handler, event=event)
+            self.dispatcher(self.handler(), event=event)
         except Exception:
             _trait_logger.exception(
                 "Exception occurred in traits notification handler "
@@ -162,10 +167,11 @@ class TraitEventNotifier:
             return True
         if type(other) is not type(self):
             return False
-        self_target = self.target()
-        other_target = other.target()
-        return self.handler is other.handler and self_target is other_target
+        return (
+            self.handler() is other.handler()
+            and self.target() is other.target()
+        )
 
 
-def _return_not_tracked():
-    return _NOT_TRACKED
+def _return(value):
+    return value

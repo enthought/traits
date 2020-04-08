@@ -363,8 +363,8 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
         self.assertEqual(dummy.notifiers, [notifier1])
 
 
-class TestTraitEventNotifierWeakref(unittest.TestCase):
-    """ Test weakref handling in TraitEventNotifier."""
+class TestTraitEventNotifierWeakrefTarget(unittest.TestCase):
+    """ Test weakref handling for target in TraitEventNotifier."""
 
     def test_notifier_does_not_prevent_object_deletion(self):
         # Typical use case: target is an instance of HasTraits
@@ -443,3 +443,36 @@ class TestTraitEventNotifierWeakref(unittest.TestCase):
         # then
         notifier(a=1, b=2)
         handler.assert_not_called()
+
+
+class TestTraitEventNotifierWeakrefHandler(unittest.TestCase):
+    """ Test weakref handling for handler in TraitEventNotifier."""
+
+    def test_method_as_handler_does_not_prevent_garbage_collect(self):
+        # It is a typical use case that the handler is a method
+        # of an object.
+        # The reference to such a handler should not prevent the
+        # object from being garbage collected.
+
+        class DummyObservableWithMethod(DummyObservable):
+            def handler(event):
+                pass
+
+        dummy = DummyObservableWithMethod()
+        dummy.internal_object = DummyObservable()
+        dummy_ref = weakref.ref(dummy)
+
+        notifier = TraitEventNotifier(
+            handler=dummy.handler,
+            target=None,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        notifier.add_to(dummy.internal_object)
+
+        # when
+        del dummy
+
+        # then
+        self.assertIsNone(dummy_ref())
