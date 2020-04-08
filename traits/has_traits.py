@@ -1497,17 +1497,11 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     def __deepcopy__(self, memo):
         """ Creates a deep copy of the object.
         """
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
-        result = self.clone_traits(
+        return self.clone_traits(
             memo=memo,
             traits=memo.get("traits_to_copy"),
             copy=memo.get("traits_copy_mode"),
         )
-
-        return result
 
     def edit_traits(
         self,
