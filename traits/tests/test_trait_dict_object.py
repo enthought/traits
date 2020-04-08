@@ -244,14 +244,19 @@ class TestTraitList(unittest.TestCase):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
                        value_validator=int_validator,
                        notifiers=[self.notification_handler])
-        pickle.loads(pickle.dumps(td))
+
+        for protocol in range(pickle.HIGHEST_PROTOCOL + 1):
+            td_unpickled = pickle.loads(pickle.dumps(td, protocol=protocol))
+
+            self.assertIs(td_unpickled.key_validator, str_validator)
+            self.assertIs(td_unpickled.value_validator, int_validator)
+            self.assertListEqual(td_unpickled.notifiers, [])
 
 
 class TestTraitDictObject(unittest.TestCase):
     """ Test TraitDictObject operations."""
 
     def test_trait_dict_object_validators(self):
-
         trait_dict = TraitDictObject(
             trait=Dict(Str),
             object=mock.Mock(),
@@ -266,7 +271,6 @@ class TestTraitDictObject(unittest.TestCase):
             trait_dict.validate_key(1)
 
     def test_trait_dict_object_validate_value(self):
-
         trait_dict = TraitDictObject(
             trait=Dict(Int, Str),
             object=mock.Mock(),
