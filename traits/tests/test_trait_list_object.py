@@ -11,7 +11,7 @@
 import copy
 import operator
 import pickle
-import unittest
+import unittest.mock
 
 from traits.api import HasTraits, Int, List
 from traits.testing.optional_dependencies import numpy, requires_numpy
@@ -540,6 +540,15 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(self.removed, [1, 2, 1, 2])
         self.assertEqual(self.added, [])
 
+    def test_imul_does_not_revalidate(self):
+        item_validator = unittest.mock.Mock(wraps=int_item_validator)
+        tl = TraitList([1, 1], item_validator=item_validator)
+        item_validator.reset_mock()
+
+        tl *= 3
+
+        item_validator.assert_not_called()
+
     def test_append(self):
         tl = TraitList([1],
                        item_validator=int_item_validator,
@@ -782,6 +791,15 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(self.index, slice(0, 5, None))
         self.assertEqual(self.removed, [1, 2, 3, 4, 5])
         self.assertEqual(self.added, [5, 4, 3, 2, 1])
+
+    def test_reverse_single_notification(self):
+        # Regression test for double notification.
+        notifier = unittest.mock.Mock()
+        tl = TraitList([1, 2, 3, 4, 5],
+                       notifiers=[notifier])
+        notifier.assert_not_called()
+        tl.reverse()
+        self.assertEqual(notifier.call_count, 1)
 
     def test_pickle(self):
         tl = TraitList([1, 2, 3, 4, 5],
