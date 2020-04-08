@@ -16,7 +16,7 @@ from traits.observers._exception_handling import (
     pop_exception_handler,
     push_exception_handler,
 )
-from traits.observers.trait_event_notifier import TraitEventNotifier
+from traits.observers._trait_event_notifier import TraitEventNotifier
 
 
 def basic_dispatcher(function, event):
