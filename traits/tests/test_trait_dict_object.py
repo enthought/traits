@@ -32,7 +32,7 @@ def int_validator(value):
         raise TraitError
 
 
-class TestTraitList(unittest.TestCase):
+class TestTraitDict(unittest.TestCase):
 
     def setUp(self):
         self.added = None
@@ -68,9 +68,7 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
         td_copy = copy.deepcopy(td)
 
-        for itm, itm_cpy in zip(td.items(), td_copy.items()):
-            self.assertTupleEqual(itm_cpy, itm)
-
+        self.assertDictEqual(td, td_copy)
         self.assertEqual(td_copy.notifiers, [])
         self.assertEqual(td_copy.value_validator, td.value_validator)
         self.assertEqual(td_copy.key_validator, td.key_validator)

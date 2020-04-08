@@ -34,7 +34,7 @@ class TraitDictEvent(object):
     Attributes
     ----------
     added : dict
-        New keys and values or None.
+        New keys and values.
     changed : dict
         Updated keys and their previous values.
     removed : dict
