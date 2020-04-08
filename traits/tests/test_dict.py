@@ -11,6 +11,7 @@
 """ Test cases for dictionary (Dict) traits. """
 
 import unittest
+from unittest import mock
 
 from traits.trait_types import Any, Dict, Event, Str, TraitDictObject
 from traits.has_traits import HasTraits, on_trait_change
@@ -146,3 +147,21 @@ class TestDict(unittest.TestCase):
         # This raises
         with self.assertRaises(TraitError):
             foo.mapping["a"] = 1
+
+    def test_items_set_to_false(self):
+
+        class Foo(HasTraits):
+
+            mapping = Dict(items=False)
+
+        handler = mock.Mock()
+        # Setting items to false effectively switches off
+        # notifications on mapping_items
+        foo = Foo(mapping={})
+        foo.on_trait_change(lambda: handler(), name="mapping_items")
+
+        # when
+        foo.mapping["1"] = 1
+
+        # then
+        handler.assert_not_called()

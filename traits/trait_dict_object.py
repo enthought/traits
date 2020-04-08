@@ -608,13 +608,10 @@ class TraitDictObject(TraitDict):
         None
 
         """
-        trait = getattr(self, 'trait', None)
-        name_items = getattr(self, 'name_items', None)
-        object_ref = getattr(self, 'object', None)
-        if trait is None or name_items is None or object_ref is None:
+        if self.name_items is None:
             return
 
-        object = object_ref()
+        object = self.object()
 
         if object is None:
             return
