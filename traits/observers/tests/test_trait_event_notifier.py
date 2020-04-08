@@ -31,7 +31,8 @@ class DummyObservable:
         return self.notifiers
 
 
-class TestTraitEventNotifier(unittest.TestCase):
+class TestTraitEventNotifierCall(unittest.TestCase):
+    """ Test calling an instance of TraitEventNotifier. """
 
     def test_init_and_call(self):
 
@@ -84,6 +85,10 @@ class TestTraitEventNotifier(unittest.TestCase):
         )
         # The tracback should be included
         self.assertIn("ZeroDivisionError", content)
+
+
+class TestTraitEventNotifierEqual(unittest.TestCase):
+    """ Test comparing two instances of TraitEventNotifier. """
 
     def test_equals_use_handler_and_target(self):
         # Check the notifier can identify an equivalence
@@ -156,6 +161,12 @@ class TestTraitEventNotifier(unittest.TestCase):
         )
         self.assertFalse(notifier.equals(float))
 
+
+class TestTraitEventNotifierAddRemove(unittest.TestCase):
+    """ Test TraitEventNotifier capability of adding/removing
+    itself to/from an observable.
+    """
+
     def test_add_to_observable(self):
         dummy = DummyObservable()
 
@@ -204,6 +215,10 @@ class TestTraitEventNotifier(unittest.TestCase):
         # then
         self.assertEqual(dummy.notifiers, [notifier1])
         self.assertEqual(notifier1._ref_count, 2)
+
+
+class TestTraitEventNotifierWeakref(unittest.TestCase):
+    """ Test weakref handling in TraitEventNotifier."""
 
     def test_callable_disabled_if_target_removed(self):
         target = mock.Mock()
