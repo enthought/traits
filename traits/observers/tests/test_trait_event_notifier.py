@@ -216,6 +216,38 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
         self.assertEqual(dummy.notifiers, [notifier1])
         self.assertEqual(notifier1._ref_count, 2)
 
+    def test_remove_from_observable(self):
+        # Test creating two equivalent notifiers.
+        # The second notifier is able to remove the first one
+        # from the observable as if the first one was itself.
+        dummy = DummyObservable()
+
+        def handler(event):
+            pass
+
+        notifier1 = TraitEventNotifier(
+            handler=handler,
+            target=None,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        notifier2 = TraitEventNotifier(
+            handler=handler,
+            target=None,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+
+        # when
+        notifier1.add_to(dummy)
+        self.assertEqual(dummy.notifiers, [notifier1])
+        notifier2.remove_from(dummy)
+
+        # then
+        self.assertEqual(dummy.notifiers, [])
+
 
 class TestTraitEventNotifierWeakref(unittest.TestCase):
     """ Test weakref handling in TraitEventNotifier."""

@@ -120,6 +120,24 @@ class TraitEventNotifier:
             notifiers.append(self)
             self._ref_count += 1
 
+    def remove_from(self, observable):
+        """ Remove this notifier from an observable object.
+
+        Parameters
+        ----------
+        observable : IObservable
+            An object for removing this notifier from.
+        """
+        notifiers = observable._notifiers(True)
+        for other in notifiers:
+            if self.equals(other):
+                notifiers.remove(other)
+                break
+        else:
+            # We may have to relax this later when dealing with
+            # "old" default value that don't have any notifiers.
+            raise ValueError("Unable to remove nonexisting notifier.")
+
     def equals(self, other):
         """ Return true if the other notifier is equivalent to this one.
 
