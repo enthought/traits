@@ -203,13 +203,10 @@ class TraitList(list):
         """
 
         original_length = len(self)
-        extended = super().__iadd__(
-            [self.item_validator(item) for item in value]
-        )
-        new_length = len(self)
-        if new_length > original_length:
-            index = slice(original_length, new_length)
-            self.notify(index, [], self[index])
+        added = [self.item_validator(item) for item in value]
+        extended = super().__iadd__(added)
+        if added:
+            self.notify(slice(original_length, len(self)), [], added)
         return extended
 
     def __imul__(self, value):
@@ -311,11 +308,10 @@ class TraitList(list):
         """
 
         original_length = len(self)
-        super().extend([self.item_validator(item) for item in iterable])
-        new_length = len(self)
-        if new_length > original_length:
-            index = slice(original_length, new_length)
-            self.notify(index, [], self[index])
+        added = [self.item_validator(item) for item in iterable]
+        super().extend(added)
+        if added:
+            self.notify(slice(original_length, len(self)), [], added)
 
     def insert(self, index, object):
         """ Insert object before index.
