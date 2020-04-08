@@ -26,9 +26,6 @@ class TraitEventNotifier:
     """ Wrapper for invoking user's handler for a trait change
     event.
 
-    The user's handler will receive an event object created by the
-    event factory provided to this wrapper.
-
     An instance of TraitEventNotifier is a callable to be given to
     an object that will emit change notifications. The signature
     of the event factory must be compatible with the notification call
@@ -43,22 +40,20 @@ class TraitEventNotifier:
         ----------
         handler : callable(event)
             The user's handler to receive the change event.
-            The event object type and attributes depend on the
-            type of change event, e.g. a list mutation event versus
-            a HasTraits trait change event.
+            The event object is created by the ``event_factory``.
+            Its type and attributes depend on the change,
+            e.g. a list mutation event versus a HasTraits trait change event.
         target : object or None
             An object for defining the context of the notifier.
-            This is also used for distinguishing one notifier from
-            another notifier wrapping the same handler. Targets are
-            compared using identity.
             If this target is not None, a weak reference is created for
             the target. If the target is garbage collected, the notifier
-            will be muted. This target is typically an instahce of
+            will be muted. This target is typically an instance of
             ``HasTraits`` and will be seen by the user as the "owner" of
-            the change handler.
+            the change handler. This is also used for distinguishing one
+            notifier from another notifier wrapping the same handler.
         event_factory : callable(*args, **kwargs) -> object
             A factory function for creating the event object to be sent to
-            the user. the call signature must be compatible with the
+            the handler. The call signature must be compatible with the
             call signature defined by the object from which change
             notifications are emitted. e.g. for CTrait, the call signature
             will be ``(object, name, old, new)``.
