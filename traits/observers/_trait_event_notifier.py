@@ -18,9 +18,13 @@ _trait_logger = logging.getLogger("traits")
 
 
 class TraitEventNotifier:
-    """ Wrapper for invoking user's handler for a trait change
-    event. It is a callable to be given to an object that will emit change
-    notifications.
+    """ Wrapper for invoking user's handler for a trait change event.
+
+    An ``TraitEventNotifier`` is a callable to be contributed to an
+    "observable" object. The call signature is defined by the observable object
+    and may vary. It is the responsibility of the ``event_factory`` to adapt
+    the varying call signatures and create an event object to be given
+    to the user's handler.
 
     A ``TraitEventNotifier`` keeps a reference count in order to address
     situations where a same object is repeated inside a container
