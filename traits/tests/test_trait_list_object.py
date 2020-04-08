@@ -19,6 +19,7 @@ from traits.trait_errors import TraitError
 from traits.trait_list_object import (
     accept_anything,
     TraitList,
+    TraitListEvent,
     TraitListObject,
 )
 
@@ -71,6 +72,25 @@ def list_item_validator(item):
         return item
     else:
         raise TraitError("Value {} is not a list instance".format(item))
+
+
+class TestTraitListEvent(unittest.TestCase):
+    def test_creation(self):
+        event = TraitListEvent(2, [3], [4])
+        self.assertEqual(event.index, 2)
+        self.assertEqual(event.removed, [3])
+        self.assertEqual(event.added, [4])
+
+        event = TraitListEvent(index=2, removed=[3], added=[4])
+        self.assertEqual(event.index, 2)
+        self.assertEqual(event.removed, [3])
+        self.assertEqual(event.added, [4])
+
+    def test_defaults(self):
+        event = TraitListEvent()
+        self.assertEqual(event.index, 0)
+        self.assertEqual(event.removed, [])
+        self.assertEqual(event.added, [])
 
 
 class TestTraitList(unittest.TestCase):

@@ -26,14 +26,13 @@ class TraitListEvent(object):
 
     Parameters
     ----------
-    index : int or slice
-        An index or slice indicating the location of the changes to the list.
-    added : list or None
-        The list of values added to the list, or optionally None if nothing
-        is added.
-    removed : list or None
-        The list of values removed from the list, or optionally None if
-        nothing is removed.
+    index : int or slice, optional
+        An index or slice indicating the location of the changes to the trait
+        list. The default is 0.
+    added : list, optional
+        The list of values added to the trait list.
+    removed : list, optional
+        The list of values removed from the list.
 
     Attributes
     ----------
