@@ -43,6 +43,21 @@ class DummyObservable:
 _DUMMY_TARGET = DummyObservable()
 
 
+def create_notifier(**kwargs):
+    """ Convenient function for creating an instance of TraitEventNotifier
+    for testing purposes.
+    """
+    values = dict(
+        handler=mock.Mock(),
+        target=_DUMMY_TARGET,
+        event_factory=mock.Mock(),
+        prevent_event=not_prevent_event,
+        dispatcher=basic_dispatcher,
+    )
+    values.update(kwargs)
+    return TraitEventNotifier(**values)
+
+
 class TestTraitEventNotifierCall(unittest.TestCase):
     """ Test calling an instance of TraitEventNotifier. """
 
@@ -60,13 +75,8 @@ class TestTraitEventNotifierCall(unittest.TestCase):
         def event_factory(*args, **kwargs):
             return "Event"
 
-        notifier = TraitEventNotifier(
-            handler=handler,
-            target=_DUMMY_TARGET,
-            dispatcher=basic_dispatcher,
-            prevent_event=not_prevent_event,
-            event_factory=event_factory,
-        )
+        notifier = create_notifier(
+            handler=handler, event_factory=event_factory)
 
         # when
         notifier(a=1, b=2)
@@ -83,11 +93,8 @@ class TestTraitEventNotifierCall(unittest.TestCase):
         def dispatcher(handler, event):
             events.append(event)
 
-        notifier = TraitEventNotifier(
-            handler=mock.Mock(),
-            target=_DUMMY_TARGET,
+        notifier = create_notifier(
             dispatcher=dispatcher,
-            prevent_event=not_prevent_event,
             event_factory=mock.Mock(return_value="Event"),
         )
 
@@ -104,12 +111,9 @@ class TestTraitEventNotifierCall(unittest.TestCase):
             return True
 
         handler = mock.Mock()
-        notifier = TraitEventNotifier(
+        notifier = create_notifier(
             handler=handler,
-            target=_DUMMY_TARGET,
-            dispatcher=basic_dispatcher,
             prevent_event=prevent_event,
-            event_factory=mock.Mock(),
         )
 
         # when
@@ -137,13 +141,7 @@ class TestTraitEventNotifierException(unittest.TestCase):
         def misbehaving_handler(event):
             raise ZeroDivisionError("lalalala")
 
-        notifier = TraitEventNotifier(
-            handler=misbehaving_handler,
-            target=_DUMMY_TARGET,
-            dispatcher=basic_dispatcher,
-            prevent_event=not_prevent_event,
-            event_factory=mock.Mock(),
-        )
+        notifier = create_notifier(handler=misbehaving_handler)
 
         # when
         with self.assertLogs("traits", level="ERROR") as log_cm:
@@ -172,44 +170,15 @@ class TestTraitEventNotifierEqual(unittest.TestCase):
     def test_equals_use_handler_and_target(self):
         # Check the notifier can identify an equivalence
         # using the handler and the target
-
-        def handler1(event):
-            pass
-
-        def handler2(event):
-            pass
-
+        handler1 = mock.Mock()
+        handler2 = mock.Mock()
         target1 = mock.Mock()
         target2 = mock.Mock()
+        notifier1 = create_notifier(handler=handler1, target=target1)
+        notifier2 = create_notifier(handler=handler1, target=target1)
+        notifier3 = create_notifier(handler=handler1, target=target2)
+        notifier4 = create_notifier(handler=handler2, target=target1)
 
-        notifier1 = TraitEventNotifier(
-            handler=handler1,
-            target=target1,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
-        notifier2 = TraitEventNotifier(
-            handler=handler1,
-            target=target1,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
-        notifier3 = TraitEventNotifier(
-            handler=handler1,
-            target=target2,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
-        notifier4 = TraitEventNotifier(
-            handler=handler2,
-            target=target1,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
         # then
         self.assertTrue(
             notifier1.equals(notifier2),
@@ -231,13 +200,7 @@ class TestTraitEventNotifierEqual(unittest.TestCase):
         )
 
     def test_equals_compared_to_different_type(self):
-        notifier = TraitEventNotifier(
-            handler=mock.Mock(),
-            target=_DUMMY_TARGET,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier = create_notifier()
         self.assertFalse(notifier.equals(float))
 
 
@@ -256,13 +219,7 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
     def test_add_to_observable(self):
         dummy = DummyObservable()
 
-        notifier = TraitEventNotifier(
-            handler=mock.Mock(),
-            target=_DUMMY_TARGET,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier = create_notifier()
 
         # when
         notifier.add_to(dummy)
@@ -279,20 +236,8 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
         def handler(event):
             pass
 
-        notifier1 = TraitEventNotifier(
-            handler=handler,
-            target=_DUMMY_TARGET,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
-        notifier2 = TraitEventNotifier(
-            handler=handler,
-            target=_DUMMY_TARGET,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier1 = create_notifier(handler=handler, target=_DUMMY_TARGET)
+        notifier2 = create_notifier(handler=handler, target=_DUMMY_TARGET)
 
         # when
         notifier1.add_to(dummy)
@@ -308,21 +253,9 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
         def handler(event):
             pass
 
-        notifier1 = TraitEventNotifier(
-            handler=handler,
-            target=_DUMMY_TARGET,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier1 = create_notifier(handler=handler, target=_DUMMY_TARGET)
         # The target is different!
-        notifier2 = TraitEventNotifier(
-            handler=handler,
-            target=dummy,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier2 = create_notifier(handler=handler, target=dummy)
 
         # when
         notifier1.add_to(dummy)
@@ -340,20 +273,8 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
         def handler(event):
             pass
 
-        notifier1 = TraitEventNotifier(
-            handler=handler,
-            target=_DUMMY_TARGET,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
-        notifier2 = TraitEventNotifier(
-            handler=handler,
-            target=_DUMMY_TARGET,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier1 = create_notifier(handler=handler, target=_DUMMY_TARGET)
+        notifier2 = create_notifier(handler=handler, target=_DUMMY_TARGET)
 
         # when
         notifier1.add_to(dummy)
@@ -370,20 +291,8 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
         def handler(event):
             pass
 
-        notifier1 = TraitEventNotifier(
-            handler=handler,
-            target=_DUMMY_TARGET,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
-        notifier2 = TraitEventNotifier(
-            handler=handler,
-            target=_DUMMY_TARGET,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier1 = create_notifier(handler=handler, target=_DUMMY_TARGET)
+        notifier2 = create_notifier(handler=handler, target=_DUMMY_TARGET)
 
         # when
         # add_to is called twice.
@@ -409,13 +318,8 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
     def test_remove_from_error_if_not_found(self):
         # We may need to relax this error later
         dummy = DummyObservable()
-        notifier1 = TraitEventNotifier(
-            handler=mock.Mock(),
-            target=_DUMMY_TARGET,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier1 = create_notifier()
+
         with self.assertRaises(ValueError) as e:
             notifier1.remove_from(dummy)
 
@@ -423,21 +327,10 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
 
     def test_remove_from_differentiate_not_equal_notifier(self):
         dummy = DummyObservable()
-        notifier1 = TraitEventNotifier(
-            handler=mock.Mock(),
-            target=_DUMMY_TARGET,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier1 = create_notifier(handler=mock.Mock())
+
         # The handler is different
-        notifier2 = TraitEventNotifier(
-            handler=mock.Mock(),
-            target=_DUMMY_TARGET,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier2 = create_notifier(handler=mock.Mock())
 
         # when
         notifier1.add_to(dummy)
@@ -468,13 +361,7 @@ class TestTraitEventNotifierWeakrefTarget(unittest.TestCase):
         target.internal_object = DummyObservable()
         target_ref = weakref.ref(target)
 
-        notifier = TraitEventNotifier(
-            handler=mock.Mock(),
-            target=target,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier = create_notifier(target=target)
         notifier.add_to(target.internal_object)
 
         # when
@@ -485,16 +372,8 @@ class TestTraitEventNotifierWeakrefTarget(unittest.TestCase):
 
     def test_callable_disabled_if_target_removed(self):
         target = mock.Mock()
-
         handler = mock.Mock()
-
-        notifier = TraitEventNotifier(
-            handler=handler,
-            target=target,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier = create_notifier(handler=handler, target=target)
 
         # sanity check
         notifier(a=1, b=2)
@@ -529,13 +408,7 @@ class TestTraitEventNotifierWeakrefHandler(unittest.TestCase):
         dummy.internal_object = DummyObservable()
         dummy_ref = weakref.ref(dummy)
 
-        notifier = TraitEventNotifier(
-            handler=dummy.handler,
-            target=_DUMMY_TARGET,
-            event_factory=mock.Mock(),
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier = create_notifier(handler=dummy.handler)
         notifier.add_to(dummy.internal_object)
 
         # when
@@ -551,13 +424,8 @@ class TestTraitEventNotifierWeakrefHandler(unittest.TestCase):
 
         event_factory = mock.Mock()
 
-        notifier = TraitEventNotifier(
-            handler=dummy.handler,
-            target=_DUMMY_TARGET,
-            event_factory=event_factory,
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier = create_notifier(
+            handler=dummy.handler, event_factory=event_factory)
         notifier.add_to(dummy.internal_object)
 
         # sanity check
@@ -581,13 +449,7 @@ class TestTraitEventNotifierWeakrefHandler(unittest.TestCase):
             nonlocal dummy
             del dummy
 
-        notifier = TraitEventNotifier(
-            handler=dummy.handler,
-            target=_DUMMY_TARGET,
-            event_factory=event_factory,
-            prevent_event=not_prevent_event,
-            dispatcher=basic_dispatcher,
-        )
+        notifier = create_notifier(handler=dummy.handler)
         notifier.add_to(dummy)
 
         notifier(a=1, b=2)
