@@ -350,6 +350,34 @@ class TestTraitEventNotifierWeakref(unittest.TestCase):
         # then
         self.assertIsNone(target_ref())
 
+    def test_equals_differentiate_no_target_tracked(self):
+        # Test differentiation between when the target is deleted
+        # and when there is no target being tracked.
+        dummy = DummyObservable()
+
+        def handler(event):
+            pass
+
+        notifier1 = TraitEventNotifier(
+            handler=handler,
+            target=dummy,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+        notifier2 = TraitEventNotifier(
+            handler=handler,
+            target=None,
+            event_factory=mock.Mock(),
+            prevent_event=not_prevent_event,
+            dispatcher=basic_dispatcher,
+        )
+
+        del dummy
+
+        self.assertIsNone(notifier1.target())
+        self.assertFalse(notifier1.equals(notifier2))
+
     def test_callable_disabled_if_target_removed(self):
         target = mock.Mock()
 
