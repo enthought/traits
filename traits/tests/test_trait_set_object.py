@@ -42,8 +42,8 @@ class TestTraitSet(unittest.TestCase):
         self.removed = removed
         self.added = added
 
-    def validator(self, set_, added):
-        self.validator_args = (set_, added)
+    def validator(self, added):
+        self.validator_args = added
         return added
 
     def test_init(self):
@@ -337,9 +337,9 @@ class TestTraitSet(unittest.TestCase):
 
         validator_args = None
 
-        def validator(set_, added):
+        def validator(added):
             nonlocal validator_args
-            validator_args = (set_, added)
+            validator_args = added
 
             return set(str(value) for value in added)
 
@@ -354,7 +354,7 @@ class TestTraitSet(unittest.TestCase):
         ts ^= set(["2", 3, 4])
 
         # then
-        self.assertEqual(validator_args, (ts, set([3, 4])))
+        self.assertEqual(validator_args, set([3, 4]))
         self.assertEqual(ts, set(["1", "3", "4"]))
         self.assertEqual(self.added, set(["4"]))
         self.assertEqual(self.removed, set(["2"]))
