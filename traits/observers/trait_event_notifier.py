@@ -45,7 +45,7 @@ class TraitEventNotifier:
             a HasTraits trait change event.
             For comparing two notifiers, the handlers are compared using
             equality.
-        target : any
+        target : object or None
             An object for defining the context of the notifier.
             This is also used for distinguishing one notifier from
             another notifier wrapping the same handler. Targets are
