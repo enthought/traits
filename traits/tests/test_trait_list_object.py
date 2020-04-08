@@ -955,6 +955,11 @@ class TestTraitListObject(unittest.TestCase):
             foo.at_most_five *= 2
         self.assertEqual(foo.at_most_five, [1, 2, 3, 4])
 
+    def test_imul_negative_multiplier(self):
+        foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4])
+        foo.at_most_five *= -10
+        self.assertEqual(foo.at_most_five, [])
+
     def test_setitem_index(self):
         foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
         foo.at_least_two[1] = 7

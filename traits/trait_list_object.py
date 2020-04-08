@@ -570,7 +570,7 @@ class TraitListObject(TraitList):
             The modified list.
         """
 
-        self._validate_length(len(self) * value)
+        self._validate_length(max(0, len(self) * value))
         return super().__imul__(value)
 
     def __setitem__(self, key, value):
