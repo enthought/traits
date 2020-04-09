@@ -18,14 +18,17 @@ from traits.trait_types import _validate_int
 
 
 def int_validator(value):
-    return _validate_int((value))
+    try:
+        return _validate_int(value)
+    except TypeError:
+        raise TraitError("int_validator error")
 
 
 def string_validator(value):
     if isinstance(value, str):
         return value
     else:
-        raise TraitError
+        raise TraitError("string_validator error")
 
 
 class TestTraitSet(unittest.TestCase):
