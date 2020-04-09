@@ -30,6 +30,9 @@ class TraitEventNotifier:
     the ``HasTraits`` instance on which the user applies the observers. It
     also needs to determine whether another notifier refers to the same
     change handler and ``HasTraits`` instance. See the ``equals`` method.
+
+    Since there is only one reference count associated with a notifier,
+    each notifier is expected to target only one observable.
     """
 
     def __init__(
@@ -79,8 +82,8 @@ class TraitEventNotifier:
         self.dispatcher = dispatcher
         self.event_factory = event_factory
         self.prevent_event = prevent_event
-        # Reference count to avoid adding multiple notifiers
-        # which are equivalent to the same observable.
+        # Reference count to avoid adding multiple equivalent notifiers
+        # to the same observable.
         self._ref_count = 0
 
     def __call__(self, *args, **kwargs):
