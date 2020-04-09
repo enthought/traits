@@ -158,9 +158,8 @@ class TraitEventNotifier:
                 if other._ref_count == 1:
                     notifiers.remove(other)
                 other._ref_count -= 1
-
                 if other._ref_count < 0:
-                    raise ValueError(
+                    raise RuntimeError(
                         "Reference count is negative. "
                         "Race condition?"
                     )
