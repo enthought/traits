@@ -20,11 +20,10 @@ class TraitSetEvent(object):
 
     Parameters
     ----------
-    added : set or None
-        New values added to the set, or optionally None if nothing was added.
-    removed : set or None
-        Old values that were removed, or optionally None if nothing was
-        removed.
+    added : set, optional
+        New values added to the set.
+    removed : set, optional
+        Old values that were removed from the set.
 
     Attributes
     ----------
@@ -38,11 +37,21 @@ class TraitSetEvent(object):
 
         if removed is None:
             removed = set()
+        self.removed = removed
+
         if added is None:
             added = set()
-
-        self.removed = removed
         self.added = added
+
+
+# Default item validator for TraitList.
+
+
+def accept_anything(item):
+    """
+    Item validator which accepts any item and returns it unaltered.
+    """
+    return item
 
 
 class TraitSet(set):
@@ -50,19 +59,27 @@ class TraitSet(set):
 
     Parameters
     ----------
-    value : set
-        The value for the set
-    validator : callable
-        Called to validate items in the set
+    value : iterable
+        Iterable providing the items for the set.
+    item_validator : callable, optional
+        Called to validate and/or transform items added to the list. The
+        callable should accept a single item from the list and return
+        the transformed item, raising TraitError for invalid items. If
+        not given, no item validation is performed.
     notifiers : list of callable
         A list of callables with the signature::
 
             notifier(removed, added)
 
+        If this argument is not given, the list of notifiers is initially
+        empty.
+
     Attributes
     ----------
-    validator : callable
-        Called to validate items in the set
+    item_validator : callable
+        Called to validate and/or transform items added to the list. The
+        callable should accept a single item from the list and return
+        the transformed item, raising TraitError for invalid items.
     notifiers : list of callable
         A list of callables with the signature::
 
@@ -71,55 +88,20 @@ class TraitSet(set):
     """
 
     def __new__(cls, *args, **kwargs):
-        instance = super().__new__(cls)
-        instance.validator = None
-        instance.notifiers = []
-        return instance
+        # We need a __new__ in addition to __init__ in order to properly
+        # support unpickling: the 'append' or 'extend' methods may be
+        # called during unpickling, triggering item validation.
+        self = super().__new__(cls)
+        self.item_validator = accept_anything
+        self.notifiers = []
+        return self
 
-    def __init__(self, value=(), *, validator=None, notifiers=None):
-        self.validator = validator
-
-        if notifiers is None:
-            notifiers = []
-        self.notifiers = list(notifiers)
-
-        value = self.validate(set(value))
-        super().__init__(value)
-
-    # ------------------------------------------------------------------------
-    # TraitSet interface
-    # ------------------------------------------------------------------------
-
-    def validate(self, value):
-        """ Validate the set of values.
-
-        This simply calls the validator provided by the class, if any.
-        The validator is expected to have the signature::
-
-            validator(value_set)
-
-        and return a set of validated values or raise TraitError.
-
-        Parameters
-        ----------
-        value : set
-            The new items being added to the set.
-
-        Returns
-        -------
-        values : set
-            The set of validated values.
-
-        Raises
-        ------
-        TraitError : Exception
-            If validation fails.
-        """
-
-        if self.validator is None:
-            return value
-        else:
-            return self.validator(value)
+    def __init__(self, value=(), *, item_validator=None, notifiers=None):
+        if item_validator is not None:
+            self.item_validator = item_validator
+        super().__init__(self.item_validator(item) for item in value)
+        if notifiers is not None:
+            self.notifiers = list(notifiers)
 
     def notify(self, removed, added):
         """ Call all notifiers.
@@ -143,41 +125,75 @@ class TraitSet(set):
         for notifier in self.notifiers:
             notifier(removed, added)
 
-    # ------------------------------------------------------------------------
-    # set interface
-    # ------------------------------------------------------------------------
+    # -- set interface -------------------------------------------------------
 
-    def __deepcopy__(self, memo):
-        """ Perform a deepcopy operation.
+    def __ior__(self, value):
+        """ Return self |= value.
 
-        Notifiers are transient and should not be copied.
+        Parameters
+        ----------
+        value : any
+            The value to update the set with.
+
+        Returns
+        -------
+        self : set
+            The updated set.
+
         """
-        # notifiers are transient and should not be copied
-        result = TraitSet(
-            [copy.deepcopy(x, memo) for x in self],
-            validator=copy.deepcopy(self.validator, memo),
-            notifiers=[],
-        )
+        self.update(value)
+        return self
 
-        return result
+    def __iand__(self, value):
+        """  Return self &= value.
 
-    def __getstate__(self):
-        """ Get the state of the object for serialization.
+        Parameters
+        ----------
+        value : any
+            A value.
 
-        Notifiers are transient and should not be serialized.
+        Returns
+        -------
+        self : set
+            The updated set.
+
         """
-        result = self.__dict__.copy()
-        # notifiers are transient and should not be serialized
-        del result["notifiers"]
-        return result
+        self.intersection_update(value)
+        return self
 
-    def __setstate__(self, state):
-        """ Restore the state of the object after serialization.
+    def __ixor__(self, value):
+        """ Return self ^= value.
 
-        Notifiers are transient and are restored to the empty list.
+        Parameters
+        ----------
+        value : any
+            A value.
+
+        Returns
+        -------
+        self : set
+            The updated set.
+
         """
-        state['notifiers'] = []
-        self.__dict__.update(state)
+        self.symmetric_difference_update(value)
+        return self
+
+    def __isub__(self, value):
+        """ Return self-=value.
+
+        Parameters
+        ----------
+        value : any
+            A value.
+
+        Returns
+        -------
+        self : set
+            The updated set.
+
+        """
+        self.difference_update(value)
+        return self
 
     def add(self, value):
         """ Add an element to a set.
@@ -189,25 +205,11 @@ class TraitSet(set):
         value : any
             The value to add to the set.
 
-        Notes
-        -----
-        Parameters in the notification:
-            removed : set
-                An empty set.
-            added : set
-                A set containing the added value.
-
         """
-        validated_values = self.validate(set([value]))
-        if len(validated_values) > 1:
-            raise ValueError("Validator returned {} values "
-                             "where 1 value is "
-                             "expected".format(len(validated_values)))
-
-        value = next(iter(validated_values))
+        value = self.item_validator(value)
         if value not in self:
             super().add(value)
-            self.notify(set(), validated_values)
+            self.notify(set(), {value})
 
     def remove(self, value):
         """ Remove an element from a set; it must be a member.
@@ -224,14 +226,6 @@ class TraitSet(set):
         KeyError
             If the value is not found in the set.
 
-        Notes
-        -----
-        Parameters in the notification:
-            removed : set
-                A set containing the removed value.
-            added : set
-                An empty set.
-
         """
         super().remove(value)
         self.notify(set([value]), set())
@@ -244,16 +238,8 @@ class TraitSet(set):
         value : iterable
             The other iterable.
 
-        Notes
-        -----
-        Parameters in the notification:
-            removed : set
-                An empty set.
-            added : set
-                A set containing the added values.
-
         """
-        validated_values = self.validate(set(value))
+        validated_values = {self.item_validator(item) for item in value}
         added = validated_values.difference(self)
 
         if len(added) > 0:
@@ -267,16 +253,8 @@ class TraitSet(set):
         ----------
         value : iterable
             The other iterable.
-
-        Notes
-        -----
-        Parameters in the notification:
-            removed : set
-                A set containing the removed values.
-            added : set
-                An empty set.
-
         """
+
         removed = self.intersection(value)
 
         if len(removed) > 0:
@@ -290,17 +268,8 @@ class TraitSet(set):
         ----------
         value : iterable
             The other iterable.
-
-        Notes
-        -----
-        Parameters in the notification:
-            removed : set
-                A set containing the removed values.
-            added : set
-                An empty set.
-
-
         """
+
         if value is None:
             return
         value = set(value)
@@ -329,7 +298,7 @@ class TraitSet(set):
         removed = self.intersection(values)
         added = values.difference(removed)
         if added:
-            added = self.validate(added)
+            added = {self.item_validator(item) for item in added}
         added = added.difference(self)
 
         if removed or added:
@@ -346,18 +315,8 @@ class TraitSet(set):
         ----------
         value : any
             An item in the set
-
-        Notes
-        -----
-        Parameters in the notification:
-            Fired if a value is removed.
-
-            removed : set
-                A set containing the removed values.
-            added : set
-                An empty set.
-
         """
+
         if value in self:
             self.remove(value)
             self.notify({value}, set())
@@ -371,36 +330,54 @@ class TraitSet(set):
         item : any
             An element from the set.
 
-        Notes
-        -----
-        Parameters in the notification:
-            removed : set
-                A set containing the removed values.
-            added : set
-                An empty set.
-
         """
+
         removed = super().pop()
         self.notify({removed}, set())
         return removed
 
     def clear(self):
-        """ Remove all elements from this set.
+        """ Remove all elements from this set. """
 
-        Notes
-        -----
-        Parameters in the notification:
-            removed : set
-                A set containing the removed values.
-            added : set
-                An empty set.
-
-        """
         if not self:
             return
         removed = set(self)
         super().clear()
         self.notify(removed, set())
+
+    # -- pickle and copy support ----------------------------------------------
+
+    def __deepcopy__(self, memo):
+        """ Perform a deepcopy operation.
+
+        Notifiers are transient and should not be copied.
+        """
+        # notifiers are transient and should not be copied
+        result = TraitSet(
+            [copy.deepcopy(x, memo) for x in self],
+            item_validator=copy.deepcopy(self.validator, memo),
+            notifiers=[],
+        )
+
+        return result
+
+    def __getstate__(self):
+        """ Get the state of the object for serialization.
+
+        Notifiers are transient and should not be serialized.
+        """
+        result = self.__dict__.copy()
+        # notifiers are transient and should not be serialized
+        del result["notifiers"]
+        return result
+
+    def __setstate__(self, state):
+        """ Restore the state of the object after serialization.
+
+        Notifiers are transient and are restored to the empty list.
+        """
+        state['notifiers'] = []
+        self.__dict__.update(state)
 
     def __reduce_ex__(self, protocol=None):
         """ Overridden to make sure we call our custom __getstate__.
@@ -410,107 +387,6 @@ class TraitSet(set):
             (type(self), set, list(self)),
             self.__getstate__(),
         )
-
-    def __ior__(self, value):
-        """ Return self|=value.
-
-        Parameters
-        ----------
-        value : any
-            A value.
-
-        Returns
-        -------
-        self : set
-            The updated set.
-
-        Notes
-        -----
-        Parameters in the notification:
-            removed : set
-                An empty set.
-            added : set
-                Set of added values.
-
-        """
-        self.update(value)
-        return self
-
-    def __iand__(self, value):
-        """  Return self&=value.
-
-        Parameters
-        ----------
-        value : any
-            A value.
-
-        Returns
-        -------
-        self : set
-            The updated set.
-
-        Notes
-        -----
-        Parameters in the notification:
-            removed : set
-                A set containing the removed values.
-            added : set
-                An empty set.
-
-
-        """
-        self.intersection_update(value)
-        return self
-
-    def __ixor__(self, value):
-        """ Return self ^= value.
-
-        Parameters
-        ----------
-        value : any
-            A value.
-
-        Returns
-        -------
-        self : set
-            The updated set.
-
-        Notes
-        -----
-        Parameters in the notification:
-            removed : set
-                A set containing the removed values.
-            added : set
-                A set containing the added values.
-
-        """
-        self.symmetric_difference_update(value)
-        return self
-
-    def __isub__(self, value):
-        """ Return self-=value.
-
-        Parameters
-        ----------
-        value : any
-            A value.
-
-        Returns
-        -------
-        self : set
-            The updated set.
-
-        Notes
-        -----
-        Parameters in the notification:
-            removed : set
-                A set containing the removed values.
-            added : Undefined
-                Will be Undefined.
-
-        """
-        self.difference_update(value)
-        return self
 
 
 class TraitSetObject(TraitSet):
@@ -527,8 +403,6 @@ class TraitSetObject(TraitSet):
         The name of the trait on the object.
     value : iterable
         The initial value of the set.
-    notifiers : list
-        Additional notifiers for the set.
 
     Attributes
     ----------
@@ -551,7 +425,7 @@ class TraitSetObject(TraitSet):
         if trait.has_items:
             self.name_items = name + "_items"
 
-        super().__init__(value, validator=self._validator,
+        super().__init__(value, item_validator=self._validator,
                          notifiers=[self.notifier])
 
     def _validator(self, value):
@@ -570,8 +444,8 @@ class TraitSetObject(TraitSet):
         ------
         TraitError
             On validation failure for the inner trait.
-
         """
+
         object_ref = getattr(self, 'object', None)
         trait = getattr(self, 'trait', None)
 
@@ -587,10 +461,7 @@ class TraitSetObject(TraitSet):
             return value
 
         try:
-            return {
-                validate(object, self.name, item)
-                for item in value
-            }
+            return validate(object, self.name, value)
         except TraitError as excp:
             excp.set_prefix("Each element of the")
             raise excp
@@ -605,12 +476,8 @@ class TraitSetObject(TraitSet):
             Set of values that were removed.
         added : set
             Set of values that were added.
-
-        Returns
-        -------
-        None
-
         """
+
         if self.name_items is None:
             return
 
@@ -627,6 +494,7 @@ class TraitSetObject(TraitSet):
 
         Notifiers are transient and should not be copied.
         """
+
         id_self = id(self)
         if id_self in memo:
             return memo[id_self]
@@ -645,6 +513,7 @@ class TraitSetObject(TraitSet):
 
         Notifiers are transient and should not be serialized.
         """
+
         result = super().__getstate__()
         result.pop("object", None)
         result.pop("trait", None)
@@ -656,6 +525,7 @@ class TraitSetObject(TraitSet):
 
         Notifiers are transient and are restored to the empty list.
         """
+
         state.setdefault("name", "")
         state["notifiers"] = [self.notifier]
         state["object"] = lambda: None

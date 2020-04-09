@@ -13,22 +13,19 @@ from unittest import mock
 
 from traits.api import HasTraits, Set, Str
 from traits.trait_errors import TraitError
-from traits.trait_set_object import TraitSet
+from traits.trait_set_object import TraitSet, accept_anything
 from traits.trait_types import _validate_int
 
 
 def int_validator(value):
-    return {_validate_int(v) for v in value}
+    return _validate_int((value))
 
 
 def string_validator(value):
-    ret = set()
-    for v in value:
-        if isinstance(v, str):
-            ret.add(v)
-        else:
-            raise TraitError
-    return ret
+    if isinstance(value, str):
+        return value
+    else:
+        raise TraitError
 
 
 class TestTraitSet(unittest.TestCase):
@@ -50,33 +47,33 @@ class TestTraitSet(unittest.TestCase):
         ts = TraitSet({1, 2, 3})
 
         self.assertEqual(ts, {1, 2, 3})
-        self.assertIsNone(ts.validator)
+        self.assertIs(ts.item_validator, accept_anything)
         self.assertEqual(ts.notifiers, [])
 
     def test_init_with_no_input(self):
         ts = TraitSet()
 
         self.assertEqual(ts, set())
-        self.assertIsNone(ts.validator)
+        self.assertIs(ts.item_validator, accept_anything)
         self.assertEqual(ts.notifiers, [])
 
     def test_validator(self):
-        ts = TraitSet({1, 2, 3}, validator=int_validator)
+        ts = TraitSet({1, 2, 3}, item_validator=int_validator)
 
         self.assertEqual(ts, {1, 2, 3})
-        self.assertEqual(ts.validator, int_validator)
+        self.assertEqual(ts.item_validator, int_validator)
         self.assertEqual(ts.notifiers, [])
 
     def test_notification(self):
-        ts = TraitSet({1, 2, 3}, validator=int_validator,
+        ts = TraitSet({1, 2, 3}, item_validator=int_validator,
                       notifiers=[self.notification_handler])
 
         self.assertEqual(ts, {1, 2, 3})
-        self.assertEqual(ts.validator, int_validator)
+        self.assertEqual(ts.item_validator, int_validator)
         self.assertEqual(ts.notifiers, [self.notification_handler])
 
     def test_add(self):
-        ts = TraitSet({1, 2, 3}, validator=int_validator,
+        ts = TraitSet({1, 2, 3}, item_validator=int_validator,
                       notifiers=[self.notification_handler])
         ts.add(5)
 
@@ -84,7 +81,7 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(self.removed, set())
         self.assertEqual(self.added, {5})
 
-        ts = TraitSet({"one", "two", "three"}, validator=string_validator,
+        ts = TraitSet({"one", "two", "three"}, item_validator=string_validator,
                       notifiers=[self.notification_handler])
         ts.add("four")
         self.assertEqual(ts, {"one", "two", "three", "four"})
@@ -127,7 +124,7 @@ class TestTraitSet(unittest.TestCase):
         notifier.assert_not_called()
 
     def test_remove(self):
-        ts = TraitSet({1, 2, 3}, validator=int_validator,
+        ts = TraitSet({1, 2, 3}, item_validator=int_validator,
                       notifiers=[self.notification_handler])
         ts.remove(3)
 
@@ -154,7 +151,7 @@ class TestTraitSet(unittest.TestCase):
     def test_remove_does_not_call_validator(self):
         # Test validator should not be called with removed
         # items
-        ts = TraitSet(validator=self.validator)
+        ts = TraitSet(item_validator=self.validator)
         ts.add("123")
 
         value, = ts
@@ -197,7 +194,7 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(ts, python_set)
 
     def test_discard(self):
-        ts = TraitSet({1, 2, 3}, validator=int_validator,
+        ts = TraitSet({1, 2, 3}, item_validator=int_validator,
                       notifiers=[self.notification_handler])
         ts.discard(3)
 
@@ -209,7 +206,7 @@ class TestTraitSet(unittest.TestCase):
         ts.discard(3)
 
     def test_pop(self):
-        ts = TraitSet({1, 2, 3}, validator=int_validator,
+        ts = TraitSet({1, 2, 3}, item_validator=int_validator,
                       notifiers=[self.notification_handler])
         val = ts.pop()
 
@@ -218,7 +215,7 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(self.added, set())
 
     def test_clear(self):
-        ts = TraitSet({1, 2, 3}, validator=int_validator,
+        ts = TraitSet({1, 2, 3}, item_validator=int_validator,
                       notifiers=[self.notification_handler])
         ts.clear()
 
@@ -234,14 +231,14 @@ class TestTraitSet(unittest.TestCase):
         notifier.assert_not_called()
 
     def test_ior(self):
-        ts = TraitSet({1, 2, 3}, validator=int_validator,
+        ts = TraitSet({1, 2, 3}, item_validator=int_validator,
                       notifiers=[self.notification_handler])
         ts |= {4, 5}
 
         self.assertEqual(self.removed, set())
         self.assertEqual(self.added, {4, 5})
 
-        ts2 = TraitSet({6, 7}, validator=int_validator,
+        ts2 = TraitSet({6, 7}, item_validator=int_validator,
                        notifiers=[self.notification_handler])
 
         ts |= ts2
@@ -250,7 +247,7 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(self.added, {6, 7})
 
     def test_iand(self):
-        ts = TraitSet({1, 2, 3}, validator=int_validator,
+        ts = TraitSet({1, 2, 3}, item_validator=int_validator,
                       notifiers=[self.notification_handler])
         ts &= {1, 2, 3}
 
@@ -264,7 +261,7 @@ class TestTraitSet(unittest.TestCase):
 
     def test_iand_does_not_call_validator(self):
         # Nothing are added, validator should not be called.
-        ts = TraitSet({1, 2, 3}, validator=self.validator)
+        ts = TraitSet({1, 2, 3}, item_validator=self.validator)
         values = list(ts)
 
         python_set = set(ts)
@@ -298,7 +295,7 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(ts, python_set)
 
     def test_ixor(self):
-        ts = TraitSet({1, 2, 3}, validator=int_validator,
+        ts = TraitSet({1, 2, 3}, item_validator=int_validator,
                       notifiers=[self.notification_handler])
         ts ^= {1, 2, 3, 5}
 
@@ -323,7 +320,7 @@ class TestTraitSet(unittest.TestCase):
         python_set ^= set([iterable])
         self.assertEqual(python_set, set())
 
-        ts = TraitSet([iterable], validator=self.validator)
+        ts = TraitSet([iterable], item_validator=self.validator)
         self.validator_args = None
         ts ^= [iterable]
         self.assertEqual(ts, set())
@@ -335,17 +332,17 @@ class TestTraitSet(unittest.TestCase):
         # Check the values given to the validator
         # when symmetric_difference_update is called.
 
-        validator_args = None
+        validator_args = set()
 
         def validator(added):
             nonlocal validator_args
-            validator_args = added
+            validator_args.add(added)
 
-            return set(str(value) for value in added)
+            return str(added)
 
         ts = TraitSet(
             [1, 2, 3],
-            validator=validator,
+            item_validator=validator,
             notifiers=[self.notification_handler],
         )
         self.assertEqual(ts, set(["1", "2", "3"]))
@@ -354,13 +351,13 @@ class TestTraitSet(unittest.TestCase):
         ts ^= set(["2", 3, 4])
 
         # then
-        self.assertEqual(validator_args, set([3, 4]))
+        self.assertEqual(validator_args, set([1, 2, 3, 4]))
         self.assertEqual(ts, set(["1", "3", "4"]))
         self.assertEqual(self.added, set(["4"]))
         self.assertEqual(self.removed, set(["2"]))
 
     def test_isub(self):
-        ts = TraitSet({1, 2, 3}, validator=int_validator,
+        ts = TraitSet({1, 2, 3}, item_validator=int_validator,
                       notifiers=[self.notification_handler])
         ts -= {2, 3, 5}
 
@@ -371,7 +368,7 @@ class TestTraitSet(unittest.TestCase):
     def test_isub_validator_not_called(self):
         # isub never needs to add items, validator should not
         # be called.
-        ts = TraitSet({1, 2, 3}, validator=self.validator)
+        ts = TraitSet({1, 2, 3}, item_validator=self.validator)
         values = list(ts)
 
         # when
