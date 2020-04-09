@@ -123,6 +123,12 @@ class TraitEventNotifier:
         ----------
         observable : IObservable
             An object for adding this notifier to.
+
+        Raises
+        ------
+        RuntimeError
+            If the internal reference count is not zero and an equivalent
+            notifier is not found in the observable.
         """
         notifiers = observable._notifiers(True)
         for other in notifiers:
@@ -151,6 +157,13 @@ class TraitEventNotifier:
         ----------
         observable : IObservable
             An object for removing this notifier from.
+
+        Raises
+        ------
+        RuntimeError
+            If the reference count becomes negative unexpectedly.
+        ValueError
+            If the notifier is not found.
         """
         notifiers = observable._notifiers(True)
         for other in notifiers[:]:
