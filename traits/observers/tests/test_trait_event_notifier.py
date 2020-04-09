@@ -478,7 +478,10 @@ class TestTraitEventNotifierWeakrefHandler(unittest.TestCase):
             nonlocal dummy
             del dummy
 
-        notifier = create_notifier(handler=dummy.handler)
+        notifier = create_notifier(
+            handler=dummy.handler,
+            event_factory=event_factory,
+        )
         notifier.add_to(dummy)
 
         notifier(a=1, b=2)
