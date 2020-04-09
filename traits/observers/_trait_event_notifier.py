@@ -40,9 +40,7 @@ class TraitEventNotifier:
         ----------
         handler : callable(event)
             The user's handler to receive the change event.
-            The event object is created by the ``event_factory``.
-            Its type and attributes depend on the change,
-            e.g. a list mutation event versus a HasTraits trait change event.
+            The event object is returned by the ``event_factory``.
             If the handler is an instance method, then a weak reference is
             created for the method. If the instance is garbage collected,
             the notifier will be muted.
@@ -57,9 +55,9 @@ class TraitEventNotifier:
         event_factory : callable(*args, **kwargs) -> object
             A factory function for creating the event object to be sent to
             the handler. The call signature must be compatible with the
-            call signature defined by the object from which change
-            notifications are emitted. e.g. for CTrait, the call signature
-            will be ``(object, name, old, new)``.
+            call signature expected by the observable this notifier is used
+            with. e.g. for CTrait, the call signature will be
+            ``(object, name, old, new)``.
         prevent_event : callable(event) -> boolean
             A callable for controlling whether the user handler should be
             invoked. It receives the event created by the event factory and
