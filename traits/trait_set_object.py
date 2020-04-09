@@ -61,17 +61,17 @@ class TraitSet(set):
     value : iterable
         Iterable providing the items for the set.
     item_validator : callable, optional
-        Called to validate and/or transform items added to the list. The
-        callable should accept a single item from the set and return
-        the transformed item, raising TraitError for invalid items. If
-        not given, no item validation is performed.
+        Called to validate and/or transform items added to the set. The
+        callable should accept a single item and return the transformed
+        item, raising TraitError for invalid items. If not given, no
+        item validation is performed.
     notifiers : list of callable
         A list of callables with the signature::
 
             notifier(removed, added)
 
-        Where 'added' is a set containing the new values that will be added.
-        And 'removed' is a set containing the old values that will be removed.
+        Where 'added' is a set containing new values that have been added.
+        And 'removed' is a set containing old values that have been removed.
 
         If this argument is not given, the list of notifiers is initially
         empty.
@@ -79,17 +79,17 @@ class TraitSet(set):
     Attributes
     ----------
     item_validator : callable
-        Called to validate and/or transform items added to the list. The
-        callable should accept a single item from the list and return
-        the transformed item, raising TraitError for invalid items.
+        Called to validate and/or transform items added to the set. The
+        callable should accept a single item and return the transformed
+        item, raising TraitError for invalid items. If not given, no
+        item validation is performed.
     notifiers : list of callable
         A list of callables with the signature::
 
             notifier(removed, added)
 
-        Where 'added' is a set containing the new values that will be added.
-        And 'removed' is a set containing the old values that will be removed.
-
+        Where 'added' is a set containing new values that have been added.
+        And 'removed' is a set containing old values that have been removed.
     """
 
     def __new__(cls, *args, **kwargs):
