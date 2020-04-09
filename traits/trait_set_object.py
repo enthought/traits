@@ -288,6 +288,7 @@ class TraitSet(set):
         Parameters
         ----------
         value : iterable
+            An iterable
         """
 
         values = set(value)
@@ -296,9 +297,8 @@ class TraitSet(set):
         added = {self.item_validator(item) for item in added}
         added = added.difference(self)
 
+        super().symmetric_difference_update(removed | added)
         if removed or added:
-            super().difference_update(removed)
-            super().update(added)
             self.notify(removed, added)
 
     def discard(self, value):
