@@ -223,7 +223,10 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
         pass
 
     def test_add_to_observable(self):
+        # It is typical that the observable also has other
+        # "notifiers" unknown to the TraitEventNotifier
         dummy = DummyObservable()
+        dummy.notifiers = [str, float]
 
         notifier = create_notifier()
 
@@ -231,7 +234,7 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
         notifier.add_to(dummy)
 
         # then
-        self.assertEqual(dummy.notifiers, [notifier])
+        self.assertEqual(dummy.notifiers, [str, float, notifier])
 
     def test_add_to_observable_twice_increase_count(self):
         # Test trying to add the "same" notifier results in
