@@ -16,55 +16,18 @@ from traits.trait_base import class_of, Undefined
 from traits.trait_errors import TraitError
 
 
-def adapt_trait_validator(trait_validator, name="items"):
-    """ Adapt a trait validator to work as a trait list validator.
-
-    Parameters
-    ----------
-    trait_validator : callable
-        A callable validator
-    name : str
-        The name of the trait on the object.
-
-    The trait validator is expected to have the signature::
-
-        validator(object, name, value)
-
-
-    Returns
-    -------
-    list_trait_validator : callable
-        The trait validator that has been adapted for lists.
-
-    """
-
-    def validator(trait_list, index, removed, value):
-        try:
-            return [
-                trait_validator(trait_list, name, item)
-                for item in value
-            ]
-
-        except TraitError as excp:
-            excp.set_prefix("Each element of the")
-            raise excp
-
-    return validator
-
-
 class TraitListEvent(object):
     """ An object reporting in-place changes to a trait list.
 
     Parameters
     ----------
-    index : int or slice
-        An index or slice indicating the location of the changes to the list.
-    added : list or None
-        The list of values added to the list, or optionally None if nothing
-        is added.
-    removed : list or None
-        The list of values removed from the list, or optionally None if
-        nothing is removed.
+    index : int or slice, optional
+        An index or slice indicating the location of the changes to the trait
+        list. The default is 0.
+    added : list, optional
+        The list of values added to the trait list.
+    removed : list, optional
+        The list of values removed from the list.
 
     Attributes
     ----------
@@ -90,108 +53,89 @@ class TraitListEvent(object):
         self.added = added
 
 
+def _normalize_index(index, length):
+    """ Normalize integer index to range 0 to len (inclusive). """
+    index = operator.index(index)
+    if index < 0:
+        return max(0, length + index)
+    else:
+        return min(length, index)
+
+
+def _normalize_slice(index, length):
+    """ Normalize slice start and stop to range 0 to len (inclusive). """
+
+    # Do not normalize if step is negative.
+    if index.step is not None and index.step < 0:
+        return index
+
+    return slice(
+        _normalize_index(0 if index.start is None else index.start, length),
+        _normalize_index(length if index.stop is None else index.stop, length),
+        index.step,
+    )
+
+
+# Default item validator for TraitList.
+
+
+def accept_anything(item):
+    """
+    List item validator which accepts any item and returns it unaltered.
+    """
+    return item
+
+
 class TraitList(list):
     """ A subclass of list that validates and notifies listeners of changes.
 
     Parameters
     ----------
-    value : list
-        The value for the list
-    validator : callable, optional
-        Called to validate items in the list.
-        With the signature::
-
-            validator(current_list, index, removed, added)
-
-        If the validator is not provided, all values added to the list
-        are considered to be valid.
-
+    value : iterable
+        Iterable providing the items for the list
+    item_validator : callable, optional
+        Called to validate and/or transform items added to the list. The
+        callable should accept a single item from the list and return
+        the transformed item, raising TraitError for invalid items. If
+        not given, no item validation is performed.
     notifiers : list of callable, optional
         A list of callables with the signature::
 
             notifier(trait_list, index, removed, added)
 
-        If a notifier is not provided, an empty list of notifiers is
-        used.
+        If this argument is not given, the list of notifiers is initially
+        empty.
 
     Attributes
     ----------
-    validator : callable, optional
-        Called to validate items in the list
-        With the signature::
-
-            validator(current_list, index, removed, added)
-
-        If the validator is not provided, all values added to the list
-        are considered to be valid.
-
-    notifiers : list of callable, optional
+    item_validator : callable
+        Called to validate and/or transform items added to the list. The
+        callable should accept a single item from the list and return
+        the transformed item, raising TraitError for invalid items.
+    notifiers : list of callable
         A list of callables with the signature::
 
             notifier(trait_list, index, removed, added)
-
-        If a notifier is not provided, an empty list of notifiers is
-        used.
-
     """
 
     def __new__(cls, *args, **kwargs):
-        instance = super().__new__(cls)
-        instance.validator = None
-        instance.notifiers = []
-        return instance
+        # We need a __new__ in addition to __init__ in order to properly
+        # support unpickling: the 'append' or 'extend' methods may be
+        # called during unpickling, triggering item validation.
+        self = super().__new__(cls)
+        self.item_validator = accept_anything
+        self.notifiers = []
+        return self
 
-    def __init__(self, value=(), *, validator=None, notifiers=None):
-        self.validator = validator
-
-        if notifiers is None:
-            notifiers = []
-        self.notifiers = list(notifiers)
-
-        value = self.validate(slice(0, 0), [], list(value))
-        super().__init__(value)
-
-    # ------------------------------------------------------------------------
-    # TraitList interface
-    # ------------------------------------------------------------------------
-
-    def validate(self, index, removed, added):
-        """ Validate values for given index and removed values.
-
-        This simply calls the validator provided by the class, if any.
-        The validator is expected to have the signature::
-
-            validator(trait_list, index, removed, added)
-
-        and return a list of added values or raise a TraitError.
-
-        Parameters
-        ----------
-        index : int or slice
-            The indices being modified by the operation.
-        removed : list
-            The items to be removed.
-        added : list
-            The new items being added to the list.
-
-        Returns
-        -------
-        values : list
-            The validated values that must be added to the list.
-
-        Raises
-        ------
-        TraitError
-            If validation fails.
-        """
-
-        if self.validator is None:
-            return added
-        else:
-            return self.validator(self, index, removed, added)
+    def __init__(self, iterable=(), *, item_validator=None, notifiers=None):
+        if item_validator is not None:
+            self.item_validator = item_validator
+        super().__init__(self.item_validator(item) for item in iterable)
+        if notifiers is not None:
+            self.notifiers = list(notifiers)
 
     def notify(self, index, removed, added):
-        """ Call all notifiers
+        """ Call all notifiers.
 
         This simply calls all notifiers provided by the class, if any.
         The notifiers are expected to have the signature::
@@ -212,27 +156,268 @@ class TraitList(list):
         for notifier in self.notifiers:
             notifier(self, index, removed, added)
 
-    # ------------------------------------------------------------------------
-    # list interface
-    # ------------------------------------------------------------------------
+    # -- list interface -------------------------------------------------------
+
+    def __delitem__(self, key):
+        """ Delete self[key].
+
+        Parameters
+        ----------
+        key : integer or slice
+            Index of the element(s) to be deleted.
+        """
+
+        if isinstance(key, slice):
+            removed = self[key]
+            normalized_index = _normalize_slice(key, len(self))
+        else:
+            # Suppress IndexError. If the lookup fails, __delitem__ should also
+            # fail, and we want to allow the __delitem__ error to propagate.
+            try:
+                removed = [self[key]]
+            except IndexError:
+                pass
+            normalized_index = _normalize_index(key, len(self))
+        super().__delitem__(key)
+        if removed:
+            self.notify(normalized_index, removed, [])
+
+    def __iadd__(self, value):
+        """ Implement self += value.
+
+        Parameters
+        ----------
+        value : iterable
+            The items to be added.
+
+        Returns
+        -------
+        self : TraitList
+            The modified list.
+        """
+
+        original_length = len(self)
+        added = [self.item_validator(item) for item in value]
+        extended = super().__iadd__(added)
+        if added:
+            self.notify(slice(original_length, len(self)), [], added)
+        return extended
+
+    def __imul__(self, value):
+        """ Implement self *= value.
+
+        Parameters
+        ----------
+        value : integer
+            The multiplier.
+
+        Returns
+        -------
+        self : TraitList
+            The modified list.
+        """
+
+        if value < 1:
+            removed = self.copy()
+            multiplied = super().__imul__(value)
+            if removed:
+                self.notify(slice(0, len(removed)), removed, [])
+        else:
+            original_length = len(self)
+            multiplied = super().__imul__(value)
+            new_length = len(self)
+            if new_length > original_length:
+                index = slice(original_length, new_length)
+                self.notify(index, [], self[index])
+        return multiplied
+
+    def __setitem__(self, key, value):
+        """ Set self[key] to value.
+
+        Parameters
+        ----------
+        key : integer or slice
+            Index of the element(s) to be replaced.
+        value : iterable
+            Replacement values.
+
+        Raises
+        ------
+        IndexError
+            If key is an integer index and is out of range.
+        ValueError
+            If key is an extended slice (that is, it's a slice whose step
+            is not 1 and not None) and the number of replacement elements
+            doesn't match the number of removed elements.
+        """
+
+        if isinstance(key, slice):
+            value = [self.item_validator(item) for item in value]
+            normalized_index = _normalize_slice(key, len(self))
+            added = value
+            removed = self[key]
+        else:
+            value = self.item_validator(value)
+            normalized_index = _normalize_index(key, len(self))
+            added = [value]
+            # Suppress IndexError. If the lookup fails, __setitem__ should also
+            # fail, and we want to allow the __setitem__ error to propagate.
+            try:
+                removed = [self[key]]
+            except IndexError:
+                pass
+        super().__setitem__(key, value)
+
+        if added != removed:
+            self.notify(normalized_index, removed, added)
+
+    def append(self, object):
+        """ Append object to the end of the list.
+
+        Parameters
+        ----------
+        object : any
+            The object to append.
+        """
+
+        original_length = len(self)
+        super().append(self.item_validator(object))
+        self.notify(original_length, [], self[original_length:])
+
+    def clear(self):
+        """ Remove all items from list. """
+
+        removed = self.copy()
+        super().clear()
+        if removed:
+            self.notify(slice(0, len(removed)), removed, [])
+
+    def extend(self, iterable):
+        """ Extend list by appending elements from the iterable.
+
+        Parameters
+        ----------
+        iterable : iterable
+            The elements to append.
+        """
+
+        original_length = len(self)
+        added = [self.item_validator(item) for item in iterable]
+        super().extend(added)
+        if added:
+            self.notify(slice(original_length, len(self)), [], added)
+
+    def insert(self, index, object):
+        """ Insert object before index.
+
+        Parameters
+        ----------
+        index : integer
+            The position at which to insert.
+        object : object
+            The object to insert.
+        """
+
+        original_length = len(self)
+        super().insert(index, self.item_validator(object))
+        normalized_index = _normalize_index(index, original_length)
+        self.notify(normalized_index, [], [self[normalized_index]])
+
+    def pop(self, index=-1):
+        """ Remove and return item at index (default last).
+
+        Parameters
+        ----------
+        index : int, optional
+            Index at which to remove item. If not given, the
+            last item of the list is removed.
+
+        Returns
+        -------
+        item : object
+            The removed item.
+
+        Raises
+        ------
+        IndexError
+            If list is empty or index is out of range.
+        """
+
+        original_length = len(self)
+        item = super().pop(index)
+        normalized_index = _normalize_index(index, original_length)
+        self.notify(normalized_index, [item], [])
+        return item
+
+    def remove(self, value):
+        """ Remove first occurrence of value.
+
+        Notes
+        -----
+        The value is not validated or converted before removal.
+
+        Parameters
+        ----------
+        value : object
+            Value to be removed.
+
+        Raises
+        ------
+        ValueError
+            If the value is not present.
+        """
+        # Suppress ValueError. If the index call fails because the item is not
+        # in the list, remove should also fail, and we want to allow the remove
+        # error to propagate.
+        try:
+            index = self.index(value)
+        except ValueError:
+            pass
+        else:
+            removed = [self[index]]
+        super().remove(value)
+        self.notify(index, removed, [])
+
+    def reverse(self):
+        """ Reverse the items in the list in place. """
+        removed = self.copy()
+        super().reverse()
+        self.notify(slice(0, len(self)), removed, self.copy())
+
+    def sort(self, *, key=None, reverse=False):
+        """ Sort the list in ascending order and return None.
+
+        The sort is in-place (i.e. the list itself is modified) and stable
+        (i.e. the order of two equal elements is maintained).
+
+        If a key function is given, apply it once to each list item and sort
+        them, ascending or descending, according to their function values.
+
+        The reverse flag can be set to sort in descending order.
+
+        Parameters
+        ----------
+        key : callable
+            Custom function that accepts a single item from the list and
+            returns the key to be used in comparisons.
+        reverse : bool
+            If true, the resulting list will be sorted in descending order.
+        """
+        removed = self.copy()
+        super().sort(key=key, reverse=reverse)
+        self.notify(slice(0, len(self)), removed, self.copy())
+
+    # -- pickle and copy support ----------------------------------------------
 
     def __deepcopy__(self, memo):
         """ Perform a deepcopy operation.
 
         Notifiers are transient and should not be copied.
         """
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
-        # notifiers are transient and should not be copied
-        memo[id_self] = result = TraitList(
+        return type(self)(
             [copy.deepcopy(x, memo) for x in self],
-            validator=copy.deepcopy(self.validator, memo),
-            notifiers=[],
+            item_validator=copy.deepcopy(self.item_validator, memo),
         )
-
-        return result
 
     def __getstate__(self):
         """ Get the state of the object for serialization.
@@ -248,435 +433,13 @@ class TraitList(list):
 
         Notifiers are transient and are restored to the empty list.
         """
-        state['notifiers'] = []
+        state["notifiers"] = []
         self.__dict__.update(state)
-
-    def __setitem__(self, index, value):
-        """ Set a value at index, implements self[index] = value
-
-        Parameters
-        ----------
-        index : int
-            Index at which the value will be set.
-        value : any
-            The value to set at the index.
-
-        Notes
-        -----
-        Parameters in the notification:
-            index : int
-                The index at which the value is set.
-            added : list
-                The value that is set, as a list.
-            removed : list
-                The value that is removed, as a list.
-
-        """
-        removed = self._get_removed(index, default=[])
-        index_is_slice = isinstance(index, slice)
-
-        if index_is_slice:
-            if len(removed) != len(value) and index.step not in {1, None}:
-                raise ValueError("attempt to assign sequence of size {} "
-                                 "to extended slice of size "
-                                 "{}".format(len(value), len(removed)))
-        else:
-            value = [value]
-
-        norm_index = self._normalize(index)
-
-        added = item = self.validate(norm_index, removed, value)
-
-        if not index_is_slice:
-            item = added[0]
-
-        super().__setitem__(index, item)
-
-        if added != removed:
-            self.notify(norm_index, removed, added)
-
-    def __delitem__(self, index):
-        """ Delete an item from the list at index.
-
-        Parameters
-        ----------
-        index : int
-            Index of the element to be deleted.
-
-        Notes
-        -----
-        Parameters in the notification:
-            index : int
-                The index of the value that is deleted.
-            added : list
-                The empty list [].
-            removed : list
-                The removed value, as a list.
-
-        """
-        added = []
-        removed = self._get_removed(index, default=[])
-        norm_index = self._normalize(index)
-        self.validate(norm_index, removed, added)
-
-        super().__delitem__(index)
-
-        if added != removed:
-            self.notify(norm_index, removed, added)
-
-    def append(self, object):
-        """ Append an item to the end of the list.
-
-        Parameters
-        ----------
-        object : any
-            The item to append to the list.
-
-        Notes
-        -----
-        Parameters in the notification:
-            index : int
-                The index of the newly appended item.
-            added : list
-                The new item, as a list
-            removed : list
-                Will be []
-
-        """
-        index = len(self)
-
-        removed = []
-        added = self.validate(index, removed, [object])
-
-        super().append(added[0])
-
-        if added != removed:
-            self.notify(index, removed, added)
-
-    def extend(self, iterable):
-        """ Extend list by appending elements from the iterable.
-
-        Parameters
-        ----------
-        iterable : iterable
-            Any iterable type
-
-        Notes
-        -----
-        Parameters in the notification:
-            index : slice
-                The slice(current_length,new_length) if successful if
-                the iterable supports len() else the slice(current_len,None,1).
-            added : list
-                The newly added items.
-            removed : list
-                Will be []
-
-        """
-        iterable = list(iterable)
-        index = slice(len(self), len(self) + len(iterable))
-        removed = []
-        added = self.validate(index, removed, iterable)
-
-        super().extend(added)
-
-        if added != removed:
-            self.notify(index, removed, added)
-
-    def insert(self, index, object):
-        """ Insert an object to the list before index.
-
-        Parameters
-        ----------
-        index : int
-            The index before which to insert the object.
-        object : any
-            The object to insert.
-
-
-        Notes
-        -----
-        Parameters in the notification:
-            index : int
-                The index before which the item was inserted.
-            added : list
-                The newly added item(s) as a list.
-            removed : list
-                Will be []
-
-        """
-        removed = []
-        norm_index = self._normalize_index(index)
-        added = self.validate(norm_index, removed, [object])
-
-        super().insert(index, added[0])
-
-        if added != removed:
-            self.notify(norm_index, removed, added)
-
-    def clear(self):
-        """ Remove all items from the list
-
-
-        Notes
-        -----
-        Parameters in the notification:
-            index : slice
-                The range of the slice will be 0 to len(self).
-            added : list
-                The empty list [].
-            removed : list
-                The removed items.
-
-        """
-        index = slice(0, len(self))
-        removed = self.copy()
-        added = []
-        self.validate(index, removed, added)
-        super().clear()
-
-        if added != removed:
-            self.notify(index, removed, [])
-
-    def pop(self, index=-1):
-        """ Remove and return item at index (default last).
-
-        Parameters
-        ----------
-        index: int
-            Index at which item has to be removed.
-
-        Returns
-        -------
-        item : An item in the list at given index, last item if no index given.
-
-        Raises
-        ------
-        IndexError
-            If the index is out of range.
-
-        Notes
-        -----
-        Parameters in the notification:
-            index : int
-                The normalized index between 0 and len(self).
-            added : list
-                Will be []
-            removed : list
-                The removed item, as a list.
-
-        """
-
-        added = []
-        removed = self._get_removed(index, default=[])
-        norm_index = self._normalize_index(index)
-        self.validate(norm_index, removed, added)
-
-        removed_item = super().pop(index)
-
-        if added != removed:
-            self.notify(norm_index, removed, added)
-
-        return removed_item
-
-    def remove(self, value):
-        """ Remove first occurrence of value.
-
-        Parameters
-        ----------
-        value : any
-            A value contained in the list.
-
-        Raises
-        ------
-        ValueError
-            If the value is not present.
-
-        Notes
-        -----
-        Parameters in the notification:
-            index : int
-                The index between 0 and len(self).
-            added : list
-                Will be [].
-            removed : list
-                The removed item, as a list.
-
-        """
-        index = self.index(value)
-        removed = self._get_removed(index)
-        added = []
-
-        self.validate(index, removed, added)
-
-        super().remove(value)
-
-        if added != removed:
-            self.notify(index, removed, added)
-
-    def sort(self, *, key=None, reverse=False):
-        """ Sort the items in the list in ascending order, *IN PLACE*.
-        A custom key function can be supplied to customize
-        the sort order, and the reverse flag can be set to request the result
-        in descending order.
-
-        Parameters
-        ----------
-        key : callable
-            Custom function.
-        reverse : bool
-            If true, the resulting list will be sorted in descending order.
-
-        Notes
-        -----
-        Parameters in the notification:
-            index : slice
-                The slice between 0 and len(self)
-            added : list
-                A copy of the list after sorting elements.
-            removed : list
-                A copy of the list before sorting elements.
-
-        """
-
-        removed = self[:]
-        super().sort(key=key, reverse=reverse)
-        added = self[:]
-        index = slice(0, len(self))
-
-        self.notify(index, removed, added)
-
-    def reverse(self):
-        """ Reverse the order of the items in the list *IN PLACE*.
-
-        Notes
-        -----
-        Parameters in the notification:
-            index : slice
-                The slice between 0 and len(self).
-            added : list
-                A copy of the list after reversing the order of items.
-            removed : list.
-                A copy of the list before reversing the order of items.
-
-        """
-        removed = self[:]
-        self[:] = self[::-1]
-        added = self[:]
-
-        index = slice(0, len(self))
-
-        self.notify(index, removed, added)
-
-    def __iadd__(self, other):
-        """ Implements the self += value operator.
-
-        Parameters
-        ----------
-        other : any
-            The item to add to the list.
-
-        Notes
-        -----
-        Parameters in the notification:
-            index : slice
-                Slice ranging from current_length to new_length.
-            added : list
-                The  new values that were added.
-            removed : list
-                The empty list [].
-
-        """
-        self.extend(other)
-        return self
-
-    def __imul__(self, count):
-        """ Implements the self *= value operator.
-
-        Parameters
-        ----------
-        count : int
-            Number of times to duplicate the list.
-
-        Notes
-        -----
-        Parameters in the notification:
-            index : slice
-                Slice ranging from current_length to new_length.
-            added : list
-                The  new values that were added.
-            removed : list
-                The empty list [].
-
-        """
-        extension = self * count
-        if count <= 0:
-            self.clear()
-        else:
-            self.extend(extension[:-len(self)])
-
-        return self
-
-    # ------------------------------------------------------------------------
-    # Private interface
-    # ------------------------------------------------------------------------
-
-    def _get_removed(self, index, default=[]):
-        """ Compute removed values given index. """
-        try:
-            if not isinstance(index, slice):
-                return [self[index]]
-            else:
-                return self[index]
-        except IndexError:
-            return default
-
-    def _normalize(self, index):
-        if isinstance(index, slice):
-            return self._normalize_slice(index)
-        else:
-            return self._normalize_index(index)
-
-    def _normalize_index(self, index):
-        """ Normalize integer index to range 0 to len (inclusive). """
-        index = operator.index(index)
-        if index < 0:
-            return max(0, len(self) + index)
-        else:
-            return min(len(self), index)
-
-    def _normalize_slice(self, index):
-        """ Normalize slice start and stop to range 0 to len (inclusive). """
-
-        # Do not normalize if step is negative.
-        if index.step is not None and index.step < 0:
-            return index
-
-        if index.step is None or index.step > 0:
-            if index.start is not None:
-                start = self._normalize_index(index.start)
-            else:
-                start = 0
-            if index.stop is not None:
-                stop = self._normalize_index(index.stop)
-            else:
-                stop = len(self)
-        else:
-            if index.start is not None:
-                start = self._normalize_index(index.start)
-            else:
-                start = len(self)
-            if index.stop is not None:
-                stop = self._normalize_index(index.stop)
-            else:
-                stop = 0
-
-        return slice(start, stop, index.step)
 
 
 class TraitListObject(TraitList):
     """ A specialization of TraitList with a default validator and notifier
-    which provide bug-for-bug compatibility with the TraitsListObject from
+    which provide bug-for-bug compatibility with the TraitListObject from
     Traits versions before 6.0.
 
     Parameters
@@ -711,65 +474,15 @@ class TraitListObject(TraitList):
         if trait.has_items:
             self.name_items = name + "_items"
 
-        super().__init__(value, validator=self.trait_validator,
-                         notifiers=[self.notifier])
+        # Convert to an explicit list so that we can validate the length.
+        value = list(value)
+        self._validate_length(len(value))
 
-    def trait_validator(self, trait_list, index, removed, added):
-        """ Validates the value by calling the inner trait's validate method
-        and also ensures that the size of the list is within the specified
-        bounds.
-
-        Parameters
-        ----------
-        trait_list : list
-            The current list.
-        index : index or slice
-            Index or slice corresponding to the values added/removed.
-        removed : list
-            values that are removed.
-        added : list
-            value or list of values that are added.
-
-        Returns
-        -------
-        value : validated value or list of validated values.
-
-        Raises
-        ------
-        TraitError
-            On validation failure for the inner trait or if the size of the
-            list exceeds the specified bounds
-        """
-        object_ref = getattr(self, 'object', None)
-        trait = getattr(self, 'trait', None)
-
-        if object_ref is None or trait is None:
-            return added
-
-        object = object_ref()
-
-        # check that length is within bounds
-        new_len = len(trait_list) - len(removed) + len(added)
-        if not trait.minlen <= new_len <= trait.maxlen:
-            raise TraitError(
-                "The '%s' trait of %s instance must be %s, "
-                "but you attempted to change its length to %d element%s."
-                % (
-                    self.name,
-                    class_of(object),
-                    self.trait.full_info(object, self.name, Undefined),
-                    new_len,
-                    "s"[new_len == 1:],
-                )
-            )
-
-        # validate the new value(s)
-        validate = trait.item_trait.handler.validate
-        if validate is None or added == []:
-            return added
-
-        validate = adapt_trait_validator(validate, self.name)
-        return validate(object, index, removed, added)
+        super().__init__(
+            value,
+            item_validator=self._item_validator,
+            notifiers=[self.notifier],
+        )
 
     def notifier(self, trait_list, index, removed, added):
         """ Converts and consolidates the parameters to a TraitListEvent and
@@ -799,29 +512,202 @@ class TraitListObject(TraitList):
         # bug-for-bug conversion of parameters to TraitListEvent
         if isinstance(index, slice):
             if index.step is None or index.step == 1:
-                index = min(index.start, index.stop)
+                index = index.start
 
         event = TraitListEvent(index, removed, added)
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
+
+    # -- list interface -------------------------------------------------------
+
+    def __delitem__(self, key):
+        """ Delete self[key].
+
+        Parameters
+        ----------
+        key : integer or slice
+            Index of the element(s) to be deleted.
+        """
+        removed_count = len(self[key]) if isinstance(key, slice) else 1
+        self._validate_length(len(self) - removed_count)
+        super().__delitem__(key)
+
+    def __iadd__(self, value):
+        """ Implement self += value.
+
+        Parameters
+        ----------
+        value : iterable
+            The items to be added.
+
+        Returns
+        -------
+        self : TraitList
+            The modified list.
+        """
+
+        # Convert input to a concrete list for length-checking purposes.
+        value = list(value)
+        self._validate_length(len(self) + len(value))
+        return super().__iadd__(value)
+
+    def __imul__(self, value):
+        """ Implement self *= value.
+
+        Parameters
+        ----------
+        value : integer
+            The multiplier.
+
+        Returns
+        -------
+        self : TraitList
+            The modified list.
+        """
+
+        self._validate_length(max(0, len(self) * value))
+        return super().__imul__(value)
+
+    def __setitem__(self, key, value):
+        """ Set self[key] to value.
+
+        Parameters
+        ----------
+        key : integer or slice
+            Index of the element(s) to be replaced.
+        value : iterable
+            Replacement values.
+
+        Raises
+        ------
+        IndexError
+            If key is an integer index and is out of range.
+        ValueError
+            If key is an extended slice (that is, it's a slice whose step
+            is not 1 and not None) and the number of replacement elements
+            doesn't match the number of removed elements.
+        """
+
+        if isinstance(key, slice):
+            value = list(value)
+            if key.step is None or key.step == 1:
+                self._validate_length(len(self) - len(self[key]) + len(value))
+            else:
+                # No length change possible, so no need to validate length. But
+                # for backwards compatibility we simulate Python's complaint
+                # about any length difference before validating items.
+                if len(value) != len(self[key]):
+                    raise ValueError(
+                        "attempt to assign sequence of size {} "
+                        "to extended slice of size {}".format(
+                            len(value), len(self[key])
+                        )
+                    )
+        super().__setitem__(key, value)
+
+    def append(self, object):
+        """ Append object to the end of the list.
+
+        Parameters
+        ----------
+        object : any
+            The object to append.
+        """
+
+        self._validate_length(len(self) + 1)
+        super().append(object)
+
+    def clear(self):
+        """ Remove all items from list. """
+
+        self._validate_length(0)
+        super().clear()
+
+    def extend(self, iterable):
+        """ Extend list by appending elements from the iterable.
+
+        Parameters
+        ----------
+        iterable : iterable
+            The elements to append.
+        """
+
+        # Convert input to a concrete list for length-checking purposes.
+        items = list(iterable)
+        self._validate_length(len(self) + len(items))
+        super().extend(items)
+
+    def insert(self, index, object):
+        """ Insert object before index.
+
+        Parameters
+        ----------
+        index : integer
+            The position at which to insert.
+        object : object
+            The object to insert.
+        """
+
+        self._validate_length(len(self) + 1)
+        super().insert(index, object)
+
+    def pop(self, index=-1):
+        """ Remove and return item at index (default last).
+
+        Parameters
+        ----------
+        index : int, optional
+            Index at which to remove item. If not given, the
+            last item of the list is removed.
+
+        Returns
+        -------
+        item : object
+            The removed item.
+
+        Raises
+        ------
+        IndexError
+            If list is empty or index is out of range.
+        """
+
+        self._validate_length(len(self) - 1)
+        return super().pop(index)
+
+    def remove(self, value):
+        """ Remove first occurrence of value.
+
+        Notes
+        -----
+        The value is not validated or converted before removal.
+
+        Parameters
+        ----------
+        value : object
+            Value to be removed.
+
+        Raises
+        ------
+        ValueError
+            If the value is not present.
+        """
+
+        self._validate_length(len(self) - 1)
+        super().remove(value)
+
+    # -- pickle and copy support ----------------------------------------------
 
     def __deepcopy__(self, memo):
         """ Perform a deepcopy operation.
 
         Notifiers are transient and should not be copied.
         """
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
-        memo[id_self] = result = TraitListObject(
+        return TraitListObject(
             self.trait,
             lambda: None,
             self.name,
             [copy.deepcopy(x, memo) for x in self],
         )
-
-        return result
 
     def __getstate__(self):
         """ Get the state of the object for serialization.
@@ -843,12 +729,64 @@ class TraitListObject(TraitList):
         state["notifiers"] = [self.notifier]
         object = state.pop("object", None)
         if object is not None:
-            state['object'] = ref(object)
+            state["object"] = ref(object)
             trait = self.object()._trait(name, 0)
             if trait is not None:
-                state['trait'] = trait.handler
+                state["trait"] = trait.handler
         else:
-            state['object'] = lambda: None
-            state['trait'] = None
+            state["object"] = lambda: None
+            state["trait"] = None
 
         self.__dict__.update(state)
+
+    # -- private methods ------------------------------------------------------
+
+    def _item_validator(self, value):
+        """
+        Validate an item that's being added to the list.
+        """
+        object = self.object()
+        if object is None:
+            return value
+
+        trait_validator = self.trait.item_trait.handler.validate
+        if trait_validator is None:
+            return value
+
+        try:
+            return trait_validator(object, self.name, value)
+        except TraitError as excp:
+            excp.set_prefix("Each element of the")
+            raise
+
+    def _validate_length(self, new_length):
+        """
+        Validate the new length for a proposed operation.
+
+        Parameters
+        ----------
+        new_length : int
+            New length of the list.
+
+        Raises
+        ------
+        TraitError
+            If the proposed new length would violate the length constraints
+            of the list.
+        """
+        trait = getattr(self, "trait", None)
+        if trait is None:
+            return
+
+        if not trait.minlen <= new_length <= trait.maxlen:
+            raise TraitError(
+                "The '%s' trait of %s instance must be %s, "
+                "but you attempted to change its length to %d %s."
+                % (
+                    self.name,
+                    class_of(object),
+                    self.trait.full_info(object, self.name, Undefined),
+                    new_length,
+                    "element" if new_length == 1 else "elements",
+                )
+            )

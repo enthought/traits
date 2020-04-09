@@ -85,12 +85,40 @@ class TestCTrait(unittest.TestCase):
 
         self.assertFalse(trait.is_property)
 
-        trait.property(getter, 0, setter, 1, validator, 1)
+        trait.property_fields = (getter, setter, validator)
 
         self.assertTrue(trait.is_property)
 
         with self.assertRaises(AttributeError):
             trait.is_property = False
+
+    def test_get_set_property(self):
+        trait = CTrait(TraitKind.trait)
+
+        # Get the property, ensure None
+        self.assertIsNone(trait.property_fields)
+
+        def value_get(self):
+            return self.__dict__.get("_value", 0)
+
+        def value_set(self, value):
+            old_value = self.__dict__.get("_value", 0)
+            if value != old_value:
+                self._value = value
+                self.trait_property_changed("value", old_value, value)
+
+        # Set the callables
+        trait.property_fields = (value_get, value_set, None)
+
+        fget, fset, validate = trait.property_fields
+
+        self.assertIs(fget, value_get)
+        self.assertIs(fset, value_set)
+        self.assertIsNone(validate)
+
+        # Ensure that _get_property does not accept arguments.
+        with self.assertRaises(TypeError):
+            trait._get_property(fget)
 
     def test_modify_delegate(self):
         trait = CTrait(TraitKind.trait)
