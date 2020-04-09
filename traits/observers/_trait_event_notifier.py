@@ -33,7 +33,7 @@ class TraitEventNotifier:
     ``HasTraits`` instance.
 
     Since there is only one reference count associated with a notifier,
-    each notifier is expected to target only one observable.
+    each notifier is expected to be added to only one observable.
     """
 
     def __init__(
