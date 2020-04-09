@@ -27,9 +27,10 @@ class TraitEventNotifier:
     situations where a same object is repeated inside a container
     and one would not want to fire the same change handler multiple times
     (see enthought/traits#237). For that purpose, a notifier keeps track of
-    the ``HasTraits`` instance on which the user applies the observers. It
-    also needs to determine whether another notifier refers to the same
-    change handler and ``HasTraits`` instance. See the ``equals`` method.
+    the ``HasTraits`` instance (called ``target``) on which the user applies
+    the observers, keeps a reference count internally, and it also needs to
+    determine whether another notifier refers to the same change handler and
+    ``HasTraits`` instance.
 
     Since there is only one reference count associated with a notifier,
     each notifier is expected to target only one observable.
