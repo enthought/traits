@@ -70,6 +70,9 @@ class TraitSet(set):
 
             notifier(removed, added)
 
+        Where 'added' is a set containing the new values that will be added.
+        And 'removed' is a set containing the old values that will be removed.
+
         If this argument is not given, the list of notifiers is initially
         empty.
 
@@ -83,6 +86,9 @@ class TraitSet(set):
         A list of callables with the signature::
 
             notifier(removed, added)
+
+        Where 'added' is a set containing the new values that will be added.
+        And 'removed' is a set containing the old values that will be removed.
 
     """
 
