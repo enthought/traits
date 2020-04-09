@@ -44,7 +44,7 @@ class TraitSetEvent(object):
         self.added = added
 
 
-# Default item validator for TraitList.
+# Default item validator for TraitSet.
 
 def accept_anything(item):
     """
@@ -62,7 +62,7 @@ class TraitSet(set):
         Iterable providing the items for the set.
     item_validator : callable, optional
         Called to validate and/or transform items added to the list. The
-        callable should accept a single item from the list and return
+        callable should accept a single item from the set and return
         the transformed item, raising TraitError for invalid items. If
         not given, no item validation is performed.
     notifiers : list of callable
@@ -87,9 +87,6 @@ class TraitSet(set):
     """
 
     def __new__(cls, *args, **kwargs):
-        # We need a __new__ in addition to __init__ in order to properly
-        # support unpickling: the 'append' or 'extend' methods may be
-        # called during unpickling, triggering item validation.
         self = super().__new__(cls)
         self.item_validator = accept_anything
         self.notifiers = []
@@ -290,8 +287,7 @@ class TraitSet(set):
         values = set(value)
         removed = self.intersection(values)
         added = values.difference(removed)
-        if added:
-            added = {self.item_validator(item) for item in added}
+        added = {self.item_validator(item) for item in added}
         added = added.difference(self)
 
         if removed or added:
