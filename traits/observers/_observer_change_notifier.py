@@ -58,7 +58,7 @@ class ObserverChangeNotifier:
         self.observer_handler = observer_handler
         self.event_factory = event_factory
         self.path = path
-        self.target = target
+        self.target = weakref.ref(target)
         self.handler = handler
         self.dispatcher = dispatcher
 
@@ -76,7 +76,7 @@ class ObserverChangeNotifier:
         self.observer_handler(
             event=event,
             path=self.path,
-            target=self.target,
+            target=self.target(),
             handler=self.handler,
             dispatcher=self.dispatcher,
         )

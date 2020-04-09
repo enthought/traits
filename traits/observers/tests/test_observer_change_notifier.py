@@ -10,8 +10,25 @@
 
 import unittest
 from unittest import mock
+import weakref
 
 from traits.observers._observer_change_notifier import ObserverChangeNotifier
+
+
+def create_notifier(**kwargs):
+    """ Convenient function for creating an instance of ObserverChangeNotifier
+    for testing purposes.
+    """
+    values = dict(
+        path=mock.Mock(),
+        observer_handler=mock.Mock(),
+        event_factory=mock.Mock(),
+        handler=mock.Mock(),
+        target=mock.Mock(),
+        dispatcher=mock.Mock(),
+    )
+    values.update(kwargs)
+    return ObserverChangeNotifier(**values)
 
 
 class TestObserverChangeNotifierCall(unittest.TestCase):
@@ -24,7 +41,7 @@ class TestObserverChangeNotifierCall(unittest.TestCase):
         target = mock.Mock()
         dispatcher = mock.Mock()
 
-        notifier = ObserverChangeNotifier(
+        notifier = create_notifier(
             observer_handler=observer_handler,
             path=path,
             handler=handler,
@@ -42,3 +59,24 @@ class TestObserverChangeNotifierCall(unittest.TestCase):
             target=target,
             dispatcher=dispatcher,
         )
+
+
+class TestObserverChangeNotifierWeakrefTarget(unittest.TestCase):
+
+    def test_target_can_be_garbage_collected(self):
+        # It is a common use case that the target is an instance
+        # of HasTraits and the notifier is attached to an internal
+        # object inside target. The notifier should not prevent
+        # the target from being garbage collected.
+        target = mock.Mock()
+        target_ref = weakref.ref(target)
+
+        # Holding reference to the notifier does not prevent
+        # the target from being deleted.
+        notifier = create_notifier(target=target)  # noqa: F841
+
+        # when
+        del target
+
+        # then
+        self.assertIsNone(target_ref())
