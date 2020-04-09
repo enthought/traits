@@ -8,13 +8,10 @@
 #
 # Thanks for using Enthought open source!
 from functools import partial
-import logging
 import types
 import weakref
 
 from traits.observers._exception_handling import handle_exception
-
-_trait_logger = logging.getLogger("traits")
 
 
 class TraitEventNotifier:
