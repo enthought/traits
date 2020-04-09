@@ -46,7 +46,7 @@ class DummyObservable:
 
 
 # Dummy target object that is not garbage collected while the tests are run.
-_DUMMY_TARGET = DummyObservable()
+_DUMMY_TARGET = mock.Mock()
 
 
 def create_notifier(**kwargs):
