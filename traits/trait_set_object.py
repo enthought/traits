@@ -117,9 +117,9 @@ class TraitSet(set):
         Parameters
         ----------
         removed : set
-            The items to be removed.
+            The items that have been removed.
         added : set
-            The new items being added to the set.
+            The new items that have been added to the set.
         """
         for notifier in self.notifiers:
             notifier(removed, added)
@@ -132,7 +132,7 @@ class TraitSet(set):
         Parameters
         ----------
         value : any
-            The value to update the set with.
+            A value.
 
         Returns
         -------
@@ -211,7 +211,7 @@ class TraitSet(set):
             self.notify(set(), {value})
 
     def remove(self, value):
-        """ Remove an element from a set; it must be a member.
+        """ Remove an element that is a member of the set.
 
         If the element is not a member, raise a KeyError.
 
@@ -230,7 +230,7 @@ class TraitSet(set):
         self.notify(set([value]), set())
 
     def update(self, value=()):
-        """ Update a set with the union of itself and others.
+        """ Update the set with the union of itself and others.
 
         Parameters
         ----------
@@ -261,7 +261,7 @@ class TraitSet(set):
             self.notify(removed, set())
 
     def intersection_update(self, value=None):
-        """  Update a set with the intersection of itself and another.
+        """  Update the set with the intersection of itself and another set.
 
         Parameters
         ----------
@@ -280,7 +280,7 @@ class TraitSet(set):
             self.notify(removed, set())
 
     def symmetric_difference_update(self, value):
-        """ Update a set with the symmetric difference of itself and another.
+        """ Update the set with the symmetric difference of itself and another.
 
         Parameters
         ----------
@@ -300,7 +300,7 @@ class TraitSet(set):
             self.notify(removed, added)
 
     def discard(self, value):
-        """ Remove an element from a set if it is a member.
+        """ Remove an element from the set if it is a member.
 
         If the element is not a member, do nothing.
 
@@ -318,12 +318,18 @@ class TraitSet(set):
 
     def pop(self):
         """ Remove and return an arbitrary set element.
+
         Raises KeyError if the set is empty.
 
         Returns
         -------
         item : any
             An element from the set.
+
+        Raises
+        ------
+        KeyError
+            If the set is empty.
         """
 
         removed = super().pop()
@@ -427,12 +433,13 @@ class TraitSetObject(TraitSet):
 
         Parameters
         ----------
-        value : set
-            set of values that need to be validated.
+        value : any
+            The value to be validated.
 
         Returns
         -------
-        value : set of validated values
+        value : any
+            The validated value.
 
         Raises
         ------
@@ -489,11 +496,7 @@ class TraitSetObject(TraitSet):
         Notifiers are transient and should not be copied.
         """
 
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
-        memo[id_self] = result = TraitSetObject(
+        result = TraitSetObject(
             self.trait,
             lambda: None,
             self.name,
@@ -509,9 +512,8 @@ class TraitSetObject(TraitSet):
         """
 
         result = super().__getstate__()
-        result.pop("object", None)
-        result.pop("trait", None)
-
+        del result["object"]
+        del result["trait"]
         return result
 
     def __setstate__(self, state):
