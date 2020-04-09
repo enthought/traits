@@ -64,6 +64,13 @@ class ObserverChangeNotifier:
 
     def __call__(self, *args, **kwargs):
         """ Called by the observable this notifier is attached to.
+
+        This exercises the observer_handler for maintaining observers and
+        notifiers on changed objects.
+
+        Note that any unexpected exceptions will be raised, as the
+        ``observer_handler`` is not provided by users of traits, but is
+        a callable maintained in traits.
         """
         event = self.event_factory(*args, **kwargs)
         self.observer_handler(
