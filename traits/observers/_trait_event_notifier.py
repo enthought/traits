@@ -131,6 +131,13 @@ class TraitEventNotifier:
                 other._ref_count += 1
                 break
         else:
+            # It is not a current use case to share a notifier with multiple
+            # observables. Using a single reference count will tie the lifetime
+            # of the notifier to multiple objects.
+            if self._ref_count != 0:
+                raise RuntimeError(
+                    "Sharing notifiers across observables is unexpected."
+                )
             notifiers.append(self)
             self._ref_count += 1
 

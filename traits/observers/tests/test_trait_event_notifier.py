@@ -346,6 +346,26 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
         # then
         self.assertEqual(dummy.notifiers, [notifier1])
 
+    def test_add_to_multiple_observables(self):
+        # This is a use case we don't have but we want to guard
+        # against for now.
+        dummy1 = DummyObservable()
+        dummy2 = DummyObservable()
+
+        notifier = create_notifier()
+
+        # when
+        notifier.add_to(dummy1)
+
+        # then
+        with self.assertRaises(RuntimeError) as exception_context:
+            notifier.add_to(dummy2)
+
+        self.assertEqual(
+            str(exception_context.exception),
+            "Sharing notifiers across observables is unexpected."
+        )
+
 
 class TestTraitEventNotifierWeakrefTarget(unittest.TestCase):
     """ Test weakref handling for target in TraitEventNotifier."""
