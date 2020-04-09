@@ -50,8 +50,13 @@ class ObserverChangeNotifier:
             a specific named trait.
         handler : callable(event)
             The user handler being maintained when a container object changes.
+            A weak reference is created for the handler if it is an instance
+            method. ``observer_handler`` may receive ``None`` if the handler
+            has been garbage collected.
         target : object
             An object for defining the context of the user's handler notifier.
+            A weak reference is created for the target. ``observer_handler``
+            may receive ``None`` if the target has been garbage collected.
         dispatcher : callable(function, event)
             Callable for dispatching the user's handler.
         """
@@ -59,7 +64,10 @@ class ObserverChangeNotifier:
         self.event_factory = event_factory
         self.path = path
         self.target = weakref.ref(target)
-        self.handler = handler
+        if isinstance(handler, types.MethodType):
+            self.handler = weakref.ref(handler)
+        else:
+            self.handler = partial(_return, value=handler)
         self.dispatcher = dispatcher
 
     def __call__(self, *args, **kwargs):
@@ -73,10 +81,19 @@ class ObserverChangeNotifier:
         a callable maintained in traits.
         """
         event = self.event_factory(*args, **kwargs)
+
+        # observer_handler will be given a chance to remove
+        # notifiers on an observable when the notifier's target or the
+        # handler is garbage collected. Hence no checks are performed
+        # on the weak references here.
         self.observer_handler(
             event=event,
             path=self.path,
             target=self.target(),
-            handler=self.handler,
+            handler=self.handler(),
             dispatcher=self.dispatcher,
         )
+
+
+def _return(value):
+    return value

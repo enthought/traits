@@ -31,6 +31,12 @@ def create_notifier(**kwargs):
     return ObserverChangeNotifier(**values)
 
 
+class DummyClass:
+
+    def dummy_method(self):
+        pass
+
+
 class TestObserverChangeNotifierCall(unittest.TestCase):
 
     def test_init_and_call(self):
@@ -80,3 +86,24 @@ class TestObserverChangeNotifierWeakrefTarget(unittest.TestCase):
 
         # then
         self.assertIsNone(target_ref())
+
+
+class TestObserverChangeNotifierWeakrefHandler(unittest.TestCase):
+    """ Test for using weak references when the user handler is a method
+    of an instance.
+    """
+
+    def test_instance_can_be_garbage_collected(self):
+        # It is a common use case the user's handler is an instance method.
+        # The notifier should not prevent the instance from being
+        # garbage collected.
+        instance = DummyClass()
+        instance_ref = weakref.ref(instance)
+
+        notifier = create_notifier(handler=instance.dummy_method)  # noqa: F841
+
+        # when
+        del instance
+
+        # then
+        self.assertIsNone(instance_ref())
