@@ -46,7 +46,6 @@ class TraitSetEvent(object):
 
 # Default item validator for TraitList.
 
-
 def accept_anything(item):
     """
     Item validator which accepts any item and returns it unaltered.
@@ -139,8 +138,8 @@ class TraitSet(set):
         -------
         self : set
             The updated set.
-
         """
+
         self.update(value)
         return self
 
@@ -156,8 +155,8 @@ class TraitSet(set):
         -------
         self : set
             The updated set.
-
         """
+
         self.intersection_update(value)
         return self
 
@@ -173,8 +172,8 @@ class TraitSet(set):
         -------
         self : set
             The updated set.
-
         """
+
         self.symmetric_difference_update(value)
         return self
 
@@ -190,8 +189,8 @@ class TraitSet(set):
         -------
         self : set
             The updated set.
-
         """
+
         self.difference_update(value)
         return self
 
@@ -204,8 +203,8 @@ class TraitSet(set):
         ----------
         value : any
             The value to add to the set.
-
         """
+
         value = self.item_validator(value)
         if value not in self:
             super().add(value)
@@ -225,8 +224,8 @@ class TraitSet(set):
         ------
         KeyError
             If the value is not found in the set.
-
         """
+
         super().remove(value)
         self.notify(set([value]), set())
 
@@ -237,8 +236,8 @@ class TraitSet(set):
         ----------
         value : iterable
             The other iterable.
-
         """
+
         validated_values = {self.item_validator(item) for item in value}
         added = validated_values.difference(self)
 
@@ -256,9 +255,9 @@ class TraitSet(set):
         """
 
         removed = self.intersection(value)
+        super().difference_update(value)
 
         if len(removed) > 0:
-            super().difference_update(removed)
             self.notify(removed, set())
 
     def intersection_update(self, value=None):
@@ -272,10 +271,12 @@ class TraitSet(set):
 
         if value is None:
             return
+
         value = set(value)
         removed = self.difference(value)
+        super().intersection_update(value)
+
         if len(removed) > 0:
-            super().intersection_update(value)
             self.notify(removed, set())
 
     def symmetric_difference_update(self, value):
@@ -284,16 +285,8 @@ class TraitSet(set):
         Parameters
         ----------
         value : iterable
-
-        Notes
-        -----
-        Parameters in the notification:
-            removed : set
-                A set containing the removed values.
-            added : set
-                A set containing the added values.
-
         """
+
         values = set(value)
         removed = self.intersection(values)
         added = values.difference(removed)
@@ -317,8 +310,10 @@ class TraitSet(set):
             An item in the set
         """
 
-        if value in self:
-            self.remove(value)
+        value_in_self = value in self
+        super().discard(value)
+
+        if value_in_self:
             self.notify({value}, set())
 
     def pop(self):
@@ -329,7 +324,6 @@ class TraitSet(set):
         -------
         item : any
             An element from the set.
-
         """
 
         removed = super().pop()
