@@ -1004,6 +1004,22 @@ class TestTraitListObject(unittest.TestCase):
             foo.at_least_two[2:] = [5.0, 6.0]
         self.assertEqual(foo.at_least_two, [1, 2, 3, 4])
 
+    def test_setitem_stop_lt_start(self):
+        # Regression test for enthought/traits#994.
+        events = []
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2, 3, 4])
+        foo.on_trait_change(
+            lambda event: events.append(event), "at_least_two_items")
+
+        # Note: items are inserted at position 4, not position 2.
+        foo.at_least_two[4:2] = [5, 6, 7]
+
+        self.assertEqual(len(events), 1)
+        event = events[0]
+        self.assertEqual(event.index, 4)
+        self.assertEqual(event.removed, [])
+        self.assertEqual(event.added, [5, 6, 7])
+
     def test_append(self):
         foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3])
         foo.at_most_five.append(6)
