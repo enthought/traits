@@ -90,11 +90,8 @@ class TraitDict(dict):
             notifier(trait_dict, added, changed, removed)
 
         Where 'added' is a dict of new key-values that have been added
-        And 'changed' is a dict with values previously associated
-        with the key.
-        And 'removed' is a dict of key-values that are no longer in
-        the dictionary
-
+        'changed' is a dict with old values previously associated with the key.
+        'removed' is a dict of key-values that are no longer in the dictionary.
 
     Attributes
     ----------
@@ -114,10 +111,8 @@ class TraitDict(dict):
             notifier(trait_dict, added, changed, removed)
 
         Where 'added' is a dict of new key-values that have been added
-        And 'changed' is a dict with values previously associated
-        with the key.
-        And 'removed' is a dict of key-values that are no longer in
-        the dictionary
+        'changed' is a dict with old values previously associated with the key.
+        'removed' is a dict of key-values that are no longer in the dictionary.
 
     """
 
@@ -324,12 +319,7 @@ class TraitDict(dict):
 
         Notifiers are transient and should not be copied.
         """
-
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
-        memo[id_self] = result = TraitDict(
+        result = TraitDict(
             dict(copy.deepcopy(x, memo) for x in self.items()),
             key_validator=copy.deepcopy(self.key_validator, memo),
             value_validator=copy.deepcopy(self.value_validator, memo),
