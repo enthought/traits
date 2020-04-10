@@ -262,11 +262,11 @@ class TestTraitDictObject(unittest.TestCase):
             value={},
         )
         # This is okay
-        trait_dict.validate_key("1")
+        trait_dict.key_validator("1")
 
         # This fails.
         with self.assertRaises(TraitError):
-            trait_dict.validate_key(1)
+            trait_dict.key_validator(1)
 
     def test_trait_dict_object_validate_value(self):
         trait_dict = TraitDictObject(
@@ -276,8 +276,8 @@ class TestTraitDictObject(unittest.TestCase):
             value={},
         )
         # This is okay
-        trait_dict.validate_value("1")
+        trait_dict.value_validator("1")
 
         # This fails.
         with self.assertRaises(TraitError):
-            trait_dict.validate_value(1)
+            trait_dict.value_validator(1)

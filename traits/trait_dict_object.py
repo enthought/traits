@@ -25,7 +25,7 @@ class TraitDictEvent(object):
     Parameters
     ----------
     added : dict
-        New keys and values.
+        New keys and values that were just added.
     changed : dict
         Updated keys and their previous values.
     removed : dict
@@ -34,7 +34,7 @@ class TraitDictEvent(object):
     Attributes
     ----------
     added : dict
-        New keys and values.
+        New keys and values that were just added.
     changed : dict
         Updated keys and their previous values.
     removed : dict
@@ -42,10 +42,28 @@ class TraitDictEvent(object):
 
     """
 
-    def __init__(self, added, changed, removed):
+    def __init__(self, added=None, changed=None, removed=None):
+        if added is None:
+            added = {}
         self.added = added
+
+        if changed is None:
+            changed = {}
         self.changed = changed
+
+        if removed is None:
+            removed = {}
         self.removed = removed
+
+
+# Default item validator for TraitDict.
+
+
+def accept_anything(item):
+    """
+    Item validator which accepts any item and returns it unaltered.
+    """
+    return item
 
 
 class TraitDict(dict):
@@ -71,6 +89,13 @@ class TraitDict(dict):
 
             notifier(trait_dict, added, changed, removed)
 
+        Where 'added' is a dict of new key-values that have been added
+        And 'changed' is a dict with values previously associated
+        with the key.
+        And 'removed' is a dict of key-values that are no longer in
+        the dictionary
+
+
     Attributes
     ----------
     key_validator : callable, optional
@@ -88,78 +113,41 @@ class TraitDict(dict):
 
             notifier(trait_dict, added, changed, removed)
 
+        Where 'added' is a dict of new key-values that have been added
+        And 'changed' is a dict with values previously associated
+        with the key.
+        And 'removed' is a dict of key-values that are no longer in
+        the dictionary
+
     """
 
     def __new__(cls, *args, **kwargs):
-        instance = super().__new__(cls)
-        instance.key_validator = None
-        instance.value_validator = None
-        instance.notifiers = []
-        return instance
+        self = super().__new__(cls)
+        self.key_validator = accept_anything
+        self.value_validator = accept_anything
+        self.notifiers = []
+        return self
 
     def __init__(self, value=None, *, key_validator=None,
                  value_validator=None, notifiers=None):
-        self.key_validator = key_validator
-        self.value_validator = value_validator
+
+        if key_validator is not None:
+            self.key_validator = key_validator
+
+        if value_validator is not None:
+            self.value_validator = value_validator
 
         if notifiers is None:
             notifiers = []
+        self.notifiers = list(notifiers)
 
         if value is None:
             value = {}
 
-        self.notifiers = list(notifiers)
-
-        value = {self.validate_key(key): self.validate_value(value)
+        value = {self.key_validator(key): self.value_validator(value)
                  for key, value in value.items()}
 
         super().__init__(value)
-
-    # ------------------------------------------------------------------------
-    # TraitDict interface
-    # ------------------------------------------------------------------------
-
-    def validate_key(self, key):
-        """ Validates the key with the key_validator for the TraitDict
-
-        Parameters
-        ----------
-        key : A hashable type.
-            The key to be validated.
-
-        Returns
-        -------
-        validated_key : A hashable type.
-            The validated key.
-
-        Raises
-        ------
-        TraitError
-            If the value cannot be validated.
-
-        """
-        return self._validate(self.key_validator, key, msg="Each key of the")
-
-    def validate_value(self, value):
-        """ Validates the value with the value_validator for the TraitDict.
-
-        Parameters
-        ----------
-        value : any
-            The value to be validated.
-
-        Returns
-        -------
-        validated_value : any
-            The validated value.
-
-        Raises
-        ------
-        TraitError
-            If the value cannot be validated.
-        """
-        return self._validate(self.value_validator, value,
-                              msg="Each value of the")
 
     def notify(self, added, changed, removed):
         """ Call all notifiers.
@@ -171,19 +159,165 @@ class TraitDict(dict):
 
         Any return values are ignored.
 
-        Parameters
-        ----------
-        added : dict
-            A dictionary of items that were added to the dict.
-        changed : dict
-            A dictionary of items that were changed in the dict. This will
-            contain the values before the change.
-        removed : dict
-            A dictionary of items that were removed from the dict.
         """
 
         for notifier in self.notifiers:
             notifier(self, added, changed, removed)
+
+    # -- dict interface -------------------------------------------------------
+
+    def __setitem__(self, key, value):
+        """ Set a value for the key, implements self[key] = value.
+
+        Parameters
+        ----------
+        key : A hashable type.
+            The key for the value.
+        value : any
+            The value to set for the corresponding key.
+
+        """
+
+        removed = {}
+        validated_key = self.key_validator(key)
+        validated_value = self.value_validator(value)
+
+        if key in self:
+            changed = {key: self[key]}
+            added = {}
+        else:
+            changed = {}
+            added = {validated_key: validated_value}
+
+        super().__setitem__(validated_key, validated_value)
+        self.notify(added, changed, removed)
+
+    def __delitem__(self, key):
+        """ Delete the item from the dict indicated by the key.
+
+        Parameters
+        ----------
+        key : A hashable type.
+            The key to be deleted.
+
+        Raises
+        ------
+        KeyError
+            If the key is not found.
+
+
+        """
+        removed = {key: self[key]}
+        super().__delitem__(key)
+        self.notify(added={}, changed={}, removed=removed)
+
+    def clear(self):
+        """ Remove all items from the dict. """
+        if self != {}:
+            removed = self.copy()
+            super().clear()
+            self.notify(added={}, changed={}, removed=removed)
+
+    def update(self, adict):
+        """ Update the values in the dict by the new dict.
+
+        Parameters
+        ----------
+        adict : dict
+            The dict from which values will be updated into this dict.
+        """
+
+        validated_dict = {}
+        added = {}
+        changed = {}
+
+        for key, value in adict.items():
+            validated_key = self.key_validator(key)
+            validated_value = self.value_validator(value)
+
+            if key in self:
+                changed[key] = self[key]
+            else:
+                added[validated_key] = validated_value
+
+            validated_dict[validated_key] = validated_value
+
+        super().update(validated_dict)
+        self.notify(added=added, changed=changed, removed={})
+
+    def setdefault(self, key, value=None):
+        """ Returns the value if key is present in the dict, else creates the
+        key-value pair and returns the value.
+
+        Parameters
+        ----------
+        key : A hashable type.
+            Key to the item.
+        """
+
+        if key in self:
+            return self[key]
+
+        key = self.key_validator(key)
+        value = self.value_validator(value)
+
+        if key in self:
+            changed = {key: self[key]}
+            added = {}
+        else:
+            changed = {}
+            added = {key: value}
+
+        super().__setitem__(key, value)
+
+        self.notify(added=added, changed=changed, removed={})
+
+        return value
+
+    def pop(self, key, value=Undefined):
+        """ Remove specified key and return the corresponding
+        value. If key is not found, the default value is returned
+        if given, otherwise KeyError is raised.
+
+        Parameters
+        ----------
+        key : A hashable type.
+            Key to the dict item.
+
+        value : any
+            Value to return if key is absent.
+        """
+
+        if value is Undefined or key in self:
+            removed = super().pop(key)
+            self.notify(
+                added={},
+                changed={},
+                removed={key: removed}
+            )
+            return removed
+        return value
+
+    def popitem(self):
+        """ Remove and return some(key, value) pair as a tuple. Raise KeyError
+        if dict is empty.
+
+        Returns
+        -------
+        key_value : tuple
+            Some 2-tuple from the dict.
+
+        Raises
+        ------
+        KeyError
+            If the dict is empty
+        """
+
+        item = super().popitem()
+        self.notify(added={}, changed={}, removed=dict([item]))
+        return item
+
+    # -- pickle and copy support ----------------------------------------------
 
     def __deepcopy__(self, memo):
         """ Perform a deepcopy operation.
@@ -220,272 +354,6 @@ class TraitDict(dict):
         """
         state['notifiers'] = []
         self.__dict__.update(state)
-
-    # ------------------------------------------------------------------------
-    # dict interface
-    # ------------------------------------------------------------------------
-
-    def __setitem__(self, key, value):
-        """ Set a value for the key, implements self[key] = value.
-
-        Parameters
-        ----------
-        key : A hashable type.
-            The key for the value.
-        value : any
-            The value to set for the corresponding key.
-
-        Notes
-        -----
-        Parameters in the notification:
-            added : dict
-                The dict of the item that was added.
-            changed : dict
-                A dict of the previous key value pair, if the key was present,
-                else an empty dict.
-            removed : dict
-                Will be an empty dict.
-
-        """
-
-        removed = {}
-        validated_key = self.validate_key(key)
-        validated_value = self.validate_value(value)
-
-        if key in self:
-            changed = {key: self[key]}
-            added = {}
-        else:
-            changed = {}
-            added = {validated_key: validated_value}
-
-        super().__setitem__(validated_key, validated_value)
-        self.notify(added, changed, removed)
-
-    def __delitem__(self, key):
-        """ Delete the item from the dict indicated by the key.
-
-        Parameters
-        ----------
-        key : A hashable type.
-            The key to be deleted.
-
-        Raises
-        ------
-        KeyError
-            If the key is not found.
-
-        Notes
-        -----
-        Parameters in the notification:
-            added : dict
-                Will be an empty dict.
-            changed : dict
-                Will be an empty dict.
-            removed : dict
-                The dict of the item that was removed.
-
-        """
-        removed = {key: self[key]}
-        super().__delitem__(key)
-        self.notify(added={}, changed={}, removed=removed)
-
-    def clear(self):
-        """ Remove all items from the dict.
-
-        Notes
-        -----
-        Parameters in the notification:
-            added : dict
-                Will be an empty dict.
-            changed : dict
-                Will be an empty dict.
-            removed : dict
-                A copy of the dict before it was removed.
-
-        """
-        if self != {}:
-            removed = self.copy()
-            super().clear()
-            self.notify(added={}, changed={}, removed=removed)
-
-    def update(self, adict):
-        """ Update the values in the dict by the new dict.
-
-        Parameters
-        ----------
-        adict : dict
-            The dict from which values will be updated into this dict.
-
-        Notes
-        -----
-        Parameters in the notification:
-            added : dict
-                The dict of the item that was added.
-            changed : dict
-                The dict of the item that was changed.
-            removed : dict
-                Will be an empty dict.
-
-        """
-        validated_dict = {}
-        added = {}
-        changed = {}
-
-        for key, value in adict.items():
-            validated_key = self.validate_key(key)
-            validated_value = self.validate_value(value)
-
-            if key in self:
-                changed[key] = self[key]
-            else:
-                added[validated_key] = validated_value
-
-            validated_dict[validated_key] = validated_value
-
-        super().update(validated_dict)
-        self.notify(added=added, changed=changed, removed={})
-
-    def setdefault(self, key, value=None):
-        """ Returns the value if key is present in the dict, else creates the
-        key-value pair and returns the value.
-
-        Parameters
-        ----------
-        key : A hashable type.
-            Key to the item.
-
-        Notes
-        -----
-        Parameters in the notification:
-            added : dict
-                The dict of the item that was added, notification is fired
-                only if the key was absent.
-            changed : dict
-                The dict of the item that was changed.
-            removed : dict
-                Will be an empty dict.
-
-        """
-        if key in self:
-            return self[key]
-
-        key = self.validate_key(key)
-        value = self.validate_value(value)
-
-        if key in self:
-            changed = {key: self[key]}
-            added = {}
-        else:
-            changed = {}
-            added = {key: value}
-
-        super().__setitem__(key, value)
-
-        self.notify(added=added, changed=changed, removed={})
-
-        return value
-
-    def pop(self, key, value=Undefined):
-        """ Remove specified key and return the corresponding
-        value. If key is not found, the default value is returned
-        if given, otherwise KeyError is raised.
-
-        Parameters
-        ----------
-        key : A hashable type.
-            Key to the dict item.
-
-        value : any
-            Value to return if key is absent.
-
-        Notes
-        -----
-        Parameters in the notification:
-            added : dict
-                Will be an empty dict
-            changed : dict
-                The dict of the item that was changed
-            removed : dict
-                The dict of the item that was removed, notification fired only
-                if the key was present.
-
-        """
-        if value is Undefined or key in self:
-            removed = super().pop(key)
-            self.notify(
-                added={},
-                changed={},
-                removed={key: removed}
-            )
-            return removed
-        return value
-
-    def popitem(self):
-        """ Remove and return some(key, value) pair as a tuple. Raise KeyError
-        if dict is empty.
-
-        Returns
-        -------
-        key_value : tuple
-            Some 2-tuple from the dict.
-
-        Raises
-        ------
-        KeyError
-            If the dict is empty
-
-        Notes
-        -----
-        Parameters in the notification:
-            added : dict
-                Will be an empty dict
-            changed : dict
-                Will be an empty dict
-            removed : dict
-                The dict of the item that was removed.
-
-        """
-        item = super().popitem()
-        self.notify(added={}, changed={}, removed=dict([item]))
-        return item
-
-    # ------------------------------------------------------------------------
-    # Utility methods
-    # ------------------------------------------------------------------------
-
-    def _validate(self, validator, value, msg=""):
-        """ Calls the validator with the value as an argument and returns
-        a validated value or raises an error.
-
-        Parameters
-        ----------
-        validator : callable
-            The validator callable
-        value : any
-            The value to be validated.
-        msg : str
-            Error message on failure.
-
-        Returns
-        -------
-        validated_value : any
-            The validated value.
-
-        Raises
-        ------
-        TraitError
-            If the value cannot be validated.
-
-        """
-        if validator is None:
-            return value
-        else:
-            try:
-                return validator(value)
-            except TraitError as excep:
-                excep.set_prefix(msg)
-                raise excep
 
 
 class TraitDictObject(TraitDict):
@@ -555,7 +423,11 @@ class TraitDictObject(TraitDict):
         if validate is None:
             return key
 
-        return validate(object, self.name, key)
+        try:
+            return validate(object, self.name, key)
+        except TraitError as excep:
+            excep.set_prefix("Each key of the")
+            raise excep
 
     def _value_validator(self, value):
         """ Calls the trait's value_handler.validate
@@ -587,7 +459,11 @@ class TraitDictObject(TraitDict):
         if validate is None:
             return value
 
-        return validate(object, self.name, value)
+        try:
+            return validate(object, self.name, value)
+        except TraitError as excep:
+            excep.set_prefix("Each value of the")
+            raise excep
 
     def notifier(self, trait_dict, added, changed, removed):
         """ Fire the TraitDictEvent with the provided parameters.
@@ -640,11 +516,7 @@ class TraitDictObject(TraitDict):
 
         Object is a weakref and should not be copied.
         """
-        id_self = id(self)
-        if id_self in memo:
-            return memo[id_self]
-
-        memo[id_self] = result = TraitDictObject(
+        result = TraitDictObject(
             self.trait,
             lambda: None,
             self.name,
@@ -660,8 +532,8 @@ class TraitDictObject(TraitDict):
         """
 
         result = super().__getstate__()
-        result.pop("object", None)
-        result.pop("trait", None)
+        del result["object"]
+        del result["trait"]
         return result
 
     def __setstate__(self, state):
