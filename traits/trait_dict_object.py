@@ -89,7 +89,7 @@ class TraitDict(dict):
 
             notifier(trait_dict, added, changed, removed)
 
-        Where 'added' is a dict of new key-values that have been added
+        Where 'added' is a dict of new key-values that have been added.
         'changed' is a dict with old values previously associated with the key.
         'removed' is a dict of key-values that are no longer in the dictionary.
 
@@ -110,7 +110,7 @@ class TraitDict(dict):
 
             notifier(trait_dict, added, changed, removed)
 
-        Where 'added' is a dict of new key-values that have been added
+        Where 'added' is a dict of new key-values that have been added.
         'changed' is a dict with old values previously associated with the key.
         'removed' is a dict of key-values that are no longer in the dictionary.
 
@@ -314,19 +314,6 @@ class TraitDict(dict):
 
     # -- pickle and copy support ----------------------------------------------
 
-    def __deepcopy__(self, memo):
-        """ Perform a deepcopy operation.
-
-        Notifiers are transient and should not be copied.
-        """
-        result = TraitDict(
-            dict(copy.deepcopy(x, memo) for x in self.items()),
-            key_validator=copy.deepcopy(self.key_validator, memo),
-            value_validator=copy.deepcopy(self.value_validator, memo),
-            notifiers=[]
-        )
-        return result
-
     def __getstate__(self):
         """ Get the state of the object for serialization.
 
@@ -344,6 +331,19 @@ class TraitDict(dict):
         """
         state['notifiers'] = []
         self.__dict__.update(state)
+
+    def __deepcopy__(self, memo):
+        """ Perform a deepcopy operation.
+
+        Notifiers are transient and should not be copied.
+        """
+        result = TraitDict(
+            dict(copy.deepcopy(x, memo) for x in self.items()),
+            key_validator=copy.deepcopy(self.key_validator, memo),
+            value_validator=copy.deepcopy(self.value_validator, memo),
+            notifiers=[]
+        )
+        return result
 
 
 class TraitDictObject(TraitDict):
@@ -382,6 +382,18 @@ class TraitDictObject(TraitDict):
         The name of the items event trait that the trait dict will fire when
         mutated.
     """
+
+    def __init__(self, trait, object, name, value):
+        self.trait = trait
+        self.object = ref(object)
+        self.name = name
+        self.name_items = None
+        if trait.has_items:
+            self.name_items = name + "_items"
+
+        super().__init__(value, key_validator=self._key_validator,
+                         value_validator=self._value_validator,
+                         notifiers=[self.notifier])
 
     def _key_validator(self, key):
         """ Calls the trait's key_trait.handler.validate.
@@ -489,31 +501,7 @@ class TraitDictObject(TraitDict):
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
 
-    def __init__(self, trait, object, name, value):
-        self.trait = trait
-        self.object = ref(object)
-        self.name = name
-        self.name_items = None
-        if trait.has_items:
-            self.name_items = name + "_items"
-
-        super().__init__(value, key_validator=self._key_validator,
-                         value_validator=self._value_validator,
-                         notifiers=[self.notifier])
-
-    def __deepcopy__(self, memo):
-        """ Perform a deepcopy operation..
-
-        Object is a weakref and should not be copied.
-        """
-        result = TraitDictObject(
-            self.trait,
-            lambda: None,
-            self.name,
-            dict(copy.deepcopy(x, memo) for x in self.items()),
-        )
-
-        return result
+    # -- pickle and copy support ----------------------------------------------
 
     def __getstate__(self):
         """ Get the state of the object for serialization.
@@ -535,3 +523,17 @@ class TraitDictObject(TraitDict):
         state["object"] = lambda: None
         state['trait'] = None
         self.__dict__.update(state)
+
+    def __deepcopy__(self, memo):
+        """ Perform a deepcopy operation..
+
+        Object is a weakref and should not be copied.
+        """
+        result = TraitDictObject(
+            self.trait,
+            lambda: None,
+            self.name,
+            dict(copy.deepcopy(x, memo) for x in self.items()),
+        )
+
+        return result
