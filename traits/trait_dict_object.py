@@ -480,11 +480,6 @@ class TraitDictObject(TraitDict):
             Dict of changed items.
         removed : dict
             Dict of removed items.
-
-        Returns
-        -------
-        None
-
         """
         trait = getattr(self, 'trait', None)
         name_items = getattr(self, 'name_items', None)
