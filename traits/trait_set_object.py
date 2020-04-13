@@ -381,15 +381,6 @@ class TraitSet(set):
         state['notifiers'] = []
         self.__dict__.update(state)
 
-    def __reduce_ex__(self, protocol=None):
-        """ Overridden to make sure we call our custom __getstate__.
-        """
-        return (
-            copyreg._reconstructor,
-            (type(self), set, list(self)),
-            self.__getstate__(),
-        )
-
 
 class TraitSetObject(TraitSet):
     """ A specialization of TraitSet with a default validator and notifier
@@ -506,6 +497,15 @@ class TraitSetObject(TraitSet):
         )
 
         return result
+
+    def __reduce_ex__(self, protocol=None):
+        """ Overridden to make sure we call our custom __getstate__.
+        """
+        return (
+            copyreg._reconstructor,
+            (type(self), set, list(self)),
+            self.__getstate__(),
+        )
 
     def __getstate__(self):
         """ Get the state of the object for serialization.
