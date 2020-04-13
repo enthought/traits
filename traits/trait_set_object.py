@@ -293,9 +293,9 @@ class TraitSet(set):
 
         values = set(value)
         removed = self.intersection(values)
-        added = values.difference(removed)
-        added = {self.item_validator(item) for item in added}
-        added = added.difference(self)
+        raw_result = values.difference(removed)
+        validated_result = {self.item_validator(item) for item in raw_result}
+        added = validated_result.difference(self)
 
         super().symmetric_difference_update(removed | added)
         if removed or added:
@@ -483,20 +483,7 @@ class TraitSetObject(TraitSet):
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
 
-    def __deepcopy__(self, memo):
-        """ Perform a deepcopy operation.
-
-        Notifiers are transient and should not be copied.
-        """
-
-        result = TraitSetObject(
-            self.trait,
-            lambda: None,
-            self.name,
-            {copy.deepcopy(x, memo) for x in self},
-        )
-
-        return result
+    # -- pickle and copy support ----------------------------------------------
 
     def __reduce_ex__(self, protocol=None):
         """ Overridden to make sure we call our custom __getstate__.
@@ -529,3 +516,18 @@ class TraitSetObject(TraitSet):
         state["object"] = lambda: None
         state["trait"] = None
         self.__dict__.update(state)
+
+    def __deepcopy__(self, memo):
+        """ Perform a deepcopy operation.
+
+        Notifiers are transient and should not be copied.
+        """
+
+        result = TraitSetObject(
+            self.trait,
+            lambda: None,
+            self.name,
+            {copy.deepcopy(x, memo) for x in self},
+        )
+
+        return result
