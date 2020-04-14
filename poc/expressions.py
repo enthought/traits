@@ -402,7 +402,26 @@ def _anytrait_filter(name, trait):
 
 
 def _create_paths(expression, paths=None, id_to_path=None, last_cnodes=None):
+    """ Create ListenerPaths from a given expression.
 
+    Parameters
+    ----------
+    expression : Expression
+    paths : collection of ListenerPath
+        Leaf paths to be added.
+        Needed when this function is called recursively.
+    id_to_path : dict(int, ListenerPath)
+        Mapping from nodes' ids to ListenerPath.
+        Needed for maintaining object identity while handling cycles
+        when this function is called recursively.
+    last_cnodes : collection of BaseListener
+        Nodes to be added as cycles.
+        Needed when this function is called recursively.
+
+    Returns
+    -------
+    paths : list of ListenerPath
+    """
     if paths is None:
         paths = []
 
