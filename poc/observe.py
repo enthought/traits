@@ -184,14 +184,36 @@ class DictValueListener(BaseListener):
 
 
 class ListenerPath:
+    """ Data structure for representing the path(s) to observe
+    traits.
+
+    For equality check, handling of cycles relies on the creator
+    of these ListenerPath to have maintained the cycles separately.
+    Only nodes are used when cycles are compared for equality.
+    """
 
     def __init__(self, node, branches=(), cycles=()):
+        """
+
+        Parameters
+        ----------
+        node : BaseListener
+            The current node.
+        branches : iterable of ListenerPath
+            Paths as branches.
+        cycles : iterable of ListenerPath
+            Paths as cycles. They are assumed to have been referenced
+            elsewhere inside a larger ListenerPath that includes this
+            path.
+        """
         self.node = node
         self.branches = set(branches)
         self.cycles = set(cycles)
 
     @property
     def nexts(self):
+        """ Next set of ListenerPath.
+        """
         return self.branches | self.cycles
 
     def __new__(cls, *args, **kwargs):
