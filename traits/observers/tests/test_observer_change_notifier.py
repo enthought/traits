@@ -87,6 +87,21 @@ class TestObserverChangeNotifierWeakrefTarget(unittest.TestCase):
         # then
         self.assertIsNone(target_ref())
 
+    def test_deleted_target_silence_notifier(self):
+        # If the target is deleted, the notifier is silenced
+        target = mock.Mock()
+        observer_handler = mock.Mock()
+
+        notifier = create_notifier(
+            observer_handler=observer_handler, target=target)
+
+        # when
+        del target
+        notifier(a=1, b=2)
+
+        # then
+        observer_handler.assert_not_called()
+
 
 class TestObserverChangeNotifierWeakrefHandler(unittest.TestCase):
     """ Test for using weak references when the user handler is a method

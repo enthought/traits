@@ -55,8 +55,8 @@ class ObserverChangeNotifier:
             has been garbage collected.
         target : object
             An object for defining the context of the user's handler notifier.
-            A weak reference is created for the target. ``observer_handler``
-            may receive ``None`` if the target has been garbage collected.
+            A weak reference is created for the target. If the target is garbage
+            collected, this notifier will be silenced.
         dispatcher : callable(function, event)
             Callable for dispatching the user's handler.
         """
@@ -80,6 +80,10 @@ class ObserverChangeNotifier:
         ``observer_handler`` is not provided by users of traits, but is
         a callable maintained in traits.
         """
+        target = self.target()
+        if target is None:
+            return
+
         event = self.event_factory(*args, **kwargs)
 
         # observer_handler will be given a chance to remove
