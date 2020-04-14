@@ -41,6 +41,14 @@ class _FilteredTraitListener(BaseListener):
         self.filter = filter
         self.notify = notify
 
+    def __repr__(self):
+        return "<Filter notify={!r} filter={!r}>".format(
+            self.notify, self.filter,
+        )
+
+    def __hash__(self):
+        return hash((type(self), self.notify, self.filter))
+
     def __eq__(self, other):
         if other is self:
             return True
