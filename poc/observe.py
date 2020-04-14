@@ -224,3 +224,20 @@ class ListenerPath:
             and set(iter(self.branches)) == set(iter(other.branches))
             and self_loop_nodes == other_loop_nodes
         )
+
+    def info(self, indent=0):
+        """ Return a list of user-friendly texts containing descriptive information about
+        this path.
+
+        Returns
+        -------
+        lines : list of str
+        """
+        infos = []
+        infos.append(" " * indent + "Node: {!r}".format(self.node))
+        for path in self.branches:
+            infos.extend(path.info(indent=indent + 4))
+
+        for path in self.loops:
+            infos.append(" " * (indent + 4) + "Loop to {!r}".format(path.node))
+        return infos

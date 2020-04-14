@@ -364,16 +364,17 @@ class Expression:
         return expression
 
     def info(self):
-        """ Return a list of string for printing this expression.
+        """ Return a list of user-friendly texts containing descriptive information
+        about this expression.
         """
         infos = []
         for path in self.as_paths():
             infos.append(" ---- Path ---- ")
-            infos.extend(path_info(path))
+            infos.extend(path.info())
         return infos
 
     def print(self):
-        """ Print the information for this expression.
+        """ Print the descriptive information for this expression.
         """
         print(*self.info(), sep="\n")
 
@@ -447,19 +448,6 @@ def _create_paths(expression, paths=None, id_to_path=None, last_cnodes=None):
         else:
             raise ValueError("Unknown prior expression type.")
     return paths
-
-
-def path_info(path, indent=0):
-    """ Return a list of string for printing information about a path.
-    """
-    infos = []
-    infos.append(" " * indent + "Node: {!r}".format(path.node))
-    for n in path.branches:
-        infos.extend(path_info(n, indent=indent + 4))
-
-    for path in path.loops:
-        infos.append(" " * (indent + 4) + "Loop to {!r}".format(path.node))
-    return infos
 
 
 # Define top-level functions
