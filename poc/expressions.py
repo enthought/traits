@@ -175,7 +175,8 @@ class Expression:
     def as_paths(self):
         """ Return all the ListenerPath for the observer.
         """
-        return set(_create_paths(self))
+        paths, _ = _create_paths(self)
+        return set(paths)
 
     def t(self, name, notify=True, optional=False):
         """ Create a new expression that matches the current
@@ -437,6 +438,8 @@ def _create_paths(expression, paths=None, id_to_path=None, last_cnodes=None):
 
     if last_cnodes is None:
         last_cnodes = []
+    else:
+        last_cnodes = list(last_cnodes)
 
     for bnodes, cnodes in expression._levels[::-1]:
         if bnodes and cnodes:
@@ -462,7 +465,7 @@ def _create_paths(expression, paths=None, id_to_path=None, last_cnodes=None):
 
         if prior_type is _JOIN:
             for expr in expressions[::-1]:
-                paths = _create_paths(
+                paths, last_cnodes = _create_paths(
                     expr,
                     paths=paths,
                     id_to_path=id_to_path,
@@ -471,19 +474,23 @@ def _create_paths(expression, paths=None, id_to_path=None, last_cnodes=None):
         elif prior_type is _OR:
             new_paths = []
             for expr in expressions:
-                new_paths.extend(
-                    _create_paths(
-                        expr,
-                        paths=paths,
-                        id_to_path=id_to_path,
-                        last_cnodes=last_cnodes.copy(),
-                    )
+                or_paths, or_cnodes = _create_paths(
+                    expr,
+                    paths=paths,
+                    id_to_path=id_to_path,
+                    last_cnodes=last_cnodes,
                 )
+                if or_cnodes:
+                    raise ValueError(
+                        "Recursion cannot be propagated with OR operation.")
+
+                new_paths.extend(or_paths)
+
             last_cnodes.clear()
             paths = new_paths
         else:
             raise ValueError("Unknown prior expression type.")
-    return paths
+    return paths, last_cnodes
 
 
 # Define top-level functions
