@@ -49,7 +49,7 @@ class TestTraitDict(unittest.TestCase):
     def test_init(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
                        value_validator=int_validator)
-        self.assertDictEqual(td, {"a": 1, "b": 2})
+        self.assertEqual(td, {"a": 1, "b": 2})
         self.assertEqual(td.notifiers, [])
 
     def test_notification(self):
@@ -68,7 +68,7 @@ class TestTraitDict(unittest.TestCase):
                        notifiers=[self.notification_handler])
         td_copy = copy.deepcopy(td)
 
-        self.assertDictEqual(td, td_copy)
+        self.assertEqual(td, td_copy)
         self.assertEqual(td_copy.notifiers, [])
         self.assertEqual(td_copy.value_validator, td.value_validator)
         self.assertEqual(td_copy.key_validator, td.key_validator)
@@ -248,7 +248,7 @@ class TestTraitDict(unittest.TestCase):
 
             self.assertIs(td_unpickled.key_validator, str_validator)
             self.assertIs(td_unpickled.value_validator, int_validator)
-            self.assertListEqual(td_unpickled.notifiers, [])
+            self.assertEqual(td_unpickled.notifiers, [])
 
 
 class TestTraitDictObject(unittest.TestCase):
