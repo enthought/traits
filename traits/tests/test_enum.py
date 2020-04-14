@@ -311,18 +311,19 @@ class TestGui(GuiTestAssistant, unittest.TestCase):
 
     def test_create_editor(self):
         obj = EnumCollectionGUIExample()
-        traits = obj.class_trait_names()
-        traits.remove("trait_added")
-        traits.remove("trait_modified")
+        user_editable_traits = obj.class_editable_traits()
 
+        # Create a UI window
         ui = obj.edit_traits()
-        for t in traits:
+
+        for t in user_editable_traits:
 
             with self.subTest(t=t):
                 editor = getattr(ui.info, t)
+                values = obj.trait(t).trait_type.values
 
                 # Try setting all valid values for the Enum trait
-                for value in obj.trait(t).trait_type.values:
+                for value in values:
                     with self.assertTraitChangesInEventLoop(
                             obj, t, lambda instance: getattr(
                                 instance, t) == value, 0, 3):
