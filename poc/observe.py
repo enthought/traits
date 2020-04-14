@@ -1,3 +1,8 @@
+import copy
+from functools import reduce
+from itertools import chain
+import operator
+
 
 class BaseListener:
 
@@ -10,7 +15,7 @@ class BaseListener:
     @property
     def notify(self):
         """ Whether to call notifiers for changes on this item."""
-        return getattr(self, "_notify", True)
+        return self._notify
 
     @notify.setter
     def notify(self, value):
@@ -69,6 +74,11 @@ class NamedTraitListener(BaseListener):
         self.optional = optional
         self.comparison_mode = comparison_mode
 
+    def __repr__(self):
+        return "<Name(name={!r}, notify={!r}, ...)>".format(
+            self.name, self.notify,
+        )
+
     def __hash__(self):
         return hash((
             type(self),
@@ -92,11 +102,69 @@ class NamedTraitListener(BaseListener):
 
 class ListItemListener(BaseListener):
 
-    def __init__(self, notify):
+    def __init__(self, notify, optional):
         self.notify = notify
+        self.optional = optional
+
+    def __repr__(self):
+        return "<List notify={!r} optional={!r}>".format(
+            self.notify, self.optional,
+        )
+
+    def __hash__(self):
+        return hash((type(self), self.notify, self.optional))
 
     def __eq__(self, other):
-        return type(self) is type(other) and self.notify == other.notify
+        return (
+            type(self) is type(other)
+            and self.notify == other.notify
+            and self.optional == other.optional
+        )
+
+
+
+class DictItemListener(BaseListener):
+
+    def __init__(self, notify, optional):
+        self.notify = notify
+        self.optional = optional
+
+    def __repr__(self):
+        return "<Dict notify={!r} optional={!r}>".format(
+            self.notify, self.optional,
+        )
+
+    def __hash__(self):
+        return hash((type(self), self.notify, self.optional))
+
+    def __eq__(self, other):
+        return (
+            type(self) is type(other)
+            and self.notify == other.notify
+            and self.optional == other.optional
+        )
+
+
+class SetItemListener(BaseListener):
+
+    def __init__(self, notify, optional):
+        self.notify = notify
+        self.optional = optional
+
+    def __repr__(self):
+        return "<Set notify={!r} optional={!r}>".format(
+            self.notify, self.optional,
+        )
+
+    def __hash__(self):
+        return hash((type(self), self.notify, self.optional))
+
+    def __eq__(self, other):
+        return (
+            type(self) is type(other)
+            and self.notify == other.notify
+            and self.optional == other.optional
+        )
 
 
 class DictValueListener(BaseListener):
@@ -109,26 +177,50 @@ class DictValueListener(BaseListener):
 
 class ListenerPath:
 
-    def __init__(self, node, nexts=()):
+    def __init__(self, node, branches=(), loops=()):
         self.node = node
-        self.nexts = set(nexts)
+        self.branches = set(branches)
+        self.loops = set(loops)
+
+    @property
+    def nexts(self):
+        return self.branches | self.loops
+
+    def __new__(cls, *args, **kwargs):
+        self = super().__new__(cls)
+        self.node = None
+        self.branches = set()
+        self.loops = set()
+        return self
+
+    def __repr__(self):
+        return "<ListenerPath node={!r}, {} branches, {} loops>".format(
+            self.node, len(self.branches), len(self.loops)
+        )
 
     def __hash__(self):
-        return hash((type(self), self.node, frozenset(self.nexts)))
+        return hash(
+            (
+                type(self),
+                self.node,
+                frozenset(p.node for p in self.loops),
+                frozenset(self.branches),
+            )
+        )
 
     def __eq__(self, other):
         """ Return true if a given ListenerPath is equivalent to this one.
         """
-
-        # FIXME: The following is a draft.
-        # We need to handle cycles!
-
         if other is self:
             return True
         if type(other) is not type(self):
             return False
-        if self.node != other.node:
-            return False
-        if self.nexts is other.nexts:
-            return True
-        return self.nexts == other.nexts
+
+        self_loop_nodes = set(p.node for p in self.loops)
+        other_loop_nodes = set(p.node for p in other.loops)
+        return(
+            self.node == other.node
+            # Rehash as the branches may have been modified afterwards
+            and set(iter(self.branches)) == set(iter(other.branches))
+            and self_loop_nodes == other_loop_nodes
+        )
