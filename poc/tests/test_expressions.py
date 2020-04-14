@@ -517,11 +517,11 @@ def create_path():
             optional=False,
         )
     )
-    path1.branches.update([left, right])
     left.cycles.update([left, right])
     left.branches.add(value)
     right.cycles.update([left, right])
     right.branches.add(value)
+    path1.branches.update([left, right])
     return path1
 
 
@@ -540,7 +540,6 @@ def create_path2():
             optional=False,
         ),
     )
-    expected.branches.add(left_path)
 
     right_path = ListenerPath(
         node=NamedTraitListener(
@@ -551,6 +550,7 @@ def create_path2():
     )
     left_path.branches.add(right_path)
     right_path.cycles.add(left_path)
+    expected.branches.add(left_path)
     return expected
 
 
