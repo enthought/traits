@@ -100,8 +100,12 @@ class Expression:
         -------
         new_expression : Expression
         """
-        new = Expression()
-        new._prior_expressions = (_JOIN, [self, expression])
+        if not self._prior_expressions and not self._levels:
+            # this expression is empty...
+            new = expression.copy()
+        else:
+            new = Expression()
+            new._prior_expressions = (_JOIN, [self, expression])
         return new
 
     def _root_nodes(self):

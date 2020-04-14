@@ -84,6 +84,13 @@ class TestParsing(unittest.TestCase):
         )
         self.assertEqual(actual, expected)
 
+    def test_recurse_twice(self):
+        actual = parsing.parse("[b:c*]*")
+        expected = expressions.recursive(
+            expressions.t("b", False).recursive(expressions.t("c"))
+        )
+        self.assertEqual(actual, expected)
+
     def test_group_and_join(self):
         actual = parsing.parse("[a:b,c].d")
         expected = (

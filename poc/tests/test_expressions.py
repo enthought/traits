@@ -469,6 +469,33 @@ class TestRecursion(unittest.TestCase):
         # it should then go back to c
         self.assertEqual([p.node.name for p in d_path.nexts], ["c"])
 
+    def test_extend_recurse_recurse(self):
+        e = recursive(t("b", False).recursive(t("c")))
+
+        path, = e.as_paths()
+
+        # First it is just b
+        self.assertEqual(path.node.name, "b")
+
+        # then it matches "c"
+        self.assertCountEqual([p.node.name for p in path.nexts], ["c"])
+
+        c_path, = path.nexts
+
+        # then it loops to "c" or "b"
+        self.assertCountEqual([p.node.name for p in c_path.nexts], ["c", "b"])
+
+        # With equality check
+        expected = ListenerPath(
+            node=NamedTraitListener(name="b", notify=False, optional=False),
+        )
+        c_path = ListenerPath(
+            node=NamedTraitListener(name="c", notify=True, optional=False),
+        )
+        c_path.cycles.update([expected, c_path])
+        expected.branches.add(c_path)
+        self.assertEqual(path, expected)
+
 
 class TestPathEquality(unittest.TestCase):
     """ For sanity checks."""
