@@ -28,6 +28,7 @@ def join_(*expressions):
     return reduce(lambda e1, e2: e1.then(e2), expressions)
 
 
+#: FIXME: Refactor this so we are not doing if-branches
 _JOIN = "JOIN"
 _OR = "OR"
 
@@ -54,6 +55,8 @@ class Expression:
         self._levels = []
 
         # Tuple of (type_str, list of Expression)
+        # Represent prior expressions to be combined in series (JOIN)
+        # or in parallel (OR)
         # type_str is either _JOIN or _OR. TODO: Refactor this!
         self._prior_expressions = None
 
