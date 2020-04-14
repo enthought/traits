@@ -105,6 +105,23 @@ class Expression:
         return new
 
     def _root_nodes(self):
+        """ Return the root nodes of this expression. They may come
+        from the prior expressions if defined.
+
+        This is for supporting recursions back to the root nodes.
+
+        Returns
+        -------
+        bnodes : set(BaseListener)
+            Nodes for branches.
+        cnodes : set(BasListener)
+            Nodes for cycles.
+
+        Raises
+        ------
+        ValueError
+            If no root nodes are found.
+        """
         if not self._levels and self._prior_expressions is None:
             raise ValueError("No root nodes")
 
@@ -137,7 +154,7 @@ class Expression:
         """ Create a new expression by adding a recursive path to
         this expression.
 
-        e.g. ``t("root").recursive(t("left") | t("left")).t("value")``
+        e.g. ``t("root").recursive(t("left") | t("right")).t("value")``
         will match ``root.left.value``, ``root.left.left.value``,
         ``root.left.right.left.value`` and so on.
 
