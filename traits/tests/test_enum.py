@@ -11,10 +11,17 @@
 import enum
 import unittest
 
-from pyface.ui.qt4.util.gui_test_assistant import GuiTestAssistant
-
 from traits.api import (
     Any, BaseEnum, Enum, HasTraits, List, Property, TraitError)
+
+from traits.testing.optional_dependencies import pyface, requires_traitsui
+
+if pyface is not None:
+    GuiTestAssistant = pyface.toolkit.toolkit_object(
+        "util.gui_test_assistant:GuiTestAssistant")
+else:
+    class GuiTestAssistant:
+        pass
 
 
 class FooEnum(enum.Enum):
@@ -307,6 +314,7 @@ class EnumTestCase(unittest.TestCase):
         self.assertEqual(obj.slow_enum, "no")
 
 
+@requires_traitsui
 class TestGui(GuiTestAssistant, unittest.TestCase):
 
     def test_create_editor(self):
