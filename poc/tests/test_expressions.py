@@ -176,8 +176,8 @@ class TestRecursion(unittest.TestCase):
             )
         )
         expected.branches.update([left, right])
-        left.loops.update([left, right])
-        right.loops.update([left, right])
+        left.cycles.update([left, right])
+        right.cycles.update([left, right])
 
         self.assertEqual(actual, expected)
 
@@ -237,9 +237,9 @@ class TestRecursion(unittest.TestCase):
             )
         )
         expected.branches.update([left, right])
-        left.loops.update([left, right])
+        left.cycles.update([left, right])
         left.branches.add(value)
-        right.loops.update([left, right])
+        right.cycles.update([left, right])
         right.branches.add(value)
 
         self.assertEqual(actual, expected)
@@ -334,7 +334,7 @@ class TestRecursion(unittest.TestCase):
                 optional=False,
             )
         )
-        right_path.loops.add(left_path)
+        right_path.cycles.add(left_path)
         left_path.branches.add(right_path)
         expected.branches.add(left_path)
 
@@ -410,7 +410,7 @@ class TestRecursion(unittest.TestCase):
             )
         )
         right.branches.add(value)
-        right.loops.add(left)
+        right.cycles.add(left)
         left.branches.add(right)
         expected.branches.add(left)
 
@@ -426,7 +426,7 @@ class TestRecursion(unittest.TestCase):
                 optional=False,
             ),
         )
-        expected.loops.add(expected)
+        expected.cycles.add(expected)
 
         actual, = expression.as_paths()
         self.assertEqual(actual, expected)
@@ -518,9 +518,9 @@ def create_path():
         )
     )
     path1.branches.update([left, right])
-    left.loops.update([left, right])
+    left.cycles.update([left, right])
     left.branches.add(value)
-    right.loops.update([left, right])
+    right.cycles.update([left, right])
     right.branches.add(value)
     return path1
 
@@ -550,7 +550,7 @@ def create_path2():
         )
     )
     left_path.branches.add(right_path)
-    right_path.loops.add(left_path)
+    right_path.cycles.add(left_path)
     return expected
 
 

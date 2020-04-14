@@ -453,7 +453,7 @@ def _create_paths(expression, paths=None, id_to_path=None, last_cnodes=None):
         bpaths = [make_path(node) for node in bnodes]
         for path in bpaths:
             path.branches = path.branches.union(paths)
-            path.loops = path.loops.union(cpaths)
+            path.cycles = path.cycles.union(cpaths)
 
         paths = bpaths
 

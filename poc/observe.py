@@ -185,25 +185,25 @@ class DictValueListener(BaseListener):
 
 class ListenerPath:
 
-    def __init__(self, node, branches=(), loops=()):
+    def __init__(self, node, branches=(), cycles=()):
         self.node = node
         self.branches = set(branches)
-        self.loops = set(loops)
+        self.cycles = set(cycles)
 
     @property
     def nexts(self):
-        return self.branches | self.loops
+        return self.branches | self.cycles
 
     def __new__(cls, *args, **kwargs):
         self = super().__new__(cls)
         self.node = None
         self.branches = set()
-        self.loops = set()
+        self.cycles = set()
         return self
 
     def __repr__(self):
-        return "<ListenerPath node={!r}, {} branches, {} loops>".format(
-            self.node, len(self.branches), len(self.loops)
+        return "<ListenerPath node={!r}, {} branches, {} cycles>".format(
+            self.node, len(self.branches), len(self.cycles)
         )
 
     def __hash__(self):
@@ -211,7 +211,7 @@ class ListenerPath:
             (
                 type(self),
                 self.node,
-                frozenset(p.node for p in self.loops),
+                frozenset(p.node for p in self.cycles),
                 frozenset(self.branches),
             )
         )
@@ -224,8 +224,8 @@ class ListenerPath:
         if type(other) is not type(self):
             return False
 
-        self_loop_nodes = set(p.node for p in self.loops)
-        other_loop_nodes = set(p.node for p in other.loops)
+        self_loop_nodes = set(p.node for p in self.cycles)
+        other_loop_nodes = set(p.node for p in other.cycles)
         return(
             self.node == other.node
             # Rehash as the branches may have been modified afterwards
@@ -246,6 +246,6 @@ class ListenerPath:
         for path in self.branches:
             infos.extend(path.info(indent=indent + 4))
 
-        for path in self.loops:
+        for path in self.cycles:
             infos.append(" " * (indent + 4) + "Loop to {!r}".format(path.node))
         return infos
