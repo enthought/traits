@@ -26,13 +26,6 @@ class ObserverPath:
     on a nested object. The attribute ``nexts`` represents these branches.
     Each item in ``nexts`` is another ``ObserverPath``.
 
-    In most use cases, an ``ObserverPath`` represents a rooted directed acyclic
-    graph. To support an existing feature of recursion in the old
-    ``on_trait_change`` machinery, an ``ObserverPath`` is allowed loops
-    (i.e. an edge that connects a node to itself). Hence the implementations
-    assumes ``ObserverPath`` is a rooted directed almost-acyclic graph with
-    loops.
-
     In order to (1) avoid hooking up a user callback with the same observer
     twice, and (2) remove an observer when they are not needed, once an
     ``ObserverPath`` object is constructed (e.g. after mutating ``nexts``
@@ -86,8 +79,5 @@ class ObserverPath:
         if len(self.nexts) != len(other.nexts):
             return False
 
-        # Remove loops
-        self_nexts = set(path for path in self.nexts if path is not self)
-        other_nexts = set(path for path in other.nexts if path is not other)
         # Paths are hashable.
-        return self_nexts == other_nexts
+        return self.nexts == other.nexts
