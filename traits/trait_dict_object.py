@@ -230,8 +230,8 @@ class TraitDict(dict):
             validated_key = self.key_validator(key)
             validated_value = self.value_validator(value)
 
-            if key in self:
-                changed[key] = self[key]
+            if validated_key in self:
+                changed[validated_key] = self[validated_key]
             else:
                 added[validated_key] = validated_value
 

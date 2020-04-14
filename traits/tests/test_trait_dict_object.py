@@ -121,6 +121,22 @@ class TestTraitDict(unittest.TestCase):
         self.assertEqual(self.changed, {"a": 1, "b": 2})
         self.assertEqual(self.removed, {})
 
+    def test_update_with_tranformation(self):
+        td = TraitDict(
+            {"1": 1, "2": 2},
+            key_validator=str,
+            notifiers=[self.notification_handler],
+        )
+
+        # when
+        td.update({1: 2})
+
+        # then
+        self.assertEqual(td, {"1": 2, "2": 2})
+        self.assertEqual(self.added, {})
+        self.assertEqual(self.changed, {"1": 1})
+        self.assertEqual(self.removed, {})
+
     def test_clear(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
                        value_validator=int_validator,
