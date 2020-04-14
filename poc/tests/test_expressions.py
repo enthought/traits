@@ -1,6 +1,6 @@
 import unittest
 
-from poc.expressions import t, recursive, dict_items
+from poc.expressions import t, recursive
 from poc.observe import NamedTraitListener, ListenerPath
 
 

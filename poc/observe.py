@@ -1,7 +1,3 @@
-import copy
-from functools import reduce
-from itertools import chain
-import operator
 
 
 class BaseListener:
@@ -130,7 +126,6 @@ class ListItemListener(BaseListener):
         )
 
 
-
 class DictItemListener(BaseListener):
 
     def __init__(self, notify, optional):
@@ -256,8 +251,8 @@ class ListenerPath:
         )
 
     def info(self, indent=0):
-        """ Return a list of user-friendly texts containing descriptive information about
-        this path.
+        """ Return a list of user-friendly texts containing descriptive information
+        about this path.
 
         Returns
         -------

@@ -1,7 +1,6 @@
 
 import copy
 from functools import reduce, update_wrapper
-from itertools import chain
 from poc.observe import (
     ListenerPath,
     NamedTraitListener,

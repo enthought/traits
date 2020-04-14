@@ -26,14 +26,17 @@ NOTIFY = pp.Optional(pp.Or([DOT, COLON]), default=True)
 
 # Match "name"
 
+
 def parse_name(s, loc, toks):
     name, = toks.asList()
     return expressions.t(name=name)
+
 
 name = NAME.copy().setName("name")
 name = name.setParseAction(parse_name)
 
 # Match the keyword "items"
+
 
 def parse_items(s, loc, toks):
     return (
@@ -41,11 +44,13 @@ def parse_items(s, loc, toks):
         | expressions.items()
     )
 
+
 items = ITEMS.copy().setName("items")
 items = items.setParseAction(parse_items)
 
 # Match either plain name or the keyword items
 items_or_name = (items | name).setName("items | name")
+
 
 # Match "attr1.attr2", "attr1:attr2.attr3" and so
 def join_action(s, loc, toks):
@@ -73,6 +78,7 @@ def or_action(s, loc, toks):
     expressions = chain.from_iterable(toks)
     return reduce(operator.or_, expressions)
 
+
 or_expr = pp.delimitedList(pp.Group(joined))
 or_expr = or_expr.setParseAction(or_action)
 
@@ -83,6 +89,7 @@ def parse_group(s, loc, toks):
     expression, = toks.asList()
     return expression
 
+
 grouped = LBRACK + or_expr + RBRACK
 grouped = grouped.setParseAction(parse_group)
 
@@ -92,6 +99,7 @@ grouped = grouped.setParseAction(parse_group)
 def parse_recurse(s, loc, toks):
     expression, = toks.asList()
     return expressions.recursive(expression)
+
 
 recursed = ((items_or_name ^ grouped) + ASTERISK).setParseAction(parse_recurse)
 

@@ -48,26 +48,26 @@ class TestParsing(unittest.TestCase):
             | expressions.items(notify=False)
         )
         expected = (
-            expressions.t("a")\
-                .then(items_attr_or_items)\
-                    .t("b")
+            expressions.t("a").then(
+                items_attr_or_items).t(
+                    "b")
         )
         self.assertEqual(actual, expected)
 
     def test_grouped_or(self):
         actual = parsing.parse("root.[left,right]")
         expected = (
-            expressions.t("root")\
-                .then(expressions.t("left") | expressions.t("right"))
+            expressions.t("root").then(
+                expressions.t("left") | expressions.t("right"))
         )
         self.assertEqual(actual, expected)
 
     def test_grouped_or_extended(self):
         actual = parsing.parse("root.[left,right].value")
         expected = (
-            expressions.t("root")\
-                .then(expressions.t("left") | expressions.t("right"))\
-                    .t("value")
+            expressions.t("root").then(
+                expressions.t("left") | expressions.t("right")).t(
+                    "value")
         )
         self.assertEqual(actual, expected)
 
@@ -78,9 +78,9 @@ class TestParsing(unittest.TestCase):
     def test_recursion_support(self):
         actual = parsing.parse("root.[left,right]*.value")
         expected = (
-            expressions.t("root")\
-                .recursive(expressions.t("left") | expressions.t("right"))\
-                    .t("value")
+            expressions.t("root").recursive(
+                expressions.t("left") | expressions.t("right")).t(
+                    "value")
         )
         self.assertEqual(actual, expected)
 
@@ -110,11 +110,9 @@ class TestParsing(unittest.TestCase):
     def test_join_double_recursion_modify_last(self):
         actual = parsing.parse("a.[b:c*]*.d")
         expected = (
-            expressions.t("a")\
-                .recursive(
-                    expressions.t("b", False)\
-                        .recursive(expressions.t("c"))
-                ).t("d")
+            expressions.t("a").recursive(
+                expressions.t("b", False).recursive(
+                    expressions.t("c"))).t("d")
         )
         self.assertEqual(actual, expected)
 
@@ -122,9 +120,8 @@ class TestParsing(unittest.TestCase):
         actual = parsing.parse("root.[a.b.c.d,value]:g")
         expected = (
             expressions.t("root").then(
-                    expressions.t("a").t("b").t("c").t("d", False)
-                    | expressions.t("value", False)
-                )\
-                .t("g")
+                expressions.t("a").t("b").t("c").t("d", False)
+                | expressions.t("value", False)
+            ).t("g")
         )
         self.assertEqual(actual, expected)

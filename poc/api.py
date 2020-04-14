@@ -1,6 +1,6 @@
 
 
-from poc.expressions import (
+from poc.expressions import (   # noqa: F401
     join_,
     t,
     items,
@@ -10,4 +10,4 @@ from poc.expressions import (
     recursive,
 )
 
-from poc.parsing import parse
+from poc.parsing import parse   # noqa: F401
