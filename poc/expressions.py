@@ -22,19 +22,6 @@ def observe(object, expression, handler):
         _observe(object=object, path=path, handler=handler)  # noqa: F821
 
 
-_top_level_funcs = []
-
-
-def _as_top_level(func):
-
-    def new_func(*args, **kwargs):
-        return func(Expression(), *args, **kwargs)
-
-    new_func.__name__ = func.__name__
-    _top_level_funcs.append(new_func)
-    return func
-
-
 def join_(*expressions):
     """ Convenient function for joining many expressions
     using ``Expression.then``
@@ -146,7 +133,6 @@ class Expression:
 
         return self._levels[0]
 
-    @_as_top_level
     def recursive(self, expression):
         """ Create a new expression by adding a recursive path to
         this expression.
@@ -174,7 +160,6 @@ class Expression:
         """
         return set(_create_paths(self))
 
-    @_as_top_level
     def t(self, name, notify=True, optional=False):
         """ Create a new expression that matches the current
         expression and then a trait with the exact name given.
@@ -199,7 +184,6 @@ class Expression:
             nodes=[NamedTraitListener(name, notify, optional)],
         )
 
-    @_as_top_level
     def list_items(self, notify=True, optional=False):
         """ Create a new expression for observing items inside a list.
 
@@ -224,7 +208,6 @@ class Expression:
             nodes=[ListItemListener(notify=notify, optional=optional)],
         )
 
-    @_as_top_level
     def dict_items(self, notify=True, optional=False):
         """ Create a new expression for observing items inside a dict.
 
@@ -248,7 +231,6 @@ class Expression:
             nodes=[DictItemListener(notify=notify, optional=optional)],
         )
 
-    @_as_top_level
     def set_items(self, notify=True, optional=False):
         """ Create a new expression for observing items inside a set.
 
@@ -268,7 +250,6 @@ class Expression:
             nodes=[SetItemListener(notify=notify, optional=optional)],
         )
 
-    @_as_top_level
     def items(self, notify=True):
         """ Create a new expression for observing items in a list or
         a dict or a set.
@@ -286,10 +267,10 @@ class Expression:
         -------
         new_expression : Expression
         """
-        return self.then(
-            list_items(notify=notify, optional=True)
-            | dict_items(notify=notify, optional=True)
-            | set_items(notify=notify, optional=True)
+        return (
+            self.list_items(notify=notify, optional=True)
+            | self.dict_items(notify=notify, optional=True)
+            | self.set_items(notify=notify, optional=True)
         )
 
     def filter_(self, filter, notify=True):
@@ -481,11 +462,30 @@ def path_info(path, indent=0):
     return infos
 
 
-_dummy = Expression()
-for _func in _top_level_funcs:
-    update_wrapper(_func, getattr(_dummy, _func.__name__))
-    locals()[_func.__name__] = _func
+# Define top-level functions
 
-del _func
-del _top_level_funcs
-del _dummy
+def _as_top_level(func):
+
+    def new_func(*args, **kwargs):
+        return func(Expression(), *args, **kwargs)
+
+    # Recreate the docstring with the appropriate arguments
+    update_wrapper(
+        new_func,
+        getattr(Expression(), func.__name__)
+    )
+    new_func.__module__ = __name__
+    return new_func
+
+
+recursive = _as_top_level(Expression.recursive)
+
+t = _as_top_level(Expression.t)
+
+items = _as_top_level(Expression.items)
+
+list_items = _as_top_level(Expression.list_items)
+
+dict_items = _as_top_level(Expression.dict_items)
+
+set_items = _as_top_level(Expression.set_items)

@@ -101,6 +101,17 @@ parser = or_expr
 
 
 def parse(text):
+    """ Main function for paring a string into an instance of Expression.
+
+    Parameters
+    ----------
+    text : str
+        String to be parsed.
+
+    Returns
+    -------
+    expression : Expression
+    """
     expression, = parser.parseString(text, parseAll=True).asList()
     return expression
 
