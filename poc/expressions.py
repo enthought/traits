@@ -102,12 +102,15 @@ class Expression:
         -------
         new_expression : Expression
         """
-        if not self._prior_expressions and not self._levels:
-            # this expression is empty...
-            new = expression.copy()
-        else:
-            new = Expression()
-            new._prior_expressions = (_JOIN, [self, expression])
+        # FIXME: We should be able to do this.
+        # But text parsing is behaving weirdly. We need to fix the text
+        # parsing interface instead.
+        # if not self._prior_expressions and not self._levels:
+        #     # this expression is empty...
+        #     new = expression.copy()
+        # else:
+        new = Expression()
+        new._prior_expressions = (_JOIN, [self, expression])
         return new
 
     def _root_nodes(self):
