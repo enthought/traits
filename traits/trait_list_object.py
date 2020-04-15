@@ -55,6 +55,7 @@ class TraitListEvent(object):
 
 def _normalize_index(index, length):
     """ Normalize integer index to range 0 to len (inclusive). """
+
     index = operator.index(index)
     if index < 0:
         return max(0, length + index)
@@ -63,25 +64,37 @@ def _normalize_index(index, length):
 
 
 def _normalize_slice(index, length):
-    """ Normalize slice start and stop to range 0 to len (inclusive). """
+    """ Normalize a slice.
 
-    # Non-extended slice (step = 1): return only need the start index.
-    if index.step is None or index.step == 1:
-        if index.start is None:
-            return 0
-        else:
-            return _normalize_index(index.start, length)
+    For slices with positive step, returns a slice that's equivalent for the
+    purposes of __delitem__ and __setitem__ operations. For slices with
+    negative step, a normalized slice representing the reverse of the given
+    slice is returned: note that in this case, the matching *added* and
+    *removed* lists will need to be reversed.
 
-    # Extended slice with negative step: do not normalize.
-    if index.step is not None and index.step < 0:
-        return index
+    The normalized slice will have 0 <= start <= stop <= length and
+    the step will be either None or a positive integer.
 
-    # Extended slice with positive step: normalize the start and stop.
-    return slice(
-        _normalize_index(0 if index.start is None else index.start, length),
-        _normalize_index(length if index.stop is None else index.stop, length),
-        index.step,
-    )
+    Parameters
+    ----------
+    index : slice
+        The slice to normalize
+    length : int
+        The length of the list to which the slice will be applied.
+
+    Returns
+    -------
+    normalized_index : slice
+        An equivalent (or reversed equivalent) normalized slice.
+    """
+    start, stop, step = index.indices(length)
+    if step < 0:
+        start, stop, step = (
+            min(stop - step + (start - stop) % step, length),
+            start + 1,
+            -step,
+        )
+    return slice(start, max(start, stop), None if step == 1 else step)
 
 
 # Default item validator for TraitList.
@@ -178,6 +191,10 @@ class TraitList(list):
         if isinstance(key, slice):
             removed = self[key]
             normalized_index = _normalize_slice(key, len(self))
+            if normalized_index.step is None:
+                normalized_index = normalized_index.start
+            if key.step is not None and key.step < 0:
+                removed = removed[::-1]
         else:
             # Suppress IndexError. If the lookup fails, __delitem__ should also
             # fail, and we want to allow the __delitem__ error to propagate.
@@ -261,8 +278,13 @@ class TraitList(list):
         if isinstance(key, slice):
             value = [self.item_validator(item) for item in value]
             normalized_index = _normalize_slice(key, len(self))
+            if normalized_index.step is None:
+                normalized_index = normalized_index.start
             added = value
             removed = self[key]
+            if key.step is not None and key.step < 0:
+                added = added[::-1]
+                removed = removed[::-1]
         else:
             value = self.item_validator(value)
             normalized_index = _normalize_index(key, len(self))
