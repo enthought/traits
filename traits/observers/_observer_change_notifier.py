@@ -134,12 +134,12 @@ class ObserverChangeNotifier:
             # observer_handler contains the logic for maintaining notifiers
             # in the downstream path.
             and self.observer_handler is other.observer_handler
-            # user handler is an input for observer_handler.
-            # different user handlers should not interfere each other.
-            and self.handler() is other.handler()
             # path is an input for observer_handler.
             # Unequal paths should not interfere each other.
             and self.path == other.path
+            # user handler is an input for observer_handler.
+            # different user handlers should not interfere each other.
+            and self.handler() is other.handler()
             # target is an input for observer_handler.
             # it goes together with the user's handler
             and self.target() is other.target()
