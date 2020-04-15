@@ -130,9 +130,10 @@ class ObserverChangeNotifier:
         boolean
         """
         return (
+            type(self) is type(other)
             # observer_handler contains the logic for maintaining notifiers
             # in the downstream path.
-            self.observer_handler is other.observer_handler
+            and self.observer_handler is other.observer_handler
             # user handler is an input for observer_handler.
             # different user handlers should not interfere each other.
             and self.handler() is other.handler()

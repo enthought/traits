@@ -336,6 +336,11 @@ class TestObserverChangeEquals(unittest.TestCase):
             "Expected notifier2 to see notifier1 as equals."
         )
 
+    def test_notifier_equals_with_different_type(self):
+        # test the notifier can handle callables of different types.
+        notifier = create_notifier()
+        self.assertFalse(notifier.equals(str))
+
 
 class TestObserverChangeNotifierAddRemove(unittest.TestCase):
 
