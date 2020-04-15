@@ -52,6 +52,12 @@ class TraitListEvent(object):
             added = []
         self.added = added
 
+    def __repr__(self):
+        outstr = "Changed list at {}: was {}, now {}".format(
+            self.index, self.removed, self.added
+        )
+        return outstr
+
 
 def _normalize_index(index, length):
     """ Normalize integer index to range 0 to len (inclusive). """
