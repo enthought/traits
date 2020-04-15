@@ -45,6 +45,12 @@ class TraitSetEvent(object):
             added = set()
         self.added = added
 
+    def __repr__(self):
+        outstr = "Updated set: {} added, {} removed".format(
+            self.added, self.removed
+        )
+        return outstr
+
 
 class TraitSetObject(set):
     """ A subclass of set that fires trait events when mutated.
