@@ -200,7 +200,7 @@ class TraitList(list):
         added = [self.item_validator(item) for item in value]
         extended = super().__iadd__(added)
         if added:
-            self.notify(slice(original_length, len(self)), [], added)
+            self.notify(original_length, [], added)
         return extended
 
     def __imul__(self, value):
@@ -221,14 +221,13 @@ class TraitList(list):
             removed = self.copy()
             multiplied = super().__imul__(value)
             if removed:
-                self.notify(slice(0, len(removed)), removed, [])
+                self.notify(0, removed, [])
         else:
             original_length = len(self)
             multiplied = super().__imul__(value)
-            new_length = len(self)
-            if new_length > original_length:
-                index = slice(original_length, new_length)
-                self.notify(index, [], self[index])
+            added = self[original_length:]
+            if added:
+                self.notify(original_length, [], added)
         return multiplied
 
     def __setitem__(self, key, value):
@@ -290,7 +289,7 @@ class TraitList(list):
         removed = self.copy()
         super().clear()
         if removed:
-            self.notify(slice(0, len(removed)), removed, [])
+            self.notify(0, removed, [])
 
     def extend(self, iterable):
         """ Extend list by appending elements from the iterable.
@@ -305,7 +304,7 @@ class TraitList(list):
         added = [self.item_validator(item) for item in iterable]
         super().extend(added)
         if added:
-            self.notify(slice(original_length, len(self)), [], added)
+            self.notify(original_length, [], added)
 
     def insert(self, index, object):
         """ Insert object before index.
@@ -382,7 +381,8 @@ class TraitList(list):
         """ Reverse the items in the list in place. """
         removed = self.copy()
         super().reverse()
-        self.notify(slice(0, len(self)), removed, self.copy())
+        if removed:
+            self.notify(0, removed, self.copy())
 
     def sort(self, *, key=None, reverse=False):
         """ Sort the list in ascending order and return None.
@@ -405,7 +405,8 @@ class TraitList(list):
         """
         removed = self.copy()
         super().sort(key=key, reverse=reverse)
-        self.notify(slice(0, len(self)), removed, self.copy())
+        if removed:
+            self.notify(0, removed, self.copy())
 
     # -- pickle and copy support ----------------------------------------------
 

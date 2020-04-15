@@ -425,7 +425,7 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl += [6, 7]
-        self.assertEqual(self.index, slice(2, 4, None))
+        self.assertEqual(self.index, 2)
         self.assertEqual(self.removed, [])
         self.assertEqual(self.added, [6, 7])
 
@@ -448,7 +448,7 @@ class TestTraitList(unittest.TestCase):
 
         tl += [True, True]
         self.assertEqual(tl, [4, 5, 1, 1])
-        self.assertEqual(self.index, slice(2, 4))
+        self.assertEqual(self.index, 2)
         self.assertEqual(self.removed, [])
         self.assertEqual(self.added, [1, 1])
         self.assertTrue(
@@ -478,7 +478,7 @@ class TestTraitList(unittest.TestCase):
 
         tl += (x**2 for x in range(3))
         self.assertEqual(tl, [4, 5, 0, 1, 4])
-        self.assertEqual(self.index, slice(2, 5))
+        self.assertEqual(self.index, 2)
         self.assertEqual(self.removed, [])
         self.assertEqual(self.added, [0, 1, 4])
 
@@ -494,7 +494,7 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(self.added, None)
 
         tl *= 2
-        self.assertEqual(self.index, slice(2, 4, None))
+        self.assertEqual(self.index, 2)
         self.assertEqual(self.removed, [])
         self.assertEqual(self.added, [1, 2])
 
@@ -505,7 +505,7 @@ class TestTraitList(unittest.TestCase):
             tl *= 2.5
 
         tl *= -1
-        self.assertEqual(self.index, slice(0, 4, None))
+        self.assertEqual(self.index, 0)
         self.assertEqual(self.removed, [1, 2, 1, 2])
         self.assertEqual(self.added, [])
 
@@ -531,13 +531,13 @@ class TestTraitList(unittest.TestCase):
 
         tl *= numpy.int64(2)
         self.assertEqual(tl, [1, 2, 1, 2])
-        self.assertEqual(self.index, slice(2, 4))
+        self.assertEqual(self.index, 2)
         self.assertEqual(self.removed, [])
         self.assertEqual(self.added, [1, 2])
 
         tl *= numpy.int64(-1)
         self.assertEqual(tl, [])
-        self.assertEqual(self.index, slice(0, 4))
+        self.assertEqual(self.index, 0)
         self.assertEqual(self.removed, [1, 2, 1, 2])
         self.assertEqual(self.added, [])
 
@@ -597,7 +597,7 @@ class TestTraitList(unittest.TestCase):
                        notifiers=[self.notification_handler])
 
         tl.extend([1, 2])
-        self.assertEqual(self.index, slice(1, 3, None))
+        self.assertEqual(self.index, 1)
         self.assertEqual(self.removed, [])
         self.assertEqual(self.added, [1, 2])
 
@@ -620,7 +620,7 @@ class TestTraitList(unittest.TestCase):
 
         tl.extend([False, True])
         self.assertEqual(tl, [4, 0, 1])
-        self.assertEqual(self.index, slice(1, 3))
+        self.assertEqual(self.index, 1)
         self.assertEqual(self.removed, [])
         self.assertEqual(self.added, [0, 1])
         self.assertTrue(
@@ -650,7 +650,7 @@ class TestTraitList(unittest.TestCase):
 
         tl.extend(x**2 for x in range(10, 13))
         self.assertEqual(tl, [1, 100, 121, 144])
-        self.assertEqual(self.index, slice(1, 4))
+        self.assertEqual(self.index, 1)
         self.assertEqual(self.removed, [])
         self.assertEqual(self.added, [100, 121, 144])
 
@@ -755,7 +755,7 @@ class TestTraitList(unittest.TestCase):
                        item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
         tl.clear()
-        self.assertEqual(self.index, slice(0, 5, None))
+        self.assertEqual(self.index, 0)
         self.assertEqual(self.removed, [1, 2, 3, 4, 5])
         self.assertEqual(self.added, [])
 
@@ -778,9 +778,31 @@ class TestTraitList(unittest.TestCase):
         tl.sort()
 
         self.assertEqual(tl, [0, 1, 2, 3, 4, 5])
-        self.assertEqual(self.index, slice(0, 6, None))
+        self.assertEqual(self.index, 0)
         self.assertEqual(self.removed, [2, 3, 1, 4, 5, 0])
         self.assertEqual(self.added, [0, 1, 2, 3, 4, 5])
+
+    def test_sort_empty_list(self):
+        tl = TraitList([],
+                       item_validator=int_item_validator,
+                       notifiers=[self.notification_handler])
+
+        tl.sort()
+        self.assertIsNone(self.index)
+        self.assertIsNone(self.removed)
+        self.assertIsNone(self.added)
+
+    def test_sort_already_sorted(self):
+        tl = TraitList([10, 11, 12, 13, 14],
+                       item_validator=int_item_validator,
+                       notifiers=[self.notification_handler])
+
+        tl.sort()
+
+        self.assertEqual(tl, [10, 11, 12, 13, 14])
+        self.assertEqual(self.index, 0)
+        self.assertEqual(self.removed, [10, 11, 12, 13, 14])
+        self.assertEqual(self.added, [10, 11, 12, 13, 14])
 
     def test_reverse(self):
         tl = TraitList([1, 2, 3, 4, 5],
@@ -789,9 +811,19 @@ class TestTraitList(unittest.TestCase):
 
         tl.reverse()
         self.assertEqual(tl, [5, 4, 3, 2, 1])
-        self.assertEqual(self.index, slice(0, 5, None))
+        self.assertEqual(self.index, 0)
         self.assertEqual(self.removed, [1, 2, 3, 4, 5])
         self.assertEqual(self.added, [5, 4, 3, 2, 1])
+
+    def test_reverse_empty_list(self):
+        tl = TraitList([],
+                       item_validator=int_item_validator,
+                       notifiers=[self.notification_handler])
+
+        tl.reverse()
+        self.assertIsNone(self.index)
+        self.assertIsNone(self.removed)
+        self.assertIsNone(self.added)
 
     def test_reverse_single_notification(self):
         # Regression test for double notification.
