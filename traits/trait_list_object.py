@@ -97,6 +97,47 @@ def _normalize_slice(index, length):
     return slice(start, max(start, stop), None if step == 1 else step)
 
 
+def _normalize_slice_or_index(index, length):
+    if isinstance(index, slice):
+        reversed = index.step is not None and index.step < 0
+        index = _normalize_slice(index, length)
+        return reversed, (index.start if index.step is None else index)
+    else:
+        return False, _normalize_index(index, length)
+
+
+def _removed_items(items, index):
+    """
+    Return the list of removed items for a given list and index.
+
+    This is used by the __setitem__ and __delitem__ implementations to
+    get the "removed" part of the event.
+
+    Note that this deliberately suppresses any IndexError arising from
+    an out-of-range integer index. A suitable IndexError will be re-raised
+    when the actual __delitem__ or __setitem__ operation is performed.
+
+    Parameters
+    ----------
+    items : list
+        The list being operated on.
+    index : integer or slice
+        Index of items to remove or replace.
+
+    Returns
+    -------
+    removed_items : list
+        List containing the removed items.
+    """
+    if isinstance(index, slice):
+        return items[index]
+    else:
+        try:
+            return [items[index]]
+        except IndexError:
+            return []
+
+
 # Default item validator for TraitList.
 
 
@@ -186,26 +227,22 @@ class TraitList(list):
         ----------
         key : integer or slice
             Index of the element(s) to be deleted.
+
+        Raises
+        ------
+        IndexError
+            If key is an integer index and is out of range.
         """
 
-        if isinstance(key, slice):
-            removed = self[key]
-            normalized_index = _normalize_slice(key, len(self))
-            if normalized_index.step is None:
-                normalized_index = normalized_index.start
-            if key.step is not None and key.step < 0:
-                removed = removed[::-1]
-        else:
-            # Suppress IndexError. If the lookup fails, __delitem__ should also
-            # fail, and we want to allow the __delitem__ error to propagate.
-            try:
-                removed = [self[key]]
-            except IndexError:
-                pass
-            normalized_index = _normalize_index(key, len(self))
+        removed = _removed_items(self, key)
+        reversed, normalized_key = _normalize_slice_or_index(key, len(self))
+
         super().__delitem__(key)
+
         if removed:
-            self.notify(normalized_index, removed, [])
+            if reversed:
+                removed = removed[::-1]
+            self.notify(normalized_key, removed, [])
 
     def __iadd__(self, value):
         """ Implement self += value.
@@ -275,30 +312,22 @@ class TraitList(list):
             doesn't match the number of removed elements.
         """
 
+        removed = _removed_items(self, key)
         if isinstance(key, slice):
             value = [self.item_validator(item) for item in value]
-            normalized_index = _normalize_slice(key, len(self))
-            if normalized_index.step is None:
-                normalized_index = normalized_index.start
             added = value
-            removed = self[key]
-            if key.step is not None and key.step < 0:
-                added = added[::-1]
-                removed = removed[::-1]
         else:
             value = self.item_validator(value)
-            normalized_index = _normalize_index(key, len(self))
             added = [value]
-            # Suppress IndexError. If the lookup fails, __setitem__ should also
-            # fail, and we want to allow the __setitem__ error to propagate.
-            try:
-                removed = [self[key]]
-            except IndexError:
-                pass
+        reversed, normalized_key = _normalize_slice_or_index(key, len(self))
+
         super().__setitem__(key, value)
 
         if added != removed:
-            self.notify(normalized_index, removed, added)
+            if reversed:
+                added = added[::-1]
+                removed = removed[::-1]
+            self.notify(normalized_key, removed, added)
 
     def append(self, object):
         """ Append object to the end of the list.
