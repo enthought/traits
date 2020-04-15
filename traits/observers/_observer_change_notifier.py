@@ -136,7 +136,7 @@ class ObserverChangeNotifier:
             # user handler is an input for observer_handler.
             # different user handlers should not interfere each other.
             and self.handler() is other.handler()
-            # path is an input for obesrver_handler.
+            # path is an input for observer_handler.
             # Unequal paths should not interfere each other.
             and self.path == other.path
         )
