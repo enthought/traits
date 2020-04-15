@@ -518,11 +518,6 @@ class TraitListObject(TraitList):
         if object is None:
             return
 
-        # bug-for-bug conversion of parameters to TraitListEvent
-        if isinstance(index, slice):
-            if index.step is None or index.step == 1:
-                index = index.start
-
         event = TraitListEvent(index, removed, added)
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
