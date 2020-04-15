@@ -118,6 +118,30 @@ class ObserverChangeNotifier:
             dispatcher=self.dispatcher,
         )
 
+    def equals(self, other):
+        """ Return true if the other value is a notifier equivalent to this one.
+
+        Parameters
+        ----------
+        other : any
+
+        Returns
+        -------
+        boolean
+        """
+        is_equal = (
+            # observer_handler contains the logic for maintaining notifiers
+            # in the downstream path.
+            self.observer_handler is other.observer_handler
+            # user handler is an input for observer_handler.
+            # different user handlers should not interfere each other.
+            and self.handler() is other.handler()
+            # path is an input for obesrver_handler.
+            # Unequal paths should not interfere each other.
+            and self.path == other.path
+        )
+        return is_equal
+
 
 def _return(value):
     return value

@@ -163,6 +163,135 @@ class TestObserverChangeNotifierWeakrefHandler(unittest.TestCase):
         event_factory.assert_not_called()
 
 
+class TestObserverChangeEquals(unittest.TestCase):
+
+    def test_notifier_equals(self):
+        observer_handler = mock.Mock()
+        handler = mock.Mock()
+        path = mock.Mock()
+
+        notifier1 = create_notifier(
+            observer_handler=observer_handler,
+            handler=handler,
+            path=path,
+        )
+        notifier2 = create_notifier(
+            observer_handler=observer_handler,
+            handler=handler,
+            path=path,
+        )
+        self.assertTrue(
+            notifier1.equals(notifier2),
+            "Expected notifier1 to see notifier2 as equals."
+        )
+        self.assertTrue(
+            notifier2.equals(notifier1),
+            "Expected notifier2 to see notifier1 as equals."
+        )
+
+    def test_notifier_observer_handler_not_equal(self):
+        # Test notifier differentiates the identity of
+        # the observer_handler.
+        handler = mock.Mock()
+        path = mock.Mock()
+
+        notifier1 = create_notifier(
+            observer_handler=mock.Mock(),
+            handler=handler,
+            path=path,
+        )
+        notifier2 = create_notifier(
+            observer_handler=mock.Mock(),
+            handler=handler,
+            path=path,
+        )
+        self.assertFalse(
+            notifier1.equals(notifier2),
+            "Expected notifier1 to see notifier2 as different."
+        )
+        self.assertFalse(
+            notifier2.equals(notifier1),
+            "Expected notifier2 to see notifier1 as different."
+        )
+
+    def test_notifier_handler_not_equal(self):
+        # Test notifier differentiates the identity of the
+        # user's handler
+        observer_handler = mock.Mock()
+        path = mock.Mock()
+
+        notifier1 = create_notifier(
+            observer_handler=observer_handler,
+            handler=mock.Mock(),
+            path=path,
+        )
+        notifier2 = create_notifier(
+            observer_handler=observer_handler,
+            handler=mock.Mock(),
+            path=path,
+        )
+        self.assertFalse(
+            notifier1.equals(notifier2),
+            "Expected notifier1 to see notifier2 as different."
+        )
+        self.assertFalse(
+            notifier2.equals(notifier1),
+            "Expected notifier2 to see notifier1 as different."
+        )
+
+    def test_notifier_path_not_equal(self):
+        # Test notifier differentiates the identity of the
+        # path.
+        observer_handler = mock.Mock()
+        handler = mock.Mock()
+
+        notifier1 = create_notifier(
+            observer_handler=observer_handler,
+            handler=handler,
+            path=mock.Mock(),
+        )
+        notifier2 = create_notifier(
+            observer_handler=observer_handler,
+            handler=handler,
+            path=mock.Mock(),
+        )
+        self.assertFalse(
+            notifier1.equals(notifier2),
+            "Expected notifier1 to see notifier2 as different."
+        )
+        self.assertFalse(
+            notifier2.equals(notifier1),
+            "Expected notifier2 to see notifier1 as different."
+        )
+
+    def test_notifier_equals_paths_compared_for_equality(self):
+        # New path can be created that will compare true for equality but not
+        # for identity
+        path1 = tuple([1, 2, 3])
+        path2 = tuple([1, 2, 3])
+        observer_handler = mock.Mock()
+        handler = mock.Mock()
+
+        notifier1 = create_notifier(
+            observer_handler=observer_handler,
+            handler=handler,
+            path=path1,
+        )
+        notifier2 = create_notifier(
+            observer_handler=observer_handler,
+            handler=handler,
+            path=path2,
+        )
+        self.assertTrue(
+            notifier1.equals(notifier2),
+            "Expected notifier1 to see notifier2 as equals."
+        )
+        self.assertTrue(
+            notifier2.equals(notifier1),
+            "Expected notifier2 to see notifier1 as equals."
+        )
+
+
 class TestObserverChangeNotifierAddRemove(unittest.TestCase):
 
     def test_add_notifier(self):
