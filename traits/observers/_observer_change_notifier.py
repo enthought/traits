@@ -57,6 +57,9 @@ class ObserverChangeNotifier:
             An object for defining the context of the user's handler notifier.
             A weak reference is created for the target. If the target is garbage
             collected, this notifier will be silenced.
+            This is typically an instance of HasTraits acting as a container for
+            an observable on which this notifier is attached to. It would be seen
+            by the user as the "owner" of the observer.
         dispatcher : callable(function, event)
             Callable for dispatching the user's handler.
         """
