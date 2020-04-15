@@ -122,3 +122,36 @@ class TestObserverChangeNotifierWeakrefHandler(unittest.TestCase):
 
         # then
         self.assertIsNone(instance_ref())
+
+    def test_deleted_handler_silence_notifier(self):
+        # If the handler is an instance method and the instance is garbage
+        # collected, the notifier is silenced.
+
+        # Create a dummy observer_handler otherwise the default mock object
+        # keep references to call argument during the sanity check.
+        def observer_handler(*args, **kwargs):
+            pass
+
+        instance = DummyClass()
+        method_ref = weakref.WeakMethod(instance.dummy_method)
+        target = mock.Mock()
+        event_factory = mock.Mock()
+        notifier = create_notifier(
+            observer_handler=observer_handler,
+            target=target,
+            handler=instance.dummy_method,
+            event_factory=event_factory,
+        )
+
+        # sanity check
+        notifier(b=3)
+        self.assertEqual(event_factory.call_count, 1)
+        event_factory.reset_mock()
+
+        # when
+        del instance
+        self.assertIsNone(method_ref())
+        notifier(a=1, b=2)
+
+        # then
+        event_factory.assert_not_called()

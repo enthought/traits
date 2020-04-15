@@ -51,8 +51,8 @@ class ObserverChangeNotifier:
         handler : callable(event)
             The user handler being maintained when a container object changes.
             A weak reference is created for the handler if it is an instance
-            method. ``observer_handler`` may receive ``None`` if the handler
-            has been garbage collected.
+            method. If the instance method handler is garbage collected, this
+            notifier will be silenced.
         target : object
             An object for defining the context of the user's handler notifier.
             A weak reference is created for the target. If the target is garbage
@@ -65,7 +65,7 @@ class ObserverChangeNotifier:
         self.path = path
         self.target = weakref.ref(target)
         if isinstance(handler, types.MethodType):
-            self.handler = weakref.ref(handler)
+            self.handler = weakref.WeakMethod(handler)
         else:
             self.handler = partial(_return, value=handler)
         self.dispatcher = dispatcher
@@ -84,17 +84,17 @@ class ObserverChangeNotifier:
         if target is None:
             return
 
+        handler = self.handler()
+        if handler is None:
+            return
+
         event = self.event_factory(*args, **kwargs)
 
-        # observer_handler will be given a chance to remove
-        # notifiers on an observable when the notifier's target or the
-        # handler is garbage collected. Hence no checks are performed
-        # on the weak references here.
         self.observer_handler(
             event=event,
             path=self.path,
-            target=self.target(),
-            handler=self.handler(),
+            target=target,
+            handler=handler,
             dispatcher=self.dispatcher,
         )
 
