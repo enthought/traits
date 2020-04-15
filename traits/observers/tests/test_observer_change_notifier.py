@@ -44,6 +44,7 @@ class DummyClass:
 
 
 class TestObserverChangeNotifierCall(unittest.TestCase):
+    """ Tests for the notifier being a callable."""
 
     def test_init_and_call(self):
         path = mock.Mock()
@@ -74,6 +75,8 @@ class TestObserverChangeNotifierCall(unittest.TestCase):
 
 
 class TestObserverChangeNotifierWeakrefTarget(unittest.TestCase):
+    """ Tests for weak references on targets.
+    """
 
     def test_target_can_be_garbage_collected(self):
         # It is a common use case that the target is an instance
@@ -164,6 +167,7 @@ class TestObserverChangeNotifierWeakrefHandler(unittest.TestCase):
 
 
 class TestObserverChangeEquals(unittest.TestCase):
+    """ Test ObserverChangeNotifier.equals """
 
     def test_notifier_equals(self):
         observer_handler = mock.Mock()
@@ -342,7 +346,8 @@ class TestObserverChangeEquals(unittest.TestCase):
         self.assertFalse(notifier.equals(str))
 
 
-class TestObserverChangeNotifierAddRemove(unittest.TestCase):
+class TestObserverChangeNotifierAdd(unittest.TestCase):
+    """ Test ObserverChangeNotifier.add_to """
 
     def test_add_notifier(self):
         instance = DummyClass()
@@ -354,17 +359,6 @@ class TestObserverChangeNotifierAddRemove(unittest.TestCase):
 
         # then
         self.assertEqual(instance.notifiers, [notifier])
-
-    def test_remove_notifier(self):
-        instance = DummyClass()
-        notifier = create_notifier()
-        notifier.add_to(instance)
-
-        # when
-        notifier.remove_from(instance)
-
-        # then
-        self.assertEqual(instance.notifiers, [])
 
     def test_add_to_ignore_same_notifier(self):
         # Test add_to is an no-op when an equivalent notifier
@@ -393,6 +387,21 @@ class TestObserverChangeNotifierAddRemove(unittest.TestCase):
 
         # then
         self.assertEqual(instance.notifiers, [notifier1])
+
+
+class TestObserverChangeNotifierRemove(unittest.TestCase):
+    """ Test ObserverChangeNotifier.remove_from """
+
+    def test_remove_notifier(self):
+        instance = DummyClass()
+        notifier = create_notifier()
+        notifier.add_to(instance)
+
+        # when
+        notifier.remove_from(instance)
+
+        # then
+        self.assertEqual(instance.notifiers, [])
 
     def test_remove_from_error_if_not_found(self):
         # Test remove_from raises if a notifier is not found.
