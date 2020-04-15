@@ -169,16 +169,19 @@ class TestObserverChangeEquals(unittest.TestCase):
         observer_handler = mock.Mock()
         handler = mock.Mock()
         path = mock.Mock()
+        target = mock.Mock()
 
         notifier1 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
             path=path,
+            target=target,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
             path=path,
+            target=target,
         )
         self.assertTrue(
             notifier1.equals(notifier2),
@@ -194,16 +197,19 @@ class TestObserverChangeEquals(unittest.TestCase):
         # the observer_handler.
         handler = mock.Mock()
         path = mock.Mock()
+        target = mock.Mock()
 
         notifier1 = create_notifier(
             observer_handler=mock.Mock(),
             handler=handler,
             path=path,
+            target=target,
         )
         notifier2 = create_notifier(
             observer_handler=mock.Mock(),
             handler=handler,
             path=path,
+            target=target,
         )
         self.assertFalse(
             notifier1.equals(notifier2),
@@ -219,16 +225,19 @@ class TestObserverChangeEquals(unittest.TestCase):
         # user's handler
         observer_handler = mock.Mock()
         path = mock.Mock()
+        target = mock.Mock()
 
         notifier1 = create_notifier(
             observer_handler=observer_handler,
             handler=mock.Mock(),
             path=path,
+            target=target,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=mock.Mock(),
             path=path,
+            target=target,
         )
         self.assertFalse(
             notifier1.equals(notifier2),
@@ -244,16 +253,49 @@ class TestObserverChangeEquals(unittest.TestCase):
         # path.
         observer_handler = mock.Mock()
         handler = mock.Mock()
+        target = mock.Mock()
 
         notifier1 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
             path=mock.Mock(),
+            target=target,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
             path=mock.Mock(),
+            target=target,
+        )
+        self.assertFalse(
+            notifier1.equals(notifier2),
+            "Expected notifier1 to see notifier2 as different."
+        )
+        self.assertFalse(
+            notifier2.equals(notifier1),
+            "Expected notifier2 to see notifier1 as different."
+        )
+
+    def test_notifier_target_not_equals(self):
+        # Test notifier differentiates the identity of target.
+
+        observer_handler = mock.Mock()
+        handler = mock.Mock()
+        path = mock.Mock()
+        target1 = mock.Mock()
+        target2 = mock.Mock()
+
+        notifier1 = create_notifier(
+            observer_handler=observer_handler,
+            handler=handler,
+            path=path,
+            target=target1,
+        )
+        notifier2 = create_notifier(
+            observer_handler=observer_handler,
+            handler=handler,
+            path=path,
+            target=target2,
         )
         self.assertFalse(
             notifier1.equals(notifier2),
@@ -271,16 +313,19 @@ class TestObserverChangeEquals(unittest.TestCase):
         path2 = tuple([1, 2, 3])
         observer_handler = mock.Mock()
         handler = mock.Mock()
+        target = mock.Mock()
 
         notifier1 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
             path=path1,
+            target=target,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
             path=path2,
+            target=target,
         )
         self.assertTrue(
             notifier1.equals(notifier2),

@@ -129,7 +129,7 @@ class ObserverChangeNotifier:
         -------
         boolean
         """
-        is_equal = (
+        return (
             # observer_handler contains the logic for maintaining notifiers
             # in the downstream path.
             self.observer_handler is other.observer_handler
@@ -139,8 +139,10 @@ class ObserverChangeNotifier:
             # path is an input for observer_handler.
             # Unequal paths should not interfere each other.
             and self.path == other.path
+            # target is an input for observer_handler.
+            # it goes together with the user's handler
+            and self.target() is other.target()
         )
-        return is_equal
 
 
 def _return(value):
