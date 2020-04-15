@@ -365,3 +365,31 @@ class TestObserverChangeNotifierAddRemove(unittest.TestCase):
 
         # then
         self.assertEqual(instance.notifiers, [])
+
+    def test_add_to_ignore_same_notifier(self):
+        # Test add_to is an no-op when an equivalent notifier
+        # is already there.
+        handler = mock.Mock()
+        observer_handler = mock.Mock()
+        path = mock.Mock()
+        target = mock.Mock()
+        notifier1 = create_notifier(
+            observer_handler=observer_handler,
+            path=path,
+            handler=handler,
+            target=target,
+        )
+        notifier2 = create_notifier(
+            observer_handler=observer_handler,
+            path=path,
+            handler=handler,
+            target=target,
+        )
+        instance = DummyClass()
+
+        # when
+        notifier1.add_to(instance)
+        notifier2.add_to(instance)
+
+        # then
+        self.assertEqual(instance.notifiers, [notifier1])
