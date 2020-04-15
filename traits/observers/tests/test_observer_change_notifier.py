@@ -12,6 +12,7 @@ import unittest
 from unittest import mock
 import weakref
 
+from traits.api import HasTraits, Instance, Int
 from traits.observers._observer_change_notifier import ObserverChangeNotifier
 
 
@@ -441,3 +442,97 @@ class TestObserverChangeNotifierRemove(unittest.TestCase):
 
         # then
         self.assertEqual(instance.notifiers, [])
+
+
+class TestIntegrationHasTraits(unittest.TestCase):
+    """ Semi-integration tests with HasTraits notifications.
+    """
+
+    def setUp(self):
+        self.event_args_list = []
+
+    def handler(self, *args):
+        self.event_args_list.append(args)
+
+    def event_factory(self, object, name, old, new):
+        event = mock.Mock()
+        event.object = object
+        event.name = name
+        event.old = old
+        event.new = new
+        return event
+
+    def test_basic_instance_change(self):
+
+        class Bar(HasTraits):
+            value = Int()
+
+        class Foo(HasTraits):
+            bar = Instance(Bar)
+
+        on_bar_value_changed = self.handler
+
+        bar = Bar()
+        foo1 = Foo(bar=bar)
+        foo2 = Foo(bar=bar)
+
+        def observer_handler(event, path, handler, target, dispatcher):
+            # Very stupid handler for maintaining notifiers.
+            old_notifiers = event.old._trait("value", 2)._notifiers(True)
+            old_notifiers.remove(handler)
+            new_notifiers = event.new._trait("value", 2)._notifiers(True)
+            new_notifiers.append(handler)
+            # Ignore path, which would have been used for propagating
+            # notifiers in nested objects.
+            # Ignore target, which would have been used as the context
+            # for the user handler.
+            # Ignore dispatcher, which would otherwise wrap the user handler.
+
+        # Two notifiers are added to bar
+        # One "belongs" to foo1, the second one "belongs" to foo2
+        bar._trait("value", 2)._notifiers(True).extend([
+            on_bar_value_changed,
+            on_bar_value_changed,
+        ])
+
+        # this is for maintaining notifiers that belong to foo1
+        notifier_foo1 = ObserverChangeNotifier(
+            observer_handler=observer_handler,
+            event_factory=self.event_factory,
+            path=(),
+            handler=on_bar_value_changed,
+            target=foo1,
+            dispatcher=(),
+        )
+        notifier_foo1.add_to(foo1._trait("bar", 2))
+
+        # this is for maintaining notifiers that belong to foo2
+        notifier_foo2 = ObserverChangeNotifier(
+            observer_handler=observer_handler,
+            event_factory=self.event_factory,
+            path=(),
+            handler=on_bar_value_changed,
+            target=foo2,
+            dispatcher=(),
+        )
+        notifier_foo2.add_to(foo2._trait("bar", 2))
+
+        # when
+        # the bar is changed, the ObserverChangeNotifier is fired so that
+        # user handler on Bar.value is maintained.
+        self.event_args_list.clear()
+        new_bar = Bar(value=1)
+        foo1.bar = new_bar
+        foo2.bar = new_bar
+        new_bar.value += 1
+
+        # then
+        self.assertEqual(len(self.event_args_list), 2)
+
+        # when
+        # changes on the old bar will not be captured
+        self.event_args_list.clear()
+        bar.value += 1
+
+        # then
+        self.assertEqual(len(self.event_args_list), 0)
