@@ -215,7 +215,7 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(self.added, [5])
 
         tl[:] = [1, 2, 3, 4, 5]
-        self.assertEqual(self.index, slice(0, 3, None))
+        self.assertEqual(self.index, 0)
         self.assertEqual(self.removed, [1, 5, 3])
         self.assertEqual(self.added, [1, 2, 3, 4, 5])
 
@@ -270,7 +270,7 @@ class TestTraitList(unittest.TestCase):
 
         tl[:] = (x**2 for x in range(4))
         self.assertEqual(tl, [0, 1, 4, 9])
-        self.assertEqual(self.index, slice(0, 3))
+        self.assertEqual(self.index, 0)
         self.assertEqual(self.removed, [1, 2, 3])
         self.assertEqual(self.added, [0, 1, 4, 9])
 
@@ -375,7 +375,7 @@ class TestTraitList(unittest.TestCase):
         # Note: new items inserted at position 5, not position 2.
         tl[5:2] = [10, 11, 12]
         self.assertEqual(tl, [0, 1, 2, 3, 4, 10, 11, 12, 5, 6])
-        self.assertEqual(self.index, slice(5, 2))
+        self.assertEqual(self.index, 5)
         self.assertEqual(self.removed, [])
         self.assertEqual(self.added, [10, 11, 12])
 
@@ -390,7 +390,7 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(self.added, [])
 
         del tl[:]
-        self.assertEqual(self.index, slice(0, 2, None))
+        self.assertEqual(self.index, 0)
         self.assertEqual(self.removed, [1, 2])
         self.assertEqual(self.added, [])
 

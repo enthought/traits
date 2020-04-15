@@ -65,10 +65,18 @@ def _normalize_index(index, length):
 def _normalize_slice(index, length):
     """ Normalize slice start and stop to range 0 to len (inclusive). """
 
-    # Do not normalize if step is negative.
+    # Non-extended slice (step = 1): return only need the start index.
+    if index.step is None or index.step == 1:
+        if index.start is None:
+            return 0
+        else:
+            return _normalize_index(index.start, length)
+
+    # Extended slice with negative step: do not normalize.
     if index.step is not None and index.step < 0:
         return index
 
+    # Extended slice with positive step: normalize the start and stop.
     return slice(
         _normalize_index(0 if index.start is None else index.start, length),
         _normalize_index(length if index.stop is None else index.stop, length),
