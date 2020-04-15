@@ -85,14 +85,24 @@ class ObserverChangeNotifier:
             notifiers.append(self)
 
     def remove_from(self, observable):
-        """ Remove this notifier from the observable.
+        """ Remove a notifier equivalent to this one from the observable.
 
         Parameters
         ----------
         observable : IObservable
+
+        Raises
+        ------
+        ValueError
+            If the notifier cannot be found.
         """
         notifiers = observable._notifiers(True)
-        notifiers.remove(self)
+        for notifier in notifiers[:]:
+            if self.equals(notifier):
+                notifiers.remove(notifier)
+                break
+        else:
+            raise ValueError("Notifier not found.")
 
     def __call__(self, *args, **kwargs):
         """ Called by the observable this notifier is attached to.

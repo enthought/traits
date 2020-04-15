@@ -412,3 +412,32 @@ class TestObserverChangeNotifierRemove(unittest.TestCase):
         notifier = create_notifier()
         with self.assertRaises(ValueError):
             notifier.remove_from(instance)
+
+    def test_remove_from_recognize_equivalent_notifier(self):
+        # Test remove_from will remove an equivalent notifier
+        instance = DummyClass()
+
+        handler = mock.Mock()
+        observer_handler = mock.Mock()
+        path = mock.Mock()
+        target = mock.Mock()
+
+        notifier1 = create_notifier(
+            handler=handler,
+            observer_handler=observer_handler,
+            path=path,
+            target=target,
+        )
+        notifier2 = create_notifier(
+            handler=handler,
+            observer_handler=observer_handler,
+            path=path,
+            target=target,
+        )
+
+        # when
+        notifier1.add_to(instance)
+        notifier2.remove_from(instance)
+
+        # then
+        self.assertEqual(instance.notifiers, [])
