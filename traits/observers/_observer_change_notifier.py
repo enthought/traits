@@ -70,6 +70,26 @@ class ObserverChangeNotifier:
             self.handler = partial(_return, value=handler)
         self.dispatcher = dispatcher
 
+    def add_to(self, observable):
+        """ Add this notifier to the observable.
+
+        Parameters
+        ----------
+        observable : IObservable
+        """
+        notifiers = observable._notifiers(True)
+        notifiers.append(self)
+
+    def remove_from(self, observable):
+        """ Remove this notifier from the observable.
+
+        Parameters
+        ----------
+        observable : IObservable
+        """
+        notifiers = observable._notifiers(True)
+        notifiers.remove(self)
+
     def __call__(self, *args, **kwargs):
         """ Called by the observable this notifier is attached to.
 

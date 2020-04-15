@@ -33,6 +33,12 @@ def create_notifier(**kwargs):
 
 class DummyClass:
 
+    def __init__(self):
+        self.notifiers = []
+
+    def _notifiers(self, force_create):
+        return self.notifiers
+
     def dummy_method(self):
         pass
 
@@ -155,3 +161,28 @@ class TestObserverChangeNotifierWeakrefHandler(unittest.TestCase):
 
         # then
         event_factory.assert_not_called()
+
+
+class TestObserverChangeNotifierAddRemove(unittest.TestCase):
+
+    def test_add_notifier(self):
+        instance = DummyClass()
+
+        notifier = create_notifier()
+
+        # when
+        notifier.add_to(instance)
+
+        # then
+        self.assertEqual(instance.notifiers, [notifier])
+
+    def test_remove_notifier(self):
+        instance = DummyClass()
+        notifier = create_notifier()
+        notifier.add_to(instance)
+
+        # when
+        notifier.remove_from(instance)
+
+        # then
+        self.assertEqual(instance.notifiers, [])
