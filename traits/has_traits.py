@@ -115,6 +115,30 @@ extended_trait_pat = re.compile(r".*[ :\+\-,\.\*\?\[\]]")
 # Generic 'Any' trait:
 any_trait = Any().as_ctrait()
 
+# Classes where we don't check for name collisions.
+HasTraitsSubclasses = (
+    "HasTraits",
+    "HasStrictTraits",
+    "HasRequiredTraits",
+    "HasPrivateTraits",
+    "ABCMetaHasTraits",
+    "ABCHasTraits",
+    "ABCHasStrictTraits",
+    "SingletonHasTraits",
+    "SingletonHasStrictTraits",
+    "SingletonHasPrivateTraits",
+    "Vetoable",
+    "MetaInterface",
+    "Interface",
+    "ISerializable",
+    "traits_super"
+)
+
+
+# A custom warning issued by Traits
+class TraitsWarning(Warning):
+    pass
+
 
 def _clone_trait(clone, metadata=None):
     """ Creates a clone of a specified trait.
@@ -374,6 +398,13 @@ def update_traits_class_dict(class_name, bases, class_dict):
     class_dict : dict
         A dictionary of class members.
     """
+    # Enable name collision check for user defined classes.
+    check_name_collision = (True if class_name not in
+                            HasTraitsSubclasses else False)
+    if check_name_collision:
+        public_method_names = {meth for meth in HasTraits.__dict__.keys()
+                               if not meth.startswith("_")}
+
     # Create the various class dictionaries, lists and objects needed to
     # hold trait and view information and definitions:
     base_traits = {}
@@ -396,6 +427,13 @@ def update_traits_class_dict(class_name, bases, class_dict):
     # Move all trait definitions from the class dictionary to the
     # appropriate trait class dictionaries:
     for name, value in list(class_dict.items()):
+
+        # Warn name collisions.
+        if check_name_collision and name in public_method_names:
+            warnings.warn("The attribute named '{}' of class {} is used"
+                          " internally and should be renamed."
+                          .format(name, class_name), TraitsWarning, 3)
+
         value = check_trait(value)
         rc = isinstance(value, CTrait)
 
