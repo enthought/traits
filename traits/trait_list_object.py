@@ -53,7 +53,7 @@ class TraitListEvent(object):
         self.added = added
 
     def __repr__(self):
-        outstr = "Changed list at {}: was {}, now {}".format(
+        outstr = "TraitListEvent(index={}, removed={}, added={})".format(
             self.index, self.removed, self.added
         )
         return outstr

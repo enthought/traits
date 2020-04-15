@@ -62,7 +62,7 @@ class TraitDictEvent(object):
         self.removed = removed
 
     def __repr__(self):
-        outstr = "Updated dict: {} changed, {} added, {} removed".format(
+        outstr = "TraitDictEvent(added={}, changed={}, removed={})".format(
             self.changed, self.added, self.removed
         )
         return outstr
