@@ -13,7 +13,7 @@ import weakref
 
 
 class ObserverChangeNotifier:
-    """ Wrapper for maintaining observers in an ObserverPath
+    """ Wrapper for maintaining notifiers in an ObserverPath
     when an upstream object changes.
 
     For example, when observing an extended attribute path,
@@ -40,9 +40,9 @@ class ObserverChangeNotifier:
             notifier.
         event_factory : callable(*args, **kwargs) -> object
             A factory function for creating the event object to be sent to
-            the handler. The call signature must be compatible with the
-            call signature expected by the observable this notifier is used
-            with. e.g. for CTrait, the call signature will be
+            the observer_handler. The call signature must be compatible with
+            the call signature expected by the observable this notifier is
+            used with. e.g. for CTrait, the call signature will be
             ``(object, name, old, new)``.
         path : ObserverPath
             An object describing what traits are being observed on an instance
