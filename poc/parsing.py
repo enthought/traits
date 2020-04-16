@@ -164,25 +164,6 @@ def handle_metadata(trees, default_notifies):
     return _expr_module.metadata(metadata_name, notify=notify)
 
 
-def handle_recursed(trees, default_notifies):
-    """ Handle trees to be wrapped with recursion.
-
-    Parameters
-    ----------
-    trees : list of lark.tree.Tree
-        The children tree for the "recursed" rule.
-        There should be only one item.
-
-    Returns
-    -------
-    expression : Expression
-    """
-    tree, = trees
-    return _expr_module.recursive(
-        handle_tree(tree, default_notifies=default_notifies)
-    )
-
-
 def handle_items(trees, default_notifies):
     """ Handle keyword "items".
 
@@ -236,7 +217,6 @@ def handle_tree(tree, default_notifies=None):
     handlers = {
         "series": handle_series,
         "parallel": handle_parallel,
-        "recursed": handle_recursed,
         "notify": handle_notify,
         "quiet": handle_quiet,
         "last": handle_last,
