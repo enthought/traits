@@ -23,13 +23,6 @@ def observe(object, expression, handler):
         _observe(object=object, path=path, handler=handler)  # noqa: F821
 
 
-def join_(*expressions):
-    """ Convenient function for joining many expressions
-    using ``Expression.then``
-    """
-    return reduce(lambda e1, e2: e1.then(e2), expressions)
-
-
 class Expression:
     """ A user-facing object for constructing the data structures
     required by ``observe`` (a future replacement for
@@ -642,3 +635,10 @@ dict_items = _as_top_level(Expression.dict_items)
 set_items = _as_top_level(Expression.set_items)
 
 metadata = _as_top_level(Expression.metadata)
+
+
+def join_(*expressions):
+    """ Convenient function for joining many expressions
+    using ``Expression.then``
+    """
+    return reduce(lambda e1, e2: e1.then(e2), expressions)
