@@ -181,6 +181,12 @@ class TestTraitSet(unittest.TestCase):
             str(python_exc.exception),
         )
 
+    def test_update_varargs(self):
+        ts = TraitSet(notifiers=[self.notification_handler])
+        ts.update({1, 2}, {3, 4})
+        self.assertEqual(self.added, {1, 2, 3, 4})
+        self.assertEqual(self.removed, set())
+
     def test_update_with_nothing(self):
         notifier = mock.Mock()
 
@@ -288,6 +294,15 @@ class TestTraitSet(unittest.TestCase):
 
         self.assertEqual(ts, python_set)
         notifier.assert_not_called
+
+    def test_intersection_update_varargs(self):
+        python_set = set([1, 2, 3])
+        python_set.intersection_update([2], [3])
+
+        ts = TraitSet([1, 2, 3], notifiers=[notifier])
+        ts.intersection_update([2], [3])
+
+        self.assertEqual(ts, python_set)
 
     def test_intersection_update_with_iterable(self):
         python_set = set([1, 2, 3])
@@ -400,6 +415,11 @@ class TestTraitSet(unittest.TestCase):
         ts.difference_update()
 
         self.assertEqual(ts, python_set)
+
+    def test_difference_update_varargs(self):
+        ts = TraitSet([1, 2, 3], notifiers=[self.notification_handler])
+        ts.difference_update([2], [3])
+        self.assertEqual(self.removed, {2, 3})
 
     def test_get_state(self):
         ts = TraitSet(notifiers=[self.notification_handler])

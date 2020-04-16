@@ -10,6 +10,7 @@
 
 import copy
 import copyreg
+from itertools import chain
 from weakref import ref
 
 from traits.trait_errors import TraitError
@@ -243,36 +244,34 @@ class TraitSet(set):
         if value_in_self:
             self.notify({value}, set())
 
-    def difference_update(self, value=()):
+    def difference_update(self, *args):
         """  Remove all elements of another set from this set.
 
         Parameters
         ----------
-        value : iterable
-            The other iterable.
+        args : iterables
+            The other iterables.
         """
 
-        removed = self.intersection(value)
-        super().difference_update(value)
+        old_set = self.copy()
+        super().difference_update(*args)
+        removed = old_set.difference(self)
 
         if len(removed) > 0:
             self.notify(removed, set())
 
-    def intersection_update(self, value=None):
+    def intersection_update(self, *args):
         """  Update the set with the intersection of itself and another set.
 
         Parameters
         ----------
-        value : iterable
-            The other iterable.
+        args : iterables
+            The other iterables.
         """
 
-        if value is None:
-            return
-
-        value = set(value)
-        removed = self.difference(value)
-        super().intersection_update(value)
+        old_set = self.copy()
+        super().intersection_update(*args)
+        removed = old_set.difference(self)
 
         if len(removed) > 0:
             self.notify(removed, set())
@@ -322,7 +321,6 @@ class TraitSet(set):
         Parameters
         ----------
         value : iterable
-            An iterable
         """
 
         values = set(value)
@@ -335,20 +333,21 @@ class TraitSet(set):
         if removed or added:
             self.notify(removed, added)
 
-    def update(self, value=()):
+    def update(self, *args):
         """ Update the set with the union of itself and others.
 
         Parameters
         ----------
-        value : iterable
-            The other iterable.
+        args : iterables
+            The other iterables.
         """
 
-        validated_values = {self.item_validator(item) for item in value}
+        validated_values = {self.item_validator(item)
+                            for item in chain.from_iterable(args)}
         added = validated_values.difference(self)
+        super().update(added)
 
         if len(added) > 0:
-            super().update(added)
             self.notify(set(), added)
 
     # -- pickle and copy support ----------------------------------------------
