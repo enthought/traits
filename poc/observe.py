@@ -1,5 +1,9 @@
 
 
+def _is_not_none(value):
+    return value is not None
+
+
 class BaseListener:
 
     def __eq__(self, other):
@@ -53,6 +57,47 @@ class _FilteredTraitListener(BaseListener):
         return (
             (self.filter, self.notify)
             == (other.filter, other.notify)
+        )
+
+
+
+class MetadataListener(BaseListener):
+    """ A listener for traits with a given metadata criterion.
+    """
+
+    def __init__(self, metadata_name, value, notify):
+        """
+
+        Parameters
+        ----------
+        metadata_name : str
+            Name of the metadata
+        value : callable(value) -> boolean
+            A callable that receives the value of the named metadata from a
+            trait and returns true if the metadata value is accepted.
+        notify : boolean
+            Whether to notify for changes.
+        """
+        self.metadata_name = metadata_name
+        self.value = value
+        self.notify = notify
+
+    def __repr__(self):
+        return "<Metadata(metadata_name={!r}, value={!r} notify={!r})>".format(
+            self.metadata_name, self.value, self.notify,
+        )
+
+    def __hash__(self):
+        return hash((
+            self.metadata_name,
+            self.value,
+            self.notify,
+        ))
+
+    def __eq__(self, other):
+        return (
+            type(self) is type(other)
+            and self.metadata_name == other.metadata_name
         )
 
 

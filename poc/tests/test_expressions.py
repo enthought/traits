@@ -1,7 +1,10 @@
 import unittest
 
-from poc.expressions import t, recursive
-from poc.observe import NamedTraitListener, ListenerPath
+from poc.expressions import t, recursive, metadata
+from poc.observe import (
+    _is_not_none,
+    NamedTraitListener, ListenerPath, MetadataListener,
+)
 
 
 class TestBasicExpression(unittest.TestCase):
@@ -132,6 +135,21 @@ class TestOrExpression(unittest.TestCase):
                 ])
             )
         )
+
+
+class TestMetadata(unittest.TestCase):
+
+    def test_metadata_on_its_own(self):
+        expression = metadata("updated")
+        actual, = expression.as_paths()
+        expected = ListenerPath(
+            node=MetadataListener(
+                metadata_name="updated",
+                value=_is_not_none,
+                notify=True,
+            )
+        )
+        self.assertEqual(actual, expected)
 
 
 class TestRecursion(unittest.TestCase):

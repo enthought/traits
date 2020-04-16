@@ -2,7 +2,9 @@
 import copy
 from functools import reduce, update_wrapper
 from poc.observe import (
+    _is_not_none,
     ListenerPath,
+    MetadataListener,
     NamedTraitListener,
     _FilteredTraitListener,
     ListItemListener,
@@ -344,7 +346,7 @@ class Expression:
         """
         return self.filter_(filter=_anytrait_filter, notify=notify)
 
-    def metadata(self, metadata_name, filter, notify=True):
+    def metadata(self, metadata_name, value=_is_not_none, notify=True):
         """ Return a new expression that matches traits based on
         metadata filters, after the current expression matches.
 
@@ -355,7 +357,7 @@ class Expression:
         ----------
         metadata_name : str
             Name of the metadata to filter traits with.
-        filter : callable(value) -> boolean
+        value : callable(value) -> boolean
             Return true if a trait is to be observed.
             ``value`` is the value of the metadata, if defined on a trait.
         notify : boolean, optional
@@ -371,7 +373,12 @@ class Expression:
         """
         # Something that makes use of
         # HasTraits.traits(**{metadata_name: filter})
-        raise NotImplementedError()
+        return self._new_with_branches(
+            nodes=[
+                MetadataListener(
+                    metadata_name=metadata_name, value=value, notify=notify),
+            ]
+        )
 
     def _new_with_branches(self, nodes):
         expression = self.copy()
@@ -529,3 +536,5 @@ list_items = _as_top_level(Expression.list_items)
 dict_items = _as_top_level(Expression.dict_items)
 
 set_items = _as_top_level(Expression.set_items)
+
+metadata = _as_top_level(Expression.metadata)

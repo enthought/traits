@@ -2,6 +2,7 @@
 
 from poc.expressions import (   # noqa: F401
     join_,
+    metadata,
     t,
     items,
     list_items,
