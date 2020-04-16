@@ -1008,10 +1008,7 @@ class TestTraitList(unittest.TestCase):
         )
 
         # Check normalization of the index.
-        if isinstance(index, slice):
-            self.check_slice_normalized(index, len(original_list))
-        else:
-            self.check_index_normalized(index, len(original_list))
+        self.check_index_normalized(index, len(original_list))
 
         # Check that we can reconstruct the list operation from the event.
         reconstructed = original_list.copy()
@@ -1029,25 +1026,41 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(reconstructed, trait_list)
 
     def check_index_normalized(self, index, length):
-        self.assertTrue(
-            0 <= index <= length,
-            msg="index {} is not normalized for length {}".format(
-                index, length)
-        )
+        if isinstance(index, slice):
+            start, stop, step = index.start, index.stop, index.step
 
-    def check_slice_normalized(self, index, length):
-        # Check start and stop.
-        self.assertTrue(
-            0 <= index.start <= index.stop <= length,
-            msg="start and stop of {} not normalized for length {}".format(
-                index, length
+            # Check start and stop.
+            self.assertTrue(
+                0 <= start < stop <= length,
+                msg="start and stop of {} not normalized for length {}".format(
+                    index, length
+                )
             )
-        )
-        # Check step.
-        self.assertTrue(
-            index.step is None or index.step > 1,
-            msg="step should be None or greater than 1"
-        )
+
+            # Check step. This should always be > 1, since for step 1
+            # we can use a plain integer index instead.
+            self.assertTrue(step > 1, msg="step should be greater than 1")
+
+            # Check that the slice represents at least two elements
+            # (otherwise we should have a plain integer index instead)
+            self.assertTrue(
+                start + step < stop,
+                msg="slice represents fewer than 2 elements"
+            )
+
+            # Check that the stop is the smallest possible out of all
+            # equivalent stops.
+            self.assertTrue(
+                (stop - start) % step == 1,
+                msg="stop not normalised with respect to step"
+            )
+
+        else:
+            self.assertTrue(
+                0 <= index <= length,
+                msg="index {} is not normalized for length {}".format(
+                    index, length)
+            )
 
     def all_slices(self, max_index=10):
         """
