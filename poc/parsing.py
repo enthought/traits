@@ -1,17 +1,10 @@
 from functools import reduce
 import operator
-import os
-from lark import Lark
 
 import poc.expressions as _expr_module
+from poc.generated_parser import Lark_StandAlone as _Lark_StandAlone
 
-HERE = os.path.dirname(__file__)
-
-
-with open(os.path.join(HERE, "grammar.lark"), "r") as p:
-    grammar = p.read()
-
-parser = Lark(grammar, parser="lalr")
+parser = _Lark_StandAlone()
 
 #: Token annotation for a name (a trait name, or a metadata name, etc.)
 _NAME_TOKEN = "NAME"
