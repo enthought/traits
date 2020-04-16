@@ -470,6 +470,8 @@ class TestRecursion(unittest.TestCase):
         )
 
     def test_recurse_extend_then_recurse(self):
+        recurse_c = recursive(t("c"))
+        e = recursive(recurse_c.t("d"))
         e = recursive(recursive(t("c")).t("d"))
 
         path, = e.as_paths()
