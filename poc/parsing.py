@@ -144,7 +144,7 @@ def handle_trait(trees, default_notifies):
     # sanity check
     if token.type != _NAME_TOKEN:
         raise ValueError("Unexpected token: {!r}".format(token))
-    name = str(token)
+    name = token.value
     notify = default_notifies[-1]
     return _expr_module.t(name, notify=notify)
 
@@ -166,7 +166,7 @@ def handle_metadata(trees, default_notifies):
     # sanity check
     if token.type != _NAME_TOKEN:
         raise ValueError("Unexpected token: {!r}".format(token))
-    metadata_name = str(token)
+    metadata_name = token.value
     notify = default_notifies[-1]
     return _expr_module.metadata(metadata_name, notify=notify)
 
