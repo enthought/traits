@@ -13,6 +13,14 @@ import unittest
 
 from traits.api import (
     Any, BaseEnum, Enum, HasTraits, List, Property, TraitError)
+from traits.testing.optional_dependencies import pyface, requires_traitsui
+
+if pyface is not None:
+    GuiTestAssistant = pyface.toolkit.toolkit_object(
+        "util.gui_test_assistant:GuiTestAssistant")
+else:
+    class GuiTestAssistant:
+        pass
 
 
 class FooEnum(enum.Enum):
@@ -108,6 +116,13 @@ class EnumCollectionExample(HasTraits):
     single_digit = Enum(8)
 
     slow_enum = BaseEnum("yes", "no", "maybe")
+
+
+class EnumCollectionGUIExample(EnumCollectionExample):
+    # Override attributes that may fail GUI test
+    # until traitsui #781 is fixed.
+    int_set_enum = Enum("int", "set")
+    correct_int_set_enum = Enum("int", "set")
 
 
 class EnumTestCase(unittest.TestCase):
@@ -296,3 +311,18 @@ class EnumTestCase(unittest.TestCase):
         with self.assertRaises(TraitError):
             obj.slow_enum = "perhaps"
         self.assertEqual(obj.slow_enum, "no")
+
+
+@requires_traitsui
+class TestGui(GuiTestAssistant, unittest.TestCase):
+
+    def test_create_editor(self):
+        obj = EnumCollectionGUIExample()
+
+        # Create a UI window
+        ui = obj.edit_traits()
+        try:
+            self.gui.process_events()
+        finally:
+            with self.delete_widget(ui.control):
+                ui.dispose()

@@ -8,6 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
+import copy
 import unittest
 
 from traits.has_traits import (
@@ -25,7 +26,7 @@ from traits.has_traits import (
 )
 from traits.ctrait import CTrait
 from traits.traits import ForwardProperty, generic_trait
-from traits.trait_types import Event, Float, Instance, Int
+from traits.trait_types import Event, Float, Instance, Int, Str
 
 
 def _dummy_getter(self):
@@ -408,6 +409,17 @@ class TestHasTraits(unittest.TestCase):
         # Exercise the case where the prefix traits machinery goes on to
         # produce a valid result.
         self.assertEqual(a.banananana, 1729)
+
+    def test_deepcopy_memoization(self):
+        class A(HasTraits):
+            x = Int()
+            y = Str()
+
+        a = A()
+        objs = [a, a]
+        objs_copy = copy.deepcopy(objs)
+        self.assertIsNot(objs_copy[0], objs[0])
+        self.assertIs(objs_copy[0], objs_copy[1])
 
 
 class TestObjectNotifiers(unittest.TestCase):

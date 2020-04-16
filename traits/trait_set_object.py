@@ -43,6 +43,11 @@ class TraitSetEvent(object):
             added = set()
         self.added = added
 
+    def __repr__(self):
+        return "TraitSetEvent(removed={!r}, added={!r})".format(
+            self.removed, self.added
+        )
+
 
 # Default item validator for TraitSet.
 
