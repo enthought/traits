@@ -430,8 +430,8 @@ def update_traits_class_dict(class_name, bases, class_dict):
 
         # Warn name collisions.
         if check_name_collision and name in public_method_names:
-            warnings.warn("The attribute named '{}' of class {} is used"
-                          " internally and should be renamed."
+            warnings.warn("The attribute named '{}' of class {} overrides"
+                          " an internal method with the same name."
                           .format(name, class_name), TraitsWarning, 3)
 
         value = check_trait(value)
