@@ -1,23 +1,48 @@
 ?start: expr*
 
-?grouped: "[" parallel "]"
-
-trait: NAME -> trait
-?element: trait | grouped | metadata | items
-metadata: "+" NAME -> metadata
-items: "items" -> items
-
 _dot: "."
 _colon: ":"
 _asterisk: "*"
 
+// Grouped elements, e.g. "[a.b]", "[a,b]"
+?grouped: "[" parallel "]"
+
+// Simple name as trait name, e.g. "a"
+trait: NAME -> trait
+
+// Element that can be followed by a ".", ":", "*"
+?element: trait | grouped | metadata | items
+
+// Syntax to indicate name is being used for matching an existing
+// metadata name rather than a trait name.
+metadata: "+" NAME -> metadata
+
+// Keyword for handing items (in list, or dict, or set,
+// or a trait named "items")
+items: "items" -> items
+
+// Element marked with notify flag set to True
+// e.g. "a."
 notified_element: (element | recursed_element) _dot -> notify
+
+// Element marked with notify flag set to False
+// e.g. "a:", "[a.b]:"
 quiet_element: (element | recursed_element) _colon -> quiet
-recursed_element: element _asterisk -> recursed
+
+// Element whose notify flag depends on the last flag used
+// e.g. The "b" and "c" elements will have notify flag set
+// to false in "[b,c]:d"
 last_element: (element | recursed_element) -> last
 
+// Element to be recursed. e.g. "a*", "[a.b]*"
+recursed_element: element _asterisk -> recursed
+
+// Rule for joining elements in series
+// e.g. "a.b.c"
 ?series: (notified_element | quiet_element)* last_element
 
+// Rule for joining elements in parallel
+// e.g. "a,b,c"
 ?parallel: series ("," series)*
 
 ?expr: parallel
