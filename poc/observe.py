@@ -256,6 +256,14 @@ class ListenerPath:
         """
         return self.branches | self.cycles
 
+    def __new__(cls, *args, **kwargs):
+        # Required for supporting cycles.
+        instance = super().__new__(cls)
+        instance.node = None
+        instance.cycles = set()
+        instance.branches = set()
+        return instance
+
     def __repr__(self):
         return "<ListenerPath node={!r}, {} branches, {} cycles>".format(
             self.node, len(self.branches), len(self.cycles)

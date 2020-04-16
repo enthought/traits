@@ -1,3 +1,5 @@
+import copy
+import pickle
 import unittest
 
 from poc.expressions import t, recursive, metadata
@@ -514,6 +516,63 @@ class TestRecursion(unittest.TestCase):
         expected.branches.add(c_path)
         self.assertEqual(path, expected)
 
+
+class TestDeepCopySupper(unittest.TestCase):
+    """ Integration test with the ListenerPath to test deepcopy
+    support.
+
+    When HasTraits methods are decorated with ``observe``, we may choose
+    to hash the created ``ListenerPath`` low level objects, instead of
+    hashing the user-facing ``Expression`` aiming at providing a user-friendly
+    interface.
+
+    With ``ListenerPath`` being a persisted internal state of an HasTraits
+    instance, it needs to support deepcopy and pickling. Recursion would make this
+    challenging.
+    """
+
+    def test_basic_path_pickle(self):
+        expression = t("a")
+        path, = expression.as_paths()
+        serialized = pickle.dumps(path)
+        deserialized = pickle.loads(serialized)
+        self.assertEqual(deserialized, path)
+
+    def test_recursed_path_pickle(self):
+
+        expression = recursive(t("a"))
+        path, = expression.as_paths()
+        serialized = pickle.dumps(path)
+        deserialized = pickle.loads(serialized)
+        self.assertEqual(deserialized, path)
+
+
+class TestPicklingSupport(unittest.TestCase):
+    """ Integration test with the ListenerPath for pickling support.
+
+    When HasTraits methods are decorated with ``observe``, we may choose
+    to hash the created ``ListenerPath`` low level objects, instead of
+    hashing the user-facing ``Expression`` aiming at providing a user-friendly
+    interface.
+
+    With ``ListenerPath`` being a persisted internal state of an HasTraits
+    instance, it needs to support deepcopy and pickling. Recursion would make this
+    challenging.
+    """
+
+    def test_basic_path_pickling(self):
+        expression = t("a")
+        path, = expression.as_paths()
+        copied = copy.deepcopy(path)
+        self.assertEqual(copied, path)
+
+    def test_recursed_path_deep_copy(self):
+
+        expression = recursive(t("a"))
+        path, = expression.as_paths()
+
+        copied = copy.deepcopy(path)
+        self.assertEqual(copied, path)
 
 class TestPathEquality(unittest.TestCase):
     """ For sanity checks."""
