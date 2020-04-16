@@ -91,12 +91,12 @@ class Expression:
         new_expression : Expression
         """
 
-        # if self._prior_expression is None and not self._levels:
-        #     # this expression is empty...
-        #     new = expression.copy()
-        # else:
-        new = Expression()
-        new._prior_expression = _SeriesExpression([self, expression])
+        if self._prior_expression is None and not self._levels:
+            # this expression is empty...
+            new = expression.copy()
+        else:
+            new = Expression()
+            new._prior_expression = _SeriesExpression([self, expression])
         return new
 
     def _root_nodes(self):
