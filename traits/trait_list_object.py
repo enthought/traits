@@ -63,8 +63,8 @@ def _normalize_index(index, length):
         return min(length, index)
 
 
-def _normalize_slice(index, length):
-    """ Normalize a slice.
+def _normalize_slice_or_index(index, length):
+    """ Normalize a slice or index for use with __delitem__ or __setitem__.
 
     For slices with positive step, returns a slice that's equivalent for the
     purposes of __delitem__ and __setitem__ operations. For slices with
@@ -72,38 +72,48 @@ def _normalize_slice(index, length):
     slice is returned: note that in this case, the matching *added* and
     *removed* lists will need to be reversed.
 
-    The normalized slice will have 0 <= start <= stop <= length and
-    the step will be either None or a positive integer.
+    A normalized slice will have 0 <= start <= stop <= length and the step will
+    be either None or a positive integer. A normalized index will satisfy
+    0 <= index <= length.
 
     Parameters
     ----------
-    index : slice
+    index : slice or integer
         The slice to normalize
     length : int
         The length of the list to which the slice will be applied.
 
     Returns
     -------
-    normalized_index : slice
-        An equivalent (or reversed equivalent) normalized slice.
+    reversed : bool
+        True if the returned slice is in the opposite direction to the
+        original, else False.
+    normalized_index : slice or integer
+        An equivalent (or reversed equivalent) normalized slice or index.
     """
+
+    if not isinstance(index, slice):
+        index = operator.index(index)
+        return False, index + length if index < 0 else index
+
     start, stop, step = index.indices(length)
-    if step < 0:
+    reversed = step < 0
+    if reversed:
         start, stop, step = (
             min(stop - step + (start - stop) % step, length),
             start + 1,
             -step,
         )
-    return slice(start, max(start, stop), None if step == 1 else step)
 
+    # Reduce stop so that equivalent slices give identical normalised
+    # slices (e.g., del x[3:7:2] is equivalent to del x[3:6:2]).
+    stop -= (stop - start - 1) % step
 
-def _normalize_slice_or_index(index, length):
-    if isinstance(index, slice):
-        reversed = index.step is not None and index.step < 0
-        index = _normalize_slice(index, length)
-        return reversed, (index.start if index.step is None else index)
+    # For a step of 1, a single item, or an empty slice, return a simple index.
+    if step == 1 or stop - start <= step:
+        return reversed, start
     else:
-        return False, _normalize_index(index, length)
+        return reversed, slice(start, max(start, stop), step)
 
 
 def _removed_items(items, index):
