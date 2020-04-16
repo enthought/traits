@@ -13,7 +13,6 @@ import unittest
 
 from traits.api import (
     Any, BaseEnum, Enum, HasTraits, List, Property, TraitError)
-
 from traits.testing.optional_dependencies import pyface, requires_traitsui
 
 if pyface is not None:
@@ -319,20 +318,11 @@ class TestGui(GuiTestAssistant, unittest.TestCase):
 
     def test_create_editor(self):
         obj = EnumCollectionGUIExample()
-        user_editable_traits = obj.class_editable_traits()
 
         # Create a UI window
         ui = obj.edit_traits()
-
-        for t in user_editable_traits:
-
-            with self.subTest(t=t):
-                editor = getattr(ui.info, t)
-                values = obj.trait(t).trait_type.values
-
-                # Try setting all valid values for the Enum trait
-                for value in values:
-                    with self.assertTraitChangesInEventLoop(
-                            obj, t, lambda instance: getattr(
-                                instance, t) == value, 0, 3):
-                        self.gui.set_trait_later(editor, 'value', value)
+        try:
+            self.gui.process_events()
+        finally:
+            with self.delete_widget(ui.control):
+                ui.dispose()
