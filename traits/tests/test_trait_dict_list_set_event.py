@@ -13,7 +13,7 @@
 import unittest
 
 from traits.api import (
-    HasTraits, List, Dict, Set, on_trait_change,
+    Dict, HasTraits, List, on_trait_change, Set,
     TraitListEvent, TraitDictEvent, TraitSetEvent
 )
 
