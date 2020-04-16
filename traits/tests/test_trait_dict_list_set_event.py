@@ -33,25 +33,25 @@ class TestTraitEvent(unittest.TestCase):
 
     foo = Foo()
 
-    def check_repr(self, event, event_str):
-        self.assertEqual(event.__repr__(), event_str)
-        self.assertEqual(eval(event_str).__repr__(), event_str)
-
     def test_list_repr(self):
-        self.foo.alist[0] = 2
+        self.foo.alist[::2] = [4, 5]
         event = self.foo.event
-        event_str = "TraitListEvent(index=0, removed=[1], added=[2])"
-        self.check_repr(event, event_str)
+        event_str = ("TraitListEvent(index=slice(0, 3, 2), "
+                     "removed=[1, 3], added=[4, 5])")
+        self.assertEqual(event.__repr__(), event_str)
+        self.assertIsInstance(eval(event.__repr__()), TraitListEvent)
 
     def test_dict_event_repr(self):
         self.foo.adict.update({'blue': 10, 'black': 0})
         event = self.foo.event
         event_str = ("TraitDictEvent(added={'black': 0}, "
                      "changed={'blue': 0}, removed={})")
-        self.check_repr(event, event_str)
+        self.assertEqual(event.__repr__(), event_str)
+        self.assertIsInstance(eval(event.__repr__()), TraitDictEvent)
 
     def test_set_event_repr(self):
         self.foo.aset.symmetric_difference_update({3, 4})
         event = self.foo.event
         event_str = "TraitSetEvent(removed={3}, added={4})"
-        self.check_repr(event, event_str)
+        self.assertEqual(event.__repr__(), event_str)
+        self.assertIsInstance(eval(event.__repr__()), TraitSetEvent)
