@@ -20,17 +20,17 @@ class TraitSetEvent(object):
 
     Parameters
     ----------
-    added : set, optional
-        New values added to the set.
     removed : set, optional
         Old values that were removed from the set.
+    added : set, optional
+        New values added to the set.
 
     Attributes
     ----------
-    added : set
-        New values added to the set.
     removed : set
         Old values that were removed from the set.
+    added : set
+        New values added to the set.
     """
 
     def __init__(self, removed=None, added=None):
@@ -81,8 +81,7 @@ class TraitSet(set):
     item_validator : callable
         Called to validate and/or transform items added to the set. The
         callable should accept a single item and return the transformed
-        item, raising TraitError for invalid items. If not given, no
-        item validation is performed.
+        item, raising TraitError for invalid items.
     notifiers : list of callable
         A list of callables with the signature::
 
@@ -103,7 +102,7 @@ class TraitSet(set):
             self.item_validator = item_validator
         super().__init__(self.item_validator(item) for item in value)
         if notifiers is not None:
-            self.notifiers = list(notifiers)
+            self.notifiers = notifiers
 
     def notify(self, removed, added):
         """ Call all notifiers.
@@ -129,23 +128,6 @@ class TraitSet(set):
 
     # -- set interface -------------------------------------------------------
 
-    def __ior__(self, value):
-        """ Return self |= value.
-
-        Parameters
-        ----------
-        value : set or frozenset
-            A value.
-
-        Returns
-        -------
-        self : TraitSet
-            The updated set.
-        """
-
-        self.update(value)
-        return self
-
     def __iand__(self, value):
         """  Return self &= value.
 
@@ -163,8 +145,8 @@ class TraitSet(set):
         self.intersection_update(value)
         return self
 
-    def __ixor__(self, value):
-        """ Return self ^= value.
+    def __ior__(self, value):
+        """ Return self |= value.
 
         Parameters
         ----------
@@ -177,7 +159,7 @@ class TraitSet(set):
             The updated set.
         """
 
-        self.symmetric_difference_update(value)
+        self.update(value)
         return self
 
     def __isub__(self, value):
@@ -197,6 +179,23 @@ class TraitSet(set):
         self.difference_update(value)
         return self
 
+    def __ixor__(self, value):
+        """ Return self ^= value.
+
+        Parameters
+        ----------
+        value : set or frozenset
+            A value.
+
+        Returns
+        -------
+        self : TraitSet
+            The updated set.
+        """
+
+        self.symmetric_difference_update(value)
+        return self
+
     def add(self, value):
         """ Add an element to a set.
 
@@ -209,44 +208,35 @@ class TraitSet(set):
         """
 
         value = self.item_validator(value)
-        if value not in self:
-            super().add(value)
+        value_in_self = value in self
+        super().add(value)
+        if not value_in_self:
             self.notify(set(), {value})
 
-    def remove(self, value):
-        """ Remove an element that is a member of the set.
+    def clear(self):
+        """ Remove all elements from this set. """
 
-        If the element is not a member, raise a KeyError.
+        removed = set(self)
+        super().clear()
+        if removed:
+            self.notify(removed, set())
+
+    def discard(self, value):
+        """ Remove an element from the set if it is a member.
+
+        If the element is not a member, do nothing.
 
         Parameters
         ----------
         value : any
-            An element in the set
-
-        Raises
-        ------
-        KeyError
-            If the value is not found in the set.
+            An item in the set
         """
 
-        super().remove(value)
-        self.notify(set([value]), set())
+        value_in_self = value in self
+        super().discard(value)
 
-    def update(self, value=()):
-        """ Update the set with the union of itself and others.
-
-        Parameters
-        ----------
-        value : iterable
-            The other iterable.
-        """
-
-        validated_values = {self.item_validator(item) for item in value}
-        added = validated_values.difference(self)
-
-        if len(added) > 0:
-            super().update(added)
-            self.notify(set(), added)
+        if value_in_self:
+            self.notify({value}, set())
 
     def difference_update(self, value=()):
         """  Remove all elements of another set from this set.
@@ -282,42 +272,6 @@ class TraitSet(set):
         if len(removed) > 0:
             self.notify(removed, set())
 
-    def symmetric_difference_update(self, value):
-        """ Update the set with the symmetric difference of itself and another.
-
-        Parameters
-        ----------
-        value : iterable
-            An iterable
-        """
-
-        values = set(value)
-        removed = self.intersection(values)
-        raw_result = values.difference(removed)
-        validated_result = {self.item_validator(item) for item in raw_result}
-        added = validated_result.difference(self)
-
-        super().symmetric_difference_update(removed | added)
-        if removed or added:
-            self.notify(removed, added)
-
-    def discard(self, value):
-        """ Remove an element from the set if it is a member.
-
-        If the element is not a member, do nothing.
-
-        Parameters
-        ----------
-        value : any
-            An item in the set
-        """
-
-        value_in_self = value in self
-        super().discard(value)
-
-        if value_in_self:
-            self.notify({value}, set())
-
     def pop(self):
         """ Remove and return an arbitrary set element.
 
@@ -338,14 +292,59 @@ class TraitSet(set):
         self.notify({removed}, set())
         return removed
 
-    def clear(self):
-        """ Remove all elements from this set. """
+    def remove(self, value):
+        """ Remove an element that is a member of the set.
 
-        if not self:
-            return
-        removed = set(self)
-        super().clear()
-        self.notify(removed, set())
+        If the element is not a member, raise a KeyError.
+
+        Parameters
+        ----------
+        value : any
+            An element in the set
+
+        Raises
+        ------
+        KeyError
+            If the value is not found in the set.
+        """
+
+        super().remove(value)
+        self.notify({value}, set())
+
+    def symmetric_difference_update(self, value):
+        """ Update the set with the symmetric difference of itself and another.
+
+        Parameters
+        ----------
+        value : iterable
+            An iterable
+        """
+
+        values = set(value)
+        removed = self.intersection(values)
+        raw_result = values.difference(removed)
+        validated_result = {self.item_validator(item) for item in raw_result}
+        added = validated_result.difference(self)
+
+        super().symmetric_difference_update(removed | added)
+        if removed or added:
+            self.notify(removed, added)
+
+    def update(self, value=()):
+        """ Update the set with the union of itself and others.
+
+        Parameters
+        ----------
+        value : iterable
+            The other iterable.
+        """
+
+        validated_values = {self.item_validator(item) for item in value}
+        added = validated_values.difference(self)
+
+        if len(added) > 0:
+            super().update(added)
+            self.notify(set(), added)
 
     # -- pickle and copy support ----------------------------------------------
 
@@ -484,15 +483,20 @@ class TraitSetObject(TraitSet):
         object.trait_items_event(self.name_items, event, items_event)
 
     # -- pickle and copy support ----------------------------------------------
+    def __deepcopy__(self, memo):
+        """ Perform a deepcopy operation.
 
-    def __reduce_ex__(self, protocol=None):
-        """ Overridden to make sure we call our custom __getstate__.
+        Notifiers are transient and should not be copied.
         """
-        return (
-            copyreg._reconstructor,
-            (type(self), set, list(self)),
-            self.__getstate__(),
+
+        result = TraitSetObject(
+            self.trait,
+            lambda: None,
+            self.name,
+            {copy.deepcopy(x, memo) for x in self},
         )
+
+        return result
 
     def __getstate__(self):
         """ Get the state of the object for serialization.
@@ -517,17 +521,11 @@ class TraitSetObject(TraitSet):
         state["trait"] = None
         self.__dict__.update(state)
 
-    def __deepcopy__(self, memo):
-        """ Perform a deepcopy operation.
-
-        Notifiers are transient and should not be copied.
+    def __reduce_ex__(self, protocol=None):
+        """ Overridden to make sure we call our custom __getstate__.
         """
-
-        result = TraitSetObject(
-            self.trait,
-            lambda: None,
-            self.name,
-            {copy.deepcopy(x, memo) for x in self},
+        return (
+            copyreg._reconstructor,
+            (type(self), set, list(self)),
+            self.__getstate__(),
         )
-
-        return result
