@@ -58,14 +58,14 @@ class TraitSet(set):
 
     Parameters
     ----------
-    value : iterable
+    value : iterable, optional
         Iterable providing the items for the set.
     item_validator : callable, optional
         Called to validate and/or transform items added to the set. The
         callable should accept a single item and return the transformed
         item, raising TraitError for invalid items. If not given, no
         item validation is performed.
-    notifiers : list of callable
+    notifiers : list of callable, optional
         A list of callables with the signature::
 
             notifier(removed, added)
@@ -114,7 +114,7 @@ class TraitSet(set):
             notifier(removed, added)
 
         Any return values are ignored. Any exceptions raised are not
-        handled. Notifiers are therefore not expected to raise any
+        handled. Notifiers are therefore expected not to raise any
         exceptions under normal use.
 
         Parameters
@@ -134,12 +134,12 @@ class TraitSet(set):
 
         Parameters
         ----------
-        value : any
+        value : set or frozenset
             A value.
 
         Returns
         -------
-        self : set
+        self : TraitSet
             The updated set.
         """
 
@@ -151,12 +151,12 @@ class TraitSet(set):
 
         Parameters
         ----------
-        value : any
+        value : set or frozenset
             A value.
 
         Returns
         -------
-        self : set
+        self : TraitSet
             The updated set.
         """
 
@@ -168,12 +168,12 @@ class TraitSet(set):
 
         Parameters
         ----------
-        value : any
+        value : set or frozenset
             A value.
 
         Returns
         -------
-        self : set
+        self : TraitSet
             The updated set.
         """
 
@@ -185,12 +185,12 @@ class TraitSet(set):
 
         Parameters
         ----------
-        value : any
+        value : set or frozenset
             A value.
 
         Returns
         -------
-        self : set
+        self : TraitSet
             The updated set.
         """
 
