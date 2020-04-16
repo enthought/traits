@@ -178,6 +178,11 @@ class TraitList(list):
         ----------
         key : integer or slice
             Index of the element(s) to be deleted.
+
+        Raises
+        ------
+        IndexError
+            If key is an integer index and is out of range.
         """
 
         if isinstance(key, slice):
@@ -536,7 +541,13 @@ class TraitListObject(TraitList):
         ----------
         key : integer or slice
             Index of the element(s) to be deleted.
+
+        Raises
+        ------
+        IndexError
+            If key is an integer index and is out of range.
         """
+
         removed_count = len(self[key]) if isinstance(key, slice) else 1
         self._validate_length(len(self) - removed_count)
         super().__delitem__(key)
