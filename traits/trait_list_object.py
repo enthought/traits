@@ -53,10 +53,9 @@ class TraitListEvent(object):
         self.added = added
 
     def __repr__(self):
-        outstr = "TraitListEvent(index={}, removed={}, added={})".format(
+        return "TraitListEvent(index={!r}, removed={!r}, added={!r})".format(
             self.index, self.removed, self.added
         )
-        return outstr
 
 
 def _normalize_index(index, length):

@@ -46,10 +46,9 @@ class TraitSetEvent(object):
         self.added = added
 
     def __repr__(self):
-        outstr = "TraitSetEvent(removed={}, added={})".format(
+        return "TraitSetEvent(removed={!r}, added={!r})".format(
             self.removed, self.added
         )
-        return outstr
 
 
 class TraitSetObject(set):
