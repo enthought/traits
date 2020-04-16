@@ -1,6 +1,6 @@
 import unittest
 
-import pyparsing
+import lark.exceptions
 
 from poc import parsing
 from poc import expressions
@@ -44,7 +44,7 @@ class TestParsing(unittest.TestCase):
         actual = parsing.parse("a.items:b")
 
         items_attr_or_items = (
-            expressions.t("items", notify=False)
+            expressions.t("items", notify=False, optional=True)
             | expressions.items(notify=False)
         )
         expected = (
@@ -72,7 +72,7 @@ class TestParsing(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_unparse_content(self):
-        with self.assertRaises(pyparsing.ParseException):
+        with self.assertRaises(lark.exceptions.UnexpectedCharacters):
             parsing.parse("a.b.c^abc")
 
     def test_recursion_support(self):

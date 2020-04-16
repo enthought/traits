@@ -1,0 +1,28 @@
+?start: expr*
+
+?grouped: "[" parallel "]"
+
+trait: NAME -> trait
+?element: trait | grouped | metadata | items
+metadata: "+" NAME -> metadata
+items: "items" -> items
+
+_dot: "."
+_colon: ":"
+_asterisk: "*"
+
+notified_element: (element | recursed_element) _dot -> notify
+quiet_element: (element | recursed_element) _colon -> quiet
+recursed_element: element _asterisk -> recursed
+last_element: (element | recursed_element) -> last
+
+?series: (notified_element | quiet_element)* last_element
+
+?parallel: series ("," series)*
+
+?expr: parallel
+
+NAME: /[a-zA-Z_]\w*/
+
+%import common.WS
+%ignore WS
