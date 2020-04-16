@@ -75,6 +75,22 @@ class TestParsing(unittest.TestCase):
         with self.assertRaises(UnexpectedCharacters):
             parsing.parse("a.b.c^abc")
 
+    def test_recursion_support(self):
+        actual = parsing.parse("root.[left,right]*.value")
+        expected = (
+            expressions.t("root").recursive(
+                expressions.t("left") | expressions.t("right")).t(
+                    "value")
+        )
+        self.assertEqual(actual, expected)
+
+    def test_recurse_twice(self):
+        actual = parsing.parse("[b:c*]*")
+        expected = expressions.recursive(
+            expressions.t("b", False).recursive(expressions.t("c"))
+        )
+        self.assertEqual(actual, expected)
+
     def test_group_and_join(self):
         actual = parsing.parse("[a:b,c].d")
         expected = (
@@ -89,6 +105,15 @@ class TestParsing(unittest.TestCase):
             expressions.t("a", False).t("b", False)
             | expressions.t("c", False)
         ).t("d")
+        self.assertEqual(actual, expected)
+
+    def test_join_double_recursion_modify_last(self):
+        actual = parsing.parse("a.[b:c*]*.d")
+        expected = (
+            expressions.t("a").recursive(
+                expressions.t("b", False).recursive(
+                    expressions.t("c"))).t("d")
+        )
         self.assertEqual(actual, expected)
 
     def test_multi_branch_then_or_modify_last(self):

@@ -109,6 +109,8 @@ class Expression:
         -------
         bnodes : set(BaseListener)
             Nodes for branches.
+        cnodes : set(BasListener)
+            Nodes for cycles.
 
         Raises
         ------
@@ -121,16 +123,38 @@ class Expression:
         if self._prior_expression is not None:
             return self._prior_expression._root_nodes()
 
-        for bnodes in self._levels:
+        for bnodes, cnodes in self._levels:
             if bnodes:
-                return bnodes
+                return (bnodes, cnodes)
 
         raise ValueError("No root nodes")
+
+    def recursive(self, expression):
+        """ Create a new expression by adding a recursive path to
+        this expression.
+
+        e.g. ``t("root").recursive(t("left") | t("right")).t("value")``
+        will match ``root.left.value``, ``root.left.left.value``,
+        ``root.left.right.left.value`` and so on.
+
+        Parameters
+        ----------
+        expression : Expression
+
+        Returns
+        -------
+        new_expression : Expression
+        """
+        new = self.then(expression)
+        bnodes, cnodes = expression._root_nodes()
+        if cnodes:
+            raise RuntimeError("Cannot recurse on a recursion.")
+        return new._new_with_cycles(bnodes)
 
     def as_paths(self):
         """ Return all the ListenerPath for the observer.
         """
-        paths = _create_paths(self)
+        paths, _ = _create_paths(self)
         return set(paths)
 
     def t(self, name, notify=True, optional=False):
@@ -326,7 +350,12 @@ class Expression:
 
     def _new_with_branches(self, nodes):
         expression = self.copy()
-        expression._levels.append(set(nodes))
+        expression._levels.append((set(nodes), set()))
+        return expression
+
+    def _new_with_cycles(self, nodes):
+        expression = self.copy()
+        expression._levels.append((set(), set(nodes)))
         return expression
 
     def copy(self):
@@ -358,7 +387,7 @@ def _anytrait_filter(name, trait):
     return True
 
 
-def _create_paths(expression, paths=None):
+def _create_paths(expression, paths=None, id_to_path=None, last_cnodes=None):
     """ Create ListenerPaths from a given expression.
 
     Parameters
@@ -367,30 +396,66 @@ def _create_paths(expression, paths=None):
     paths : collection of ListenerPath
         Leaf paths to be added.
         Needed when this function is called recursively.
+    id_to_path : dict(int, ListenerPath)
+        Mapping from nodes' ids to ListenerPath.
+        Needed for maintaining object identity while handling cycles
+        when this function is called recursively.
+    last_cnodes : collection of BaseListener
+        Nodes to be added as cycles.
+        Needed when this function is called recursively.
 
     Returns
     -------
     paths : list of ListenerPath
         New paths
+    last_cnodes : list of BaseListener
+        Cycles to be propagated upstream, if any. Used when this
+        function is called multiple times for joining expressions.
     """
     if paths is None:
         paths = []
 
-    for bnodes in expression._levels[::-1]:
-        if not bnodes:
-            raise RuntimeError("Unexpectedly empty.")
+    if id_to_path is None:
+        id_to_path = {}
 
-        bpaths = [ListenerPath(node=node) for node in bnodes]
+    def make_path(node):
+        if id(node) in id_to_path:
+            return id_to_path[id(node)]
+        path = ListenerPath(node=node)
+        id_to_path[id(node)] = path
+        return path
+
+    if last_cnodes is None:
+        last_cnodes = []
+    else:
+        last_cnodes = list(last_cnodes)
+
+    for bnodes, cnodes in expression._levels[::-1]:
+        if bnodes and cnodes:
+            raise RuntimeError("Either branches or cycles given, not both.")
+
+        if cnodes:
+            last_cnodes.extend(cnodes)
+            continue
+
+        cnodes = set(last_cnodes)
+        last_cnodes.clear()
+
+        cpaths = [make_path(node) for node in cnodes]
+        bpaths = [make_path(node) for node in bnodes]
         for path in bpaths:
             path.branches = path.branches.union(paths)
+            path.cycles = path.cycles.union(cpaths)
 
         paths = bpaths
 
     if expression._prior_expression is not None:
-        paths = expression._prior_expression._create_paths(
+        paths, last_cnodes = expression._prior_expression._create_paths(
             paths=paths,
+            id_to_path=id_to_path,
+            last_cnodes=last_cnodes,
         )
-    return paths
+    return paths, last_cnodes
 
 
 class _SeriesExpression:
@@ -427,7 +492,7 @@ class _SeriesExpression:
         else:
             raise ValueError("No root nodes found.")
 
-    def _create_paths(self, paths):
+    def _create_paths(self, paths, id_to_path, last_cnodes):
         """
         Create new ListenerPath(s) from the joined expressions.
 
@@ -436,18 +501,30 @@ class _SeriesExpression:
         paths : collection of ListenerPath
             Leaf paths to be added.
             Needed when this function is called recursively.
+        id_to_path : dict(int, ListenerPath)
+            Mapping from nodes' ids to ListenerPath.
+            Needed for maintaining object identity while handling cycles
+            when this function is called recursively.
+        last_cnodes : collection of BaseListener
+            Nodes to be added as cycles.
+            Needed when this function is called recursively.
 
         Returns
         -------
         paths : list of ListenerPath
             New paths
+        last_cnodes : list of BaseListener
+            Cycles to be propagated upstream, if any. Used when this
+            function is called multiple times for joining expressions.
         """
         for expr in self.expressions[::-1]:
-            paths = _create_paths(
+            paths, last_cnodes = _create_paths(
                 expr,
                 paths=paths,
+                id_to_path=id_to_path,
+                last_cnodes=last_cnodes,
             )
-        return paths
+        return paths, last_cnodes
 
 
 class _ParallelExpression:
@@ -468,6 +545,8 @@ class _ParallelExpression:
         -------
         bnodes : set(BaseListener)
             Nodes for branches.
+        cnodes : set(BasListener)
+            Nodes for cycles.
 
         Raises
         ------
@@ -475,16 +554,18 @@ class _ParallelExpression:
             If no root nodes are found.
         """
         bnodes = set()
+        cnodes = set()
         for expr in self.expressions:
-            nodes = expr._root_nodes()
-            bnodes |= nodes
+            bs, cs = expr._root_nodes()
+            bnodes |= bs
+            cnodes |= cs
 
         if not bnodes:
             raise ValueError("No root nodes")
 
-        return bnodes
+        return (bnodes, cnodes)
 
-    def _create_paths(self, paths):
+    def _create_paths(self, paths, id_to_path, last_cnodes):
         """
         Create new ListenerPath(s) from the joined expressions.
 
@@ -493,20 +574,36 @@ class _ParallelExpression:
         paths : collection of ListenerPath
             Leaf paths to be added.
             Needed when this function is called recursively.
+        id_to_path : dict(int, ListenerPath)
+            Mapping from nodes' ids to ListenerPath.
+            Needed for maintaining object identity while handling cycles
+            when this function is called recursively.
+        last_cnodes : collection of BaseListener
+            Nodes to be added as cycles.
+            Needed when this function is called recursively.
 
         Returns
         -------
         paths : list of ListenerPath
             New paths
+        last_cnodes : list of BaseListener
+            Cycles to be propagated upstream, if any. Used when this
+            function is called multiple times for joining expressions.
         """
         new_paths = []
         for expr in self.expressions:
-            or_paths = _create_paths(
+            or_paths, cnodes = _create_paths(
                 expr,
                 paths=paths,
+                id_to_path=id_to_path,
+                last_cnodes=last_cnodes,
             )
+            if cnodes:
+                raise ValueError(
+                    "Cycles cannot be propagated further upstream with OR operation."
+                )
             new_paths.extend(or_paths)
-        return new_paths
+        return new_paths, []
 
 
 # Define top-level functions
@@ -524,6 +621,8 @@ def _as_top_level(func):
     new_func.__module__ = __name__
     return new_func
 
+
+recursive = _as_top_level(Expression.recursive)
 
 t = _as_top_level(Expression.t)
 

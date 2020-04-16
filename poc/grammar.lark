@@ -23,16 +23,19 @@ items: "items" -> items
 
 // Element marked with notify flag set to True
 // e.g. "a."
-notified_element: element _dot -> notify
+notified_element: (element | recursed_element) _dot -> notify
 
 // Element marked with notify flag set to False
 // e.g. "a:", "[a.b]:"
-quiet_element: element _colon -> quiet
+quiet_element: (element | recursed_element) _colon -> quiet
 
 // Element whose notify flag depends on the last flag used
 // e.g. The "b" and "c" elements will have notify flag set
 // to false in "[b,c]:d"
-last_element: element -> last
+last_element: (element | recursed_element) -> last
+
+// Element to be recursed. e.g. "a*", "[a.b]*"
+recursed_element: element _asterisk -> recursed
 
 // Rule for joining elements in series
 // e.g. "a.b.c"
