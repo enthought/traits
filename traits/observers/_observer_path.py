@@ -43,19 +43,18 @@ class ObserverPath:
     This object is considered a low-level object for the observer mechanism.
     It is not intended to be instantiated by users directly. Users will be
     given higher-level wrappers for creating ``ObserverPath`` objects.
+
+    Parameters
+    ----------
+    node : any
+        A context specific observer.
+        It must be a hashable object. In practice, this will be
+        an instance that implements ``IObserver``.
+    nexts : iterable of ObserverPath, optional
+        Branches on this path.
     """
 
     def __init__(self, *, node, nexts=None):
-        """
-        Parameters
-        ----------
-        node : any
-            A context specific observer.
-            It must be a hashable object. In practice, this will be
-            an instance that implements ``IObserver``.
-        nexts : iterable of ObserverPath
-            Branches on this path.
-        """
         self.node = node
 
         self.nexts = set(nexts) if nexts is not None else set()
