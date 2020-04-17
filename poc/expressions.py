@@ -57,7 +57,7 @@ class Expression:
         """ Create a new expression that matches this expression OR
         the given expression.
 
-        e.g. ``t("age") | t("number")`` will match either trait `age`
+        e.g. ``trait("age") | trait("number")`` will match either trait `age`
         or trait `number` on an object.
 
         Parameters
@@ -76,11 +76,8 @@ class Expression:
         """ Create a new expression by extending this expression with
         the given expression.
 
-        e.g. ``t("child").then( t("age") | t("number") )`` on an object
-        matches ``child.age`` or ``child.number`` on the object.
-
-        This example is equivalent to
-        ``t("child").t("age") | t("child").t("number")``
+        e.g. ``trait("child").then( trait("age") | trait("number") )``
+        on an object matches ``child.age`` or ``child.number`` on the object.
 
         Parameters
         ----------
@@ -133,7 +130,7 @@ class Expression:
         """ Create a new expression by adding a recursive path to
         this expression.
 
-        e.g. ``t("root").recursive(t("left") | t("right")).t("value")``
+        e.g. ``trait("root").recursive(trait("left") | trait("right")).trait("value")``
         will match ``root.left.value``, ``root.left.left.value``,
         ``root.left.right.left.value`` and so on.
 
@@ -185,10 +182,10 @@ class Expression:
     def list_items(self, notify=True, optional=False):
         """ Create a new expression for observing items inside a list.
 
-        e.g. ``t("containers").list_items()`` for observing to mutations
+        e.g. ``trait("containers").list_items()`` for observing to mutations
         to a list named ``containers``.
 
-        e.g. ``t("containers").list_items().t("value")`` for observing
+        e.g. ``trait("containers").list_items().trait("value")`` for observing
         the trait ``value`` on any items in the list ``containers``.
 
         Parameters
@@ -274,7 +271,7 @@ class Expression:
         """ Create a new expression that matches anytrait after
         the current expresion returns a match.
 
-        e.g. ``t("child").anytrait()`` with match anytrait on
+        e.g. ``trait("child").anytrait()`` with match anytrait on
         the trait ``child`` on a given object, such as ``child.age``,
         ``child.name``, ``child.mother`` and so on.
 
