@@ -212,12 +212,13 @@ class TraitDict(dict):
         if not was_empty:
             self.notify(removed=removed, added={}, changed={})
 
-    def update(self, adict):
-        """ Update the values in the dict by the new dict.
+    def update(self, other):
+        """ Update the values in the dict by the new dict or an iterable of
+        key-value pairs.
 
         Parameters
         ----------
-        adict : dict
+        other : dict or iterable
             The dict from which values will be updated into this dict.
         """
 
@@ -225,7 +226,9 @@ class TraitDict(dict):
         added = {}
         changed = {}
 
-        for key, value in adict.items():
+        items = other.items() if isinstance(other, dict) else other
+
+        for key, value in items:
             validated_key = self.key_validator(key)
             validated_value = self.value_validator(value)
 
@@ -283,7 +286,8 @@ class TraitDict(dict):
         """
 
         should_notify = (value is Undefined or key in self)
-        removed = super().pop(key)
+        pop_args = [key, value] if not value is Undefined else [key]
+        removed = super().pop(*pop_args)
 
         if should_notify:
             self.notify(
@@ -323,7 +327,7 @@ class TraitDict(dict):
 
         result = self.__dict__.copy()
         # notifiers are transient and should not be serialized
-        result.pop("notifiers", None)
+        del result["notifiers"]
         return result
 
     def __setstate__(self, state):
