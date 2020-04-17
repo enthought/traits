@@ -41,7 +41,6 @@ Classes
 
 .. autoclass:: ISerializable
 
-
 ABC classes
 -----------
 
