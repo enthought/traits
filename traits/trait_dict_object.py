@@ -24,11 +24,11 @@ class TraitDictEvent(object):
 
     Parameters
     ----------
-    added : dict
+    added : dict, optional
         New keys and values that were just added.
-    changed : dict
+    changed : dict, optional
         Updated keys and their previous values.
-    removed : dict
+    removed : dict, optional
         Old keys and values that were just removed.
 
     Attributes
@@ -95,17 +95,17 @@ class TraitDict(dict):
 
     Attributes
     ----------
-    key_validator : callable, optional
+    key_validator : callable
         Called to validate a key in the dict.
         The callable must accept a single key and
         return a validated key or raise a TraitError
         If not provided, all keys are considered valid.
-    value_validator : callable, optional
+    value_validator : callable
         Called to validate a value in the dict.
         The callable must accept a single value and
         return a validated value or raise a TraitError
         If not provided, all values are considered valid.
-    notifiers : list, optional
+    notifiers : list
         A list of callables with the signature::
 
             notifier(trait_dict, added, changed, removed)
