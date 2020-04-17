@@ -49,7 +49,6 @@ class TestObserverGraph(unittest.TestCase):
             ],
         )
         self.assertNotEqual(path1, path2)
-        self.assertNotEqual(hash(path1), hash(path2))
 
     def test_equality_order_of_children(self):
         # The order of items in children does not matter
