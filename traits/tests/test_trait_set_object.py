@@ -255,6 +255,9 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(self.removed, set())
         self.assertEqual(self.added, {6, 7})
 
+        with self.assertRaises(TypeError):
+            ts |= 8
+
     def test_iand(self):
         ts = TraitSet({1, 2, 3}, item_validator=int_validator,
                       notifiers=[self.notification_handler])
@@ -267,6 +270,9 @@ class TestTraitSet(unittest.TestCase):
         ts &= {1, 2}
         self.assertEqual(self.removed, {3})
         self.assertEqual(self.added, set())
+
+        with self.assertRaises(TypeError):
+            ts &= [3]
 
     def test_iand_does_not_call_validator(self):
         # Nothing are added, validator should not be called.
