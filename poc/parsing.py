@@ -139,7 +139,7 @@ def handle_trait(trees, default_notifies):
         raise ValueError("Unexpected token: {!r}".format(token))
     name = token.value
     notify = default_notifies[-1]
-    return _expr_module.t(name, notify=notify)
+    return _expr_module.trait(name, notify=notify)
 
 
 def handle_metadata(trees, default_notifies):
@@ -203,7 +203,7 @@ def handle_items(trees, default_notifies):
     return reduce(
         operator.or_,
         (
-            _expr_module.t("items", notify=notify, optional=True),
+            _expr_module.trait("items", notify=notify, optional=True),
             _expr_module.list_items(notify=notify, optional=True),
             _expr_module.dict_items(notify=notify, optional=True),
             _expr_module.set_items(notify=notify, optional=True),

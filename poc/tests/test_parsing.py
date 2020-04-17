@@ -13,33 +13,33 @@ class TestParsing(unittest.TestCase):
 
     def test_simple(self):
         actual = parsing.parse("a")
-        expected = expressions.t("a")
+        expected = expressions.trait("a")
         self.assertEqual(actual, expected)
 
     def test_join(self):
         actual = parsing.parse("a.b.c")
-        expected = expressions.t("a").t("b").t("c")
+        expected = expressions.trait("a").trait("b").trait("c")
         self.assertEqual(actual, expected)
 
     def test_join_with_colon(self):
         actual = parsing.parse("a:b:c")
-        expected = expressions.t("a", False).t("b", False).t("c")
+        expected = expressions.trait("a", False).trait("b", False).trait("c")
         self.assertEqual(actual, expected)
 
     def test_or_with_commas(self):
         actual = parsing.parse("a,b,c")
         expected = (
-            expressions.t("a")
-            | expressions.t("b")
-            | expressions.t("c")
+            expressions.trait("a")
+            | expressions.trait("b")
+            | expressions.trait("c")
         )
         self.assertEqual(actual, expected)
 
     def test_or_with_join_nested(self):
         actual = parsing.parse("a.b.c,d.e")
         expected = (
-            expressions.t("a").t("b").t("c")
-            | expressions.t("d").t("e")
+            expressions.trait("a").trait("b").trait("c")
+            | expressions.trait("d").trait("e")
         )
         self.assertEqual(actual, expected)
 
@@ -47,14 +47,14 @@ class TestParsing(unittest.TestCase):
         actual = parsing.parse("a.items:b")
 
         items_attr_or_items = (
-            expressions.t("items", notify=False, optional=True)
+            expressions.trait("items", notify=False, optional=True)
             | expressions.list_items(notify=False, optional=True)
             | expressions.dict_items(notify=False, optional=True)
             | expressions.set_items(notify=False, optional=True)
         )
         expected = (
-            expressions.t("a").then(
-                items_attr_or_items).t(
+            expressions.trait("a").then(
+                items_attr_or_items).trait(
                     "b")
         )
         self.assertEqual(actual, expected)
@@ -62,16 +62,16 @@ class TestParsing(unittest.TestCase):
     def test_grouped_or(self):
         actual = parsing.parse("root.[left,right]")
         expected = (
-            expressions.t("root").then(
-                expressions.t("left") | expressions.t("right"))
+            expressions.trait("root").then(
+                expressions.trait("left") | expressions.trait("right"))
         )
         self.assertEqual(actual, expected)
 
     def test_grouped_or_extended(self):
         actual = parsing.parse("root.[left,right].value")
         expected = (
-            expressions.t("root").then(
-                expressions.t("left") | expressions.t("right")).t(
+            expressions.trait("root").then(
+                expressions.trait("left") | expressions.trait("right")).trait(
                     "value")
         )
         self.assertEqual(actual, expected)
@@ -91,8 +91,8 @@ class TestParsing(unittest.TestCase):
     def test_recursion_support(self):
         actual = parsing.parse("root.[left,right]*.value")
         expected = (
-            expressions.t("root").recursive(
-                expressions.t("left") | expressions.t("right")).t(
+            expressions.trait("root").recursive(
+                expressions.trait("left") | expressions.trait("right")).trait(
                     "value")
         )
         self.assertEqual(actual, expected)
@@ -100,41 +100,41 @@ class TestParsing(unittest.TestCase):
     def test_recurse_twice(self):
         actual = parsing.parse("[b:c*]*")
         expected = expressions.recursive(
-            expressions.t("b", False).recursive(expressions.t("c"))
+            expressions.trait("b", False).recursive(expressions.trait("c"))
         )
         self.assertEqual(actual, expected)
 
     def test_group_and_join(self):
         actual = parsing.parse("[a:b,c].d")
         expected = (
-            expressions.t("a", False).t("b")
-            | expressions.t("c")
-        ).t("d")
+            expressions.trait("a", False).trait("b")
+            | expressions.trait("c")
+        ).trait("d")
         self.assertEqual(actual, expected)
 
     def test_group_followed_by_colon(self):
         actual = parsing.parse("[a:b,c]:d")
         expected = (
-            expressions.t("a", False).t("b", False)
-            | expressions.t("c", False)
-        ).t("d")
+            expressions.trait("a", False).trait("b", False)
+            | expressions.trait("c", False)
+        ).trait("d")
         self.assertEqual(actual, expected)
 
     def test_join_double_recursion_modify_last(self):
         actual = parsing.parse("a.[b:c*]*.d")
         expected = (
-            expressions.t("a").recursive(
-                expressions.t("b", False).recursive(
-                    expressions.t("c"))).t("d")
+            expressions.trait("a").recursive(
+                expressions.trait("b", False).recursive(
+                    expressions.trait("c"))).trait("d")
         )
         self.assertEqual(actual, expected)
 
     def test_multi_branch_then_or_modify_last(self):
         actual = parsing.parse("root.[a.b.c.d,value]:g")
         expected = (
-            expressions.t("root").then(
-                expressions.t("a").t("b").t("c").t("d", False)
-                | expressions.t("value", False)
-            ).t("g")
+            expressions.trait("root").then(
+                expressions.trait("a").trait("b").trait("c").trait("d", False)
+                | expressions.trait("value", False)
+            ).trait("g")
         )
         self.assertEqual(actual, expected)

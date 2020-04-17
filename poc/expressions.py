@@ -157,12 +157,13 @@ class Expression:
         paths, _ = _create_paths(self)
         return set(paths)
 
-    def t(self, name, notify=True, optional=False):
+    def trait(self, name, notify=True, optional=False):
         """ Create a new expression that matches the current
         expression and then a trait with the exact name given.
 
-        e.g. ``t("child").t("age")`` matches ``child.age`` on an object,
-        and is equivalent to ``t("child").then(t("age"))``
+        e.g. ``trait("child").trait("age")`` matches ``child.age``
+        on an object, and is equivalent to
+        ``trait("child").then(trait("age"))``
 
         Parameters
         ----------
@@ -611,7 +612,7 @@ def _as_top_level(func):
 
 recursive = _as_top_level(Expression.recursive)
 
-t = _as_top_level(Expression.t)
+trait = _as_top_level(Expression.trait)
 
 list_items = _as_top_level(Expression.list_items)
 

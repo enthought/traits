@@ -2,7 +2,7 @@ import copy
 import pickle
 import unittest
 
-from poc.expressions import t, recursive, metadata
+from poc.expressions import trait, recursive, metadata
 from poc.observe import (
     _is_not_none,
     NamedTraitListener, ListenerPath, MetadataListener,
@@ -12,7 +12,7 @@ from poc.observe import (
 class TestBasicExpression(unittest.TestCase):
 
     def test_basic_t(self):
-        expression = t("name")
+        expression = trait("name")
         actual, = expression.as_paths()
         self.assertEqual(
             actual,
@@ -26,7 +26,7 @@ class TestBasicExpression(unittest.TestCase):
         )
 
     def test_basic_path(self):
-        expression = t("name").t("attr")
+        expression = trait("name").trait("attr")
         actual, = expression.as_paths()
         self.assertEqual(
             actual,
@@ -52,7 +52,7 @@ class TestBasicExpression(unittest.TestCase):
 class TestOrExpression(unittest.TestCase):
 
     def test_or_expression(self):
-        expression = t("name") | t("attr")
+        expression = trait("name") | trait("attr")
         expected = [
             ListenerPath(
                 node=NamedTraitListener(
@@ -75,20 +75,20 @@ class TestOrExpression(unittest.TestCase):
         )
 
     def test_or_with_same_nodes(self):
-        e1 = t("name") | t("name")
-        e2 = t("name")
+        e1 = trait("name") | trait("name")
+        e2 = trait("name")
         self.assertEqual(len(e1.as_paths()), 1)
         self.assertEqual(len(e2.as_paths()), 1)
         self.assertEqual(e1.as_paths(), e2.as_paths())
 
     def test_or_with_same_paths(self):
-        e1 = t("name") | t("age")
-        e2 = t("age") | t("name")
+        e1 = trait("name") | trait("age")
+        e2 = trait("age") | trait("name")
         e3 = e1 | e2
         self.assertEqual(len(e3.as_paths()), 2)
 
     def test_or_then_extend(self):
-        e1 = (t("a").t("b") | t("c")).t("d")
+        e1 = (trait("a").trait("b") | trait("c")).trait("d")
 
         a_path, c_path = e1.as_paths()
         if a_path.node.name == "c":
@@ -109,7 +109,7 @@ class TestOrExpression(unittest.TestCase):
         )
 
     def test_then(self):
-        expression = t("child").then(t("age") | t("name"))
+        expression = trait("child").then(trait("age") | trait("name"))
         actual, = expression.as_paths()
         self.assertEqual(
             actual,
@@ -157,7 +157,7 @@ class TestMetadata(unittest.TestCase):
 class TestRecursion(unittest.TestCase):
 
     def test_recursion(self):
-        expression = t("root").recursive(t("left") | t("right"))
+        expression = trait("root").recursive(trait("left") | trait("right"))
         actual, = expression.as_paths()
         self.assertEqual(actual.node.name, "root")
 
@@ -171,7 +171,7 @@ class TestRecursion(unittest.TestCase):
 
     def test_recursion_with_equals(self):
         # Same test but use equality check
-        expression = t("root").recursive(t("left") | t("right"))
+        expression = trait("root").recursive(trait("left") | trait("right"))
         actual, = expression.as_paths()
 
         expected = ListenerPath(
@@ -203,7 +203,8 @@ class TestRecursion(unittest.TestCase):
 
     def test_recursion_then_extend(self):
         expression = (
-            t("root").recursive(t("left") | t("right")).t("value")
+            trait("root").recursive(
+                trait("left") | trait("right")).trait("value")
         )
         actual, = expression.as_paths()
 
@@ -225,7 +226,8 @@ class TestRecursion(unittest.TestCase):
 
     def test_recursion_then_extend_with_equals(self):
         # Same test but use equality check
-        expression = t("root").recursive(t("left") | t("right")).t("value")
+        expression = trait("root").recursive(
+            trait("left") | trait("right")).trait("value")
         actual, = expression.as_paths()
 
         expected = ListenerPath(
@@ -265,33 +267,33 @@ class TestRecursion(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_recursion_different_order(self):
-        expression1 = t("root").recursive(t("right") | t("left")).t("value")
-        expression2 = t("root").recursive(t("left") | t("right")).t("value")
+        expression1 = trait("root").recursive(trait("right") | trait("left")).trait("value")
+        expression2 = trait("root").recursive(trait("left") | trait("right")).trait("value")
         self.assertEqual(
             expression1.as_paths(),
             expression2.as_paths(),
         )
 
     def test_recursion_not_equal(self):
-        expression1 = t("root").recursive(t("left") | t("right")).t("value")
-        expression2 = t("root").recursive(t("prev") | t("right")).t("value")
+        expression1 = trait("root").recursive(trait("left") | trait("right")).trait("value")
+        expression2 = trait("root").recursive(trait("prev") | trait("right")).trait("value")
         self.assertNotEqual(
             expression1.as_paths(),
             expression2.as_paths(),
         )
 
     def test_recursion_branch_not_equal(self):
-        expression1 = t("root").recursive(t("left") | t("right")).t("value")
-        expression2 = t("root").recursive(t("left") | t("right")).t("age")
+        expression1 = trait("root").recursive(trait("left") | trait("right")).trait("value")
+        expression2 = trait("root").recursive(trait("left") | trait("right")).trait("age")
         self.assertNotEqual(
             expression1.as_paths(),
             expression2.as_paths(),
         )
 
     def test_recursion_multi_level(self):
-        left_then_right = t("left").t("right")
+        left_then_right = trait("left").trait("right")
         expression = (
-            t("root").recursive(left_then_right)
+            trait("root").recursive(left_then_right)
         )
         actual, = expression.as_paths()
 
@@ -319,7 +321,7 @@ class TestRecursion(unittest.TestCase):
 
         # The original left_or_right should not be
         # mutated
-        new_left_then_right = t("left").t("right")
+        new_left_then_right = trait("left").trait("right")
         self.assertEqual(
             left_then_right,
             new_left_then_right,
@@ -327,9 +329,9 @@ class TestRecursion(unittest.TestCase):
 
     def test_recursion_multi_level_with_equals(self):
         # Same test but use equality check
-        left_then_right = t("left").t("right")
+        left_then_right = trait("left").trait("right")
         expression = (
-            t("root").recursive(left_then_right)
+            trait("root").recursive(left_then_right)
         )
         actual, = expression.as_paths()
 
@@ -365,7 +367,8 @@ class TestRecursion(unittest.TestCase):
         # root.left.right.value
         # root.left.right.left.right.value
         # root.left.right.left.right.left.right.value
-        expression = t("root").recursive(t("left").t("right")).t("value")
+        expression = trait("root").recursive(
+            trait("left").trait("right")).trait("value")
 
         path, = expression.as_paths()
 
@@ -399,7 +402,8 @@ class TestRecursion(unittest.TestCase):
         # root.left.right.value
         # root.left.right.left.right.value
         # root.left.right.left.right.left.right.value
-        expression = t("root").recursive(t("left").t("right")).t("value")
+        expression = trait("root").recursive(
+            trait("left").trait("right")).trait("value")
 
         expected = ListenerPath(
             node=NamedTraitListener(
@@ -438,7 +442,7 @@ class TestRecursion(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_recursive_from_empty(self):
-        expression = recursive(t("name"))
+        expression = recursive(trait("name"))
         expected = ListenerPath(
             node=NamedTraitListener(
                 name="name",
@@ -452,16 +456,16 @@ class TestRecursion(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_recursive_different_paths(self):
-        expression1 = t("root").recursive(t("one").t("two"))
-        expression2 = t("root").recursive(t("one").t("three"))
+        expression1 = trait("root").recursive(trait("one").trait("two"))
+        expression2 = trait("root").recursive(trait("one").trait("three"))
         self.assertNotEqual(
             expression1.as_paths(),
             expression2.as_paths()
         )
 
     def test_deepcopy_strange_behaviour(self):
-        e1 = recursive(t("value") | t("name"))
-        e2 = t("name")
+        e1 = recursive(trait("value") | trait("name"))
+        e2 = trait("name")
         e3 = e1 | e2
 
         self.assertCountEqual(
@@ -470,9 +474,9 @@ class TestRecursion(unittest.TestCase):
         )
 
     def test_recurse_extend_then_recurse(self):
-        recurse_c = recursive(t("c"))
-        e = recursive(recurse_c.t("d"))
-        e = recursive(recursive(t("c")).t("d"))
+        recurse_c = recursive(trait("c"))
+        e = recursive(recurse_c.trait("d"))
+        e = recursive(recursive(trait("c")).trait("d"))
 
         path, = e.as_paths()
 
@@ -492,7 +496,7 @@ class TestRecursion(unittest.TestCase):
         self.assertEqual([p.node.name for p in d_path.nexts], ["c"])
 
     def test_extend_recurse_recurse(self):
-        e = recursive(t("b", False).recursive(t("c")))
+        e = recursive(trait("b", False).recursive(trait("c")))
 
         path, = e.as_paths()
 
@@ -534,7 +538,7 @@ class TestDeepCopySupper(unittest.TestCase):
     """
 
     def test_basic_path_pickle(self):
-        expression = t("a")
+        expression = trait("a")
         path, = expression.as_paths()
         serialized = pickle.dumps(path)
         deserialized = pickle.loads(serialized)
@@ -542,7 +546,7 @@ class TestDeepCopySupper(unittest.TestCase):
 
     def test_recursed_path_pickle(self):
 
-        expression = recursive(t("a"))
+        expression = recursive(trait("a"))
         path, = expression.as_paths()
         serialized = pickle.dumps(path)
         deserialized = pickle.loads(serialized)
@@ -563,14 +567,14 @@ class TestPicklingSupport(unittest.TestCase):
     """
 
     def test_basic_path_pickling(self):
-        expression = t("a")
+        expression = trait("a")
         path, = expression.as_paths()
         copied = copy.deepcopy(path)
         self.assertEqual(copied, path)
 
     def test_recursed_path_deep_copy(self):
 
-        expression = recursive(t("a"))
+        expression = recursive(trait("a"))
         path, = expression.as_paths()
 
         copied = copy.deepcopy(path)

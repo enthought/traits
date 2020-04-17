@@ -3,7 +3,7 @@
 from poc.expressions import (   # noqa: F401
     join_,
     metadata,
-    t,
+    trait,
     list_items,
     dict_items,
     set_items,
