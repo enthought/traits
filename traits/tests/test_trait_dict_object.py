@@ -40,11 +40,11 @@ class TestTraitDict(unittest.TestCase):
         self.removed = None
         self.trait_dict = None
 
-    def notification_handler(self, trait_dict, added, changed, removed):
+    def notification_handler(self, trait_dict, removed, added, changed):
         self.trait_list = trait_dict
+        self.removed = removed
         self.added = added
         self.changed = changed
-        self.removed = removed
 
     def test_init(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,

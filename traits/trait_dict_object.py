@@ -24,24 +24,28 @@ class TraitDictEvent(object):
 
     Parameters
     ----------
+    removed : dict, optional
+        Old keys and values that were just removed.
     added : dict, optional
         New keys and values that were just added.
     changed : dict, optional
         Updated keys and their previous values.
-    removed : dict, optional
-        Old keys and values that were just removed.
 
     Attributes
     ----------
+    removed : dict
+        Old keys and values that were just removed.
     added : dict
         New keys and values that were just added.
     changed : dict
         Updated keys and their previous values.
-    removed : dict
-        Old keys and values that were just removed.
     """
 
-    def __init__(self, added=None, changed=None, removed=None):
+    def __init__(self, removed=None, added=None, changed=None):
+        if removed is None:
+            removed = {}
+        self.removed = removed
+
         if added is None:
             added = {}
         self.added = added
@@ -50,12 +54,8 @@ class TraitDictEvent(object):
             changed = {}
         self.changed = changed
 
-        if removed is None:
-            removed = {}
-        self.removed = removed
-
     def __repr__(self):
-        return "TraitDictEvent(added={!r}, changed={!r}, removed={!r})".format(
+        return "TraitDictEvent(removed={!r}, added={!r}, changed={!r})".format(
             self.added, self.changed, self.removed
         )
 
@@ -94,9 +94,10 @@ class TraitDict(dict):
 
             notifier(trait_dict, added, changed, removed)
 
-        Where 'added' is a dict of new key-values that have been added.
-        'changed' is a dict with old values previously associated with the key.
+        Where:
         'removed' is a dict of key-values that are no longer in the dictionary.
+        'added' is a dict of new key-values that have been added.
+        'changed' is a dict with old values previously associated with the key.
 
     Attributes
     ----------
@@ -113,9 +114,10 @@ class TraitDict(dict):
 
             notifier(trait_dict, added, changed, removed)
 
-        Where 'added' is a dict of new key-values that have been added.
-        'changed' is a dict with old values previously associated with the key.
+        Where:
         'removed' is a dict of key-values that are no longer in the dictionary.
+        'added' is a dict of new key-values that have been added.
+        'changed' is a dict with old values previously associated with the key.
     """
 
     def __new__(cls, *args, **kwargs):
@@ -146,19 +148,19 @@ class TraitDict(dict):
 
         super().__init__(value)
 
-    def notify(self, added, changed, removed):
+    def notify(self, removed, added, changed):
         """ Call all notifiers.
 
         This simply calls all notifiers provided by the class, if any.
         The notifiers are expected to have the signature::
 
-            notifier(trait_dict, added, changed, removed)
+            notifier(trait_dict, removed, added, changed)
 
         Any return values are ignored.
         """
 
         for notifier in self.notifiers:
-            notifier(self, added, changed, removed)
+            notifier(self, removed=removed, added=added, changed=changed)
 
     # -- dict interface -------------------------------------------------------
 
@@ -185,7 +187,7 @@ class TraitDict(dict):
             added = {validated_key: validated_value}
 
         super().__setitem__(validated_key, validated_value)
-        self.notify(added, changed, removed)
+        self.notify(removed=removed, added=added, changed=changed)
 
     def __delitem__(self, key):
         """ Delete the item from the dict indicated by the key.
@@ -203,14 +205,14 @@ class TraitDict(dict):
 
         removed = {key: self[key]}
         super().__delitem__(key)
-        self.notify(added={}, changed={}, removed=removed)
+        self.notify(removed=removed, added={}, changed={})
 
     def clear(self):
         """ Remove all items from the dict. """
         if self != {}:
             removed = self.copy()
             super().clear()
-            self.notify(added={}, changed={}, removed=removed)
+            self.notify(removed=removed, added={}, changed={})
 
     def update(self, adict):
         """ Update the values in the dict by the new dict.
@@ -237,7 +239,7 @@ class TraitDict(dict):
             validated_dict[validated_key] = validated_value
 
         super().update(validated_dict)
-        self.notify(added=added, changed=changed, removed={})
+        self.notify(removed={}, added=added, changed=changed)
 
     def setdefault(self, key, value=None):
         """ Returns the value if key is present in the dict, else creates the
@@ -264,7 +266,7 @@ class TraitDict(dict):
 
         super().__setitem__(validated_key, validated_value)
 
-        self.notify(added=added, changed=changed, removed={})
+        self.notify(removed={}, added=added, changed=changed)
 
         return value
 
@@ -285,9 +287,9 @@ class TraitDict(dict):
         if value is Undefined or key in self:
             removed = super().pop(key)
             self.notify(
+                removed={key: removed},
                 added={},
-                changed={},
-                removed={key: removed}
+                changed={}
             )
             return removed
         return value
@@ -308,7 +310,7 @@ class TraitDict(dict):
         """
 
         item = super().popitem()
-        self.notify(added={}, changed={}, removed=dict([item]))
+        self.notify(removed=dict([item]), added={}, changed={})
         return item
 
     # -- pickle and copy support ----------------------------------------------
@@ -469,19 +471,19 @@ class TraitDictObject(TraitDict):
             excep.set_prefix("Each value of the")
             raise excep
 
-    def notifier(self, trait_dict, added, changed, removed):
+    def notifier(self, trait_dict, removed, added, changed):
         """ Fire the TraitDictEvent with the provided parameters.
 
         Parameters
         ----------
         trait_dict : dict
             The complete dictionary.
+        removed : dict
+            Dict of removed items.
         added : dict
             Dict of added items.
         changed : dict
             Dict of changed items.
-        removed : dict
-            Dict of removed items.
         """
 
         if self.name_items is None:
@@ -492,7 +494,7 @@ class TraitDictObject(TraitDict):
         if object is None:
             return
 
-        event = TraitDictEvent(added, changed, removed)
+        event = TraitDictEvent(removed, added, changed)
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
 
