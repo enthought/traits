@@ -438,6 +438,11 @@ def _create_paths(expression, paths=None, id_to_path=None, last_cnodes=None):
 class _SeriesExpression:
     """ Container of Expression for joining expressions in series.
     Used internally in this module.
+
+    Parameters
+    ----------
+    expressions : list of Expression
+        List of Expression to be combined in parallel.
     """
 
     def __init__(self, expressions):
@@ -507,6 +512,11 @@ class _SeriesExpression:
 class _ParallelExpression:
     """ Container of Expression for joining expressions in parallel.
     Used internally in this module.
+
+    Parameters
+    ----------
+    expressions : list of Expression
+        List of Expression to be combined in parallel.
     """
 
     def __init__(self, expressions):
