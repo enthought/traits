@@ -3391,14 +3391,3 @@ class ISerializable(Interface):
     """ A class that implemented ISerializable requires that all HasTraits
         objects saved as part of its state also implement ISerializable.
     """
-
-
-class traits_super(super):
-    def __getattribute__(self, name):
-        try:
-            return super(traits_super, self).__getattribute__(name)
-        except:
-            return self._noop
-
-    def _noop(self, *args, **kw):
-        pass
