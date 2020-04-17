@@ -442,7 +442,7 @@ class _SeriesExpression:
     Parameters
     ----------
     expressions : list of Expression
-        List of Expression to be combined in parallel.
+        List of Expression to be combined in series.
     """
 
     def __init__(self, expressions):
