@@ -21,7 +21,7 @@ def create_notifier(**kwargs):
     for testing purposes.
     """
     values = dict(
-        path=mock.Mock(),
+        graph=mock.Mock(),
         observer_handler=mock.Mock(),
         event_factory=mock.Mock(),
         handler=mock.Mock(),
@@ -48,7 +48,7 @@ class TestObserverChangeNotifierCall(unittest.TestCase):
     """ Tests for the notifier being a callable."""
 
     def test_init_and_call(self):
-        path = mock.Mock()
+        graph = mock.Mock()
         observer_handler = mock.Mock()
         event_factory = mock.Mock(return_value="Event")
         handler = mock.Mock()
@@ -57,7 +57,7 @@ class TestObserverChangeNotifierCall(unittest.TestCase):
 
         notifier = create_notifier(
             observer_handler=observer_handler,
-            path=path,
+            graph=graph,
             handler=handler,
             target=target,
             dispatcher=dispatcher,
@@ -68,7 +68,7 @@ class TestObserverChangeNotifierCall(unittest.TestCase):
         event_factory.assert_called_once_with(a=1, b=2)
         observer_handler.assert_called_once_with(
             event="Event",
-            path=path,
+            graph=graph,
             handler=handler,
             target=target,
             dispatcher=dispatcher,
@@ -173,19 +173,19 @@ class TestObserverChangeEquals(unittest.TestCase):
     def test_notifier_equals(self):
         observer_handler = mock.Mock()
         handler = mock.Mock()
-        path = mock.Mock()
+        graph = mock.Mock()
         target = mock.Mock()
 
         notifier1 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
-            path=path,
+            graph=graph,
             target=target,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
-            path=path,
+            graph=graph,
             target=target,
         )
         self.assertTrue(
@@ -201,19 +201,19 @@ class TestObserverChangeEquals(unittest.TestCase):
         # Test notifier differentiates the identity of
         # the observer_handler.
         handler = mock.Mock()
-        path = mock.Mock()
+        graph = mock.Mock()
         target = mock.Mock()
 
         notifier1 = create_notifier(
             observer_handler=mock.Mock(),
             handler=handler,
-            path=path,
+            graph=graph,
             target=target,
         )
         notifier2 = create_notifier(
             observer_handler=mock.Mock(),
             handler=handler,
-            path=path,
+            graph=graph,
             target=target,
         )
         self.assertFalse(
@@ -229,19 +229,19 @@ class TestObserverChangeEquals(unittest.TestCase):
         # Test notifier differentiates the identity of the
         # user's handler
         observer_handler = mock.Mock()
-        path = mock.Mock()
+        graph = mock.Mock()
         target = mock.Mock()
 
         notifier1 = create_notifier(
             observer_handler=observer_handler,
             handler=mock.Mock(),
-            path=path,
+            graph=graph,
             target=target,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=mock.Mock(),
-            path=path,
+            graph=graph,
             target=target,
         )
         self.assertFalse(
@@ -253,9 +253,9 @@ class TestObserverChangeEquals(unittest.TestCase):
             "Expected notifier2 to see notifier1 as different."
         )
 
-    def test_notifier_path_not_equal(self):
+    def test_notifier_graph_not_equal(self):
         # Test notifier differentiates the identity of the
-        # path.
+        # graph.
         observer_handler = mock.Mock()
         handler = mock.Mock()
         target = mock.Mock()
@@ -263,13 +263,13 @@ class TestObserverChangeEquals(unittest.TestCase):
         notifier1 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
-            path=mock.Mock(),
+            graph=mock.Mock(),
             target=target,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
-            path=mock.Mock(),
+            graph=mock.Mock(),
             target=target,
         )
         self.assertFalse(
@@ -286,20 +286,20 @@ class TestObserverChangeEquals(unittest.TestCase):
 
         observer_handler = mock.Mock()
         handler = mock.Mock()
-        path = mock.Mock()
+        graph = mock.Mock()
         target1 = mock.Mock()
         target2 = mock.Mock()
 
         notifier1 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
-            path=path,
+            graph=graph,
             target=target1,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
-            path=path,
+            graph=graph,
             target=target2,
         )
         self.assertFalse(
@@ -311,11 +311,11 @@ class TestObserverChangeEquals(unittest.TestCase):
             "Expected notifier2 to see notifier1 as different."
         )
 
-    def test_notifier_equals_paths_compared_for_equality(self):
-        # New path can be created that will compare true for equality but not
+    def test_notifier_equals_graphs_compared_for_equality(self):
+        # New graph can be created that will compare true for equality but not
         # for identity
-        path1 = tuple([1, 2, 3])
-        path2 = tuple([1, 2, 3])
+        graph1 = tuple([1, 2, 3])
+        graph2 = tuple([1, 2, 3])
         observer_handler = mock.Mock()
         handler = mock.Mock()
         target = mock.Mock()
@@ -323,13 +323,13 @@ class TestObserverChangeEquals(unittest.TestCase):
         notifier1 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
-            path=path1,
+            graph=graph1,
             target=target,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
-            path=path2,
+            graph=graph2,
             target=target,
         )
         self.assertTrue(
@@ -366,17 +366,17 @@ class TestObserverChangeNotifierAdd(unittest.TestCase):
         # is already there.
         handler = mock.Mock()
         observer_handler = mock.Mock()
-        path = mock.Mock()
+        graph = mock.Mock()
         target = mock.Mock()
         notifier1 = create_notifier(
             observer_handler=observer_handler,
-            path=path,
+            graph=graph,
             handler=handler,
             target=target,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
-            path=path,
+            graph=graph,
             handler=handler,
             target=target,
         )
@@ -420,19 +420,19 @@ class TestObserverChangeNotifierRemove(unittest.TestCase):
 
         handler = mock.Mock()
         observer_handler = mock.Mock()
-        path = mock.Mock()
+        graph = mock.Mock()
         target = mock.Mock()
 
         notifier1 = create_notifier(
             handler=handler,
             observer_handler=observer_handler,
-            path=path,
+            graph=graph,
             target=target,
         )
         notifier2 = create_notifier(
             handler=handler,
             observer_handler=observer_handler,
-            path=path,
+            graph=graph,
             target=target,
         )
 
@@ -476,13 +476,13 @@ class TestIntegrationHasTraits(unittest.TestCase):
         foo1 = Foo(bar=bar)
         foo2 = Foo(bar=bar)
 
-        def observer_handler(event, path, handler, target, dispatcher):
+        def observer_handler(event, graph, handler, target, dispatcher):
             # Very stupid handler for maintaining notifiers.
             old_notifiers = event.old._trait("value", 2)._notifiers(True)
             old_notifiers.remove(handler)
             new_notifiers = event.new._trait("value", 2)._notifiers(True)
             new_notifiers.append(handler)
-            # Ignore path, which would have been used for propagating
+            # Ignore graph, which would have been used for propagating
             # notifiers in nested objects.
             # Ignore target, which would have been used as the context
             # for the user handler.
@@ -499,7 +499,7 @@ class TestIntegrationHasTraits(unittest.TestCase):
         notifier_foo1 = ObserverChangeNotifier(
             observer_handler=observer_handler,
             event_factory=self.event_factory,
-            path=(),
+            graph=(),
             handler=on_bar_value_changed,
             target=foo1,
             dispatcher=(),
@@ -510,7 +510,7 @@ class TestIntegrationHasTraits(unittest.TestCase):
         notifier_foo2 = ObserverChangeNotifier(
             observer_handler=observer_handler,
             event_factory=self.event_factory,
-            path=(),
+            graph=(),
             handler=on_bar_value_changed,
             target=foo2,
             dispatcher=(),

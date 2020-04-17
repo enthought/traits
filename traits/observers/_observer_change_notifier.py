@@ -13,7 +13,7 @@ import weakref
 
 
 class ObserverChangeNotifier:
-    """ Wrapper for maintaining notifiers in an ObserverPath
+    """ Wrapper for maintaining notifiers in an ObserverGraph
     when an upstream object changes.
 
     For example, when observing an extended attribute path,
@@ -27,12 +27,12 @@ class ObserverChangeNotifier:
 
     def __init__(
             self, *, observer_handler, event_factory,
-            path, handler, target, dispatcher):
+            graph, handler, target, dispatcher):
         """
 
         Parameters
         ----------
-        observer_handler : callable(event, path, handler, target, dispatcher)
+        observer_handler : callable(event, graph, handler, target, dispatcher)
             The handler for maintaining observers and notifiers.
             ``event`` is the object created by the ``event_factory`` and is
             associated with the change event that triggers this notifier.
@@ -44,7 +44,7 @@ class ObserverChangeNotifier:
             the call signature expected by the observable this notifier is
             used with. e.g. for CTrait, the call signature will be
             ``(object, name, old, new)``.
-        path : ObserverPath
+        graph : ObserverGraph
             An object describing what traits are being observed on an instance
             of ``HasTraits``, e.g. observe mutations on a list referenced by
             a specific named trait.
@@ -65,7 +65,7 @@ class ObserverChangeNotifier:
         """
         self.observer_handler = observer_handler
         self.event_factory = event_factory
-        self.path = path
+        self.graph = graph
         self.target = weakref.ref(target)
         if isinstance(handler, types.MethodType):
             self.handler = weakref.WeakMethod(handler)
@@ -129,7 +129,7 @@ class ObserverChangeNotifier:
 
         self.observer_handler(
             event=event,
-            path=self.path,
+            graph=self.graph,
             target=target,
             handler=handler,
             dispatcher=self.dispatcher,
@@ -149,11 +149,11 @@ class ObserverChangeNotifier:
         return (
             type(self) is type(other)
             # observer_handler contains the logic for maintaining notifiers
-            # in the downstream path.
+            # in the downstream graph.
             and self.observer_handler is other.observer_handler
-            # path is an input for observer_handler.
-            # Unequal paths should not interfere each other.
-            and self.path == other.path
+            # graph is an input for observer_handler.
+            # Unequal graphs should not interfere each other.
+            and self.graph == other.graph
             # user handler is an input for observer_handler.
             # different user handlers should not interfere each other.
             and self.handler() is other.handler()
