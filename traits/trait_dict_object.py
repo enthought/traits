@@ -9,14 +9,10 @@
 # Thanks for using Enthought open source!
 
 import copy
-import logging
 from weakref import ref
 
 from traits.trait_base import Undefined
 from traits.trait_errors import TraitError
-
-# Set up a logger:
-logger = logging.getLogger(__name__)
 
 
 class TraitDictEvent(object):
