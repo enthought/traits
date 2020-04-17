@@ -99,12 +99,10 @@ class TraitDict(dict):
         Called to validate a key in the dict.
         The callable must accept a single key and
         return a validated key or raise a TraitError
-        If not provided, all keys are considered valid.
     value_validator : callable
         Called to validate a value in the dict.
         The callable must accept a single value and
         return a validated value or raise a TraitError
-        If not provided, all values are considered valid.
     notifiers : list
         A list of callables with the signature::
 
@@ -166,7 +164,7 @@ class TraitDict(dict):
 
         Parameters
         ----------
-        key : A hashable type.
+        key : A hashable object.
             The key for the value.
         value : any
             The value to set for the corresponding key.
@@ -192,7 +190,7 @@ class TraitDict(dict):
 
         Parameters
         ----------
-        key : A hashable type.
+        key : A hashable object.
             The key to be deleted.
 
         Raises
@@ -246,7 +244,7 @@ class TraitDict(dict):
 
         Parameters
         ----------
-        key : A hashable type.
+        key : A hashable object.
             Key to the item.
         """
 
@@ -276,7 +274,7 @@ class TraitDict(dict):
 
         Parameters
         ----------
-        key : A hashable type.
+        key : A hashable object.
             Key to the dict item.
 
         value : any
@@ -400,12 +398,12 @@ class TraitDictObject(TraitDict):
 
         Parameters
         ----------
-        key : A hashable type.
+        key : A hashable object.
             The key to validate.
 
         Returns
         -------
-        validated_key : A hashable type.
+        validated_key : A hashable object.
             The validated key.
 
         Raises
