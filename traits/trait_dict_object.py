@@ -282,8 +282,10 @@ class TraitDict(dict):
             Value to return if key is absent.
         """
 
-        if value is Undefined or key in self:
-            removed = super().pop(key)
+        should_notify = (value is Undefined or key in self)
+        removed = super().pop(key)
+
+        if should_notify:
             self.notify(
                 removed={key: removed},
                 added={},
