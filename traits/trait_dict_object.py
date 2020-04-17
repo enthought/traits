@@ -199,7 +199,7 @@ class TraitDict(dict):
             If the key is not found.
         """
 
-        removed = {key: self[key]}
+        removed = {key: self[key]} if key in self else {}
         super().__delitem__(key)
         self.notify(removed=removed, added={}, changed={})
 
