@@ -14,7 +14,7 @@ from unittest import mock
 from traits.observers._named_trait_observer import (
     NamedTraitObserver,
 )
-from traits.observers._observer_path import ObserverPath
+from traits.observers._observer_graph import ObserverGraph
 
 
 class TestNamedTraitObserver(unittest.TestCase):
@@ -60,25 +60,25 @@ class TestNamedTraitObserver(unittest.TestCase):
             str(exception_context.exception), "can't set attribute")
 
 
-class TestObserverPathIntegrateNamedTraitObserver(unittest.TestCase):
-    """ Test integrating ObserverPath with NamedTraitObserver as nodes.
+class TestObserverGraphIntegrateNamedTraitObserver(unittest.TestCase):
+    """ Test integrating ObserverGraph with NamedTraitObserver as nodes.
     """
 
-    def test_observer_path_hash_with_named_listener(self):
+    def test_observer_graph_hash_with_named_listener(self):
         # Test equality + hashing using set passes.
 
-        path1 = ObserverPath(
+        path1 = ObserverGraph(
             node=NamedTraitObserver(name="foo", notify=True),
             children=[
-                ObserverPath(
+                ObserverGraph(
                     node=NamedTraitObserver(name="bar", notify=True),
                 ),
             ],
         )
-        path2 = ObserverPath(
+        path2 = ObserverGraph(
             node=NamedTraitObserver(name="foo", notify=True),
             children=[
-                ObserverPath(
+                ObserverGraph(
                     node=NamedTraitObserver(name="bar", notify=True),
                 ),
             ],

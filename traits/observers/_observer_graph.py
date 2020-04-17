@@ -9,8 +9,8 @@
 # Thanks for using Enthought open source!
 
 
-class ObserverPath:
-    """ An ``ObserverPath`` is an object for describing what traits are being
+class ObserverGraph:
+    """ An ``ObserverGraph`` is an object for describing what traits are being
     observed on an instance of ``HasTraits``.
 
     The most basic unit in a path is a node, which is a context specific
@@ -19,30 +19,30 @@ class ObserverPath:
     changes on a number of traits matching a certain criteria, an observer
     specialized in mutations on a list, etc.
 
-    The most basic example is an ``ObserverPath`` that contains only one node,
+    The most basic example is an ``ObserverGraph`` that contains only one node,
     e.g. for observing changes on a named trait.
 
-    An ``ObserverPath`` can have branches, e.g. to observe more than one trait
+    An ``ObserverGraph`` can have branches, e.g. to observe more than one trait
     on a nested object. The attribute ``children`` represents these branches.
-    Each item in ``children`` is another ``ObserverPath``.
+    Each item in ``children`` is another ``ObserverGraph``.
 
     In order to (1) avoid hooking up a user callback with the same observer
     twice, and (2) remove an observer when they are not needed, once an
-    ``ObserverPath`` object is constructed (e.g. after mutating ``children``
+    ``ObserverGraph`` object is constructed (e.g. after mutating ``children``
     for constructing branches) and is ready to be used against an instance
     of ``HasTraits``, it should not be mutated again.
 
-    For the same reason, ``ObserverPath`` implements ``__hash__`` and
+    For the same reason, ``ObserverGraph`` implements ``__hash__`` and
     ``__eq__`` and requires its nodes to also support these methods.
 
-    An ``ObserverPath`` does not keep states regarding the HasTraits instances
-    and the user callbacks it was used with. An ``ObserverPath`` can be
+    An ``ObserverGraph`` does not keep states regarding the HasTraits instances
+    and the user callbacks it was used with. An ``ObserverGraph`` can be
     reused multiple times on different ``HasTraits`` instance and with
     different user callback.
 
     This object is considered a low-level object for the observer mechanism.
     It is not intended to be instantiated by users directly. Users will be
-    given higher-level wrappers for creating ``ObserverPath`` objects.
+    given higher-level wrappers for creating ``ObserverGraph`` objects.
 
     Parameters
     ----------
@@ -50,7 +50,7 @@ class ObserverPath:
         A context specific observer.
         It must be a hashable object. In practice, this will be
         an instance that implements ``IObserver``.
-    children : iterable of ObserverPath, optional
+    children : iterable of ObserverGraph, optional
         Branches on this path.
     """
 
@@ -60,13 +60,13 @@ class ObserverPath:
         self.children = set(children) if children is not None else set()
 
     def __hash__(self):
-        """ Return the hash of this ObserverPath."""
+        """ Return the hash of this ObserverGraph."""
         return hash(
             (type(self), self.node, hash(frozenset(self.children)))
         )
 
     def __eq__(self, other):
-        """ Return true if another object is an ObserverPath with the
+        """ Return true if another object is an ObserverGraph with the
         same content.
         """
         return (

@@ -9,20 +9,20 @@
 # Thanks for using Enthought open source!
 import unittest
 
-from traits.observers._observer_path import ObserverPath
+from traits.observers._observer_graph import ObserverGraph
 
 
 def path_from_nodes(node, *nodes):
-    root = path = ObserverPath(node=node)
+    root = path = ObserverGraph(node=node)
     for node in nodes:
-        next_path = ObserverPath(node=node)
+        next_path = ObserverGraph(node=node)
         path.children.add(next_path)
         path = next_path
     return root
 
 
-class TestObserverPath(unittest.TestCase):
-    """ Test generic functions on ObserverPath."""
+class TestObserverGraph(unittest.TestCase):
+    """ Test generic functions on ObserverGraph."""
 
     def test_equality(self):
         path1 = path_from_nodes(1, 2, 3)
@@ -35,17 +35,17 @@ class TestObserverPath(unittest.TestCase):
         self.assertNotEqual(path1, 1)
 
     def test_equality_different_length_children(self):
-        path1 = ObserverPath(
+        path1 = ObserverGraph(
             node=1,
             children=[
-                ObserverPath(node=2),
-                ObserverPath(node=3),
+                ObserverGraph(node=2),
+                ObserverGraph(node=3),
             ],
         )
-        path2 = ObserverPath(
+        path2 = ObserverGraph(
             node=1,
             children=[
-                ObserverPath(node=2),
+                ObserverGraph(node=2),
             ],
         )
         self.assertNotEqual(path1, path2)
@@ -53,18 +53,18 @@ class TestObserverPath(unittest.TestCase):
 
     def test_equality_order_of_children(self):
         # The order of items in children does not matter
-        path1 = ObserverPath(
+        path1 = ObserverGraph(
             node=1,
             children=[
-                ObserverPath(node=2),
-                ObserverPath(node=3),
+                ObserverGraph(node=2),
+                ObserverGraph(node=3),
             ],
         )
-        path2 = ObserverPath(
+        path2 = ObserverGraph(
             node=1,
             children=[
-                ObserverPath(node=3),
-                ObserverPath(node=2),
+                ObserverGraph(node=3),
+                ObserverGraph(node=2),
             ],
         )
         self.assertEqual(path1, path2)

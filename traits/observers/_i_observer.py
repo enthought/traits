@@ -14,10 +14,10 @@ class IObserver(abc.ABC):
     """ Interface for all observers.
 
     Each instance of ``IObserver`` can be a node in the
-    ``ObserverPath``. These objects are considered
+    ``ObserverGraph``. These objects are considered
     low-level objects not to be instantiated directly by the
     user. In order to support equality and hashing on the
-    ``ObserverPath``, ``IObserver`` needs to be hashable
+    ``ObserverGraph``, ``IObserver`` needs to be hashable
     and it needs to support comparison for equality.
     """
 
