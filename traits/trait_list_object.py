@@ -59,7 +59,12 @@ class TraitListEvent(object):
 
 
 def _normalize_index(index, length):
-    """ Normalize integer index to range 0 to len (inclusive). """
+    """ Normalize integer index to range 0 to len (inclusive).
+
+    These rules reflect the normalization that Python uses for the
+    ``insert`` and ``pop`` operations.
+
+    """
 
     index = operator.index(index)
     if index < 0:
@@ -77,9 +82,23 @@ def _normalize_slice_or_index(index, length):
     slice is returned: note that in this case, the matching *added* and
     *removed* lists will need to be reversed.
 
-    A normalized slice will have 0 <= start <= stop <= length and the step will
-    be either None or a positive integer. A normalized index will satisfy
-    0 <= index <= length.
+    Slices with a step of 1 or -1 are normalized to a single integer index,
+    referring to the position of the first element referenced by the slice.
+
+    Similarly, slices that refer to only a single element of the corresponding
+    list (for example, a slice of `[1::10]` applied to a list of length 5)
+    are normalized to the index that refers to that same element.
+
+    Empty slices are also normalized to a single index. Note that in the case
+    of an empty slice, the corresponding __delitem__ or __setitem__ operation
+    does not cause any list change, so does not issue a notification. So the
+    normalized index in this case is unused in current code.
+
+    A normalized slice will have 0 <= start < stop <= length and a step >= 2.
+    It should further satisfy start + step < stop. The stop will always be
+    one larger than the last element referenced by the slice.
+
+    A normalized index will satisfy 0 <= index <= length.
 
     Parameters
     ----------
@@ -110,7 +129,7 @@ def _normalize_slice_or_index(index, length):
             -step,
         )
 
-    # Reduce stop so that equivalent slices give identical normalised
+    # Reduce stop so that equivalent slices give identical normalized
     # slices (e.g., del x[3:7:2] is equivalent to del x[3:6:2]).
     stop -= (stop - start - 1) % step
 
