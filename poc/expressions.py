@@ -247,29 +247,6 @@ class Expression:
             nodes=[SetItemListener(notify=notify, optional=optional)],
         )
 
-    def items(self, notify=True):
-        """ Create a new expression for observing items in a list or
-        a dict or a set.
-
-        If the type of the collection is known, it will be more efficient
-        to use the type specific implementation, namely, ``list_items``,
-        ``dict_items`` and ``set_items``.
-
-        Parameters
-        ----------
-        notify : boolean, optional
-            Whether to notify for changes.
-
-        Returns
-        -------
-        new_expression : Expression
-        """
-        return (
-            self.list_items(notify=notify, optional=True)
-            | self.dict_items(notify=notify, optional=True)
-            | self.set_items(notify=notify, optional=True)
-        )
-
     def filter_(self, filter, notify=True):
         """ Create a new expression that matches traits using the
         given filter after the current expression returns a match.
@@ -625,8 +602,6 @@ def _as_top_level(func):
 recursive = _as_top_level(Expression.recursive)
 
 t = _as_top_level(Expression.t)
-
-items = _as_top_level(Expression.items)
 
 list_items = _as_top_level(Expression.list_items)
 

@@ -45,7 +45,9 @@ class TestParsing(unittest.TestCase):
 
         items_attr_or_items = (
             expressions.t("items", notify=False, optional=True)
-            | expressions.items(notify=False)
+            | expressions.list_items(notify=False, optional=True)
+            | expressions.dict_items(notify=False, optional=True)
+            | expressions.set_items(notify=False, optional=True)
         )
         expected = (
             expressions.t("a").then(
