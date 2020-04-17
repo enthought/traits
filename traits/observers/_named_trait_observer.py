@@ -50,3 +50,6 @@ class NamedTraitObserver:
             and self.name == other.name
             and self.notify == other.notify
         )
+
+
+IObserver.register(NamedTraitObserver)

@@ -7,9 +7,10 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
+import abc
 
 
-class IObserver:
+class IObserver(abc.ABC):
     """ Interface for all observers.
 
     Each instance of ``IObserver`` can be a node in the
