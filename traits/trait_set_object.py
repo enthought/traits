@@ -148,8 +148,14 @@ class TraitSet(set):
             The updated set.
         """
 
-        self.intersection_update(value)
-        return self
+        old_set = self.copy()
+        retval = super().__iand__(value)
+        removed = old_set.difference(self)
+
+        if len(removed) > 0:
+            self.notify(removed, set())
+
+        return retval
 
     def __ior__(self, value):
         """ Return self |= value.
@@ -164,9 +170,20 @@ class TraitSet(set):
         self : TraitSet
             The updated set.
         """
+        old_set = self.copy()
 
-        self.update(value)
-        return self
+        if isinstance(value, (set, frozenset)):
+            value = {self.item_validator(item)
+                     for item in value}
+
+        retval = super().__ior__(value)
+
+        added = self.difference(old_set)
+
+        if len(added) > 0:
+            self.notify(set(), added)
+
+        return retval
 
     def __isub__(self, value):
         """ Return self-=value.
@@ -182,8 +199,14 @@ class TraitSet(set):
             The updated set.
         """
 
-        self.difference_update(value)
-        return self
+        old_set = self.copy()
+        retval = super().__isub__(value)
+        removed = old_set.difference(self)
+
+        if len(removed) > 0:
+            self.notify(removed, set())
+
+        return retval
 
     def __ixor__(self, value):
         """ Return self ^= value.
@@ -199,8 +222,23 @@ class TraitSet(set):
             The updated set.
         """
 
-        self.symmetric_difference_update(value)
-        return self
+        removed = set()
+        added = set()
+        if isinstance(value, (set, frozenset)):
+            values = set(value)
+            removed = self.intersection(values)
+            raw_result = values.difference(removed)
+            validated_result = {self.item_validator(item) for item in
+                                raw_result}
+            added = validated_result.difference(self)
+            value = added | removed
+
+        retval = super().__ixor__(value)
+
+        if removed or added:
+            self.notify(removed, added)
+
+        return retval
 
     def add(self, value):
         """ Add an element to a set.

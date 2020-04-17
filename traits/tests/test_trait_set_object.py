@@ -321,6 +321,9 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(self.added, {5})
         self.assertEqual(ts, {5})
 
+        with self.assertRaises(TypeError):
+            ts ^= [5]
+
     def test_ixor_no_nofications_for_no_change(self):
         notifier = mock.Mock()
         ts_1 = TraitSet([1, 2], notifiers=[notifier])
@@ -340,7 +343,7 @@ class TestTraitSet(unittest.TestCase):
 
         ts = TraitSet([iterable], item_validator=self.validator)
         self.validator_args = None
-        ts ^= [iterable]
+        ts ^= {iterable}
         self.assertEqual(ts, set())
 
         # No values are being added.
@@ -379,14 +382,18 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(self.added, set())
         self.assertEqual(ts, {1})
 
+        with self.assertRaises(TypeError):
+            ts -= [4, 5]
+
     def test_isub_validator_not_called(self):
         # isub never needs to add items, validator should not
         # be called.
         ts = TraitSet({1, 2, 3}, item_validator=self.validator)
-        values = list(ts)
+        values = set(ts)
 
         # when
         self.validator_args = None
+
         ts -= values
 
         # then
