@@ -7,10 +7,10 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
-from traits.observers._interfaces import IObserver
+from traits.observers._i_observer import IObserver
 
 
-class NamedTraitObserver(IObserver):
+class NamedTraitObserver:
     """ Observer for observing changes on a named trait
     on an instance of HasTraits.
     """
