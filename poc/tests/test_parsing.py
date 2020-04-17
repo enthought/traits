@@ -1,6 +1,9 @@
 import unittest
 
-from poc.generated_parser import UnexpectedCharacters
+from poc.generated_parser import (
+    UnexpectedCharacters,
+    UnexpectedToken,
+)
 
 from poc import parsing
 from poc import expressions
@@ -76,6 +79,14 @@ class TestParsing(unittest.TestCase):
     def test_unparse_content(self):
         with self.assertRaises(UnexpectedCharacters):
             parsing.parse("a.b.c^abc")
+
+    def test_error_empty_string(self):
+        with self.assertRaises(UnexpectedToken):
+            parsing.parse("")
+
+    def test_error_unconnected_expressions(self):
+        with self.assertRaises(UnexpectedToken):
+            parsing.parse("[a.b]c")
 
     def test_recursion_support(self):
         actual = parsing.parse("root.[left,right]*.value")

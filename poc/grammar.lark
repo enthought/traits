@@ -1,4 +1,4 @@
-?start: expr*
+?start: expr
 
 _dot: "."
 _colon: ":"
