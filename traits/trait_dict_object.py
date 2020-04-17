@@ -39,7 +39,6 @@ class TraitDictEvent(object):
         Updated keys and their previous values.
     removed : dict
         Old keys and values that were just removed.
-
     """
 
     def __init__(self, added=None, changed=None, removed=None):
@@ -68,6 +67,7 @@ def accept_anything(item):
     """
     Item validator which accepts any item and returns it unaltered.
     """
+
     return item
 
 
@@ -116,7 +116,6 @@ class TraitDict(dict):
         Where 'added' is a dict of new key-values that have been added.
         'changed' is a dict with old values previously associated with the key.
         'removed' is a dict of key-values that are no longer in the dictionary.
-
     """
 
     def __new__(cls, *args, **kwargs):
@@ -137,7 +136,7 @@ class TraitDict(dict):
 
         if notifiers is None:
             notifiers = []
-        self.notifiers = list(notifiers)
+        self.notifiers = notifiers
 
         if value is None:
             value = {}
@@ -156,7 +155,6 @@ class TraitDict(dict):
             notifier(trait_dict, added, changed, removed)
 
         Any return values are ignored.
-
         """
 
         for notifier in self.notifiers:
@@ -173,15 +171,14 @@ class TraitDict(dict):
             The key for the value.
         value : any
             The value to set for the corresponding key.
-
         """
 
         removed = {}
         validated_key = self.key_validator(key)
         validated_value = self.value_validator(value)
 
-        if key in self:
-            changed = {key: self[key]}
+        if validated_key in self:
+            changed = {validated_key: self[validated_key]}
             added = {}
         else:
             changed = {}
@@ -202,9 +199,8 @@ class TraitDict(dict):
         ------
         KeyError
             If the key is not found.
-
-
         """
+
         removed = {key: self[key]}
         super().__delitem__(key)
         self.notify(added={}, changed={}, removed=removed)
@@ -256,17 +252,17 @@ class TraitDict(dict):
         if key in self:
             return self[key]
 
-        key = self.key_validator(key)
-        value = self.value_validator(value)
+        validated_key = self.key_validator(key)
+        validated_value = self.value_validator(value)
 
-        if key in self:
-            changed = {key: self[key]}
+        if validated_key in self:
+            changed = {validated_key: self[validated_key]}
             added = {}
         else:
             changed = {}
-            added = {key: value}
+            added = {validated_key: validated_value}
 
-        super().__setitem__(key, value)
+        super().__setitem__(validated_key, validated_value)
 
         self.notify(added=added, changed=changed, removed={})
 
@@ -297,7 +293,7 @@ class TraitDict(dict):
         return value
 
     def popitem(self):
-        """ Remove and return some(key, value) pair as a tuple. Raise KeyError
+        """ Remove and return some (key, value) pair as a tuple. Raise KeyError
         if dict is empty.
 
         Returns
@@ -322,6 +318,7 @@ class TraitDict(dict):
 
         Notifiers are transient and should not be serialized.
         """
+
         result = self.__dict__.copy()
         # notifiers are transient and should not be serialized
         result.pop("notifiers", None)
@@ -332,6 +329,7 @@ class TraitDict(dict):
 
         Notifiers are transient and are restored to the empty list.
         """
+
         state['notifiers'] = []
         self.__dict__.update(state)
 
@@ -340,6 +338,7 @@ class TraitDict(dict):
 
         Notifiers are transient and should not be copied.
         """
+
         result = TraitDict(
             dict(copy.deepcopy(x, memo) for x in self.items()),
             key_validator=copy.deepcopy(self.key_validator, memo),
@@ -415,8 +414,8 @@ class TraitDictObject(TraitDict):
         ------
         TraitError
             If the validation fails.
-
         """
+
         trait = getattr(self, 'trait', None)
         object_ref = getattr(self, 'object', None)
         if object_ref is None or trait is None:
@@ -451,8 +450,8 @@ class TraitDictObject(TraitDict):
         ------
         TraitError
             If the validation fails.
-
         """
+
         trait = getattr(self, 'trait', None)
         object_ref = getattr(self, 'object', None)
         if object_ref is None or trait is None:
@@ -484,6 +483,7 @@ class TraitDictObject(TraitDict):
         removed : dict
             Dict of removed items.
         """
+
         if self.name_items is None:
             return
 
