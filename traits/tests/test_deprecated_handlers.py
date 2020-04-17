@@ -14,6 +14,9 @@ import warnings
 from traits.api import (
     TraitDict,
     TraitList,
+    TraitMap,
+    TraitPrefixList,
+    TraitPrefixMap,
     TraitTuple,
 )
 
@@ -24,7 +27,10 @@ class TestTraitHandlerDeprecatedWarnings(unittest.TestCase):
         handlers = {
             "TraitDict": TraitDict,
             "TraitList": TraitList,
-            "TraitTuple": TraitTuple
+            "TraitTuple": TraitTuple,
+            "TraitMap": lambda: TraitMap({}),
+            "TraitPrefixList": lambda: TraitPrefixList("one", "two"),
+            "TraitPrefixMap": lambda: TraitPrefixMap({}),
         }
 
         for name, handler_factory in handlers.items():
