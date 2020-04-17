@@ -73,8 +73,8 @@ class TraitDict(dict):
 
     Parameters
     ----------
-    value : dict, optional
-        The initial dict.
+    value : dict or iterable, optional
+        The initial dict or an iterable containing key-value pairs.
     key_validator : callable, optional
         Called to validate a key in the dict.
         The callable must accept a single key and
@@ -139,8 +139,9 @@ class TraitDict(dict):
         if value is None:
             value = {}
 
+        items = value.items() if isinstance(value, dict) else value
         value = {self.key_validator(key): self.value_validator(value)
-                 for key, value in value.items()}
+                 for key, value in items}
 
         super().__init__(value)
 
@@ -286,7 +287,7 @@ class TraitDict(dict):
         """
 
         should_notify = (value is Undefined or key in self)
-        pop_args = [key, value] if not value is Undefined else [key]
+        pop_args = [key, value] if value is not Undefined else [key]
         removed = super().pop(*pop_args)
 
         if should_notify:
