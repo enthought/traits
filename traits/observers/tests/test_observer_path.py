@@ -16,7 +16,7 @@ def path_from_nodes(node, *nodes):
     root = path = ObserverPath(node=node)
     for node in nodes:
         next_path = ObserverPath(node=node)
-        path.nexts.add(next_path)
+        path.children.add(next_path)
         path = next_path
     return root
 
@@ -34,35 +34,35 @@ class TestObserverPath(unittest.TestCase):
         path1 = path_from_nodes(1, 2, 3)
         self.assertNotEqual(path1, 1)
 
-    def test_equality_different_length_nexts(self):
+    def test_equality_different_length_children(self):
         path1 = ObserverPath(
             node=1,
-            nexts=[
+            children=[
                 ObserverPath(node=2),
                 ObserverPath(node=3),
             ],
         )
         path2 = ObserverPath(
             node=1,
-            nexts=[
+            children=[
                 ObserverPath(node=2),
             ],
         )
         self.assertNotEqual(path1, path2)
         self.assertNotEqual(hash(path1), hash(path2))
 
-    def test_equality_order_of_nexts(self):
-        # The order of items in nexts does not matter
+    def test_equality_order_of_children(self):
+        # The order of items in children does not matter
         path1 = ObserverPath(
             node=1,
-            nexts=[
+            children=[
                 ObserverPath(node=2),
                 ObserverPath(node=3),
             ],
         )
         path2 = ObserverPath(
             node=1,
-            nexts=[
+            children=[
                 ObserverPath(node=3),
                 ObserverPath(node=2),
             ],

@@ -23,12 +23,12 @@ class ObserverPath:
     e.g. for observing changes on a named trait.
 
     An ``ObserverPath`` can have branches, e.g. to observe more than one trait
-    on a nested object. The attribute ``nexts`` represents these branches.
-    Each item in ``nexts`` is another ``ObserverPath``.
+    on a nested object. The attribute ``children`` represents these branches.
+    Each item in ``children`` is another ``ObserverPath``.
 
     In order to (1) avoid hooking up a user callback with the same observer
     twice, and (2) remove an observer when they are not needed, once an
-    ``ObserverPath`` object is constructed (e.g. after mutating ``nexts``
+    ``ObserverPath`` object is constructed (e.g. after mutating ``children``
     for constructing branches) and is ready to be used against an instance
     of ``HasTraits``, it should not be mutated again.
 
@@ -50,19 +50,19 @@ class ObserverPath:
         A context specific observer.
         It must be a hashable object. In practice, this will be
         an instance that implements ``IObserver``.
-    nexts : iterable of ObserverPath, optional
+    children : iterable of ObserverPath, optional
         Branches on this path.
     """
 
-    def __init__(self, *, node, nexts=None):
+    def __init__(self, *, node, children=None):
         self.node = node
 
-        self.nexts = set(nexts) if nexts is not None else set()
+        self.children = set(children) if children is not None else set()
 
     def __hash__(self):
         """ Return the hash of this ObserverPath."""
         return hash(
-            (type(self), self.node, hash(frozenset(self.nexts)))
+            (type(self), self.node, hash(frozenset(self.children)))
         )
 
     def __eq__(self, other):
@@ -72,5 +72,5 @@ class ObserverPath:
         return (
             type(self) is type(other)
             and self.node == other.node
-            and self.nexts == other.nexts
+            and self.children == other.children
         )

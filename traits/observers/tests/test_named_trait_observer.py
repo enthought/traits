@@ -69,7 +69,7 @@ class TestObserverPathIntegrateNamedTraitObserver(unittest.TestCase):
 
         path1 = ObserverPath(
             node=NamedTraitObserver(name="foo", notify=True),
-            nexts=[
+            children=[
                 ObserverPath(
                     node=NamedTraitObserver(name="bar", notify=True),
                 ),
@@ -77,7 +77,7 @@ class TestObserverPathIntegrateNamedTraitObserver(unittest.TestCase):
         )
         path2 = ObserverPath(
             node=NamedTraitObserver(name="foo", notify=True),
-            nexts=[
+            children=[
                 ObserverPath(
                     node=NamedTraitObserver(name="bar", notify=True),
                 ),
