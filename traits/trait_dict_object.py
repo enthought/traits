@@ -270,7 +270,7 @@ class TraitDict(dict):
 
         self.notify(removed={}, added=added, changed=changed)
 
-        return value
+        return validated_value
 
     def pop(self, key, value=Undefined):
         """ Remove specified key and return the corresponding
