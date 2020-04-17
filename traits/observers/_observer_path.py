@@ -69,14 +69,8 @@ class ObserverPath:
         """ Return true if another object is an ObserverPath with the
         same content.
         """
-        if other is self:
-            return True
-        if type(self) is not type(other):
-            return False
-        if self.node != other.node:
-            return False
-        if len(self.nexts) != len(other.nexts):
-            return False
-
-        # Paths are hashable.
-        return self.nexts == other.nexts
+        return (
+            type(self) is type(other)
+            and self.node == other.node
+            and self.nexts == other.nexts
+        )
