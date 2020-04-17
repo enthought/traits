@@ -205,9 +205,11 @@ class TraitDict(dict):
 
     def clear(self):
         """ Remove all items from the dict. """
-        if self != {}:
-            removed = self.copy()
-            super().clear()
+        was_empty = (self == {})
+        removed = self.copy()
+
+        super().clear()
+        if not was_empty:
             self.notify(removed=removed, added={}, changed={})
 
     def update(self, adict):
