@@ -23,8 +23,8 @@ class IObserver(abc.ABC):
 
     def __hash__(self):
         """ Return a hash of this object."""
-        raise NotImplementedError("Subclass must implement __hash__.")
+        raise NotImplementedError("__hash__ must be implemented.")
 
     def __eq__(self, other):
         """ Return true if this observer is equal to the given one."""
-        raise NotImplementedError("Subclass must implement __eq__.")
+        raise NotImplementedError("__eq__ must be implemented.")
