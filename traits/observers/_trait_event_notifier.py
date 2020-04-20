@@ -35,44 +35,44 @@ class TraitEventNotifier:
 
     Since there is only one reference count associated with a notifier,
     each notifier is expected to be added to only one observable.
+
+    Parameters
+    ----------
+    handler : callable(event)
+        The user's handler to receive the change event.
+        The event object is returned by the ``event_factory``.
+        If the handler is an instance method, then a weak reference is
+        created for the method. If the instance is garbage collected,
+        the notifier will be muted.
+    target : object
+        An object for defining the context of the notifier.
+        A weak reference is created for the target.
+        If the target is garbage collected, the notifier will be muted.
+        This target is typically an instance of ``HasTraits`` and will be
+        seen by the user as the "owner" of the change handler.
+        This is also used for distinguishing one notifier from another
+        notifier wrapping the same handler.
+    event_factory : callable(*args, **kwargs) -> object
+        A factory function for creating the event object to be sent to
+        the handler. The call signature must be compatible with the
+        call signature expected by the observable this notifier is used
+        with. e.g. for CTrait, the call signature will be
+        ``(object, name, old, new)``.
+    prevent_event : callable(event) -> boolean
+        A callable for controlling whether the user handler should be
+        invoked. It receives the event created by the event factory and
+        returns true if the event should be prevented, false if the event
+        should be fired.
+    dispatcher : callable(handler, event)
+        A callable for dispatching the handler, e.g. on a different
+        thread or on a GUI event loop. ``event`` is the object
+        created by the event factory.
     """
 
     def __init__(
             self, *, handler, target,
             event_factory, prevent_event, dispatcher):
-        """
-        Parameters
-        ----------
-        handler : callable(event)
-            The user's handler to receive the change event.
-            The event object is returned by the ``event_factory``.
-            If the handler is an instance method, then a weak reference is
-            created for the method. If the instance is garbage collected,
-            the notifier will be muted.
-        target : object
-            An object for defining the context of the notifier.
-            A weak reference is created for the target.
-            If the target is garbage collected, the notifier will be muted.
-            This target is typically an instance of ``HasTraits`` and will be
-            seen by the user as the "owner" of the change handler.
-            This is also used for distinguishing one notifier from another
-            notifier wrapping the same handler.
-        event_factory : callable(*args, **kwargs) -> object
-            A factory function for creating the event object to be sent to
-            the handler. The call signature must be compatible with the
-            call signature expected by the observable this notifier is used
-            with. e.g. for CTrait, the call signature will be
-            ``(object, name, old, new)``.
-        prevent_event : callable(event) -> boolean
-            A callable for controlling whether the user handler should be
-            invoked. It receives the event created by the event factory and
-            returns true if the event should be prevented, false if the event
-            should be fired.
-        dispatcher : callable(handler, event)
-            A callable for dispatching the handler, e.g. on a different
-            thread or on a GUI event loop. ``event`` is the object
-            created by the event factory.
-        """
+
         if not callable(handler):
             raise ValueError(
                 "handler must be a callable, got {!r}".format(handler))
