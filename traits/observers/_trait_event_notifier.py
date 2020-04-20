@@ -67,6 +67,11 @@ class TraitEventNotifier:
         A callable for dispatching the handler, e.g. on a different
         thread or on a GUI event loop. ``event`` is the object
         created by the event factory.
+
+    Raises
+    ------
+    ValueError
+        If the handler given is not a callable.
     """
 
     def __init__(
