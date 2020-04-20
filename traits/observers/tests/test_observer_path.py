@@ -12,13 +12,12 @@ import unittest
 from traits.observers._observer_graph import ObserverGraph
 
 
-def path_from_nodes(node, *nodes):
-    root = path = ObserverGraph(node=node)
-    for node in nodes:
-        next_path = ObserverGraph(node=node)
-        path.children.add(next_path)
-        path = next_path
-    return root
+def path_from_nodes(*nodes):
+    nodes = nodes[::-1]
+    graph = ObserverGraph(node=nodes[0])
+    for node in nodes[1:]:
+        graph = ObserverGraph(node=node, children=[graph])
+    return graph
 
 
 class TestObserverGraph(unittest.TestCase):
@@ -68,3 +67,29 @@ class TestObserverGraph(unittest.TestCase):
         )
         self.assertEqual(path1, path2)
         self.assertEqual(hash(path1), hash(path2))
+
+    def test_children_ordered(self):
+        child_graph = ObserverGraph(node=2)
+        graph = ObserverGraph(
+            node=1,
+            children=[
+                child_graph,
+                ObserverGraph(node=3),
+            ],
+        )
+        self.assertIs(graph.children[0], child_graph)
+
+    def test_children_unique(self):
+        child_graph = ObserverGraph(node=2)
+
+        with self.assertRaises(ValueError) as exception_cm:
+            ObserverGraph(
+                node=1,
+                children=[
+                    child_graph,
+                    ObserverGraph(node=2),
+                ],
+            )
+
+        self.assertEqual(
+            str(exception_cm.exception), "Not all children are unique.")

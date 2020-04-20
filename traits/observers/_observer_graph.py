@@ -51,13 +51,21 @@ class ObserverGraph:
         It must be a hashable object. In practice, this will be
         an instance that implements ``IObserver``.
     children : iterable of ObserverGraph, optional
-        Branches on this path.
+        Branches on this graph. All children must be unique.
+
+    Raises
+    ------
+    ValueError
+        If not all children are unique.
     """
 
     def __init__(self, *, node, children=None):
         self.node = node
 
-        self.children = set(children) if children is not None else set()
+        self.children = list(children) if children is not None else []
+
+        if len(set(self.children)) != len(self.children):
+            raise ValueError("Not all children are unique.")
 
     def __hash__(self):
         """ Return the hash of this ObserverGraph."""
@@ -67,10 +75,11 @@ class ObserverGraph:
 
     def __eq__(self, other):
         """ Return true if another object is an ObserverGraph with the
-        same content.
+        same content. The order of children is not taken into account
+        in the comparison.
         """
         return (
             type(self) is type(other)
             and self.node == other.node
-            and self.children == other.children
+            and set(self.children) == set(other.children)
         )
