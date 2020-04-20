@@ -205,6 +205,17 @@ class TestTraitEventNotifierEqual(unittest.TestCase):
             "do not compare equally."
         )
 
+    def test_equality_check_with_instance_methods(self):
+        # Methods are descriptors and need to be compared with care.
+        instance = DummyObservable()
+        target = mock.Mock()
+
+        notifier1 = create_notifier(handler=instance.handler, target=target)
+        notifier2 = create_notifier(handler=instance.handler, target=target)
+
+        self.assertTrue(notifier1.equals(notifier2))
+        self.assertTrue(notifier2.equals(notifier1))
+
     def test_equals_compared_to_different_type(self):
         notifier = create_notifier()
         self.assertFalse(notifier.equals(float))

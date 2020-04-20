@@ -198,7 +198,7 @@ class TraitEventNotifier:
         if type(other) is not type(self):
             return False
         return (
-            self.handler() is other.handler()
+            self.handler() == other.handler()
             and self.target() is other.target()
         )
 
