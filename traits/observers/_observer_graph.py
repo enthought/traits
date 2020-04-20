@@ -60,12 +60,12 @@ class ObserverGraph:
     """
 
     def __init__(self, *, node, children=None):
-        self.node = node
 
-        self.children = list(children) if children is not None else []
-
-        if len(set(self.children)) != len(self.children):
+        if children is not None and len(set(children)) != len(children):
             raise ValueError("Not all children are unique.")
+
+        self.node = node
+        self.children = list(children) if children is not None else []
 
     def __hash__(self):
         """ Return the hash of this ObserverGraph."""
