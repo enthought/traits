@@ -16,18 +16,18 @@ import sys
 
 
 class ObserverExceptionHandler:
-    """ State for an exception handler."""
+    """ State for an exception handler.
+
+    Parameters
+    ----------
+    handler : callable(event) or None
+        A callable to handle an event, in the context of
+        an exception. If None, the exceptions will be logged.
+    reraise_exceptions : boolean
+        Whether to reraise the exception.
+    """
 
     def __init__(self, handler, reraise_exceptions):
-        """
-        Parameters
-        ----------
-        handler : callable(event) or None
-            A callable to handle an event, in the context of
-            an exception. If None, the exceptions will be logged.
-        reraise_exceptions : boolean
-            Whether to reraise the exception.
-        """
         self.handler = handler if handler is not None else self._log_exception
         self.reraise_exceptions = reraise_exceptions
         self.logger = None
@@ -55,7 +55,13 @@ class ObserverExceptionHandler:
 
 
 class ObserverExceptionHandlerStack:
-    """ A stack of exception handlers."""
+    """ A stack of exception handlers.
+
+    Parameters
+    ----------
+    handlers : list of ObserverExceptionHandler
+        The last item is the current handler.
+    """
 
     def __init__(self):
         self.handlers = []
