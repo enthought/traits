@@ -760,6 +760,6 @@ releases and platforms.
 Traits consider handlers for the same change event to be independent of each
 other. Therefore, any uncaught exception from one change handler will not
 prevent other handlers to be called. In the above (bad) example, if
-``update_number`` happens to be called before ``update_orders`` and ``update_number``
-raises an exception, ``update_orders`` will still be called, producing
-unexpected results.
+``update_number`` happens to be called before ``update_orders`` and
+``update_number`` raises an exception, ``update_orders`` will still be called,
+producing unexpected results.
