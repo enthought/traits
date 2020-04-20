@@ -770,7 +770,6 @@ Don't do this::
         if len(new) == 0:
             raise ValueError("Name cannot be empty.")
 
-
 What to do instead depends on the use case. For the above use case, ``String``
 supports length checking::
 
