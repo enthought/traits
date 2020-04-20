@@ -130,6 +130,18 @@ class TestTraitEventNotifierCall(unittest.TestCase):
         # then
         handler.assert_not_called()
 
+    def test_init_check_handler_is_callable_early(self):
+        # Early sanity check to capture misuse
+
+        not_a_callable = None
+        with self.assertRaises(ValueError) as exception_cm:
+            create_notifier(handler=not_a_callable)
+
+        self.assertEqual(
+            str(exception_cm.exception),
+            "handler must be a callable, got {!r}".format(not_a_callable)
+        )
+
 
 class TestTraitEventNotifierException(unittest.TestCase):
     """ Test the default exception handling without pushing and

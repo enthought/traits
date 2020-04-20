@@ -73,6 +73,10 @@ class TraitEventNotifier:
             thread or on a GUI event loop. ``event`` is the object
             created by the event factory.
         """
+        if not callable(handler):
+            raise ValueError(
+                "handler must be a callable, got {!r}".format(handler))
+
         # This is such that the notifier does not prevent
         # the target from being garbage collected.
         self.target = weakref.ref(target)
