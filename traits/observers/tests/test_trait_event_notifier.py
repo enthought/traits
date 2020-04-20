@@ -16,6 +16,7 @@ from traits.observers._exception_handling import (
     pop_exception_handler,
     push_exception_handler,
 )
+from traits.observers._exceptions import NotifierNotFound
 from traits.observers._trait_event_notifier import TraitEventNotifier
 
 
@@ -336,11 +337,10 @@ class TestTraitEventNotifierAddRemove(unittest.TestCase):
         self.assertEqual(dummy.notifiers, [])
 
     def test_remove_from_error_if_not_found(self):
-        # We may need to relax this error later
         dummy = DummyObservable()
         notifier1 = create_notifier()
 
-        with self.assertRaises(ValueError) as e:
+        with self.assertRaises(NotifierNotFound) as e:
             notifier1.remove_from(dummy)
 
         self.assertEqual(str(e.exception), "Notifier not found.")

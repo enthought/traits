@@ -12,6 +12,7 @@ import types
 import weakref
 
 from traits.observers._exception_handling import handle_exception
+from traits.observers._exceptions import NotifierNotFound
 
 
 class TraitEventNotifier:
@@ -162,7 +163,7 @@ class TraitEventNotifier:
         ------
         RuntimeError
             If the reference count becomes negative unexpectedly.
-        ValueError
+        NotifierNotFound
             If the notifier is not found.
         """
         notifiers = observable._notifiers(True)
@@ -178,9 +179,7 @@ class TraitEventNotifier:
                     )
                 break
         else:
-            # We may have to relax this later when dealing with
-            # "old" default value that don't have any notifiers.
-            raise ValueError("Notifier not found.")
+            raise NotifierNotFound("Notifier not found.")
 
     def equals(self, other):
         """ Return true if the other notifier is equivalent to this one.
