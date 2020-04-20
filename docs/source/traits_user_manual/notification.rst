@@ -727,8 +727,9 @@ values can be queried from directly from the trait value, if needed).
 Dos and Don’ts
 --------------
 
-Do not assume handlers are called in a specific order
-`````````````````````````````````````````````````````
+Don't assume handlers are called in a specific order
+````````````````````````````````````````````````````
+
 Don't do this::
 
     @on_trait_change("name")
