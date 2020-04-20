@@ -14,23 +14,6 @@
 import logging
 import sys
 
-_trait_logger = logging.getLogger("traits")
-
-
-def _log_exception(event):
-    """ A handler that logs the exception with the given event.
-
-    Parameters
-    ----------
-    event : object
-        An event object emitted by the notification.
-    """
-    _trait_logger.exception(
-        "Exception occurred in traits notification handler "
-        "for event object: %r",
-        event,
-    )
-
 
 class ObserverExceptionHandler:
     """ State for an exception handler."""
@@ -39,14 +22,36 @@ class ObserverExceptionHandler:
         """
         Parameters
         ----------
-        handler : callable(event)
+        handler : callable(event) or None
             A callable to handle an event, in the context of
-            an exception.
+            an exception. If None, the exceptions will be logged.
         reraise_exceptions : boolean
             Whether to reraise the exception.
         """
-        self.handler = handler
+        self.handler = handler if handler is not None else self._log_exception
         self.reraise_exceptions = reraise_exceptions
+        self.logger = None
+
+    def _log_exception(self, event):
+        """ A handler that logs the exception with the given event.
+
+        Parameters
+        ----------
+        event : object
+            An event object emitted by the notification.
+        """
+        if self.logger is None:
+            self.logger = logging.getLogger("traits")
+            handler = logging.StreamHandler()
+            handler.setFormatter(logging.Formatter("%(message)s"))
+            self.logger.addHandler(handler)
+            self.logger.setLevel(logging.ERROR)
+
+        self.logger.exception(
+            "Exception occurred in traits notification handler "
+            "for event object: %r",
+            event,
+        )
 
 
 class ObserverExceptionHandlerStack:
@@ -56,15 +61,15 @@ class ObserverExceptionHandlerStack:
         self.handlers = []
 
     def push_exception_handler(
-            self, handler=_log_exception, reraise_exceptions=False):
+            self, handler=None, reraise_exceptions=False):
         """ Push a new exception handler into the stack. Making it the
         current exception handler.
 
         Parameters
         ----------
-        handler : callable(event)
+        handler : callable(event) or None
             A callable to handle an event, in the context of
-            an exception.
+            an exception. If None, the exceptions will be logged.
         reraise_exceptions : boolean
             Whether to reraise the exception.
         """
@@ -96,9 +101,8 @@ class ObserverExceptionHandlerStack:
         try:
             handler_state = self.handlers[-1]
         except IndexError:
-            # We will always handle the exceptions with logging
             handler_state = ObserverExceptionHandler(
-                handler=_log_exception,
+                handler=None,
                 reraise_exceptions=False,
             )
 

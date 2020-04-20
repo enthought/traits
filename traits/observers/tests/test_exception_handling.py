@@ -10,7 +10,9 @@
 """
 Test the push_exception_handler and pop_exception_handler for the observers
 """
+import io
 import unittest
+from unittest import mock
 
 from traits.observers._exception_handling import (
     ObserverExceptionHandlerStack,
@@ -22,13 +24,13 @@ class TestExceptionHandling(unittest.TestCase):
     def test_default_logging(self):
         stack = ObserverExceptionHandlerStack()
 
-        with self.assertLogs("traits", level="ERROR") as log_cm:
+        with mock.patch("sys.stderr", new_callable=io.StringIO) as stderr:
             try:
                 raise ZeroDivisionError()
             except Exception:
                 stack.handle_exception("Event")
 
-        content, = log_cm.output
+        content = stderr.getvalue()
         self.assertIn(
             "Exception occurred in traits notification handler for "
             "event object: {!r}".format("Event"),
@@ -43,7 +45,7 @@ class TestExceptionHandling(unittest.TestCase):
 
         stack.push_exception_handler(reraise_exceptions=True)
 
-        with self.assertLogs("traits", level="ERROR") as log_cm, \
+        with mock.patch("sys.stderr", new_callable=io.StringIO) as stderr, \
                 self.assertRaises(ZeroDivisionError):
 
             try:
@@ -51,7 +53,7 @@ class TestExceptionHandling(unittest.TestCase):
             except Exception:
                 stack.handle_exception("Event")
 
-        content, = log_cm.output
+        content = stderr.getvalue()
         self.assertIn("ZeroDivisionError", content)
 
     def test_push_exception_handler_collect_events(self):
@@ -80,7 +82,7 @@ class TestExceptionHandling(unittest.TestCase):
 
         # This should not raise as we fall back to the default
 
-        with self.assertLogs("traits", level="ERROR"):
+        with mock.patch("sys.stderr"):
             try:
                 raise ZeroDivisionError()
             except Exception:
