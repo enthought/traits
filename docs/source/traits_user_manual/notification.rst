@@ -757,9 +757,24 @@ Even if the change handlers appear to be called in a deterministic order,
 this would be due to implementation details that may not hold true across
 releases and platforms.
 
+Don't raise exception from a change handler
+```````````````````````````````````````````
+
+Don't do this::
+
+    name = String()
+
+    @on_trait_change("name")
+    def update_name(self, new):
+        if len(new) == 0:
+            raise ValueError("Name cannot be empty.")
+
+
+What to do instead depends on the use case. For the above use case, ``String``
+supports length checking::
+
+    name = String(minlen=1)
+
 Traits consider handlers for the same change event to be independent of each
-other. Therefore, any uncaught exception from one change handler will not
-prevent other handlers to be called. In the above (bad) example, if
-``update_number`` happens to be called before ``update_orders`` and
-``update_number`` raises an exception, ``update_orders`` will still be called,
-producing unexpected results.
+other. Therefore, any uncaught exception from one change handler will be captured
+and logged, so not to prevent other handlers to be called.
