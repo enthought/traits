@@ -12,7 +12,7 @@ import unittest
 from traits.observers._observer_graph import ObserverGraph
 
 
-def path_from_nodes(*nodes):
+def graph_from_nodes(*nodes):
     nodes = nodes[::-1]
     graph = ObserverGraph(node=nodes[0])
     for node in nodes[1:]:
@@ -24,49 +24,49 @@ class TestObserverGraph(unittest.TestCase):
     """ Test generic functions on ObserverGraph."""
 
     def test_equality(self):
-        path1 = path_from_nodes(1, 2, 3)
-        path2 = path_from_nodes(1, 2, 3)
-        self.assertEqual(path1, path2)
-        self.assertEqual(hash(path1), hash(path2))
+        graph1 = graph_from_nodes(1, 2, 3)
+        graph2 = graph_from_nodes(1, 2, 3)
+        self.assertEqual(graph1, graph2)
+        self.assertEqual(hash(graph1), hash(graph2))
 
     def test_equality_different_type(self):
-        path1 = path_from_nodes(1, 2, 3)
-        self.assertNotEqual(path1, 1)
+        graph1 = graph_from_nodes(1, 2, 3)
+        self.assertNotEqual(graph1, 1)
 
     def test_equality_different_length_children(self):
-        path1 = ObserverGraph(
+        graph1 = ObserverGraph(
             node=1,
             children=[
                 ObserverGraph(node=2),
                 ObserverGraph(node=3),
             ],
         )
-        path2 = ObserverGraph(
+        graph2 = ObserverGraph(
             node=1,
             children=[
                 ObserverGraph(node=2),
             ],
         )
-        self.assertNotEqual(path1, path2)
+        self.assertNotEqual(graph1, graph2)
 
     def test_equality_order_of_children(self):
         # The order of items in children does not matter
-        path1 = ObserverGraph(
+        graph1 = ObserverGraph(
             node=1,
             children=[
                 ObserverGraph(node=2),
                 ObserverGraph(node=3),
             ],
         )
-        path2 = ObserverGraph(
+        graph2 = ObserverGraph(
             node=1,
             children=[
                 ObserverGraph(node=3),
                 ObserverGraph(node=2),
             ],
         )
-        self.assertEqual(path1, path2)
-        self.assertEqual(hash(path1), hash(path2))
+        self.assertEqual(graph1, graph2)
+        self.assertEqual(hash(graph1), hash(graph2))
 
     def test_children_ordered(self):
         child_graph = ObserverGraph(node=2)

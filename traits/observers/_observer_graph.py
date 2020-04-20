@@ -13,7 +13,7 @@ class ObserverGraph:
     """ An ``ObserverGraph`` is an object for describing what traits are being
     observed on an instance of ``HasTraits``.
 
-    The most basic unit in a path is a node, which is a context specific
+    The most basic unit in a graph is a node, which is a context specific
     observer. For example, a node can be an observer specialized in
     changes on a named trait, an observer specialized in
     changes on a number of traits matching a certain criteria, an observer
