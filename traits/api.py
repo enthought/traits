@@ -184,6 +184,7 @@ from .has_traits import (  # noqa: F401
     SingletonHasStrictTraits,
     SingletonHasPrivateTraits,
     MetaHasTraits,
+    TraitsWarning,
     Vetoable,
     VetoableEvent,
     traits_super,

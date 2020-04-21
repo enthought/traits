@@ -124,6 +124,10 @@ DisallowedNamePrefixes = (
 
 # A custom warning issued by Traits
 class TraitsWarning(Warning):
+    """ A warning from Traits which could indicate that something
+    in the user code is using traits in a way that is was not
+    designed to be used.
+    """
     pass
 
 
