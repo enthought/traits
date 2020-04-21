@@ -43,9 +43,8 @@ The method overrides any default value specified in the trait definition. The
 initializer is called when:
 
 1. the attribute value is accessed the first time or
-2. an instance is constructed with a value different from the default, if there
-   is a change handler defined for the trait
-   (see :ref:`static-notification`).
+2. an instance is constructed with a specific value, if there is a change
+   handler defined for the trait (see :ref:`static-notification`).
 
 .. index:: get_default_value()
 
