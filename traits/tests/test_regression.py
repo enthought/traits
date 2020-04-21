@@ -22,7 +22,17 @@ from traits.has_traits import (
 from traits.testing.optional_dependencies import numpy, requires_numpy
 from traits.trait_errors import TraitError
 from traits.trait_type import TraitType
-from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
+from traits.trait_types import (
+    Bool,
+    DelegatesTo,
+    Dict,
+    Either,
+    Instance,
+    Int,
+    List,
+    Str,
+    Union,
+)
 
 if numpy is not None:
     from traits.trait_numeric import Array
@@ -289,3 +299,34 @@ class TestRegression(unittest.TestCase):
 
         with self.assertRaises(ZeroDivisionError):
             a.bar = "foo"
+
+
+class NestedContainerClass(HasTraits):
+    # Used in regression test for changes to nested containers
+    # e.g. enthought/traits#281
+    dict_of_list = Dict(Str, List(Str))
+
+    dict_of_union_none_or_list = Dict(Str, Union(List(), None))
+
+
+class TestRegressionNestedContainerEvent(unittest.TestCase):
+    """ Regression tests for enthought/traits#281
+    """
+
+    def test_modify_list_in_dict(self):
+        # Regression test for enthought/traits#281
+        instance = NestedContainerClass(dict_of_list={"name": []})
+
+        try:
+            instance.dict_of_list["name"].append("word")
+        except Exception:
+            self.fail("Mutating a nested list should not fail.")
+
+    def test_modify_list_in_dict_wrapped_in_either(self):
+        instance = NestedContainerClass(
+            dict_of_union_none_or_list={"name": []},
+        )
+        try:
+            instance.dict_of_union_none_or_list["name"].append("word")
+        except Exception:
+            self.fail("Mutating a nested list should not fail.")
