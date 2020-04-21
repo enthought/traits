@@ -397,7 +397,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
         A dictionary of class members.
     """
     # Enable name collision check for user defined classes.
-    check_name_collision = (False if class_dict["__module__"]
+    check_name_collision = (False if class_dict.get("__module__", "")
                             .startswith("traits.") else True)
 
     # Create the various class dictionaries, lists and objects needed to
