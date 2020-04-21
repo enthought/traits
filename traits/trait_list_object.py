@@ -52,6 +52,11 @@ class TraitListEvent(object):
             added = []
         self.added = added
 
+    def __repr__(self):
+        return "TraitListEvent(index={!r}, removed={!r}, added={!r})".format(
+            self.index, self.removed, self.added
+        )
+
 
 def _normalize_index(index, length):
     """ Normalize integer index to range 0 to len (inclusive). """
@@ -65,10 +70,18 @@ def _normalize_index(index, length):
 def _normalize_slice(index, length):
     """ Normalize slice start and stop to range 0 to len (inclusive). """
 
-    # Do not normalize if step is negative.
+    # Non-extended slice (step = 1): return only need the start index.
+    if index.step is None or index.step == 1:
+        if index.start is None:
+            return 0
+        else:
+            return _normalize_index(index.start, length)
+
+    # Extended slice with negative step: do not normalize.
     if index.step is not None and index.step < 0:
         return index
 
+    # Extended slice with positive step: normalize the start and stop.
     return slice(
         _normalize_index(0 if index.start is None else index.start, length),
         _normalize_index(length if index.stop is None else index.stop, length),
@@ -165,6 +178,11 @@ class TraitList(list):
         ----------
         key : integer or slice
             Index of the element(s) to be deleted.
+
+        Raises
+        ------
+        IndexError
+            If key is an integer index and is out of range.
         """
 
         if isinstance(key, slice):
@@ -200,7 +218,7 @@ class TraitList(list):
         added = [self.item_validator(item) for item in value]
         extended = super().__iadd__(added)
         if added:
-            self.notify(slice(original_length, len(self)), [], added)
+            self.notify(original_length, [], added)
         return extended
 
     def __imul__(self, value):
@@ -221,14 +239,13 @@ class TraitList(list):
             removed = self.copy()
             multiplied = super().__imul__(value)
             if removed:
-                self.notify(slice(0, len(removed)), removed, [])
+                self.notify(0, removed, [])
         else:
             original_length = len(self)
             multiplied = super().__imul__(value)
-            new_length = len(self)
-            if new_length > original_length:
-                index = slice(original_length, new_length)
-                self.notify(index, [], self[index])
+            added = self[original_length:]
+            if added:
+                self.notify(original_length, [], added)
         return multiplied
 
     def __setitem__(self, key, value):
@@ -290,7 +307,7 @@ class TraitList(list):
         removed = self.copy()
         super().clear()
         if removed:
-            self.notify(slice(0, len(removed)), removed, [])
+            self.notify(0, removed, [])
 
     def extend(self, iterable):
         """ Extend list by appending elements from the iterable.
@@ -305,7 +322,7 @@ class TraitList(list):
         added = [self.item_validator(item) for item in iterable]
         super().extend(added)
         if added:
-            self.notify(slice(original_length, len(self)), [], added)
+            self.notify(original_length, [], added)
 
     def insert(self, index, object):
         """ Insert object before index.
@@ -382,7 +399,8 @@ class TraitList(list):
         """ Reverse the items in the list in place. """
         removed = self.copy()
         super().reverse()
-        self.notify(slice(0, len(self)), removed, self.copy())
+        if removed:
+            self.notify(0, removed, self.copy())
 
     def sort(self, *, key=None, reverse=False):
         """ Sort the list in ascending order and return None.
@@ -405,7 +423,8 @@ class TraitList(list):
         """
         removed = self.copy()
         super().sort(key=key, reverse=reverse)
-        self.notify(slice(0, len(self)), removed, self.copy())
+        if removed:
+            self.notify(0, removed, self.copy())
 
     # -- pickle and copy support ----------------------------------------------
 
@@ -509,11 +528,6 @@ class TraitListObject(TraitList):
         if object is None:
             return
 
-        # bug-for-bug conversion of parameters to TraitListEvent
-        if isinstance(index, slice):
-            if index.step is None or index.step == 1:
-                index = index.start
-
         event = TraitListEvent(index, removed, added)
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
@@ -527,7 +541,13 @@ class TraitListObject(TraitList):
         ----------
         key : integer or slice
             Index of the element(s) to be deleted.
+
+        Raises
+        ------
+        IndexError
+            If key is an integer index and is out of range.
         """
+
         removed_count = len(self[key]) if isinstance(key, slice) else 1
         self._validate_length(len(self) - removed_count)
         super().__delitem__(key)

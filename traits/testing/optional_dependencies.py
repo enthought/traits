@@ -42,6 +42,9 @@ requires_cython = unittest.skipIf(cython is None, "Cython not available")
 numpy = optional_import("numpy")
 requires_numpy = unittest.skipIf(numpy is None, "NumPy not available")
 
+pyface = optional_import("pyface")
+requires_pyface = unittest.skipIf(pyface is None, "Pyface not available")
+
 sphinx = optional_import("sphinx")
 requires_sphinx = unittest.skipIf(sphinx is None, "Sphinx not available")
 
