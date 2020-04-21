@@ -115,29 +115,23 @@ extended_trait_pat = re.compile(r".*[ :\+\-,\.\*\?\[\]]")
 # Generic 'Any' trait:
 any_trait = Any().as_ctrait()
 
-# Classes where we don't check for name collisions.
-HasTraitsSubclasses = (
-    "HasTraits",
-    "HasStrictTraits",
-    "HasRequiredTraits",
-    "HasPrivateTraits",
-    "ABCMetaHasTraits",
-    "ABCHasTraits",
-    "ABCHasStrictTraits",
-    "SingletonHasTraits",
-    "SingletonHasStrictTraits",
-    "SingletonHasPrivateTraits",
-    "Vetoable",
-    "MetaInterface",
-    "Interface",
-    "ISerializable",
-    "traits_super"
+# Prefixes that are not allowed for user defined traits.
+DisallowedNamePrefixes = (
+    "trait",
+    "_trait"
 )
 
 
 # A custom warning issued by Traits
 class TraitsWarning(Warning):
     pass
+
+
+def _is_disallowed_prefix(name):
+    for prefix in DisallowedNamePrefixes:
+        if name.startswith(prefix):
+            return True
+    return False
 
 
 def _clone_trait(clone, metadata=None):
@@ -399,11 +393,8 @@ def update_traits_class_dict(class_name, bases, class_dict):
         A dictionary of class members.
     """
     # Enable name collision check for user defined classes.
-    check_name_collision = (True if class_name not in
-                            HasTraitsSubclasses else False)
-    if check_name_collision:
-        public_method_names = {meth for meth in HasTraits.__dict__.keys()
-                               if not meth.startswith("_")}
+    check_name_collision = (False if class_dict["__module__"]
+                            .startswith("traits.") else True)
 
     # Create the various class dictionaries, lists and objects needed to
     # hold trait and view information and definitions:
@@ -429,9 +420,9 @@ def update_traits_class_dict(class_name, bases, class_dict):
     for name, value in list(class_dict.items()):
 
         # Warn name collisions.
-        if check_name_collision and name in public_method_names:
-            warnings.warn("The attribute named '{}' of class {} overrides"
-                          " an internal method with the same name."
+        if check_name_collision and _is_disallowed_prefix(name):
+            warnings.warn("The attribute named '{}' of class {} uses a "
+                          "prefix that is discouraged. Consider renaming it."
                           .format(name, class_name), TraitsWarning, 3)
 
         value = check_trait(value)
@@ -2556,6 +2547,10 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             it is equivalent to passing the entire list of values to Trait().
 
         """
+        if _is_disallowed_prefix(name):
+            warnings.warn("The attribute named '{}' uses a prefix that is "
+                          "discouraged. Consider renaming it."
+                          .format(name), TraitsWarning, 3)
 
         # Make sure a trait argument was specified:
         if len(trait) == 0:
