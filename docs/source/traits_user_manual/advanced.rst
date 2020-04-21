@@ -31,16 +31,21 @@ Dynamic Initialization
 When you define trait attributes using predefined traits, the Trait() factory
 function or trait handlers, you typically specify their default values
 statically. You can also define a method that dynamically initializes a trait
-attribute the first time that the attribute value is accessed. To do this, you
-define a method on the same class as the trait attribute, with a name based on
-the name of the trait attribute:
+attribute. To do this, you define a method on the same class as the trait
+attribute, with a name based on the name of the trait attribute:
 
 .. index:: default value; method
 
 .. method:: _name_default()
 
 This method initializes the *name* trait attribute, returning its initial value.
-The method overrides any default value specified in the trait definition.
+The method overrides any default value specified in the trait definition. The
+initializer is called when:
+
+1. the attribute value is accessed the first time or
+2. an instance is constructed with a different value provided to the instance
+   constructor, if there is a change handler defined for the trait
+   (see :ref:`trait-notification`).
 
 .. index:: get_default_value()
 

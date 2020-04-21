@@ -1,4 +1,6 @@
 
+.. _trait-notification:
+
 ==================
 Trait Notification
 ==================
@@ -463,11 +465,6 @@ on_trait_change() to register the method as a notification handler. However,
 the two approaches differ in when the call is made. Specially-named handlers
 are registered at class construction time; decorated handlers are registered at
 instance creation time, prior to setting any object state.
-
-A consequence of this difference is that the @on_trait_change() decorator
-causes any default initializers for the traits it references to be executed at
-instance construction time. In the case of specially-named handlers, any
-default initializers are executed lazily.
 
 .. index:: notification; specially-named handlers
 
