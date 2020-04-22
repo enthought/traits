@@ -125,13 +125,10 @@ DisallowedNamePrefixes = (
 )
 
 
-def _disallowed_prefix(name):
-    """ Returns a prefix of name if the prefix is in
-    DisallowedNamePrefixes, else return None"""
-    for prefix in DisallowedNamePrefixes:
-        if name.startswith(prefix):
-            return prefix
-    return None
+def _is_disallowed_prefix(name):
+    """ Returns True if name has a prefix which is in DisallowedNamePrefixes
+    """
+    return name.startswith(DisallowedNamePrefixes)
 
 
 def _clone_trait(clone, metadata=None):
@@ -421,13 +418,12 @@ def update_traits_class_dict(class_name, bases, class_dict):
     for name, value in list(class_dict.items()):
 
         # Warn name collisions.
-        if check_name_collision:
-            prefix = _disallowed_prefix(name)
-            if prefix:
-                warnings.warn("The attribute named '{}' of class {} uses a "
-                              "prefix '{}' that is discouraged. Consider "
-                              "renaming it." .format(name, class_name, prefix),
-                              UserWarning, 3)
+        if check_name_collision and _is_disallowed_prefix(name):
+            warnings.warn("The attribute named '{}' of class {} uses one of "
+                          "the reserved prefixes: {}. Consider renaming it."
+                          .format(name, class_name,
+                                  ",".join(DisallowedNamePrefixes)),
+                          UserWarning, 3)
 
         value = check_trait(value)
         rc = isinstance(value, CTrait)
@@ -2551,11 +2547,11 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             it is equivalent to passing the entire list of values to Trait().
 
         """
-        prefix = _disallowed_prefix(name)
-        if prefix:
-            warnings.warn("The attribute named '{}' uses a prefix '{}' that is"
-                          " discouraged. Consider renaming it."
-                          .format(name, prefix), UserWarning, 3)
+        if _is_disallowed_prefix(name):
+            warnings.warn("The attribute named '{}' uses one of the reserved "
+                          "prefixes: {}. Consider renaming it."
+                          .format(name, ",".join(DisallowedNamePrefixes)),
+                          UserWarning, 3)
 
         # Make sure a trait argument was specified:
         if len(trait) == 0:
