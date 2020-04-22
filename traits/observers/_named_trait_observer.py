@@ -11,6 +11,7 @@
 from traits.observers._i_observer import IObserver
 
 
+@IObserver.register
 class NamedTraitObserver:
     """ Observer for observing changes on a named trait
     on an instance of HasTraits.
@@ -51,6 +52,3 @@ class NamedTraitObserver:
             and self.name == other.name
             and self.notify == other.notify
         )
-
-
-IObserver.register(NamedTraitObserver)
