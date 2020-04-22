@@ -456,18 +456,21 @@ not belong to the same object.
 Decorator Semantics
 :::::::::::::::::::
 
-
 The functionality provided by the @on_trait_change() decorator is identical to
 that of specially-named handlers, in that both result in a call to
 on_trait_change() to register the method as a notification handler. However,
 the two approaches differ in when the call is made. Specially-named handlers
 are registered at class construction time; decorated handlers are registered at
-instance creation time, prior to setting any object state.
+instance creation time.
 
-A consequence of this difference is that the @on_trait_change() decorator
-causes any default initializers for the traits it references to be executed at
-instance construction time. In the case of specially-named handlers, any
-default initializers are executed lazily.
+By default, decorated handlers are registered prior to setting the object
+state. When an instance is constructed with a trait value that is different
+from the default, that is considered a change and will fire the associated
+change handlers. The ``post_init`` argument in @on_trait_change can be used
+to delay registering the handler to after the state is set.
+
+.. literalinclude:: /../../examples/tutorials/doc_examples/examples/post_init_notification.py
+   :start-after: post_init_notification
 
 .. index:: notification; specially-named handlers
 
