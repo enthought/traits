@@ -38,12 +38,12 @@ class TestTraitWarning(TestCase):
 
                 UserDefinedClass3()
 
-            # Test invalid name using add_trait
-            class UserDefinedClass4(HasTraits):
-                valid_trait = Any()
+        # Test invalid name using add_trait
+        class UserDefinedClass4(HasTraits):
+            valid_trait = Any()
 
-            obj = UserDefinedClass4()
-            with self.assertWarns(UserWarning):
-                obj.add_trait("trait_invalid", Any())
-            with self.assertWarns(UserWarning):
-                obj.add_trait("_trait_invalid2", Any())
+        obj = UserDefinedClass4()
+        with self.assertWarns(UserWarning):
+            obj.add_trait("trait_invalid", Any())
+        with self.assertWarns(UserWarning):
+            obj.add_trait("_trait_invalid2", Any())
