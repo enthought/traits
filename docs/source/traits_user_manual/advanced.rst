@@ -44,7 +44,8 @@ initializer is called when:
 
 1. the attribute value is accessed the first time or
 2. an instance is constructed with a specific value, if there is a change
-   handler defined for the trait (see :ref:`static-notification`).
+   handler defined for the trait. This is needed so the default can be reported
+   as the old value (see :ref:`static-notification`).
 
 .. index:: get_default_value()
 
