@@ -93,8 +93,8 @@ class TraitSet(set):
 
             notifier(removed, added)
 
-        Where 'added' is a set containing new values that have been added.
-        And 'removed' is a set containing old values that have been removed.
+        where 'added' is a set containing new values that have been added
+        and 'removed' is a set containing old values that have been removed.
     """
 
     def __new__(cls, *args, **kwargs):
