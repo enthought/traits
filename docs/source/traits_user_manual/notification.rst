@@ -453,8 +453,8 @@ not belong to the same object.
 
 .. _decorator-semantics:
 
-Registration time
-:::::::::::::::::
+Decorator Semantics
+:::::::::::::::::::
 
 The functionality provided by the @on_trait_change() decorator is identical to
 that of specially-named handlers, in that both result in a call to
