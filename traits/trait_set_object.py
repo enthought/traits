@@ -172,6 +172,10 @@ class TraitSet(set):
         """
         old_set = self.copy()
 
+        # Validate each item in value, only if value is a set or frozenset.
+        # We do not want to convert any other iterable type to a set
+        # so that super().__ior__ raises the appropriate error message
+        # for all other iterables.
         if isinstance(value, (set, frozenset)):
             value = {self.item_validator(item)
                      for item in value}
@@ -224,13 +228,18 @@ class TraitSet(set):
 
         removed = set()
         added = set()
+
+        # Validate each item in value, only if value is a set or frozenset.
+        # We do not want to convert any other iterable type to a set
+        # so that super().__ixor__ raises the appropriate error message
+        # for all other iterables.
         if isinstance(value, (set, frozenset)):
             values = set(value)
             removed = self.intersection(values)
-            raw_result = values.difference(removed)
-            validated_result = {self.item_validator(item) for item in
-                                raw_result}
-            added = validated_result.difference(self)
+            raw_added = values.difference(removed)
+            validated_added = {self.item_validator(item) for item in
+                               raw_added}
+            added = validated_added.difference(self)
             value = added | removed
 
         retval = super().__ixor__(value)
