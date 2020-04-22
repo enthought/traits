@@ -8,33 +8,42 @@
 #
 # Thanks for using Enthought open source!
 
-import unittest
+from unittest import mock, TestCase
 
 from traits.api import Any, HasTraits
-from traits.has_traits import TraitsWarning
 
 
-class TestTraitWarning(unittest.TestCase):
+def mock_module_name(name):
+    return mock.patch(__name__ + ".__name__", name)
+
+
+class TestTraitWarning(TestCase):
 
     def test_invalid_trait_name_prefix(self):
-        with self.assertWarns(TraitsWarning):
-            class UserDefinedClass(HasTraits):
-                trait = "something"
+        with mock_module_name("usermodule"):
+            with self.assertWarns(UserWarning):
+                class UserDefinedClass(HasTraits):
+                    trait = "something"
+                UserDefinedClass()
 
-        with self.assertWarns(TraitsWarning):
-            class UserDefinedClass2(HasTraits):
-                _trait = "something"
+            with self.assertWarns(UserWarning):
+                class UserDefinedClass2(HasTraits):
+                    _trait = "something"
 
-        with self.assertWarns(TraitsWarning):
-            class UserDefinedClass3(HasTraits):
-                _trait_suffix = "something"
+                UserDefinedClass2()
 
-        # Test invalid name using add_trait
-        class UserDefinedClass4(HasTraits):
-            valid_trait = Any()
+            with self.assertWarns(UserWarning):
+                class UserDefinedClass3(HasTraits):
+                    _trait_suffix = "something"
 
-        obj = UserDefinedClass4()
-        with self.assertWarns(TraitsWarning):
-            obj.add_trait("trait_invalid", Any())
-        with self.assertWarns(TraitsWarning):
-            obj.add_trait("_trait_invalid2", Any())
+                UserDefinedClass3()
+
+            # Test invalid name using add_trait
+            class UserDefinedClass4(HasTraits):
+                valid_trait = Any()
+
+            obj = UserDefinedClass4()
+            with self.assertWarns(UserWarning):
+                obj.add_trait("trait_invalid", Any())
+            with self.assertWarns(UserWarning):
+                obj.add_trait("_trait_invalid2", Any())
