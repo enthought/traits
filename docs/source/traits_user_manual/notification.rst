@@ -464,10 +464,10 @@ are registered at class construction time; decorated handlers are registered at
 instance creation time.
 
 By default, decorated handlers are registered prior to setting the object
-states. When an instance is constructed with a trait value that is different
+state. When an instance is constructed with a trait value that is different
 from the default, that is considered a change and will fire the associated
 change handlers. The ``post_init`` argument in @on_trait_change can be used
-to delay registering the handler to after the states are set.
+to delay registering the handler to after the state is set.
 
 .. literalinclude:: /../../examples/tutorials/doc_examples/examples/post_init_notification.py
    :start-after: post_init_notification
