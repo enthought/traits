@@ -456,18 +456,21 @@ not belong to the same object.
 Decorator Semantics
 :::::::::::::::::::
 
-
 The functionality provided by the @on_trait_change() decorator is identical to
 that of specially-named handlers, in that both result in a call to
 on_trait_change() to register the method as a notification handler. However,
 the two approaches differ in when the call is made. Specially-named handlers
 are registered at class construction time; decorated handlers are registered at
-instance creation time, prior to setting any object state.
+instance creation time.
 
-A consequence of this difference is that the @on_trait_change() decorator
-causes any default initializers for the traits it references to be executed at
-instance construction time. In the case of specially-named handlers, any
-default initializers are executed lazily.
+By default, decorated handlers are registered prior to setting the object
+state. When an instance is constructed with a trait value that is different
+from the default, that is considered a change and will fire the associated
+change handlers. The ``post_init`` argument in @on_trait_change can be used
+to delay registering the handler to after the state is set.
+
+.. literalinclude:: /../../examples/tutorials/doc_examples/examples/post_init_notification.py
+   :start-after: post_init_notification
 
 .. index:: notification; specially-named handlers
 
@@ -719,3 +722,62 @@ steps other than 1, **index** holds the _slice_ that was changed.
 The TraitDictEvent has an additional **changed** attribute which holds the
 keys that were modified and the _old_ values that those keys held.  The new
 values can be queried from directly from the trait value, if needed).
+
+
+.. _on-trait-change-dos-n-donts:
+
+
+Dos and Don’ts
+--------------
+
+Don't assume handlers are called in a specific order
+````````````````````````````````````````````````````
+
+Don't do this::
+
+    @on_trait_change("name")
+    def update_number(self):
+        self.number += 1
+
+    @on_trait_change("name")
+    def update_orders(self):
+        if self.number > 5:
+          self.orders.clear()
+
+Do this instead::
+
+    @on_trait_change("name")
+    def update(self):
+        number = self.number + 1
+        self.number = number
+        if number > 5:
+            self.orders.clear()
+
+The first example is problematic because when ``name`` changes, calling
+``update_orders`` after ``update_number``  produces a result that is different
+from calling ``update_number`` after ``update_orders``.
+
+Even if the change handlers appear to be called in a deterministic order,
+this would be due to implementation details that may not hold true across
+releases and platforms.
+
+Don't raise exception from a change handler
+```````````````````````````````````````````
+
+Don't do this::
+
+    name = String()
+
+    @on_trait_change("name")
+    def update_name(self, new):
+        if len(new) == 0:
+            raise ValueError("Name cannot be empty.")
+
+What to do instead depends on the use case. For the above use case, ``String``
+supports length checking::
+
+    name = String(minlen=1)
+
+Traits consider handlers for the same change event to be independent of each
+other. Therefore, any uncaught exception from one change handler will be captured
+and logged, so not to prevent other handlers to be called.

@@ -61,6 +61,11 @@ class TraitDictEvent(object):
             removed = {}
         self.removed = removed
 
+    def __repr__(self):
+        return "TraitDictEvent(added={!r}, changed={!r}, removed={!r})".format(
+            self.added, self.changed, self.removed
+        )
+
 
 class TraitDictObject(dict):
     """ A subclass of dict that fires trait events when mutated.
