@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-# post_init_notification.py --- Example of dynamic notification
+# post_init_notification.py --- Example of static notification
 from traits.api import Float, HasTraits, on_trait_change, Str
 
 class Part(HasTraits):
