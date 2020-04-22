@@ -719,3 +719,62 @@ steps other than 1, **index** holds the _slice_ that was changed.
 The TraitDictEvent has an additional **changed** attribute which holds the
 keys that were modified and the _old_ values that those keys held.  The new
 values can be queried from directly from the trait value, if needed).
+
+
+.. _on-trait-change-dos-n-donts:
+
+
+Dos and Don’ts
+--------------
+
+Don't assume handlers are called in a specific order
+````````````````````````````````````````````````````
+
+Don't do this::
+
+    @on_trait_change("name")
+    def update_number(self):
+        self.number += 1
+
+    @on_trait_change("name")
+    def update_orders(self):
+        if self.number > 5:
+          self.orders.clear()
+
+Do this instead::
+
+    @on_trait_change("name")
+    def update(self):
+        number = self.number + 1
+        self.number = number
+        if number > 5:
+            self.orders.clear()
+
+The first example is problematic because when ``name`` changes, calling
+``update_orders`` after ``update_number``  produces a result that is different
+from calling ``update_number`` after ``update_orders``.
+
+Even if the change handlers appear to be called in a deterministic order,
+this would be due to implementation details that may not hold true across
+releases and platforms.
+
+Don't raise exception from a change handler
+```````````````````````````````````````````
+
+Don't do this::
+
+    name = String()
+
+    @on_trait_change("name")
+    def update_name(self, new):
+        if len(new) == 0:
+            raise ValueError("Name cannot be empty.")
+
+What to do instead depends on the use case. For the above use case, ``String``
+supports length checking::
+
+    name = String(minlen=1)
+
+Traits consider handlers for the same change event to be independent of each
+other. Therefore, any uncaught exception from one change handler will be captured
+and logged, so not to prevent other handlers to be called.
