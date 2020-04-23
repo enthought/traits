@@ -20,13 +20,16 @@ from traits.api import (
     CFloat,
     CInt,
     ComparisonMode,
+    Color,
     Delegate,
     Float,
+    Font,
     HasTraits,
     Instance,
     Int,
     List,
     Range,
+    RGBColor,
     Str,
     This,
     Trait,
@@ -1275,3 +1278,20 @@ class ComparisonModeTests(unittest.TestCase):
         self.assertEqual(len(events), 1)
         old_compare.bar = [4, 5, 6]
         self.assertEqual(len(events), 2)
+
+
+class TestDeprecatedTraits(unittest.TestCase):
+
+    def test_color_deprecated(self):
+        with self.assertWarnsRegex(DeprecationWarning, "'Color' in 'traits'"):
+            print("I register changes")
+            Color()
+
+    def test_rgb_color_deprecated(self):
+        with self.assertWarnsRegex(DeprecationWarning,
+                                   "'RGBColor' in 'traits'"):
+            RGBColor()
+
+    def test_font_deprecated(self):
+        with self.assertWarnsRegex(DeprecationWarning, "'Font' in 'traits'"):
+            Font()
