@@ -16,7 +16,7 @@ def add_or_remove_notifiers(
 
     Parameters
     ----------
-    object : IObservable
+    object : object
         An object to be observed.
     graph : ObserverGraph
         A graph describing what and how extended traits are being observed.
