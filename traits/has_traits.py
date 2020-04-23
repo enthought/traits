@@ -419,11 +419,14 @@ def update_traits_class_dict(class_name, bases, class_dict):
 
         # Warn name collisions.
         if check_name_collision and _is_disallowed_prefix(name):
-            warnings.warn("The attribute named '{}' of class {} uses one of "
-                          "the reserved prefixes: {}. Consider renaming it."
-                          .format(name, class_name,
-                                  ",".join(DisallowedNamePrefixes)),
-                          UserWarning, 3)
+            warnings.warn(
+                "The attribute named {!r} of class {} uses one of "
+                "the reserved prefixes: {}. Consider renaming it.".format(
+                    name, class_name,
+                    ", ".join(
+                        repr(prefix) for prefix in DisallowedNamePrefixes)
+                ),
+                UserWarning, 3)
 
         value = check_trait(value)
         rc = isinstance(value, CTrait)
@@ -2548,10 +2551,13 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         """
         if _is_disallowed_prefix(name):
-            warnings.warn("The attribute named '{}' uses one of the reserved "
-                          "prefixes: {}. Consider renaming it."
-                          .format(name, ",".join(DisallowedNamePrefixes)),
-                          UserWarning, 3)
+            warnings.warn(
+                "The attribute named {!r} uses one of the reserved "
+                "prefixes: {}. Consider renaming it.".format(
+                    name,
+                    ", ".join(repr(word) for word in DisallowedNamePrefixes)),
+                UserWarning, 3,
+            )
 
         # Make sure a trait argument was specified:
         if len(trait) == 0:
