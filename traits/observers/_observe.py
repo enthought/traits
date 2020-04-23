@@ -66,8 +66,8 @@ def add_or_remove_notifiers(
         for next_object in observer.iter_objects(object):
             add_or_remove_notifiers(
                 object=next_object,
-                handler=handler,
                 graph=child_graph,
+                handler=handler,
                 target=target,
                 dispatcher=dispatcher,
                 remove=remove,
@@ -76,8 +76,8 @@ def add_or_remove_notifiers(
     for extra_graph in observer.iter_extra_graphs(graph):
         add_or_remove_notifiers(
             object=object,
-            handler=handler,
             graph=extra_graph,
+            handler=handler,
             target=target,
             dispatcher=dispatcher,
             remove=remove,
