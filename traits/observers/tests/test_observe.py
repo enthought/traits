@@ -62,7 +62,7 @@ class DummyObserver:
         yield from self.next_objects
 
     def get_notifier(
-            self, observable, handler, target, dispatcher):
+            self, handler, target, dispatcher):
         return self.notifier
 
     def get_maintainer(

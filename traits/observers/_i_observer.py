@@ -91,9 +91,18 @@ class IObserver(abc.ABC):
         """
         raise NotImplementedError("iter_objects must be implemented.")
 
-    def get_notifier(self, observable, handler, target, dispatcher):
+    def get_notifier(self, handler, target, dispatcher):
         """ Return a notifier for calling the user handler with the change
         event. This is needed if ``notify`` is true.
+
+        Parameters
+        ----------
+        handler : callable
+            User handler.
+        target : object
+            Object seen by the user as the owner of the observer.
+        dispatcher : callable
+            Callable for dispatching the handler.
 
         Returns
         -------

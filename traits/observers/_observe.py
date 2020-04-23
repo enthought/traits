@@ -39,7 +39,6 @@ def add_or_remove_notifiers(
     for observable in observer.iter_observables(object):
         if observer.notify:
             notifier = observer.get_notifier(
-                observable=observable,
                 handler=handler,
                 target=target,
                 dispatcher=dispatcher,
