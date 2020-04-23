@@ -12,7 +12,7 @@ class INotifier(abc.ABC):
     """
 
     def __call__(self, *args, **kwargs):
-        """ Called by the observable.
+        """ Called by an observable.
         The signature is not restricted by the interface.
         """
         raise NotImplementedError("__call__ must be implemented.")
