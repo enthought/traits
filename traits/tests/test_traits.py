@@ -1089,10 +1089,9 @@ class test_list_value(test_base2):
         self.assertLastTraitListEventEqual(0, [6, 7], [4, 5])
         self.obj.alist[0:2:1] = [8, 9]
         self.assertLastTraitListEventEqual(0, [4, 5], [8, 9])
-        old_event = self.last_event
         self.obj.alist[0:2:1] = [8, 9]
-        # If no values changed, no new TraitListEvent will be generated.
-        self.assertIs(self.last_event, old_event)
+        # Even if no values change, a new TraitListEvent will be generated.
+        self.assertLastTraitListEventEqual(0, [8, 9], [8, 9])
         self.obj.alist[0:4:2] = [10, 11]
         self.assertLastTraitListEventEqual(
             slice(0, 4, 2), [8, 4], [10, 11]

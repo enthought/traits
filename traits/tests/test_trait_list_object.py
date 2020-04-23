@@ -259,9 +259,20 @@ class TestTraitList(unittest.TestCase):
 
         tl[3:] = []
         self.assertEqual(tl, [1, 2, 3])
-        self.assertIsNone(self.index)
-        self.assertIsNone(self.removed)
-        self.assertIsNone(self.added)
+        self.assertEqual(self.index, 3)
+        self.assertEqual(self.removed, [])
+        self.assertEqual(self.added, [])
+
+    def test_setitem_nochange_element(self):
+        tl = TraitList([1, 2, 3],
+                       item_validator=int_item_validator,
+                       notifiers=[self.notification_handler])
+
+        tl[0] = 1
+        self.assertEqual(tl, [1, 2, 3])
+        self.assertEqual(self.index, 0)
+        self.assertEqual(self.removed, [1])
+        self.assertEqual(self.added, [1])
 
     def test_setitem_iterable(self):
         tl = TraitList([1, 2, 3],
