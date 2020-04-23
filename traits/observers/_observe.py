@@ -25,10 +25,9 @@ def add_or_remove_notifiers(
         ``event`` is an object representing the change.
         Its type and content depends on the change.
     target : Any
-        Sets the context for the handler. In practice, it is
-        the HasTrait instance on which the observer graph is defined and
-        will be seen by users as the "owner" of the observer.
-        Strictly speaking, this object does not have to be an observable.
+        An object for defining the context of the user's handler notifier.
+        This is typically an instance of HasTraits seen by the user as the
+        "owner" of the observer.
     dispatcher : callable(callable, event)
         Callable for dispatching the user-defined handler, i.e. dispatching
         callback on a different thread.
