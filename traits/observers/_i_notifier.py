@@ -1,0 +1,42 @@
+
+import abc
+
+
+class INotifier(abc.ABC):
+    """ Interface for all notifiers.
+
+    An instance of notifier must be a callable, i.e. ``__call__`` must be
+    implemented and cannot be None. The signature of that callable should be
+    compatible with the observables the notifier will be given to. This
+    interface does not define what that signature should be.
+    """
+
+    def __call__(self, *args, **kwargs):
+        """ Called by the observable.
+        The signature is not restricted by the interface.
+        """
+        raise NotImplementedError("__call__ must be implemented.")
+
+    def add_to(self, observable):
+        """ Add this notifier to the observable.
+
+        Parameters
+        ----------
+        observable : IObservable
+        """
+        raise NotImplementedError("add_to must be implemented.")
+
+    def remove_from(self, observable):
+        """ Remove this notifier or a notifier equivalent to this one
+        from the observable.
+
+        Parameters
+        ----------
+        observable : IObservable
+
+        Raises
+        ------
+        NotifierNotFound
+            If the notifier cannot be found.
+        """
+        raise NotImplementedError("remove_from must be implemented.")
