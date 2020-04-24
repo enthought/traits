@@ -84,7 +84,7 @@ class TestTraitWarning(TestCase):
         try:
             with self.assertWarns(category) as cm:
                 yield
-        except AssertionError as e:
+        except AssertionError:
             # This may silence other, unexpected assertion errors.
             pass
         else:
