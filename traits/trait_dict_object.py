@@ -88,7 +88,7 @@ class TraitDict(dict):
     notifiers : list, optional
         A list of callables with the signature::
 
-            notifier(trait_dict, added, changed, removed)
+            notifier(trait_dict, removed, added, changed)
 
         Where:
         'removed' is a dict of key-values that are no longer in the dictionary.
@@ -108,7 +108,7 @@ class TraitDict(dict):
     notifiers : list
         A list of callables with the signature::
 
-            notifier(trait_dict, added, changed, removed)
+            notifier(trait_dict, removed, added, changed)
 
         Where:
         'removed' is a dict of key-values that are no longer in the dictionary.
@@ -139,7 +139,7 @@ class TraitDict(dict):
         if value is None:
             value = {}
 
-        items = value.items() if isinstance(value, dict) else value
+        items = value.items() if hasattr(value, 'keys') else value
         value = {self.key_validator(key): self.value_validator(value)
                  for key, value in items}
 
@@ -157,7 +157,7 @@ class TraitDict(dict):
         """
 
         for notifier in self.notifiers:
-            notifier(self, removed=removed, added=added, changed=changed)
+            notifier(self, removed, added, changed)
 
     # -- dict interface -------------------------------------------------------
 
@@ -227,7 +227,7 @@ class TraitDict(dict):
         added = {}
         changed = {}
 
-        items = other.items() if isinstance(other, dict) else other
+        items = other.items() if hasattr(other, 'keys') else other
 
         for key, value in items:
             validated_key = self.key_validator(key)
@@ -287,8 +287,10 @@ class TraitDict(dict):
         """
 
         should_notify = (value is Undefined or key in self)
-        pop_args = [key, value] if value is not Undefined else [key]
-        removed = super().pop(*pop_args)
+        if value is Undefined:
+            removed = super().pop(key)
+        else:
+            removed = super().pop(key, value)
 
         if should_notify:
             self.notify(
@@ -296,8 +298,7 @@ class TraitDict(dict):
                 added={},
                 changed={}
             )
-            return removed
-        return value
+        return removed
 
     def popitem(self):
         """ Remove and return some (key, value) pair as a tuple. Raise KeyError
@@ -424,11 +425,9 @@ class TraitDictObject(TraitDict):
         """
 
         trait = getattr(self, 'trait', None)
-        object_ref = getattr(self, 'object', None)
-        if object_ref is None or trait is None:
+        object = getattr(self, 'object', lambda: None)()
+        if trait is None or object is None:
             return key
-
-        object = object_ref()
 
         validate = trait.key_trait.handler.validate
         if validate is None:
@@ -460,11 +459,9 @@ class TraitDictObject(TraitDict):
         """
 
         trait = getattr(self, 'trait', None)
-        object_ref = getattr(self, 'object', None)
-        if object_ref is None or trait is None:
+        object = getattr(self, 'object', lambda: None)()
+        if trait is None or object is None:
             return value
-
-        object = object_ref()
 
         validate = trait.value_handler.validate
         if validate is None:
