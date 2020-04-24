@@ -348,7 +348,7 @@ class TraitList(list):
 
         super().__setitem__(key, value)
 
-        if added != removed:
+        if added or removed:
             reversed, normalized_key = _normalize_slice_or_index(
                 key, original_length)
             if reversed:

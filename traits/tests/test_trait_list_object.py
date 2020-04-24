@@ -252,7 +252,7 @@ class TestTraitList(unittest.TestCase):
             msg="Event contains non-integers for int-only list",
         )
 
-    def test_setitem_nochange(self):
+    def test_setitem_no_structural_change(self):
         tl = TraitList([1, 2, 3],
                        item_validator=int_item_validator,
                        notifiers=[self.notification_handler])
@@ -262,6 +262,39 @@ class TestTraitList(unittest.TestCase):
         self.assertIsNone(self.index)
         self.assertIsNone(self.removed)
         self.assertIsNone(self.added)
+
+    def test_setitem_no_item_change(self):
+        tl = TraitList([1, 2, 3],
+                       item_validator=int_item_validator,
+                       notifiers=[self.notification_handler])
+
+        tl[0] = 1
+        self.assertEqual(tl, [1, 2, 3])
+        self.assertEqual(self.index, 0)
+        self.assertEqual(self.removed, [1])
+        self.assertEqual(self.added, [1])
+
+    def test_setitem_no_removed(self):
+        tl = TraitList([1, 2, 3],
+                       item_validator=int_item_validator,
+                       notifiers=[self.notification_handler])
+
+        tl[3:] = [4, 5, 6]
+        self.assertEqual(tl, [1, 2, 3, 4, 5, 6])
+        self.assertEqual(self.index, 3)
+        self.assertEqual(self.removed, [])
+        self.assertEqual(self.added, [4, 5, 6])
+
+    def test_setitem_no_added(self):
+        tl = TraitList([1, 2, 3],
+                       item_validator=int_item_validator,
+                       notifiers=[self.notification_handler])
+
+        tl[1:2] = []
+        self.assertEqual(tl, [1, 3])
+        self.assertEqual(self.index, 1)
+        self.assertEqual(self.removed, [2])
+        self.assertEqual(self.added, [])
 
     def test_setitem_iterable(self):
         tl = TraitList([1, 2, 3],
