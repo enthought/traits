@@ -426,6 +426,9 @@ class TraitDictObject(TraitDict):
 
         trait = getattr(self, 'trait', None)
         object = getattr(self, 'object', lambda: None)()
+
+        # Deserialized TraitDictObjects without 'trait' and 'object' set
+        # will not validate its keys
         if trait is None or object is None:
             return key
 
@@ -460,6 +463,9 @@ class TraitDictObject(TraitDict):
 
         trait = getattr(self, 'trait', None)
         object = getattr(self, 'object', lambda: None)()
+
+        # Deserialized TraitDictObjects without 'trait' and 'object' set
+        # will not validate its values
         if trait is None or object is None:
             return value
 
