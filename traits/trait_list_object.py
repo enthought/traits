@@ -285,7 +285,8 @@ class TraitList(list):
                 pass
         super().__setitem__(key, value)
 
-        self.notify(normalized_index, removed, added)
+        if added or removed:
+            self.notify(normalized_index, removed, added)
 
     def append(self, object):
         """ Append object to the end of the list.
