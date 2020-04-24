@@ -1033,6 +1033,10 @@ class TestTraitList(unittest.TestCase):
         if isinstance(index, slice):
             start, stop, step = index.start, index.stop, index.step
 
+            self.assertIsNotNone(start)
+            self.assertIsNotNone(stop)
+            self.assertIsNotNone(step)
+
             # Check start and stop.
             self.assertTrue(
                 0 <= start < stop <= length,
