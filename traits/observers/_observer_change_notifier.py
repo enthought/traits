@@ -87,11 +87,7 @@ class ObserverChangeNotifier:
         observable : IObservable
         """
         notifiers = observable._notifiers(True)
-        for notifier in notifiers:
-            if self.equals(notifier):
-                break
-        else:
-            notifiers.append(self)
+        notifiers.append(self)
 
     def remove_from(self, observable):
         """ Remove a notifier equivalent to this one from the observable.
