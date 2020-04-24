@@ -79,7 +79,7 @@ class TestTraitWarning(TestCase):
 
     @contextlib.contextmanager
     def _assert_no_warnings(self, category):
-        # There could be an assertNoWarns from uniitest in the future
+        # There may be an assertNoWarns from unittest in the future
         # see https://bugs.python.org/issue39385
         try:
             with self.assertWarns(category) as cm:
