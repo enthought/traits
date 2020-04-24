@@ -1025,8 +1025,7 @@ class TestTraitList(unittest.TestCase):
         else:
             removed_slice = slice(index, index + len(removed))
             self.assertEqual(removed, reconstructed[removed_slice])
-            del reconstructed[removed_slice]
-            reconstructed[index:index] = added
+            reconstructed[removed_slice] = added
         self.assertEqual(reconstructed, trait_list)
 
     def check_index_normalized(self, index, length):
