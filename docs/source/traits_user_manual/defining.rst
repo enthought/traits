@@ -82,6 +82,10 @@ The Traits package allows creation of a wide variety of trait types, ranging
 from very simple to very sophisticated. The following section presents some of
 the simpler, more commonly used forms.
 
+.. warning:: Unless otherwise stated as safe to do so, avoid naming
+   attributes with the prefix 'trait' or '_trait'. This is to prevent
+   existing methods on ``HasTraits`` from being overshadowed.
+
 .. index:: predefined traits
 
 .. _predefined-traits:
