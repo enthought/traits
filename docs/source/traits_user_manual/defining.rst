@@ -83,8 +83,8 @@ from very simple to very sophisticated. The following section presents some of
 the simpler, more commonly used forms.
 
 .. warning:: Unless otherwise stated as safe to do so, avoid naming
-   attributes with the prefix 'trait' or '_trait'. This is to prevent
-   existing methods on ``HasTraits`` from being overshadowed.
+   attributes with the prefix 'trait' or '_trait'. This avoids overshadowing
+   existing methods on HasTraits.
 
 .. index:: predefined traits
 
