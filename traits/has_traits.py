@@ -426,7 +426,8 @@ def update_traits_class_dict(class_name, bases, class_dict):
                     ", ".join(
                         repr(prefix) for prefix in DisallowedNamePrefixes)
                 ),
-                UserWarning, 3)
+                UserWarning, stacklevel=3,
+            )
 
         value = check_trait(value)
         rc = isinstance(value, CTrait)
@@ -2556,7 +2557,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 "prefixes: {}. Consider renaming it.".format(
                     name,
                     ", ".join(repr(word) for word in DisallowedNamePrefixes)),
-                UserWarning, 3,
+                UserWarning, stacklevel=3,
             )
 
         # Make sure a trait argument was specified:
