@@ -961,8 +961,11 @@ class TestTraitList(unittest.TestCase):
         self.failureException
             If any aspect of the behaviour is found to be incorrect.
         """
-        # Reset notification values.
-        self.index = self.removed = self.added = None
+        # List to collection notifications in.
+        notifications = []
+
+        def notifier(trait_list, index, removed, added):
+            notifications.append((index, removed, added))
 
         # Apply the operation to both a plain Python list and a TraitList.
         python_list = original_list.copy()
@@ -974,8 +977,7 @@ class TestTraitList(unittest.TestCase):
         else:
             python_raised = False
 
-        trait_list = TraitList(
-            original_list, notifiers=[self.notification_handler])
+        trait_list = TraitList(original_list, notifiers=[notifier])
         try:
             trait_result = operation(trait_list)
         except Exception as e:
@@ -994,13 +996,15 @@ class TestTraitList(unittest.TestCase):
         self.assertEqual(python_result, trait_result)
 
         # Check the notification attributes.
-        index, removed, added = self.index, self.removed, self.added
-        if index is None:
+        if notifications == []:
             # No notifications. The new list should match the original,
             # and there's nothing more to check.
             self.assertEqual(trait_list, original_list)
             return
 
+        # Otherwise, expect exactly one notification.
+        self.assertEqual(len(notifications), 1)
+        index, removed, added = notifications[0]
         self.assertTrue(
             len(removed) > 0 or len(added) > 0,
             "a notification was generated, "
