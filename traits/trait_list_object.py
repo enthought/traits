@@ -114,7 +114,7 @@ class TraitList(list):
     notifiers : list of callable, optional
         A list of callables with the signature::
 
-            notifier(trait_list, index, removed, added)
+            notifier(index, removed, added)
 
         If this argument is not given, the list of notifiers is initially
         empty.
@@ -128,7 +128,7 @@ class TraitList(list):
     notifiers : list of callable
         A list of callables with the signature::
 
-            notifier(trait_list, index, removed, added)
+            notifier(index, removed, added)
     """
 
     def __new__(cls, *args, **kwargs):
@@ -153,7 +153,7 @@ class TraitList(list):
         This simply calls all notifiers provided by the class, if any.
         The notifiers are expected to have the signature::
 
-            notifier(trait_list, index, removed, added)
+            notifier(index, removed, added)
 
         Any return values are ignored.
 
@@ -167,7 +167,7 @@ class TraitList(list):
             The items being added to the list.
         """
         for notifier in self.notifiers:
-            notifier(self, index, removed, added)
+            notifier(index, removed, added)
 
     # -- list interface -------------------------------------------------------
 
@@ -503,14 +503,12 @@ class TraitListObject(TraitList):
             notifiers=[self.notifier],
         )
 
-    def notifier(self, trait_list, index, removed, added):
+    def notifier(self, index, removed, added):
         """ Converts and consolidates the parameters to a TraitListEvent and
         then fires the event.
 
         Parameters
         ----------
-        trait_list : list
-            The list
         index : int or slice
             Index or slice that was modified
         removed : list

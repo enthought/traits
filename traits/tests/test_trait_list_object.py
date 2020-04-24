@@ -100,10 +100,8 @@ class TestTraitList(unittest.TestCase):
         self.index = None
         self.added = None
         self.removed = None
-        self.trait_list = None
 
-    def notification_handler(self, trait_list, index, removed, added):
-        self.trait_list = trait_list
+    def notification_handler(self, index, removed, added):
         self.index = index
         self.removed = removed
         self.added = added
@@ -166,7 +164,6 @@ class TestTraitList(unittest.TestCase):
         tl[0] = 5
 
         self.assertListEqual(tl, [5, 2, 3])
-        self.assertIs(self.trait_list, tl)
         self.assertEqual(self.index, 0)
         self.assertEqual(self.removed, [1])
         self.assertEqual(self.added, [5])
