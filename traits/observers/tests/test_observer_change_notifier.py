@@ -24,6 +24,7 @@ def create_notifier(**kwargs):
         graph=mock.Mock(),
         observer_handler=mock.Mock(),
         event_factory=mock.Mock(),
+        prevent_event=lambda event: False,
         handler=mock.Mock(),
         target=mock.Mock(),
         dispatcher=mock.Mock(),
@@ -73,6 +74,34 @@ class TestObserverChangeNotifierCall(unittest.TestCase):
             target=target,
             dispatcher=dispatcher,
         )
+
+    def test_call_with_prevent_event(self):
+
+        observer_handler = mock.Mock()
+        handler = mock.Mock()
+        target = mock.Mock()
+
+        notifier = create_notifier(
+            observer_handler=observer_handler,
+            handler=handler,
+            target=target,
+            event_factory=lambda value: value,
+            prevent_event=lambda event: event != "Fire",
+        )
+
+        # when
+        notifier("Hello")
+
+        # then
+        # silenced by prevent_event
+        self.assertEqual(observer_handler.call_count, 0)
+
+        # when
+        notifier("Fire")
+
+        # then
+        # it got through
+        self.assertEqual(observer_handler.call_count, 1)
 
 
 class TestObserverChangeNotifierWeakrefTarget(unittest.TestCase):
@@ -496,7 +525,7 @@ class TestIntegrationHasTraits(unittest.TestCase):
         ])
 
         # this is for maintaining notifiers that belong to foo1
-        notifier_foo1 = ObserverChangeNotifier(
+        notifier_foo1 = create_notifier(
             observer_handler=observer_handler,
             event_factory=self.event_factory,
             graph=(),
@@ -507,9 +536,10 @@ class TestIntegrationHasTraits(unittest.TestCase):
         notifier_foo1.add_to(foo1._trait("bar", 2))
 
         # this is for maintaining notifiers that belong to foo2
-        notifier_foo2 = ObserverChangeNotifier(
+        notifier_foo2 = create_notifier(
             observer_handler=observer_handler,
             event_factory=self.event_factory,
+            prevent_event=lambda e: False,
             graph=(),
             handler=on_bar_value_changed,
             target=foo2,

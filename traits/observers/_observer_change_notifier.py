@@ -26,7 +26,7 @@ class ObserverChangeNotifier:
     """
 
     def __init__(
-            self, *, observer_handler, event_factory,
+            self, *, observer_handler, event_factory, prevent_event,
             graph, handler, target, dispatcher):
         """
 
@@ -44,6 +44,11 @@ class ObserverChangeNotifier:
             the call signature expected by the observable this notifier is
             used with. e.g. for CTrait, the call signature will be
             ``(object, name, old, new)``.
+        prevent_event : callable(event) -> boolean
+            A callable for controlling whether the observer_handler should be
+            invoked. It receives the event created by the event factory and
+            returns true if the event should be prevented, false if the event
+            should be fired.
         graph : ObserverGraph
             An object describing what traits are being observed on an instance
             of ``HasTraits``, e.g. observe mutations on a list referenced by
@@ -65,6 +70,7 @@ class ObserverChangeNotifier:
         """
         self.observer_handler = observer_handler
         self.event_factory = event_factory
+        self.prevent_event = prevent_event
         self.graph = graph
         self.target = weakref.ref(target)
         if isinstance(handler, types.MethodType):
@@ -126,6 +132,8 @@ class ObserverChangeNotifier:
             return
 
         event = self.event_factory(*args, **kwargs)
+        if self.prevent_event(event):
+            return
 
         self.observer_handler(
             event=event,
