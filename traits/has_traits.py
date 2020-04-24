@@ -124,11 +124,22 @@ DisallowedNamePrefixes = (
     "_trait"
 )
 
+# But whitelist these because they have been sanctioned to be okay
+# prior to the prefix check is put in-place
+WhitelistedNames = (
+    "trait_context",
+    "traits_view",
+    "traits_init",
+)
+
 
 def _is_disallowed_prefix(name):
     """ Returns True if name has a prefix which is in DisallowedNamePrefixes
     """
-    return name.startswith(DisallowedNamePrefixes)
+    return (
+        name not in WhitelistedNames
+        and name.startswith(DisallowedNamePrefixes)
+    )
 
 
 def _clone_trait(clone, metadata=None):

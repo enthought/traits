@@ -7,14 +7,21 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
+import contextlib
 
 from unittest import mock, TestCase
 
 from traits.api import Any, HasTraits
+from traits.has_traits import AbstractViewElement
 
 
 def mock_module_name(name):
     return mock.patch(__name__ + ".__name__", name)
+
+
+class DummyViewElement(AbstractViewElement):
+    """ Dummy view for testing purposes."""
+    pass
 
 
 class TestTraitWarning(TestCase):
@@ -47,3 +54,38 @@ class TestTraitWarning(TestCase):
             obj.add_trait("trait_invalid", Any())
         with self.assertWarns(UserWarning):
             obj.add_trait("_trait_invalid2", Any())
+
+    def test_traits_view_whitelisted(self):
+        with mock_module_name("usermodule"):
+            with self._assert_no_warnings(UserWarning):
+                class UserDefinedClass(HasTraits):
+                    traits_view = DummyViewElement()
+
+    def test_traits_init_whitelisted(self):
+        with mock_module_name("usermodule"):
+            with self._assert_no_warnings(UserWarning):
+                class UserDefinedClass(HasTraits):
+
+                    def traits_init(self):
+                        pass
+
+    def test_trait_context_whitelisted(self):
+        with mock_module_name("usermodule"):
+            with self._assert_no_warnings(UserWarning):
+                class UserDefinedClass(HasTraits):
+
+                    def trait_context(self):
+                        return {}
+
+    @contextlib.contextmanager
+    def _assert_no_warnings(self, category):
+        # There could be an assertNoWarns from uniitest in the future
+        # see https://bugs.python.org/issue39385
+        try:
+            with self.assertWarns(category) as cm:
+                yield
+        except AssertionError as e:
+            # This may silence other, unexpected assertion errors.
+            pass
+        else:
+            self.fail("Expected no warnings, got {!r}".format(cm.warning))
