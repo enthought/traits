@@ -83,7 +83,9 @@ def _normalize_slice_or_index(index, length):
     It should further satisfy start + step < stop. The stop will always be
     one larger than the last element referenced by the slice.
 
-    A normalized index will satisfy 0 <= index <= length.
+    For a plain integer index, it's assumed -length <= index < length on input
+    (but this is not explicitly checked). A normalized output index will
+    satisfy 0 <= index <= length.
 
     Parameters
     ----------
