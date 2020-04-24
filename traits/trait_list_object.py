@@ -255,12 +255,14 @@ class TraitList(list):
             If key is an integer index and is out of range.
         """
 
+        original_length = len(self)
         removed = _removed_items(self, key, return_for_invalid_index=None)
-        reversed, normalized_key = _normalize_slice_or_index(key, len(self))
 
         super().__delitem__(key)
 
         if removed:
+            reversed, normalized_key = _normalize_slice_or_index(
+                key, original_length)
             if reversed:
                 removed = removed[::-1]
             self.notify(normalized_key, removed, [])
@@ -333,6 +335,7 @@ class TraitList(list):
             doesn't match the number of removed elements.
         """
 
+        original_length = len(self)
         removed = _removed_items(self, key, return_for_invalid_index=None)
         if isinstance(key, slice):
             value = [self.item_validator(item) for item in value]
@@ -340,11 +343,12 @@ class TraitList(list):
         else:
             value = self.item_validator(value)
             added = [value]
-        reversed, normalized_key = _normalize_slice_or_index(key, len(self))
 
         super().__setitem__(key, value)
 
         if added != removed:
+            reversed, normalized_key = _normalize_slice_or_index(
+                key, original_length)
             if reversed:
                 added = added[::-1]
                 removed = removed[::-1]
