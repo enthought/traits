@@ -164,7 +164,7 @@ class ObserverChangeNotifier:
             and self.graph == other.graph
             # user handler is an input for observer_handler.
             # different user handlers should not interfere each other.
-            and self.handler() is other.handler()
+            and self.handler() == other.handler()
             # target is an input for observer_handler.
             # it goes together with the user's handler
             and self.target() is other.target()
