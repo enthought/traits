@@ -140,9 +140,9 @@ def _normalize_slice_or_index(index, length):
         return reversed, slice(start, stop, step)
 
 
-def _removed_items(items, index):
+def _removed_items(items, index, return_for_invalid_index):
     """
-    Return the list of removed items for a given list and index.
+    Return removed items for a given list and index, suppressing IndexError.
 
     This is used by the __setitem__ and __delitem__ implementations to
     get the "removed" part of the event.
@@ -157,6 +157,8 @@ def _removed_items(items, index):
         The list being operated on.
     index : integer or slice
         Index of items to remove or replace.
+    return_for_invalid_index : any
+        Object to return for an invalid index.
 
     Returns
     -------
@@ -169,7 +171,7 @@ def _removed_items(items, index):
         try:
             return [items[index]]
         except IndexError:
-            return []
+            return return_for_invalid_index
 
 
 # Default item validator for TraitList.
@@ -268,7 +270,7 @@ class TraitList(list):
             If key is an integer index and is out of range.
         """
 
-        removed = _removed_items(self, key)
+        removed = _removed_items(self, key, return_for_invalid_index=None)
         reversed, normalized_key = _normalize_slice_or_index(key, len(self))
 
         super().__delitem__(key)
@@ -346,7 +348,7 @@ class TraitList(list):
             doesn't match the number of removed elements.
         """
 
-        removed = _removed_items(self, key)
+        removed = _removed_items(self, key, return_for_invalid_index=None)
         if isinstance(key, slice):
             value = [self.item_validator(item) for item in value]
             added = value
