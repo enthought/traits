@@ -137,7 +137,7 @@ def _normalize_slice_or_index(index, length):
     if step == 1 or stop - start <= step:
         return reversed, start
     else:
-        return reversed, slice(start, max(start, stop), step)
+        return reversed, slice(start, stop, step)
 
 
 def _removed_items(items, index):
