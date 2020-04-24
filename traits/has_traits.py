@@ -928,6 +928,10 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     attribute is an explicit trait event defined on the HasTraits class.)
     The wildcard attribute *temp_lunch* and the dynamically-added trait
     attribute *favorite_sport* are not listed.
+
+    Subclass should avoid defining new traits and/or methods with names
+    starting with "trait" or "_trait" to avoid overshadowing existing methods,
+    unless it has been documented as being safe to do so.
     """
 
     # -- Trait Prefix Rules ---------------------------------------------------
