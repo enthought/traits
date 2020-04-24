@@ -58,21 +58,6 @@ class TraitListEvent(object):
         )
 
 
-def _normalize_index(index, length):
-    """ Normalize integer index to range 0 to len (inclusive).
-
-    These rules reflect the normalization that Python uses for the
-    ``insert`` and ``pop`` operations.
-
-    """
-
-    index = operator.index(index)
-    if index < 0:
-        return max(0, length + index)
-    else:
-        return min(length, index)
-
-
 def _normalize_slice_or_index(index, length):
     """ Normalize a slice or index for use with __delitem__ or __setitem__.
 
@@ -412,10 +397,14 @@ class TraitList(list):
             The object to insert.
         """
 
-        original_length = len(self)
+        # For insert, *any* index is valid!
+        if index < 0:
+            normalized_index = max(index + len(self), 0)
+        else:
+            normalized_index = min(index, len(self))
+        object = self.item_validator(object)
         super().insert(index, self.item_validator(object))
-        normalized_index = _normalize_index(index, original_length)
-        self.notify(normalized_index, [], [self[normalized_index]])
+        self.notify(normalized_index, [], [object])
 
     def pop(self, index=-1):
         """ Remove and return item at index (default last).
@@ -437,9 +426,10 @@ class TraitList(list):
             If list is empty or index is out of range.
         """
 
-        original_length = len(self)
+        # We don't need to worry about indices < -len(self) or >= len(self):
+        # for those, the pop call will raise anyway.
+        normalized_index = index + len(self) if index < 0 else index
         item = super().pop(index)
-        normalized_index = _normalize_index(index, original_length)
         self.notify(normalized_index, [item], [])
         return item
 
