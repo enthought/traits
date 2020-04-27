@@ -37,7 +37,7 @@ class TraitDictEvent(object):
         Updated keys and their previous values.
     """
 
-    def __init__(self, removed=None, added=None, changed=None):
+    def __init__(self, *, removed=None, added=None, changed=None):
         if removed is None:
             removed = {}
         self.removed = removed
@@ -502,7 +502,7 @@ class TraitDictObject(TraitDict):
         if object is None:
             return
 
-        event = TraitDictEvent(removed, added, changed)
+        event = TraitDictEvent(removed=removed, added=added, changed=changed)
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
 
