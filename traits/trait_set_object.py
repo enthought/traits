@@ -13,7 +13,7 @@ import copyreg
 from itertools import chain
 from weakref import ref
 
-from traits.trait_base import validate_everything
+from traits.trait_base import _validate_everything
 from traits.trait_errors import TraitError
 
 
@@ -91,7 +91,7 @@ class TraitSet(set):
 
     def __new__(cls, *args, **kwargs):
         self = super().__new__(cls)
-        self.item_validator = validate_everything
+        self.item_validator = _validate_everything
         self.notifiers = []
         return self
 

@@ -162,7 +162,7 @@ StringTypes = (str, int, float, complex)
 
 
 # Default item validator for TraitDict, TraitList and TraitSet.
-def validate_everything(item):
+def _validate_everything(item):
     """ Item validator which accepts any item and returns it unaltered.
     """
     return item

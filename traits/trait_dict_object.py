@@ -11,7 +11,7 @@
 import copy
 from weakref import ref
 
-from traits.trait_base import Undefined, validate_everything
+from traits.trait_base import Undefined, _validate_everything
 from traits.trait_errors import TraitError
 
 
@@ -107,8 +107,8 @@ class TraitDict(dict):
 
     def __new__(cls, *args, **kwargs):
         self = super().__new__(cls)
-        self.key_validator = validate_everything
-        self.value_validator = validate_everything
+        self.key_validator = _validate_everything
+        self.value_validator = _validate_everything
         self.notifiers = []
         return self
 

@@ -12,7 +12,7 @@ import copy
 import operator
 from weakref import ref
 
-from traits.trait_base import class_of, Undefined, validate_everything
+from traits.trait_base import class_of, Undefined, _validate_everything
 from traits.trait_errors import TraitError
 
 
@@ -198,7 +198,7 @@ class TraitList(list):
         # support unpickling: the 'append' or 'extend' methods may be
         # called during unpickling, triggering item validation.
         self = super().__new__(cls)
-        self.item_validator = validate_everything
+        self.item_validator = _validate_everything
         self.notifiers = []
         return self
 
