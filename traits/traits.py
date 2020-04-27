@@ -511,26 +511,6 @@ def Property(
 ):
     """ Returns a trait whose value is a Python property.
 
-    Parameters
-    ----------
-    fget : function
-        The "getter" function for the property.
-    fset : function
-        The "setter" function for the property.
-    fvalidate : function
-        The validation function for the property. The method should return the
-        value to set or raise TraitError if the new value is not valid.
-    force : bool
-        Indicates whether to use only the function definitions specified by
-        **fget** and **fset**, and not look elsewhere on the class.
-    handler : function
-        A trait handler function for the trait.
-    trait : Trait or value
-        A trait definition or a value that can be converted to a trait that
-        constrains the values of the property trait.
-
-    Description
-    -----------
     If no getter, setter or validate functions are specified (and **force** is
     not True), it is assumed that they are defined elsewhere on the class whose
     attribute this trait is assigned to. For example::
@@ -567,6 +547,24 @@ def Property(
 
     For details of the extended trait name syntax, refer to the
     on_trait_change() method of the HasTraits class.
+
+    Parameters
+    ----------
+    fget : function
+        The "getter" function for the property.
+    fset : function
+        The "setter" function for the property.
+    fvalidate : function
+        The validation function for the property. The method should return the
+        value to set or raise TraitError if the new value is not valid.
+    force : bool
+        Indicates whether to use only the function definitions specified by
+        **fget** and **fset**, and not look elsewhere on the class.
+    handler : function
+        A trait handler function for the trait.
+    trait : Trait or value
+        A trait definition or a value that can be converted to a trait that
+        constrains the values of the property trait.
     """
     metadata["type"] = "property"
 
