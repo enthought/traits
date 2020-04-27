@@ -11,117 +11,15 @@
 import unittest
 from unittest import mock
 
-from traits.observers._observe import add_or_remove_notifiers
+from traits.observers._exceptions import NotifierNotFound
 from traits.observers._observer_graph import ObserverGraph
-
-
-class DummyObservable:
-    """ A dummy implementation of IObservable for testing purposes."""
-
-    def __init__(self):
-        self.notifiers = []
-
-    def _notifiers(self, force_create):
-        return self.notifiers
-
-
-class DummyNotifier:
-    """ A dummy implementation of INotifier for testing purposes."""
-
-    def add_to(self, observable):
-        observable._notifiers(True).append(self)
-
-    def remove_from(self, observable):
-        observable._notifiers(True).remove(self)
-
-
-class DummyObserver:
-    """ A dummy implementation of IObserver for testing purposes.
-    """
-
-    def __init__(
-            self, notify, observables, next_objects,
-            notifier, maintainer, extra_graphs):
-        self.notify = notify
-        self.observables = observables
-        self.next_objects = next_objects
-        self.notifier = notifier
-        self.maintainer = maintainer
-        self.extra_graphs = extra_graphs
-
-    def __eq__(self, other):
-        return other is self
-
-    def __hash__(self):
-        return 1
-
-    def iter_observables(self, object):
-        yield from self.observables
-
-    def iter_objects(self, object):
-        yield from self.next_objects
-
-    def get_notifier(
-            self, handler, target, dispatcher):
-        return self.notifier
-
-    def get_maintainer(
-            self, graph, handler, target, dispatcher):
-        return self.maintainer
-
-    def iter_extra_graphs(self, graph):
-        yield from self.extra_graphs
-
-
-def create_observer(**kwargs):
-    """ Convenient function for creating a DummyObserver.
-
-    Parameters
-    ----------
-    notify : boolean
-        The mocked return value from IObserver.notify
-    observables : iterable of IObservable
-        The mocked yielded values from IObserver.iter_observables
-    next_objects : iterable of object
-        The mocked yielded values from IObserver.iter_objects
-    notifier : INotifier
-        The mocked returned value from IObserver.get_notifier
-    maintainer : INotifier
-        The mocked returned value from IObserver.get_maintainer
-    extra_graphs : iterable of ObserverGraph
-        The mocked yielded values from IObserver.iter_extra_graphs
-    """
-    values = dict(
-        notify=True,
-        observables=[],
-        next_objects=[],
-        notifier=DummyNotifier(),
-        maintainer=DummyNotifier(),
-        extra_graphs=[],
-    )
-    values.update(kwargs)
-    return DummyObserver(**values)
-
-
-def call_add_or_remove_notifiers(**kwargs):
-    """ Convenient function for calling add_or_remove_notifiers
-    with some default inputs.
-
-    Parameters
-    ----------
-    **kwargs
-        New values to use instead of the defaults
-    """
-    values = dict(
-        object=mock.Mock(),
-        graph=ObserverGraph(node=None),
-        handler=mock.Mock(),
-        target=mock.Mock(),
-        dispatcher=mock.Mock(),
-        remove=False,
-    )
-    values.update(kwargs)
-    add_or_remove_notifiers(**values)
+from traits.observers._testing import (
+    call_add_or_remove_notifiers,
+    create_graph,
+    DummyNotifier,
+    DummyObservable,
+    DummyObserver,
+)
 
 
 class TestObserveAddNotifier(unittest.TestCase):
@@ -130,7 +28,7 @@ class TestObserveAddNotifier(unittest.TestCase):
     def test_add_trait_notifiers(self):
         observable = DummyObservable()
         notifier = DummyNotifier()
-        observer = create_observer(
+        observer = DummyObserver(
             notify=True,
             observables=[observable],
             notifier=notifier,
@@ -151,7 +49,7 @@ class TestObserveAddNotifier(unittest.TestCase):
         # added.
         observable = DummyObservable()
         notifier = DummyNotifier()
-        observer = create_observer(
+        observer = DummyObserver(
             notify=False,
             observables=[observable],
             notifier=notifier,
@@ -171,7 +69,7 @@ class TestObserveAddNotifier(unittest.TestCase):
         # Test adding maintainers for children graphs
         observable = DummyObservable()
         maintainer = DummyNotifier()
-        root_observer = create_observer(
+        root_observer = DummyObserver(
             notify=False,
             observables=[observable],
             maintainer=maintainer,
@@ -180,8 +78,8 @@ class TestObserveAddNotifier(unittest.TestCase):
         graph = ObserverGraph(
             node=root_observer,
             children=[
-                ObserverGraph(node=create_observer()),
-                ObserverGraph(node=create_observer()),
+                ObserverGraph(node=DummyObserver()),
+                ObserverGraph(node=DummyObserver()),
             ],
         )
 
@@ -199,14 +97,14 @@ class TestObserveAddNotifier(unittest.TestCase):
     def test_add_notifiers_for_children_graphs(self):
         # Test adding notifiers using children graphs
         observable1 = DummyObservable()
-        child_observer1 = create_observer(
+        child_observer1 = DummyObserver(
             observables=[observable1],
         )
         observable2 = DummyObservable()
-        child_observer2 = create_observer(
+        child_observer2 = DummyObserver(
             observables=[observable2],
         )
-        parent_observer = create_observer(
+        parent_observer = DummyObserver(
             next_objects=[mock.Mock()],
         )
         graph = ObserverGraph(
@@ -246,14 +144,14 @@ class TestObserveAddNotifier(unittest.TestCase):
     def test_add_notifiers_for_extra_graph(self):
         observable = DummyObservable()
         extra_notifier = DummyNotifier()
-        extra_observer = create_observer(
+        extra_observer = DummyObserver(
             observables=[observable],
             notifier=extra_notifier,
         )
         extra_graph = ObserverGraph(
             node=extra_observer,
         )
-        observer = create_observer(
+        observer = DummyObserver(
             extra_graphs=[extra_graph],
         )
         graph = ObserverGraph(node=observer)
@@ -269,6 +167,41 @@ class TestObserveAddNotifier(unittest.TestCase):
             observable.notifiers, [extra_notifier]
         )
 
+    def test_add_notifier_atomic(self):
+
+        class BadNotifier(DummyNotifier):
+            def add_to(self, observable):
+                raise ZeroDivisionError()
+
+        observable = DummyObservable()
+        good_observer = DummyObserver(
+            notify=True,
+            observables=[observable],
+            next_objects=[mock.Mock()],
+            notifier=DummyNotifier(),
+            maintainer=DummyNotifier(),
+        )
+        bad_observer = DummyObserver(
+            notify=True,
+            observables=[observable],
+            notifier=BadNotifier(),
+            maintainer=DummyNotifier(),
+        )
+        graph = create_graph(
+            good_observer,
+            bad_observer,
+        )
+
+        # when
+        with self.assertRaises(ZeroDivisionError):
+            call_add_or_remove_notifiers(
+                object=mock.Mock(),
+                graph=graph,
+            )
+
+        # then
+        self.assertEqual(observable.notifiers, [])
+
 
 class TestObserveRemoveNotifier(unittest.TestCase):
     """ Test the remove action."""
@@ -278,7 +211,7 @@ class TestObserveRemoveNotifier(unittest.TestCase):
         notifier = DummyNotifier()
         observable.notifiers = [notifier]
 
-        observer = create_observer(
+        observer = DummyObserver(
             observables=[observable],
             notifier=notifier,
         )
@@ -300,7 +233,7 @@ class TestObserveRemoveNotifier(unittest.TestCase):
         notifier = DummyNotifier()
         observable.notifiers = [notifier]
 
-        observer = create_observer(
+        observer = DummyObserver(
             notify=False,
             observables=[observable],
             notifier=notifier,
@@ -326,7 +259,7 @@ class TestObserveRemoveNotifier(unittest.TestCase):
         maintainer = DummyNotifier()
         observable.notifiers = [maintainer, maintainer]
 
-        root_observer = create_observer(
+        root_observer = DummyObserver(
             notify=False,
             observables=[observable],
             maintainer=maintainer,
@@ -337,8 +270,8 @@ class TestObserveRemoveNotifier(unittest.TestCase):
         graph = ObserverGraph(
             node=root_observer,
             children=[
-                ObserverGraph(node=create_observer()),
-                ObserverGraph(node=create_observer()),
+                ObserverGraph(node=DummyObserver()),
+                ObserverGraph(node=DummyObserver()),
             ],
         )
 
@@ -354,17 +287,17 @@ class TestObserveRemoveNotifier(unittest.TestCase):
     def test_remove_notifiers_for_children_graphs(self):
         observable1 = DummyObservable()
         notifier1 = DummyNotifier()
-        child_observer1 = create_observer(
+        child_observer1 = DummyObserver(
             observables=[observable1],
             notifier=notifier1,
         )
         observable2 = DummyObservable()
         notifier2 = DummyNotifier()
-        child_observer2 = create_observer(
+        child_observer2 = DummyObserver(
             observables=[observable2],
             notifier=notifier2,
         )
-        parent_observer = create_observer(
+        parent_observer = DummyObserver(
             next_objects=[mock.Mock()],
         )
 
@@ -397,14 +330,14 @@ class TestObserveRemoveNotifier(unittest.TestCase):
     def test_remove_notifiers_for_extra_graph(self):
         observable = DummyObservable()
         extra_notifier = DummyNotifier()
-        extra_observer = create_observer(
+        extra_observer = DummyObserver(
             observables=[observable],
             notifier=extra_notifier,
         )
         extra_graph = ObserverGraph(
             node=extra_observer,
         )
-        observer = create_observer(
+        observer = DummyObserver(
             extra_graphs=[extra_graph],
         )
         graph = ObserverGraph(node=observer)
@@ -426,13 +359,71 @@ class TestObserveRemoveNotifier(unittest.TestCase):
         # be propagated.
 
         # DummyNotifier.remove_from raises if the notifier is not found.
-        observer = create_observer(
+        observer = DummyObserver(
             observables=[DummyObservable()],
             notifier=DummyNotifier(),
         )
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(NotifierNotFound):
             call_add_or_remove_notifiers(
                 graph=ObserverGraph(node=observer),
                 remove=True,
             )
+
+    def test_remove_atomic(self):
+        # Test atomicity
+        notifier = DummyNotifier()
+        maintainer = DummyNotifier()
+        observable1 = DummyObservable()
+        observable1.notifiers = [
+            notifier,
+            maintainer,
+        ]
+        old_observable1_notifiers = observable1.notifiers.copy()
+        observable2 = DummyObservable()
+        observable2.notifiers = [maintainer]
+        old_observable2_notifiers = observable2.notifiers.copy()
+        observable3 = DummyObservable()
+        observable3.notifiers = [
+            notifier,
+            maintainer,
+        ]
+        old_observable3_notifiers = observable3.notifiers.copy()
+
+        observer = DummyObserver(
+            notify=True,
+            observables=[
+                observable1,
+                observable2,
+                observable3,
+            ],
+            notifier=notifier,
+            maintainer=maintainer,
+        )
+        graph = create_graph(
+            observer,
+            DummyObserver(),  # Need a child graph to get maintainer in
+        )
+
+        # when
+        with self.assertRaises(NotifierNotFound):
+            call_add_or_remove_notifiers(
+                object=mock.Mock(),
+                graph=graph,
+                remove=True,
+            )
+
+        # then
+        # as if nothing has happened, the order might not be maintained though!
+        self.assertCountEqual(
+            observable1.notifiers,
+            old_observable1_notifiers,
+        )
+        self.assertCountEqual(
+            observable2.notifiers,
+            old_observable2_notifiers,
+        )
+        self.assertCountEqual(
+            observable3.notifiers,
+            old_observable3_notifiers,
+        )
