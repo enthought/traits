@@ -1065,18 +1065,6 @@ class test_list_value(test_base2):
     def test_trait_list_event(self):
         """ Record TraitListEvent behavior.
         """
-        # FIXME: The behavior of TraitListEvent is suboptimal with
-        # respect to extended slice changes. Previously, TraitListObject
-        # used to have a __setitem__() and a separate __setslice__() to
-        # handle non-extended slices. Extended slices were added to the
-        # underlying list object later. The __setitem__() code handled
-        # the new extended slices, but created the TraitListEvent in the
-        # same way it did for an integer index; namely it wrapped the
-        # value with a list. For simple slices, the `index` attribute of
-        # the TraitListEvent is an integer, and the `added` list is just
-        # the list of values added. For an extended slice, the `index`
-        # attribute is the slice object and the `added` list is the list
-        # of values wrapped in another list.
         self.obj.alist = [1, 2, 3, 4]
         self.obj.on_trait_change(self._record_trait_list_event, "alist_items")
         del self.obj.alist[0]
@@ -1089,13 +1077,16 @@ class test_list_value(test_base2):
         self.assertLastTraitListEventEqual(0, [6, 7], [4, 5])
         self.obj.alist[0:2:1] = [8, 9]
         self.assertLastTraitListEventEqual(0, [4, 5], [8, 9])
-        old_event = self.last_event
         self.obj.alist[0:2:1] = [8, 9]
-        # If no values changed, no new TraitListEvent will be generated.
+        # If list values stay the same, a new TraitListEvent will be generated.
+        self.assertLastTraitListEventEqual(0, [8, 9], [8, 9])
+        old_event = self.last_event
+        self.obj.alist[4:] = []
+        # If no structural change, NO new TraitListEvent will be generated.
         self.assertIs(self.last_event, old_event)
         self.obj.alist[0:4:2] = [10, 11]
         self.assertLastTraitListEventEqual(
-            slice(0, 4, 2), [8, 4], [10, 11]
+            slice(0, 3, 2), [8, 4], [10, 11]
         )
         del self.obj.alist[1:4:2]
         self.assertLastTraitListEventEqual(slice(1, 4, 2), [9, 5], [])

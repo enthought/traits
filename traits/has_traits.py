@@ -54,6 +54,9 @@ from .trait_errors import TraitError
 from .util.deprecated import deprecated
 from .trait_converters import check_trait, mapped_trait_for, trait_for
 
+# Store the name of the package
+_TRAITS_PACKAGE_NAME = __name__.split(".", 1)[0]
+
 #  Set CHECK_INTERFACES to one of the following values:
 #
 #  - 0: Does not check to see if classes implement their declared interfaces.
@@ -114,6 +117,18 @@ extended_trait_pat = re.compile(r".*[ :\+\-,\.\*\?\[\]]")
 
 # Generic 'Any' trait:
 any_trait = Any().as_ctrait()
+
+# Prefixes that are not allowed for user defined traits.
+DisallowedNamePrefixes = (
+    "trait",
+    "_trait"
+)
+
+
+def _is_disallowed_prefix(name):
+    """ Returns True if name has a prefix which is in DisallowedNamePrefixes
+    """
+    return name.startswith(DisallowedNamePrefixes)
 
 
 def _clone_trait(clone, metadata=None):
@@ -374,6 +389,11 @@ def update_traits_class_dict(class_name, bases, class_dict):
     class_dict : dict
         A dictionary of class members.
     """
+    # Enable name collision check for user defined classes.
+    module_name = class_dict.get("__module__", "")
+    package = module_name.split(".", 1)[0]
+    check_name_collision = (package != _TRAITS_PACKAGE_NAME)
+
     # Create the various class dictionaries, lists and objects needed to
     # hold trait and view information and definitions:
     base_traits = {}
@@ -396,6 +416,19 @@ def update_traits_class_dict(class_name, bases, class_dict):
     # Move all trait definitions from the class dictionary to the
     # appropriate trait class dictionaries:
     for name, value in list(class_dict.items()):
+
+        # Warn name collisions.
+        if check_name_collision and _is_disallowed_prefix(name):
+            warnings.warn(
+                "The attribute named {!r} of class {} uses one of "
+                "the reserved prefixes: {}. Consider renaming it.".format(
+                    name, class_name,
+                    ", ".join(
+                        repr(prefix) for prefix in DisallowedNamePrefixes)
+                ),
+                UserWarning, stacklevel=3,
+            )
+
         value = check_trait(value)
         rc = isinstance(value, CTrait)
 
@@ -2518,6 +2551,14 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             it is equivalent to passing the entire list of values to Trait().
 
         """
+        if _is_disallowed_prefix(name):
+            warnings.warn(
+                "The attribute named {!r} uses one of the reserved "
+                "prefixes: {}. Consider renaming it.".format(
+                    name,
+                    ", ".join(repr(word) for word in DisallowedNamePrefixes)),
+                UserWarning, stacklevel=3,
+            )
 
         # Make sure a trait argument was specified:
         if len(trait) == 0:
@@ -3391,14 +3432,3 @@ class ISerializable(Interface):
     """ A class that implemented ISerializable requires that all HasTraits
         objects saved as part of its state also implement ISerializable.
     """
-
-
-class traits_super(super):
-    def __getattribute__(self, name):
-        try:
-            return super(traits_super, self).__getattribute__(name)
-        except:
-            return self._noop
-
-    def _noop(self, *args, **kw):
-        pass

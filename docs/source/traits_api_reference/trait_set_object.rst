@@ -9,4 +9,6 @@ Classes
 
 .. autoclass:: TraitSetEvent
 
+.. autoclass:: TraitSet
+
 .. autoclass:: TraitSetObject
