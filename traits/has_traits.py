@@ -124,11 +124,22 @@ DisallowedNamePrefixes = (
     "_trait"
 )
 
+# But whitelist these because they have been sanctioned to be okay
+# prior to the prefix check is put in-place
+WhitelistedNames = (
+    "trait_context",
+    "traits_view",
+    "traits_init",
+)
+
 
 def _is_disallowed_prefix(name):
     """ Returns True if name has a prefix which is in DisallowedNamePrefixes
     """
-    return name.startswith(DisallowedNamePrefixes)
+    return (
+        name not in WhitelistedNames
+        and name.startswith(DisallowedNamePrefixes)
+    )
 
 
 def _clone_trait(clone, metadata=None):
@@ -917,6 +928,10 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     attribute is an explicit trait event defined on the HasTraits class.)
     The wildcard attribute *temp_lunch* and the dynamically-added trait
     attribute *favorite_sport* are not listed.
+
+    Subclass should avoid defining new traits and/or methods with names
+    starting with "trait" or "_trait" to avoid overshadowing existing methods,
+    unless it has been documented as being safe to do so.
     """
 
     # -- Trait Prefix Rules ---------------------------------------------------
