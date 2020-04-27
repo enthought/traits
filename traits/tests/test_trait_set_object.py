@@ -39,7 +39,8 @@ class TestTraitSet(unittest.TestCase):
         self.removed = None
         self.validator_args = None
 
-    def notification_handler(self, removed, added):
+    def notification_handler(self, trait_set, removed, added):
+        self.trait_set = trait_set
         self.removed = removed
         self.added = added
 
@@ -75,6 +76,13 @@ class TestTraitSet(unittest.TestCase):
         self.assertEqual(ts, {1, 2, 3})
         self.assertEqual(ts.item_validator, int_validator)
         self.assertEqual(ts.notifiers, [self.notification_handler])
+
+        ts.add(5)
+
+        self.assertEqual(ts, {1, 2, 3, 5})
+        self.assertIs(self.trait_set, ts)
+        self.assertEqual(self.removed, set())
+        self.assertEqual(self.added, {5})
 
     def test_add(self):
         ts = TraitSet({1, 2, 3}, item_validator=int_validator,
@@ -306,7 +314,7 @@ class TestTraitSet(unittest.TestCase):
         python_set = set([1, 2, 3])
         python_set.intersection_update([2], [3])
 
-        ts = TraitSet([1, 2, 3], notifiers=[notifier])
+        ts = TraitSet([1, 2, 3])
         ts.intersection_update([2], [3])
 
         self.assertEqual(ts, python_set)
