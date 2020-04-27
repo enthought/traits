@@ -49,8 +49,4 @@ if __name__ == "__main__":
     else:
         root_dir = os.getcwd()
 
-    try:
-        main(root_dir)
-    except NameError as e:
-        print(e)
-        print(usage)
+    main(root_dir)
