@@ -15,16 +15,17 @@ Classes
 
 .. autoclass:: ForwardProperty
 
-.. autoclass:: Color
-
-.. autoclass:: RGBColor
-
-.. autoclass:: Font
 
 Functions
 ---------
 
 .. autofunction:: Trait
+
+.. autofunction:: Color
+
+.. autofunction:: RGBColor
+
+.. autofunction:: Font
 
 
 Private Classes
