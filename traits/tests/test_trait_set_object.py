@@ -38,6 +38,7 @@ class TestTraitSet(unittest.TestCase):
         self.added = None
         self.removed = None
         self.validator_args = None
+        self.trait_set = None
 
     def notification_handler(self, trait_set, removed, added):
         self.trait_set = trait_set
