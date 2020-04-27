@@ -3224,8 +3224,8 @@ class HasRequiredTraits(HasStrictTraits):
     TraitError
         If a required trait is not passed as an argument.
 
-    Usage
-    -----
+    Examples
+    --------
     A class with required traits:
 
     >>> class RequiredTest(HasRequiredTraits):
