@@ -463,9 +463,6 @@ class TestObserverChangeNotifierRemove(unittest.TestCase):
 
     def test_remove_from_error_if_not_found(self):
         # Test remove_from raises if a notifier is not found.
-        # We may need to relax this later. Default values from
-        # trait may have no notifiers to be removed and will
-        # appear as the "old" value in a change event.
         instance = DummyClass()
         notifier = create_notifier()
         with self.assertRaises(NotifierNotFound):
