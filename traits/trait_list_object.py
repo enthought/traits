@@ -12,7 +12,7 @@ import copy
 import operator
 from weakref import ref
 
-from traits.trait_base import class_of, Undefined
+from traits.trait_base import class_of, Undefined, validate_everything
 from traits.trait_errors import TraitError
 
 
@@ -161,16 +161,6 @@ def _removed_items(items, index, return_for_invalid_index):
             return return_for_invalid_index
 
 
-# Default item validator for TraitList.
-
-
-def accept_anything(item):
-    """
-    List item validator which accepts any item and returns it unaltered.
-    """
-    return item
-
-
 class TraitList(list):
     """ A subclass of list that validates and notifies listeners of changes.
 
@@ -208,7 +198,7 @@ class TraitList(list):
         # support unpickling: the 'append' or 'extend' methods may be
         # called during unpickling, triggering item validation.
         self = super().__new__(cls)
-        self.item_validator = accept_anything
+        self.item_validator = validate_everything
         self.notifiers = []
         return self
 
