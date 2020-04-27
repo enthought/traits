@@ -1284,7 +1284,6 @@ class TestDeprecatedTraits(unittest.TestCase):
 
     def test_color_deprecated(self):
         with self.assertWarnsRegex(DeprecationWarning, "'Color' in 'traits'"):
-            print("I register changes")
             Color()
 
     def test_rgb_color_deprecated(self):
