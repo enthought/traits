@@ -34,7 +34,7 @@ class TraitSetEvent(object):
         New values added to the set.
     """
 
-    def __init__(self, removed=None, added=None):
+    def __init__(self, *, removed=None, added=None):
 
         if removed is None:
             removed = set()
@@ -529,7 +529,7 @@ class TraitSetObject(TraitSet):
         if object is None:
             return
 
-        event = TraitSetEvent(removed, added)
+        event = TraitSetEvent(removed=removed, added=added)
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
 
