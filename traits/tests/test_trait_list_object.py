@@ -15,9 +15,9 @@ import unittest.mock
 
 from traits.api import HasTraits, Int, List
 from traits.testing.optional_dependencies import numpy, requires_numpy
+from traits.trait_base import validate_everything
 from traits.trait_errors import TraitError
 from traits.trait_list_object import (
-    accept_anything,
     TraitList,
     TraitListEvent,
     TraitListObject,
@@ -112,28 +112,28 @@ class TestTraitList(unittest.TestCase):
         tl = TraitList([1, 2, 3])
 
         self.assertListEqual(tl, [1, 2, 3])
-        self.assertIs(tl.item_validator, accept_anything)
+        self.assertIs(tl.item_validator, validate_everything)
         self.assertEqual(tl.notifiers, [])
 
     def test_init_no_value(self):
         tl = TraitList()
 
         self.assertEqual(tl, [])
-        self.assertIs(tl.item_validator, accept_anything)
+        self.assertIs(tl.item_validator, validate_everything)
         self.assertEqual(tl.notifiers, [])
 
     def test_init_iterable(self):
         tl = TraitList("abcde")
 
         self.assertListEqual(tl, ['a', 'b', 'c', 'd', 'e'])
-        self.assertIs(tl.item_validator, accept_anything)
+        self.assertIs(tl.item_validator, validate_everything)
         self.assertEqual(tl.notifiers, [])
 
     def test_init_iterable_without_length(self):
         tl = TraitList(x**2 for x in range(5))
 
         self.assertEqual(tl, [0, 1, 4, 9, 16])
-        self.assertIs(tl.item_validator, accept_anything)
+        self.assertIs(tl.item_validator, validate_everything)
         self.assertEqual(tl.notifiers, [])
 
     def test_init_validates(self):
@@ -160,7 +160,7 @@ class TestTraitList(unittest.TestCase):
         tl = TraitList([1, 2, 3], notifiers=[self.notification_handler])
 
         self.assertListEqual(tl, [1, 2, 3])
-        self.assertIs(tl.item_validator, accept_anything)
+        self.assertIs(tl.item_validator, validate_everything)
         self.assertEqual(tl.notifiers, [self.notification_handler])
 
         tl[0] = 5
