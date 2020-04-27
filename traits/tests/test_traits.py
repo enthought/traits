@@ -41,6 +41,7 @@ from traits.api import (
     pop_exception_handler,
     push_exception_handler,
 )
+from traits.testing.optional_dependencies import requires_traitsui
 
 #  Base unit test classes:
 
@@ -1271,6 +1272,7 @@ class ComparisonModeTests(unittest.TestCase):
         self.assertEqual(len(events), 2)
 
 
+@requires_traitsui
 class TestDeprecatedTraits(unittest.TestCase):
 
     def test_color_deprecated(self):
