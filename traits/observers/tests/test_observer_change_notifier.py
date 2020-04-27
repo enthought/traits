@@ -13,6 +13,7 @@ from unittest import mock
 import weakref
 
 from traits.api import HasTraits, Instance, Int
+from traits.observers._exceptions import NotifierNotFound
 from traits.observers._observer_change_notifier import ObserverChangeNotifier
 
 
@@ -467,7 +468,7 @@ class TestObserverChangeNotifierRemove(unittest.TestCase):
         # appear as the "old" value in a change event.
         instance = DummyClass()
         notifier = create_notifier()
-        with self.assertRaises(ValueError):
+        with self.assertRaises(NotifierNotFound):
             notifier.remove_from(instance)
 
     def test_remove_from_recognize_equivalent_notifier(self):

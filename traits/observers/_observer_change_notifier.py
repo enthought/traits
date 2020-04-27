@@ -11,6 +11,8 @@ from functools import partial
 import types
 import weakref
 
+from traits.observers._exceptions import NotifierNotFound
+
 
 class ObserverChangeNotifier:
     """ Wrapper for maintaining notifiers in an ObserverGraph
@@ -98,7 +100,7 @@ class ObserverChangeNotifier:
 
         Raises
         ------
-        ValueError
+        NotifierNotFound
             If the notifier cannot be found.
         """
         notifiers = observable._notifiers(True)
@@ -107,7 +109,7 @@ class ObserverChangeNotifier:
                 notifiers.remove(notifier)
                 break
         else:
-            raise ValueError("Notifier not found.")
+            raise NotifierNotFound("Notifier not found.")
 
     def __call__(self, *args, **kwargs):
         """ Called by the observable this notifier is attached to.
