@@ -57,6 +57,11 @@ class BaseTraitHandler(object):
     def error(self, object, name, value):
         """Raises a TraitError exception.
 
+        This method is called by the validate() method when an assigned value
+        is not valid. Raising a TraitError exception either notifies the user
+        of the problem, or, in the case of compound traits, provides a chance
+        for another trait handler to handle to validate the value.
+
         Parameters
         ----------
         object : object
@@ -65,13 +70,6 @@ class BaseTraitHandler(object):
             The name of the attribute being assigned.
         value : object
             The proposed new value for the attribute.
-
-        Description
-        -----------
-        This method is called by the validate() method when an assigned value
-        is not valid. Raising a TraitError exception either notifies the user
-        of the problem, or, in the case of compound traits, provides a chance
-        for another trait handler to handle to validate the value.
         """
         raise TraitError(
             object, name, self.full_info(object, name, value), value
@@ -81,17 +79,6 @@ class BaseTraitHandler(object):
         """Returns a string describing the type of value accepted by the
         trait handler.
 
-        Parameters
-        ----------
-        object : object
-            The object whose attribute is being assigned.
-        name : str
-            The name of the attribute being assigned.
-        value :
-            The proposed new value for the attribute.
-
-        Description
-        -----------
         The string should be a phrase describing the type defined by the
         TraitHandler subclass, rather than a complete sentence. For example,
         use the phrase, "a square sprocket" instead of the sentence, "The value
@@ -104,6 +91,15 @@ class BaseTraitHandler(object):
         Note that the result can include information specific to the particular
         trait handler instance. If the full_info() method is not overridden,
         the default method returns the value of calling the info() method.
+
+        Parameters
+        ----------
+        object : object
+            The object whose attribute is being assigned.
+        name : str
+            The name of the attribute being assigned.
+        value :
+            The proposed new value for the attribute.
         """
         return self.info()
 

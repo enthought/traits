@@ -13,6 +13,7 @@ import copyreg
 from itertools import chain
 from weakref import ref
 
+from traits.trait_base import _validate_everything
 from traits.trait_errors import TraitError
 
 
@@ -34,7 +35,7 @@ class TraitSetEvent(object):
         New values added to the set.
     """
 
-    def __init__(self, removed=None, added=None):
+    def __init__(self, *, removed=None, added=None):
 
         if removed is None:
             removed = set()
@@ -48,15 +49,6 @@ class TraitSetEvent(object):
         return "TraitSetEvent(removed={!r}, added={!r})".format(
             self.removed, self.added
         )
-
-
-# Default item validator for TraitSet.
-
-def accept_anything(item):
-    """
-    Item validator which accepts any item and returns it unaltered.
-    """
-    return item
 
 
 class TraitSet(set):
@@ -74,7 +66,7 @@ class TraitSet(set):
     notifiers : list of callable, optional
         A list of callables with the signature::
 
-            notifier(removed, added)
+            notifier(trait_set, removed, added)
 
         Where 'added' is a set containing new values that have been added.
         And 'removed' is a set containing old values that have been removed.
@@ -91,7 +83,7 @@ class TraitSet(set):
     notifiers : list of callable
         A list of callables with the signature::
 
-            notifier(removed, added)
+            notifier(trait_set, removed, added)
 
         where 'added' is a set containing new values that have been added
         and 'removed' is a set containing old values that have been removed.
@@ -99,7 +91,7 @@ class TraitSet(set):
 
     def __new__(cls, *args, **kwargs):
         self = super().__new__(cls)
-        self.item_validator = accept_anything
+        self.item_validator = _validate_everything
         self.notifiers = []
         return self
 
@@ -116,7 +108,7 @@ class TraitSet(set):
         This simply calls all notifiers provided by the class, if any.
         The notifiers are expected to have the signature::
 
-            notifier(removed, added)
+            notifier(trait_set, removed, added)
 
         Any return values are ignored. Any exceptions raised are not
         handled. Notifiers are therefore expected not to raise any
@@ -130,7 +122,7 @@ class TraitSet(set):
             The new items that have been added to the set.
         """
         for notifier in self.notifiers:
-            notifier(removed, added)
+            notifier(self, removed, added)
 
     # -- set interface -------------------------------------------------------
 
@@ -510,12 +502,14 @@ class TraitSetObject(TraitSet):
             excp.set_prefix("Each element of the")
             raise excp
 
-    def notifier(self, removed, added):
+    def notifier(self, trait_set, removed, added):
         """ Converts and consolidates the parameters to a TraitSetEvent and
         then fires the event.
 
         Parameters
         ----------
+        trait_set : set
+            The complete set
         removed : set
             Set of values that were removed.
         added : set
@@ -529,7 +523,7 @@ class TraitSetObject(TraitSet):
         if object is None:
             return
 
-        event = TraitSetEvent(removed, added)
+        event = TraitSetEvent(removed=removed, added=added)
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
 
