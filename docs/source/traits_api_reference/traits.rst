@@ -11,8 +11,6 @@ Classes
 
 .. autoclass:: Default
 
-.. autoclass:: Property
-
 .. autoclass:: ForwardProperty
 
 
@@ -20,6 +18,8 @@ Functions
 ---------
 
 .. autofunction:: Trait
+
+.. autofunction:: Property
 
 .. autofunction:: Color
 
