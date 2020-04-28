@@ -2055,20 +2055,23 @@ class BaseEnum(TraitType):
         from traitsui.api import EnumEditor
 
         if self.name is None:
-            values = self
+            values = self.values
             name = ""
         else:
             values = None
             name = self.name
 
-        return EnumEditor(
-            values=values,
+        editor = EnumEditor(
             name=name,
             cols=self.cols or 3,
             evaluate=self.evaluate,
             format_func=self.format_func,
             mode=self.mode if self.mode else "radio",
         )
+        # Workaround enthought/traitsui#782
+        if values is not None:
+            editor.values = values
+        return editor
 
     def _get(self, object, name, trait):
         """ Returns the current value of a dynamic enum trait.
