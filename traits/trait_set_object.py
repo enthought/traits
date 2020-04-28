@@ -66,7 +66,7 @@ class TraitSet(set):
     notifiers : list of callable, optional
         A list of callables with the signature::
 
-            notifier(removed, added)
+            notifier(trait_set, removed, added)
 
         Where 'added' is a set containing new values that have been added.
         And 'removed' is a set containing old values that have been removed.
@@ -83,7 +83,7 @@ class TraitSet(set):
     notifiers : list of callable
         A list of callables with the signature::
 
-            notifier(removed, added)
+            notifier(trait_set, removed, added)
 
         where 'added' is a set containing new values that have been added
         and 'removed' is a set containing old values that have been removed.
@@ -108,7 +108,7 @@ class TraitSet(set):
         This simply calls all notifiers provided by the class, if any.
         The notifiers are expected to have the signature::
 
-            notifier(removed, added)
+            notifier(trait_set, removed, added)
 
         Any return values are ignored. Any exceptions raised are not
         handled. Notifiers are therefore expected not to raise any
@@ -122,7 +122,7 @@ class TraitSet(set):
             The new items that have been added to the set.
         """
         for notifier in self.notifiers:
-            notifier(removed, added)
+            notifier(self, removed, added)
 
     # -- set interface -------------------------------------------------------
 
@@ -502,12 +502,14 @@ class TraitSetObject(TraitSet):
             excp.set_prefix("Each element of the")
             raise excp
 
-    def notifier(self, removed, added):
+    def notifier(self, trait_set, removed, added):
         """ Converts and consolidates the parameters to a TraitSetEvent and
         then fires the event.
 
         Parameters
         ----------
+        trait_set : set
+            The complete set
         removed : set
             Set of values that were removed.
         added : set
