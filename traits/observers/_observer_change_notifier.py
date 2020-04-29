@@ -18,12 +18,18 @@ class ObserverChangeNotifier:
     """ Wrapper for maintaining notifiers in an ObserverGraph
     when an upstream object changes.
 
-    For example, when observing an extended attribute path,
-    e.g. ``foo.bar.baz``, on an instance of ``HasTraits``,
-    if the container object changes, the observers and notifiers
-    need to be removed from the old container and nested objects,
-    and new observers and notifiers added to the new container and
-    nested objects.
+    An instance of ``ObserverChangeNotifier`` is a callable to be contributed
+    to an instance of ``IObserverable``, e.g. ``CTrait``, ``TraitList`` etc.,
+    such that it will be called when an observerable emits notificaitons for
+    changes.
+
+    For example, suppose changes are observed on an extended attribute path,
+    e.g. ``foo.bar.baz``, where ``foo`` and ``bar`` are both instances of
+    ``HasTraits``.  There will be an instance of ``ObserverChangeNotifier`` on
+    the ``CTrait`` for ``foo``. When ``foo`` changes, the notifier will be
+    called for maintaining the observers for ``bar.baz``. Similarly, there
+    will be an instance of ``ObserverChangeNotifier`` on the ``CTrait`` for
+    ``bar`` for maintaining the observers for ``baz``, when ``bar`` changes.
 
     """
 
