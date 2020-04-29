@@ -54,8 +54,6 @@ from .trait_errors import TraitError
 from .util.deprecated import deprecated
 from .trait_converters import check_trait, mapped_trait_for, trait_for
 
-# Store the name of the package
-_TRAITS_PACKAGE_NAME = __name__.split(".", 1)[0]
 
 #  Set CHECK_INTERFACES to one of the following values:
 #
