@@ -419,21 +419,27 @@ class TestRegressionNestedContainerEvent(unittest.TestCase):
         except Exception:
             self.fail("Mutating a nested set should not fail.")
 
-    def test_modify_set_in_dict_no_events(self):
+    def test_modify_set_in_dict(self):
         instance = NestedContainerClass(dict_of_set={"1": set()})
-        instance.on_trait_change(self.change_handler, "dict_of_set_items")
-
-        instance.dict_of_set["1"].add(1)
-
-        self.assertEqual(len(self.events), 0, "Expected no events.")
+        try:
+            instance.dict_of_set["1"].add(1)
+        except Exception:
+            self.fail("Mutating a nested set should not fail.")
 
     def test_modify_set_in_union_in_dict(self):
         instance = NestedContainerClass(
             dict_of_union_none_or_set={"1": set()}
         )
-        instance.on_trait_change(
-            self.change_handler, "dict_of_union_none_or_set_items")
+        try:
+            instance.dict_of_union_none_or_set["1"].add(1)
+        except Exception:
+            self.fail("Mutating a nested set should not fail.")
 
-        instance.dict_of_union_none_or_set["1"].add(1)
+    def test_modify_nested_set_no_events(self):
+        instance = NestedContainerClass(list_of_set=[set()])
+        instance.on_trait_change(
+            self.change_handler, "list_of_set_items")
+
+        instance.list_of_set[0].add(1)
 
         self.assertEqual(len(self.events), 0, "Expected no events.")
