@@ -30,6 +30,7 @@ from traits.trait_types import (
     Instance,
     Int,
     List,
+    Set,
     Str,
     Union,
 )
@@ -321,6 +322,13 @@ class NestedContainerClass(HasTraits):
 
     dict_of_union_none_or_dict = Dict(Str, Union(Dict(), None))
 
+    # Nested set
+    list_of_set = List(Set)
+
+    dict_of_set = Dict(Str, Set)
+
+    dict_of_union_none_or_set = Dict(Str, Union(Set(), None))
+
 
 class TestRegressionNestedContainerEvent(unittest.TestCase):
     """ Regression tests for enthought/traits#281 and enthought/traits#25
@@ -395,3 +403,37 @@ class TestRegressionNestedContainerEvent(unittest.TestCase):
         instance.dict_of_union_none_or_dict["1"]["3"] = 3
 
         self.assertEqual(len(self.events), 0)
+
+    def test_modify_set_in_list(self):
+        instance = NestedContainerClass(list_of_set=[set()])
+        try:
+            instance.list_of_set[0].add(1)
+        except Exception:
+            self.fail("Mutating a nested set should not fail.")
+
+    def test_modify_set_in_list_with_new_value(self):
+        instance = NestedContainerClass(list_of_set=[])
+        instance.list_of_set.append(set())
+        try:
+            instance.list_of_set[0].add(1)
+        except Exception:
+            self.fail("Mutating a nested set should not fail.")
+
+    def test_modify_set_in_dict_no_events(self):
+        instance = NestedContainerClass(dict_of_set={"1": set()})
+        instance.on_trait_change(self.change_handler, "dict_of_set_items")
+
+        instance.dict_of_set["1"].add(1)
+
+        self.assertEqual(len(self.events), 0, "Expected no events.")
+
+    def test_modify_set_in_union_in_dict(self):
+        instance = NestedContainerClass(
+            dict_of_union_none_or_set={"1": set()}
+        )
+        instance.on_trait_change(
+            self.change_handler, "dict_of_union_none_or_set_items")
+
+        instance.dict_of_union_none_or_set["1"].add(1)
+
+        self.assertEqual(len(self.events), 0, "Expected no events.")
