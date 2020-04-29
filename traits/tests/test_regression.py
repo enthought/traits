@@ -311,6 +311,8 @@ class NestedContainerClass(HasTraits):
     # Similar to enthought/traits#281
     dict_of_union_none_or_list = Dict(Str, Union(List(), None))
 
+    list_of_list = List(List)
+
     # Nested dict
     # enthought/traits#25
     list_of_dict = List(Dict)
@@ -328,7 +330,7 @@ class TestRegressionNestedContainerEvent(unittest.TestCase):
         self.events = []
 
         def change_handler(*args):
-            events.append(args)
+            self.events.append(args)
 
         self.change_handler = change_handler
 
@@ -349,6 +351,13 @@ class TestRegressionNestedContainerEvent(unittest.TestCase):
             instance.dict_of_union_none_or_list["name"].append("word")
         except Exception:
             self.fail("Mutating a nested list should not fail.")
+
+    def test_modify_list_in_list_no_events(self):
+        instance = NestedContainerClass(list_of_list=[[]])
+        instance.on_trait_change(self.change_handler, "list_of_list_items")
+
+        instance.list_of_list[0].append(1)
+        self.assertEqual(len(self.events), 0, "Expected no events.")
 
     def test_modify_dict_in_list(self):
         instance = NestedContainerClass(list_of_dict=[{}])
