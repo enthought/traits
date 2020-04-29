@@ -591,6 +591,12 @@ class TraitListObject(TraitList):
         if object is None:
             return
 
+        if getattr(object, self.name) is not self:
+            # Workaround having this list inside another container which
+            # also uses the name_items trait for notification.
+            # See enthought/traits#25, enthought/traits#281
+            return
+
         event = TraitListEvent(index, removed, added)
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
