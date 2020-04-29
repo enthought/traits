@@ -352,14 +352,11 @@ class TestRegressionNestedContainerEvent(unittest.TestCase):
 
     def test_modify_dict_in_list(self):
         instance = NestedContainerClass(list_of_dict=[{}])
-        instance.on_trait_change(self.change_handler, "list_of_dict_items")
 
         try:
             instance.list_of_dict[0]["key"] = 1
         except Exception:
             self.fail("Mutating a nested dict should not fail.")
-
-        self.assertEqual(len(self.events), 0, "Expected no events.")
 
     def test_modify_dict_in_list_with_new_value(self):
         instance = NestedContainerClass(list_of_dict=[{}])
