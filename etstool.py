@@ -84,6 +84,7 @@ import click
 
 # Dependencies common to all configurations.
 common_dependencies = {
+    "configobj",
     "coverage",
     "cython",
     "enthought_sphinx_theme",
