@@ -384,7 +384,7 @@ class TestRegressionNestedContainerEvent(unittest.TestCase):
         except Exception:
             self.fail("Mutating a nested dict should not fail.")
 
-    def test_modify_dict_in_dict_does_not_fire(self):
+    def test_modify_dict_in_dict_no_events(self):
         # Related to enthought/traits#25
         instance = NestedContainerClass(dict_of_dict={"1": {"2": 2}})
         instance.on_trait_change(self.change_handler, "dict_of_dict_items")
@@ -393,7 +393,7 @@ class TestRegressionNestedContainerEvent(unittest.TestCase):
 
         self.assertEqual(len(self.events), 0, "Expected no events.")
 
-    def test_modify_dict_in_union_in_dict(self):
+    def test_modify_dict_in_union_in_dict_no_events(self):
         instance = NestedContainerClass(
             dict_of_union_none_or_dict={"1": {"2": 2}},
         )
