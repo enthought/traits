@@ -306,13 +306,13 @@ class NestedContainerClass(HasTraits):
     # Used in regression test for changes to nested containers
 
     # Nested list
+    list_of_list = List(List)
+
     # enthought/traits#281
     dict_of_list = Dict(Str, List(Str))
 
     # Similar to enthought/traits#281
     dict_of_union_none_or_list = Dict(Str, Union(List(), None))
-
-    list_of_list = List(List)
 
     # Nested dict
     # enthought/traits#25
