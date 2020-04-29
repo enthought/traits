@@ -322,7 +322,7 @@ class TestRegressionNestedContainerEvent(unittest.TestCase):
         except Exception:
             self.fail("Mutating a nested list should not fail.")
 
-    def test_modify_list_in_dict_wrapped_in_either(self):
+    def test_modify_list_in_dict_wrapped_in_union(self):
         instance = NestedContainerClass(
             dict_of_union_none_or_list={"name": []},
         )
