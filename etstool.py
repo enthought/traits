@@ -51,7 +51,7 @@ you can run tests in all supported runtimes::
 
     python etstool.py test-all
 
-Currently supported runtime values are ``3.5`` and ``3.6``.  Not all
+Currently supported runtime values are ``3.6``.  Not all
 combinations of runtimes will work, but the tasks will fail with
 a clear error if that is the case.
 
@@ -89,6 +89,7 @@ common_dependencies = {
     "cython",
     "enthought_sphinx_theme",
     "flake8",
+    "mypy",
     "numpy",
     "pyqt",
     "Sphinx",
@@ -165,9 +166,6 @@ def install(edm, runtime, environment, editable, source):
     dependencies = common_dependencies.copy()
     if sys.platform != "win32":
         dependencies.update(unix_dependencies)
-    # For Python 3.5, we don't have mypy builds from packages.enthought.com.
-    if runtime != "3.5":
-        dependencies.add("mypy")
 
     packages = " ".join(dependencies)
 
@@ -250,11 +248,10 @@ def test(edm, runtime, verbose, environment):
         "{edm} run -e {environment} -- coverage run -p -m "
         "unittest discover " + options + "traits",
     ]
-    if runtime != "3.5":
-        commands += [
-            "{edm} run -e {environment} -- coverage run -p -m "
-            "unittest discover " + options + "traits_stubs_tests",
-        ]
+    commands += [
+        "{edm} run -e {environment} -- coverage run -p -m "
+        "unittest discover " + options + "traits_stubs_tests",
+    ]
 
     # We run in a tempdir to avoid accidentally picking up wrong traits
     # code from a local dir.  We need to ensure a good .coveragerc is in
