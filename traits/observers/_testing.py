@@ -7,6 +7,7 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
+
 from unittest import mock
 
 from traits.observers._exceptions import NotifierNotFound
