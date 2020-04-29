@@ -18,8 +18,10 @@ from traits.observers._exceptions import NotifierNotFound
 class TraitEventNotifier:
     """ Wrapper for invoking user's handler for a trait change event.
 
-    An ``TraitEventNotifier`` is a callable to be contributed to an
-    "observable" object. The call signature is defined by the observable object
+    An instance of ``TraitEventNotifier`` is a callable to be contributed
+    to an instance of ``IObserverable``, e.g. ``CTrait``, ``TraitList`` etc.,
+    such that it will be called when an observerable emits notificaitons for
+    changes. The call signature is defined by the observable object
     and may vary. It is the responsibility of the ``event_factory`` to adapt
     the varying call signatures and create an event object to be given
     to the user's handler.
