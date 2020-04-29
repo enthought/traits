@@ -303,15 +303,34 @@ class TestRegression(unittest.TestCase):
 
 class NestedContainerClass(HasTraits):
     # Used in regression test for changes to nested containers
-    # e.g. enthought/traits#281
+
+    # Nested list
+    # enthought/traits#281
     dict_of_list = Dict(Str, List(Str))
 
+    # Similar to enthought/traits#281
     dict_of_union_none_or_list = Dict(Str, Union(List(), None))
+
+    # Nested dict
+    # enthought/traits#25
+    list_of_dict = List(Dict)
+
+    dict_of_dict = Dict(Str, Dict)
+
+    dict_of_union_none_or_dict = Dict(Str, Union(Dict(), None))
 
 
 class TestRegressionNestedContainerEvent(unittest.TestCase):
-    """ Regression tests for enthought/traits#281
+    """ Regression tests for enthought/traits#281 and enthought/traits#25
     """
+
+    def setUp(self):
+        self.events = []
+
+        def change_handler(*args):
+            events.append(args)
+
+        self.change_handler = change_handler
 
     def test_modify_list_in_dict(self):
         # Regression test for enthought/traits#281
@@ -330,3 +349,43 @@ class TestRegressionNestedContainerEvent(unittest.TestCase):
             instance.dict_of_union_none_or_list["name"].append("word")
         except Exception:
             self.fail("Mutating a nested list should not fail.")
+
+    def test_modify_dict_in_list(self):
+        instance = NestedContainerClass(list_of_dict=[{}])
+        instance.on_trait_change(self.change_handler, "list_of_dict_items")
+
+        try:
+            instance.list_of_dict[0]["key"] = 1
+        except Exception:
+            self.fail("Mutating a nested dict should not fail.")
+
+        self.assertEqual(len(self.events), 0, "Expected no events.")
+
+    def test_modify_dict_in_list_with_new_value(self):
+        instance = NestedContainerClass(list_of_dict=[{}])
+
+        instance.list_of_dict.append(dict())
+        try:
+            instance.list_of_dict[-1]["key"] = 1
+        except Exception:
+            self.fail("Mutating a nested dict should not fail.")
+
+    def test_modify_dict_in_dict_does_not_fire(self):
+        # Related to enthought/traits#25
+        instance = NestedContainerClass(dict_of_dict={"1": {"2": 2}})
+        instance.on_trait_change(self.change_handler, "dict_of_dict_items")
+
+        instance.dict_of_dict["1"]["3"] = 3
+
+        self.assertEqual(len(self.events), 0)
+
+    def test_modify_dict_in_union_in_dict(self):
+        instance = NestedContainerClass(
+            dict_of_union_none_or_dict={"1": {"2": 2}},
+        )
+        instance.on_trait_change(
+            self.change_handler, "dict_of_union_none_or_dict_items")
+
+        instance.dict_of_union_none_or_dict["1"]["3"] = 3
+
+        self.assertEqual(len(self.events), 0)
