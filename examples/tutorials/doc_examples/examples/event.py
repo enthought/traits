@@ -11,7 +11,8 @@
 # event.py --- Example of a trait event
 
 # --<Imports>------------------------------------------------------------------
-from traits.api import Event, HasTraits, List, RGBColor, Tuple
+from traits.api import Event, HasTraits, List, Tuple
+from traitsui.api import RGBColor
 
 # --[Code]---------------------------------------------------------------------
 

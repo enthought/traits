@@ -193,17 +193,15 @@ class CTrait(ctraits.cTrait):
     def get_help(self, full=True):
         """ Returns the help text for a trait.
 
+        If *full* is False or the trait does not have a **help** string,
+        the returned string is constructed from the **desc** attribute on the
+        trait and the **info** string on the trait's handler.
+
         Parameters
         ----------
         full : bool
             Indicates whether to return the value of the *help* attribute of
             the trait itself.
-
-        Description
-        -----------
-        If *full* is False or the trait does not have a **help** string,
-        the returned string is constructed from the **desc** attribute on the
-        trait and the **info** string on the trait's handler.
         """
         if full:
             help = self.help
