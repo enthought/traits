@@ -391,7 +391,7 @@ class TestRegressionNestedContainerEvent(unittest.TestCase):
 
         instance.dict_of_dict["1"]["3"] = 3
 
-        self.assertEqual(len(self.events), 0)
+        self.assertEqual(len(self.events), 0, "Expected no events.")
 
     def test_modify_dict_in_union_in_dict(self):
         instance = NestedContainerClass(
@@ -402,7 +402,7 @@ class TestRegressionNestedContainerEvent(unittest.TestCase):
 
         instance.dict_of_union_none_or_dict["1"]["3"] = 3
 
-        self.assertEqual(len(self.events), 0)
+        self.assertEqual(len(self.events), 0, "Expected no events.")
 
     def test_modify_set_in_list(self):
         instance = NestedContainerClass(list_of_set=[set()])
