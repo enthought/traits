@@ -180,10 +180,10 @@ attribute set operations. Most ``CTrait`` types do not permit deletion.
 Traits Containers
 -----------------
 
-Traits has the ability to watch for changes in standard Python containers,
-specifically lists, dictionaries and sets.  To achieve this, Traits provides
-special subclasses of the standard Python classes that can validate elements
-and can fire trait notifications when the contents change.  These classes are,
+Traits has the ability to watch for changes in standard Python containers:
+lists, dictionaries and sets.  To achieve this Traits provides special
+subclasses of the standard Python classes that can validate elements and can
+fire trait notifications when the contents change.  These classes are,
 respectively, |TraitList|, |TraitDict| and |TraitSet| (not to be confused with
 the deprecated Trait Handlers of the same names).
 
@@ -277,17 +277,18 @@ lists, dicts and sets, but in all cases starts with the container object itself.
 Notifiers are called in the order that they appear in the notifiers list and
 should not mutate the parameters that they have been passed.
 
-List notifiers must take 4 arguments: the list object, the index value or slice
-that identifies where the change occurred, a list of removed elements, and a
-list of added elements.  The |ListObject| methods make an attempt to normalize
-indices and slices to make things easier for notification writers.
+List notifiers must take 4 arguments: the **trait_list** object, the **index**
+value or slice that identifies where the change occurred, a list of
+**removed** elements, and a list of **added** elements.  The |TraitList|
+methods make an attempt to normalize indices and slices to make things easier
+for notification writers.
 
-Dict notifiers expect 4 arguments: the dict object, a dictionary of removed
-items, a dictionary of added elements, and a dictionary of changed items,
-where the values are the old values held in the keys.
+Dict notifiers expect 4 arguments: the **trait_dict** object, a dictionary of
+**removed** items, a dictionary of **added** elements, and a dictionary of
+**changed** items, where the values are the old values held in the keys.
 
-Set notifiers expect 3 arguments: the set object, the set of removed elements,
-and the set of added elements.
+Set notifiers expect 3 arguments: the **trait_set** object, the set of
+**removed** elements, and the set of **added** elements.
 
 Users should not usually need to interact with the container notifiers directly,
 just as they do not usually need to interact with trait notifiers.
