@@ -284,7 +284,7 @@ The handler passed to |@observe| must have the following signature:
 
 where the *event* parameter is an object representing the change observed.
 The type of *event* depends on the context of the change. The handler should
-raise any exceptions. Any unexpected exceptions will be captured and logged.
+not raise exceptions. Any unexpected exceptions will be captured and logged.
 
 .. rubric:: Change event types
 
