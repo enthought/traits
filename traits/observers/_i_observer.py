@@ -32,9 +32,8 @@ class IObserver(abc.ABC):
     the same graph (see ``iter_objects``). Then the process repeats as the
     ``ObserverGraph`` is walked. See ``add_or_remove_notifiers``.
 
-    Some observers may require additional helper observers and notifiers,
-    e.g. an observer for traits will need to respond to the ``trait_added``
-    event. See ``iter_extra_graphs``.
+    An observer can also contribute more ``ObserverGraph`` via
+    ``iter_extra_graphs`` if they require support from other observers.
     """
 
     def __hash__(self):
