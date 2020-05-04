@@ -215,12 +215,14 @@ class TestObserverChangeEquals(unittest.TestCase):
             handler=handler,
             graph=graph,
             target=target,
+            dispatcher=dispatch_here,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
             graph=graph,
             target=target,
+            dispatcher=dispatch_here,
         )
         self.assertTrue(
             notifier1.equals(notifier2),
@@ -243,12 +245,14 @@ class TestObserverChangeEquals(unittest.TestCase):
             handler=handler,
             graph=graph,
             target=target,
+            dispatcher=dispatch_here,
         )
         notifier2 = create_notifier(
             observer_handler=mock.Mock(),
             handler=handler,
             graph=graph,
             target=target,
+            dispatcher=dispatch_here,
         )
         self.assertFalse(
             notifier1.equals(notifier2),
@@ -271,12 +275,14 @@ class TestObserverChangeEquals(unittest.TestCase):
             handler=mock.Mock(),
             graph=graph,
             target=target,
+            dispatcher=dispatch_here,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=mock.Mock(),
             graph=graph,
             target=target,
+            dispatcher=dispatch_here,
         )
         self.assertFalse(
             notifier1.equals(notifier2),
@@ -299,12 +305,14 @@ class TestObserverChangeEquals(unittest.TestCase):
             handler=handler,
             graph=mock.Mock(),
             target=target,
+            dispatcher=dispatch_here,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
             graph=mock.Mock(),
             target=target,
+            dispatcher=dispatch_here,
         )
         self.assertFalse(
             notifier1.equals(notifier2),
@@ -329,12 +337,14 @@ class TestObserverChangeEquals(unittest.TestCase):
             handler=handler,
             graph=graph,
             target=target1,
+            dispatcher=dispatch_here,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
             graph=graph,
             target=target2,
+            dispatcher=dispatch_here,
         )
         self.assertFalse(
             notifier1.equals(notifier2),
@@ -392,12 +402,14 @@ class TestObserverChangeEquals(unittest.TestCase):
             handler=handler,
             graph=graph1,
             target=target,
+            dispatcher=dispatch_here,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=handler,
             graph=graph2,
             target=target,
+            dispatcher=dispatch_here,
         )
         self.assertTrue(
             notifier1.equals(notifier2),
@@ -425,12 +437,14 @@ class TestObserverChangeEquals(unittest.TestCase):
             handler=instance.dummy_method,
             graph=graph,
             target=target,
+            dispatcher=dispatch_here,
         )
         notifier2 = create_notifier(
             observer_handler=observer_handler,
             handler=instance.dummy_method,
             graph=graph,
             target=target,
+            dispatcher=dispatch_here,
         )
         self.assertTrue(
             notifier1.equals(notifier2),
