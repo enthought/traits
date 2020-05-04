@@ -100,7 +100,8 @@ class TestTraitEventNotifierCall(unittest.TestCase):
         # Test the dispatch is used
         events = []
 
-        def dispatcher(handler, event):
+        def dispatcher(handler, *args):
+            event, = args
             events.append(event)
 
         def event_factory(*args, **kwargs):
