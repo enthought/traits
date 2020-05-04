@@ -84,7 +84,9 @@ class TestTraitEventNotifierCall(unittest.TestCase):
             return "Event"
 
         notifier = create_notifier(
-            handler=handler, event_factory=event_factory)
+            handler=handler,
+            event_factory=event_factory,
+        )
 
         # when
         notifier(a=1, b=2)
@@ -101,9 +103,12 @@ class TestTraitEventNotifierCall(unittest.TestCase):
         def dispatcher(handler, event):
             events.append(event)
 
+        def event_factory(*args, **kwargs):
+            return "Event"
+
         notifier = create_notifier(
             dispatcher=dispatcher,
-            event_factory=mock.Mock(return_value="Event"),
+            event_factory=event_factory,
         )
 
         # when
