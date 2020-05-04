@@ -91,13 +91,14 @@ class IObserver(abc.ABC):
         """ Yield objects for the next observer following this observer, in an
         ObserverGraph.
 
-        For example, an observer may observe many traits for a given instance
-        of HasTraits, then the observer will yield the values of those traits
-        if they are deem appropriate to be passed onto the next observer.
+        An observer may yield many items for the next observer, e.g. the
+        observer is observing many traits on the given instance of HasTraits
+        or the observer is observing items in a container. The observer can
+        evaluate whether the value is appropriate to be passed on, or skip some
+        if the observer expected to do so.
 
-        An observer may be observing items in a container, e.g. an instance
-        of TraitListObject, then the observer will yield the content of the
-        container for the next observer to handle.
+        An observer may yield one item if that is what should be passed onto
+        the next observer.
 
         An observer may find nothing to be passed onto the next observer, and
         has no need to complain about that. Then the observer may yield
