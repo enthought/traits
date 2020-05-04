@@ -173,6 +173,9 @@ class ObserverChangeNotifier:
             # target is an input for observer_handler.
             # it goes together with the user's handler
             and self.target() is other.target()
+            # dispatcher is an input for observer_handler.
+            # different dispatchers should not interfere each other.
+            and self.dispatcher == other.dispatcher
         )
 
 

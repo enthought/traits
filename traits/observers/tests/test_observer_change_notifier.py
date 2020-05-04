@@ -17,6 +17,10 @@ from traits.observers._exceptions import NotifierNotFound
 from traits.observers._observer_change_notifier import ObserverChangeNotifier
 
 
+def dispatch_here(handler, event):
+    handler(event)
+
+
 def create_notifier(**kwargs):
     """ Convenient function for creating an instance of ObserverChangeNotifier
     for testing purposes.
@@ -28,7 +32,7 @@ def create_notifier(**kwargs):
         prevent_event=lambda event: False,
         handler=mock.Mock(),
         target=mock.Mock(),
-        dispatcher=mock.Mock(),
+        dispatcher=dispatch_here,
     )
     values.update(kwargs)
     return ObserverChangeNotifier(**values)
@@ -331,6 +335,39 @@ class TestObserverChangeEquals(unittest.TestCase):
             handler=handler,
             graph=graph,
             target=target2,
+        )
+        self.assertFalse(
+            notifier1.equals(notifier2),
+            "Expected notifier1 to see notifier2 as different."
+        )
+        self.assertFalse(
+            notifier2.equals(notifier1),
+            "Expected notifier2 to see notifier1 as different."
+        )
+
+    def test_notifier_dispatcher_not_equals(self):
+        # Test notifier differentiates the dispatchers.
+
+        observer_handler = mock.Mock()
+        handler = mock.Mock()
+        graph = mock.Mock()
+        target = mock.Mock()
+        dispatcher1 = mock.Mock()
+        dispatcher2 = mock.Mock()
+
+        notifier1 = create_notifier(
+            observer_handler=observer_handler,
+            handler=handler,
+            graph=graph,
+            target=target,
+            dispatcher=dispatcher1,
+        )
+        notifier2 = create_notifier(
+            observer_handler=observer_handler,
+            handler=handler,
+            graph=graph,
+            target=target,
+            dispatcher=dispatcher2,
         )
         self.assertFalse(
             notifier1.equals(notifier2),
