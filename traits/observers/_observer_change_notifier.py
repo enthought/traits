@@ -85,7 +85,12 @@ class ObserverChangeNotifier:
         if isinstance(handler, types.MethodType):
             self.handler = weakref.WeakMethod(handler)
         else:
-            self.handler = partial(_return, value=handler)
+
+            def _return_handler():
+                return handler
+
+            self.handler = _return_handler
+
         self.dispatcher = dispatcher
 
     def add_to(self, observable):
@@ -177,7 +182,3 @@ class ObserverChangeNotifier:
             # different dispatchers should not interfere each other.
             and self.dispatcher == other.dispatcher
         )
-
-
-def _return(value):
-    return value
