@@ -194,10 +194,15 @@ class TestTraitEventNotifierEqual(unittest.TestCase):
         handler2 = mock.Mock()
         target1 = mock.Mock()
         target2 = mock.Mock()
-        notifier1 = create_notifier(handler=handler1, target=target1)
-        notifier2 = create_notifier(handler=handler1, target=target1)
-        notifier3 = create_notifier(handler=handler1, target=target2)
-        notifier4 = create_notifier(handler=handler2, target=target1)
+        dispatcher = dispatch_here
+        notifier1 = create_notifier(
+            handler=handler1, target=target1, dispatcher=dispatcher)
+        notifier2 = create_notifier(
+            handler=handler1, target=target1, dispatcher=dispatcher)
+        notifier3 = create_notifier(
+            handler=handler1, target=target2, dispatcher=dispatcher)
+        notifier4 = create_notifier(
+            handler=handler2, target=target1, dispatcher=dispatcher)
 
         # then
         self.assertTrue(
@@ -233,6 +238,28 @@ class TestTraitEventNotifierEqual(unittest.TestCase):
     def test_equals_compared_to_different_type(self):
         notifier = create_notifier()
         self.assertFalse(notifier.equals(float))
+
+    def test_not_equal_if_dispatcher_different(self):
+        handler = mock.Mock()
+        target = mock.Mock()
+        dispatcher1 = mock.Mock()
+        dispatcher2 = mock.Mock()
+        notifier1 = create_notifier(
+            handler=handler, target=target, dispatcher=dispatcher1)
+        notifier2 = create_notifier(
+            handler=handler, target=target, dispatcher=dispatcher2)
+
+        # then
+        self.assertFalse(
+            notifier1.equals(notifier2),
+            "Expected the notifiers to be different because the dispatchers "
+            "do not compare equally."
+        )
+        self.assertFalse(
+            notifier2.equals(notifier1),
+            "Expected the notifiers to be different because the dispatchers "
+            "do not compare equally."
+        )
 
 
 class TestTraitEventNotifierAddRemove(unittest.TestCase):

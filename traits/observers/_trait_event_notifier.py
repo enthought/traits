@@ -211,6 +211,7 @@ class TraitEventNotifier:
         return (
             self.handler() == other.handler()
             and self.target() is other.target()
+            and self.dispatcher == other.dispatcher
         )
 
 
