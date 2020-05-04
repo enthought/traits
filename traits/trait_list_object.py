@@ -12,7 +12,7 @@ import copy
 import operator
 from weakref import ref
 
-from traits.trait_base import class_of, Undefined
+from traits.trait_base import class_of, Undefined, _validate_everything
 from traits.trait_errors import TraitError
 
 
@@ -52,38 +52,113 @@ class TraitListEvent(object):
             added = []
         self.added = added
 
+    def __repr__(self):
+        return "TraitListEvent(index={!r}, removed={!r}, added={!r})".format(
+            self.index, self.removed, self.added
+        )
 
-def _normalize_index(index, length):
-    """ Normalize integer index to range 0 to len (inclusive). """
-    index = operator.index(index)
-    if index < 0:
-        return max(0, length + index)
+
+def _normalize_slice_or_index(index, length):
+    """ Normalize a slice or index for use with __delitem__ or __setitem__.
+
+    For slices with positive step, returns a slice that's equivalent for the
+    purposes of __delitem__ and __setitem__ operations. For slices with
+    negative step, a normalized slice representing the reverse of the given
+    slice is returned: note that in this case, the matching *added* and
+    *removed* lists will need to be reversed.
+
+    Slices with a step of 1 or -1 are normalized to a single integer index,
+    referring to the position of the first element referenced by the slice.
+
+    Similarly, slices that refer to only a single element of the corresponding
+    list (for example, a slice of `[1::10]` applied to a list of length 5)
+    are normalized to the index that refers to that same element.
+
+    Empty slices are also normalized to a single index. Note that in the case
+    of an empty slice, the corresponding __delitem__ or __setitem__ operation
+    does not cause any list change, so does not issue a notification. So the
+    normalized index in this case is unused in current code.
+
+    A normalized slice will have 0 <= start < stop <= length and a step >= 2.
+    It should further satisfy start + step < stop. The stop will always be
+    one larger than the last element referenced by the slice.
+
+    For a plain integer index, it's assumed -length <= index < length on input
+    (but this is not explicitly checked). A normalized output index will
+    satisfy 0 <= index <= length.
+
+    Parameters
+    ----------
+    index : slice or integer
+        The slice to normalize
+    length : int
+        The length of the list to which the slice will be applied.
+
+    Returns
+    -------
+    reversed : bool
+        True if the returned slice is in the opposite direction to the
+        original, else False.
+    normalized_index : slice or integer
+        An equivalent (or reversed equivalent) normalized slice or index.
+    """
+
+    if not isinstance(index, slice):
+        index = operator.index(index)
+        return False, index + length if index < 0 else index
+
+    start, stop, step = index.indices(length)
+    reversed = step < 0
+    if reversed:
+        start, stop, step = (
+            min(stop - step + (start - stop) % step, length),
+            start + 1,
+            -step,
+        )
+
+    # Reduce stop so that equivalent slices give identical normalized
+    # slices (e.g., del x[3:7:2] is equivalent to del x[3:6:2]).
+    stop -= (stop - start - 1) % step
+
+    # For a step of 1, a single item, or an empty slice, return a simple index.
+    if step == 1 or stop - start <= step:
+        return reversed, start
     else:
-        return min(length, index)
+        return reversed, slice(start, stop, step)
 
 
-def _normalize_slice(index, length):
-    """ Normalize slice start and stop to range 0 to len (inclusive). """
-
-    # Do not normalize if step is negative.
-    if index.step is not None and index.step < 0:
-        return index
-
-    return slice(
-        _normalize_index(0 if index.start is None else index.start, length),
-        _normalize_index(length if index.stop is None else index.stop, length),
-        index.step,
-    )
-
-
-# Default item validator for TraitList.
-
-
-def accept_anything(item):
+def _removed_items(items, index, return_for_invalid_index):
     """
-    List item validator which accepts any item and returns it unaltered.
+    Return removed items for a given list and index, suppressing IndexError.
+
+    This is used by the __setitem__ and __delitem__ implementations to
+    get the "removed" part of the event.
+
+    Note that this deliberately suppresses any IndexError arising from
+    an out-of-range integer index. A suitable IndexError will be re-raised
+    when the actual __delitem__ or __setitem__ operation is performed.
+
+    Parameters
+    ----------
+    items : list
+        The list being operated on.
+    index : integer or slice
+        Index of items to remove or replace.
+    return_for_invalid_index : any
+        Object to return for an invalid index.
+
+    Returns
+    -------
+    removed_items : list
+        List containing the removed items.
     """
-    return item
+    if isinstance(index, slice):
+        return items[index]
+    else:
+        try:
+            return [items[index]]
+        except IndexError:
+            return return_for_invalid_index
 
 
 class TraitList(list):
@@ -123,7 +198,7 @@ class TraitList(list):
         # support unpickling: the 'append' or 'extend' methods may be
         # called during unpickling, triggering item validation.
         self = super().__new__(cls)
-        self.item_validator = accept_anything
+        self.item_validator = _validate_everything
         self.notifiers = []
         return self
 
@@ -165,22 +240,24 @@ class TraitList(list):
         ----------
         key : integer or slice
             Index of the element(s) to be deleted.
+
+        Raises
+        ------
+        IndexError
+            If key is an integer index and is out of range.
         """
 
-        if isinstance(key, slice):
-            removed = self[key]
-            normalized_index = _normalize_slice(key, len(self))
-        else:
-            # Suppress IndexError. If the lookup fails, __delitem__ should also
-            # fail, and we want to allow the __delitem__ error to propagate.
-            try:
-                removed = [self[key]]
-            except IndexError:
-                pass
-            normalized_index = _normalize_index(key, len(self))
+        original_length = len(self)
+        removed = _removed_items(self, key, return_for_invalid_index=None)
+
         super().__delitem__(key)
+
         if removed:
-            self.notify(normalized_index, removed, [])
+            reversed, normalized_key = _normalize_slice_or_index(
+                key, original_length)
+            if reversed:
+                removed = removed[::-1]
+            self.notify(normalized_key, removed, [])
 
     def __iadd__(self, value):
         """ Implement self += value.
@@ -200,7 +277,7 @@ class TraitList(list):
         added = [self.item_validator(item) for item in value]
         extended = super().__iadd__(added)
         if added:
-            self.notify(slice(original_length, len(self)), [], added)
+            self.notify(original_length, [], added)
         return extended
 
     def __imul__(self, value):
@@ -221,14 +298,13 @@ class TraitList(list):
             removed = self.copy()
             multiplied = super().__imul__(value)
             if removed:
-                self.notify(slice(0, len(removed)), removed, [])
+                self.notify(0, removed, [])
         else:
             original_length = len(self)
             multiplied = super().__imul__(value)
-            new_length = len(self)
-            if new_length > original_length:
-                index = slice(original_length, new_length)
-                self.notify(index, [], self[index])
+            added = self[original_length:]
+            if added:
+                self.notify(original_length, [], added)
         return multiplied
 
     def __setitem__(self, key, value):
@@ -251,25 +327,24 @@ class TraitList(list):
             doesn't match the number of removed elements.
         """
 
+        original_length = len(self)
+        removed = _removed_items(self, key, return_for_invalid_index=None)
         if isinstance(key, slice):
             value = [self.item_validator(item) for item in value]
-            normalized_index = _normalize_slice(key, len(self))
             added = value
-            removed = self[key]
         else:
             value = self.item_validator(value)
-            normalized_index = _normalize_index(key, len(self))
             added = [value]
-            # Suppress IndexError. If the lookup fails, __setitem__ should also
-            # fail, and we want to allow the __setitem__ error to propagate.
-            try:
-                removed = [self[key]]
-            except IndexError:
-                pass
+
         super().__setitem__(key, value)
 
-        if added != removed:
-            self.notify(normalized_index, removed, added)
+        if added or removed:
+            reversed, normalized_key = _normalize_slice_or_index(
+                key, original_length)
+            if reversed:
+                added = added[::-1]
+                removed = removed[::-1]
+            self.notify(normalized_key, removed, added)
 
     def append(self, object):
         """ Append object to the end of the list.
@@ -290,7 +365,7 @@ class TraitList(list):
         removed = self.copy()
         super().clear()
         if removed:
-            self.notify(slice(0, len(removed)), removed, [])
+            self.notify(0, removed, [])
 
     def extend(self, iterable):
         """ Extend list by appending elements from the iterable.
@@ -305,7 +380,7 @@ class TraitList(list):
         added = [self.item_validator(item) for item in iterable]
         super().extend(added)
         if added:
-            self.notify(slice(original_length, len(self)), [], added)
+            self.notify(original_length, [], added)
 
     def insert(self, index, object):
         """ Insert object before index.
@@ -318,10 +393,14 @@ class TraitList(list):
             The object to insert.
         """
 
-        original_length = len(self)
+        # For insert, *any* index is valid!
+        if index < 0:
+            normalized_index = max(index + len(self), 0)
+        else:
+            normalized_index = min(index, len(self))
+        object = self.item_validator(object)
         super().insert(index, self.item_validator(object))
-        normalized_index = _normalize_index(index, original_length)
-        self.notify(normalized_index, [], [self[normalized_index]])
+        self.notify(normalized_index, [], [object])
 
     def pop(self, index=-1):
         """ Remove and return item at index (default last).
@@ -343,9 +422,10 @@ class TraitList(list):
             If list is empty or index is out of range.
         """
 
-        original_length = len(self)
+        # We don't need to worry about indices < -len(self) or >= len(self):
+        # for those, the pop call will raise anyway.
+        normalized_index = index + len(self) if index < 0 else index
         item = super().pop(index)
-        normalized_index = _normalize_index(index, original_length)
         self.notify(normalized_index, [item], [])
         return item
 
@@ -382,7 +462,8 @@ class TraitList(list):
         """ Reverse the items in the list in place. """
         removed = self.copy()
         super().reverse()
-        self.notify(slice(0, len(self)), removed, self.copy())
+        if removed:
+            self.notify(0, removed, self.copy())
 
     def sort(self, *, key=None, reverse=False):
         """ Sort the list in ascending order and return None.
@@ -405,7 +486,8 @@ class TraitList(list):
         """
         removed = self.copy()
         super().sort(key=key, reverse=reverse)
-        self.notify(slice(0, len(self)), removed, self.copy())
+        if removed:
+            self.notify(0, removed, self.copy())
 
     # -- pickle and copy support ----------------------------------------------
 
@@ -509,10 +591,11 @@ class TraitListObject(TraitList):
         if object is None:
             return
 
-        # bug-for-bug conversion of parameters to TraitListEvent
-        if isinstance(index, slice):
-            if index.step is None or index.step == 1:
-                index = index.start
+        if getattr(object, self.name) is not self:
+            # Workaround having this list inside another container which
+            # also uses the name_items trait for notification.
+            # See enthought/traits#25, enthought/traits#281
+            return
 
         event = TraitListEvent(index, removed, added)
         items_event = self.trait.items_event()
@@ -527,7 +610,13 @@ class TraitListObject(TraitList):
         ----------
         key : integer or slice
             Index of the element(s) to be deleted.
+
+        Raises
+        ------
+        IndexError
+            If key is an integer index and is out of range.
         """
+
         removed_count = len(self[key]) if isinstance(key, slice) else 1
         self._validate_length(len(self) - removed_count)
         super().__delitem__(key)

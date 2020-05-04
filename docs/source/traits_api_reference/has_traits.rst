@@ -41,8 +41,6 @@ Classes
 
 .. autoclass:: ISerializable
 
-.. autoclass:: traits_super
-
 ABC classes
 -----------
 

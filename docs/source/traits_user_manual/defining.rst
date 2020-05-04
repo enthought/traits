@@ -82,6 +82,10 @@ The Traits package allows creation of a wide variety of trait types, ranging
 from very simple to very sophisticated. The following section presents some of
 the simpler, more commonly used forms.
 
+.. warning:: Unless otherwise stated as safe to do so, avoid naming
+   attributes with the prefix 'trait' or '_trait'. This avoids overshadowing
+   existing methods on HasTraits.
+
 .. index:: predefined traits
 
 .. _predefined-traits:
@@ -235,13 +239,13 @@ trait cannot be used as a simple name, it is omitted from the Name column of
 the table.
 
 .. index:: Any(), Array(), Button(), Callable(), CArray(), Code()
-.. index:: Color(), CSet(), Constant(), Dict()
+.. index:: CSet(), Constant(), Dict()
 .. index:: Directory(), Disallow, Either(), Enum()
-.. index:: Event(), Expression(), false, File(), Font()
+.. index:: Event(), Expression(), false, File()
 .. index:: Instance(), List(), Method(), Module()
 .. index:: Password(), Property(), Python()
 .. index:: PythonValue(), Range(), ReadOnly(), Regex()
-.. index:: RGBColor(), Set() String(), This,
+.. index:: Set() String(), This,
 .. index:: ToolbarButton(), true, Tuple(), Type()
 .. index:: undefined, UUID(), ValidatedTuple(), WeakRef()
 
@@ -272,8 +276,6 @@ the table.
 | Code             | Code( [*value* = '', *minlen* = 0, *maxlen* = sys.maxint,|
 |                  | *regex* = '', \*\*\ *metadata*] )                        |
 +------------------+----------------------------------------------------------+
-| Color            | Color( [\*\ *args*, \*\*\ *metadata*] )                  |
-+------------------+----------------------------------------------------------+
 | CSet             | CSet( [*trait* = None, *value* = None, *items* = True,   |
 |                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
@@ -298,8 +300,6 @@ the table.
 +------------------+----------------------------------------------------------+
 | File             | File( [*value* = '', *filter* = None, *auto_set* = False,|
 |                  | *entries* = 10, *exists* = False,  \*\*\ *metadata* ] )  |
-+------------------+----------------------------------------------------------+
-| Font             | Font( [\*\ *args*, \*\*\ *metadata*] )                   |
 +------------------+----------------------------------------------------------+
 | Function         | Function( [*value* = None, \*\*\ *metadata*] )           |
 +------------------+----------------------------------------------------------+
@@ -344,8 +344,6 @@ the table.
 | ReadOnly         | ReadOnly( [*value* = Undefined, \*\*\ *metadata*] )      |
 +------------------+----------------------------------------------------------+
 | Regex            | Regex( [*value* = '', *regex* = '.\*', \*\*\ *metadata*])|
-+------------------+----------------------------------------------------------+
-| RGBColor         | RGBColor( [\*\ *args*, \*\*\ *metadata*] )               |
 +------------------+----------------------------------------------------------+
 | self             | n/a                                                      |
 +------------------+----------------------------------------------------------+

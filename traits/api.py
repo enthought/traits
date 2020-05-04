@@ -186,7 +186,6 @@ from .has_traits import (  # noqa: F401
     MetaHasTraits,
     Vetoable,
     VetoableEvent,
-    traits_super,
     on_trait_change,
     cached_property,
     property_depends_on,
@@ -227,14 +226,3 @@ from .adaptation.adaptation_manager import (  # noqa: F401
 )
 
 from .trait_numeric import Array, ArrayOrNone, CArray  # noqa: F401
-
-try:
-    #  Patch the main traits module with the correct definition for the
-    #  ViewElement class:
-
-    from traitsui.view_element import ViewElement
-
-    if not isinstance(ViewElement, AbstractViewElement):
-        AbstractViewElement.register(ViewElement)
-except ImportError:
-    pass
