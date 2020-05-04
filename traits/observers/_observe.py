@@ -68,8 +68,11 @@ class _AddOrRemoveNotifier:
         self._processed = []
 
     def __call__(self):
-        """ Main function for adding/removing notifiers."""
+        """ Main function for adding/removing notifiers.
+        """
 
+        # The order of events does not matter as they are independent of each
+        # other.
         steps = [
             self._add_or_remove_notifiers,
             self._add_or_remove_maintainers,
