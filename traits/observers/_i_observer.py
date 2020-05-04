@@ -60,8 +60,8 @@ class IObserver(abc.ABC):
         An observer may observe many items, e.g. multiple traits for a given
         instance of HasTraits, then the observer will yield many items here.
 
-        An observer may also observe just one thing, a single trait, then
-        the observer may yield just that.
+        An observer may also observe just one thing, e.g. a single trait, or an
+        instance of TraitListObject, then the observer may yield just that.
 
         An observer may also find nothing to be observed and does not need to
         complain about that, and it will yield nothing here.
