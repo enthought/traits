@@ -615,7 +615,6 @@ class TestIntegrationHasTraits(unittest.TestCase):
         notifier_foo2 = create_notifier(
             observer_handler=observer_handler,
             event_factory=self.event_factory,
-            prevent_event=lambda e: False,
             graph=(),
             handler=on_bar_value_changed,
             target=foo2,
