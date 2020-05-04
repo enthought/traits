@@ -52,7 +52,22 @@ class IObserver(abc.ABC):
         raise NotImplementedError("notify property must be implemented.")
 
     def iter_observables(self, object):
-        """ Yield observables for notifiers to be attached to or detached from.
+        """ Yield observables for adding or removing notifiers.
+
+        The notifiers are contributed by this observer's ``get_notifier``
+        and ``get_maintainer`` methods.
+
+        An observer may observe many items, e.g. multiple traits for a given
+        instance of HasTraits, then the observer will yield many items here.
+
+        An observer may also observe just one thing, a single trait, then
+        the observer may yield just that.
+
+        An observer may also find nothing to be observed and does not need to
+        complain about that, and it will yield nothing here.
+
+        Observers are allowed to raise here if it is appropriate to do so,
+        e.g. to help catch usage errors.
 
         Parameters
         ----------
@@ -76,6 +91,21 @@ class IObserver(abc.ABC):
     def iter_objects(self, object):
         """ Yield objects for the next observer following this observer, in an
         ObserverGraph.
+
+        For example, an observer may observe many traits for a given instance
+        of HasTraits, then the observer will yield the values of those traits
+        if they are deem appropriate to be passed onto the next observer.
+
+        An observer may be observing items in a container, e.g. an instance
+        of TraitListObject, then the observer will yield the content of the
+        container for the next observer to handle.
+
+        An observer may find nothing to be passed onto the next observer, and
+        has no need to complain about that. Then the observer may yield
+        nothing.
+
+        Observers are allowed to raise here if it is appropriate to do so,
+        e.g. to help catch usage errors.
 
         Parameters
         ----------
@@ -134,6 +164,13 @@ class IObserver(abc.ABC):
     def iter_extra_graphs(self, graph):
         """ Yield additional ObserverGraph for adding/removing notifiers when
         this observer is encountered in a given ObserverGraph.
+
+        If an observer needs support from another observer(s), e.g.
+        for observing 'trait_added' event, then this method can yield any
+        number of ObserverGraph containing those additional observer(s).
+
+        If an observer does not need additional support from other observers,
+        this method can yield nothing.
 
         Parameters
         ----------
