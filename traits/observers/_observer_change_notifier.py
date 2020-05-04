@@ -8,7 +8,6 @@
 #
 # Thanks for using Enthought open source!
 
-from functools import partial
 import types
 import weakref
 
