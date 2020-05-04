@@ -15,6 +15,7 @@ import weakref
 from traits.api import HasTraits, Instance, Int
 from traits.observers._exceptions import NotifierNotFound
 from traits.observers._observer_change_notifier import ObserverChangeNotifier
+from traits.observers._observer_graph import ObserverGraph
 
 
 def dispatch_here(handler, event):
@@ -604,10 +605,10 @@ class TestIntegrationHasTraits(unittest.TestCase):
         notifier_foo1 = create_notifier(
             observer_handler=observer_handler,
             event_factory=self.event_factory,
-            graph=(),
+            graph=ObserverGraph(node=None),
             handler=on_bar_value_changed,
             target=foo1,
-            dispatcher=(),
+            dispatcher=dispatch_here,
         )
         notifier_foo1.add_to(foo1._trait("bar", 2))
 
@@ -615,10 +616,10 @@ class TestIntegrationHasTraits(unittest.TestCase):
         notifier_foo2 = create_notifier(
             observer_handler=observer_handler,
             event_factory=self.event_factory,
-            graph=(),
+            graph=ObserverGraph(node=None),
             handler=on_bar_value_changed,
             target=foo2,
-            dispatcher=(),
+            dispatcher=dispatch_here,
         )
         notifier_foo2.add_to(foo2._trait("bar", 2))
 
