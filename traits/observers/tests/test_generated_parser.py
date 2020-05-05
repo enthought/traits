@@ -33,6 +33,7 @@ class TestParsingValidation(unittest.TestCase):
             "a:[b,c]:",
             ".a",
             "a()",
+            "-a",
         ]
         for bad_example in bad_examples:
             with self.subTest(bad_example=bad_example):
@@ -57,6 +58,7 @@ class TestParsingValidation(unittest.TestCase):
             "foo:[bar.spam,baz]",
             "foo.items",
             "items",
+            "+metadata_name",
         ]
 
         for good_example in good_examples:
