@@ -717,12 +717,16 @@ respectively.
 
 The TraitListEvent has an additional **index** attribute that holds either
 the index of the first item changed, or for changes involving slices with
-steps other than 1, **index** holds the _slice_ that was changed.
+steps other than 1, **index** holds the _slice_ that was changed.  For
+slice values you can always recover the actual values which were changed or
+removed via ``range(index.start, index.stop, index.end)``.
 
 The TraitDictEvent has an additional **changed** attribute which holds the
 keys that were modified and the _old_ values that those keys held.  The new
-values can be queried from directly from the trait value, if needed).
+values can be queried from directly from the trait value, if needed.
 
+Handlers for these events should not mutate the attributes of the event
+objects, including avoiding in-place changes to **added**, **removed**, etc.
 
 .. _on-trait-change-dos-n-donts:
 
