@@ -22,6 +22,7 @@ from typing import (
     Type as _Type,
     TypeVar,
     Union as _Union,
+    overload,
 )
 from uuid import UUID as _UUID
 
@@ -487,14 +488,13 @@ class BaseClass(_BaseClass[_Type]):
 
 
 class _BaseInstance(_BaseClass[_T]):
+
+    # simplified signature
     def __init__(
             self,
-            klass: _T = ...,
-            factory: _OptionalCallable = ...,
-            args: tuple = ...,
-            kw: _Dict[_Any, _Any] = ...,
-            allow_none: bool = ...,
-            adapt: str = ...,
+            klass: _T,
+            *args,
+            **metadata: _Any,
     ) -> None:
         ...
 
@@ -611,15 +611,36 @@ class WeakRef(Instance):
 
 
 class Date(_BaseInstance[datetime.date]):
-    ...
+
+    # simplified signature
+    def __init__(
+            self,
+            default_value: datetime.date = ...,
+            **metadata: _Any,
+    ) -> None:
+        ...
 
 
 class Datetime(_BaseInstance[datetime.datetime]):
-    ...
+
+    # simplified signature
+    def __init__(
+            self,
+            default_value: datetime.datetime = ...,
+            **metadata: _Any,
+    ) -> None:
+        ...
 
 
 class Time(_BaseInstance[datetime.time]):
-    ...
+
+    # simplified signature
+    def __init__(
+            self,
+            default_value: datetime.time = ...,
+            **metadata: _Any,
+    ) -> None:
+        ...
 
 
 class AdaptedTo(Supports):
