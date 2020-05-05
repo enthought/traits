@@ -74,7 +74,8 @@ class IObserver(abc.ABC):
             Object provided by the ``iter_objects`` methods from another
             observers or directly by the user.
             No guarantee can be made about the type of the object.
-            Concrete should do the sanity check where appropriate.
+            Concrete implementations should do the sanity check where
+            appropriate.
 
         Yields
         ------
@@ -95,7 +96,7 @@ class IObserver(abc.ABC):
         observer is observing many traits on the given instance of HasTraits
         or the observer is observing items in a container. The observer can
         evaluate whether the value is appropriate to be passed on, or skip some
-        if the observer expected to do so.
+        if the observer is expected to do so.
 
         An observer may yield one item if that is what should be passed onto
         the next observer.
@@ -113,7 +114,8 @@ class IObserver(abc.ABC):
             Object provided by the ``iter_objects`` methods from another
             observers or directly by the user.
             No guarantee can be made about the type of the object.
-            Concrete should do the sanity check where appropriate.
+            Concrete implementations should do the sanity check where
+            appropriate.
 
         Yields
         ------
