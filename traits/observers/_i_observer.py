@@ -80,11 +80,6 @@ class IObserver(abc.ABC):
         Yields
         ------
         IObservable
-
-        Raises
-        ------
-        ValueError
-            If the given object cannot be handled by this observer.
         """
         raise NotImplementedError("iter_observables must be implemented.")
 
