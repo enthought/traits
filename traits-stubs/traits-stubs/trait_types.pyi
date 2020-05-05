@@ -22,7 +22,6 @@ from typing import (
     Type as _Type,
     TypeVar,
     Union as _Union,
-    overload,
 )
 from uuid import UUID as _UUID
 
