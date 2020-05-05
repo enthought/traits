@@ -27,17 +27,16 @@ class TestClass(HasTraits):
     itm_args = Instance(Fruit, ('different info',))
     itm_kw = Instance(Fruit, {'info': 'different info'})
     itm_factory = Instance(Fruit, fruit_factory)
-    itm_factory = Instance(Fruit, fruit_factory, ('different info',), )
-    itm_factory = Instance(
+    itm_factory_args = Instance(Fruit, fruit_factory, ('different info',), )
+    itm_factory_args_kw = Instance(
         Fruit,
         fruit_factory,
         ('different info',),
         {'other_stuff': 3},
     )
-    itm_factory = Instance(
+    itm_factory_kw = Instance(
         Fruit,
         fruit_factory,
-        ('different info',),
         {'other_stuff': 3},
     )
 
