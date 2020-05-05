@@ -44,6 +44,7 @@ last_element: element -> last
 // Rule for joining elements in parallel, e.g. "a,b,c"
 ?parallel: series ("," series)*
 
+// Final expression to be used in start
 ?expr: parallel
 
 // Matching Python variable name rule
