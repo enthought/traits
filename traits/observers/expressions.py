@@ -1,4 +1,3 @@
-
 # (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
@@ -8,7 +7,6 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
-
 
 import functools as _functools
 
