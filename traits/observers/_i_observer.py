@@ -26,11 +26,22 @@ class IObserver(abc.ABC):
 
     Given an ``ObserverGraph``, observers are visited from the root node
     to the leaf nodes. The first observer (root node) will be given the object
-    the user wants to observe. It knows how to obtain the ``IObservable``
-    object(s) for attaching notifiers (see ``iter_observables``). It also
-    knows what objects should be given to the downstream/children observers in
-    the same graph (see ``iter_objects``). Then the process repeats as the
-    ``ObserverGraph`` is walked. See ``add_or_remove_notifiers``.
+    the user wants to observe. It knows how to obtain observable(s) for
+    attaching notifiers. It also knows what objects should be given to the
+    downstream/children observers in the same graph. Then the process repeats
+    as the ``ObserverGraph`` is walked.
+
+    An observer defines the notifier that wraps the user change handler, should
+    notification is enabled by the user. This allows the observer to define
+    how the user should receive the change event, e.g. what type of event
+    object should be created, and whether a given event should be silenced etc.
+
+    An observer also defines a "maintainer" (which is also a notifier from the
+    point of view of an observable), for maintaining downstream observers when
+    a change happens for an observable. For example, an observerable may not
+    have a defined value yet for the children observers to handle. When the
+    value is defined, the observable is expected to notify the maintainer,
+    which will pass the new value onto the children observers.
 
     An observer can also contribute more ``ObserverGraph`` via
     ``iter_extra_graphs`` if they require support from other observers.
