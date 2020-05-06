@@ -28,8 +28,7 @@ class IObserver(abc.ABC):
     to the leaf nodes. The first observer (root node) will be given the object
     the user wants to observe. It knows how to obtain observable(s) for
     attaching notifiers. It also knows what objects should be given to the
-    downstream/children observers in the same graph. Then the process repeats
-    as the ``ObserverGraph`` is walked.
+    downstream/children observers in the same graph.
 
     An observer defines the notifier that wraps the user change handler, should
     notification is enabled by the user. This allows the observer to define
