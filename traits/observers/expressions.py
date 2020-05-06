@@ -52,8 +52,8 @@ class Expression:
         """
         if type(other) is not type(self):
             return False
-        self_graphs = self.as_graphs()
-        other_graphs = other.as_graphs()
+        self_graphs = self._as_graphs()
+        other_graphs = other._as_graphs()
         return (
             len(self_graphs) == len(other_graphs)
             and set(self_graphs) == set(other_graphs)
@@ -104,9 +104,13 @@ class Expression:
             new._prior_expression = _SeriesExpression([self, expression])
         return new
 
-    def as_graphs(self):
+    def _as_graphs(self):
         """ Return all the ObserverGraph for the observer framework to attach
         notifiers.
+
+        This is considered private to the users and to modules outside of the
+        ``observers`` subpackage, but public to modules within the
+        ``observers`` subpackage.
 
         Returns
         -------

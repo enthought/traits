@@ -56,7 +56,7 @@ class TestExpressionComposition(unittest.TestCase):
         expected = [
             create_graph(observer),
         ]
-        actual = expr.as_graphs()
+        actual = expr._as_graphs()
         self.assertEqual(actual, expected)
 
     def test_or_operator(self):
@@ -70,7 +70,7 @@ class TestExpressionComposition(unittest.TestCase):
             create_graph(observer1),
             create_graph(observer2),
         ]
-        actual = expr.as_graphs()
+        actual = expr._as_graphs()
         self.assertEqual(actual, expected)
 
     def test_or_operator_same_elements(self):
@@ -83,7 +83,7 @@ class TestExpressionComposition(unittest.TestCase):
         expected = [
             create_graph(observer),
         ]
-        actual = expr.as_graphs()
+        actual = expr._as_graphs()
         self.assertEqual(actual, expected)
 
     def test_or_maintain_order(self):
@@ -96,7 +96,7 @@ class TestExpressionComposition(unittest.TestCase):
         combined1 = expr1 | expr2
         combined2 = expr2 | expr1
 
-        self.assertEqual(combined1.as_graphs(), combined2.as_graphs()[::-1])
+        self.assertEqual(combined1._as_graphs(), combined2._as_graphs()[::-1])
 
     def test_then_operator(self):
         observer1 = 1
@@ -111,7 +111,7 @@ class TestExpressionComposition(unittest.TestCase):
                 observer2,
             )
         ]
-        actual = expr.as_graphs()
+        actual = expr._as_graphs()
         self.assertEqual(actual, expected)
 
     def test_then_optimization(self):
@@ -149,7 +149,7 @@ class TestExpressionComposition(unittest.TestCase):
             ),
 
         ]
-        actual = expr.as_graphs()
+        actual = expr._as_graphs()
         self.assertEqual(actual, expected)
 
     def test_or_then_chained(self):
@@ -180,7 +180,7 @@ class TestExpressionComposition(unittest.TestCase):
                 ],
             ),
         ]
-        actual = expr.as_graphs()
+        actual = expr._as_graphs()
         self.assertEqual(actual, expected)
 
     def test_join_expressions(self):
@@ -197,7 +197,7 @@ class TestExpressionComposition(unittest.TestCase):
                 observer2,
             )
         ]
-        actual = expr.as_graphs()
+        actual = expr._as_graphs()
         self.assertEqual(actual, expected)
 
 
@@ -241,14 +241,14 @@ class TestExpressionCopy(unittest.TestCase):
         copied = expr.copy()
         self.assertEqual(expr._levels, copied._levels)
         self.assertIsNot(copied._levels, expr._levels)
-        self.assertEqual(copied.as_graphs(), expr.as_graphs())
+        self.assertEqual(copied._as_graphs(), expr._as_graphs())
 
     def test_expression_copy_prior_expression_parallel(self):
         expr = create_expression(1) | create_expression(2)
         self.assertIsNotNone(expr._prior_expression)
 
         copied = expr.copy()
-        self.assertEqual(copied.as_graphs(), expr.as_graphs())
+        self.assertEqual(copied._as_graphs(), expr._as_graphs())
         self.assertIsNotNone(copied._prior_expression)
         self.assertIsNot(copied._prior_expression, expr._prior_expression)
         self.assertEqual(
@@ -265,7 +265,7 @@ class TestExpressionCopy(unittest.TestCase):
         self.assertIsNotNone(expr._prior_expression)
 
         copied = expr.copy()
-        self.assertEqual(copied.as_graphs(), expr.as_graphs())
+        self.assertEqual(copied._as_graphs(), expr._as_graphs())
         self.assertIsNotNone(copied._prior_expression)
         self.assertIsNot(copied._prior_expression, expr._prior_expression)
         self.assertEqual(
