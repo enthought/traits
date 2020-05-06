@@ -51,8 +51,8 @@ initialization. For performance purposes, a default initializer is called when:
    as the old value (see :ref:`static-notification`).
 
 Without any trait change notification definitions, it is possible to use
-default initializers to initialize attributes using object states after
-instantiation. However such usage will often leads to unexpected behavior when
+default initializers to initialize attributes using object state after
+instantiation. However such usage will often lead to unexpected behavior when
 notifications for trait changes are defined.
 
 .. index:: get_default_value()
