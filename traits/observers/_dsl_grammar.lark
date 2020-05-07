@@ -1,6 +1,6 @@
 // Grammar for Traits Mini Language used in observe
 // After updating the grammar, rebuild the standalone parser with:
-//     $ python etstools.py generate-parser
+//     $ python etstool.py generate-parser
 //
 
 ?start: expr
