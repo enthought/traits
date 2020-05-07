@@ -8,6 +8,12 @@
 #
 # Thanks for using Enthought open source!
 
+from traits.observers._has_traits_helpers import (
+    iter_objects,
+    get_maintainer,
+    get_notifier,
+    object_has_named_trait,
+)
 from traits.observers._i_observer import IObserver
 
 
@@ -17,7 +23,7 @@ class NamedTraitObserver:
     on an instance of HasTraits.
     """
 
-    def __init__(self, *, name, notify):
+    def __init__(self, *, name, notify, optional):
         """ Initializer.
         Once this observer is defined, it should not be mutated.
 
@@ -27,9 +33,17 @@ class NamedTraitObserver:
             Name of the trait to be observed.
         notify : boolean
             Whether to notify for changes.
+        optional : boolean
+            If true and if the incoming object is not an instance of HasTraits
+            or does not have a trait with the given name, this observer will
+            quietly skip it. Otherwise, this observer will raise an error if
+            the named trait cannot be found. Useful if the named trait is
+            added after a handler is registered, or when the context is
+            ambiguous (e.g. "items" in the domain specific language).
         """
         self._name = name
         self._notify = notify
+        self._optional = optional
 
     @property
     def name(self):
@@ -43,12 +57,141 @@ class NamedTraitObserver:
         """
         return self._notify
 
+    @property
+    def optional(self):
+        """ A boolean for whether to silent error if the incoming object
+        does not have the requested trait.
+        """
+        return self._optional
+
     def __hash__(self):
-        return hash((type(self), self.name, self.notify))
+        return hash((type(self), self.name, self.notify, self.optional))
 
     def __eq__(self, other):
         return (
             type(self) is type(other)
             and self.name == other.name
             and self.notify == other.notify
+            and self.optional == other.optional
         )
+
+    def iter_observables(self, object):
+        """ Yield the named instance trait from the given object. If the named
+        trait cannot be found and optional is false, raise an error.
+
+        Parameters
+        ----------
+        object: object
+            Object provided by another observers or by the user.
+
+        Yields
+        ------
+        CTrait
+
+        Raises
+        ------
+        ValueError
+            If the trait is not found and optional flag is set to false.
+        """
+        if not object_has_named_trait(object, self.name):
+            if self.optional:
+                return
+            raise ValueError(
+                "Trait named {!r} not found on {!r}.".format(self.name, object)
+            )
+        yield object._trait(self.name, 2)
+
+    def iter_objects(self, object):
+        """ Yield the value of the named trait from the given object, if the
+        value is defined. The value will then be given to the next observer(s)
+        following this one in an ObserverGraph.
+
+        If the value has not been set as an instance attribute, i.e. absent in
+        ``object.__dict__``, this observer will yield nothing. This is to avoid
+        evaluating default initializers while adding observers. When the
+        default is defined, a change event will trigger the maintainer to
+        add/remove notifiers for the next observers.
+
+        Note that ``Undefined``, ``Uninitialized`` and ``None`` values are also
+        skipped, as they are inevitable filled values that contain no further
+        attributes to be observed by any other observers.
+
+        Parameters
+        ----------
+        object: HasTraits
+            Expected to be an instance of HasTraits
+
+        Yields
+        ------
+        value : any
+
+        Raises
+        ------
+        ValueError
+            If the trait is not found and optional flag is set to false.
+        """
+        if not object_has_named_trait(object, self.name):
+            if self.optional:
+                return
+            raise ValueError(
+                "Trait named {!r} not found on {!r}.".format(self.name, object)
+            )
+        yield from iter_objects(object, self.name)
+
+    def get_notifier(self, handler, target, dispatcher):
+        """ Return a notifier for calling the user handler with the change
+        event.
+
+        Returns
+        -------
+        notifier : TraitEventNotifier
+        """
+        return get_notifier(
+            handler=handler,
+            target=target,
+            dispatcher=dispatcher,
+        )
+
+    def get_maintainer(self, graph, handler, target, dispatcher):
+        """ Return a notifier for maintaining downstream observers when
+        a trait is changed.
+
+        Parameters
+        ----------
+        graph : ObserverGraph
+            Description for the *downstream* observers, i.e. excluding self.
+        handler : callable
+            User handler.
+        target : object
+            Object seen by the user as the owner of the observer.
+        dispatcher : callable
+            Callable for dispatching the handler.
+
+        Returns
+        -------
+        notifier : ObserverChangeNotifier
+        """
+        return get_maintainer(
+            graph=graph,
+            handler=handler,
+            target=target,
+            dispatcher=dispatcher,
+        )
+
+    def iter_extra_graphs(self, graph):
+        """ Yield additional ObserverGraph for adding/removing notifiers when
+        this observer is encountered in a given ObserverGraph.
+
+        Parameters
+        ----------
+        graph : ObserverGraph
+            The graph where this observer is the root node.
+
+        Yields
+        ------
+        graph : ObserverGraph
+        """
+        # This will yield a new ObserverGraph with an observer specialized in
+        # observing trait_added event.
+        # enthought/traits#977
+        yield from ()
