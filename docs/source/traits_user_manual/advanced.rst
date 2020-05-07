@@ -41,8 +41,8 @@ attribute, with a name based on the name of the trait attribute:
 This method returns the default value for the *name* trait attribute and it
 overrides any default value specified in the trait definition.
 
-Similar to static default values, default values defined dynamically are
-considered to have existed **prior to** setting object state during
+Similar to static default values, default values defined dynamically should be
+thought of as existing **prior to** setting object state during
 initialization. For performance purposes, a default initializer is called when:
 
 1. the attribute value is accessed the first time or
@@ -50,10 +50,13 @@ initialization. For performance purposes, a default initializer is called when:
    handler defined for the trait. This is needed so the default can be reported
    as the old value (see :ref:`static-notification`).
 
-Without any trait change notification definitions, it is possible to use
-default initializers to initialize attributes using object states after
-instantiation. However such usage will often leads to unexpected behavior when
-notifications for trait changes are defined.
+While it is possible to use default initializers to lazily initialize an
+attribute based on the object state after instantiation, this relies on not
+having to observe for changes on the trait. This is often difficult in
+practice, since trait notifications can be setup by external objects, and are
+often needed for Property traits, delegation and GUI applications. These use
+cases will cause the default initializers to be evaluated eagerly prior to
+instantiation, instead of lazily after instantiation.
 
 .. index:: get_default_value()
 
