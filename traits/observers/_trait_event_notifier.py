@@ -119,7 +119,7 @@ class TraitEventNotifier:
         if self.prevent_event(event):
             return
         try:
-            self.dispatcher(handler, event=event)
+            self.dispatcher(handler, event)
         except Exception:
             handle_exception(event)
 
