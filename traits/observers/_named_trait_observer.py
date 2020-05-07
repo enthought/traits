@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-from traits.observers.events._trait_observer_event import trait_event_factory
+from traits.observers._trait_observer_event import trait_event_factory
 from traits.observers._has_traits_helpers import (
     iter_objects,
     object_has_named_trait,

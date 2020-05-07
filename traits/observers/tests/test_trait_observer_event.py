@@ -12,7 +12,7 @@ import unittest
 
 from traits.has_traits import HasTraits
 from traits.trait_types import Int
-from traits.observers.events._trait_observer_event import (
+from traits.observers._trait_observer_event import (
     trait_event_factory,
     TraitObserverEvent,
 )
