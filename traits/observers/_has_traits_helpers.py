@@ -8,16 +8,13 @@
 #
 # Thanks for using Enthought open source!
 
-""" Module for HasTraits and CTrait specific functions for observers.
+""" Module for HasTraits and CTrait specific utility functions for observers.
 """
 
 from traits.ctraits import CHasTraits
 from traits.trait_base import Undefined, Uninitialized
-from traits.observers.events._trait_observer_event import trait_event_factory
 from traits.observers._exceptions import NotifierNotFound
-from traits.observers._observer_change_notifier import ObserverChangeNotifier
 from traits.observers._observe import add_or_remove_notifiers
-from traits.observers._trait_event_notifier import TraitEventNotifier
 
 
 #: List of values not to be passed onto the next observers because they are
@@ -74,70 +71,7 @@ def iter_objects(object, name):
         yield value
 
 
-def get_notifier(handler, target, dispatcher):
-    """ Return a notifier for calling the user handler with the
-    TraitObserverEvent object representing a trait value change.
-
-    If the old value is uninitialized, then the change is caused by having
-    the default value defined. Such an event is prevented from reaching the
-    user's change handler.
-
-    Parameters
-    ----------
-    handler : callable
-        User handler.
-    target : object
-        Object seen by the user as the owner of the observer.
-    dispatcher : callable
-        Callable for dispatching the handler.
-
-    Returns
-    -------
-    notifier : TraitEventNotifier
-    """
-    return TraitEventNotifier(
-        handler=handler,
-        target=target,
-        dispatcher=dispatcher,
-        event_factory=trait_event_factory,
-        prevent_event=lambda event: event.old is Uninitialized,
-    )
-
-
-def get_maintainer(graph, handler, target, dispatcher):
-    """ Return a notifier for maintaining downstream observers when
-    a trait is changed.
-
-    All events should be allowed through, including setting default value such
-    that downstream observers can be maintained on the new value.
-
-    Parameters
-    ----------
-    graph : ObserverGraph
-        Description for the *downstream* observers, i.e. excluding self.
-    handler : callable
-        User handler.
-    target : object
-        Object seen by the user as the owner of the observer.
-    dispatcher : callable
-        Callable for dispatching the handler.
-
-    Returns
-    -------
-    notifier : ObserverChangeNotifier
-    """
-    return ObserverChangeNotifier(
-        observer_handler=_observer_change_handler,
-        event_factory=trait_event_factory,
-        prevent_event=lambda event: False,
-        graph=graph,
-        handler=handler,
-        target=target,
-        dispatcher=dispatcher,
-    )
-
-
-def _observer_change_handler(event, graph, handler, target, dispatcher):
+def observer_change_handler(event, graph, handler, target, dispatcher):
     """ Maintain downstream notifiers when the trait changes.
 
     Parameters

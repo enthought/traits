@@ -19,6 +19,7 @@ from traits.observers._observer_graph import ObserverGraph
 from traits.observers._testing import (
     call_add_or_remove_notifiers,
     create_graph,
+    DummyObserver,
 )
 
 
@@ -242,7 +243,7 @@ class TestNamedTraitObserverNotifications(unittest.TestCase):
         self.assertEqual(event.old, 0)
         self.assertEqual(event.new, 1)
 
-    def test_maintain_notifier(self):
+    def test_maintain_notifier_change_to_new_value(self):
         # Test when the container object is changed, the notifiers are
         # maintained downstream.
 
@@ -278,6 +279,35 @@ class TestNamedTraitObserverNotifications(unittest.TestCase):
         # then
         self.assertEqual(handler.call_count, 1)
 
+    def test_maintain_notifier_change_to_none(self):
+        # Instance may accept None, maintainer should accomodate that
+        # and skip it for the next observer.
+
+        class UnassumingObserver(DummyObserver):
+            def iter_observables(self, object):
+                if object is None:
+                    raise ValueError("This observer cannot handle None.")
+                yield from ()
+
+        foo = ClassWithInstance()
+        graph = create_graph(
+            create_observer(name="instance", notify=True),
+            UnassumingObserver(),
+        )
+        handler = mock.Mock()
+        call_add_or_remove_notifiers(
+            object=foo,
+            graph=graph,
+            handler=handler,
+        )
+
+        foo.instance = ClassWithTwoValue()
+
+        try:
+            foo.instance = None
+        except Exception:
+            self.fail("Setting instance back to None should not fail.")
+
     def test_maintain_notifier_for_default(self):
         # Dynamic defaults are not computed when hooking up the notifiers.
         # By when the default is defined, the maintainer will then hook up
@@ -311,3 +341,32 @@ class TestNamedTraitObserverNotifications(unittest.TestCase):
         # then
         # the notifier for value1 has been hooked up by the maintainer
         self.assertEqual(handler.call_count, 1)
+
+    def test_get_maintainer_excuse_old_value_with_no_notifiers(self):
+        # The "instance" trait has a default that has not been
+        # materialized prior to the user setting a new value to the trait.
+        # There isn't an old: Uninitialized -> new: Default value change event.
+        # Instead, there is a old: Default -> new value event.
+        # The old default value in this event won't have any notifiers
+        # to be removed, therefore we need to excuse the NotifierNotFound
+        # in the maintainer when it tries to remove notifiers from the old
+        # value.
+
+        foo = ClassWithDefault()
+        graph = create_graph(
+            create_observer(name="instance", notify=True),
+            create_observer(name="value1", notify=True),
+        )
+        handler = mock.Mock()
+        call_add_or_remove_notifiers(
+            object=foo,
+            graph=graph,
+            handler=handler,
+        )
+
+        try:
+            foo.instance = ClassWithTwoValue()
+        except Exception:
+            self.fail(
+                "Reassigning the instance value should not fail."
+            )

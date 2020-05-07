@@ -8,13 +8,16 @@
 #
 # Thanks for using Enthought open source!
 
+from traits.trait_base import Uninitialized
+from traits.observers.events._trait_observer_event import trait_event_factory
 from traits.observers._has_traits_helpers import (
     iter_objects,
-    get_maintainer,
-    get_notifier,
     object_has_named_trait,
+    observer_change_handler,
 )
 from traits.observers._i_observer import IObserver
+from traits.observers._observer_change_notifier import ObserverChangeNotifier
+from traits.observers._trait_event_notifier import TraitEventNotifier
 
 
 @IObserver.register
@@ -142,19 +145,28 @@ class NamedTraitObserver:
         """ Return a notifier for calling the user handler with the change
         event.
 
+        If the old value is uninitialized, then the change is caused by having
+        the default value defined. Such an event is prevented from reaching the
+        user's change handler.
+
         Returns
         -------
         notifier : TraitEventNotifier
         """
-        return get_notifier(
+        return TraitEventNotifier(
             handler=handler,
             target=target,
             dispatcher=dispatcher,
+            event_factory=trait_event_factory,
+            prevent_event=lambda event: event.old is Uninitialized,
         )
 
     def get_maintainer(self, graph, handler, target, dispatcher):
         """ Return a notifier for maintaining downstream observers when
         a trait is changed.
+
+        All events should be allowed through, including setting default value
+        such that downstream observers can be maintained on the new value.
 
         Parameters
         ----------
@@ -171,7 +183,10 @@ class NamedTraitObserver:
         -------
         notifier : ObserverChangeNotifier
         """
-        return get_maintainer(
+        return ObserverChangeNotifier(
+            observer_handler=observer_change_handler,
+            event_factory=trait_event_factory,
+            prevent_event=lambda event: False,
             graph=graph,
             handler=handler,
             target=target,
