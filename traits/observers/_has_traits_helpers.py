@@ -11,12 +11,8 @@
 """ Module for HasTraits and CTrait specific functions for observers.
 """
 
-import warnings
-
-from traits.constants import ComparisonMode
 from traits.ctraits import CHasTraits
 from traits.trait_base import Undefined, Uninitialized
-from traits.trait_types import Dict, List, Set
 from traits.observers.events._trait_observer_event import trait_event_factory
 from traits.observers._exceptions import NotifierNotFound
 from traits.observers._observer_change_notifier import ObserverChangeNotifier

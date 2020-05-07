@@ -12,7 +12,7 @@ import unittest
 from unittest import mock
 
 from traits.api import (
-    Bool, Dict, HasTraits, List, Instance, Int, Property, Set,
+    Bool, HasTraits, List, Instance, Int, Property,
 )
 from traits.observers import _has_traits_helpers as helpers
 from traits.observers.events._trait_observer_event import TraitObserverEvent
@@ -54,6 +54,11 @@ class Foo(HasTraits):
     def _get_property_value(self):
         self.property_n_calculations += 1
         return 1
+
+
+class ClassWithInstanceDefault(HasTraits):
+
+    instance_with_default = Instance(Bar, ())
 
 
 class TestHasTraitsHelpersHasNamedTrait(unittest.TestCase):
@@ -264,30 +269,32 @@ class TestHasTraitsHelpersGetMaintainer(unittest.TestCase):
             self.fail("Maintainer should not fail when new value is None.")
 
     def test_get_maintainer_excuse_old_value_with_no_notifiers(self):
-        # If the trait is referring to a TraitListObject (or friends),
-        # traits may provide a default empty container as the "old" value
-        # if it had not been initialized at the time of change.
-        # That default empty container has no notifiers so
-        # attempt to remove notifiers will fail, and we need to excuse that.
+        # The "instance_with_default" trait has a default that has not been
+        # materialized prior to the user setting a new value to the trait.
+        # There isn't an old: Uninitialized -> new: Default value change event.
+        # Instead, there is a old: Default -> new value event.
+        # The old default value in this event won't have any notifiers
+        # to be removed, therefore we need to excuse the NotifierNotFound
+        # in the maintainer when it tries to remove notifiers from the old
+        # value.
 
         class Observer(DummyObserver):
             def iter_observables(self, object):
                 yield object
 
-        foo = Foo()
+        foo = ClassWithInstanceDefault()
         maintainer = helpers.get_maintainer(
             graph=create_graph(Observer()),
             handler=self.handler,
             target=self.target,
             dispatcher=default_dispatcher,
         )
-        ctrait = foo._trait("list_of_int", 2)
+        ctrait = foo._trait("instance_with_default", 2)
         ctrait._notifiers(True).append(maintainer)
 
         try:
-            foo.list_of_int = [1, 2, 3]
+            foo.instance_with_default = Bar()
         except Exception:
             self.fail(
-                "Reassigning a list from an otherwise uninitialized value "
-                "should not faill."
+                "Reassigning the instance value should not fail."
             )
