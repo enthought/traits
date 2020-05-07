@@ -21,7 +21,7 @@ from traits.observers._trait_change_event import (
 class TestTraitChangeEvent(unittest.TestCase):
     """ Test initialization and repr of TraitChangeEvent. """
 
-    def test_trait_observer_event_repr(self):
+    def test_trait_change_event_repr(self):
         event = TraitChangeEvent(
             object=None,
             name="name",
