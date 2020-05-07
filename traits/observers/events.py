@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-""" Objects to describe change events.
+""" Event objects received by change handlers added using observe.
 """
 
 from traits.observers._trait_observer_event import (   # noqa: F401
