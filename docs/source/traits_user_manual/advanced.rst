@@ -50,8 +50,8 @@ initialization. For performance purposes, a default initializer is called when:
    handler defined for the trait. This is needed so the default can be reported
    as the old value (see :ref:`static-notification`).
 
-While it is possible to use default initializers to lazily initialize an
-attribute based on the object state after instantiation, this relies on not
+While it is possible to use default initializers to lazily initialize
+attributes based on the object state post-instantiation, this relies on not
 having to observe for changes on the trait. This is often difficult in
 practice, since trait notifications can be setup by external objects, and are
 often needed for Property traits, delegation and GUI applications. These use
