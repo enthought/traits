@@ -165,9 +165,8 @@ def _observer_change_handler(event, graph, handler, target, dispatcher):
                 remove=True,
             )
         except NotifierNotFound:
-            # The old value could be filled value
-            # (e.g. an empty TraitListObject)
-            # that does not have any notifier.
+            # The old value could be a default value that does not have any
+            # notifier.
             pass
 
     if event.new not in UNOBSERVABLE_VALUES:
