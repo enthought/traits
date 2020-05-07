@@ -413,7 +413,7 @@ def generate_parser(edm, runtime, environment):
         "{grammar_path}"
     )
 
-    with open(out_path, "w") as out_file:
+    with open(out_path, "w", encoding="utf-8") as out_file:
         execute([command], parameters, stdout=out_file)
     click.echo("Written to {out_path!r}".format(out_path=out_path))
 
