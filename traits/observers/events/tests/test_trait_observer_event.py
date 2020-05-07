@@ -18,32 +18,6 @@ from traits.observers.events._trait_observer_event import (
 )
 
 
-def get_notifier(event_factory):
-    """ Dummy notifier for collecting events created by the event factory so
-    that the events can then be inspected in tests.
-
-    Parameters
-    ----------
-    event_factory : callable
-        The event factory to be tested.
-
-    Returns
-    -------
-    events : list
-        A list for collecting events. New events will be appended to it.
-    notifier : callable
-        Notifier to be given to an observable so that it is called when
-        a change occurs.
-    """
-    events = []
-
-    def notifier(*args, **kwargs):
-        event = event_factory(*args, **kwargs)
-        events.append(event)
-
-    return events, notifier
-
-
 class TestTraitObserverEvent(unittest.TestCase):
     """ Test initialization and repr of TraitObserverEvent. """
 
@@ -69,7 +43,11 @@ class TestTraitEventFactory(unittest.TestCase):
         class Foo(HasTraits):
             number = Int()
 
-        events, notifier = get_notifier(trait_event_factory)
+        events = []
+
+        def notifier(*args, **kwargs):
+            event = trait_event_factory(*args, **kwargs)
+            events.append(event)
 
         foo = Foo(number=0)
         trait = foo.trait("number")
