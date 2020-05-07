@@ -12,10 +12,10 @@
 """
 
 
-# TraitObserverEvent is exposed in the public API.
+# TraitChangeEvent is exposed in the public API.
 
-class TraitObserverEvent:
-    """ Emitted when a trait on an HasTraits object is changed.
+class TraitChangeEvent:
+    """ Emitted when a trait on a HasTraits object is changed.
 
     Attributes
     ----------
@@ -38,10 +38,7 @@ class TraitObserverEvent:
     def __repr__(self):
         return (
             "<{class_name}("
-            "object={object!r}, "
-            "name={name!r}, "
-            "old={old!r}, "
-            "new={new!r}"    # no trailing comma here.
+                "object={object!r}, name={name!r}, old={old!r}, new={new!r}"
             ")>".format(
                 class_name=type(self).__name__,
                 object=self.object,
@@ -68,11 +65,6 @@ def trait_event_factory(object, name, old, new):
 
     Returns
     -------
-    TraitObserverEvent
+    TraitChangeEvent
     """
-    return TraitObserverEvent(
-        object=object,
-        name=name,
-        old=old,
-        new=new,
-    )
+    return TraitChangeEvent(object=object, name=name, old=old, new=new)

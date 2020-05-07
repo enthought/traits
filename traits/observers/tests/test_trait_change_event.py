@@ -12,17 +12,17 @@ import unittest
 
 from traits.has_traits import HasTraits
 from traits.trait_types import Int
-from traits.observers._trait_observer_event import (
+from traits.observers._trait_change_event import (
     trait_event_factory,
-    TraitObserverEvent,
+    TraitChangeEvent,
 )
 
 
-class TestTraitObserverEvent(unittest.TestCase):
-    """ Test initialization and repr of TraitObserverEvent. """
+class TestTraitChangeEvent(unittest.TestCase):
+    """ Test initialization and repr of TraitChangeEvent. """
 
     def test_trait_observer_event_repr(self):
-        event = TraitObserverEvent(
+        event = TraitChangeEvent(
             object=None,
             name="name",
             old=1,
@@ -31,7 +31,7 @@ class TestTraitObserverEvent(unittest.TestCase):
         actual = repr(event)
         self.assertEqual(
             actual,
-            "<TraitObserverEvent(object=None, name='name', old=1, new=2)>"
+            "<TraitChangeEvent(object=None, name='name', old=1, new=2)>"
         )
 
 

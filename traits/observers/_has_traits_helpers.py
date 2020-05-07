@@ -76,7 +76,7 @@ def observer_change_handler(event, graph, handler, target, dispatcher):
 
     Parameters
     ----------
-    event : TraitObserverEvent
+    event : TraitChangeEvent
         The event that triggers this function.
     graph : ObserverGraph
         Description for the *downstream* observers, i.e. excluding the observer

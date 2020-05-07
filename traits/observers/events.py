@@ -11,6 +11,6 @@
 """ Event objects received by change handlers added using observe.
 """
 
-from traits.observers._trait_observer_event import (   # noqa: F401
-    TraitObserverEvent,
+from traits.observers._trait_change_event import (   # noqa: F401
+    TraitChangeEvent,
 )

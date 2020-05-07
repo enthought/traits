@@ -15,6 +15,6 @@
     :undoc-members:
     :show-inheritance:
 
-.. autoclass:: TraitObserverEvent
+.. autoclass:: TraitChangeEvent
    :members:
    :inherited-members:
