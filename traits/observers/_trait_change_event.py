@@ -38,7 +38,7 @@ class TraitChangeEvent:
     def __repr__(self):
         return (
             "<{class_name}("
-                "object={object!r}, name={name!r}, old={old!r}, new={new!r}"
+            "object={object!r}, name={name!r}, old={old!r}, new={new!r}"
             ")>".format(
                 class_name=type(self).__name__,
                 object=self.object,
