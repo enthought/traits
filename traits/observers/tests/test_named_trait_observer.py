@@ -188,6 +188,12 @@ class TestNamedTraitObserverNextObjects(unittest.TestCase):
             "Trait named {!r} not found on {!r}.".format("sally", foo)
         )
 
+    def test_trait_not_found_skip_as_optional(self):
+        observer = create_observer(name="sally", optional=True)
+        foo = ClassWithInstance()
+        actual = list(observer.iter_objects(foo))
+        self.assertEqual(actual, [])
+
     def test_iter_objects_no_side_effect_on_default_initializer(self):
         # Test iter_objects should not trigger default to be evaluated.
         observer = create_observer(name="instance")
