@@ -1,0 +1,54 @@
+// Grammar for Traits Mini Language used in observe
+// After updating the grammar, rebuild the standalone parser with:
+//     $ python etstool.py generate-parser
+//
+
+?start: expr
+
+// Connectors
+_dot: "."
+_colon: ":"
+
+// Grouped elements, e.g. "[a.b]", "[a,b]"
+?grouped: "[" parallel "]"
+
+// Simple name as trait name, e.g. "a"
+trait: NAME -> trait
+
+// Element that can be followed by a ".", ":"
+?element: trait | grouped | metadata | items
+
+// Syntax to indicate name is being used for matching an existing
+// metadata name rather than a trait name.
+metadata: "+" NAME -> metadata
+
+// Keyword for handing items (in list, or dict, or set,
+// or a trait named "items")
+items: "items" -> items
+
+// Element marked with notify flag set to True
+// e.g. "a."
+notified_element: element _dot -> notify
+
+// Element marked with notify flag set to False
+// e.g. "a:", "[a.b]:"
+quiet_element: element _colon -> quiet
+
+// Element appearing last and therefore its notify flag needs to be implied.
+// e.g. The "b" and "c" in "[a.b,c]:d" will have notify flag set to false
+last_element: element -> last
+
+// Rule for joining elements in series, e.g. "a.b.c"
+?series: (notified_element | quiet_element)* last_element
+
+// Rule for joining elements in parallel, e.g. "a,b,c"
+?parallel: series ("," series)*
+
+// Final expression to be used in start
+?expr: parallel
+
+// Matching Python variable name rule
+NAME: /[a-zA-Z_]\w*/
+
+%import common.WS
+%ignore WS
