@@ -8,7 +8,6 @@
 #
 # Thanks for using Enthought open source!
 
-from traits.trait_base import Uninitialized
 from traits.observers.events._trait_observer_event import trait_event_factory
 from traits.observers._has_traits_helpers import (
     iter_objects,
@@ -18,6 +17,7 @@ from traits.observers._has_traits_helpers import (
 from traits.observers._i_observer import IObserver
 from traits.observers._observer_change_notifier import ObserverChangeNotifier
 from traits.observers._trait_event_notifier import TraitEventNotifier
+from traits.trait_base import Uninitialized
 
 
 @IObserver.register
