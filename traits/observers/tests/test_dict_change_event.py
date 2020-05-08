@@ -23,20 +23,12 @@ class TestDictChangeEvent(unittest.TestCase):
         event = DictChangeEvent(
             trait_dict=dict(),
             added={1: 1},
-            removed={"key": 2},
+            removed={"2": 2},
         )
         actual = repr(event)
         self.assertEqual(
             actual,
-            "<DictChangeEvent("
-            "trait_dict={trait_dict!r}, "
-            "removed={removed!r}"
-            "added={added!r}, "
-            ")>".format(
-                trait_dict=dict(),
-                added={1: 1},
-                removed={"key": 2},
-            )
+            "<DictChangeEvent(trait_dict={}, removed={'2': 2}, added={1: 1})>"
         )
 
 

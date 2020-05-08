@@ -38,8 +38,8 @@ class DictChangeEvent:
         return (
             "<{class_name}("
             "trait_dict={trait_dict!r}, "
-            "removed={removed!r}"
-            "added={added!r}, "
+            "removed={removed!r}, "
+            "added={added!r}"
             ")>".format(
                 class_name=type(self).__name__,
                 trait_dict=self.trait_dict,
