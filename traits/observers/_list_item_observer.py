@@ -63,7 +63,7 @@ class ListItemObserver:
 
     def iter_observables(self, object):
         """ If the given object is an observable list, yield that list.
-        Otherwise, raise an error.
+        Otherwise, raise an error unless the observer is optional.
 
         Parameters
         ----------
@@ -96,7 +96,7 @@ class ListItemObserver:
 
     def iter_objects(self, object):
         """ Yield the content of the list if the given object is an observable
-        list. Otherwise raise an error.
+        list. Otherwise, raise an error, unless the observer is optional.
 
         The content of the list will be passed onto the next observer following
         this one in an ObserverGraph.
@@ -131,6 +131,8 @@ class ListItemObserver:
         -------
         notifier : TraitEventNotifier
         """
+        # Unlike CTrait, when default list is created, there isn't a change
+        # event where the old value is Uninitialized.
         return TraitEventNotifier(
             handler=handler,
             target=target,
