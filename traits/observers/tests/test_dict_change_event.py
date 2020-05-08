@@ -30,8 +30,8 @@ class TestDictChangeEvent(unittest.TestCase):
             actual,
             "<DictChangeEvent("
             "trait_dict={trait_dict!r}, "
-            "added={added!r}, "
             "removed={removed!r}"
+            "added={added!r}, "
             ")>".format(
                 trait_dict=dict(),
                 added={1: 1},

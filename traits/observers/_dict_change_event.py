@@ -19,27 +19,27 @@ class DictChangeEvent:
     ----------
     trait_dict : dict
         The dict being mutated.
-    added : dict
-        Keys and values for added or updated items.
-        If keys are found in ``removed`` as well, they refer to updated items
-        and the values are new.
     removed : dict
         Keys and values for removed or updated items.
         If keys are found in ``added`` as well, they refer to updated items
         and the values are old.
+    added : dict
+        Keys and values for added or updated items.
+        If keys are found in ``removed`` as well, they refer to updated items
+        and the values are new.
     """
 
-    def __init__(self, *, trait_dict, added, removed):
+    def __init__(self, *, trait_dict, removed, added):
         self.trait_dict = trait_dict
-        self.added = added
         self.removed = removed
+        self.added = added
 
     def __repr__(self):
         return (
             "<{class_name}("
             "trait_dict={trait_dict!r}, "
-            "added={added!r}, "
             "removed={removed!r}"
+            "added={added!r}, "
             ")>".format(
                 class_name=type(self).__name__,
                 trait_dict=self.trait_dict,
