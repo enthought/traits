@@ -270,11 +270,11 @@ class TestDictItemObserverNotifications(unittest.TestCase):
         ((event, ), _), = handler.call_args_list
         self.assertEqual(event.added, {"3": 3})
         self.assertEqual(event.removed, {})
+        handler.reset_mock()
 
         # when
         # Change the content to something else
         instance.dict_of_dict["1"] = {}
-        handler.reset_mock()
 
         # the inner dict is not inside the instance.dict_of_dict any more
         inner_dict["4"] = 4
