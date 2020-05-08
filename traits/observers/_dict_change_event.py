@@ -13,7 +13,7 @@
 
 
 class DictChangeEvent:
-    """ Event object to represent mutation on a dict.
+    """ Event object to represent mutations on a dict.
 
     Attributes
     ----------
@@ -21,11 +21,11 @@ class DictChangeEvent:
         The dict being mutated.
     added : dict
         Keys and values for added or updated items.
-        If keys are found in removed as well, they refer to updated items
+        If keys are found in ``removed`` as well, they refer to updated items
         and the values are new.
     removed : dict
         Keys and values for removed or updated items.
-        If keys are found in added as well, they refer to updated items
+        If keys are found in ``added`` as well, they refer to updated items
         and the values are old.
     """
 
