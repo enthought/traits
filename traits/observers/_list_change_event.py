@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-""" Event object and factory for mutations to a list.
+""" Event object for representing mutations to a list.
 """
 
 
