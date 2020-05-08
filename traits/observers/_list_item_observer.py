@@ -119,7 +119,8 @@ class ListItemObserver:
             if self.optional:
                 return
             raise ValueError(
-                "Expected a list to be observed, got {!r}".format(object))
+                "Expected a list to be observed, got {!r} (type: {!r})".format(
+                    object, type(object)))
 
         yield from object
 
