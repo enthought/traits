@@ -37,10 +37,8 @@ class ListChangeEvent:
     def __repr__(self):
         return (
             "<ListChangeEvent("
-            "trait_list={trait_list!r}, "
-            "index={index!r}, "
-            "removed={removed!r}, "
-            "added={added!r}"    # no trailing comma here.
+            "trait_list={trait_list!r}, index={index!r}, "
+            "removed={removed!r}, added={added!r}"
             ")>".format(
                 trait_list=self.trait_list,
                 index=self.index,
@@ -69,8 +67,5 @@ def list_event_factory(trait_list, index, removed, added):
     ListChangeEvent
     """
     return ListChangeEvent(
-        trait_list=trait_list,
-        index=index,
-        removed=removed,
-        added=added,
+        trait_list=trait_list, index=index, removed=removed, added=added,
     )
