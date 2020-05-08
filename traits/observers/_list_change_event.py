@@ -13,6 +13,7 @@
 
 # ListChangeEvent is exposed in the public API
 
+
 class ListChangeEvent:
     """ Event object to represent mutations to a list.
 
