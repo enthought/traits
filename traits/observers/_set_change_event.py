@@ -19,23 +19,23 @@ class SetChangeEvent:
     ----------
     trait_set : set
         The set being mutated.
-    added : set
-        Values added to the set.
     removed : set
         Values removed from the set.
+    added : set
+        Values added to the set.
     """
 
-    def __init__(self, *, trait_set, added, removed):
+    def __init__(self, *, trait_set, removed, added):
         self.trait_set = trait_set
-        self.added = added
         self.removed = removed
+        self.added = added
 
     def __repr__(self):
         return (
             "<{class_name}("
             "trait_set={trait_set!r}, "
-            "added={added!r}, "
-            "removed={removed!r}"
+            "removed={removed!r}, "
+            "added={added!r}"
             ")>".format(
                 class_name=type(self).__name__,
                 trait_set=self.trait_set,
