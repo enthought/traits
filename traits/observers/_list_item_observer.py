@@ -10,10 +10,10 @@
 
 from traits.observers._list_change_event import list_event_factory
 from traits.observers._i_observer import IObserver
-from traits.observers._i_observable import IObservable
 from traits.observers._trait_event_notifier import TraitEventNotifier
 from traits.observers._observe import add_or_remove_notifiers
 from traits.observers._observer_change_notifier import ObserverChangeNotifier
+from traits.trait_list_object import TraitList
 
 
 @IObserver.register
@@ -79,19 +79,12 @@ class ListItemObserver:
         ValueError
             If the given object is not a list.
         """
-        if not isinstance(object, list):
+        if not isinstance(object, TraitList):
             if self.optional:
                 return
             raise ValueError(
-                "Expected a list to be observed, got {!r} (type: {!r})".format(
-                    object, type(object)))
-        if not isinstance(object, IObservable):
-            if self.optional:
-                return
-            raise ValueError(
-                "Expected an observable, got {!r} (type: {!r})".format(
-                    object, type(object))
-            )
+                "Expected a TraitList to be observed, "
+                "got {!r} (type: {!r})".format(object, type(object)))
         yield object
 
     def iter_objects(self, object):
@@ -115,12 +108,12 @@ class ListItemObserver:
         ValueError
             If the given object is not a list.
         """
-        if not isinstance(object, list):
+        if not isinstance(object, TraitList):
             if self.optional:
                 return
             raise ValueError(
-                "Expected a list to be observed, got {!r} (type: {!r})".format(
-                    object, type(object)))
+                "Expected a TraitList to be observed, "
+                "got {!r} (type: {!r})".format(object, type(object)))
 
         yield from object
 

@@ -18,7 +18,7 @@ from traits.observers._testing import (
     call_add_or_remove_notifiers,
     create_graph,
 )
-from traits.trait_list_object import TraitListObject
+from traits.trait_list_object import TraitList, TraitListObject
 
 
 class TestListItemObserverEqualHash(unittest.TestCase):
@@ -64,6 +64,10 @@ class CustomList(list):
     pass
 
 
+class CustomTraitList(TraitList):
+    pass
+
+
 class ClassWithList(HasTraits):
 
     values = List()
@@ -71,6 +75,8 @@ class ClassWithList(HasTraits):
     not_a_trait_list = Instance(CustomList)
 
     number = Int()
+
+    custom_trait_list = Instance(CustomTraitList)
 
 
 class ClassWithListOfList(HasTraits):
@@ -104,6 +110,17 @@ class TestListItemObserverIterObservable(unittest.TestCase):
         actual_item, = list(observer.iter_observables(instance.values))
         self.assertIsInstance(actual_item, TraitListObject)
 
+    def test_trait_list_iter_observables_accept_custom_trait_list(self):
+        # An extension of TraitList can be used with ListItemObserver
+        instance = ClassWithList()
+        instance.custom_trait_list = CustomTraitList([1, 2, 3])
+
+        observer = ListItemObserver(notify=True, optional=False)
+
+        actual_item, = list(
+            observer.iter_observables(instance.custom_trait_list))
+        self.assertIs(actual_item, instance.custom_trait_list)
+
     def test_trait_list_iter_observables_error(self):
         # If the user chains a ListItemObserver after an observer that
         # does not produce a TraitList, raise an error
@@ -116,7 +133,9 @@ class TestListItemObserverIterObservable(unittest.TestCase):
             next(observer.iter_observables(instance.not_a_trait_list))
 
         self.assertIn(
-            "Expected an observable", str(exception_context.exception))
+            "Expected a TraitList to be observed",
+            str(exception_context.exception)
+        )
 
     def test_trait_list_iter_observables_not_a_trait_list_optional(self):
         # Test when the given object is a list but not an IObservable
@@ -142,7 +161,8 @@ class TestListItemObserverIterObservable(unittest.TestCase):
             list(observer.iter_observables(instance.number))
 
         self.assertIn(
-            "Expected a list to be observed", str(exception_context.exception))
+            "Expected a TraitList to be observed",
+            str(exception_context.exception))
 
 
 class TestListItemObserverIterObjects(unittest.TestCase):
@@ -160,6 +180,17 @@ class TestListItemObserverIterObjects(unittest.TestCase):
         actual = list(observer.iter_objects(instance.values))
         self.assertEqual(actual, [item1, item2])
 
+    def test_trait_list_iter_object_accept_custom_trait_list(self):
+        # An extension of TraitList can be used with ListItemObserver
+        instance = ClassWithList()
+        instance.custom_trait_list = CustomTraitList([1, 2, 3])
+
+        observer = ListItemObserver(notify=True, optional=False)
+
+        actual = list(
+            observer.iter_objects(instance.custom_trait_list))
+        self.assertEqual(actual, [1, 2, 3])
+
     def test_trait_list_iter_objects_complain_not_list(self):
 
         observer = ListItemObserver(notify=True, optional=False)
@@ -167,7 +198,7 @@ class TestListItemObserverIterObjects(unittest.TestCase):
             next(observer.iter_objects(set([1])))
 
         self.assertIn(
-            "Expected a list to be observed", str(exception_cm.exception))
+            "Expected a TraitList to be observed", str(exception_cm.exception))
 
     def test_trait_list_iter_objects_ignore_if_optional_and_not_list(self):
         observer = ListItemObserver(notify=True, optional=True)
@@ -197,6 +228,31 @@ class TestListTraitObserverNotifications(unittest.TestCase):
 
         # when
         instance.values.append(1)
+
+        # then
+        ((event, ), _), = handler.call_args_list
+        self.assertEqual(event.trait_list, [1])
+        self.assertEqual(event.added, [1])
+        self.assertEqual(event.removed, [])
+        self.assertEqual(event.index, 0)
+
+    def test_notifier_custom_trait_list_change(self):
+        # Test compatibility with any extension of TraitList, not just
+        # TraitListObject
+        instance = ClassWithList()
+        instance.custom_trait_list = CustomTraitList()
+        graph = create_graph(
+            ListItemObserver(notify=True, optional=False),
+        )
+        handler = mock.Mock()
+        call_add_or_remove_notifiers(
+            object=instance.custom_trait_list,
+            graph=graph,
+            handler=handler,
+        )
+
+        # when
+        instance.custom_trait_list.append(1)
 
         # then
         ((event, ), _), = handler.call_args_list

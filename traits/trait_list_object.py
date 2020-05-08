@@ -162,6 +162,7 @@ def _removed_items(items, index, return_for_invalid_index):
             return return_for_invalid_index
 
 
+@_IObservable.register
 class TraitList(list):
     """ A subclass of list that validates and notifies listeners of changes.
 
@@ -519,8 +520,21 @@ class TraitList(list):
         state["notifiers"] = []
         self.__dict__.update(state)
 
+    # -- Implement IObservable ------------------------------------------------
 
-@_IObservable.register
+    def _notifiers(self, force_create):
+        """ Return a list of callables where each callable is a notifier.
+        The list is expected to be mutated for contributing or removing
+        notifiers from the object.
+
+        Parameters
+        ----------
+        force_create: boolean
+            It is added for compatibility with CTrait. Not used here.
+        """
+        return self.notifiers
+
+
 class TraitListObject(TraitList):
     """ A specialization of TraitList with a default validator and notifier
     which provide bug-for-bug compatibility with the TraitListObject from
@@ -881,17 +895,3 @@ class TraitListObject(TraitList):
                     "element" if new_length == 1 else "elements",
                 )
             )
-
-    # -- Implement IObservable ------------------------------------------------
-
-    def _notifiers(self, force_create):
-        """ Return a list of callables where each callable is a notifier.
-        The list is expected to be mutated for contributing or removing
-        notifiers from the object.
-
-        Parameters
-        ----------
-        force_create: boolean
-            It is added for compatibility with CTrait. Not used here.
-        """
-        return self.notifiers
