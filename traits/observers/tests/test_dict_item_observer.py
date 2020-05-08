@@ -213,8 +213,8 @@ class TestDictItemObserverNotifications(unittest.TestCase):
         self.assertEqual(event.added, {"1": 1})
         self.assertEqual(event.removed, {})
 
-    def test_maintain_notifier(self):
-        # Test maintaining downstream notifier by observing a nested dict
+    def test_maintain_notifier_for_added(self):
+        # Test adding downstream notifier by observing a nested dict
         # inside another dict
 
         instance = ClassWithDict()
@@ -246,3 +246,37 @@ class TestDictItemObserverNotifications(unittest.TestCase):
         ((event, ), _), = handler.call_args_list
         self.assertEqual(event.added, {})
         self.assertEqual(event.removed, {"2": 2})
+
+    def test_maintain_notifier_for_removed(self):
+        # Test removing downstream notifier by observing a nested dict
+        # inside another dict
+        instance = ClassWithDict(dict_of_dict={"1": {"2": 2}})
+        graph = create_graph(
+            create_observer(notify=False, optional=False),
+            create_observer(notify=True, optional=False),
+        )
+
+        handler = mock.Mock()
+        call_add_or_remove_notifiers(
+            object=instance.dict_of_dict,
+            graph=graph,
+            handler=handler,
+        )
+
+        # sanity check test setup
+        inner_dict = instance.dict_of_dict["1"]
+        inner_dict["3"] = 3
+        self.assertEqual(handler.call_count, 1)
+        ((event, ), _), = handler.call_args_list
+        self.assertEqual(event.added, {"3": 3})
+        self.assertEqual(event.removed, {})
+
+        # when
+        del instance.dict_of_dict["1"]
+        handler.reset_mock()
+
+        # the inner dict is not inside the instance.dict_of_dict any more
+        inner_dict["4"] = 4
+
+        # then
+        self.assertEqual(handler.call_count, 0)
