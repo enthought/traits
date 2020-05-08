@@ -11,6 +11,7 @@
 """ Event object for representing mutations to a list.
 """
 
+# ListChangeEvent is exposed in the public API
 
 class ListChangeEvent:
     """ Event object to represent mutations to a list.
