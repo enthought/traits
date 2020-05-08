@@ -62,8 +62,8 @@ class SetItemObserver:
         return self._optional
 
     def iter_observables(self, object):
-        """ If the given object is a set, yield that set. Otherwise, raise
-        an error.
+        """ If the given object is an observable set, yield that set.
+        Otherwise, raise an error, unless this observer is optional
 
         Parameters
         ----------
@@ -77,7 +77,7 @@ class SetItemObserver:
         Raises
         ------
         ValueError
-            If the given object is not a set.
+            If the given object is not an observable set and optional is false.
         """
         if not isinstance(object, TraitSet):
             if self.optional:
@@ -90,8 +90,11 @@ class SetItemObserver:
         yield object
 
     def iter_objects(self, object):
-        """ Yield object for the children observers following this one,
-        in an ObserverGraph.
+        """ Yield the content of the set if the given object is an observable
+        set. Otherwise, raise an error, unless the observer is optional.
+
+        The content of the set will be passed onto the children observer(s)
+        following this one in an ObserverGraph.
 
         Parameters
         ----------
@@ -105,7 +108,7 @@ class SetItemObserver:
         Raises
         ------
         ValueError
-            If the given object is not a set.
+            If the given object is not an observable set and optional is false.
         """
         if not isinstance(object, TraitSet):
             if self.optional:
