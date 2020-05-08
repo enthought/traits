@@ -13,7 +13,7 @@
 
 
 class ListChangeEvent:
-    """ Event object to represent mutation on a list.
+    """ Event object to represent mutations to a list.
 
     Attributes
     ----------
