@@ -344,6 +344,20 @@ class TraitDict(dict):
         )
         return result
 
+    # -- Implement IObservable ------------------------------------------------
+
+    def _notifiers(self, force_create):
+        """ Return a list of callables where each callable is a notifier.
+        The list is expected to be mutated for contributing or removing
+        notifiers from the object.
+
+        Parameters
+        ----------
+        force_create: boolean
+            Not used here.
+        """
+        return self.notifiers
+
 
 class TraitDictObject(TraitDict):
     """ A subclass of TraitDict that fires trait events when mutated.
