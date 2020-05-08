@@ -14,6 +14,7 @@ from weakref import ref
 
 from traits.trait_base import class_of, Undefined, _validate_everything
 from traits.trait_errors import TraitError
+from traits.observers._i_observable import IObservable as _IObservable
 
 
 class TraitListEvent(object):
@@ -519,6 +520,7 @@ class TraitList(list):
         self.__dict__.update(state)
 
 
+@_IObservable.register
 class TraitListObject(TraitList):
     """ A specialization of TraitList with a default validator and notifier
     which provide bug-for-bug compatibility with the TraitListObject from
@@ -879,3 +881,17 @@ class TraitListObject(TraitList):
                     "element" if new_length == 1 else "elements",
                 )
             )
+
+    # -- Implement IObservable ------------------------------------------------
+
+    def _notifiers(self, force_create):
+        """ Return a list of callables where each callable is a notifier.
+        The list is expected to be mutated for contributing or removing
+        notifiers from the object.
+
+        Parameters
+        ----------
+        force_create: boolean
+            It is added for compatibility with CTrait. Not used here.
+        """
+        return self.notifiers
