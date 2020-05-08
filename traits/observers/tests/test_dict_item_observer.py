@@ -16,12 +16,9 @@ from traits.observers._dict_item_observer import DictItemObserver
 from traits.observers._testing import (
     call_add_or_remove_notifiers,
     create_graph,
-    DummyObservable,
-    DummyObserver,
-    DummyNotifier,
 )
 from traits.trait_dict_object import TraitDict
-from traits.trait_types import Dict
+from traits.trait_types import Dict, Str
 
 
 def create_observer(**kwargs):
@@ -87,6 +84,8 @@ class CustomTraitDict(TraitDict):
 
 class ClassWithDict(HasTraits):
     values = Dict()
+
+    dict_of_dict = Dict(Str, Dict)
 
 
 class TestDictItemObserverIterObservable(unittest.TestCase):
@@ -215,38 +214,35 @@ class TestDictItemObserverNotifications(unittest.TestCase):
         self.assertEqual(event.removed, {})
 
     def test_maintain_notifier(self):
-        # Test maintaining downstream notifier
-
-        class ChildObserver(DummyObserver):
-
-            def iter_observables(self, object):
-                yield object
+        # Test maintaining downstream notifier by observing a nested dict
+        # inside another dict
 
         instance = ClassWithDict()
-
-        notifier = DummyNotifier()
-        child_observer = ChildObserver(notifier=notifier)
         graph = create_graph(
             create_observer(notify=False, optional=False),
-            child_observer,
+            create_observer(notify=True, optional=False),
         )
 
         handler = mock.Mock()
         call_add_or_remove_notifiers(
-            object=instance.values,
+            object=instance.dict_of_dict,
             graph=graph,
             handler=handler,
         )
 
         # when
-        observable = DummyObservable()
-        instance.values.update({"1": observable})
+        instance.dict_of_dict.update({"1": {"2": 2}})
 
         # then
-        self.assertEqual(observable.notifiers, [notifier])
+        # ``notify`` is set to False for mutations on the outer dict
+        self.assertEqual(handler.call_count, 0)
 
         # when
-        del instance.values["1"]
+        del instance.dict_of_dict["1"]["2"]
 
         # then
-        self.assertEqual(observable.notifiers, [])
+        # ``notify`` is set to True for mutations on the inner dict
+        self.assertEqual(handler.call_count, 1)
+        ((event, ), _), = handler.call_args_list
+        self.assertEqual(event.added, {})
+        self.assertEqual(event.removed, {"2": 2})
