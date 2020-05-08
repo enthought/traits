@@ -62,7 +62,5 @@ def set_event_factory(trait_set, removed, added):
     SetChangeEvent
     """
     return SetChangeEvent(
-        trait_set=trait_set,
-        added=added,
-        removed=removed,
+        trait_set=trait_set, added=added, removed=removed,
     )
