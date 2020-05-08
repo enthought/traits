@@ -423,6 +423,20 @@ class TraitSet(set):
         state['notifiers'] = []
         self.__dict__.update(state)
 
+    # -- Implement IObservable ------------------------------------------------
+
+    def _notifiers(self, force_create):
+        """ Return a list of callables where each callable is a notifier.
+        The list is expected to be mutated for contributing or removing
+        notifiers from the object.
+
+        Parameters
+        ----------
+        force_create: boolean
+            Not used here.
+        """
+        return self.notifiers
+
 
 class TraitSetObject(TraitSet):
     """ A specialization of TraitSet with a default validator and notifier
