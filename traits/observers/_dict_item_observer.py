@@ -61,8 +61,8 @@ class DictItemObserver:
         return self._optional
 
     def iter_observables(self, object):
-        """ If the given object is a dict, yield that dict. Otherwise, raise
-        an error.
+        """ If the given object is an observable dict, yield that dict.
+        Otherwise, raise an error unless this observer is optional.
 
         Parameters
         ----------
@@ -76,7 +76,8 @@ class DictItemObserver:
         Raises
         ------
         ValueError
-            If the given object is not an observable dict.
+            If the given object is not an observable dict and optional is
+            false.
         """
         if not isinstance(object, TraitDict):
             if self.optional:
@@ -88,8 +89,11 @@ class DictItemObserver:
         yield object
 
     def iter_objects(self, object):
-        """ Yield object for the children observers following this one,
-        in an ObserverGraph.
+        """ Yield the values if the given object is an observable dict.
+        Otherwise, raise an error, unless the observer is optional.
+
+        The values of the dict will be passed onto the children observer(s)
+        following this one in an ObserverGraph.
 
         Parameters
         ----------
@@ -103,7 +107,8 @@ class DictItemObserver:
         Raises
         ------
         ValueError
-            If the given object is not an observable dict.
+            If the given object is not an observable dict and optional is
+            false.
         """
         if not isinstance(object, TraitDict):
             if self.optional:
@@ -122,6 +127,8 @@ class DictItemObserver:
         -------
         notifier : TraitEventNotifier
         """
+        # Unlike CTrait, when default dict is created, there isn't a change
+        # event where the old value is Uninitialized.
         return TraitEventNotifier(
             handler=handler,
             target=target,
