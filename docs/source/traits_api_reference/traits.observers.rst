@@ -18,3 +18,7 @@
 .. autoclass:: ListChangeEvent
    :members:
    :inherited-members:
+
+.. autoclass:: TraitChangeEvent
+   :members:
+   :inherited-members:

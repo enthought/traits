@@ -77,7 +77,8 @@ class ListItemObserver:
         Raises
         ------
         ValueError
-            If the given object is not a list.
+            If the given object is not an observable list and the observer is
+            not optional.
         """
         if not isinstance(object, TraitList):
             if self.optional:
@@ -106,7 +107,8 @@ class ListItemObserver:
         Raises
         ------
         ValueError
-            If the given object is not a list.
+            If the given object is not an observable list and the observer is
+            not optional.
         """
         if not isinstance(object, TraitList):
             if self.optional:
