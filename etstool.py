@@ -89,6 +89,7 @@ common_dependencies = {
     "cython",
     "enthought_sphinx_theme",
     "flake8",
+    "lark_parser",
     "mypy",
     "numpy",
     "pyqt",
@@ -159,7 +160,7 @@ def cli():
 def install(edm, runtime, environment, editable, source):
     """ Install project and dependencies into a clean EDM environment and
     optionally install further dependencies required for building
-    documentation.
+    documentation and mini-language parser.
 
     """
     parameters = get_parameters(edm, runtime, environment)
@@ -385,6 +386,38 @@ def test_all(edm):
         sys.exit(1)
 
 
+@cli.command(name="generate-parser")
+@edm_option
+@runtime_option
+@click.option(
+    "--environment", default=None, help="Name of EDM environment to use."
+)
+def generate_parser(edm, runtime, environment):
+    """ Regenerate the mini-language parser for the observe framework.
+    """
+    parameters = get_parameters(edm, runtime, environment)
+
+    root_dir = os.path.dirname(__file__)
+    observers_dir = os.path.join(root_dir, "traits", "observers")
+
+    # parser file to be generated.
+    out_path = os.path.join(observers_dir, "_generated_parser.py")
+
+    # grammar file.
+    parameters["grammar_path"] = os.path.join(
+        observers_dir, "_dsl_grammar.lark")
+
+    command = (
+        "{edm} run -e {environment} -- "
+        "python -m lark.tools.standalone "
+        "{grammar_path}"
+    )
+
+    with open(out_path, "w", encoding="utf-8") as out_file:
+        execute([command], parameters, stdout=out_file)
+    click.echo("Written to {out_path!r}".format(out_path=out_path))
+
+
 # Utility routines
 
 def get_parameters(edm, runtime, environment):
@@ -456,12 +489,13 @@ def do_in_existingdir(path):
         os.chdir(old_path)
 
 
-def execute(commands, parameters):
+def execute(commands, parameters, stdout=None):
     for command in commands:
         click.echo("[EXECUTING] {}".format(command.format(**parameters)))
         try:
             subprocess.check_call(
-                [arg.format(**parameters) for arg in command.split()]
+                [arg.format(**parameters) for arg in command.split()],
+                stdout=stdout,
             )
         except subprocess.CalledProcessError as exc:
             print(exc)
