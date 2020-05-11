@@ -49,6 +49,7 @@ class TestDictItemObserverEqualHash(unittest.TestCase):
         observer1 = DictItemObserver(notify=False, optional=False)
         imposter = mock.Mock()
         imposter.notify = False
+        imposter.optional = False
         self.assertNotEqual(observer1, imposter)
 
     def test_equal_observers(self):
