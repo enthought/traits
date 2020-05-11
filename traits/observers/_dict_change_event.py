@@ -11,6 +11,8 @@
 """ Event object for representing mutations to a dict.
 """
 
+# DictChangeEvent is exposed in the public API
+
 
 class DictChangeEvent:
     """ Event object to represent mutations on a dict.
