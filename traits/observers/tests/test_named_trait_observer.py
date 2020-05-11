@@ -99,13 +99,13 @@ class TestObserverGraphIntegrateNamedTraitObserver(unittest.TestCase):
         path1 = ObserverGraph(
             node=create_observer(name="foo"),
             children=[
-                create_observer(name="bar"),
+                ObserverGraph(node=create_observer(name="bar")),
             ],
         )
         path2 = ObserverGraph(
             node=create_observer(name="foo"),
             children=[
-                create_observer(name="bar"),
+                ObserverGraph(node=create_observer(name="bar")),
             ],
         )
         # This tests __eq__ and __hash__
