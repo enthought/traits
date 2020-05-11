@@ -86,7 +86,7 @@ class Image(HasStrictTraits):
     # Trait observers
 
     @observe('filename')
-    def read_image(self):
+    def read_image(self, event):
         pil_image = PILImage.open(self.filename).convert("L")
         self.image = np.array(pil_image)
 

@@ -19,7 +19,7 @@ changes.  We can do this by adding an ``observe`` decorator to the method::
         ...
 
         @observe('filename')
-        def read_image(self):
+        def read_image(self, event):
             ...
 
 For most traits, this will run only when the trait's value *actually* changes,
@@ -52,7 +52,7 @@ all the traits at once::
         ...
 
         @observe('scan_width,scan_height,image')
-        def update_pixel_area(self):
+        def update_pixel_area(self, event):
             if self.image.size > 0:
                 self.pixel_area = (
                     self.scan_height * self.scan_width / self.image.size
@@ -73,7 +73,7 @@ trait changes::
         sample_id="0001",
     )
 
-    def print_filename_changed():
+    def print_filename_changed(event):
         print("Filename changed")
 
     image.observe(print_filename_changed, 'filename')
@@ -81,7 +81,7 @@ trait changes::
     # will print "Filename changed" to the screen
     image.filename="sample_0002.png"
 
-Dynamic observers can also be disconnected using the same method, but adding
+Dynamic observers can also be disconnected using the same method, by adding
 the argument ``remove=True``::
 
     image.observe(print_filename_changed, 'filename', remove=True)
@@ -134,12 +134,12 @@ class Image(HasTraits):
     # Trait observers
 
     @observe('filename')
-    def read_image(self):
+    def read_image(self, event):
         pil_image = PILImage.open(self.filename).convert("L")
         self.image = np.array(pil_image)
 
     @observe('scan_width,scan_height,image')
-    def update_pixel_area(self):
+    def update_pixel_area(self, event):
         if self.image.size > 0:
             self.pixel_area = (
                 self.scan_height * self.scan_width / self.image.size

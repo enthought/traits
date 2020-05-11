@@ -4,7 +4,7 @@ Property Traits
 
 The ``Image`` class has three traits which are closely related: ``scan_size``,
 ``scan_width`` and ``scan_height``.  We would ideally like to keep all of these
-synchronised.  This can be done with trait observation, as shown in the previous
+synchronized.  This can be done with trait observation, as shown in the previous
 section, but this sort of pattern is common enough that Traits has some in-built
 helpers.
 
@@ -15,7 +15,7 @@ a derived value via a "getter", and optionally store values via a "setter".
 Traits uses specially named methods of the form ``_get_<property>`` and
 ``_set_property`` for these "getters" and "setters."  Additionally, we need to
 know when the value of the property might change, and so we need to declare
-what traits to listen to to know when the property might change.
+what traits to observe to know when the property might change.
 
 What this means is that we can define ``scan_width`` as a property by::
 
@@ -124,7 +124,7 @@ class Image(HasTraits):
     # Trait observers
 
     @observe('filename')
-    def read_image(self):
+    def read_image(self, event):
         pil_image = PILImage.open(self.filename).convert("L")
         self.image = np.array(pil_image)
 
