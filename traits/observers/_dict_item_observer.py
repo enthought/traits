@@ -37,7 +37,7 @@ class DictItemObserver:
 
     def __hash__(self):
         """ Return a hash of this object."""
-        return hash((type(self), self.notify))
+        return hash((type(self), self.notify, self.optional))
 
     def __eq__(self, other):
         """ Return true if this observer is equal to the given one."""
