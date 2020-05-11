@@ -53,9 +53,9 @@ def set_event_factory(trait_set, removed, added):
     trait_set : set
         The set being mutated.
     removed : set
-        The items that have been removed.
+        Values removed from the set.
     added : set
-        The new items that have been added to the set.
+        Values added to the set.
 
     Returns
     -------
