@@ -18,3 +18,7 @@
 .. autoclass:: DictChangeEvent
    :members:
    :inherited-members:
+
+.. autoclass:: TraitChangeEvent
+   :members:
+   :inherited-members:
