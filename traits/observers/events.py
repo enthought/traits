@@ -14,3 +14,6 @@
 from traits.observers._set_change_event import (   # noqa: F401
     SetChangeEvent,
 )
+from traits.observers._trait_change_event import (   # noqa: F401
+    TraitChangeEvent,
+)
