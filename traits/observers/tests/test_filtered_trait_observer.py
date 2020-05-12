@@ -133,6 +133,7 @@ class DummyParent(HasTraits):
 
 
 class TestFilteredTraitObserverIterObservables(unittest.TestCase):
+    """ Test FilteredTraitObserver.iter_observables """
 
     def test_iter_observables_with_filter(self):
         instance = DummyParent()
@@ -160,6 +161,7 @@ class TestFilteredTraitObserverIterObservables(unittest.TestCase):
 
 
 class TestFilteredTraitObserverIterObjects(unittest.TestCase):
+    """ Test FilteredTraitObserver.iter_objects """
 
     def test_iter_objects(self):
         instance = DummyParent()
@@ -213,6 +215,7 @@ class WatchfulObserver(DummyObserver):
 
 
 class TestFilteredTraitObserverNotifications(unittest.TestCase):
+    """ Integration tests with HasTraits and notifiers."""
 
     def test_notify_filter_values_changed(self):
         instance = DummyParent()
