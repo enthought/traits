@@ -117,25 +117,7 @@ class TraitAddedObserver:
         # children graphs are used in the maintainer only.
         yield from ()
 
-    def get_notifier(self, handler, target, dispatcher):
-        """ Return a notifier for calling the user handler with the change
-        event. This is needed if ``notify`` is true.
-
-        Parameters
-        ----------
-        handler : callable
-            User handler.
-        target : object
-            Object seen by the user as the owner of the observer.
-        dispatcher : callable
-            Callable for dispatching the handler.
-
-        Returns
-        -------
-        notifier : INotifier
-        """
-        # notify is always false, no notifiers are needed here.
-        raise NotImplementedError("notifier is not needed for trait_added.")
+    # get_notifier is not implemented as notify is always false.
 
     def get_maintainer(self, graph, handler, target, dispatcher):
         """ Return a notifier for maintaining downstream observers when
