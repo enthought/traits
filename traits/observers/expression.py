@@ -43,21 +43,13 @@ class Expression:
         """ Return true if the other value is an Expression with equivalent
         content.
 
-        e.g. ``(trait("a") | trait("b")) == (trait("b") | trait("a"))`` will
-        return true.
-
         Returns
         -------
         boolean
         """
         if type(other) is not type(self):
             return False
-        self_graphs = self._as_graphs()
-        other_graphs = other._as_graphs()
-        return (
-            len(self_graphs) == len(other_graphs)
-            and set(self_graphs) == set(other_graphs)
-        )
+        return self._as_graphs() == other._as_graphs()
 
     def __or__(self, expression):
         """ Create a new expression that matches this expression OR

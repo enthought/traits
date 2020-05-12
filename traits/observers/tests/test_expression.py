@@ -219,15 +219,6 @@ class TestExpressionEquality(unittest.TestCase):
 
         self.assertEqual(combined1, combined2)
 
-    def test_or_equality(self):
-        expr1 = create_expression(1)
-        expr2 = create_expression(2)
-
-        combined1 = expr1 | expr2
-        combined2 = expr2 | expr1
-        # order is ignored.
-        self.assertEqual(combined1, combined2)
-
     def test_equality_different_type(self):
         expr = create_expression(1)
         self.assertNotEqual(expr, "1")
