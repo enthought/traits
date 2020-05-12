@@ -10,11 +10,6 @@
 
 import unittest
 
-from traits.observers._generated_parser import (
-    UnexpectedCharacters,
-    UnexpectedToken,
-)
-
 from traits.observers.parsing import parse
 from traits.observers.expression import (
     trait,
@@ -88,22 +83,3 @@ class TestParsingTrait(unittest.TestCase):
         actual = parse("a:b")
         expected = trait("a", notify=False).trait("b")
         self.assertEqual(actual, expected)
-
-
-class TestParsingError(unittest.TestCase):
-
-    def test_unparse_content(self):
-        with self.assertRaises(UnexpectedCharacters):
-            parse("a.b.c^abc")
-
-    def test_error_empty_string(self):
-        with self.assertRaises(UnexpectedToken):
-            parse("")
-
-    def test_error_unconnected_expressions(self):
-        with self.assertRaises(UnexpectedToken):
-            parse("[a.b]c")
-
-    def test_error_recursion_not_supported(self):
-        with self.assertRaises(UnexpectedCharacters):
-            parse("a*.c")
