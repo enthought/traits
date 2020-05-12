@@ -32,7 +32,7 @@ class FilteredTraitObserver:
         A callable that receives the name of a trait and the corresponding
         trait definition. The returned boolean indicates whether the trait is
         observed. In order to remove an existing observer with the equivalent
-        filter, the filter callables must be equal to each other.
+        filter, the filter callables must compare equally.
     """
 
     def __init__(self, notify, filter):
