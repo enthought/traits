@@ -68,11 +68,11 @@ class Expression:
 
         Parameters
         ----------
-        expression : traits.observers.expressions.Expression
+        expression : traits.observers.expression.Expression
 
         Returns
         -------
-        new_expression : traits.observers.expressions.Expression
+        new_expression : traits.observers.expression.Expression
         """
         if self == expression:
             return self._copy()
@@ -89,11 +89,11 @@ class Expression:
 
         Parameters
         ----------
-        expression : traits.observers.expressions.Expression
+        expression : traits.observers.expression.Expression
 
         Returns
         -------
-        new_expression : traits.observers.expressions.Expression
+        new_expression : traits.observers.expression.Expression
         """
 
         if self._prior_expression is None and not self._levels:
@@ -127,7 +127,7 @@ class Expression:
 
         Returns
         -------
-        new_expression : traits.observers.expressions.Expression
+        new_expression : traits.observers.expression.Expression
         """
         expression = self._copy()
         expression._levels.append(nodes)
@@ -138,7 +138,7 @@ class Expression:
 
         Returns
         -------
-        new_expression : traits.observers.expressions.Expression
+        new_expression : traits.observers.expression.Expression
         """
         expression = Expression()
         expression._levels = self._levels.copy()
@@ -152,7 +152,7 @@ def _create_graphs(expression, graphs=None):
 
     Parameters
     ----------
-    expression : traits.observers.expressions.Expression
+    expression : traits.observers.expression.Expression
     graphs : collection of ObserverGraph
         Leaf graphs to be added.
         Needed when this function is called recursively.
@@ -280,11 +280,11 @@ def join_(*expressions):
 
     Parameters
     ----------
-    *expressions : iterable of traits.observers.expressions.Expression
+    *expressions : iterable of traits.observers.expression.Expression
 
     Returns
     -------
-    new_expression : traits.observers.expressions.Expression
+    new_expression : traits.observers.expression.Expression
         Joined expression.
     """
     return _functools.reduce(lambda e1, e2: e1.then(e2), expressions)

@@ -10,7 +10,7 @@
 
 import unittest
 
-from traits.observers import expressions
+from traits.observers import expression
 from traits.observers._observer_graph import ObserverGraph
 
 
@@ -44,7 +44,7 @@ def create_expression(observer):
     -------
     expression : Expression
     """
-    return expressions.Expression()._new_with_branches(nodes=[observer])
+    return expression.Expression()._new_with_branches(nodes=[observer])
 
 
 class TestExpressionComposition(unittest.TestCase):
@@ -118,7 +118,7 @@ class TestExpressionComposition(unittest.TestCase):
         # If the expression is empty to start with, just make a copy
         # An empty bootstrapping expression is common when an user creates an
         # expression using a high-level helper function.
-        expr1 = expressions.Expression()
+        expr1 = expression.Expression()
         expr2 = create_expression(1)
         expr = expr1.then(expr2)
 
@@ -189,7 +189,7 @@ class TestExpressionComposition(unittest.TestCase):
         expr1 = create_expression(observer1)
         expr2 = create_expression(observer2)
 
-        expr = expressions.join_(expr1, expr2)
+        expr = expression.join_(expr1, expr2)
 
         expected = [
             create_graph(
@@ -214,7 +214,7 @@ class TestExpressionEquality(unittest.TestCase):
         expr1 = create_expression(1)
         expr2 = create_expression(2)
 
-        combined1 = expressions.join_(expr1, expr2)
+        combined1 = expression.join_(expr1, expr2)
         combined2 = expr1.then(expr2)
 
         self.assertEqual(combined1, combined2)

@@ -7,10 +7,10 @@
     :show-inheritance:
 
 
-:mod:`traits.observers.expressions` Module
-------------------------------------------
+:mod:`traits.observers.expression` Module
+-----------------------------------------
 
-.. automodule:: traits.observers.expressions
+.. automodule:: traits.observers.expression
     :members:
     :undoc-members:
     :show-inheritance:
