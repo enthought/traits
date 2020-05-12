@@ -15,3 +15,16 @@
     :undoc-members:
     :show-inheritance:
     :special-members: __eq__, __or__
+
+
+:mod:`traits.observers.events` Module
+-------------------------------------
+
+.. automodule:: traits.observers.events
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. autoclass:: TraitChangeEvent
+   :members:
+   :inherited-members:
