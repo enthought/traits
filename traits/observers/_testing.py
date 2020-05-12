@@ -19,6 +19,10 @@ from traits.observers._observer_graph import ObserverGraph
 _DEFAULT_TARGET = mock.Mock()
 
 
+def dispatch_same(handler, event):
+    handler(event)
+
+
 def create_graph(*nodes):
     """ Create an ObserverGraph with the given nodes joined one after another.
 
@@ -47,9 +51,6 @@ def call_add_or_remove_notifiers(**kwargs):
     **kwargs
         New argument values to use instead.
     """
-    def dispatch_same(handler, event):
-        handler(event)
-
     values = dict(
         object=mock.Mock(),
         graph=ObserverGraph(node=None),

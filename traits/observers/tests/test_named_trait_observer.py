@@ -376,3 +376,136 @@ class TestNamedTraitObserverNotifications(unittest.TestCase):
             self.fail(
                 "Reassigning the instance value should not fail."
             )
+
+
+class TestNamedTraitObserverTraitAdded(unittest.TestCase):
+    """ Test integration with the trait_added event."""
+
+    def test_observe_respond_to_trait_added(self):
+        graph = create_graph(
+            create_observer(name="value", notify=True, optional=True),
+        )
+        handler = mock.Mock()
+        foo = ClassWithInstance()
+
+        # when
+        # does not complain because optional is set to true
+        call_add_or_remove_notifiers(object=foo, graph=graph, handler=handler)
+
+        # when
+        foo.add_trait("value", Int())
+
+        # then
+        self.assertEqual(handler.call_count, 0)
+
+        # when
+        foo.value += 1
+
+        # then
+        self.assertEqual(handler.call_count, 1)
+
+    def test_observe_remove_notifiers_remove_trait_added(self):
+        graph = create_graph(
+            create_observer(name="value", notify=True, optional=True),
+        )
+        handler = mock.Mock()
+        foo = ClassWithInstance()
+
+        # when
+        # The following should cancel each other
+        call_add_or_remove_notifiers(
+            object=foo, graph=graph, handler=handler, remove=False)
+        call_add_or_remove_notifiers(
+            object=foo, graph=graph, handler=handler, remove=True)
+
+        # when
+        foo.add_trait("value", Int())
+
+        # then
+        self.assertEqual(handler.call_count, 0)
+
+        # when
+        foo.value += 1
+
+        # then
+        self.assertEqual(handler.call_count, 0)
+
+    def test_remove_notifiers_after_trait_added(self):
+        graph = create_graph(
+            create_observer(name="value", notify=True, optional=True),
+        )
+        handler = mock.Mock()
+        foo = ClassWithInstance()
+        call_add_or_remove_notifiers(
+            object=foo, graph=graph, handler=handler, remove=False)
+
+        # when
+        foo.add_trait("value", Int())
+
+        # sanity check
+        foo.value += 1
+        self.assertEqual(handler.call_count, 1)
+        handler.reset_mock()
+
+        # when
+        call_add_or_remove_notifiers(
+            object=foo, graph=graph, handler=handler, remove=True)
+
+        # then
+        foo.value += 1
+        self.assertEqual(handler.call_count, 0)
+
+    def test_notifier_trait_added_distinguished(self):
+        # Add two observers, both will have their own additional trait_added
+        # observer. When one is removed, the other one is not affected.
+        graph1 = create_graph(
+            create_observer(name="some_value1", notify=True, optional=True),
+        )
+        graph2 = create_graph(
+            create_observer(name="some_value2", notify=True, optional=True),
+        )
+
+        handler = mock.Mock()
+        foo = ClassWithInstance()
+        # Add two observers
+        call_add_or_remove_notifiers(
+            object=foo, graph=graph1, handler=handler, remove=False)
+        call_add_or_remove_notifiers(
+            object=foo, graph=graph2, handler=handler, remove=False)
+
+        # when
+        # Now remove the second observer
+        call_add_or_remove_notifiers(
+            object=foo, graph=graph2, handler=handler, remove=True)
+
+        # the first one should still respond to trait_added event
+        foo.add_trait("some_value1", Int())
+        foo.some_value1 += 1
+
+        # then
+        self.assertEqual(handler.call_count, 1)
+        handler.reset_mock()
+
+        # when
+        # the second observer has been removed
+        foo.add_trait("some_value2", Int())
+        foo.some_value2 += 1
+
+        # then
+        self.assertEqual(handler.call_count, 0)
+
+    def test_optional_trait_added(self):
+        graph = create_graph(
+            create_observer(name="value", notify=True, optional=True),
+        )
+        handler = mock.Mock()
+
+        not_an_has_traits_instance = mock.Mock()
+
+        # when
+        # does not complain because optional is set to true
+        call_add_or_remove_notifiers(
+            object=not_an_has_traits_instance,
+            graph=graph,
+            handler=handler,
+        )
