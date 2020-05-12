@@ -171,7 +171,7 @@ class TraitAddedObserver:
 
         Parameters
         ----------
-        event : TraitObserverEvent
+        event : TraitChangeEvent
             Event triggered by add_trait.
         """
         object = event.object
@@ -185,7 +185,7 @@ class TraitAddedObserver:
 
         Parameters
         ----------
-        event : TraitObserverEvent
+        event : TraitChangeEvent
             Event triggered by add_trait.
         graph : ObserverGraph
             Description for the *downstream* observers, i.e. excluding self.
