@@ -185,7 +185,7 @@ def _handle_metadata(trees, default_notifies):
     -------
     expression : traits.observers.expressions.Expression
     """
-    raise NotImplementedError("metadata is not yet implemeneted.")
+    raise NotImplementedError("metadata is not yet implemented.")
 
 
 def _handle_items(trees, default_notifies):
@@ -203,7 +203,7 @@ def _handle_items(trees, default_notifies):
     -------
     expression : traits.observers.expressions.Expression
     """
-    raise NotImplementedError("items is not yet implemeneted.")
+    raise NotImplementedError("items is not yet implemented.")
 
 
 def _handle_tree(tree, default_notifies=None):
