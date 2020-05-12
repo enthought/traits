@@ -8,14 +8,14 @@
 #
 # Thanks for using Enthought open source!
 
-from traits.observers._trait_change_event import trait_event_factory
 from traits.observers._has_traits_helpers import (
     iter_objects,
     observer_change_handler,
 )
 from traits.observers._i_observer import IObserver
-from traits.observers._observer_graph import ObserverGraph
 from traits.observers._observer_change_notifier import ObserverChangeNotifier
+from traits.observers._observer_graph import ObserverGraph
+from traits.observers._trait_change_event import trait_event_factory
 from traits.observers._trait_event_notifier import TraitEventNotifier
 from traits.trait_base import Uninitialized
 
