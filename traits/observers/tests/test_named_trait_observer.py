@@ -502,10 +502,12 @@ class TestNamedTraitObserverTraitAdded(unittest.TestCase):
 
         not_an_has_traits_instance = mock.Mock()
 
-        # when
         # does not complain because optional is set to true
-        call_add_or_remove_notifiers(
-            object=not_an_has_traits_instance,
-            graph=graph,
-            handler=handler,
-        )
+        try:
+            call_add_or_remove_notifiers(
+                object=not_an_has_traits_instance,
+                graph=graph,
+                handler=handler,
+            )
+        except Exception:
+            self.fail("Optional flag should have been propagated.")
