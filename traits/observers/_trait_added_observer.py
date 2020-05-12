@@ -211,6 +211,9 @@ class TraitAddedObserver:
             dispatcher=dispatcher,
             remove=False,
         )
+        # Added notifiers cannot be removed because the reverse action
+        # of ``add_trait`` does not fire a change event
+        # see enthought/traits#1047
 
     def iter_extra_graphs(self, graph):
         """ Yield new ObserverGraph to be contributed by this observer.
