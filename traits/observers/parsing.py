@@ -36,7 +36,7 @@ def _handle_series(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expressions.Expression
+    expression : traits.observers.expression.Expression
     """
     expressions = (
         _handle_tree(tree, default_notifies=default_notifies)
@@ -58,7 +58,7 @@ def _handle_parallel(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expressions.Expression
+    expression : traits.observers.expression.Expression
     """
     expressions = (
         _handle_tree(tree, default_notifies=default_notifies) for tree in trees
@@ -101,7 +101,7 @@ def _handle_notify(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expressions.Expression
+    expression : traits.observers.expression.Expression
     """
     with _notify_flag(default_notifies, True):
         return _handle_last(trees, default_notifies=default_notifies)
@@ -121,7 +121,7 @@ def _handle_quiet(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expressions.Expression
+    expression : traits.observers.expression.Expression
     """
     with _notify_flag(default_notifies, False):
         return _handle_last(trees, default_notifies=default_notifies)
@@ -144,7 +144,7 @@ def _handle_last(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expressions.Expression
+    expression : traits.observers.expression.Expression
     """
     tree, = trees
     return _handle_tree(tree, default_notifies=default_notifies)
@@ -163,7 +163,7 @@ def _handle_trait(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expressions.Expression
+    expression : traits.observers.expression.Expression
     """
     token, = trees
     # sanity check
@@ -187,7 +187,7 @@ def _handle_metadata(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expressions.Expression
+    expression : traits.observers.expression.Expression
     """
     raise NotImplementedError("metadata is not yet implemented.")
 
@@ -205,7 +205,7 @@ def _handle_items(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expressions.Expression
+    expression : traits.observers.expression.Expression
     """
     raise NotImplementedError("items is not yet implemented.")
 
@@ -225,7 +225,7 @@ def _handle_tree(tree, default_notifies=None):
 
     Returns
     -------
-    expression: traits.observers.expressions.Expression
+    expression: traits.observers.expression.Expression
     """
     if default_notifies is None:
         default_notifies = [True]
@@ -256,7 +256,7 @@ def parse(text):
 
     Returns
     -------
-    expression : traits.observers.expressions.Expression
+    expression : traits.observers.expression.Expression
     """
     tree = _LARK_PARSER.parse(text)
     return _handle_tree(tree)
