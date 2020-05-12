@@ -231,7 +231,7 @@ class _RestrictedNamedTraitObserver:
         self._wrapped_observer = wrapped_observer
 
     def __hash__(self):
-        return hash(tuple(type(self), self.name, self._wrapped_observer))
+        return hash((type(self), self.name, self._wrapped_observer))
 
     def __eq__(self, other):
         return (

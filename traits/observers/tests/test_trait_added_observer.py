@@ -13,7 +13,10 @@ from unittest import mock
 
 from traits.has_traits import HasTraits
 from traits.trait_types import Str
-from traits.observers._trait_added_observer import TraitAddedObserver
+from traits.observers._trait_added_observer import (
+    TraitAddedObserver,
+    _RestrictedNamedTraitObserver,
+)
 from traits.observers._testing import (
     call_add_or_remove_notifiers,
     create_graph,
@@ -113,6 +116,64 @@ class TestTraitAddedObserverEqualHashImmutable(unittest.TestCase):
             observer.notify = True
         self.assertEqual(
             str(exception_context.exception), "can't set attribute")
+
+
+class TestRestrictedNamedTraitObserverEqualityHash(unittest.TestCase):
+    """ Test _RestrictedNamedTraitObserver.__eq__ and __hash__ """
+
+    def test_equality_name_and_observer(self):
+        wrapped_observer = DummyObserver()
+        observer1 = _RestrictedNamedTraitObserver(
+            name="name", wrapped_observer=wrapped_observer)
+        observer2 = _RestrictedNamedTraitObserver(
+            name="name", wrapped_observer=wrapped_observer)
+        self.assertEqual(observer1, observer2)
+        self.assertEqual(hash(observer1), hash(observer2))
+
+    def test_not_equal_name(self):
+        wrapped_observer = DummyObserver()
+        observer1 = _RestrictedNamedTraitObserver(
+            name="name", wrapped_observer=wrapped_observer)
+        observer2 = _RestrictedNamedTraitObserver(
+            name="other", wrapped_observer=wrapped_observer)
+        self.assertNotEqual(observer1, observer2)
+
+    def test_not_equal_observer(self):
+        observer1 = _RestrictedNamedTraitObserver(
+            name="name", wrapped_observer=DummyObserver())
+        observer2 = _RestrictedNamedTraitObserver(
+            name="name", wrapped_observer=DummyObserver())
+        self.assertNotEqual(observer1, observer2)
+
+
+class TestRestrictedNamedTraitObserverWithWrappedObserver(unittest.TestCase):
+    """ Test the quantities inherited from the wrapped observer."""
+
+    def test_notify_inherited(self):
+        wrapped_observer = DummyObserver(notify=False)
+        observer = _RestrictedNamedTraitObserver(
+            name="name", wrapped_observer=wrapped_observer)
+        self.assertEqual(observer.notify, wrapped_observer.notify)
+
+    def test_notifier_inherited(self):
+        notifier = DummyNotifier()
+        wrapped_observer = DummyObserver(notifier=notifier)
+        observer = _RestrictedNamedTraitObserver(
+            name="name", wrapped_observer=wrapped_observer)
+        self.assertEqual(
+            observer.get_notifier(None, None, None),
+            notifier,
+        )
+
+    def test_maintainer_inherited(self):
+        maintainer = DummyNotifier()
+        wrapped_observer = DummyObserver(maintainer=maintainer)
+        observer = _RestrictedNamedTraitObserver(
+            name="name", wrapped_observer=wrapped_observer)
+        self.assertEqual(
+            observer.get_maintainer(None, None, None, None),
+            maintainer,
+        )
 
 
 # -----------------------------------
