@@ -25,7 +25,7 @@ from traits.observers._testing import (
 
 
 class DummyFilter:
-    """ A callable to be used as FilteredTraitObserver
+    """ A callable to be used as the 'filter' for FilteredTraitObserver
     """
 
     def __init__(self, return_value):
