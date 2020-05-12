@@ -28,3 +28,12 @@
 .. autoclass:: TraitChangeEvent
    :members:
    :inherited-members:
+
+
+:mod:`traits.observers.parsing` Module
+--------------------------------------
+
+.. automodule:: traits.observers.parsing
+    :members:
+    :undoc-members:
+    :show-inheritance:
