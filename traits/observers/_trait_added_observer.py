@@ -215,8 +215,8 @@ class TraitAddedObserver:
 @IObserver.register
 class _RestrictedNamedTraitObserver:
     """ An observer to support TraitAddedObserver in order to add
-    notifiers for one specific named trait, and retain the notifiers from the
-    original observer.
+    notifiers for one specific named trait. The notifiers should be
+    contributed by the original observer.
 
     Parameters
     ----------
