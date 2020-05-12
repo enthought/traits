@@ -304,8 +304,6 @@ class _ParallelExpression:
         return new_graphs
 
 
-# User-facing top-level functions.
-
 def join_(*expressions):
     """ Convenient function for joining many expressions in series
     using ``Expression.then``
