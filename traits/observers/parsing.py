@@ -31,6 +31,8 @@ def _handle_series(trees, default_notifies):
     trees : list of lark.tree.Tree
         The children tree for the "series" rule.
         It should contain one or more items.
+    default_notifies : list of boolean
+        The notify flag stack.
 
     Returns
     -------
@@ -51,6 +53,8 @@ def _handle_parallel(trees, default_notifies):
     trees : list of lark.tree.Tree
         The children tree for the "parallel" rule.
         It should contain one or more items.
+    default_notifies : list of boolean
+        The notify flag stack.
 
     Returns
     -------
