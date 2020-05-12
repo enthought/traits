@@ -23,6 +23,9 @@ class Expression:
     Expression is an object for describing what traits are being observed
     for change notifications. It can be passed directly to
     ``HasTraits.observe`` method or the ``observe`` decorator.
+
+    An Expression is typically created using one of the top-level functions
+    provided in this module, e.g.``trait``.
     """
     def __init__(self):
         # ``_levels`` is a list of list of IObserver.
