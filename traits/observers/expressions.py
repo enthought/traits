@@ -75,7 +75,7 @@ class Expression:
         new_expression : traits.observers.expressions.Expression
         """
         if self == expression:
-            return self.copy()
+            return self._copy()
         new = Expression()
         new._prior_expression = _ParallelExpression([self, expression])
         return new
@@ -98,7 +98,7 @@ class Expression:
 
         if self._prior_expression is None and not self._levels:
             # this expression is empty...
-            new = expression.copy()
+            new = expression._copy()
         else:
             new = Expression()
             new._prior_expression = _SeriesExpression([self, expression])
@@ -129,11 +129,11 @@ class Expression:
         -------
         new_expression : traits.observers.expressions.Expression
         """
-        expression = self.copy()
+        expression = self._copy()
         expression._levels.append(nodes)
         return expression
 
-    def copy(self):
+    def _copy(self):
         """ Return a copy of this expression.
 
         Returns
@@ -143,7 +143,7 @@ class Expression:
         expression = Expression()
         expression._levels = self._levels.copy()
         if self._prior_expression is not None:
-            expression._prior_expression = self._prior_expression.copy()
+            expression._prior_expression = self._prior_expression._copy()
         return expression
 
 
@@ -193,7 +193,7 @@ class _SeriesExpression:
     def __init__(self, expressions):
         self.expressions = expressions.copy()
 
-    def copy(self):
+    def _copy(self):
         """ Return a copy of this instance.
         The internal ``expressions`` list is copied so it can be mutated.
 
@@ -239,7 +239,7 @@ class _ParallelExpression:
     def __init__(self, expressions):
         self.expressions = expressions.copy()
 
-    def copy(self):
+    def _copy(self):
         """ Return a copy of this instance.
         The internal ``expressions`` list is copied so it can be mutated.
 

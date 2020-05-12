@@ -234,11 +234,11 @@ class TestExpressionEquality(unittest.TestCase):
 
 
 class TestExpressionCopy(unittest.TestCase):
-    """ Test the Expression.copy method."""
+    """ Test the Expression._copy method."""
 
     def test_expression_copy_current_levels(self):
         expr = create_expression(1)
-        copied = expr.copy()
+        copied = expr._copy()
         self.assertEqual(expr._levels, copied._levels)
         self.assertIsNot(copied._levels, expr._levels)
         self.assertEqual(copied._as_graphs(), expr._as_graphs())
@@ -247,7 +247,7 @@ class TestExpressionCopy(unittest.TestCase):
         expr = create_expression(1) | create_expression(2)
         self.assertIsNotNone(expr._prior_expression)
 
-        copied = expr.copy()
+        copied = expr._copy()
         self.assertEqual(copied._as_graphs(), expr._as_graphs())
         self.assertIsNotNone(copied._prior_expression)
         self.assertIsNot(copied._prior_expression, expr._prior_expression)
@@ -264,7 +264,7 @@ class TestExpressionCopy(unittest.TestCase):
         expr = create_expression(1).then(create_expression(2))
         self.assertIsNotNone(expr._prior_expression)
 
-        copied = expr.copy()
+        copied = expr._copy()
         self.assertEqual(copied._as_graphs(), expr._as_graphs())
         self.assertIsNotNone(copied._prior_expression)
         self.assertIsNot(copied._prior_expression, expr._prior_expression)
