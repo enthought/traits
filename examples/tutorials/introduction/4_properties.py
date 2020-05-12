@@ -33,10 +33,11 @@ property by::
             self.scan_size = (value, self.scan_height)
 
 Traits will then take care of hooking up all the required observers to make
-everything work as expected.
+everything work as expected; and the `Property` can also be observed if
+desired.
 
-Property traits are computed "lazily": the value is only calculated when you
-ask for it.
+Simple `Property` traits like this are computed "lazily": the value is only
+calculated when you ask for it.
 
 Cached Properties
 -----------------
