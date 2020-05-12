@@ -91,6 +91,13 @@ So we could write::
     def _date_acquired_default(self):
         return datetime.datetime.today()
 
+Dynamic defaults are best used for values which don't depend on other traits.
+For example, it might be tempting to have the ``image`` trait have a dynamic
+default which loads in the data.  As we will see, this is almost always
+better handled by Traits observation and/or properties, which are discussed
+in subsequent sections of the tutorial.
+
+
 The ``traits_init`` Method
 --------------------------
 
@@ -107,22 +114,22 @@ up some auxilliary values. This doesn't have to change::
         self.scan_width, self.scan_height = self.scan_size
 
 However Traits offers a slightlty more convenient way of doing this sort of
-post-initialization setup of state: instead of overriding ``__init__``,
-instead you can define a ``traits_init`` method which the ``HasTraits``
-class ensures is called as part of the main initialization process.  When
-it has been called, all initial values will have been set::
+post-initialization setup of state: you can define a ``traits_init`` method
+which the ``HasTraits`` class ensures is called as part of the main
+initialization process.  When it has been called, all initial values will
+have been set::
 
     def traits_init(self):
         # useful secondary attributes
         self.scan_width, self.scan_height = self.scan_size
+
 
 Excercise
 ~~~~~~~~~
 
 In our original example, the ``scan_size`` atribute had a default value of
 ``(1e-5, 1e-5)``.  Modify the code in the example so that the trait is
-initialized to this default if the value is not provided using a dynamic
-default method.
+initialized to this default using a dynamic default method.
 
 """
 

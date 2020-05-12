@@ -13,11 +13,13 @@ to be a ``Property`` trait type.  Property traits are similar to ``@property``
 decorators in standard Python in that rather than storing a value, they compute
 a derived value via a "getter", and optionally store values via a "setter".
 Traits uses specially named methods of the form ``_get_<property>`` and
-``_set_property`` for these "getters" and "setters."  Additionally, we need to
-know when the value of the property might change, and so we need to declare
-what traits to observe to know when the property might change.
+``_set_property`` for these "getters" and "setters."  If there is a "getter"
+but no "setter" then the property is read-only.
 
-What this means is that we can define ``scan_width`` as a property by::
+Additionally, we need to know when the value of the property might change, and
+so we need to declare what traits to observe to know when the property might
+change.  What all this this means is that we can define ``scan_width`` as a
+property by::
 
     class Image(HasTraits):
         ...
@@ -33,9 +35,7 @@ What this means is that we can define ``scan_width`` as a property by::
 Traits will then take care of hooking up all the required observers to make
 everything work as expected.
 
-In this example we wrote both a "getter" and a "setter", but in many cases all
-you need and want is a "getter", and this is OK for Traits.  Additionally,
-property traits are computed "lazily": the value is only calculated when you
+Property traits are computed "lazily": the value is only calculated when you
 ask for it.
 
 Cached Properties
@@ -88,7 +88,7 @@ with a multi-gigabyte array.
 Exercise
 ~~~~~~~~
 
-Make ``pixel_area`` a property.
+Make ``pixel_area`` a read-only property.
 
 """
 

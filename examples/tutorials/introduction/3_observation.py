@@ -22,16 +22,18 @@ changes.  We can do this by adding an ``observe`` decorator to the method::
         def read_image(self, event):
             ...
 
-For most traits, this will run only when the trait's value *actually* changes,
-not just when the value is set.  So if you do::
+The observer passes an event object to the function which contains information
+about what changed, such as the old value of the trait, but we don't need that
+information to react to the change, so it is ignored in the body of the
+function.
+
+For most traits, the observer will run only when the trait's value *actually*
+changes, not just when the value is set.  So if you do::
 
     >>> image.filename = "sample_0001.png"
     >>> image.filename = "sample_0001.png"
 
-then the code will only be run once.
-
-You can still call the ``read_image`` function if you want to, but now you
-shouldn't need to.
+then the observer will only be run once.
 
 Observing Multiple Traits
 -------------------------
