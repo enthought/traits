@@ -28,7 +28,7 @@ class TestSetChangeEvent(unittest.TestCase):
         actual = repr(event)
         self.assertEqual(
             actual,
-            "<SetChangeEvent(trait_set=set(), removed={3}, added={1})>",
+            "SetChangeEvent(trait_set=set(), removed={3}, added={1})",
         )
 
 

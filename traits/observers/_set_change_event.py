@@ -32,16 +32,11 @@ class SetChangeEvent:
 
     def __repr__(self):
         return (
-            "<{class_name}("
-            "trait_set={trait_set!r}, "
-            "removed={removed!r}, "
-            "added={added!r}"
-            ")>".format(
-                class_name=type(self).__name__,
-                trait_set=self.trait_set,
-                added=self.added,
-                removed=self.removed,
-            )
+            "{event.__class__.__name__}("
+            "trait_set={event.trait_set!r}, "
+            "removed={event.removed!r}, "
+            "added={event.added!r}"
+            ")".format(event=self)
         )
 
 
