@@ -67,27 +67,6 @@ class TestNamedTraitObserverEqualHash(unittest.TestCase):
         imposter.optional = True
         self.assertNotEqual(observer, imposter)
 
-    def test_name_not_mutable(self):
-        observer = NamedTraitObserver(name="foo", notify=True, optional=True)
-        with self.assertRaises(AttributeError) as exception_context:
-            observer.name = "bar"
-        self.assertEqual(
-            str(exception_context.exception), "can't set attribute")
-
-    def test_notify_not_mutable(self):
-        observer = NamedTraitObserver(name="foo", notify=True, optional=True)
-        with self.assertRaises(AttributeError) as exception_context:
-            observer.notify = False
-        self.assertEqual(
-            str(exception_context.exception), "can't set attribute")
-
-    def test_optional_not_mutable(self):
-        observer = NamedTraitObserver(name="foo", notify=True, optional=True)
-        with self.assertRaises(AttributeError) as exception_context:
-            observer.optional = False
-        self.assertEqual(
-            str(exception_context.exception), "can't set attribute")
-
 
 class TestObserverGraphIntegrateNamedTraitObserver(unittest.TestCase):
     """ Test integrating ObserverGraph with NamedTraitObserver as nodes.
