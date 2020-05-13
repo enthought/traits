@@ -17,7 +17,7 @@ class SetChangeEvent:
 
     Attributes
     ----------
-    trait_set : set
+    trait_set : traits.trait_set_object.TraitSet
         The set being mutated.
     removed : set
         Values removed from the set.
@@ -45,7 +45,7 @@ def set_event_factory(trait_set, removed, added):
 
     Parameters
     ----------
-    trait_set : set
+    trait_set : traits.trait_set_object.TraitSet
         The set being mutated.
     removed : set
         Values removed from the set.
