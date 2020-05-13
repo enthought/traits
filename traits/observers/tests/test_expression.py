@@ -11,6 +11,7 @@
 import unittest
 
 from traits.observers import expression
+from traits.observers._named_trait_observer import NamedTraitObserver
 from traits.observers._observer_graph import ObserverGraph
 
 
@@ -196,6 +197,40 @@ class TestExpressionComposition(unittest.TestCase):
                 observer1,
                 observer2,
             )
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+
+class TestExpressionTrait(unittest.TestCase):
+    """ Test Expression.trait """
+
+    def test_trait_name(self):
+        expr = expression.trait("name")
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name", notify=True, optional=False)
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_trait_name_notify_false(self):
+        expr = expression.trait("name", notify=False)
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name", notify=False, optional=False)
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_trait_name_optional_true(self):
+        expr = expression.trait("name", optional=True)
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name", notify=True, optional=True)
+            ),
         ]
         actual = expr._as_graphs()
         self.assertEqual(actual, expected)
