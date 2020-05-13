@@ -29,8 +29,8 @@ class TestListChangeEvent(unittest.TestCase):
         actual = repr(event)
         self.assertEqual(
             actual,
-            "<ListChangeEvent("
-            "trait_list=[], index=3, removed=[1, 2], added=[3, 4])>"
+            "ListChangeEvent("
+            "trait_list=[], index=3, removed=[1, 2], added=[3, 4])"
         )
 
 
