@@ -32,8 +32,8 @@ class DictItemObserver:
     """
 
     def __init__(self, *, notify, optional):
-        self._notify = notify
-        self._optional = optional
+        self.notify = notify
+        self.optional = optional
 
     def __hash__(self):
         """ Return a hash of this object."""
@@ -46,19 +46,6 @@ class DictItemObserver:
             and self.notify == other.notify
             and self.optional == other.optional
         )
-
-    @property
-    def notify(self):
-        """ A boolean for whether this observer will notify for changes.
-        """
-        return self._notify
-
-    @property
-    def optional(self):
-        """ A boolean for whether this observer is optional when the incoming
-        object is not a dict.
-        """
-        return self._optional
 
     def iter_observables(self, object):
         """ If the given object is an observable dict, yield that dict.

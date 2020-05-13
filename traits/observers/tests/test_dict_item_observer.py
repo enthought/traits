@@ -33,7 +33,7 @@ def create_observer(**kwargs):
 
 
 class TestDictItemObserverEqualHash(unittest.TestCase):
-    """ Test DictItemObserver __eq__, __hash__ and immutability. """
+    """ Test DictItemObserver __eq__, __hash__. """
 
     def test_not_equal_notify(self):
         observer1 = DictItemObserver(notify=False, optional=False)
@@ -57,20 +57,6 @@ class TestDictItemObserverEqualHash(unittest.TestCase):
         observer2 = DictItemObserver(notify=False, optional=False)
         self.assertEqual(observer1, observer2)
         self.assertEqual(hash(observer1), hash(observer2))
-
-    def test_notify_not_mutable(self):
-        observer = DictItemObserver(notify=True, optional=False)
-        with self.assertRaises(AttributeError) as exception_context:
-            observer.notify = False
-        self.assertEqual(
-            str(exception_context.exception), "can't set attribute")
-
-    def test_optional_not_mutable(self):
-        observer = DictItemObserver(notify=True, optional=False)
-        with self.assertRaises(AttributeError) as exception_context:
-            observer.optional = False
-        self.assertEqual(
-            str(exception_context.exception), "can't set attribute")
 
 
 class CustomDict(dict):
