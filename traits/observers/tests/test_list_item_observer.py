@@ -46,20 +46,6 @@ class TestListItemObserverEqualHash(unittest.TestCase):
         self.assertEqual(observer1, observer2)
         self.assertEqual(hash(observer1), hash(observer2))
 
-    def test_notify_not_mutable(self):
-        observer = ListItemObserver(notify=True, optional=False)
-        with self.assertRaises(AttributeError) as exception_context:
-            observer.notify = False
-        self.assertEqual(
-            str(exception_context.exception), "can't set attribute")
-
-    def test_optional_not_mutable(self):
-        observer = ListItemObserver(notify=True, optional=False)
-        with self.assertRaises(AttributeError) as exception_context:
-            observer.optional = False
-        self.assertEqual(
-            str(exception_context.exception), "can't set attribute")
-
 
 class CustomList(list):
     pass
