@@ -19,7 +19,7 @@ class ListChangeEvent:
 
     Attributes
     ----------
-    trait_list : list
+    trait_list : traits.trait_list_object.TraitList
         The list being mutated.
     index : int or slice
         The index used for the mutation.
@@ -55,7 +55,7 @@ def list_event_factory(trait_list, index, removed, added):
 
     Parameters
     ----------
-    trait_list : TraitList
+    trait_list : traits.trait_list_object.TraitList
         TraitList object being mutated.
     index : int or slice
         The indices being modified by the operation.
