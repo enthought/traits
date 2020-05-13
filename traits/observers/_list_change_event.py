@@ -37,16 +37,12 @@ class ListChangeEvent:
 
     def __repr__(self):
         return (
-            "{class_name}("
-            "trait_list={trait_list!r}, index={index!r}, "
-            "removed={removed!r}, added={added!r}"
-            ")".format(
-                class_name=type(self).__name__,
-                trait_list=self.trait_list,
-                index=self.index,
-                removed=self.removed,
-                added=self.added,
-            )
+            "{event.__class__.__name__}("
+            "trait_list={event.trait_list!r}, "
+            "index={event.index!r}, "
+            "removed={event.removed!r}, "
+            "added={event.added!r}"
+            ")".format(event=self)
         )
 
 
