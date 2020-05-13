@@ -10,11 +10,11 @@
 
 import unittest
 
-from traits.trait_list_object import TraitList
 from traits.observers._list_change_event import (
     ListChangeEvent,
     list_event_factory,
 )
+from traits.trait_list_object import TraitList
 
 
 class TestListChangeEvent(unittest.TestCase):

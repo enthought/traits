@@ -11,7 +11,7 @@
 import unittest
 from unittest import mock
 
-from traits.api import HasTraits, List, Instance, Int
+from traits.api import HasTraits, Instance, Int, List
 
 from traits.observers._list_item_observer import ListItemObserver
 from traits.observers._testing import (
