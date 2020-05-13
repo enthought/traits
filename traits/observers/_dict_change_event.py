@@ -38,16 +38,11 @@ class DictChangeEvent:
 
     def __repr__(self):
         return (
-            "<{class_name}("
-            "trait_dict={trait_dict!r}, "
-            "removed={removed!r}, "
-            "added={added!r}"
-            ")>".format(
-                class_name=type(self).__name__,
-                trait_dict=self.trait_dict,
-                added=self.added,
-                removed=self.removed,
-            )
+            "{event.__class__.__name__}("
+            "trait_dict={event.trait_dict!r}, "
+            "removed={event.removed!r}, "
+            "added={event.added!r}"
+            ")".format(event=self)
         )
 
 

@@ -28,7 +28,7 @@ class TestDictChangeEvent(unittest.TestCase):
         actual = repr(event)
         self.assertEqual(
             actual,
-            "<DictChangeEvent(trait_dict={}, removed={'2': 2}, added={1: 1})>"
+            "DictChangeEvent(trait_dict={}, removed={'2': 2}, added={1: 1})"
         )
 
 
