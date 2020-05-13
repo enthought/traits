@@ -19,7 +19,7 @@ class DictChangeEvent:
 
     Attributes
     ----------
-    trait_dict : dict
+    trait_dict : traits.trait_dict_object.TraitDict
         The dict being mutated.
     removed : dict
         Keys and values for removed or updated items.
@@ -51,7 +51,8 @@ def dict_event_factory(trait_dict, removed, added, changed):
 
     Parameters
     ----------
-    trait_dict : TraitDict
+    trait_dict : traits.trait_dict_object.TraitDict
+        The dict being mutated.
     removed : dict
         Items removed from the dict
     added : dict
