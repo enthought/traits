@@ -9,6 +9,7 @@
 # Thanks for using Enthought open source!
 
 import inspect
+import textwrap
 import unittest
 
 from traits.observers import expression
@@ -276,10 +277,10 @@ class TestExpressionTrait(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_call_signatures(self):
-        # Test to help developers keeping the two functions in-sync.
-        # Remove this if this becomes irrelevant.
+        # Test to help developers keeping the two function signatures in-sync.
+        # Remove this if the two need to divert in the future.
         top_level_trait = expression.trait
-        method_trait = create_expression(1).trait
+        method_trait = expression.Expression().trait
         self.assertEqual(
             inspect.signature(top_level_trait), inspect.signature(method_trait)
         )
