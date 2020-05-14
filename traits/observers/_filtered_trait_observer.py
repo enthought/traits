@@ -35,8 +35,8 @@ class FilteredTraitObserver:
     """
 
     def __init__(self, notify, filter):
-        self._notify = notify
-        self._filter = filter
+        self.notify = notify
+        self.filter = filter
 
     def __hash__(self):
         """ Return a hash of this object."""
@@ -49,18 +49,6 @@ class FilteredTraitObserver:
             and self.notify == other.notify
             and self.filter == other.filter
         )
-
-    @property
-    def notify(self):
-        """ A boolean for whether this observer will notify for changes.
-        """
-        return self._notify
-
-    @property
-    def filter(self):
-        """ The callable to decide if a given trait should be observed.
-        """
-        return self._filter
 
     def iter_observables(self, object):
         """ Yield the instance traits matching the filter given. If trait

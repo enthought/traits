@@ -97,20 +97,6 @@ class TestFilteredTraitObserverEqualHashImmutable(unittest.TestCase):
         imposter.filter = filter_func
         self.assertNotEqual(observer1, imposter)
 
-    def test_filter_not_mutable(self):
-        observer = create_observer()
-        with self.assertRaises(AttributeError) as exception_context:
-            observer.filter = mock.Mock()
-        self.assertEqual(
-            str(exception_context.exception), "can't set attribute")
-
-    def test_notify_not_immutable(self):
-        observer = create_observer()
-        with self.assertRaises(AttributeError) as exception_context:
-            observer.notify = True
-        self.assertEqual(
-            str(exception_context.exception), "can't set attribute")
-
 
 class Dummy(HasTraits):
 
