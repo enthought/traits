@@ -53,9 +53,9 @@ initialization. For performance purposes, a default initializer is called when:
 While it is possible to use default initializers to lazily initialize
 attributes based on the object state post-instantiation, this relies on not
 having to observe for changes on the trait. This is often difficult in
-practice, since trait notifications can be setup by external objects, and are
+practice, since trait notifications can be set up by external objects, and are
 often needed for Property traits, delegation and GUI applications. These use
-cases will cause the default initializers to be evaluated eagerly prior to
+cases may cause the default initializers to be evaluated eagerly prior to
 instantiation, instead of lazily after instantiation.
 
 .. index:: get_default_value()
