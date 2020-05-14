@@ -717,20 +717,26 @@ def observe(expression, *, post_init=False, dispatch="same"):
     This decorator can be stacked, e.g.::
 
         @observe("attr1")
-        @observe("attr2")
-        def update(self, event):
+        @observe("attr2", post_init=True)
+        def updated(self, event):
             ...
+
+    The decorated function must accept one argument which is the event object
+    representing the change. See :py:mod:`traits.observers.events` for details.
 
     Parameters
     ----------
     expression : str or list or traits.observers.expression.Expression
         A description of what traits are being observed.
-        If this is a list, each item must be a string.
+        If this is a list, each item must be a string or Expression.
+        See :py:func:`HasTraits.observe` for details on the
+        semantics when passing a string.
     post_init : boolean, optional
         Whether the change handler should be attached after
-        an instance is instantiated. Default is false, and values
-        provided to the instance constructor can trigger the
-        change handler to fire.
+        the state is set when instantiating an object. Default is false, and
+        values provided to the instance constructor will trigger the
+        change handler to fire if the value is different from the
+        default. Set to true to avoid this change event.
     dispatch : str, optional
         A string indicating how the handler should be run. Default is to run
         it on the same thread where the change occurs.
@@ -2162,19 +2168,53 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 notifiers.append(wrapper)
 
     def observe(self, handler, expression, *, remove=False, dispatch="same"):
-        """ Attach or detach event handler that would fire when one or many
-        traits change.
+        """ Causes the object to invoke a handler whenever a trait attribute
+        matching a specified pattern is modified, or removes the association.
+
+        The *expression* parameter can be a single string or an Expression
+        object. A list of expressions is also accepted.
+
+        When *expression* is a string, its content should follow Traits Mini
+        Language semantics:
+
+        ============================== ======================================
+        Expression                       Meaning
+        ============================== ======================================
+        ``item1.item2``                Observes trait *item2* on the object
+                                       under trait *item1*.
+                                       Changes to either *item1* or *item2*
+                                       cause a notification to be fired.
+        ``item1:item2``                Similar to the above, except changes
+                                       to *item1* will not fire events
+                                       (the ':' indicates no notifications).
+        ``[item1, item2, ..., itemN]`` A list which matches any of the
+                                       specified items. Each item can itself
+                                       be an expression.
+        ``items``                      Special keyword for observing a trait
+                                       named *items* or items inside a list /
+                                       dict / set.
+        ``+metadata_name``             Matches any trait on the object having
+                                       *metadata_name* metadata.
+        ============================== ======================================
+
+        All spaces will be ignored.
+
+        The :py:class:`traits.observers.expression.Expression` object supports
+        the above features and more.
 
         Parameters
         ----------
         handler : callable(event)
-            A callable that will receive the change event when the observed
-            trait changes.
+            A callable that will be invoked when the observed trait changes.
+            It must accept one argument, which is an event object providing
+            information about the change.
+            See :py:mod:`traits.observers.events` for details.
         expression : str or list or traits.observers.expression.Expression
             A description of what traits are being observed.
-            If this is a list, each item must be a str or an Expression.
+            If this is a list, each item must be a string or an Expression.
         remove : boolean, optional
-            Whether to remove the event handler.
+            Whether to remove the event handler. Default is to add the event
+            handler.
         dispatch : str, optional
             A string indicating how the handler should be run.
             Default is to run on the same thread where the change occurs.
@@ -2226,6 +2266,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     ):
         """Causes the object to invoke a handler whenever a trait attribute
         matching a specified pattern is modified, or removes the association.
+
+        See also ``HasTraits.observe`` for a newer API.
 
         Multiple handlers can be defined for the same object, or even for the
         same trait attribute on the same object. If *name* is not specified or
