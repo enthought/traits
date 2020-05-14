@@ -18,7 +18,7 @@ class DictChangeEvent:
     """ Event object to represent mutations on a dict.
 
     Note that the API is different from the ``TraitDictEvent`` emitted via the
-    "*name*\_items" trait. In particular, the attribute ``changed`` is not
+    "*name* _items" trait. In particular, the attribute ``changed`` is not
     defined here.
 
     Attributes
