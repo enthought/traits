@@ -110,33 +110,6 @@ class Expression:
             new._prior_expression = _SeriesExpression([self, expression])
         return new
 
-    def trait(self, name, notify=True, optional=False):
-        """ Create a new expression for observing a trait with the exact
-        name given.
-
-        e.g. ``trait("child").trait("age")`` matches ``child.age``
-        on an object, and is equivalent to
-        ``trait("child").then(trait("age"))``
-
-        Events emitted (if any) will be instances of ``TraitChangeEvent``.
-
-        Parameters
-        ----------
-        name : str
-            Name of the trait to match.
-        notify : boolean, optional
-            Whether to notify for changes.
-        optional : boolean, optional
-            If true, skip this observer if the requested trait is not found.
-
-        Returns
-        -------
-        new_expression : traits.observers.expression.Expression
-        """
-        observer = _NamedTraitObserver(
-            name=name, notify=notify, optional=optional)
-        return self._new_with_branches(nodes=[observer])
-
     def _as_graphs(self):
         """ Return all the ObserverGraph for the observer framework to attach
         notifiers.
@@ -323,31 +296,25 @@ def join_(*expressions):
     return _functools.reduce(lambda e1, e2: e1.then(e2), expressions)
 
 
-def _as_top_level(func):
-    """ Create a top-level function that calls an instance method of
-    an empty ``Expression`` instance.
+def trait(name, notify=True, optional=False):
+    """ Create a new expression for observing a trait with the exact
+    name given.
+
+    Events emitted (if any) will be instances of ``TraitChangeEvent``.
 
     Parameters
     ----------
-    func : callable
-        Unbound method of ``Expression`` to be wrapped.
+    name : str
+        Name of the trait to match.
+    notify : boolean, optional
+        Whether to notify for changes.
+    optional : boolean, optional
+        If true, skip this observer if the requested trait is not found.
 
     Returns
     -------
-    new_func : callable
-        New callable with the associated docstring copied over.
+    new_expression : traits.observers.expression.Expression
     """
-
-    def new_func(*args, **kwargs):
-        return func(Expression(), *args, **kwargs)
-
-    # Recreate the docstring with the appropriate arguments
-    _functools.update_wrapper(
-        new_func,
-        getattr(Expression(), func.__name__)
-    )
-    new_func.__module__ = __name__
-    return new_func
-
-
-trait = _as_top_level(Expression.trait)
+    observer = _NamedTraitObserver(
+        name=name, notify=notify, optional=optional)
+    return Expression()._new_with_branches(nodes=[observer])
