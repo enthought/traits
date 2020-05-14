@@ -8,5 +8,17 @@
 #
 # Thanks for using Enthought open source!
 
-from traits.observers.observe import observe   # noqa: F401
+from traits.observers._exception_handling import (   # noqa: F401
+    pop_exception_handler,
+    push_exception_handler,
+)
+
+from traits.observers.expression import (   # noqa: F401
+    trait,
+)
+
+from traits.observers.observe import (   # noqa: F401
+    dispatch_same,
+    observe,
+)
 from traits.observers.parsing import parse     # noqa: F401
