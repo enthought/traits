@@ -9,3 +9,4 @@
 # Thanks for using Enthought open source!
 
 from traits.observers.observe import observe   # noqa: F401
+from traits.observers.parsing import parse     # noqa: F401
