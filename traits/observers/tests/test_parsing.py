@@ -20,12 +20,12 @@ class TestParsingSeriesJoin(unittest.TestCase):
 
     def test_join(self):
         actual = parse("a.b.c")
-        expected = trait("a").then(trait("b")).then(trait("c"))
+        expected = trait("a").trait("b").trait("c")
         self.assertEqual(actual, expected)
 
     def test_join_with_colon(self):
         actual = parse("a:b:c")
-        expected = trait("a", False).then(trait("b", False).then(trait("c")))
+        expected = trait("a", False).trait("b", False).trait("c")
         self.assertEqual(actual, expected)
 
 
@@ -39,8 +39,8 @@ class TestParsingOr(unittest.TestCase):
     def test_or_with_join_nested(self):
         actual = parse("a.b.c,d.e")
         expected = (
-            trait("a").then(trait("b").then(trait("c")))
-            | trait("d").then(trait("e"))
+            trait("a").trait("b").trait("c")
+            | trait("d").trait("e")
         )
         self.assertEqual(actual, expected)
 
@@ -57,7 +57,7 @@ class TestParsingGroup(unittest.TestCase):
         actual = parse("root.[left,right].value")
         expected = (
             trait("root").then(
-                trait("left") | trait("right")).then(trait("value"))
+                trait("left") | trait("right")).trait("value")
         )
         self.assertEqual(actual, expected)
 
@@ -65,10 +65,9 @@ class TestParsingGroup(unittest.TestCase):
         actual = parse("root.[a.b.c.d,value]:g")
         expected = (
             trait("root").then(
-                trait("a").then(
-                    trait("b").then(trait("c").then(trait("d", False))))
+                trait("a").trait("b").trait("c").trait("d", False)
                 | trait("value", False)
-            ).then(trait("g"))
+            ).trait("g")
         )
         self.assertEqual(actual, expected)
 
@@ -82,5 +81,5 @@ class TestParsingTrait(unittest.TestCase):
 
     def test_trait_not_notifiy(self):
         actual = parse("a:b")
-        expected = trait("a", notify=False).then(trait("b"))
+        expected = trait("a", notify=False).trait("b")
         self.assertEqual(actual, expected)
