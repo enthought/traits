@@ -46,7 +46,7 @@ class TraitAddedObserver:
 
     def __hash__(self):
         """ Return a hash of this object."""
-        return hash((type(self), self.match_func, self.optional))
+        return hash((type(self).__name__, self.match_func, self.optional))
 
     def __eq__(self, other):
         """ Return true if this observer is equal to the given one."""
