@@ -40,7 +40,7 @@ class FilteredTraitObserver:
 
     def __hash__(self):
         """ Return a hash of this object."""
-        return hash((type(self), self.notify, self.filter))
+        return hash((type(self).__name__, self.notify, self.filter))
 
     def __eq__(self, other):
         """ Return true if this observer is equal to the given one."""
