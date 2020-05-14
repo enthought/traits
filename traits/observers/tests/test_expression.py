@@ -8,9 +8,11 @@
 #
 # Thanks for using Enthought open source!
 
+import inspect
 import unittest
 
 from traits.observers import expression
+from traits.observers._named_trait_observer import NamedTraitObserver
 from traits.observers._observer_graph import ObserverGraph
 
 
@@ -199,6 +201,88 @@ class TestExpressionComposition(unittest.TestCase):
         ]
         actual = expr._as_graphs()
         self.assertEqual(actual, expected)
+
+
+class TestExpressionTrait(unittest.TestCase):
+    """ Test Expression.trait """
+
+    def test_trait_name(self):
+        # Test the top-level function
+        expr = expression.trait("name")
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name", notify=True, optional=False)
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_trait_name_notify_false(self):
+        # Test the top-level function
+        expr = expression.trait("name", notify=False)
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name", notify=False, optional=False)
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_trait_name_optional_true(self):
+        # Test the top-level function
+        expr = expression.trait("name", optional=True)
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name", notify=True, optional=True)
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_trait_method(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.trait("name").trait("attr")
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name", notify=True, optional=False),
+                NamedTraitObserver(name="attr", notify=True, optional=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_trait_method_notify_false(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.trait("name").trait("attr", notify=False)
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name", notify=True, optional=False),
+                NamedTraitObserver(name="attr", notify=False, optional=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_trait_method_optional_true(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.trait("name").trait("attr", optional=True)
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name", notify=True, optional=False),
+                NamedTraitObserver(name="attr", notify=True, optional=True),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_call_signatures(self):
+        # Test to help developers keeping the two function signatures in-sync.
+        # Remove this if the two need to divert in the future.
+        top_level_trait = expression.trait
+        method_trait = expression.Expression().trait
+        self.assertEqual(
+            inspect.signature(top_level_trait), inspect.signature(method_trait)
+        )
 
 
 class TestExpressionEquality(unittest.TestCase):

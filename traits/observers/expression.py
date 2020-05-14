@@ -10,6 +10,9 @@
 
 import functools as _functools
 
+from traits.observers._named_trait_observer import (
+    NamedTraitObserver as _NamedTraitObserver,
+)
 from traits.observers._observer_graph import (
     ObserverGraph as _ObserverGraph,
 )
@@ -20,6 +23,9 @@ class Expression:
     Expression is an object for describing what traits are being observed
     for change notifications. It can be passed directly to
     ``HasTraits.observe`` method or the ``observe`` decorator.
+
+    An Expression is typically created using one of the top-level functions
+    provided in this module, e.g.``trait``.
     """
     def __init__(self):
         # ``_levels`` is a list of list of IObserver.
@@ -95,6 +101,27 @@ class Expression:
             new = Expression()
             new._prior_expression = _SeriesExpression([self, expression])
         return new
+
+    def trait(self, name, notify=True, optional=False):
+        """ Create a new expression for observing a trait with the exact
+        name given.
+
+        Events emitted (if any) will be instances of ``TraitChangeEvent``.
+
+        Parameters
+        ----------
+        name : str
+            Name of the trait to match.
+        notify : boolean, optional
+            Whether to notify for changes.
+        optional : boolean, optional
+            If true, skip this observer if the requested trait is not found.
+
+        Returns
+        -------
+        new_expression : traits.observers.expression.Expression
+        """
+        return self.then(trait(name=name, notify=notify, optional=optional))
 
     def _as_graphs(self):
         """ Return all the ObserverGraph for the observer framework to attach
@@ -280,3 +307,27 @@ def join_(*expressions):
         Joined expression.
     """
     return _functools.reduce(lambda e1, e2: e1.then(e2), expressions)
+
+
+def trait(name, notify=True, optional=False):
+    """ Create a new expression for observing a trait with the exact
+    name given.
+
+    Events emitted (if any) will be instances of ``TraitChangeEvent``.
+
+    Parameters
+    ----------
+    name : str
+        Name of the trait to match.
+    notify : boolean, optional
+        Whether to notify for changes.
+    optional : boolean, optional
+        If true, skip this observer if the requested trait is not found.
+
+    Returns
+    -------
+    new_expression : traits.observers.expression.Expression
+    """
+    observer = _NamedTraitObserver(
+        name=name, notify=notify, optional=optional)
+    return Expression()._new_with_branches(nodes=[observer])
