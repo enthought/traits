@@ -8,6 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
+import inspect
 import unittest
 
 from traits.observers import expression
@@ -273,6 +274,15 @@ class TestExpressionTrait(unittest.TestCase):
         ]
         actual = expr._as_graphs()
         self.assertEqual(actual, expected)
+
+    def test_call_signatures(self):
+        # Test to help developers keeping the two functions in-sync.
+        # Remove this if this becomes irrelevant.
+        top_level_trait = expression.trait
+        method_trait = create_expression(1).trait
+        self.assertEqual(
+            inspect.signature(top_level_trait), inspect.signature(method_trait)
+        )
 
 
 class TestExpressionEquality(unittest.TestCase):
