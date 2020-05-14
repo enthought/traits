@@ -186,6 +186,7 @@ from .has_traits import (  # noqa: F401
     MetaHasTraits,
     Vetoable,
     VetoableEvent,
+    observe,
     on_trait_change,
     cached_property,
     property_depends_on,
