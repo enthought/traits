@@ -14,7 +14,7 @@ from unittest import mock
 from traits.has_traits import HasTraits
 from traits.trait_types import Instance, Int
 from traits.observers._exceptions import NotifierNotFound
-from traits.observers.expressions import trait
+from traits.observers.expression import trait
 from traits.observers.observe import (
     observe,
 )
@@ -445,7 +445,6 @@ class ClassWithNumber(HasTraits):
 class ClassWithInstance(HasTraits):
 
     instance = Instance(ClassWithNumber)
-
 
 
 class TestObserverIntegration(unittest.TestCase):
