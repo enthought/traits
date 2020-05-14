@@ -2172,7 +2172,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             trait changes.
         expression : str or list or traits.observers.expression.Expression
             A description of what traits are being observed.
-            If this is a list, each item must be a string.
+            If this is a list, each item must be a str or an Expression.
         remove : boolean, optional
             Whether to remove the event handler.
         dispatch : str, optional
@@ -2194,20 +2194,21 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         """
         # Handle the overloaded signature.
-        def to_expression(str_or_expression):
-            if isinstance(str_or_expression, str):
-                return observe_api.parse(str_or_expression)
-            return str_or_expression
-
+        # Support list to be consistent with on_trait_change.
         if isinstance(expression, SequenceTypes):
-            expressions = [to_expression(item) for item in expression]
+            expressions = expression
         else:
-            expressions = [to_expression(expression)]
+            expressions = [expression]
 
-        for expression in expressions:
+        expressions = [
+            observe_api.parse(expr) if isinstance(expr, str) else expr
+            for expr in expressions
+        ]
+
+        for expr in expressions:
             observe_api.observe(
                 object=self,
-                expression=expression,
+                expression=expr,
                 handler=handler,
                 remove=remove,
                 dispatcher=_ObserverDispatchers[dispatch],

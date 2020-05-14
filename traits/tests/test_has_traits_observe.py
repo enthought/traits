@@ -216,6 +216,20 @@ class TestHasTraitsObserveInstanceMethod(unittest.TestCase):
         foo.single_value_instance = SingleValue()
         self.assertEqual(handler.call_count, 1)
 
+    def test_observe_instance_method_mixed_types(self):
+
+        foo = Foo()
+        handler = mock.Mock()
+        foo.observe(handler, (trait("value"), "single_value_instance"))
+
+        # verify
+        foo.value += 1
+        self.assertEqual(handler.call_count, 1)
+        handler.reset_mock()
+
+        foo.single_value_instance = SingleValue()
+        self.assertEqual(handler.call_count, 1)
+
     def test_remove_decorated_observer(self):
         # Test it is possible to remove a handler used with the observe
         # decorator
