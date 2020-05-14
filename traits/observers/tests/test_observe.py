@@ -11,7 +11,13 @@
 import unittest
 from unittest import mock
 
+from traits.has_traits import HasTraits
+from traits.trait_types import Instance, Int
 from traits.observers._exceptions import NotifierNotFound
+from traits.observers.expressions import trait
+from traits.observers.observe import (
+    observe,
+)
 from traits.observers._observer_graph import ObserverGraph
 from traits.observers._testing import (
     call_add_or_remove_notifiers,
@@ -427,3 +433,101 @@ class TestObserveRemoveNotifier(unittest.TestCase):
             observable3.notifiers,
             old_observable3_notifiers,
         )
+
+
+# ---- Tests for public facing `observe` --------------------------------------
+
+class ClassWithNumber(HasTraits):
+
+    number = Int()
+
+
+class ClassWithInstance(HasTraits):
+
+    instance = Instance(ClassWithNumber)
+
+
+
+class TestObserverIntegration(unittest.TestCase):
+    """ Test the public facing observe function."""
+
+    def test_observe_with_expression(self):
+        foo = ClassWithNumber()
+        handler = mock.Mock()
+
+        observe(
+            object=foo,
+            expression=trait("number"),
+            handler=handler,
+        )
+
+        # when
+        foo.number += 1
+
+        # then
+        self.assertEqual(handler.call_count, 1)
+        handler.reset_mock()
+
+        # when
+        observe(
+            object=foo,
+            expression=trait("number"),
+            handler=handler,
+            remove=True,
+        )
+        foo.number += 1
+
+        # then
+        self.assertEqual(handler.call_count, 0)
+
+    def test_observe_different_dispatcher(self):
+
+        self.dispatch_records = []
+
+        def dispatcher(handler, event):
+            self.dispatch_records.append((handler, event))
+
+        foo = ClassWithNumber()
+        handler = mock.Mock()
+
+        # when
+        observe(
+            object=foo,
+            expression=trait("number"),
+            handler=handler,
+            dispatcher=dispatcher,
+        )
+        foo.number += 1
+
+        # then
+        # the dispatcher is called.
+        self.assertEqual(len(self.dispatch_records), 1)
+
+    def test_observe_different_target(self):
+        # Test the result of setting target to be the same as object
+        parent1 = ClassWithInstance()
+        parent2 = ClassWithInstance()
+
+        # the instance is shared
+        instance = ClassWithNumber()
+        parent1.instance = instance
+        parent2.instance = instance
+
+        handler = mock.Mock()
+
+        # when
+        observe(
+            object=parent1,
+            expression=trait("instance").trait("number"),
+            handler=handler,
+        )
+        observe(
+            object=parent2,
+            expression=trait("instance").trait("number"),
+            handler=handler,
+        )
+        instance.number += 1
+
+        # then
+        # the handler should be called twice as the targets are different.
+        self.assertEqual(handler.call_count, 2)
