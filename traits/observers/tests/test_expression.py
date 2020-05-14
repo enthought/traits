@@ -9,7 +9,6 @@
 # Thanks for using Enthought open source!
 
 import inspect
-import textwrap
 import unittest
 
 from traits.observers import expression
