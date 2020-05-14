@@ -92,30 +92,12 @@ class TestTraitAddedObserverEqualHashImmutable(unittest.TestCase):
         imposter.optional = False
         self.assertNotEqual(observer1, imposter)
 
-    def test_match_func_not_mutable(self):
-        observer = TraitAddedObserver(match_func=mock.Mock(), optional=True)
-        with self.assertRaises(AttributeError) as exception_context:
-            observer.match_func = mock.Mock()
-        self.assertEqual(
-            str(exception_context.exception), "can't set attribute")
-
-    def test_optional_not_mutable(self):
-        observer = TraitAddedObserver(match_func=mock.Mock(), optional=True)
-        with self.assertRaises(AttributeError) as exception_context:
-            observer.optional = False
-        self.assertEqual(
-            str(exception_context.exception), "can't set attribute")
-
-    def test_notify_is_false_and_immutable(self):
+    def test_notify_is_false(self):
         observer = create_observer()
         self.assertFalse(
             observer.notify,
             "TraitAddedObserver.notify should be always false.",
         )
-        with self.assertRaises(AttributeError) as exception_context:
-            observer.notify = True
-        self.assertEqual(
-            str(exception_context.exception), "can't set attribute")
 
 
 class TestRestrictedNamedTraitObserverEqualityHash(unittest.TestCase):

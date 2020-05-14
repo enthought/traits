@@ -41,8 +41,8 @@ class TraitAddedObserver:
     """
 
     def __init__(self, match_func, optional):
-        self._match_func = match_func
-        self._optional = optional
+        self.match_func = match_func
+        self.optional = optional
 
     def __hash__(self):
         """ Return a hash of this object."""
@@ -61,19 +61,6 @@ class TraitAddedObserver:
         """ A boolean for whether this observer will notify for changes.
         """
         return False
-
-    @property
-    def match_func(self):
-        """ The callable to decide if the added trait should be handled.
-        """
-        return self._match_func
-
-    @property
-    def optional(self):
-        """ Whether to skip this observer if the trait_added trait cannot be
-        found on the incoming object.
-        """
-        return self._optional
 
     def iter_observables(self, object):
         """ Yield observables for notifiers to be attached to or detached from.
