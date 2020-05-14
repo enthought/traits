@@ -120,7 +120,7 @@ extended_trait_pat = re.compile(r".*[ :\+\-,\.\*\?\[\]]")
 # Generic 'Any' trait:
 any_trait = Any().as_ctrait()
 
-# Mapping from user-facing strings to the dispatch callable in observe.
+# Mapping from user-facing strings to the dispatcher callable in observe.
 _ObserverDispatchers = {
     "same": observe_api.dispatch_same,
     "ui": ui_dispatch,
