@@ -22,7 +22,7 @@ from traits.trait_types import Dict, Str
 
 
 def create_observer(**kwargs):
-    """ Convenient function for creating DictItemObserver with default values.
+    """ Convenience function for creating DictItemObserver with default values.
     """
     values = dict(
         notify=True,
