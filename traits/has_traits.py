@@ -777,8 +777,8 @@ def observe(expression, *, post_init=False, dispatch="same"):
 
         # handler_getter : callable(HasTraits) -> callable
         #     A callable for obtaining the change handler from an instance
-        #     of HasTraits. This is for obtaining the bound method, rather
-        #     using the unbound one.
+        #     of HasTraits. This is for obtaining the bound method instead of
+        #     the unbound one.
         observe_input = dict(
             expression=expression,
             dispatch=dispatch,
