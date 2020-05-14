@@ -206,6 +206,7 @@ class TestExpressionTrait(unittest.TestCase):
     """ Test Expression.trait """
 
     def test_trait_name(self):
+        # Test the top-level function
         expr = expression.trait("name")
         expected = [
             create_graph(
@@ -216,6 +217,7 @@ class TestExpressionTrait(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_trait_name_notify_false(self):
+        # Test the top-level function
         expr = expression.trait("name", notify=False)
         expected = [
             create_graph(
@@ -226,10 +228,47 @@ class TestExpressionTrait(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_trait_name_optional_true(self):
+        # Test the top-level function
         expr = expression.trait("name", optional=True)
         expected = [
             create_graph(
                 NamedTraitObserver(name="name", notify=True, optional=True)
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_trait_method(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.trait("name").trait("attr")
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name", notify=True, optional=False),
+                NamedTraitObserver(name="attr", notify=True, optional=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_trait_method_notify_false(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.trait("name").trait("attr", notify=False)
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name", notify=True, optional=False),
+                NamedTraitObserver(name="attr", notify=False, optional=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_trait_method_optional_true(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.trait("name").trait("attr", optional=True)
+        expected = [
+            create_graph(
+                NamedTraitObserver(name="name", notify=True, optional=False),
+                NamedTraitObserver(name="attr", notify=True, optional=True),
             ),
         ]
         actual = expr._as_graphs()

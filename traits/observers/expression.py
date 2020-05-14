@@ -110,6 +110,27 @@ class Expression:
             new._prior_expression = _SeriesExpression([self, expression])
         return new
 
+    def trait(self, name, notify=True, optional=False):
+        """ Create a new expression for observing a trait with the exact
+        name given.
+
+        Events emitted (if any) will be instances of ``TraitChangeEvent``.
+
+        Parameters
+        ----------
+        name : str
+            Name of the trait to match.
+        notify : boolean, optional
+            Whether to notify for changes.
+        optional : boolean, optional
+            If true, skip this observer if the requested trait is not found.
+
+        Returns
+        -------
+        new_expression : traits.observers.expression.Expression
+        """
+        return self.then(trait(name=name, notify=notify, optional=optional))
+
     def _as_graphs(self):
         """ Return all the ObserverGraph for the observer framework to attach
         notifiers.
