@@ -396,9 +396,8 @@ def update_traits_class_dict(class_name, bases, class_dict):
     view_elements = {}
 
     # Mapping from method name or trait name to list(dict)
-    # The values are lists of dicts, where each nested dict contains
-    # information on how to register a change handler with ``observe`` once.
-    # See ``observe`` decorator.
+    # where each nested dict provides the input arguments for calling
+    # ``HasTraits.observe`` once. See ``_init_trait_observers``.`
     observers = {}
 
     # Create a list of just those base classes that derive from HasTraits:
