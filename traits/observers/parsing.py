@@ -19,9 +19,6 @@ from traits.observers._generated_parser import (
 
 _LARK_PARSER = _Lark_StandAlone()
 
-#: Token annotation for a name (a trait name, or a metadata name, etc.)
-_NAME_TOKEN = "NAME"
-
 
 def _handle_series(trees, default_notifies):
     """ Handle expressions joined in series using "." or ":" connectors.
@@ -166,9 +163,6 @@ def _handle_trait(trees, default_notifies):
     expression : traits.observers.expression.Expression
     """
     token, = trees
-    # sanity check
-    if token.type != _NAME_TOKEN:
-        raise ValueError("Unexpected token: {!r}".format(token))
     name = token.value
     notify = default_notifies[-1]
     return _expr_module.trait(name, notify=notify)
