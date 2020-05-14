@@ -131,7 +131,7 @@ def _handle_last(trees, default_notifies):
     """ Handle trees when the notify is not immediately specified
     as a suffix. The last notify flag will be used.
 
-    e.g. In "a.[b,c]:.d", the element "b" should receive a notify flag
+    e.g. In "a.[b,c]:d", the element "b" should receive a notify flag
     set to false, which is set after a parallel group is defined.
 
     Parameters
