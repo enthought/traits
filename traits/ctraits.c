@@ -1815,7 +1815,7 @@ default_value_for(trait_object *trait, has_traits_object *obj, PyObject *name)
             result = PyObject_Call(trait->default_value, tuple, NULL);
             Py_DECREF(tuple);
             if ((result != NULL) && (trait->validate != NULL)) {
-                if (trait->flags & TRAIT_SETATTR_ORIGINAL_VALUE){
+                if (trait->flags & TRAIT_SETATTR_ORIGINAL_VALUE) {
                     return result;
                 }
                 else {
