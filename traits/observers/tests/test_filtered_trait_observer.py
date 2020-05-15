@@ -50,9 +50,8 @@ def create_observer(**kwargs):
     return FilteredTraitObserver(**values)
 
 
-class TestFilteredTraitObserverEqualHashImmutable(unittest.TestCase):
-    """ Tests for FilteredTraitObserver __eq__ and __hash__ methods, and
-    the fact it is not mutable.
+class TestFilteredTraitObserverEqualHash(unittest.TestCase):
+    """ Tests for FilteredTraitObserver __eq__ and __hash__ methods.
     """
 
     def test_not_equal_filter(self):
