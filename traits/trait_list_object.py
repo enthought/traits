@@ -12,9 +12,9 @@ import copy
 import operator
 from weakref import ref
 
+from traits.observers._i_observable import IObservable
 from traits.trait_base import class_of, Undefined, _validate_everything
 from traits.trait_errors import TraitError
-from traits.observers._i_observable import IObservable as _IObservable
 
 
 class TraitListEvent(object):
@@ -162,7 +162,7 @@ def _removed_items(items, index, return_for_invalid_index):
             return return_for_invalid_index
 
 
-@_IObservable.register
+@IObservable.register
 class TraitList(list):
     """ A subclass of list that validates and notifies listeners of changes.
 

@@ -11,6 +11,7 @@
 import copy
 from weakref import ref
 
+from traits.observers._i_observable import IObservable
 from traits.trait_base import Undefined, _validate_everything
 from traits.trait_errors import TraitError
 
@@ -56,6 +57,7 @@ class TraitDictEvent(object):
         )
 
 
+@IObservable.register
 class TraitDict(dict):
     """ A subclass of dict that validates keys and values and notifies
     listeners of any change.

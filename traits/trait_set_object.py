@@ -13,9 +13,9 @@ import copyreg
 from itertools import chain
 from weakref import ref
 
+from traits.observers._i_observable import IObservable
 from traits.trait_base import _validate_everything
 from traits.trait_errors import TraitError
-from traits.observers._i_observable import IObservable as _IObservable
 
 
 class TraitSetEvent(object):
@@ -52,7 +52,7 @@ class TraitSetEvent(object):
         )
 
 
-@_IObservable.register
+@IObservable.register
 class TraitSet(set):
     """ A subclass of set that validates and notifies listeners of changes.
 
