@@ -8,8 +8,10 @@
 #
 # Thanks for using Enthought open source!
 
+import abc
 
-class IObservable:
+
+class IObservable(abc.ABC):
     """ Interface for objects that can emit notifications for the observer
     system.
     """

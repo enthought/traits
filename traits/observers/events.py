@@ -14,6 +14,11 @@
 from traits.observers._dict_change_event import (   # noqa: F401
     DictChangeEvent,
 )
+
+from traits.observers._list_change_event import (   # noqa: F401
+    ListChangeEvent,
+)
+
 from traits.observers._trait_change_event import (   # noqa: F401
     TraitChangeEvent,
 )
