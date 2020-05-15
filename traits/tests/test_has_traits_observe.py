@@ -249,17 +249,15 @@ class TestHasTraitsObserveInstanceMethod(unittest.TestCase):
         self.assertEqual(len(foo.value_handler_events), 0)
 
     def test_observe_dispatch_ui(self):
+        # Test to ensure "ui" is one of the allowed value
+        # Not testing the actual effect as it requires GUI event loop
+        # as well as assumption on the local thread identity while running
+        # the test.
         foo = Foo()
 
         handler = mock.Mock()
+
         foo.observe(handler, trait("value"), dispatch="ui")
-
-        with mock.patch("traits.trait_notifiers.ui_handler") as mocked:
-            foo.value += 1
-
-        self.assertEqual(mocked.call_count, 1)
-        ((actual_handler, _), _), = mocked.call_args_list
-        self.assertIs(actual_handler, handler)
 
 
 # Test subclass can inherit the observers defined in the base class -----------
