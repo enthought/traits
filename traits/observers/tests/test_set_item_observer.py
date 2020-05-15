@@ -25,7 +25,7 @@ from traits.trait_types import Set
 
 
 def create_observer(**kwargs):
-    """ Convenient function for creating SetItemObserver with default values.
+    """ Convenience function for creating SetItemObserver with default values.
     """
     values = dict(
         notify=True,
