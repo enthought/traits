@@ -28,10 +28,10 @@ from traits.has_traits import (
     SingletonHasPrivateTraits,
 )
 from traits.ctrait import CTrait
-from traits.observers.api import (
+from traits.observers.api import trait
+from traits.observers._exception_handling import (
     pop_exception_handler,
     push_exception_handler,
-    trait,
 )
 from traits.traits import ForwardProperty, generic_trait
 from traits.trait_types import Event, Float, Instance, Int, List, Str

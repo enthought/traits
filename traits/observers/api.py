@@ -8,11 +8,6 @@
 #
 # Thanks for using Enthought open source!
 
-from traits.observers._exception_handling import (   # noqa: F401
-    pop_exception_handler,
-    push_exception_handler,
-)
-
 from traits.observers.expression import (   # noqa: F401
     trait,
 )
