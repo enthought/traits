@@ -66,8 +66,7 @@ class FilteredTraitObserver:
         ------
         IObservable
         """
-        name_to_ctrait = object.traits()
-        for name, ctrait in name_to_ctrait.items():
+        for name, ctrait in object.traits().items():
             if self.filter(name, ctrait):
                 yield object._trait(name, 2)
 
@@ -96,8 +95,7 @@ class FilteredTraitObserver:
         ------
         value : object
         """
-        name_to_ctrait = object.traits()
-        for name, ctrait in name_to_ctrait.items():
+        for name, ctrait in object.traits().items():
             if self.filter(name, ctrait):
                 yield from iter_objects(object, name)
 
