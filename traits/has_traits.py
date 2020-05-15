@@ -27,6 +27,7 @@ from .adaptation.adaptation_error import AdaptationError
 from .constants import DefaultValue, TraitKind
 from .ctrait import CTrait, __newobj__
 from .ctraits import CHasTraits
+from .observers import api as observe_api
 from .traits import (
     ForwardProperty,
     Property,
@@ -54,7 +55,6 @@ from .trait_base import (
 from .trait_errors import TraitError
 from .util.deprecated import deprecated
 from .trait_converters import check_trait, mapped_trait_for, trait_for
-from .observers import api as observe_api
 
 
 #  Set CHECK_INTERFACES to one of the following values:
