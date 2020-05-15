@@ -9,6 +9,8 @@
 # Thanks for using Enthought open source!
 
 import copy
+import operator
+import pickle
 import unittest
 
 from traits.has_traits import (
@@ -20,13 +22,20 @@ from traits.has_traits import (
     ListenerTraits,
     InstanceTraits,
     HasTraits,
+    observe,
+    ObserverTraits,
     SingletonHasTraits,
     SingletonHasStrictTraits,
     SingletonHasPrivateTraits,
 )
 from traits.ctrait import CTrait
+from traits.observers.api import (
+    pop_exception_handler,
+    push_exception_handler,
+    trait,
+)
 from traits.traits import ForwardProperty, generic_trait
-from traits.trait_types import Event, Float, Instance, Int, Str
+from traits.trait_types import Event, Float, Instance, Int, List, Str
 
 
 def _dummy_getter(self):
@@ -166,6 +175,39 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
                         "dispatch": "same",
                     },
                 )
+            },
+        )
+
+    def test_observe_trait(self):
+        # Given
+        @observe(trait("value"), post_init=True, dispatch="ui")
+        @observe("name")
+        def handler(event):
+            pass
+
+        class_name = "MyClass"
+        bases = (object,)
+        class_dict = {"attr": "something", "my_listener": handler}
+
+        # When
+        update_traits_class_dict(class_name, bases, class_dict)
+
+        # Then
+        self.assertEqual(
+            class_dict[ObserverTraits],
+            {
+                "my_listener": [
+                    {
+                        "expression": "name",
+                        "post_init": False,
+                        "dispatch": "same",
+                    },
+                    {
+                        "expression": trait("value"),
+                        "post_init": True,
+                        "dispatch": "ui",
+                    },
+                ],
             },
         )
 
@@ -550,3 +592,136 @@ class TestDeprecatedHasTraits(unittest.TestCase):
 
         with self.assertWarns(DeprecationWarning):
             TestSingletonHasPrivateTraits()
+
+
+class Person(HasTraits):
+    age = Int()
+
+
+class PersonWithObserve(Person):
+    events = List()
+
+    @observe(trait("age"))
+    def handler(self, event):
+        self.events.append(event)
+
+
+class TestHasTraitsObserveHook(unittest.TestCase):
+    """ Test observe decorator and the observe method.
+    """
+
+    def setUp(self):
+        push_exception_handler(reraise_exceptions=True)
+        self.addCleanup(pop_exception_handler)
+
+    def test_overloaded_signature_expression(self):
+        # Test the overloaded signature for expression
+        expressions = [
+            trait("age"),
+            "age",
+            [trait("age")],
+            ["age"],
+        ]
+        for expression in expressions:
+
+            class NewPerson(Person):
+                events = List()
+
+                @observe(expression)
+                def handler(self, event):
+                    self.events.append(event)
+
+            person = NewPerson()
+            person.age += 1
+            self.assertEqual(len(person.events), 1)
+
+    def test_observe_method_remove(self):
+        events = []
+        person = Person()
+        person.observe(events.append, "age")
+
+        # sanity check
+        person.age += 1
+        self.assertEqual(len(events), 1)
+
+        # when
+        person.observe(events.append, "age", remove=True)
+
+        # then
+        person.age += 1
+        self.assertEqual(len(events), 1)  # unchanged
+
+    def test_observe_dispatch_ui(self):
+        # Test to ensure "ui" is one of the allowed value
+        # Not testing the actual effect as it requires GUI event loop
+        # as well as assumption on the local thread identity while running
+        # the test.
+        person = Person()
+
+        person.observe(repr, trait("age"), dispatch="ui")
+
+    def test_inherit_observer_from_superclass(self):
+        # Test observers can be inherited
+        class BaseClass(HasTraits):
+            events = List()
+
+            @observe("value")
+            def handler(self, event):
+                self.events.append(event)
+
+        class SubClass(BaseClass):
+            value = Int()
+
+        instance = SubClass()
+        instance.value += 1
+        self.assertEqual(len(instance.events), 1)
+
+    def test_observer_overridden(self):
+        # The handler is overriden, no change event should be registered.
+        class BaseClass(HasTraits):
+            events = List()
+
+            @observe("value")
+            def handler(self, event):
+                self.events.append(event)
+
+        class SubclassOverriden(BaseClass):
+            value = Int()
+            handler = None
+
+        instance = SubclassOverriden()
+        instance.value += 1
+        self.assertEqual(len(instance.events), 0)
+
+    def test_observe_post_init(self):
+
+        class PersonWithPostInt(Person):
+            events = List()
+
+            @observe("age", post_init=True)
+            def handler(self, event):
+                self.events.append(event)
+
+        person = PersonWithPostInt(age=10)
+        self.assertEqual(len(person.events), 0)
+
+        person.age += 1
+        self.assertEqual(len(person.events), 1)
+
+    def test_observe_pickability(self):
+        # Test an HasTraits with observe can be pickled.
+        person = PersonWithObserve()
+        for protocol in range(pickle.HIGHEST_PROTOCOL + 1):
+            serialized = pickle.dumps(person, protocol=protocol)
+            deserialized = pickle.loads(serialized)
+
+            deserialized.age += 1
+            self.assertEqual(len(deserialized.events), 1)
+
+    def test_observe_deepcopy(self):
+        # Test an HasTraits with observe can be deepcopied.
+        person = PersonWithObserve()
+        copied = copy.deepcopy(person)
+        copied.age += 1
+        self.assertEqual(len(copied.events), 1)
+        self.assertEqual(len(person.events), 0)

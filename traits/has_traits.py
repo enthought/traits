@@ -15,7 +15,6 @@
 import abc
 import copy as copy_module
 import os
-import operator
 import pickle
 import re
 import warnings
@@ -775,14 +774,9 @@ def observe(expression, *, post_init=False, dispatch="same"):
             observe_inputs = []
             function._observe_inputs = observe_inputs
 
-        # handler_getter : callable(HasTraits) -> callable
-        #     A callable for obtaining the change handler from an instance
-        #     of HasTraits. This is for obtaining the bound method instead of
-        #     the unbound one.
         observe_input = dict(
             expression=expression,
             dispatch=dispatch,
-            handler_getter=operator.attrgetter(function.__name__),
             post_init=post_init,
         )
         observe_inputs.append(observe_input)
@@ -3303,7 +3297,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 if not state["post_init"]:
                     self.observe(
                         expression=state["expression"],
-                        handler=state["handler_getter"](self),
+                        handler=getattr(self, name),
                         dispatch=state["dispatch"],
                     )
 
@@ -3315,7 +3309,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 if state["post_init"]:
                     self.observe(
                         expression=state["expression"],
-                        handler=state["handler_getter"](self),
+                        handler=getattr(self, name),
                         dispatch=state["dispatch"],
                     )
 
