@@ -10,14 +10,13 @@
 
 import unittest
 
-from traits.api import HasTraits, Expression
+from traits.api import Expression, HasTraits
 
 
 class TestExpression(unittest.TestCase):
 
     def test_set_value_original(self):
         class Foo(HasTraits):
-            # The default value set in the class definition is "0"
             bar = Expression()
 
         f = Foo()
@@ -42,3 +41,15 @@ class TestExpression(unittest.TestCase):
 
         f = Foo()
         self.assertEqual(f.bar, "1")
+
+    def test_default_method_non_valid(self):
+        class Foo(HasTraits):
+            bar = Expression()
+
+            def _bar_default(self):
+                return "{x=y"
+
+        f = Foo()
+        # Raised exception is layered, therefore check only for base Exception
+        with self.assertRaises(Exception):
+            getattr(f, "bar")
