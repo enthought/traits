@@ -53,8 +53,8 @@ class TestSetEventFactory(unittest.TestCase):
 
         # then
         event, = events
-        self.assertEqual(event.added, set([4]))
-        self.assertEqual(event.removed, set([]))
+        self.assertEqual(event.added, {4})
+        self.assertEqual(event.removed, set())
 
         # when
         events.clear()
@@ -62,5 +62,5 @@ class TestSetEventFactory(unittest.TestCase):
 
         # then
         event, = events
-        self.assertEqual(event.added, set([]))
-        self.assertEqual(event.removed, set([4]))
+        self.assertEqual(event.added, set())
+        self.assertEqual(event.removed, {4})
