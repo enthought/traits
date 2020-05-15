@@ -36,8 +36,6 @@ class SingleValue(HasTraits):
     value = Int()
 
 
-# Test ``observe`` decorator registers the handlers as expected ---------------
-
 class Foo(HasTraits):
     """ Dummy class with a single value and an instance with a single value
     """
@@ -46,29 +44,19 @@ class Foo(HasTraits):
     single_value_instance = Instance(SingleValue)
 
 
+# Test ``observe`` decorator registers the handlers as expected ---------------
+
+
 class FooWithTextObserver(Foo):
     """ Dummy class for testing the use of string in ``observe``
     """
 
-    value_handler_events = List()
-
-    multi_observer_handler_events = List()
-
-    value_or_single_value_instance_events = List()
-
-    @observe("value")
-    def value_handler(self, event):
-        self.value_handler_events.append(event)
-
-    @observe("single_value_instance")
-    @observe("value")
-    @observe("single_value_instance:value")
-    def multi_observer_handler(self, event):
-        self.multi_observer_handler_events.append(event)
+    events = List()
 
     @observe(["value", "single_value_instance"])
-    def value_or_single_value_instance_handler(self, event):
-        self.value_or_single_value_instance_events.append(event)
+    @observe("single_value_instance:value")
+    def multi_observer_handler(self, event):
+        self.events.append(event)
 
 
 class FooWithExpressionObserver(Foo):
@@ -76,25 +64,12 @@ class FooWithExpressionObserver(Foo):
     in ``observe``
     """
 
-    value_handler_events = List()
-
-    multi_observer_handler_events = List()
-
-    value_or_single_value_instance_events = List()
-
-    @observe(trait("value"))
-    def value_handler(self, event):
-        self.value_handler_events.append(event)
-
-    @observe(trait("single_value_instance"))
-    @observe(trait("value"))
-    @observe(trait("single_value_instance", notify=False).trait("value"))
-    def multi_observer_handler(self, event):
-        self.multi_observer_handler_events.append(event)
+    events = List()
 
     @observe(trait("value") | trait("single_value_instance"))
-    def value_or_single_value_instance_handler(self, event):
-        self.value_or_single_value_instance_events.append(event)
+    @observe(trait("single_value_instance", notify=False).trait("value"))
+    def multi_observer_handler(self, event):
+        self.events.append(event)
 
 
 class TestHasTraitsObserveDecorator(unittest.TestCase):
@@ -104,18 +79,6 @@ class TestHasTraitsObserveDecorator(unittest.TestCase):
     def setUp(self):
         push_exception_handler(reraise_exceptions=True)
         self.addCleanup(pop_exception_handler)
-
-    def test_value_observed(self):
-
-        foos = [
-            FooWithTextObserver(),
-            FooWithExpressionObserver(),
-        ]
-
-        for foo in foos:
-            with self.subTest(foo=foo):
-                foo.value += 1
-                self.assertEqual(len(foo.value_handler_events), 1)
 
     def test_multiple_decorators(self):
         # Test when the observe decorator is stacked
@@ -131,43 +94,19 @@ class TestHasTraitsObserveDecorator(unittest.TestCase):
                 foo.single_value_instance = SingleValue()
 
                 # then
-                self.assertEqual(len(foo.multi_observer_handler_events), 1)
+                self.assertEqual(len(foo.events), 1)
 
                 # when
                 foo.value += 1
 
                 # then
-                self.assertEqual(len(foo.multi_observer_handler_events), 2)
+                self.assertEqual(len(foo.events), 2)
 
                 # when
                 foo.single_value_instance.value += 1
 
                 # then
-                self.assertEqual(len(foo.multi_observer_handler_events), 3)
-
-    def test_observe_with_list_of_str_or_expression(self):
-        # Test when the expression is a list of str or an equivalent expression
-
-        foos = [
-            FooWithTextObserver(),
-            FooWithExpressionObserver(),
-        ]
-
-        for foo in foos:
-            with self.subTest(foo=foo):
-                # when
-                foo.value += 1
-
-                # then
-                self.assertEqual(
-                    len(foo.value_or_single_value_instance_events), 1)
-
-                # when
-                foo.single_value_instance = SingleValue()
-
-                # then
-                self.assertEqual(
-                    len(foo.value_or_single_value_instance_events), 2)
+                self.assertEqual(len(foo.events), 3)
 
 
 # Test ``observe`` instance method registers the handlers as expected ---------
@@ -238,15 +177,15 @@ class TestHasTraitsObserveInstanceMethod(unittest.TestCase):
 
         # sanity check
         foo.value += 1
-        self.assertEqual(len(foo.value_handler_events), 1)
-        foo.value_handler_events = []
+        self.assertEqual(len(foo.events), 1)
+        foo.events = []
 
         # when
-        foo.observe(foo.value_handler, trait("value"), remove=True)
+        foo.observe(foo.multi_observer_handler, trait("value"), remove=True)
         foo.value += 1
 
         # then
-        self.assertEqual(len(foo.value_handler_events), 0)
+        self.assertEqual(len(foo.events), 0)
 
     def test_observe_dispatch_ui(self):
         # Test to ensure "ui" is one of the allowed value
@@ -385,7 +324,7 @@ class TestHasTraitsWithObservePickle(unittest.TestCase):
                     deserialized = pickle.loads(serialized)
 
                     deserialized.value += 1
-                    self.assertEqual(len(deserialized.value_handler_events), 1)
+                    self.assertEqual(len(deserialized.events), 1)
 
 
 # Integration test for deep copy compatibility --------------------------------
@@ -408,5 +347,5 @@ class TestHasTraitsWithObserveDeepCopy(unittest.TestCase):
                 copied = copy.deepcopy(foo)
                 copied.value += 1
 
-                self.assertEqual(len(copied.value_handler_events), 1)
-                self.assertEqual(len(foo.value_handler_events), 0)
+                self.assertEqual(len(copied.events), 1)
+                self.assertEqual(len(foo.events), 0)
