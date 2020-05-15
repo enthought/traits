@@ -96,13 +96,7 @@ class FilteredTraitObserver:
         ------
         value : object
         """
-        try:
-            name_to_ctrait = object.traits()
-        except AttributeError:
-            raise ValueError(
-                "Unable to obtain trait definitions from {!r}".format(object)
-            )
-
+        name_to_ctrait = object.traits()
         for name, ctrait in name_to_ctrait.items():
             if self.filter(name, ctrait):
                 yield from iter_objects(object, name)

@@ -162,15 +162,6 @@ class TestFilteredTraitObserverIterObjects(unittest.TestCase):
             [instance.instance, instance.instance2]
         )
 
-    def test_iter_objects_error(self):
-        observer = create_observer()
-        with self.assertRaises(ValueError) as exception_context:
-            list(observer.iter_objects(None))
-
-        self.assertIn(
-            "Unable to obtain trait definitions from None",
-            str(exception_context.exception)
-        )
 
 # ------------------------------------
 # Integration tests with notifiers
