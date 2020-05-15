@@ -44,28 +44,9 @@ class NamedTraitObserver:
             added after a handler is registered, or when the context is
             ambiguous (e.g. "items" in the domain specific language).
         """
-        self._name = name
-        self._notify = notify
-        self._optional = optional
-
-    @property
-    def name(self):
-        """ Name of trait to observe on any given HasTraits object."""
-        return self._name
-
-    @property
-    def notify(self):
-        """ A boolean for whether this observer will notify
-        for changes.
-        """
-        return self._notify
-
-    @property
-    def optional(self):
-        """ A boolean for whether to silent error if the incoming object
-        does not have the requested trait.
-        """
-        return self._optional
+        self.name = name
+        self.notify = notify
+        self.optional = optional
 
     def __hash__(self):
         return hash((type(self), self.name, self.notify, self.optional))
