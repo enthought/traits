@@ -14,6 +14,7 @@
 
 import abc
 import copy as copy_module
+from functools import partial
 import os
 import pickle
 import re
@@ -303,6 +304,16 @@ def _property_method(class_dict, name):
     getter/setter.
     """
     return class_dict.get(name)
+
+
+def _mapped_trait_default_method(trait, trait_name):
+
+    def default_method(key_trait, key_trait_name, object):
+        return key_trait.handler.mapped_value(
+            getattr(object, key_trait_name, Undefined)
+        )
+
+    return partial(default_method, trait, trait_name)
 
 
 # This really should be 'HasTraits', but it's not defined yet:
@@ -619,7 +630,23 @@ def update_traits_class_dict(class_name, bases, class_dict):
                 )
 
         handlers = [h for h in handlers if h is not None]
+
         default = _get_def(class_name, class_dict, [], "_%s_default" % name)
+        # In case of mapped traits, need to form a new default method
+        if (name[-1:] == '_'):
+            key_trait = class_traits[name[:-1]]
+            handler = key_trait.handler
+            if (handler is not None) and (handler.is_mapped):
+                key_default = _get_def(
+                    class_name, class_dict, [], "_%s_default" % name[:-1]
+                )
+                if key_default is None:
+                    default = None
+                else:
+                    default = _mapped_trait_default_method(
+                        key_trait, name[:-1]
+                    )
+
         if (len(handlers) > 0) or (default is not None):
 
             if name not in cloned:

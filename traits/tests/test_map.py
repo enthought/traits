@@ -15,7 +15,7 @@ Tests for the Map handler.
 import pickle
 import unittest
 
-from traits.api import HasTraits, TraitError, Map, Undefined
+from traits.api import HasTraits, Int, Map, TraitError, Undefined
 
 
 class TestMap(unittest.TestCase):
@@ -49,6 +49,28 @@ class TestMap(unittest.TestCase):
         p = Person()
         self.assertIsNone(p.married)
         self.assertEqual(p.married_, 2)
+
+    def test_default_method(self):
+        class Person(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
+                           None: 2})
+
+            default_calls = Int(0)
+
+            def _married_default(self):
+                self.default_calls += 1
+                return None
+
+        p = Person()
+        self.assertIsNone(p.married)
+        self.assertEqual(p.married_, 2)
+        self.assertEqual(p.default_calls, 1)
+
+        # Check that the order doesn't matter
+        p2 = Person()
+        self.assertEqual(p2.married_, 2)
+        self.assertIsNone(p2.married)
+        self.assertEqual(p2.default_calls, 1)
 
     def test_pickle_roundtrip(self):
         class Person(HasTraits):
