@@ -14,12 +14,16 @@ def add_or_remove_notifiers(
     """ Add/Remove notifiers on objects following the description on an
     ObserverGraph.
 
+    All nodes in ``ObserverGraph`` are required to be instances of
+    ``IObserver``. The interface of ``IObserver`` supports this function.
+
     Parameters
     ----------
     object : object
         An object to be observed.
     graph : ObserverGraph
         A graph describing what and how extended traits are being observed.
+        All nodes must be ``IObserver``.
     handler : callable(event)
         User-defined callable to handle change events.
         ``event`` is an object representing the change.
