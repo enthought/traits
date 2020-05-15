@@ -10,7 +10,7 @@
 
 import unittest
 
-from traits.api import Expression, HasTraits
+from traits.api import Expression, HasTraits, TraitError
 
 
 class TestExpression(unittest.TestCase):
@@ -50,6 +50,6 @@ class TestExpression(unittest.TestCase):
                 return "{x=y"
 
         f = Foo()
-        # Raised exception is layered, therefore check only for base Exception
-        with self.assertRaises(Exception):
-            getattr(f, "bar")
+        msg = "The 'bar' trait of a Foo instance must be a valid"
+        with self.assertRaisesRegex(TraitError, msg):
+            f.bar
