@@ -15,6 +15,7 @@ from weakref import ref
 
 from traits.trait_base import _validate_everything
 from traits.trait_errors import TraitError
+from traits.observers._i_observable import IObservable as _IObservable
 
 
 class TraitSetEvent(object):
@@ -51,6 +52,7 @@ class TraitSetEvent(object):
         )
 
 
+@_IObservable.register
 class TraitSet(set):
     """ A subclass of set that validates and notifies listeners of changes.
 
@@ -422,6 +424,20 @@ class TraitSet(set):
         """
         state['notifiers'] = []
         self.__dict__.update(state)
+
+    # -- Implement IObservable ------------------------------------------------
+
+    def _notifiers(self, force_create):
+        """ Return a list of callables where each callable is a notifier.
+        The list is expected to be mutated for contributing or removing
+        notifiers from the object.
+
+        Parameters
+        ----------
+        force_create: boolean
+            Not used here.
+        """
+        return self.notifiers
 
 
 class TraitSetObject(TraitSet):

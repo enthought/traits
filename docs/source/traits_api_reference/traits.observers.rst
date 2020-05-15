@@ -33,6 +33,10 @@
    :members:
    :inherited-members:
 
+.. autoclass:: SetChangeEvent
+   :members:
+   :inherited-members:
+
 .. autoclass:: TraitChangeEvent
    :members:
    :inherited-members:
