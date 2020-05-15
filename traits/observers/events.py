@@ -11,6 +11,10 @@
 """ Event objects received by change handlers added using observe.
 """
 
+from traits.observers._dict_change_event import (   # noqa: F401
+    DictChangeEvent,
+)
+
 from traits.observers._list_change_event import (   # noqa: F401
     ListChangeEvent,
 )

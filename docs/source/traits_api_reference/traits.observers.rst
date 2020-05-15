@@ -25,6 +25,10 @@
     :undoc-members:
     :show-inheritance:
 
+.. autoclass:: DictChangeEvent
+   :members:
+   :inherited-members:
+
 .. autoclass:: ListChangeEvent
    :members:
    :inherited-members:
