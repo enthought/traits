@@ -135,16 +135,6 @@ class TestFilteredTraitObserverIterObservables(unittest.TestCase):
         ]
         self.assertCountEqual(actual, expected)
 
-    def test_iter_observable_error(self):
-        observer = create_observer()
-        with self.assertRaises(ValueError) as exception_context:
-            list(observer.iter_observables(None))
-
-        self.assertIn(
-            "Unable to obtain trait definitions from None",
-            str(exception_context.exception)
-        )
-
 
 class TestFilteredTraitObserverIterObjects(unittest.TestCase):
     """ Test FilteredTraitObserver.iter_objects """

@@ -31,7 +31,8 @@ class FilteredTraitObserver:
         A callable that receives the name of a trait and the corresponding
         trait definition. The returned boolean indicates whether the trait is
         observed. In order to remove an existing observer with the equivalent
-        filter, the filter callables must compare equally.
+        filter, the filter callables must compare equally. The callable must
+        also be hashable.
     """
 
     def __init__(self, notify, filter):
@@ -51,8 +52,9 @@ class FilteredTraitObserver:
         )
 
     def iter_observables(self, object):
-        """ Yield the instance traits matching the filter given. If trait
-        definition cannot be found on the object, raise an error.
+        """ Yield the instance traits matching the filter given. Any error
+        occurred upon obtaining the trait definitions (e.g. the given object
+        is not an instance of HasTraits) will be propagated.
 
         Parameters
         ----------
@@ -63,19 +65,8 @@ class FilteredTraitObserver:
         Yields
         ------
         IObservable
-
-        Raises
-        ------
-        ValueError
-            If the given object cannot be handled by this observer.
         """
-        try:
-            name_to_ctrait = object.traits()
-        except AttributeError:
-            raise ValueError(
-                "Unable to obtain trait definitions from {!r}".format(object)
-            )
-
+        name_to_ctrait = object.traits()
         for name, ctrait in name_to_ctrait.items():
             if self.filter(name, ctrait):
                 yield object._trait(name, 2)
