@@ -2228,7 +2228,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         """
         # Handle the overloaded signature.
         # Support list to be consistent with on_trait_change.
-        if isinstance(expression, SequenceTypes):
+        if isinstance(expression, list):
             expressions = expression
         else:
             expressions = [expression]
