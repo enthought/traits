@@ -1816,8 +1816,17 @@ default_value_for(trait_object *trait, has_traits_object *obj, PyObject *name)
             Py_DECREF(tuple);
             if ((result != NULL) && (trait->validate != NULL)) {
                 value = trait->validate(trait, obj, name, result);
-                Py_DECREF(result);
-                return value;
+                if (trait->flags & TRAIT_SETATTR_ORIGINAL_VALUE) {
+                    if (value == NULL) {
+                        Py_DECREF(result);
+                        return NULL;
+                    }
+                    return result;
+                }
+                else {
+                    Py_DECREF(result);
+                    return value;
+                }
             }
             break;
         case TRAIT_SET_OBJECT_DEFAULT_VALUE:
