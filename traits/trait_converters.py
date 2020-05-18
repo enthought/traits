@@ -109,17 +109,23 @@ def trait_for(trait):
         return Trait(trait)
 
 
-def mapped_trait_for(trait):
+def mapped_trait_for(trait, name):
     """ Returns the 'mapped trait' definition for a mapped trait.
     """
     from .trait_types import Any
+    from .constants import DefaultValue
+    from .trait_base import Undefined
 
-    default_value = trait.default_value()[1]
-    try:
-        default_value = trait.handler.mapped_value(default_value)
-    except Exception:
-        pass
-
-    return Any(
-        default_value, is_base=False, transient=True, editable=False
+    mapped_trait = Any(
+        is_base=False, transient=True, editable=False
     ).as_ctrait()
+
+    def default(instance):
+        value = getattr(instance, name, Undefined)
+        if value is Undefined:
+            return Undefined
+        return trait.handler.mapped_value(value)
+
+    mapped_trait.set_default_value(DefaultValue.callable, default)
+
+    return mapped_trait

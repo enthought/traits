@@ -14,7 +14,6 @@
 
 import abc
 import copy as copy_module
-from functools import partial
 import os
 import pickle
 import re
@@ -306,16 +305,6 @@ def _property_method(class_dict, name):
     return class_dict.get(name)
 
 
-def _mapped_trait_default_method(trait, trait_name):
-
-    def default_method(key_trait, key_trait_name, object):
-        return key_trait.handler.mapped_value(
-            getattr(object, key_trait_name, Undefined)
-        )
-
-    return partial(default_method, trait, trait_name)
-
-
 # This really should be 'HasTraits', but it's not defined yet:
 _HasTraits = None
 
@@ -454,7 +443,9 @@ def update_traits_class_dict(class_name, bases, class_dict):
                             class_traits[name + "_items"] = items_trait
 
                         if handler.is_mapped:
-                            class_traits[name + "_"] = mapped_trait_for(value)
+                            class_traits[name + "_"] = mapped_trait_for(
+                                value, name
+                            )
 
                 elif value_type == "delegate":
                     # Only add a listener if the trait.listenable metadata
@@ -512,9 +503,6 @@ def update_traits_class_dict(class_name, bases, class_dict):
                     value.set_default_value(
                         DefaultValue.missing, value.default)
                     del class_dict[name]
-                    handler = value.handler
-                    if (handler is not None) and handler.is_mapped:
-                        class_traits[name + "_"] = mapped_trait_for(value)
                     break
 
     # Process all HasTraits base classes:
@@ -630,23 +618,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                 )
 
         handlers = [h for h in handlers if h is not None]
-
         default = _get_def(class_name, class_dict, [], "_%s_default" % name)
-        # In case of mapped traits, need to form a new default method
-        if (name[-1:] == '_'):
-            key_trait = class_traits[name[:-1]]
-            handler = key_trait.handler
-            if (handler is not None) and (handler.is_mapped):
-                key_default = _get_def(
-                    class_name, class_dict, [], "_%s_default" % name[:-1]
-                )
-                if key_default is None:
-                    default = None
-                else:
-                    default = _mapped_trait_default_method(
-                        key_trait, name[:-1]
-                    )
-
         if (len(handlers) > 0) or (default is not None):
 
             if name not in cloned:
@@ -1028,7 +1000,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             if handler.has_items:
                 cls.add_class_trait(name + "_items", handler.items_event())
             if handler.is_mapped:
-                cls.add_class_trait(name + "_", mapped_trait_for(trait))
+                cls.add_class_trait(name + "_", mapped_trait_for(trait, name))
 
         # Make the new trait inheritable (if allowed):
         if trait.is_base is not False:
@@ -2544,7 +2516,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             if handler.has_items:
                 self.add_trait(name + "_items", handler.items_event())
             if handler.is_mapped:
-                self.add_trait(name + "_", mapped_trait_for(trait))
+                self.add_trait(name + "_", mapped_trait_for(trait, name))
 
         # See if there already is a class or instance trait with the same name:
         old_trait = self._trait(name, 0)
