@@ -760,7 +760,7 @@ def observe(expression, *, post_init=False, dispatch="same"):
         """ Create input arguments for HasTraits.observe and attach the input
         to the callable.
 
-        Metaclass will then collect this information for calling
+        The metaclass will then collect this information for calling
         HasTraits.observe with the decorated function.
 
         Parameters
