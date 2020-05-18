@@ -18,7 +18,6 @@ from traits.observers._testing import (
     call_add_or_remove_notifiers,
     create_graph,
 )
-from traits.trait_types import Int
 
 
 class TestMetadataFilter(unittest.TestCase):
