@@ -75,19 +75,6 @@ class TestExpressionComposition(unittest.TestCase):
         actual = expr._as_graphs()
         self.assertEqual(actual, expected)
 
-    def test_or_operator_same_elements(self):
-        observer = 1
-        expr1 = create_expression(observer)
-        expr2 = create_expression(observer)
-        expr = expr1 | expr2
-
-        # the two elements are equal
-        expected = [
-            create_graph(observer),
-        ]
-        actual = expr._as_graphs()
-        self.assertEqual(actual, expected)
-
     def test_or_maintain_order(self):
         # Test __or__ will maintain the order provided by the user.
         observer1 = 1

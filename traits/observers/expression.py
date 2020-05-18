@@ -44,7 +44,7 @@ class Expression:
 
     def __or__(self, expression):
         """ Create a new expression that matches this expression OR
-        the given expression. Equivalent expressions will be ignored.
+        the given expression.
 
         e.g. ``trait("age") | trait("number")`` will match either trait
         **age** or trait **number** on an object.
@@ -57,8 +57,6 @@ class Expression:
         -------
         new_expression : traits.observers.expression.Expression
         """
-        if self == expression:
-            return self
         return ParallelExpression(self, expression)
 
     def then(self, expression):
