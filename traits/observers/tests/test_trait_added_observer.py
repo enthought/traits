@@ -51,9 +51,8 @@ class DummyMatchFunc:
         return hash(self.return_value)
 
 
-class TestTraitAddedObserverEqualHashImmutable(unittest.TestCase):
-    """ Tests for TraitAddedObserver __eq__ and __hash__ methods, and
-    the fact it is not mutable.
+class TestTraitAddedObserverEqualHash(unittest.TestCase):
+    """ Tests for TraitAddedObserver __eq__ and __hash__ methods.
     """
 
     def test_not_equal_match_func(self):
