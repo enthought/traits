@@ -2463,7 +2463,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         See Also
         --------
-        HasTraits.observe : A newer API defining traits notifications.
+        HasTraits.observe : A newer API for defining traits notifications.
         """
         # Check to see if we can do a quick exit to the basic trait change
         # handler:
