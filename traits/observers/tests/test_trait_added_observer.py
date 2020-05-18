@@ -12,17 +12,17 @@ import unittest
 from unittest import mock
 
 from traits.has_traits import HasTraits
-from traits.trait_types import Str
-from traits.observers._trait_added_observer import (
-    TraitAddedObserver,
-    _RestrictedNamedTraitObserver,
-)
 from traits.observers._testing import (
     call_add_or_remove_notifiers,
     create_graph,
     DummyNotifier,
     DummyObserver,
 )
+from traits.observers._trait_added_observer import (
+    _RestrictedNamedTraitObserver,
+    TraitAddedObserver,
+)
+from traits.trait_types import Str
 
 
 def create_observer(**kwargs):
