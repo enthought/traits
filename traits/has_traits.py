@@ -2260,8 +2260,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         """Causes the object to invoke a handler whenever a trait attribute
         matching a specified pattern is modified, or removes the association.
 
-        See also ``HasTraits.observe`` for a newer API.
-
         Multiple handlers can be defined for the same object, or even for the
         same trait attribute on the same object. If *name* is not specified or
         is None, *handler* is invoked when any trait attribute on the
@@ -2463,6 +2461,9 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             ``new``     Run notifications in a new thread.
             =========== =======================================================
 
+        See Also
+        --------
+        HasTraits.observe : A newer API defining traits notifications.
         """
         # Check to see if we can do a quick exit to the basic trait change
         # handler:
