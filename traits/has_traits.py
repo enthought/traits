@@ -751,7 +751,7 @@ def observe(expression, *, post_init=False, dispatch="same"):
                     event queue.
         =========== =======================================================
 
-    See also
+    See Also
     --------
     HasTraits.observe
     """
