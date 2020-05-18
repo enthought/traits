@@ -32,6 +32,16 @@ class Expression:
     provided in this module, e.g.``trait``.
     """
     def __init__(self, _expression=None):
+        """ Create an user-facing Expression wrapping an _IExpression for
+        internal use.
+
+        Parameters
+        ----------
+        _expression: _IExpression, or None
+            Internal object for constructing a graph of observers.
+            If not provided, the internal object represents an empty
+            expression.
+        """
         if _expression is None:
             _expression = _EmptyExpression()
         self._expression = _expression
