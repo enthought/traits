@@ -214,7 +214,7 @@ class _RestrictedNamedTraitObserver:
     """
 
     def __init__(self, name, wrapped_observer):
-        self._name = name
+        self.name = name
         self._wrapped_observer = wrapped_observer
 
     def __hash__(self):
@@ -226,11 +226,6 @@ class _RestrictedNamedTraitObserver:
             and self.name == other.name
             and self._wrapped_observer == other._wrapped_observer
         )
-
-    @property
-    def name(self):
-        """ Name of trait to observe on any given HasTraits object."""
-        return self._name
 
     @property
     def notify(self):
