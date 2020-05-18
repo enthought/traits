@@ -30,7 +30,7 @@ class TraitAddedObserver:
 
     Parameters
     ----------
-    match_func : callable(str, TraitType) -> boolean
+    match_func : callable(str, CTrait) -> bool
         A callable that receives the name of the trait added and the
         corresponding trait type. The returned boolean indicates whether
         notifiers should be added/removed for the added trait.
