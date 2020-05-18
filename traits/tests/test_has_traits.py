@@ -9,6 +9,7 @@
 # Thanks for using Enthought open source!
 
 import copy
+import pickle
 import unittest
 
 from traits.has_traits import (
@@ -26,7 +27,7 @@ from traits.has_traits import (
 )
 from traits.ctrait import CTrait
 from traits.traits import ForwardProperty, generic_trait
-from traits.trait_types import Event, Float, Instance, Int, Str
+from traits.trait_types import Event, Float, Instance, Int, Str, Map
 
 
 def _dummy_getter(self):
@@ -550,3 +551,29 @@ class TestDeprecatedHasTraits(unittest.TestCase):
 
         with self.assertWarns(DeprecationWarning):
             TestSingletonHasPrivateTraits()
+
+
+class MappedWithDefault(HasTraits):
+
+    married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+
+    default_calls = Int(0)
+
+    def _married_default(self):
+        self.default_calls += 1
+        return "yes"
+
+
+class TestHasTraitsPickling(unittest.TestCase):
+
+    def test_pickle_mapped_default_method(self):
+        person = MappedWithDefault()
+
+        # Sanity check
+        self.assertEqual(person.default_calls, 0)
+
+        reconstituted = pickle.loads(pickle.dumps(person))
+
+        self.assertEqual(reconstituted.married_, 1)
+        self.assertEqual(reconstituted.married, "yes")
+        self.assertEqual(reconstituted.default_calls, 1)

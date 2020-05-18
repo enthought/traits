@@ -72,6 +72,75 @@ class TestMap(unittest.TestCase):
         self.assertIsNone(p2.married)
         self.assertEqual(p2.default_calls, 1)
 
+    def test_default_static_override_static(self):
+        class BasePerson(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
+                           None: 2}, default_value=None)
+
+        class Person(BasePerson):
+            married = "yes"
+
+        p = Person()
+        self.assertEqual(p.married, "yes")
+        self.assertEqual(p.married_, 1)
+
+    def test_default_static_override_method(self):
+        class BasePerson(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
+                           None: 2}, default_value=None)
+
+        class Person(BasePerson):
+            default_calls = Int(0)
+
+            def _married_default(self):
+                self.default_calls += 1
+                return "yes"
+
+        p = Person()
+        self.assertEqual(p.married, "yes")
+        self.assertEqual(p.married_, 1)
+        self.assertEqual(p.default_calls, 1)
+
+    def test_default_method_override_static(self):
+        class BasePerson(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
+                           None: 2})
+
+            default_calls = Int(0)
+
+            def _married_default(self):
+                self.default_calls += 1
+                return None
+
+        class Person(BasePerson):
+            married = "yes"
+
+        p = Person()
+        self.assertEqual(p.married, "yes")
+        self.assertEqual(p.married_, 1)
+        self.assertEqual(p.default_calls, 0)
+
+    def test_default_method_override_method(self):
+        class BasePerson(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
+                           None: 2})
+
+            default_calls = Int(0)
+
+            def _married_default(self):
+                self.default_calls += 1
+                return None
+
+        class Person(BasePerson):
+            def _married_default(self):
+                self.default_calls += 1
+                return "yes"
+
+        p = Person()
+        self.assertEqual(p.married, "yes")
+        self.assertEqual(p.married_, 1)
+        self.assertEqual(p.default_calls, 1)
+
     def test_pickle_roundtrip(self):
         class Person(HasTraits):
             married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0},

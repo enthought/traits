@@ -15,7 +15,7 @@ Tests for the PrefixMap handler.
 import pickle
 import unittest
 
-from traits.api import HasTraits, TraitError, PrefixMap, Undefined
+from traits.api import HasTraits, Int, PrefixMap, TraitError, Undefined
 
 
 class Person(HasTraits):
@@ -59,12 +59,99 @@ class TestPrefixMap(unittest.TestCase):
 
     def test_default(self):
         class Person(HasTraits):
-            married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
-                                 None: 2},
-                                default_value=None)
+            married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
+                                default_value="nah")
         p = Person()
-        self.assertIsNone(p.married)
-        self.assertEqual(p.married_, 2)
+        self.assertEqual(p.married, "nah")
+        self.assertEqual(p.married_, 0)
+
+    def test_default_method(self):
+        class Person(HasTraits):
+            married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+
+            default_calls = Int(0)
+
+            def _married_default(self):
+                self.default_calls += 1
+                return "nah"
+
+        p = Person()
+        self.assertEqual(p.married, "nah")
+        self.assertEqual(p.married_, 0)
+        self.assertEqual(p.default_calls, 1)
+
+        # Check that the order doesn't matter
+        p2 = Person()
+        self.assertEqual(p2.married_, 0)
+        self.assertEqual(p2.married, "nah")
+        self.assertEqual(p2.default_calls, 1)
+
+    def test_default_static_override_static(self):
+        class BasePerson(HasTraits):
+            married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
+                                default_value="nah")
+
+        class Person(BasePerson):
+            married = "yes"
+
+        p = Person()
+        self.assertEqual(p.married, "yes")
+        self.assertEqual(p.married_, 1)
+
+    def test_default_static_override_method(self):
+        class BasePerson(HasTraits):
+            married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
+                                default_value="nah")
+
+        class Person(BasePerson):
+            default_calls = Int(0)
+
+            def _married_default(self):
+                self.default_calls += 1
+                return "yes"
+
+        p = Person()
+        self.assertEqual(p.married, "yes")
+        self.assertEqual(p.married_, 1)
+        self.assertEqual(p.default_calls, 1)
+
+    def test_default_method_override_static(self):
+        class BasePerson(HasTraits):
+            married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+
+            default_calls = Int(0)
+
+            def _married_default(self):
+                self.default_calls += 1
+                return "nah"
+
+        class Person(BasePerson):
+            married = "yes"
+
+        p = Person()
+        self.assertEqual(p.married, "yes")
+        self.assertEqual(p.married_, 1)
+        self.assertEqual(p.default_calls, 0)
+
+    def test_default_method_override_method(self):
+        class BasePerson(HasTraits):
+            married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+
+            default_calls = Int(0)
+
+            def _married_default(self):
+                self.default_calls += 1
+                return "nah"
+
+        class Person(BasePerson):
+            def _married_default(self):
+                self.default_calls += 1
+                return "yes"
+
+        p = Person()
+        self.assertEqual(p.married, "yes")
+        self.assertEqual(p.married_, 1)
+        self.assertEqual(p.default_calls, 1)
 
     def test_pickle_roundtrip(self):
         class Person(HasTraits):
