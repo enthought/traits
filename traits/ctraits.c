@@ -736,11 +736,10 @@ has_traits_init(PyObject *obj, PyObject *args, PyObject *kwds)
     }
 
     /* Make sure all of the object's observers have been set up: */
-    value = PyObject_CallMethod(obj, "_init_trait_observers", "()");
+    value = PyObject_CallMethod(obj, "_init_trait_observers", NULL);
     if (value == NULL) {
         return -1;
     }
-
     Py_DECREF(value);
 
     /* Set any traits specified in the constructor: */
@@ -766,11 +765,10 @@ has_traits_init(PyObject *obj, PyObject *args, PyObject *kwds)
 
     /* Make sure all post constructor argument assignment observers have been
        set up: */
-    value = PyObject_CallMethod(obj, "_post_init_trait_observers", "()");
+    value = PyObject_CallMethod(obj, "_post_init_trait_observers", NULL);
     if (value == NULL) {
         return -1;
     }
-
     Py_DECREF(value);
 
     /* Call the 'traits_init' method to finish up initialization: */
