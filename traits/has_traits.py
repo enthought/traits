@@ -744,7 +744,7 @@ def observe(expression, *, post_init=False, dispatch="same"):
         value       dispatch
         =========== =======================================================
         ``same``    Run notifications on the same thread where the change
-                    occurs.
+                    occurs. The notifications are executed immediately.
         ``ui``      Run notifications on the UI thread. If the current
                     thread is the UI thread, the notifications are executed
                     immediately; otherwise, they are placed on the UI
@@ -2218,7 +2218,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             value       dispatch
             =========== =======================================================
             ``same``    Run notifications on the same thread where the change
-                        occurs.
+                        occurs. The notifications are executed immediately.
             ``ui``      Run notifications on the UI thread. If the current
                         thread is the UI thread, the notifications are executed
                         immediately; otherwise, they are placed on the UI
