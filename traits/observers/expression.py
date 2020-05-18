@@ -8,7 +8,6 @@
 #
 # Thanks for using Enthought open source!
 
-import abc
 import functools as _functools
 
 from traits.observers._named_trait_observer import (
@@ -19,8 +18,6 @@ from traits.observers._observer_graph import (
 )
 
 # Expression is a public user interface for constructing ObserverGraph.
-# It wraps an instance of _IExpression which is hidden from the user.
-# Despite the name, Expression itself is not an instance of _IExpression.
 
 
 class Expression:
@@ -32,21 +29,6 @@ class Expression:
     An Expression is typically created using one of the top-level functions
     provided in this module, e.g.``trait``.
     """
-    def __init__(self, _expression=None):
-        """ Create an user-facing Expression wrapping an _IExpression for
-        internal use.
-
-        Parameters
-        ----------
-        _expression: _IExpression, or None
-            Internal object for constructing a graph of observers.
-            If not provided, the internal object represents an empty
-            expression.
-        """
-        if _expression is None:
-            _expression = _EmptyExpression()
-        self._expression = _expression
-
     def __eq__(self, other):
         """ Return true if the other value is an Expression with equivalent
         content.
@@ -76,9 +58,7 @@ class Expression:
         """
         if self == expression:
             return self
-        return Expression(
-            _ParallelExpression(self._expression, expression._expression)
-        )
+        return _ParallelExpression(self, expression)
 
     def then(self, expression):
         """ Create a new expression by extending this expression with
@@ -95,9 +75,7 @@ class Expression:
         -------
         new_expression : traits.observers.expression.Expression
         """
-        return Expression(
-            _SeriesExpression(self._expression, expression._expression)
-        )
+        return _SeriesExpression(self, expression)
 
     def trait(self, name, notify=True, optional=False):
         """ Create a new expression for observing a trait with the exact
@@ -132,38 +110,10 @@ class Expression:
         -------
         graphs : list of ObserverGraph
         """
-        return self._expression.create_graphs(branches=[])
+        return self.create_graphs(branches=[])
 
 
-class _IExpression(abc.ABC):
-    """ Interface to be implemented for objects to be wrapped in
-    Expression. Such objects are responsible for constructing an ObserverGraph
-    with the given information and context.
-
-    All these objects are used internally.
-    """
-
-    def create_graphs(self, branches):
-        """ Return a list of ObserverGraph with the given branches.
-
-        Parameters
-        ----------
-        branches : list of ObserverGraph
-            Graphs to be used as branches.
-        """
-        raise NotImplementedError("'create_graphs' must be implemented.")
-
-
-@_IExpression.register
-class _EmptyExpression:
-    """ Empty expression as a placeholder."""
-
-    def create_graphs(self, branches):
-        return []
-
-
-@_IExpression.register
-class _SingleObserverExpression:
+class _SingleObserverExpression(Expression):
     """ Container of Expression for wrapping a single observer.
     Used internally in this module.
     """
@@ -177,16 +127,15 @@ class _SingleObserverExpression:
         ]
 
 
-@_IExpression.register
-class _SeriesExpression:
+class _SeriesExpression(Expression):
     """ Container of Expression for joining expressions in series.
     Used internally in this module.
 
     Parameters
     ----------
-    first : _IExpression
+    first : Expression
         Left expression to be joined in series.
-    second : _IExpression
+    second : Expression
         Right expression to be joined in series.
     """
 
@@ -199,16 +148,15 @@ class _SeriesExpression:
         return self._first.create_graphs(branches=branches)
 
 
-@_IExpression.register
-class _ParallelExpression:
+class _ParallelExpression(Expression):
     """ Container of Expression for joining expressions in parallel.
     Used internally in this module.
 
     Parameters
     ----------
-    left : _IExpression
+    left : Expression
         Left expression to be joined in parallel.
-    right : _IExpression
+    right : Expression
         Right expression to be joined in parallel.
     """
 
@@ -259,4 +207,4 @@ def trait(name, notify=True, optional=False):
     """
     observer = _NamedTraitObserver(
         name=name, notify=notify, optional=optional)
-    return Expression(_SingleObserverExpression(observer))
+    return _SingleObserverExpression(observer)

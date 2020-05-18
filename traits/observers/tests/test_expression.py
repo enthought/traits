@@ -46,9 +46,7 @@ def create_expression(observer):
     -------
     expression : Expression
     """
-    return expression.Expression(
-        expression._SingleObserverExpression(observer)
-    )
+    return expression._SingleObserverExpression(observer)
 
 
 class TestExpressionComposition(unittest.TestCase):
