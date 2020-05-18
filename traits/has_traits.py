@@ -394,7 +394,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
     prefix_list = []
     view_elements = {}
 
-    # Mapping from method name or trait name to list(dict)
+    # Mapping from method names to list(dict)
     # where each nested dict provides the input arguments for calling
     # ``HasTraits.observe`` once. See ``_init_trait_observers``.`
     observers = {}
