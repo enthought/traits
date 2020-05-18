@@ -46,7 +46,9 @@ def create_expression(observer):
     -------
     expression : Expression
     """
-    return expression.Expression()._new_with_branches(nodes=[observer])
+    return expression.Expression(
+        expression._SingleObserverExpression(observer)
+    )
 
 
 class TestExpressionComposition(unittest.TestCase):
@@ -115,18 +117,6 @@ class TestExpressionComposition(unittest.TestCase):
         ]
         actual = expr._as_graphs()
         self.assertEqual(actual, expected)
-
-    def test_then_optimization(self):
-        # If the expression is empty to start with, just make a copy
-        # An empty bootstrapping expression is common when an user creates an
-        # expression using a high-level helper function.
-        expr1 = expression.Expression()
-        expr2 = create_expression(1)
-        expr = expr1.then(expr2)
-
-        self.assertEqual(expr._levels, expr2._levels)
-        self.assertIsNot(expr._levels, expr2._levels)
-        self.assertIsNone(expr._prior_expression)
 
     def test_chained_then_or(self):
         observer1 = 1
@@ -306,48 +296,3 @@ class TestExpressionEquality(unittest.TestCase):
     def test_equality_different_type(self):
         expr = create_expression(1)
         self.assertNotEqual(expr, "1")
-
-
-class TestExpressionCopy(unittest.TestCase):
-    """ Test the Expression._copy method."""
-
-    def test_expression_copy_current_levels(self):
-        expr = create_expression(1)
-        copied = expr._copy()
-        self.assertEqual(expr._levels, copied._levels)
-        self.assertIsNot(copied._levels, expr._levels)
-        self.assertEqual(copied._as_graphs(), expr._as_graphs())
-
-    def test_expression_copy_prior_expression_parallel(self):
-        expr = create_expression(1) | create_expression(2)
-        self.assertIsNotNone(expr._prior_expression)
-
-        copied = expr._copy()
-        self.assertEqual(copied._as_graphs(), expr._as_graphs())
-        self.assertIsNotNone(copied._prior_expression)
-        self.assertIsNot(copied._prior_expression, expr._prior_expression)
-        self.assertEqual(
-            copied._prior_expression.expressions,
-            expr._prior_expression.expressions,
-        )
-        self.assertIsNot(
-            copied._prior_expression.expressions,
-            expr._prior_expression.expressions,
-        )
-
-    def test_expression_copy_prior_expression_serial(self):
-        expr = create_expression(1).then(create_expression(2))
-        self.assertIsNotNone(expr._prior_expression)
-
-        copied = expr._copy()
-        self.assertEqual(copied._as_graphs(), expr._as_graphs())
-        self.assertIsNotNone(copied._prior_expression)
-        self.assertIsNot(copied._prior_expression, expr._prior_expression)
-        self.assertEqual(
-            copied._prior_expression.expressions,
-            expr._prior_expression.expressions,
-        )
-        self.assertIsNot(
-            copied._prior_expression.expressions,
-            expr._prior_expression.expressions,
-        )
