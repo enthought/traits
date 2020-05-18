@@ -8,6 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
+import abc
 import functools as _functools
 
 from traits.observers._named_trait_observer import (
@@ -134,7 +135,7 @@ class Expression:
         return self._expression.create_graphs(branches=[])
 
 
-class _IExpression:
+class _IExpression(abc.ABC):
     """ Interface to be implemented for objects to be wrapped in
     Expression. Such objects are responsible for constructing an ObserverGraph
     with the given information and context.
@@ -153,6 +154,7 @@ class _IExpression:
         raise NotImplementedError("'create_graphs' must be implemented.")
 
 
+@_IExpression.register
 class _EmptyExpression:
     """ Empty expression as a placeholder."""
 
@@ -160,6 +162,7 @@ class _EmptyExpression:
         return []
 
 
+@_IExpression.register
 class _SingleObserverExpression:
     """ Container of Expression for wrapping a single observer.
     Used internally in this module.
@@ -174,6 +177,7 @@ class _SingleObserverExpression:
         ]
 
 
+@_IExpression.register
 class _SeriesExpression:
     """ Container of Expression for joining expressions in series.
     Used internally in this module.
@@ -195,6 +199,7 @@ class _SeriesExpression:
         return self._first.create_graphs(branches=branches)
 
 
+@_IExpression.register
 class _ParallelExpression:
     """ Container of Expression for joining expressions in parallel.
     Used internally in this module.
