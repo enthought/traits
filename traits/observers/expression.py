@@ -18,8 +18,6 @@ from traits.observers._observer_graph import (
 )
 
 # Expression is a public user interface for constructing ObserverGraph.
-# It wraps an instance of _IExpression which is hidden from the user.
-# Despite the name, Expression itself is not an instance of _IExpression.
 
 
 class Expression:
