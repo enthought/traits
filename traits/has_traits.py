@@ -799,6 +799,10 @@ def on_trait_change(name, post_init=False, dispatch="same"):
         becomes effective after all object constructor arguments have been
         processed. That is, trait values assigned as part of object
         construction will not cause the handler to be invoked.
+
+        See Also
+        --------
+        observe : A newer API for defining traits notifications.
     """
 
     def decorator(function):
