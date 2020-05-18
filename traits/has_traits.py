@@ -756,7 +756,7 @@ def observe(expression, *, post_init=False, dispatch="same"):
     HasTraits.observe
     """
 
-    def decorator(function):
+    def observe_decorator(handler):
         """ Create input arguments for HasTraits.observe and attach the input
         to the callable.
 
@@ -765,14 +765,14 @@ def observe(expression, *, post_init=False, dispatch="same"):
 
         Parameters
         ----------
-        function : callable
-            Unbound method of a subclass of HasTraits
+        handler : callable
+            Method of a subclass of HasTraits
         """
         try:
-            observe_inputs = function._observe_inputs
+            observe_inputs = handler._observe_inputs
         except AttributeError:
             observe_inputs = []
-            function._observe_inputs = observe_inputs
+            handler._observe_inputs = observe_inputs
 
         observe_input = dict(
             expression=expression,
@@ -781,8 +781,8 @@ def observe(expression, *, post_init=False, dispatch="same"):
         )
         observe_inputs.append(observe_input)
 
-        return function
-    return decorator
+        return handler
+    return observe_decorator
 
 
 def on_trait_change(name, post_init=False, dispatch="same"):
