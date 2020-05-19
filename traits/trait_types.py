@@ -3839,6 +3839,9 @@ class _NoneTrait(TraitType):
 class Union(TraitType):
     """ Defines a trait whose value can be any of of a specified list of
     trait types or list of trait type instances or None
+
+    If the default value is not defined on Union, the default value from the
+    first trait will be used.
     """
 
     def __init__(self, *traits, **metadata):

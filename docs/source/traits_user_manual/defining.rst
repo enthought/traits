@@ -655,9 +655,6 @@ Note that static default values are defined on Union via the
 **default_value** attribute, whereas Either uses the **default** attribute.
 The naming of **default_value** is consistent with other trait types.
 
-If a default value is not defined on Union, the default value from the
-first trait type will be used.
-
 .. index:: multiple values, defining trait with
 
 .. _list-of-possibl-values:
