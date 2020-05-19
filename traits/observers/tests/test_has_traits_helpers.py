@@ -138,10 +138,8 @@ class TestHasTraitsHelpersIterObjects(unittest.TestCase):
 
 
 class ObjectWithEqualityComparisonMode(HasTraits):
+    """ Class for supporting TestHasTraitsHelpersWarning """
 
-    # If the comparison mode is equality, downstream observers cannot be
-    # maintained . A warning should be emitted if an observer is attached
-    # for obeserving mutations to containers.
     list_values = List(comparison_mode=2)
     dict_values = Dict(comparison_mode=2)
     set_values = Set(comparison_mode=2)
