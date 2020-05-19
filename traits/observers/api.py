@@ -11,6 +11,8 @@
 from traits.observers.expression import (   # noqa: F401
     dict_items,
     list_items,
+    match,
+    metadata,
     set_items,
     trait,
 )
