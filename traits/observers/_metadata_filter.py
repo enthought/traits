@@ -33,7 +33,7 @@ class MetadataFilter:
     def __call__(self, name, trait):
         # Consistent with the current behaviour where metadata with None as
         # the value is equivalent to the metadata not having been defined.
-        return getattr(trait, self.metadata_name, None) is not None
+        return getattr(trait, self.metadata_name) is not None
 
     def __eq__(self, other):
         return (
