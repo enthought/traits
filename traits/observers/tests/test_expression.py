@@ -49,13 +49,13 @@ def create_expression(observer):
 
     Returns
     -------
-    expression : Expression
+    expression : ObserverExpression
     """
     return expression.SingleObserverExpression(observer)
 
 
-class TestExpressionComposition(unittest.TestCase):
-    """ Test composition of Expression with generic observers."""
+class TestObserverExpressionComposition(unittest.TestCase):
+    """ Test composition of ObserverExpression with generic observers."""
 
     def test_new_with_branches(self):
         observer = 1
@@ -183,8 +183,8 @@ class TestExpressionComposition(unittest.TestCase):
         self.assertEqual(actual, expected)
 
 
-class TestExpressionFilter(unittest.TestCase):
-    """ Test Expression.match """
+class TestObserverExpressionFilter(unittest.TestCase):
+    """ Test ObserverExpression.match """
 
     def setUp(self):
 
@@ -247,14 +247,14 @@ class TestExpressionFilter(unittest.TestCase):
         # Test to help developers keeping the two function signatures in-sync.
         # Remove this if the two need to divert in the future.
         top_level = expression.match
-        method = expression.Expression().match
+        method = expression.ObserverExpression().match
         self.assertEqual(
             inspect.signature(top_level), inspect.signature(method)
         )
 
 
-class TestExpressionFilterMetadata(unittest.TestCase):
-    """ Test Expression.metadata """
+class TestObserverExpressionFilterMetadata(unittest.TestCase):
+    """ Test ObserverExpression.metadata """
 
     def test_metadata_notify_true(self):
         # Test the top-level function
@@ -324,14 +324,14 @@ class TestExpressionFilterMetadata(unittest.TestCase):
         # Test to help developers keeping the two function signatures in-sync.
         # Remove this if the two need to divert in the future.
         top_level = expression.metadata
-        method = expression.Expression().metadata
+        method = expression.ObserverExpression().metadata
         self.assertEqual(
             inspect.signature(top_level), inspect.signature(method)
         )
 
 
-class TestExpressionTrait(unittest.TestCase):
-    """ Test Expression.trait """
+class TestObserverExpressionTrait(unittest.TestCase):
+    """ Test ObserverExpression.trait """
 
     def test_trait_name(self):
         # Test the top-level function
@@ -406,14 +406,14 @@ class TestExpressionTrait(unittest.TestCase):
         # Test to help developers keeping the two function signatures in-sync.
         # Remove this if the two need to divert in the future.
         top_level_trait = expression.trait
-        method_trait = expression.Expression().trait
+        method_trait = expression.ObserverExpression().trait
         self.assertEqual(
             inspect.signature(top_level_trait), inspect.signature(method_trait)
         )
 
 
-class TestExpressionDictItem(unittest.TestCase):
-    """ Test Expression.dict_items """
+class TestObserverExpressionDictItem(unittest.TestCase):
+    """ Test ObserverExpression.dict_items """
 
     def test_dict_items(self):
         expr = expression.dict_items()
@@ -473,14 +473,14 @@ class TestExpressionDictItem(unittest.TestCase):
         # Test to help developers keeping the two function signatures in-sync.
         # Remove this if the two need to divert in the future.
         top_level = expression.dict_items
-        method = expression.Expression().dict_items
+        method = expression.ObserverExpression().dict_items
         self.assertEqual(
             inspect.signature(top_level), inspect.signature(method)
         )
 
 
-class TestExpressionListItem(unittest.TestCase):
-    """ Test Expression.list_items """
+class TestObserverExpressionListItem(unittest.TestCase):
+    """ Test ObserverExpression.list_items """
 
     def test_list_items(self):
         expr = expression.list_items()
@@ -540,14 +540,14 @@ class TestExpressionListItem(unittest.TestCase):
         # Test to help developers keeping the two function signatures in-sync.
         # Remove this if the two need to divert in the future.
         top_level = expression.list_items
-        method = expression.Expression().list_items
+        method = expression.ObserverExpression().list_items
         self.assertEqual(
             inspect.signature(top_level), inspect.signature(method)
         )
 
 
-class TestExpressionSetItem(unittest.TestCase):
-    """ Test Expression.set_items """
+class TestObserverExpressionSetItem(unittest.TestCase):
+    """ Test ObserverExpression.set_items """
 
     def test_set_items(self):
         expr = expression.set_items()
@@ -607,14 +607,14 @@ class TestExpressionSetItem(unittest.TestCase):
         # Test to help developers keeping the two function signatures in-sync.
         # Remove this if the two need to divert in the future.
         top_level = expression.set_items
-        method = expression.Expression().set_items
+        method = expression.ObserverExpression().set_items
         self.assertEqual(
             inspect.signature(top_level), inspect.signature(method)
         )
 
 
-class TestExpressionEquality(unittest.TestCase):
-    """ Test Expression.__eq__ """
+class TestObserverExpressionEquality(unittest.TestCase):
+    """ Test ObserverExpression.__eq__ """
 
     def test_trait_equality(self):
         expr1 = create_expression(1)

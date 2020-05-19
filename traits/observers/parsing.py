@@ -33,7 +33,7 @@ def _handle_series(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expression.Expression
+    expression : ObserverExpression
     """
     expressions = (
         _handle_tree(tree, default_notifies=default_notifies)
@@ -55,7 +55,7 @@ def _handle_parallel(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expression.Expression
+    expression : ObserverExpression
     """
     expressions = (
         _handle_tree(tree, default_notifies=default_notifies) for tree in trees
@@ -98,7 +98,7 @@ def _handle_notify(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expression.Expression
+    expression : ObserverExpression
     """
     with _notify_flag(default_notifies, True):
         return _handle_last(trees, default_notifies=default_notifies)
@@ -118,7 +118,7 @@ def _handle_quiet(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expression.Expression
+    expression : ObserverExpression
     """
     with _notify_flag(default_notifies, False):
         return _handle_last(trees, default_notifies=default_notifies)
@@ -141,7 +141,7 @@ def _handle_last(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expression.Expression
+    expression : ObserverExpression
     """
     tree, = trees
     return _handle_tree(tree, default_notifies=default_notifies)
@@ -160,7 +160,7 @@ def _handle_trait(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expression.Expression
+    expression : ObserverExpression
     """
     token, = trees
     name = token.value
@@ -181,7 +181,7 @@ def _handle_metadata(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expression.Expression
+    expression : ObserverExpression
     """
     token, = trees
     metadata_name = token.value
@@ -202,7 +202,7 @@ def _handle_items(trees, default_notifies):
 
     Returns
     -------
-    expression : traits.observers.expression.Expression
+    expression : ObserverExpression
     """
     if trees:
         # Nothing should be wrapped in items
@@ -226,7 +226,7 @@ def _handle_tree(tree, default_notifies=None):
     Parameters
     ----------
     tree : lark.tree.Tree
-        Tree to be converted to an Expression.
+        Tree to be converted to an ObserverExpression.
     default_notifies : list of boolean
         The notify flag stack.
         The last item is the current notify flag.
@@ -235,7 +235,7 @@ def _handle_tree(tree, default_notifies=None):
 
     Returns
     -------
-    expression: traits.observers.expression.Expression
+    expression: ObserverExpression
     """
     if default_notifies is None:
         default_notifies = [True]
@@ -257,7 +257,7 @@ def _handle_tree(tree, default_notifies=None):
 
 
 def parse(text):
-    """ Top-level function for parsing user's text to an Expression.
+    """ Top-level function for parsing user's text to an ObserverExpression.
 
     Parameters
     ----------
@@ -266,7 +266,7 @@ def parse(text):
 
     Returns
     -------
-    expression : traits.observers.expression.Expression
+    expression : ObserverExpression
     """
     tree = _LARK_PARSER.parse(text)
     return _handle_tree(tree)
