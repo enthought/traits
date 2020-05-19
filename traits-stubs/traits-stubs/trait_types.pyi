@@ -572,10 +572,6 @@ class Either(_TraitType[_Any, _Any]):
         ...
 
 
-class NoneTrait(_TraitType[None, None]):
-    ...
-
-
 class Union(_TraitType[_Any, _Any]):
     def __init__(
             self,
