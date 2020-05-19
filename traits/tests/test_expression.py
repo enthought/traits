@@ -15,21 +15,23 @@ from traits.api import Expression, HasTraits, Int, TraitError
 
 class TestExpression(unittest.TestCase):
 
-    def test_set_value_original(self):
+    def test_set_value(self):
         class Foo(HasTraits):
             bar = Expression()
 
         f = Foo()
         f.bar = "1"
         self.assertEqual(f.bar, "1")
+        self.assertEqual(f.bar_, compile("1", "<string>", "eval"))
 
-    def test_default_value_original(self):
+    def test_default_static(self):
         class Foo(HasTraits):
             # The default value set in the class definition is "0"
             bar = Expression(default_value="1")
 
         f = Foo()
         self.assertEqual(f.bar, "1")
+        self.assertEqual(f.bar_, compile("1", "<string>", "eval"))
 
     def test_default_method(self):
         class Foo(HasTraits):
@@ -65,7 +67,6 @@ class TestExpression(unittest.TestCase):
         with self.assertRaisesRegex(TraitError, msg):
             f.bar
 
-    @unittest.expectedFailure  # FIXME issue #1096
     def test_default_static_override_static(self):
         class BaseFoo(HasTraits):
             # The default value set in the class definition is "0"
@@ -75,8 +76,10 @@ class TestExpression(unittest.TestCase):
             bar = "3"
 
         f = Foo()
-        self.assertEqual(f.bar, "3")
-        self.assertEqual(f.bar_, compile("3", "<string>", "eval"))
+        with self.assertRaises(AssertionError):  # FIXME issue #1096
+            self.assertEqual(f.bar, "3")
+        with self.assertRaises(TypeError):  # FIXME issue #1096
+            self.assertEqual(f.bar_, compile("3", "<string>", "eval"))
 
     def test_default_static_override_method(self):
         class BaseFoo(HasTraits):
@@ -95,7 +98,6 @@ class TestExpression(unittest.TestCase):
         self.assertEqual(f.bar_, compile("3", "<string>", "eval"))
         self.assertEqual(f.default_calls, 1)
 
-    @unittest.expectedFailure   # FIXME issue #1096
     def test_default_method_override_static(self):
         class BaseFoo(HasTraits):
             # The default value set in the class definition is "0"
@@ -111,8 +113,10 @@ class TestExpression(unittest.TestCase):
             bar = "3"
 
         f = Foo()
-        self.assertEqual(f.bar, "3")
-        self.assertEqual(f.bar_, compile("3", "<string>", "eval"))
+        with self.assertRaises(AssertionError):  # FIXME issue #1096
+            self.assertEqual(f.bar, "3")
+        with self.assertRaises(TypeError):  # FIXME issue #1096
+            self.assertEqual(f.bar_, compile("3", "<string>", "eval"))
         self.assertEqual(f.default_calls, 0)
 
     def test_default_method_override_method(self):
