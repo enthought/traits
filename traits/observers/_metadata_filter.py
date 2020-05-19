@@ -9,53 +9,40 @@
 # Thanks for using Enthought open source!
 
 """ A filter to be used with FilteredTraitObserver for observing traits
-with a given metadata and value filter. The filter is defined here so that two
+with a given metadata. The filter is defined here so that two
 observers created using the same parameters compare equally.
 """
 
 
 class MetadataFilter:
     """ Callable to be used with FilteredTraitObserver for filtering traits
-    using defined metadata.
+    with the given metadata name.
 
-    If the metadata is not defined, the filter will return False.
+    This filter returns true if the metadata is defined on the trait, false
+    if it is undefined.
 
     Attributes
     ----------
     metadata_name : str
         Name of the metadata to filter traits with.
-        If the trait does not have the requested metadata, this filter will
-        return false.
-    value : callable(value) -> boolean
-        The callable must accept a single argument which is
-        the metadata value on the trait and return true if the trait
-        is to be observed. For removing an existing observer, the ``value``
-        callables must compare equally. The callable must be hashable as well.
     """
 
-    def __init__(self, metadata_name, value):
+    def __init__(self, metadata_name):
         self.metadata_name = metadata_name
-        self.value = value
 
     def __call__(self, name, trait):
-        # hasattr on an CTrait always return true, and the
-        # value would be None if it is not defined.
-        if self.metadata_name in trait.__dict__:
-            value = getattr(trait, self.metadata_name)
-            return self.value(value)
-        return False
+        return self.metadata_name in trait.__dict__
 
     def __eq__(self, other):
         return (
             type(self) is type(other)
             and self.metadata_name == other.metadata_name
-            and self.value == other.value
         )
 
     def __hash__(self):
-        return hash((type(self).__name__, self.metadata_name, self.value))
+        return hash((type(self).__name__, self.metadata_name))
 
     def __repr__(self):
-        return "MetadataFilter(metadata_name={!r}, value={})".format(
-            self.metadata_name, self.value.__name__
+        return "MetadataFilter(metadata_name={!r})".format(
+            self.metadata_name
         )
