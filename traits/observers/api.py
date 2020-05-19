@@ -9,6 +9,9 @@
 # Thanks for using Enthought open source!
 
 from traits.observers.expression import (   # noqa: F401
+    dict_items,
+    list_items,
+    set_items,
     trait,
 )
 
