@@ -3810,8 +3810,10 @@ class Either(TraitType):
         return self.trait_maker.as_ctrait()
 
 
-class NoneTrait(TraitType):
+class _NoneTrait(TraitType):
     """ Defines a trait that only accepts the None value
+
+    This is primarily used for supporting ``Union``.
     """
 
     info_text = "None"
@@ -3824,8 +3826,8 @@ class NoneTrait(TraitType):
         default_value = metadata.pop("default", None)
         if default_value is not None:
             raise ValueError("Cannot set default value {} "
-                             "for NoneTrait".format(default_value))
-        super(NoneTrait, self).__init__(**metadata)
+                             "for _NoneTrait".format(default_value))
+        super(_NoneTrait, self).__init__(**metadata)
 
     def validate(self, obj, name, value):
         if value is None:
@@ -3843,11 +3845,11 @@ class Union(TraitType):
         self.list_ctrait_instances = []
 
         if not traits:
-            traits = (NoneTrait,)
+            traits = (_NoneTrait,)
 
         for trait in traits:
             if trait is None:
-                trait = NoneTrait
+                trait = _NoneTrait
             ctrait_instance = trait_cast(trait)
             if ctrait_instance is None:
                 raise ValueError("Union trait declaration expects a trait "
