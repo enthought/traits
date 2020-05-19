@@ -280,7 +280,7 @@ class TestListTraitObserverNotifications(unittest.TestCase):
 
         # then
         ((event, ), _), = handler.call_args_list
-        self.assertEqual(event.object, [1])
+        self.assertEqual(event.object, nested_list)
         self.assertEqual(event.added, [1])
         self.assertEqual(event.removed, [])
         self.assertEqual(event.index, 0)
