@@ -457,7 +457,9 @@ def update_traits_class_dict(class_name, bases, class_dict):
                             class_traits[name + "_items"] = items_trait
 
                         if handler.is_mapped:
-                            class_traits[name + "_"] = mapped_trait_for(value)
+                            class_traits[name + "_"] = mapped_trait_for(
+                                value, name
+                            )
 
                 elif value_type == "delegate":
                     # Only add a listener if the trait.listenable metadata
@@ -520,9 +522,6 @@ def update_traits_class_dict(class_name, bases, class_dict):
                     value.set_default_value(
                         DefaultValue.missing, value.default)
                     del class_dict[name]
-                    handler = value.handler
-                    if (handler is not None) and handler.is_mapped:
-                        class_traits[name + "_"] = mapped_trait_for(value)
                     break
 
     # Process all HasTraits base classes:
@@ -1108,7 +1107,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             if handler.has_items:
                 cls.add_class_trait(name + "_items", handler.items_event())
             if handler.is_mapped:
-                cls.add_class_trait(name + "_", mapped_trait_for(trait))
+                cls.add_class_trait(name + "_", mapped_trait_for(trait, name))
 
         # Make the new trait inheritable (if allowed):
         if trait.is_base is not False:
@@ -2718,7 +2717,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             if handler.has_items:
                 self.add_trait(name + "_items", handler.items_event())
             if handler.is_mapped:
-                self.add_trait(name + "_", mapped_trait_for(trait))
+                self.add_trait(name + "_", mapped_trait_for(trait, name))
 
         # See if there already is a class or instance trait with the same name:
         old_trait = self._trait(name, 0)

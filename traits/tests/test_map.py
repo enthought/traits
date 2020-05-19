@@ -15,7 +15,7 @@ Tests for the Map handler.
 import pickle
 import unittest
 
-from traits.api import HasTraits, TraitError, Map, Undefined
+from traits.api import HasTraits, Int, Map, TraitError, Undefined
 
 
 class TestMap(unittest.TestCase):
@@ -41,6 +41,14 @@ class TestMap(unittest.TestCase):
         with self.assertRaises(TraitError):
             person.married = []
 
+    def test_no_default(self):
+        class Person(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+
+        p = Person()
+        self.assertEqual(p.married, Undefined)
+        self.assertEqual(p.married_, Undefined)
+
     def test_default(self):
         class Person(HasTraits):
             married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
@@ -49,6 +57,97 @@ class TestMap(unittest.TestCase):
         p = Person()
         self.assertIsNone(p.married)
         self.assertEqual(p.married_, 2)
+
+    def test_default_method(self):
+        class Person(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
+                           None: 2})
+
+            default_calls = Int(0)
+
+            def _married_default(self):
+                self.default_calls += 1
+                return None
+
+        p = Person()
+        self.assertIsNone(p.married)
+        self.assertEqual(p.married_, 2)
+        self.assertEqual(p.default_calls, 1)
+
+        # Check that the order doesn't matter
+        p2 = Person()
+        self.assertEqual(p2.married_, 2)
+        self.assertIsNone(p2.married)
+        self.assertEqual(p2.default_calls, 1)
+
+    def test_default_static_override_static(self):
+        class BasePerson(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
+                           None: 2}, default_value=None)
+
+        class Person(BasePerson):
+            married = "yes"
+
+        p = Person()
+        self.assertEqual(p.married, "yes")
+        self.assertEqual(p.married_, 1)
+
+    def test_default_static_override_method(self):
+        class BasePerson(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
+                           None: 2}, default_value=None)
+
+        class Person(BasePerson):
+            default_calls = Int(0)
+
+            def _married_default(self):
+                self.default_calls += 1
+                return "yes"
+
+        p = Person()
+        self.assertEqual(p.married, "yes")
+        self.assertEqual(p.married_, 1)
+        self.assertEqual(p.default_calls, 1)
+
+    def test_default_method_override_static(self):
+        class BasePerson(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
+                           None: 2})
+
+            default_calls = Int(0)
+
+            def _married_default(self):
+                self.default_calls += 1
+                return None
+
+        class Person(BasePerson):
+            married = "yes"
+
+        p = Person()
+        self.assertEqual(p.married, "yes")
+        self.assertEqual(p.married_, 1)
+        self.assertEqual(p.default_calls, 0)
+
+    def test_default_method_override_method(self):
+        class BasePerson(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
+                           None: 2})
+
+            default_calls = Int(0)
+
+            def _married_default(self):
+                self.default_calls += 1
+                return None
+
+        class Person(BasePerson):
+            def _married_default(self):
+                self.default_calls += 1
+                return "yes"
+
+        p = Person()
+        self.assertEqual(p.married, "yes")
+        self.assertEqual(p.married_, 1)
+        self.assertEqual(p.default_calls, 1)
 
     def test_pickle_roundtrip(self):
         class Person(HasTraits):
@@ -65,3 +164,16 @@ class TestMap(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             reconstituted.validate(p, "married", "unknown")
+
+    def test_pickle_shadow_trait(self):
+        class Person(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
+                          default_value="yes")
+
+        p = Person()
+        married_shadow_trait = p.trait("married_")
+        reconstituted = pickle.loads(pickle.dumps(married_shadow_trait))
+
+        default_value_callable = reconstituted.default_value()[1]
+
+        self.assertEqual(default_value_callable(p), 1)
