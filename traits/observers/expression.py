@@ -96,7 +96,7 @@ class Expression:
         given filter.
 
         Events emitted (if any) will be instances of
-        :py:class:`~traits.observers.events.TraitChangeEvent`.
+        :class:`~traits.observers.events.TraitChangeEvent`.
 
         Parameters
         ----------
@@ -120,7 +120,7 @@ class Expression:
         metadata is not None.
 
         Events emitted (if any) will be instances of
-        :py:class:`~traits.observers.events.TraitChangeEvent`.
+        :class:`~traits.observers.events.TraitChangeEvent`.
 
         e.g. ``metadata("age")`` matches traits whose 'age' attribute has a
         non-None value.
@@ -404,7 +404,7 @@ def match(filter, notify=True):
     given filter.
 
     Events emitted (if any) will be instances of
-    :py:class:`~traits.observers.events.TraitChangeEvent`.
+    :class:`~traits.observers.events.TraitChangeEvent`.
 
     Parameters
     ----------
@@ -430,7 +430,7 @@ def metadata(metadata_name, notify=True):
     is not None.
 
     Events emitted (if any) will be instances of
-    :py:class:`~traits.observers.events.TraitChangeEvent`.
+    :class:`~traits.observers.events.TraitChangeEvent`.
 
     e.g. ``metadata("age")`` matches traits whose 'age' attribute has a
     non-None value.
