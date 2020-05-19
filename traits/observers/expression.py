@@ -100,14 +100,18 @@ class Expression:
 
         Parameters
         ----------
-        filter : callable(str, CTrait) -> boolean
+        filter : callable(str, CTrait) -> bool
             A callable that receives the name of a trait and the corresponding
-            trait definition. The returned boolean indicates whether the trait
+            trait definition. The returned bool indicates whether the trait
             is observed. In order to remove an existing observer with the
             equivalent filter, the filter callables must compare equally. The
             callable must also be hashable.
-        notify : boolean, optional
-            Whether to notify for changes.
+        notify : bool, optional
+            Whether to notify for changes. Default is to notify.
+
+        Returns
+        -------
+        new_expression : traits.observers.expression.Expression
         """
         return self.then(match(filter=filter, notify=notify))
 
@@ -125,8 +129,12 @@ class Expression:
         ----------
         metadata_name : str
             Name of the metadata to filter traits with.
-        notify : boolean, optional
-            Whether to notify for changes.
+        notify : bool, optional
+            Whether to notify for changes. Default is to notify.
+
+        Returns
+        -------
+        new_expression : traits.observers.expression.Expression
         """
         return self.match(
             filter=_MetadataFilter(metadata_name=metadata_name),
@@ -400,14 +408,18 @@ def match(filter, notify=True):
 
     Parameters
     ----------
-    filter : callable(str, CTrait) -> boolean
+    filter : callable(str, CTrait) -> bool
         A callable that receives the name of a trait and the corresponding
-        trait definition. The returned boolean indicates whether the trait is
+        trait definition. The returned bool indicates whether the trait is
         observed. In order to remove an existing observer with the equivalent
         filter, the filter callables must compare equally. The callable must
         also be hashable.
-    notify : boolean, optional
+    notify : bool, optional
         Whether to notify for changes.
+
+    Returns
+    -------
+    new_expression : traits.observers.expression.Expression
     """
     observer = _FilteredTraitObserver(notify=notify, filter=filter)
     return SingleObserverExpression(observer)
@@ -427,8 +439,12 @@ def metadata(metadata_name, notify=True):
     ----------
     metadata_name : str
         Name of the metadata to filter traits with.
-    notify : boolean, optional
-        Whether to notify for changes.
+    notify : bool, optional
+        Whether to notify for changes. Default is to notify.
+
+    Returns
+    -------
+    new_expression : traits.observers.expression.Expression
     """
     return match(
         filter=_MetadataFilter(metadata_name=metadata_name),
@@ -471,7 +487,7 @@ def trait(name, notify=True, optional=False):
     name : str
         Name of the trait to match.
     notify : bool, optional
-        Whether to notify for changes.
+        Whether to notify for changes. Default is to notify.
     optional : bool, optional
         If true, skip this observer if the requested trait is not found.
         Default is false, and an error will be raised if the requested
