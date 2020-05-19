@@ -183,7 +183,10 @@ def _handle_metadata(trees, default_notifies):
     -------
     expression : traits.observers.expression.Expression
     """
-    raise NotImplementedError("metadata is not yet implemented.")
+    token, = trees
+    metadata_name = token.value
+    notify = default_notifies[-1]
+    return _expr_module.metadata(metadata_name, notify=notify)
 
 
 def _handle_items(trees, default_notifies):
