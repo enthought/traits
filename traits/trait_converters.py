@@ -109,6 +109,13 @@ def trait_for(trait):
         return Trait(trait)
 
 
+def _mapped_trait_default(trait, name, undefined_default, instance):
+    value = getattr(instance, name, undefined_default)
+    if value is undefined_default:
+        return undefined_default
+    return trait.handler.mapped_value(value)
+
+
 def mapped_trait_for(trait, name):
     """ Returns the 'mapped trait' definition for a mapped trait, the default
         value of which is a callable that maps the value of the original trait.
@@ -126,20 +133,19 @@ def mapped_trait_for(trait, name):
         trait_types.Any
             A definition of the 'mapped trait'
     """
-    from .trait_types import Any
+    from functools import partial
+
     from .constants import DefaultValue
     from .trait_base import Undefined
+    from .trait_types import Any
 
     mapped_trait = Any(
         is_base=False, transient=True, editable=False
     ).as_ctrait()
 
-    def default(instance):
-        value = getattr(instance, name, Undefined)
-        if value is Undefined:
-            return Undefined
-        return trait.handler.mapped_value(value)
-
-    mapped_trait.set_default_value(DefaultValue.callable, default)
+    mapped_trait.set_default_value(
+        DefaultValue.callable,
+        partial(_mapped_trait_default, trait, name, Undefined)
+    )
 
     return mapped_trait
