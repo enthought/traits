@@ -77,10 +77,8 @@ class TestExpression(unittest.TestCase):
             bar = "3"
 
         f = Foo()
-        with self.assertRaises(AssertionError):  # FIXME issue #1096
-            self.assertEqual(f.bar, "3")
-        with self.assertRaises(TypeError):  # FIXME issue #1096
-            self.assertEqual(eval(f.bar_), 3)
+        self.assertEqual(f.bar, "3")
+        self.assertEqual(eval(f.bar_), 3)
 
     def test_default_static_override_method(self):
         class BaseFoo(HasTraits):
@@ -114,10 +112,8 @@ class TestExpression(unittest.TestCase):
             bar = "3"
 
         f = Foo()
-        with self.assertRaises(AssertionError):  # FIXME issue #1096
-            self.assertEqual(f.bar, "3")
-        with self.assertRaises(TypeError):  # FIXME issue #1096
-            self.assertEqual(eval(f.bar_), 3)
+        self.assertEqual(f.bar, "3")
+        self.assertEqual(eval(f.bar_), 3)
         self.assertEqual(f.default_calls, 0)
 
     def test_default_method_override_method(self):
