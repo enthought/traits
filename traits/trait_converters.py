@@ -26,6 +26,11 @@ To handle this, there is another informal interface with the deliberately
 unwieldy classmethod name ``instantiate_and_get_ctrait``.
 """
 
+from functools import partial
+
+from .constants import DefaultValue
+from .trait_base import Undefined
+
 
 def trait_cast(obj):
     """ Convert to a CTrait if the object knows how, else return None.
@@ -109,10 +114,10 @@ def trait_for(trait):
         return Trait(trait)
 
 
-def _mapped_trait_default(trait, name, undefined_default, instance):
-    value = getattr(instance, name, undefined_default)
-    if value is undefined_default:
-        return undefined_default
+def _mapped_trait_default(trait, name, instance):
+    value = getattr(instance, name, Undefined)
+    if value is Undefined:
+        return Undefined
     return trait.handler.mapped_value(value)
 
 
@@ -133,10 +138,6 @@ def mapped_trait_for(trait, name):
         trait_types.Any
             A definition of the 'mapped trait'
     """
-    from functools import partial
-
-    from .constants import DefaultValue
-    from .trait_base import Undefined
     from .trait_types import Any
 
     mapped_trait = Any(
@@ -145,7 +146,7 @@ def mapped_trait_for(trait, name):
 
     mapped_trait.set_default_value(
         DefaultValue.callable,
-        partial(_mapped_trait_default, trait, name, Undefined)
+        partial(_mapped_trait_default, trait, name)
     )
 
     return mapped_trait
