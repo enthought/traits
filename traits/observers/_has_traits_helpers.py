@@ -47,14 +47,16 @@ def warn_comparison_mode(object, name):
 
     def has_container_trait(ctrait):
         # Return true if the CTrait trait type contains container trait
-        # at the top-level. Also handle Union
+        # at the top-level.
         container_types = (Dict, List, Set)
-        if not isinstance(ctrait.trait_type, container_types):
-            return any(
-                isinstance(trait.trait_type, container_types)
-                for trait in ctrait.inner_traits
-            )
-        return isinstance(ctrait.trait_type, container_types)
+        is_container = ctrait.is_trait_type(container_types)
+        if is_container:
+            return True
+        # Try inner traits, e.g. to support Union
+        return any(
+            trait.is_trait_type(container_types)
+            for trait in ctrait.inner_traits
+        )
 
     if (not ctrait.is_property
             and has_container_trait(ctrait)
