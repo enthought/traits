@@ -32,7 +32,7 @@ class TraitAddedObserver:
     ----------
     match_func : callable(str, CTrait) -> bool
         A callable that receives the name of the trait added and the
-        corresponding trait type. The returned boolean indicates whether
+        corresponding trait. The returned boolean indicates whether
         notifiers should be added/removed for the added trait.
         This callable is used for equality check and must be hashable.
     optional : boolean
