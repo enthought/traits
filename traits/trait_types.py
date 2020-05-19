@@ -3852,7 +3852,7 @@ class Union(TraitType):
             if ctrait_instance is None:
                 raise ValueError("Union trait declaration expects a trait "
                                  "type or an instance of trait type or None,"
-                                 " but got {} instead".format(trait))
+                                 " but got {!r} instead".format(trait))
 
             self.list_ctrait_instances.append(ctrait_instance)
 
