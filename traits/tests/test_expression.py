@@ -22,7 +22,7 @@ class TestExpression(unittest.TestCase):
         f = Foo()
         f.bar = "1"
         self.assertEqual(f.bar, "1")
-        self.assertEqual(f.bar_, compile("1", "<string>", "eval"))
+        self.assertEqual(eval(f.bar_), 1)
 
     def test_default_static(self):
         class Foo(HasTraits):
@@ -31,7 +31,7 @@ class TestExpression(unittest.TestCase):
 
         f = Foo()
         self.assertEqual(f.bar, "1")
-        self.assertEqual(f.bar_, compile("1", "<string>", "eval"))
+        self.assertEqual(eval(f.bar_), 1)
 
     def test_default_method(self):
         class Foo(HasTraits):
@@ -46,12 +46,12 @@ class TestExpression(unittest.TestCase):
 
         f = Foo()
         self.assertEqual(f.bar, "1")
-        self.assertEqual(f.bar_, compile("1", "<string>", "eval"))
+        self.assertEqual(eval(f.bar_), 1)
         self.assertEqual(f.default_calls, 1)
 
         # Check that the order doesn't matter
         f2 = Foo()
-        self.assertEqual(f2.bar_, compile("1", "<string>", "eval"))
+        self.assertEqual(eval(f2.bar_), 1)
         self.assertEqual(f2.bar, "1")
         self.assertEqual(f2.default_calls, 1)
 
@@ -79,7 +79,7 @@ class TestExpression(unittest.TestCase):
         with self.assertRaises(AssertionError):  # FIXME issue #1096
             self.assertEqual(f.bar, "3")
         with self.assertRaises(TypeError):  # FIXME issue #1096
-            self.assertEqual(f.bar_, compile("3", "<string>", "eval"))
+            self.assertEqual(eval(f.bar_), 3)
 
     def test_default_static_override_method(self):
         class BaseFoo(HasTraits):
@@ -95,7 +95,7 @@ class TestExpression(unittest.TestCase):
 
         f = Foo()
         self.assertEqual(f.bar, "3")
-        self.assertEqual(f.bar_, compile("3", "<string>", "eval"))
+        self.assertEqual(eval(f.bar_), 3)
         self.assertEqual(f.default_calls, 1)
 
     def test_default_method_override_static(self):
@@ -116,7 +116,7 @@ class TestExpression(unittest.TestCase):
         with self.assertRaises(AssertionError):  # FIXME issue #1096
             self.assertEqual(f.bar, "3")
         with self.assertRaises(TypeError):  # FIXME issue #1096
-            self.assertEqual(f.bar_, compile("3", "<string>", "eval"))
+            self.assertEqual(eval(f.bar_), 3)
         self.assertEqual(f.default_calls, 0)
 
     def test_default_method_override_method(self):
@@ -137,5 +137,5 @@ class TestExpression(unittest.TestCase):
 
         f = Foo()
         self.assertEqual(f.bar, "3")
-        self.assertEqual(f.bar_, compile("3", "<string>", "eval"))
+        self.assertEqual(eval(f.bar_), 3)
         self.assertEqual(f.default_calls, 1)
