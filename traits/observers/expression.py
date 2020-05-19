@@ -10,6 +10,9 @@
 
 import functools as _functools
 
+from traits.observers._filtered_trait_observer import (
+    FilteredTraitObserver as _FilteredTraitObserver,
+)
 from traits.observers._named_trait_observer import (
     NamedTraitObserver as _NamedTraitObserver,
 )
@@ -75,6 +78,30 @@ class Expression:
         new_expression : traits.observers.expression.Expression
         """
         return SeriesExpression(self, expression)
+
+    def match(self, filter, notify=True):
+        """ Create a new expression for observing traits using the
+        given filter.
+
+        Events emitted (if any) will be instances of
+        :py:class:`~traits.observers.events.TraitChangeEvent`.
+
+        Parameters
+        ----------
+        filter : callable(str, CTrait) -> boolean
+            A callable that receives the name of a trait and the corresponding
+            trait definition. The returned boolean indicates whether the trait
+            is observed. In order to remove an existing observer with the
+            equivalent filter, the filter callables must compare equally. The
+            callable must also be hashable.
+        notify : boolean, optional
+            Whether to notify for changes.
+
+        Returns
+        -------
+        new_expression : traits.observers.expressions.Expression
+        """
+        return self.then(match(filter=filter, notify=notify))
 
     def trait(self, name, notify=True, optional=False):
         """ Create a new expression for observing a trait with the exact
@@ -194,6 +221,32 @@ def join_(*expressions):
         Joined expression.
     """
     return _functools.reduce(lambda e1, e2: e1.then(e2), expressions)
+
+
+def match(filter, notify=True):
+    """ Create a new expression for observing traits using the
+    given filter.
+
+    Events emitted (if any) will be instances of
+    :py:class:`~traits.observers.events.TraitChangeEvent`.
+
+    Parameters
+    ----------
+    filter : callable(str, CTrait) -> boolean
+        A callable that receives the name of a trait and the corresponding
+        trait definition. The returned boolean indicates whether the trait is
+        observed. In order to remove an existing observer with the equivalent
+        filter, the filter callables must compare equally. The callable must
+        also be hashable.
+    notify : boolean, optional
+        Whether to notify for changes.
+
+    Returns
+    -------
+    new_expression : traits.observers.expressions.Expression
+    """
+    observer = _FilteredTraitObserver(notify=notify, filter=filter)
+    return SingleObserverExpression(observer)
 
 
 def trait(name, notify=True, optional=False):
