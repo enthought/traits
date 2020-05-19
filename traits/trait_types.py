@@ -3812,6 +3812,8 @@ class Either(TraitType):
 
 class _NoneTrait(TraitType):
     """ Defines a trait that only accepts the None value
+
+    This is primarily used for supporting ``Union``.
     """
 
     info_text = "None"
