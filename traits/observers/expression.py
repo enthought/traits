@@ -107,7 +107,7 @@ class Expression:
 
         Returns
         -------
-        new_expression : traits.observers.expressions.Expression
+        new_expression : traits.observers.expression.Expression
         """
         return self.then(dict_items(notify=notify, optional=optional))
 
@@ -132,7 +132,7 @@ class Expression:
 
         Returns
         -------
-        new_expression : traits.observers.expressions.Expression
+        new_expression : traits.observers.expression.Expression
         """
         return self.then(list_items(notify=notify, optional=optional))
 
@@ -151,7 +151,7 @@ class Expression:
 
         Returns
         -------
-        new_expression : traits.observers.expressions.Expression
+        new_expression : traits.observers.expression.Expression
         """
         return self.then(set_items(notify=notify, optional=optional))
 
@@ -298,7 +298,7 @@ def dict_items(notify=True, optional=False):
 
     Returns
     -------
-    new_expression : traits.observers.expressions.Expression
+    new_expression : traits.observers.expression.Expression
     """
     observer = _DictItemObserver(notify=notify, optional=optional)
     return SingleObserverExpression(observer)
@@ -325,7 +325,7 @@ def list_items(notify=True, optional=False):
 
     Returns
     -------
-    new_expression : traits.observers.expressions.Expression
+    new_expression : traits.observers.expression.Expression
     """
     observer = _ListItemObserver(notify=notify, optional=optional)
     return SingleObserverExpression(observer)
@@ -346,7 +346,7 @@ def set_items(notify=True, optional=False):
 
     Returns
     -------
-    new_expression : traits.observers.expressions.Expression
+    new_expression : traits.observers.expression.Expression
     """
     observer = _SetItemObserver(notify=notify, optional=optional)
     return SingleObserverExpression(observer)
