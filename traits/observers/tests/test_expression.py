@@ -189,7 +189,7 @@ class TestExpressionFilter(unittest.TestCase):
 
         self.anytrait = anytrait
 
-    def test_matchnotify_true(self):
+    def test_match_notify_true(self):
         # Test the top-level function
         expr = expression.match(filter=self.anytrait)
         expected = [
@@ -200,7 +200,7 @@ class TestExpressionFilter(unittest.TestCase):
         actual = expr._as_graphs()
         self.assertEqual(actual, expected)
 
-    def test_matchnotify_false(self):
+    def test_match_notify_false(self):
         # Test the top-level function
         expr = expression.match(filter=self.anytrait, notify=False)
         expected = [
@@ -211,7 +211,7 @@ class TestExpressionFilter(unittest.TestCase):
         actual = expr._as_graphs()
         self.assertEqual(actual, expected)
 
-    def test_matchmethod_notify_true(self):
+    def test_match_method_notify_true(self):
         # Test the instance method calls the top-level function correctly.
         expr = expression.match(filter=self.anytrait).match(
             filter=self.anytrait
@@ -225,7 +225,7 @@ class TestExpressionFilter(unittest.TestCase):
         actual = expr._as_graphs()
         self.assertEqual(actual, expected)
 
-    def test_matchmethod_notify_false(self):
+    def test_match_method_notify_false(self):
         # Test the instance method calls the top-level function correctly.
         expr = expression.match(filter=self.anytrait).match(
             filter=self.anytrait, notify=False,
