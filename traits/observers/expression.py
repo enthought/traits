@@ -13,6 +13,9 @@ import functools as _functools
 from traits.observers._filtered_trait_observer import (
     FilteredTraitObserver as _FilteredTraitObserver,
 )
+from traits.observers._metadata_filter import (
+    MetadataFilter as _MetadataFilter,
+)
 from traits.observers._named_trait_observer import (
     NamedTraitObserver as _NamedTraitObserver,
 )
@@ -99,9 +102,35 @@ class Expression:
 
         Returns
         -------
-        new_expression : traits.observers.expressions.Expression
+        new_expression : traits.observers.expression.Expression
         """
         return self.then(match(filter=filter, notify=notify))
+
+    def metadata(self, metadata_name, notify=True):
+        """ Return a new expression for observing traits where the given
+        metadata is not None.
+
+        Events emitted (if any) will be instances of
+        :py:class:`~traits.observers.events.TraitChangeEvent`.
+
+        e.g. ``metadata("age")`` matches traits whose 'age' attribute has a
+        non-None value.
+
+        Parameters
+        ----------
+        metadata_name : str
+            Name of the metadata to filter traits with.
+        notify : boolean, optional
+            Whether to notify for changes.
+
+        Returns
+        -------
+        new_expression : traits.observers.expression.Expression
+        """
+        return self.match(
+            filter=_MetadataFilter(metadata_name=metadata_name),
+            notify=notify,
+        )
 
     def trait(self, name, notify=True, optional=False):
         """ Create a new expression for observing a trait with the exact
@@ -243,10 +272,37 @@ def match(filter, notify=True):
 
     Returns
     -------
-    new_expression : traits.observers.expressions.Expression
+    new_expression : traits.observers.expression.Expression
     """
     observer = _FilteredTraitObserver(notify=notify, filter=filter)
     return SingleObserverExpression(observer)
+
+
+def metadata(metadata_name, notify=True):
+    """ Return a new expression for observing traits where the given metadata
+    is not None.
+
+    Events emitted (if any) will be instances of
+    :py:class:`~traits.observers.events.TraitChangeEvent`.
+
+    e.g. ``metadata("age")`` matches traits whose 'age' attribute has a
+    non-None value.
+
+    Parameters
+    ----------
+    metadata_name : str
+        Name of the metadata to filter traits with.
+    notify : boolean, optional
+        Whether to notify for changes.
+
+    Returns
+    -------
+    new_expression : traits.observers.expression.Expression
+    """
+    return match(
+        filter=_MetadataFilter(metadata_name=metadata_name),
+        notify=notify,
+    )
 
 
 def trait(name, notify=True, optional=False):
