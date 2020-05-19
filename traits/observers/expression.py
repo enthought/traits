@@ -45,7 +45,7 @@ class Expression:
 
         Returns
         -------
-        boolean
+        bool
         """
         if type(other) is not type(self):
             return False
@@ -100,10 +100,12 @@ class Expression:
 
         Parameters
         ----------
-        notify : boolean, optional
-            Whether to notify for changes.
-        optional : booleal, optional
+        notify : bool, optional
+            Whether to notify for changes. Default is to notify.
+        optional : bool, optional
             Whether to ignore this if the upstream object is not a dict.
+            Default is false and an error will be raised if the object is not
+            a dict.
 
         Returns
         -------
@@ -125,10 +127,12 @@ class Expression:
 
         Parameters
         ----------
-        notify : boolean, optional
-            Whether to notify for changes.
-        optional : booleal, optional
+        notify : bool, optional
+            Whether to notify for changes. Default is to notify.
+        optional : bool, optional
             Whether to ignore this if the upstream object is not a list.
+            Default is false and an error will be raised if the object is not
+            a list.
 
         Returns
         -------
@@ -144,10 +148,12 @@ class Expression:
 
         Parameters
         ----------
-        notify : boolean, optional
-            Whether to notify for changes.
-        optional : booleal, optional
+        notify : bool, optional
+            Whether to notify for changes. Default is to notify.
+        optional : bool, optional
             Whether to ignore this if the upstream object is not a set.
+            Default is false and an error will be raised if the object is not
+            a set.
 
         Returns
         -------
@@ -166,10 +172,12 @@ class Expression:
         ----------
         name : str
             Name of the trait to match.
-        notify : boolean, optional
-            Whether to notify for changes.
-        optional : boolean, optional
+        notify : bool, optional
+            Whether to notify for changes. Default is to notify.
+        optional : bool, optional
             If true, skip this observer if the requested trait is not found.
+            Default is false, and an error will be raised if the requested
+            trait is not found.
 
         Returns
         -------
@@ -291,10 +299,12 @@ def dict_items(notify=True, optional=False):
 
     Parameters
     ----------
-    notify : boolean, optional
-        Whether to notify for changes.
-    optional : booleal, optional
+    notify : bool, optional
+        Whether to notify for changes. Default is to notify.
+    optional : bool, optional
         Whether to ignore this if the upstream object is not a dict.
+        Default is false and an error will be raised if the object is not
+        a dict.
 
     Returns
     -------
@@ -318,10 +328,12 @@ def list_items(notify=True, optional=False):
 
     Parameters
     ----------
-    notify : boolean, optional
-        Whether to notify for changes.
-    optional : booleal, optional
+    notify : bool, optional
+        Whether to notify for changes. Default is to notify.
+    optional : bool, optional
         Whether to ignore this if the upstream object is not a list.
+        Default is false and an error will be raised if the object is not
+        a list.
 
     Returns
     -------
@@ -339,10 +351,12 @@ def set_items(notify=True, optional=False):
 
     Parameters
     ----------
-    notify : boolean, optional
-        Whether to notify for changes.
-    optional : booleal, optional
+    notify : bool, optional
+        Whether to notify for changes. Default is to notify.
+    optional : bool, optional
         Whether to ignore this if the upstream object is not a set.
+        Default is false and an error will be raised if the object is not
+        a set.
 
     Returns
     -------
@@ -363,10 +377,12 @@ def trait(name, notify=True, optional=False):
     ----------
     name : str
         Name of the trait to match.
-    notify : boolean, optional
+    notify : bool, optional
         Whether to notify for changes.
-    optional : boolean, optional
+    optional : bool, optional
         If true, skip this observer if the requested trait is not found.
+        Default is false, and an error will be raised if the requested
+        trait is not found.
 
     Returns
     -------
