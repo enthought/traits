@@ -9,11 +9,15 @@
 # Thanks for using Enthought open source!
 
 import unittest
+from unittest import mock
+import warnings
 
 from traits.api import (
-    Bool, HasTraits, List, Instance, Int, Property,
+    Bool, Dict, HasTraits, List, Instance, Int, Property, Set, Union,
 )
 from traits.observers import _has_traits_helpers as helpers
+from traits.observers import expression
+from traits.observers.observe import observe
 
 
 class Bar(HasTraits):
@@ -131,3 +135,167 @@ class TestHasTraitsHelpersIterObjects(unittest.TestCase):
         foo = Foo()
         list(helpers.iter_objects(foo, "property_value"))
         self.assertEqual(foo.property_n_calculations, 0)
+
+
+class ObjectWithEqualityComparisonMode(HasTraits):
+
+    # If the comparison mode is equality, downstream observers cannot be
+    # maintained . A warning should be emitted if an observer is attached
+    # for obeserving mutations to containers.
+    list_values = List(comparison_mode=2)
+    dict_values = Dict(comparison_mode=2)
+    set_values = Set(comparison_mode=2)
+    property_list = Property(List(comparison_mode=2))
+    container_in_union = Union(
+        None,
+        Set(comparison_mode=1),
+        comparison_mode=2,
+    )
+
+
+class TestHasTraitsHelpersWarning(unittest.TestCase):
+
+    def test_warn_list_explicit_equality_comparison_mode(self):
+        # Test a warning is emitted if the comparison mode is explicitly set to
+        # equality. Note that iter_objects is for providing values for the
+        # next observers, hence imitates the use case when membership in a
+        # container is observed.
+        instance = ObjectWithEqualityComparisonMode()
+
+        name_to_type = {
+            "list_values": "List",
+            "dict_values": "Dict",
+            "set_values": "Set",
+            "container_in_union": "Union",
+        }
+        for trait_name, type_name in name_to_type.items():
+            with self.subTest(trait_name=trait_name, type_name=type_name):
+
+                with self.assertWarns(RuntimeWarning) as warn_context:
+                    list(helpers.iter_objects(instance, trait_name))
+
+                self.assertIn(
+                    "Redefine the trait with {}(..., comparison_mode".format(
+                        type_name
+                    ),
+                    str(warn_context.warning)
+                )
+
+    def test_union_equality_comparison_mode_prevent_change_event(self):
+        # Justification for the warning: If the comparison mode is equality,
+        # one cannot observe mutations after reassigning an equal but new
+        # object.
+        instance = ObjectWithEqualityComparisonMode()
+        instance.container_in_union = {1}
+        handler = mock.Mock()
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            observe(
+                object=instance,
+                expression=expression.trait("container_in_union").set_items(),
+                handler=handler,
+            )
+
+        # New set, but equals to the previous
+        instance.container_in_union = {1}
+        handler.reset_mock()
+
+        # when
+        instance.container_in_union.add(2)
+
+        # The expected value is 1.
+        # If this fails with 1 != 0, consider removing the warning.
+        self.assertEqual(handler.call_count, 0)
+
+    def test_list_equality_comparison_mode_prevent_change_event(self):
+        # Justification for the warning: If the comparison mode is equality,
+        # one cannot observe mutations after reassigning an equal but new list
+        # object.
+        instance = ObjectWithEqualityComparisonMode()
+        instance.list_values = [1]
+        handler = mock.Mock()
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            observe(
+                object=instance,
+                expression=expression.trait("list_values").list_items(),
+                handler=handler,
+            )
+
+        # New list, but equals to the previous
+        instance.list_values = [1]
+        handler.reset_mock()
+
+        # when
+        instance.list_values.append(2)
+
+        # The expected value is 1.
+        # If this fails with 1 != 0, consider removing the warning.
+        self.assertEqual(handler.call_count, 0)
+
+    def test_dict_equality_comparison_mode_prevent_change_event(self):
+        # Justification for the warning: If the comparison mode is equality,
+        # one cannot observe mutations after reassigning an equal but new dict
+        # object.
+        instance = ObjectWithEqualityComparisonMode()
+        instance.dict_values = {"1": 1}
+        handler = mock.Mock()
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            observe(
+                object=instance,
+                expression=expression.trait("dict_values").dict_items(),
+                handler=handler,
+            )
+
+        # New dict, but equals to the previous
+        instance.dict_values = {"1": 1}
+        handler.reset_mock()
+
+        # when
+        instance.dict_values.pop("1")
+
+        # The expected value is 1.
+        # If this fails with 1 != 0, consider removing the warning.
+        self.assertEqual(handler.call_count, 0)
+
+    def test_set_equality_comparison_mode_prevent_change_event(self):
+        # Justification for the warning: If the comparison mode is equality,
+        # one cannot observe mutations after reassigning an equal but new set
+        # object.
+        instance = ObjectWithEqualityComparisonMode()
+        instance.set_values = {1}
+        handler = mock.Mock()
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            observe(
+                object=instance,
+                expression=expression.trait("set_values").set_items(),
+                handler=handler,
+            )
+
+        # New set, but equals to the previous
+        instance.set_values = {1}
+        handler.reset_mock()
+
+        # when
+        instance.set_values.add(2)
+
+        # The expected value is 1.
+        # If this fails with 1 != 0, consider removing the warning.
+        self.assertEqual(handler.call_count, 0)
+
+    def test_no_warn_for_property(self):
+        # property is computed and downstream observers are not useful.
+        # they do exist in the wild. Do not warn for those.
+
+        instance = ObjectWithEqualityComparisonMode()
+
+        # almost equivalent to assertNoWarns...
+        with self.assertRaises(AssertionError):
+            with self.assertWarns(RuntimeWarning):
+                list(helpers.iter_objects(instance, "property_list"))
