@@ -89,7 +89,7 @@ class Expression:
         """ Create a new expression for observing items inside a dict.
 
         Events emitted (if any) will be instances of
-        :py:class:`~traits.observers.events.DictChangeEvent`.
+        :class:`~traits.observers.events.DictChangeEvent`.
 
         If an expression with ``dict_items`` is further extended, the
         **values** of the dict will be given to the next item in the
@@ -115,7 +115,7 @@ class Expression:
         """ Create a new expression for observing items inside a list.
 
         Events emitted (if any) will be instances of
-        :py:class:`~traits.observers.events.ListChangeEvent`.
+        :class:`~traits.observers.events.ListChangeEvent`.
 
         e.g. ``trait("containers").list_items()`` for observing to mutations
         to a list named ``containers``.
@@ -140,7 +140,7 @@ class Expression:
         """ Create a new expression for observing items inside a set.
 
         Events emitted (if any) will be instances of
-        :py:class:`~traits.observers.events.SetChangeEvent`.
+        :class:`~traits.observers.events.SetChangeEvent`.
 
         Parameters
         ----------
@@ -160,7 +160,7 @@ class Expression:
         name given.
 
         Events emitted (if any) will be instances of
-        :py:class:`~traits.observers.events.TraitChangeEvent`.
+        :class:`~traits.observers.events.TraitChangeEvent`.
 
         Parameters
         ----------
@@ -280,7 +280,7 @@ def dict_items(notify=True, optional=False):
     """ Create a new expression for observing items inside a dict.
 
     Events emitted (if any) will be instances of
-    :py:class:`~traits.observers.events.DictChangeEvent`.
+    :class:`~traits.observers.events.DictChangeEvent`.
 
     If an expression with ``dict_items`` is further extended, the
     **values** of the dict will be given to the next item in the expression.
@@ -308,7 +308,7 @@ def list_items(notify=True, optional=False):
     """ Create a new expression for observing items inside a list.
 
     Events emitted (if any) will be instances of
-    :py:class:`~traits.observers.events.ListChangeEvent`.
+    :class:`~traits.observers.events.ListChangeEvent`.
 
     e.g. ``trait("containers").list_items()`` for observing to mutations
     to a list named ``containers``.
@@ -335,7 +335,7 @@ def set_items(notify=True, optional=False):
     """ Create a new expression for observing items inside a set.
 
     Events emitted (if any) will be instances of
-    :py:class:`~traits.observers.events.SetChangeEvent`.
+    :class:`~traits.observers.events.SetChangeEvent`.
 
     Parameters
     ----------
@@ -357,7 +357,7 @@ def trait(name, notify=True, optional=False):
     name given.
 
     Events emitted (if any) will be instances of
-    :py:class:`~traits.observers.events.TraitChangeEvent`.
+    :class:`~traits.observers.events.TraitChangeEvent`.
 
     Parameters
     ----------
