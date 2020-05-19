@@ -18,8 +18,8 @@ class MetadataFilter:
     """ Callable to be used with FilteredTraitObserver for filtering traits
     with the given metadata name.
 
-    This filter returns true if the metadata is defined on the trait, false
-    if it is undefined.
+    This filter returns true if the metadata value is not None, false
+    if the metadata is not defined or the value is None.
 
     Attributes
     ----------
@@ -31,7 +31,9 @@ class MetadataFilter:
         self.metadata_name = metadata_name
 
     def __call__(self, name, trait):
-        return self.metadata_name in trait.__dict__
+        # Consistent with the current behaviour where metadata with None as
+        # the value is equivalent to the metadata not having been defined.
+        return getattr(trait, self.metadata_name, None) is not None
 
     def __eq__(self, other):
         return (

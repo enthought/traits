@@ -36,6 +36,21 @@ class TestMetadataFilter(unittest.TestCase):
             "Expected the filter to return false"
         )
 
+    def test_metadata_defined_as_none_is_same_as_undefined(self):
+        # If a metadata has a None value, it is equivalent to the metadata
+        # not being defined.
+        metadata_filter = MetadataFilter(
+            metadata_name="name",
+        )
+        self.assertTrue(
+            metadata_filter("name", Int(name=True).as_ctrait()),
+            "Expected the filter to return true"
+        )
+        self.assertFalse(
+            metadata_filter("name", Int(name=None).as_ctrait()),
+            "Expected the filter to return false"
+        )
+
     def test_filter_equality(self):
         filter1 = MetadataFilter(
             metadata_name="name",
