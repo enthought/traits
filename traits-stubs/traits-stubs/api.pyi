@@ -8,7 +8,10 @@ from .traits import (
     Trait as Trait
 )
 
-from .has_traits import HasTraits as HasTraits
+from .has_traits import (
+    HasTraits as HasTraits,
+    observe as observe,
+)
 
 from .trait_types import (
     Any as Any,
