@@ -21,14 +21,14 @@ class TestDictChangeEvent(unittest.TestCase):
 
     def test_dict_change_event_repr(self):
         event = DictChangeEvent(
-            trait_dict=dict(),
+            object=dict(),
             added={1: 1},
             removed={"2": 2},
         )
         actual = repr(event)
         self.assertEqual(
             actual,
-            "DictChangeEvent(trait_dict={}, removed={'2': 2}, added={1: 1})"
+            "DictChangeEvent(object={}, removed={'2': 2}, added={1: 1})"
         )
 
 
@@ -53,6 +53,7 @@ class TestDictEventFactory(unittest.TestCase):
 
         # then
         event, = events
+        self.assertIs(event.object, trait_dict)
         self.assertEqual(event.removed, {"4": 4})
 
         # when

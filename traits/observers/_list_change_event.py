@@ -17,9 +17,11 @@
 class ListChangeEvent:
     """ Event object to represent mutations to a list.
 
+    The interface of this object is provisional as of version 6.1.
+
     Attributes
     ----------
-    trait_list : traits.trait_list_object.TraitList
+    object : traits.trait_list_object.TraitList
         The list being mutated.
     index : int or slice
         The index used for the mutation.
@@ -29,8 +31,8 @@ class ListChangeEvent:
         Values removed from the list.
     """
 
-    def __init__(self, *, trait_list, index, removed, added):
-        self.trait_list = trait_list
+    def __init__(self, *, object, index, removed, added):
+        self.object = object
         self.added = added
         self.removed = removed
         self.index = index
@@ -38,7 +40,7 @@ class ListChangeEvent:
     def __repr__(self):
         return (
             "{event.__class__.__name__}("
-            "trait_list={event.trait_list!r}, "
+            "object={event.object!r}, "
             "index={event.index!r}, "
             "removed={event.removed!r}, "
             "added={event.added!r}"
@@ -65,5 +67,5 @@ def list_event_factory(trait_list, index, removed, added):
     ListChangeEvent
     """
     return ListChangeEvent(
-        trait_list=trait_list, index=index, removed=removed, added=added,
+        object=trait_list, index=index, removed=removed, added=added,
     )
