@@ -43,6 +43,7 @@ class MetadataFilter:
         return hash((type(self).__name__, self.metadata_name))
 
     def __repr__(self):
-        return "MetadataFilter(metadata_name={!r})".format(
-            self.metadata_name
+        return (
+            "{self.__class__.__name__}"
+            "(metadata_name={self.metadata_name!r})".format(self=self)
         )
