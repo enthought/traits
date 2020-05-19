@@ -57,6 +57,14 @@ class TestPrefixMap(unittest.TestCase):
                 with self.assertRaises(TraitError):
                     person.married = value
 
+    def test_no_default(self):
+        class Person(HasTraits):
+            married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+
+        p = Person()
+        self.assertEqual(p.married, Undefined)
+        self.assertEqual(p.married_, Undefined)
+
     def test_default(self):
         class Person(HasTraits):
             married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
@@ -171,3 +179,16 @@ class TestPrefixMap(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             reconstituted.validate(p, "married", "ye")
+
+    def test_pickle_shadow_trait(self):
+        class Person(HasTraits):
+            married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
+                                default_value="yeah")
+
+        p = Person()
+        married_shadow_trait = p.trait("married_")
+        reconstituted = pickle.loads(pickle.dumps(married_shadow_trait))
+
+        default_value_callable = reconstituted.default_value()[1]
+
+        self.assertEqual(default_value_callable(p), 1)

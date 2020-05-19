@@ -8,6 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
+import pickle
 import unittest
 
 from traits.api import Expression, HasTraits, Int, TraitError
@@ -139,3 +140,16 @@ class TestExpression(unittest.TestCase):
         self.assertEqual(f.bar, "3")
         self.assertEqual(eval(f.bar_), 3)
         self.assertEqual(f.default_calls, 1)
+
+    def test_pickle_shadow_trait(self):
+        class Foo(HasTraits):
+            # The default value set in the class definition is "0"
+            bar = Expression(default_value="1")
+
+        f = Foo()
+        married_shadow_trait = f.trait("bar_")
+        reconstituted = pickle.loads(pickle.dumps(married_shadow_trait))
+
+        default_value_callable = reconstituted.default_value()[1]
+
+        self.assertEqual(eval(default_value_callable(f)), 1)
