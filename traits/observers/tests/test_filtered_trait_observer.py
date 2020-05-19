@@ -347,6 +347,8 @@ class TestFilteredTraitObserverTraitAdded(unittest.TestCase):
         # If the maintainer from TraitAddedObserver did not restrict its
         # action to just the added trait, when 'count' is added, the previously
         # added 'another_number' would have received a second notifier again.
+        # Then it would require two *remove* actions in order to clean up
+        # notifiers on 'another_number'.
         instance.add_trait("another_number", Int())
         instance.add_trait("count", Int())
 
