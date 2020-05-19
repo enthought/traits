@@ -204,7 +204,20 @@ def _handle_items(trees, default_notifies):
     -------
     expression : traits.observers.expression.Expression
     """
-    raise NotImplementedError("items is not yet implemented.")
+    if trees:
+        # Nothing should be wrapped in items
+        raise ValueError("Unexpected tree: {!r}".format(trees))
+
+    notify = default_notifies[-1]
+    return reduce(
+        operator.or_,
+        (
+            _expr_module.trait("items", notify=notify, optional=True),
+            _expr_module.dict_items(notify=notify, optional=True),
+            _expr_module.list_items(notify=notify, optional=True),
+            _expr_module.set_items(notify=notify, optional=True),
+        )
+    )
 
 
 def _handle_tree(tree, default_notifies=None):

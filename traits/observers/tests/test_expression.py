@@ -12,9 +12,12 @@ import inspect
 import unittest
 
 from traits.observers import expression
+from traits.observers._dict_item_observer import DictItemObserver
 from traits.observers._filtered_trait_observer import FilteredTraitObserver
+from traits.observers._list_item_observer import ListItemObserver
 from traits.observers._metadata_filter import MetadataFilter
 from traits.observers._named_trait_observer import NamedTraitObserver
+from traits.observers._set_item_observer import SetItemObserver
 from traits.observers._observer_graph import ObserverGraph
 
 
@@ -406,6 +409,207 @@ class TestExpressionTrait(unittest.TestCase):
         method_trait = expression.Expression().trait
         self.assertEqual(
             inspect.signature(top_level_trait), inspect.signature(method_trait)
+        )
+
+
+class TestExpressionDictItem(unittest.TestCase):
+    """ Test Expression.dict_items """
+
+    def test_dict_items(self):
+        expr = expression.dict_items()
+        expected = [
+            create_graph(
+                DictItemObserver(notify=True, optional=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_dict_items_notify_false(self):
+        expr = expression.dict_items(notify=False)
+        expected = [
+            create_graph(
+                DictItemObserver(notify=False, optional=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_dict_items_optional_true(self):
+        expr = expression.dict_items(optional=True)
+        expected = [
+            create_graph(
+                DictItemObserver(notify=True, optional=True),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_dict_items_method_notify(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.dict_items().dict_items(notify=False)
+        expected = [
+            create_graph(
+                DictItemObserver(notify=True, optional=False),
+                DictItemObserver(notify=False, optional=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_dict_items_method_optional(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.dict_items().dict_items(optional=True)
+        expected = [
+            create_graph(
+                DictItemObserver(notify=True, optional=False),
+                DictItemObserver(notify=True, optional=True),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_call_signatures(self):
+        # Test to help developers keeping the two function signatures in-sync.
+        # Remove this if the two need to divert in the future.
+        top_level = expression.dict_items
+        method = expression.Expression().dict_items
+        self.assertEqual(
+            inspect.signature(top_level), inspect.signature(method)
+        )
+
+
+class TestExpressionListItem(unittest.TestCase):
+    """ Test Expression.list_items """
+
+    def test_list_items(self):
+        expr = expression.list_items()
+        expected = [
+            create_graph(
+                ListItemObserver(notify=True, optional=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_list_items_notify_false(self):
+        expr = expression.list_items(notify=False)
+        expected = [
+            create_graph(
+                ListItemObserver(notify=False, optional=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_list_items_optional_true(self):
+        expr = expression.list_items(optional=True)
+        expected = [
+            create_graph(
+                ListItemObserver(notify=True, optional=True),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_list_items_method_notify(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.list_items().list_items(notify=False)
+        expected = [
+            create_graph(
+                ListItemObserver(notify=True, optional=False),
+                ListItemObserver(notify=False, optional=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_list_items_method_optional(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.list_items().list_items(optional=True)
+        expected = [
+            create_graph(
+                ListItemObserver(notify=True, optional=False),
+                ListItemObserver(notify=True, optional=True),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_call_signatures(self):
+        # Test to help developers keeping the two function signatures in-sync.
+        # Remove this if the two need to divert in the future.
+        top_level = expression.list_items
+        method = expression.Expression().list_items
+        self.assertEqual(
+            inspect.signature(top_level), inspect.signature(method)
+        )
+
+
+class TestExpressionSetItem(unittest.TestCase):
+    """ Test Expression.set_items """
+
+    def test_set_items(self):
+        expr = expression.set_items()
+        expected = [
+            create_graph(
+                SetItemObserver(notify=True, optional=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_set_items_notify_false(self):
+        expr = expression.set_items(notify=False)
+        expected = [
+            create_graph(
+                SetItemObserver(notify=False, optional=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_set_items_optional_true(self):
+        expr = expression.set_items(optional=True)
+        expected = [
+            create_graph(
+                SetItemObserver(notify=True, optional=True),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_set_items_method_notify(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.set_items().set_items(notify=False)
+        expected = [
+            create_graph(
+                SetItemObserver(notify=True, optional=False),
+                SetItemObserver(notify=False, optional=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_set_items_method_optional(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.set_items().set_items(optional=True)
+        expected = [
+            create_graph(
+                SetItemObserver(notify=True, optional=False),
+                SetItemObserver(notify=True, optional=True),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_call_signatures(self):
+        # Test to help developers keeping the two function signatures in-sync.
+        # Remove this if the two need to divert in the future.
+        top_level = expression.set_items
+        method = expression.Expression().set_items
+        self.assertEqual(
+            inspect.signature(top_level), inspect.signature(method)
         )
 
 

@@ -21,9 +21,11 @@ class DictChangeEvent:
     "*name* _items" trait. In particular, the attribute ``changed`` is not
     defined here.
 
+    The interface of this object is provisional as of version 6.1.
+
     Attributes
     ----------
-    trait_dict : traits.trait_dict_object.TraitDict
+    object : traits.trait_dict_object.TraitDict
         The dict being mutated.
     removed : dict
         Keys and values for removed or updated items.
@@ -35,15 +37,15 @@ class DictChangeEvent:
         and the values are new.
     """
 
-    def __init__(self, *, trait_dict, removed, added):
-        self.trait_dict = trait_dict
+    def __init__(self, *, object, removed, added):
+        self.object = object
         self.removed = removed
         self.added = added
 
     def __repr__(self):
         return (
             "{event.__class__.__name__}("
-            "trait_dict={event.trait_dict!r}, "
+            "object={event.object!r}, "
             "removed={event.removed!r}, "
             "added={event.added!r}"
             ")".format(event=self)
@@ -75,5 +77,5 @@ def dict_event_factory(trait_dict, removed, added, changed):
     for key in changed:
         added[key] = trait_dict[key]
     return DictChangeEvent(
-        trait_dict=trait_dict, added=added, removed=removed,
+        object=trait_dict, added=added, removed=removed,
     )

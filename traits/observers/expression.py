@@ -10,8 +10,14 @@
 
 import functools as _functools
 
+from traits.observers._dict_item_observer import (
+    DictItemObserver as _DictItemObserver,
+)
 from traits.observers._filtered_trait_observer import (
     FilteredTraitObserver as _FilteredTraitObserver,
+)
+from traits.observers._list_item_observer import (
+    ListItemObserver as _ListItemObserver,
 )
 from traits.observers._metadata_filter import (
     MetadataFilter as _MetadataFilter,
@@ -21,6 +27,9 @@ from traits.observers._named_trait_observer import (
 )
 from traits.observers._observer_graph import (
     ObserverGraph as _ObserverGraph,
+)
+from traits.observers._set_item_observer import (
+    SetItemObserver as _SetItemObserver,
 )
 
 # Expression is a public user interface for constructing ObserverGraph.
@@ -42,7 +51,7 @@ class Expression:
 
         Returns
         -------
-        boolean
+        bool
         """
         if type(other) is not type(self):
             return False
@@ -99,10 +108,6 @@ class Expression:
             callable must also be hashable.
         notify : boolean, optional
             Whether to notify for changes.
-
-        Returns
-        -------
-        new_expression : traits.observers.expression.Expression
         """
         return self.then(match(filter=filter, notify=notify))
 
@@ -122,30 +127,105 @@ class Expression:
             Name of the metadata to filter traits with.
         notify : boolean, optional
             Whether to notify for changes.
-
-        Returns
-        -------
-        new_expression : traits.observers.expression.Expression
         """
         return self.match(
             filter=_MetadataFilter(metadata_name=metadata_name),
             notify=notify,
         )
 
+    def dict_items(self, notify=True, optional=False):
+        """ Create a new expression for observing items inside a dict.
+
+        Events emitted (if any) will be instances of
+        :class:`~traits.observers.events.DictChangeEvent`.
+
+        If an expression with ``dict_items`` is further extended, the
+        **values** of the dict will be given to the next item in the
+        expression. For example, the following observes a trait named "number"
+        on any object that is one of the values in the dict named "mapping"::
+
+            trait("mapping").dict_items().trait("number")
+
+        Parameters
+        ----------
+        notify : bool, optional
+            Whether to notify for changes. Default is to notify.
+        optional : bool, optional
+            Whether to ignore this if the upstream object is not a dict.
+            Default is false and an error will be raised if the object is not
+            a dict.
+
+        Returns
+        -------
+        new_expression : traits.observers.expression.Expression
+        """
+        return self.then(dict_items(notify=notify, optional=optional))
+
+    def list_items(self, notify=True, optional=False):
+        """ Create a new expression for observing items inside a list.
+
+        Events emitted (if any) will be instances of
+        :class:`~traits.observers.events.ListChangeEvent`.
+
+        e.g. ``trait("containers").list_items()`` for observing mutations
+        to a list named ``containers``.
+
+        e.g. ``trait("containers").list_items().trait("value")`` for observing
+        the trait ``value`` on any items in the list ``containers``.
+
+        Parameters
+        ----------
+        notify : bool, optional
+            Whether to notify for changes. Default is to notify.
+        optional : bool, optional
+            Whether to ignore this if the upstream object is not a list.
+            Default is false and an error will be raised if the object is not
+            a list.
+
+        Returns
+        -------
+        new_expression : traits.observers.expression.Expression
+        """
+        return self.then(list_items(notify=notify, optional=optional))
+
+    def set_items(self, notify=True, optional=False):
+        """ Create a new expression for observing items inside a set.
+
+        Events emitted (if any) will be instances of
+        :class:`~traits.observers.events.SetChangeEvent`.
+
+        Parameters
+        ----------
+        notify : bool, optional
+            Whether to notify for changes. Default is to notify.
+        optional : bool, optional
+            Whether to ignore this if the upstream object is not a set.
+            Default is false and an error will be raised if the object is not
+            a set.
+
+        Returns
+        -------
+        new_expression : traits.observers.expression.Expression
+        """
+        return self.then(set_items(notify=notify, optional=optional))
+
     def trait(self, name, notify=True, optional=False):
         """ Create a new expression for observing a trait with the exact
         name given.
 
-        Events emitted (if any) will be instances of ``TraitChangeEvent``.
+        Events emitted (if any) will be instances of
+        :class:`~traits.observers.events.TraitChangeEvent`.
 
         Parameters
         ----------
         name : str
             Name of the trait to match.
-        notify : boolean, optional
-            Whether to notify for changes.
-        optional : boolean, optional
+        notify : bool, optional
+            Whether to notify for changes. Default is to notify.
+        optional : bool, optional
             If true, skip this observer if the requested trait is not found.
+            Default is false, and an error will be raised if the requested
+            trait is not found.
 
         Returns
         -------
@@ -252,6 +332,65 @@ def join_(*expressions):
     return _functools.reduce(lambda e1, e2: e1.then(e2), expressions)
 
 
+def dict_items(notify=True, optional=False):
+    """ Create a new expression for observing items inside a dict.
+
+    Events emitted (if any) will be instances of
+    :class:`~traits.observers.events.DictChangeEvent`.
+
+    If an expression with ``dict_items`` is further extended, the
+    **values** of the dict will be given to the next item in the expression.
+    For example, the following observes a trait named "number" on any object
+    that is one of the values in the dict named "mapping"::
+
+        trait("mapping").dict_items().trait("number")
+
+    Parameters
+    ----------
+    notify : bool, optional
+        Whether to notify for changes. Default is to notify.
+    optional : bool, optional
+        Whether to ignore this if the upstream object is not a dict.
+        Default is false and an error will be raised if the object is not
+        a dict.
+
+    Returns
+    -------
+    new_expression : traits.observers.expression.Expression
+    """
+    observer = _DictItemObserver(notify=notify, optional=optional)
+    return SingleObserverExpression(observer)
+
+
+def list_items(notify=True, optional=False):
+    """ Create a new expression for observing items inside a list.
+
+    Events emitted (if any) will be instances of
+    :class:`~traits.observers.events.ListChangeEvent`.
+
+    e.g. ``trait("containers").list_items()`` for observing mutations
+    to a list named ``containers``.
+
+    e.g. ``trait("containers").list_items().trait("value")`` for observing
+    the trait ``value`` on any items in the list ``containers``.
+
+    Parameters
+    ----------
+    notify : bool, optional
+        Whether to notify for changes. Default is to notify.
+    optional : bool, optional
+        Whether to ignore this if the upstream object is not a list.
+        Default is false and an error will be raised if the object is not
+        a list.
+
+    Returns
+    -------
+    new_expression : traits.observers.expression.Expression
+    """
+    observer = _ListItemObserver(notify=notify, optional=optional)
+    return SingleObserverExpression(observer)
+
+
 def match(filter, notify=True):
     """ Create a new expression for observing traits using the
     given filter.
@@ -269,10 +408,6 @@ def match(filter, notify=True):
         also be hashable.
     notify : boolean, optional
         Whether to notify for changes.
-
-    Returns
-    -------
-    new_expression : traits.observers.expression.Expression
     """
     observer = _FilteredTraitObserver(notify=notify, filter=filter)
     return SingleObserverExpression(observer)
@@ -294,10 +429,6 @@ def metadata(metadata_name, notify=True):
         Name of the metadata to filter traits with.
     notify : boolean, optional
         Whether to notify for changes.
-
-    Returns
-    -------
-    new_expression : traits.observers.expression.Expression
     """
     return match(
         filter=_MetadataFilter(metadata_name=metadata_name),
@@ -305,20 +436,46 @@ def metadata(metadata_name, notify=True):
     )
 
 
+def set_items(notify=True, optional=False):
+    """ Create a new expression for observing items inside a set.
+
+    Events emitted (if any) will be instances of
+    :class:`~traits.observers.events.SetChangeEvent`.
+
+    Parameters
+    ----------
+    notify : bool, optional
+        Whether to notify for changes. Default is to notify.
+    optional : bool, optional
+        Whether to ignore this if the upstream object is not a set.
+        Default is false and an error will be raised if the object is not
+        a set.
+
+    Returns
+    -------
+    new_expression : traits.observers.expression.Expression
+    """
+    observer = _SetItemObserver(notify=notify, optional=optional)
+    return SingleObserverExpression(observer)
+
+
 def trait(name, notify=True, optional=False):
     """ Create a new expression for observing a trait with the exact
     name given.
 
-    Events emitted (if any) will be instances of ``TraitChangeEvent``.
+    Events emitted (if any) will be instances of
+    :class:`~traits.observers.events.TraitChangeEvent`.
 
     Parameters
     ----------
     name : str
         Name of the trait to match.
-    notify : boolean, optional
+    notify : bool, optional
         Whether to notify for changes.
-    optional : boolean, optional
+    optional : bool, optional
         If true, skip this observer if the requested trait is not found.
+        Default is false, and an error will be raised if the requested
+        trait is not found.
 
     Returns
     -------

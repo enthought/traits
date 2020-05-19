@@ -21,7 +21,7 @@ class TestListChangeEvent(unittest.TestCase):
 
     def test_list_change_event_repr(self):
         event = ListChangeEvent(
-            trait_list=[],
+            object=[],
             index=3,
             removed=[1, 2],
             added=[3, 4],
@@ -30,7 +30,7 @@ class TestListChangeEvent(unittest.TestCase):
         self.assertEqual(
             actual,
             "ListChangeEvent("
-            "trait_list=[], index=3, removed=[1, 2], added=[3, 4])"
+            "object=[], index=3, removed=[1, 2], added=[3, 4])"
         )
 
 
@@ -56,7 +56,7 @@ class TestListEventFactory(unittest.TestCase):
         # then
         event, = events
         self.assertIsInstance(event, ListChangeEvent)
-        self.assertIs(event.trait_list, trait_list)
+        self.assertIs(event.object, trait_list)
         self.assertEqual(event.index, 1)
         self.assertEqual(event.removed, [1, 2])
         self.assertEqual(event.added, [3, 4])

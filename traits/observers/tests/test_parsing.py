@@ -12,7 +12,10 @@ import unittest
 
 from traits.observers.parsing import parse
 from traits.observers.expression import (
+    dict_items,
+    list_items,
     metadata,
+    set_items,
     trait,
 )
 
@@ -96,4 +99,27 @@ class TestParsingTrait(unittest.TestCase):
     def test_trait_not_notifiy(self):
         actual = parse("a:b")
         expected = trait("a", notify=False).trait("b")
+        self.assertEqual(actual, expected)
+
+
+class TestParsingItems(unittest.TestCase):
+
+    def test_items(self):
+        actual = parse("items")
+        expected = (
+            trait("items", optional=True)
+            | dict_items(optional=True)
+            | list_items(optional=True)
+            | set_items(optional=True)
+        )
+        self.assertEqual(actual, expected)
+
+    def test_items_not_notify(self):
+        actual = parse("items:attr")
+        expected = (
+            trait("items", notify=False, optional=True)
+            | dict_items(notify=False, optional=True)
+            | list_items(notify=False, optional=True)
+            | set_items(notify=False, optional=True)
+        ).trait("attr")
         self.assertEqual(actual, expected)
