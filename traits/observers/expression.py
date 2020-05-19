@@ -13,17 +13,23 @@ import functools as _functools
 from traits.observers._dict_item_observer import (
     DictItemObserver as _DictItemObserver,
 )
+from traits.observers._filtered_trait_observer import (
+    FilteredTraitObserver as _FilteredTraitObserver,
+)
 from traits.observers._list_item_observer import (
     ListItemObserver as _ListItemObserver,
+)
+from traits.observers._metadata_filter import (
+    MetadataFilter as _MetadataFilter,
 )
 from traits.observers._named_trait_observer import (
     NamedTraitObserver as _NamedTraitObserver,
 )
-from traits.observers._set_item_observer import (
-    SetItemObserver as _SetItemObserver,
-)
 from traits.observers._observer_graph import (
     ObserverGraph as _ObserverGraph,
+)
+from traits.observers._set_item_observer import (
+    SetItemObserver as _SetItemObserver,
 )
 
 # Expression is a public user interface for constructing ObserverGraph.
@@ -84,6 +90,56 @@ class Expression:
         new_expression : traits.observers.expression.Expression
         """
         return SeriesExpression(self, expression)
+
+    def match(self, filter, notify=True):
+        """ Create a new expression for observing traits using the
+        given filter.
+
+        Events emitted (if any) will be instances of
+        :class:`~traits.observers.events.TraitChangeEvent`.
+
+        Parameters
+        ----------
+        filter : callable(str, CTrait) -> bool
+            A callable that receives the name of a trait and the corresponding
+            trait definition. The returned bool indicates whether the trait
+            is observed. In order to remove an existing observer with the
+            equivalent filter, the filter callables must compare equally. The
+            callable must also be hashable.
+        notify : bool, optional
+            Whether to notify for changes. Default is to notify.
+
+        Returns
+        -------
+        new_expression : traits.observers.expression.Expression
+        """
+        return self.then(match(filter=filter, notify=notify))
+
+    def metadata(self, metadata_name, notify=True):
+        """ Return a new expression for observing traits where the given
+        metadata is not None.
+
+        Events emitted (if any) will be instances of
+        :class:`~traits.observers.events.TraitChangeEvent`.
+
+        e.g. ``metadata("age")`` matches traits whose 'age' attribute has a
+        non-None value.
+
+        Parameters
+        ----------
+        metadata_name : str
+            Name of the metadata to filter traits with.
+        notify : bool, optional
+            Whether to notify for changes. Default is to notify.
+
+        Returns
+        -------
+        new_expression : traits.observers.expression.Expression
+        """
+        return self.match(
+            filter=_MetadataFilter(metadata_name=metadata_name),
+            notify=notify,
+        )
 
     def dict_items(self, notify=True, optional=False):
         """ Create a new expression for observing items inside a dict.
@@ -343,6 +399,59 @@ def list_items(notify=True, optional=False):
     return SingleObserverExpression(observer)
 
 
+def match(filter, notify=True):
+    """ Create a new expression for observing traits using the
+    given filter.
+
+    Events emitted (if any) will be instances of
+    :class:`~traits.observers.events.TraitChangeEvent`.
+
+    Parameters
+    ----------
+    filter : callable(str, CTrait) -> bool
+        A callable that receives the name of a trait and the corresponding
+        trait definition. The returned bool indicates whether the trait is
+        observed. In order to remove an existing observer with the equivalent
+        filter, the filter callables must compare equally. The callable must
+        also be hashable.
+    notify : bool, optional
+        Whether to notify for changes.
+
+    Returns
+    -------
+    new_expression : traits.observers.expression.Expression
+    """
+    observer = _FilteredTraitObserver(notify=notify, filter=filter)
+    return SingleObserverExpression(observer)
+
+
+def metadata(metadata_name, notify=True):
+    """ Return a new expression for observing traits where the given metadata
+    is not None.
+
+    Events emitted (if any) will be instances of
+    :class:`~traits.observers.events.TraitChangeEvent`.
+
+    e.g. ``metadata("age")`` matches traits whose 'age' attribute has a
+    non-None value.
+
+    Parameters
+    ----------
+    metadata_name : str
+        Name of the metadata to filter traits with.
+    notify : bool, optional
+        Whether to notify for changes. Default is to notify.
+
+    Returns
+    -------
+    new_expression : traits.observers.expression.Expression
+    """
+    return match(
+        filter=_MetadataFilter(metadata_name=metadata_name),
+        notify=notify,
+    )
+
+
 def set_items(notify=True, optional=False):
     """ Create a new expression for observing items inside a set.
 
@@ -378,7 +487,7 @@ def trait(name, notify=True, optional=False):
     name : str
         Name of the trait to match.
     notify : bool, optional
-        Whether to notify for changes.
+        Whether to notify for changes. Default is to notify.
     optional : bool, optional
         If true, skip this observer if the requested trait is not found.
         Default is false, and an error will be raised if the requested

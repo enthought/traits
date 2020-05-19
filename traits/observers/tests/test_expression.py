@@ -13,7 +13,9 @@ import unittest
 
 from traits.observers import expression
 from traits.observers._dict_item_observer import DictItemObserver
+from traits.observers._filtered_trait_observer import FilteredTraitObserver
 from traits.observers._list_item_observer import ListItemObserver
+from traits.observers._metadata_filter import MetadataFilter
 from traits.observers._named_trait_observer import NamedTraitObserver
 from traits.observers._set_item_observer import SetItemObserver
 from traits.observers._observer_graph import ObserverGraph
@@ -179,6 +181,153 @@ class TestExpressionComposition(unittest.TestCase):
         ]
         actual = expr._as_graphs()
         self.assertEqual(actual, expected)
+
+
+class TestExpressionFilter(unittest.TestCase):
+    """ Test Expression.match """
+
+    def setUp(self):
+
+        def anytrait(name, trait):
+            return True
+
+        self.anytrait = anytrait
+
+    def test_match_notify_true(self):
+        # Test the top-level function
+        expr = expression.match(filter=self.anytrait)
+        expected = [
+            create_graph(
+                FilteredTraitObserver(filter=self.anytrait, notify=True),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_match_notify_false(self):
+        # Test the top-level function
+        expr = expression.match(filter=self.anytrait, notify=False)
+        expected = [
+            create_graph(
+                FilteredTraitObserver(filter=self.anytrait, notify=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_match_method_notify_true(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.match(filter=self.anytrait).match(
+            filter=self.anytrait
+        )
+        expected = [
+            create_graph(
+                FilteredTraitObserver(filter=self.anytrait, notify=True),
+                FilteredTraitObserver(filter=self.anytrait, notify=True),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_match_method_notify_false(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.match(filter=self.anytrait).match(
+            filter=self.anytrait, notify=False,
+        )
+        expected = [
+            create_graph(
+                FilteredTraitObserver(filter=self.anytrait, notify=True),
+                FilteredTraitObserver(filter=self.anytrait, notify=False),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_call_signatures(self):
+        # Test to help developers keeping the two function signatures in-sync.
+        # Remove this if the two need to divert in the future.
+        top_level = expression.match
+        method = expression.Expression().match
+        self.assertEqual(
+            inspect.signature(top_level), inspect.signature(method)
+        )
+
+
+class TestExpressionFilterMetadata(unittest.TestCase):
+    """ Test Expression.metadata """
+
+    def test_metadata_notify_true(self):
+        # Test the top-level function
+        expr = expression.metadata("butterfly")
+        expected = [
+            create_graph(
+                FilteredTraitObserver(
+                    filter=MetadataFilter(metadata_name="butterfly"),
+                    notify=True,
+                ),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_metadata_notify_false(self):
+        # Test the top-level function
+        expr = expression.metadata("butterfly", notify=False)
+        expected = [
+            create_graph(
+                FilteredTraitObserver(
+                    filter=MetadataFilter(metadata_name="butterfly"),
+                    notify=False,
+                ),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_metadata_method_notify_true(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.metadata("bee").metadata("ant")
+        expected = [
+            create_graph(
+                FilteredTraitObserver(
+                    filter=MetadataFilter(metadata_name="bee"),
+                    notify=True,
+                ),
+                FilteredTraitObserver(
+                    filter=MetadataFilter(metadata_name="ant"),
+                    notify=True,
+                ),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_metadata_method_notify_false(self):
+        # Test the instance method calls the top-level function correctly.
+        expr = expression.metadata("bee").metadata("ant", notify=False)
+        expected = [
+            create_graph(
+                FilteredTraitObserver(
+                    filter=MetadataFilter(metadata_name="bee"),
+                    notify=True,
+                ),
+                FilteredTraitObserver(
+                    filter=MetadataFilter(metadata_name="ant"),
+                    notify=False,
+                ),
+            ),
+        ]
+        actual = expr._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_call_signatures(self):
+        # Test to help developers keeping the two function signatures in-sync.
+        # Remove this if the two need to divert in the future.
+        top_level = expression.metadata
+        method = expression.Expression().metadata
+        self.assertEqual(
+            inspect.signature(top_level), inspect.signature(method)
+        )
 
 
 class TestExpressionTrait(unittest.TestCase):
