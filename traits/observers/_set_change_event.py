@@ -15,9 +15,11 @@
 class SetChangeEvent:
     """ Event object to represent mutations on a set.
 
+    The interface of this object is provisional as of version 6.1.
+
     Attributes
     ----------
-    trait_set : traits.trait_set_object.TraitSet
+    object : traits.trait_set_object.TraitSet
         The set being mutated.
     removed : set
         Values removed from the set.
@@ -25,15 +27,15 @@ class SetChangeEvent:
         Values added to the set.
     """
 
-    def __init__(self, *, trait_set, removed, added):
-        self.trait_set = trait_set
+    def __init__(self, *, object, removed, added):
+        self.object = object
         self.removed = removed
         self.added = added
 
     def __repr__(self):
         return (
             "{event.__class__.__name__}("
-            "trait_set={event.trait_set!r}, "
+            "object={event.object!r}, "
             "removed={event.removed!r}, "
             "added={event.added!r}"
             ")".format(event=self)
@@ -57,5 +59,5 @@ def set_event_factory(trait_set, removed, added):
     SetChangeEvent
     """
     return SetChangeEvent(
-        trait_set=trait_set, added=added, removed=removed,
+        object=trait_set, added=added, removed=removed,
     )

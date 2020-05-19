@@ -218,7 +218,7 @@ class TestListTraitObserverNotifications(unittest.TestCase):
 
         # then
         ((event, ), _), = handler.call_args_list
-        self.assertEqual(event.trait_list, [1])
+        self.assertIs(event.object, instance.values)
         self.assertEqual(event.added, [1])
         self.assertEqual(event.removed, [])
         self.assertEqual(event.index, 0)
@@ -243,7 +243,7 @@ class TestListTraitObserverNotifications(unittest.TestCase):
 
         # then
         ((event, ), _), = handler.call_args_list
-        self.assertEqual(event.trait_list, [1])
+        self.assertIs(event.object, instance.custom_trait_list)
         self.assertEqual(event.added, [1])
         self.assertEqual(event.removed, [])
         self.assertEqual(event.index, 0)
@@ -280,7 +280,7 @@ class TestListTraitObserverNotifications(unittest.TestCase):
 
         # then
         ((event, ), _), = handler.call_args_list
-        self.assertEqual(event.trait_list, [1])
+        self.assertEqual(event.object, [1])
         self.assertEqual(event.added, [1])
         self.assertEqual(event.removed, [])
         self.assertEqual(event.index, 0)

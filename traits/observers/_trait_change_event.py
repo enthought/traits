@@ -17,6 +17,8 @@
 class TraitChangeEvent:
     """ Emitted when a trait on a HasTraits object is changed.
 
+    The interface of this object is provisional as of version 6.1.
+
     Attributes
     ----------
     object : HasTraits

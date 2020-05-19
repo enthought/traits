@@ -21,14 +21,14 @@ class TestSetChangeEvent(unittest.TestCase):
 
     def test_set_change_event_repr(self):
         event = SetChangeEvent(
-            trait_set=set(),
+            object=set(),
             added={1},
             removed={3},
         )
         actual = repr(event)
         self.assertEqual(
             actual,
-            "SetChangeEvent(trait_set=set(), removed={3}, added={1})",
+            "SetChangeEvent(object=set(), removed={3}, added={1})",
         )
 
 
@@ -53,6 +53,7 @@ class TestSetEventFactory(unittest.TestCase):
 
         # then
         event, = events
+        self.assertIs(event.object, trait_set)
         self.assertEqual(event.added, {4})
         self.assertEqual(event.removed, set())
 
