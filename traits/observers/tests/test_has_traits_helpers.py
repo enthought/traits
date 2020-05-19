@@ -180,9 +180,8 @@ class TestHasTraitsHelpersWarning(unittest.TestCase):
                 )
 
     def test_union_equality_comparison_mode_prevent_change_event(self):
-        # Justification for the warning: If the comparison mode is equality,
-        # one cannot observe mutations after reassigning an equal but new
-        # object.
+        # Justification for the warning: Reassess if the warning is still
+        # needed if this test fails.
         instance = ObjectWithEqualityComparisonMode()
         instance.container_in_union = {1}
         handler = mock.Mock()
@@ -207,9 +206,8 @@ class TestHasTraitsHelpersWarning(unittest.TestCase):
         self.assertEqual(handler.call_count, 0)
 
     def test_list_equality_comparison_mode_prevent_change_event(self):
-        # Justification for the warning: If the comparison mode is equality,
-        # one cannot observe mutations after reassigning an equal but new list
-        # object.
+        # Justification for the warning: Reassess if the warning is still
+        # needed if this test fails.
         instance = ObjectWithEqualityComparisonMode()
         instance.list_values = [1]
         handler = mock.Mock()
@@ -234,9 +232,8 @@ class TestHasTraitsHelpersWarning(unittest.TestCase):
         self.assertEqual(handler.call_count, 0)
 
     def test_dict_equality_comparison_mode_prevent_change_event(self):
-        # Justification for the warning: If the comparison mode is equality,
-        # one cannot observe mutations after reassigning an equal but new dict
-        # object.
+        # Justification for the warning: Reassess if the warning is still
+        # needed if this test fails.
         instance = ObjectWithEqualityComparisonMode()
         instance.dict_values = {"1": 1}
         handler = mock.Mock()
@@ -261,9 +258,8 @@ class TestHasTraitsHelpersWarning(unittest.TestCase):
         self.assertEqual(handler.call_count, 0)
 
     def test_set_equality_comparison_mode_prevent_change_event(self):
-        # Justification for the warning: If the comparison mode is equality,
-        # one cannot observe mutations after reassigning an equal but new set
-        # object.
+        # Justification for the warning: Reassess if the warning is still
+        # needed if this test fails.
         instance = ObjectWithEqualityComparisonMode()
         instance.set_values = {1}
         handler = mock.Mock()
