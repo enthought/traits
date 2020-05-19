@@ -727,11 +727,10 @@ has_traits_init(PyObject *obj, PyObject *args, PyObject *kwds)
         (PyMapping_Size(PyDict_GetItem(Py_TYPE(obj)->tp_dict, listener_traits))
          > 0);
     if (has_listeners) {
-        value = PyObject_CallMethod(obj, "_init_trait_listeners", "()");
+        value = PyObject_CallMethod(obj, "_init_trait_listeners", NULL);
         if (value == NULL) {
             return -1;
         }
-
         Py_DECREF(value);
     }
 
@@ -748,20 +747,18 @@ has_traits_init(PyObject *obj, PyObject *args, PyObject *kwds)
     /* Make sure all post constructor argument assignment listeners have been
        set up: */
     if (has_listeners) {
-        value = PyObject_CallMethod(obj, "_post_init_trait_listeners", "()");
+        value = PyObject_CallMethod(obj, "_post_init_trait_listeners", NULL);
         if (value == NULL) {
             return -1;
         }
-
         Py_DECREF(value);
     }
 
     /* Call the 'traits_init' method to finish up initialization: */
-    value = PyObject_CallMethod(obj, "traits_init", "()");
+    value = PyObject_CallMethod(obj, "traits_init", NULL);
     if (value == NULL) {
         return -1;
     }
-
     Py_DECREF(value);
 
     /* Indicate that the object has finished being initialized: */
