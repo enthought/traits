@@ -42,10 +42,6 @@ class TestMetadataFilter(unittest.TestCase):
         metadata_filter = MetadataFilter(
             metadata_name="name",
         )
-        self.assertTrue(
-            metadata_filter("name", Int(name=True).as_ctrait()),
-            "Expected the filter to return true"
-        )
         self.assertFalse(
             metadata_filter("name", Int(name=None).as_ctrait()),
             "Expected the filter to return false"
