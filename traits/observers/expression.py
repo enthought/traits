@@ -119,7 +119,7 @@ class Expression:
         Events emitted (if any) will be instances of
         :class:`~traits.observers.events.ListChangeEvent`.
 
-        e.g. ``trait("containers").list_items()`` for observing to mutations
+        e.g. ``trait("containers").list_items()`` for observing mutations
         to a list named ``containers``.
 
         e.g. ``trait("containers").list_items().trait("value")`` for observing
@@ -320,7 +320,7 @@ def list_items(notify=True, optional=False):
     Events emitted (if any) will be instances of
     :class:`~traits.observers.events.ListChangeEvent`.
 
-    e.g. ``trait("containers").list_items()`` for observing to mutations
+    e.g. ``trait("containers").list_items()`` for observing mutations
     to a list named ``containers``.
 
     e.g. ``trait("containers").list_items().trait("value")`` for observing
