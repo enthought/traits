@@ -15,7 +15,7 @@ from traits.trait_types import _NoneTrait
 
 
 class A(HasTraits):
-    none_atr = _NoneTrait(default=None)
+    none_atr = _NoneTrait(default_value=None)
 
 
 class TestCaseNoneTrait(unittest.TestCase):
@@ -30,7 +30,7 @@ class TestCaseNoneTrait(unittest.TestCase):
     def test_default_value_not_none(self):
         with self.assertRaises(ValueError):
             class TestClass(HasTraits):
-                none_trait = _NoneTrait(default=[])
+                none_trait = _NoneTrait(default_value=[])
 
 
 if __name__ == '__main__':

@@ -3823,7 +3823,7 @@ class _NoneTrait(TraitType):
     default_value_type = DefaultValue.constant
 
     def __init__(self, **metadata):
-        default_value = metadata.pop("default", None)
+        default_value = metadata.pop("default_value", None)
         if default_value is not None:
             raise ValueError("Cannot set default value {} "
                              "for _NoneTrait".format(default_value))
@@ -3858,9 +3858,17 @@ class Union(TraitType):
 
             self.list_ctrait_instances.append(ctrait_instance)
 
+        # ``Either`` uses 'default' for defining static default values.
+        # Raise if 'default' is found in order to help code migrate to Union
+        if "default" in metadata:
+            raise ValueError(
+                "Union default value should be set via 'default_value', not "
+                "'default'."
+            )
+
         default_value = None
-        if 'default' in metadata:
-            default_value = metadata.pop("default")
+        if 'default_value' in metadata:
+            default_value = metadata.pop("default_value")
         elif self.list_ctrait_instances:
             default_value = self.list_ctrait_instances[0].default
 
