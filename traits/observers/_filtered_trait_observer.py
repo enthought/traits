@@ -14,7 +14,9 @@ from traits.observers._has_traits_helpers import (
 )
 from traits.observers._i_observer import IObserver
 from traits.observers._observer_change_notifier import ObserverChangeNotifier
+from traits.observers._observer_graph import ObserverGraph
 from traits.observers._trait_change_event import trait_event_factory
+from traits.observers._trait_added_observer import TraitAddedObserver
 from traits.observers._trait_event_notifier import TraitEventNotifier
 from traits.trait_base import Uninitialized
 
@@ -163,7 +165,10 @@ class FilteredTraitObserver:
         ------
         ObserverGraph
         """
-        # This will yield a new ObserverGraph with an observer specialized in
-        # observing trait_added event.
-        # enthought/traits#1077
-        yield from ()
+        yield ObserverGraph(
+            node=TraitAddedObserver(
+                match_func=self.filter,
+                optional=False,
+            ),
+            children=[graph],
+        )
