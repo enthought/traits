@@ -28,6 +28,17 @@ class CustomStrType(TraitType):
 
 
 class TestCaseEnumTrait(unittest.TestCase):
+
+    def test_union_incompatible_trait(self):
+        with self.assertRaises(ValueError) as exception_context:
+            Union(Str(), "none")
+
+        self.assertEqual(
+            str(exception_context.exception),
+            "Union trait declaration expects a trait type or an instance of "
+            "trait type or None, but got 'none' instead"
+        )
+
     def test_list_trait_types(self):
         class TestClass(HasTraits):
             int_or_str_type = Union(Type, Int, Str)
@@ -85,7 +96,10 @@ class TestCaseEnumTrait(unittest.TestCase):
         self.assertEqual(TestClass().atr, 3)
 
         class TestClass(HasTraits):
-            atr = Union(Int(3), Float(4.1), Str("Something"), default="XYZ")
+            atr = Union(
+                Int(3), Float(4.1), Str("Something"),
+                default_value="XYZ",
+            )
 
         self.assertEqual(TestClass().atr, "XYZ")
 
@@ -98,6 +112,20 @@ class TestCaseEnumTrait(unittest.TestCase):
             atr = Union(None)
 
         self.assertEqual(TestClass().atr, None)
+
+    def test_default_raise_error(self):
+        # If 'default' is defined, it could be caused by migration from
+        # ``Either``. Raise an error to aid migrations from ``Either``
+        # to ``Union``
+
+        with self.assertRaises(ValueError) as exception_context:
+            Union(Int(), Float(), default=1.0)
+
+        self.assertEqual(
+            str(exception_context.exception),
+            "Union default value should be set via 'default_value', not "
+            "'default'."
+        )
 
     def test_inner_traits(self):
         class TestClass(HasTraits):

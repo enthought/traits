@@ -727,13 +727,19 @@ has_traits_init(PyObject *obj, PyObject *args, PyObject *kwds)
         (PyMapping_Size(PyDict_GetItem(Py_TYPE(obj)->tp_dict, listener_traits))
          > 0);
     if (has_listeners) {
-        value = PyObject_CallMethod(obj, "_init_trait_listeners", "()");
+        value = PyObject_CallMethod(obj, "_init_trait_listeners", NULL);
         if (value == NULL) {
             return -1;
         }
-
         Py_DECREF(value);
     }
+
+    /* Make sure all of the object's observers have been set up: */
+    value = PyObject_CallMethod(obj, "_init_trait_observers", NULL);
+    if (value == NULL) {
+        return -1;
+    }
+    Py_DECREF(value);
 
     /* Set any traits specified in the constructor: */
     if (kwds != NULL) {
@@ -748,20 +754,26 @@ has_traits_init(PyObject *obj, PyObject *args, PyObject *kwds)
     /* Make sure all post constructor argument assignment listeners have been
        set up: */
     if (has_listeners) {
-        value = PyObject_CallMethod(obj, "_post_init_trait_listeners", "()");
+        value = PyObject_CallMethod(obj, "_post_init_trait_listeners", NULL);
         if (value == NULL) {
             return -1;
         }
-
         Py_DECREF(value);
     }
 
-    /* Call the 'traits_init' method to finish up initialization: */
-    value = PyObject_CallMethod(obj, "traits_init", "()");
+    /* Make sure all post constructor argument assignment observers have been
+       set up: */
+    value = PyObject_CallMethod(obj, "_post_init_trait_observers", NULL);
     if (value == NULL) {
         return -1;
     }
+    Py_DECREF(value);
 
+    /* Call the 'traits_init' method to finish up initialization: */
+    value = PyObject_CallMethod(obj, "traits_init", NULL);
+    if (value == NULL) {
+        return -1;
+    }
     Py_DECREF(value);
 
     /* Indicate that the object has finished being initialized: */
@@ -1816,8 +1828,17 @@ default_value_for(trait_object *trait, has_traits_object *obj, PyObject *name)
             Py_DECREF(tuple);
             if ((result != NULL) && (trait->validate != NULL)) {
                 value = trait->validate(trait, obj, name, result);
-                Py_DECREF(result);
-                return value;
+                if (trait->flags & TRAIT_SETATTR_ORIGINAL_VALUE) {
+                    if (value == NULL) {
+                        Py_DECREF(result);
+                        return NULL;
+                    }
+                    return result;
+                }
+                else {
+                    Py_DECREF(result);
+                    return value;
+                }
             }
             break;
         case TRAIT_SET_OBJECT_DEFAULT_VALUE:

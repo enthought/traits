@@ -27,6 +27,7 @@ from .adaptation.adaptation_error import AdaptationError
 from .constants import DefaultValue, TraitKind
 from .ctrait import CTrait, __newobj__
 from .ctraits import CHasTraits
+from .observers import api as observe_api
 from .traits import (
     ForwardProperty,
     Property,
@@ -41,6 +42,7 @@ from .trait_notifiers import (
     StaticAnyTraitChangeNotifyWrapper,
     StaticTraitChangeNotifyWrapper,
     TraitChangeNotifyWrapper,
+    ui_dispatch,
 )
 from .trait_base import (
     SequenceTypes,
@@ -95,6 +97,7 @@ BaseTraits = "__base_traits__"
 ClassTraits = "__class_traits__"
 PrefixTraits = "__prefix_traits__"
 ListenerTraits = "__listener_traits__"
+ObserverTraits = "__observer_traits__"
 ViewTraits = "__view_traits__"
 InstanceTraits = "__instance_traits__"
 
@@ -115,6 +118,12 @@ extended_trait_pat = re.compile(r".*[ :\+\-,\.\*\?\[\]]")
 
 # Generic 'Any' trait:
 any_trait = Any().as_ctrait()
+
+# Mapping from user-facing strings to the dispatcher callable in observe.
+_ObserverDispatchers = {
+    "same": observe_api.dispatch_same,
+    "ui": ui_dispatch,
+}
 
 
 def _clone_trait(clone, metadata=None):
@@ -385,6 +394,11 @@ def update_traits_class_dict(class_name, bases, class_dict):
     prefix_list = []
     view_elements = {}
 
+    # Mapping from method names to list(dict)
+    # where each nested dict provides the input arguments for calling
+    # ``HasTraits.observe`` once. See ``_init_trait_observers``.`
+    observers = {}
+
     # Create a list of just those base classes that derive from HasTraits:
     hastraits_bases = [
         base for base in bases if base.__dict__.get(ClassTraits) is not None
@@ -443,7 +457,9 @@ def update_traits_class_dict(class_name, bases, class_dict):
                             class_traits[name + "_items"] = items_trait
 
                         if handler.is_mapped:
-                            class_traits[name + "_"] = mapped_trait_for(value)
+                            class_traits[name + "_"] = mapped_trait_for(
+                                value, name
+                            )
 
                 elif value_type == "delegate":
                     # Only add a listener if the trait.listenable metadata
@@ -468,6 +484,11 @@ def update_traits_class_dict(class_name, bases, class_dict):
             pattern = getattr(value, "on_trait_change", None)
             if pattern is not None:
                 listeners[name] = ("method", pattern)
+
+            observer_states = getattr(value, "_observe_inputs", None)
+            if observer_states is not None:
+                stack = observers.setdefault(name, [])
+                stack.extend(observer_states)
 
         elif isinstance(value, property):
             class_traits[name] = generic_trait
@@ -498,12 +519,14 @@ def update_traits_class_dict(class_name, bases, class_dict):
                     class_traits[name] = value = ictrait(default_value)
                     # Make sure that the trait now has the default value
                     # has the correct initializer.
-                    value.set_default_value(
-                        DefaultValue.missing, value.default)
+                    if value.setattr_original_value:
+                        # Set the original, non validated value
+                        value.set_default_value(
+                            DefaultValue.missing, default_value)
+                    else:
+                        value.set_default_value(
+                            DefaultValue.missing, value.default)
                     del class_dict[name]
-                    handler = value.handler
-                    if (handler is not None) and handler.is_mapped:
-                        class_traits[name + "_"] = mapped_trait_for(value)
                     break
 
     # Process all HasTraits base classes:
@@ -515,6 +538,12 @@ def update_traits_class_dict(class_name, bases, class_dict):
         for name, value in base_dict.get(ListenerTraits).items():
             if (name not in class_traits) and (name not in class_dict):
                 listeners[name] = value
+
+        # Merge observer information:
+        for name, states in base_dict[ObserverTraits].items():
+            if name not in class_traits and name not in class_dict:
+                stack = observers.setdefault(name, [])
+                stack.extend(states)
 
         # Merge base traits:
         for name, value in base_dict.get(BaseTraits).items():
@@ -657,6 +686,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
     class_dict[InstanceTraits] = instance_traits
     class_dict[PrefixTraits] = prefix_traits
     class_dict[ListenerTraits] = listeners
+    class_dict[ObserverTraits] = observers
     class_dict[ViewTraits] = view_elements
 
 
@@ -682,6 +712,83 @@ def migrate_property(name, property, property_info, class_dict):
 
 # 'HasTraits' decorators
 
+def observe(expression, *, post_init=False, dispatch="same"):
+    """ Marks the wrapped method as being a handler to be called when the
+    specified traits change.
+
+    This decorator can be stacked, e.g.::
+
+        @observe("attr1")
+        @observe("attr2", post_init=True)
+        def updated(self, event):
+            ...
+
+    The decorated function must accept one argument which is the event object
+    representing the change. See :py:mod:`traits.observers.events` for details.
+
+    Parameters
+    ----------
+    expression : str or list or ObserverExpression
+        A description of what traits are being observed.
+        If this is a list, each item must be a string or Expression.
+        See :py:func:`HasTraits.observe` for details on the
+        semantics when passing a string.
+    post_init : boolean, optional
+        Whether the change handler should be attached after
+        the state is set when instantiating an object. Default is false, and
+        values provided to the instance constructor will trigger the
+        change handler to fire if the value is different from the
+        default. Set to true to avoid this change event.
+    dispatch : str, optional
+        A string indicating how the handler should be run. Default is to run
+        it on the same thread where the change occurs.
+        Possible values are:
+
+        =========== =======================================================
+        value       dispatch
+        =========== =======================================================
+        ``same``    Run notifications on the same thread where the change
+                    occurs. The notifications are executed immediately.
+        ``ui``      Run notifications on the UI thread. If the current
+                    thread is the UI thread, the notifications are executed
+                    immediately; otherwise, they are placed on the UI
+                    event queue.
+        =========== =======================================================
+
+    See Also
+    --------
+    HasTraits.observe
+    """
+
+    def observe_decorator(handler):
+        """ Create input arguments for HasTraits.observe and attach the input
+        to the callable.
+
+        The metaclass will then collect this information for calling
+        HasTraits.observe with the decorated function.
+
+        Parameters
+        ----------
+        handler : callable
+            Method of a subclass of HasTraits
+        """
+        try:
+            observe_inputs = handler._observe_inputs
+        except AttributeError:
+            observe_inputs = []
+            handler._observe_inputs = observe_inputs
+
+        observe_input = dict(
+            expression=expression,
+            dispatch=dispatch,
+            post_init=post_init,
+        )
+        observe_inputs.append(observe_input)
+
+        return handler
+    return observe_decorator
+
+
 def on_trait_change(name, post_init=False, dispatch="same"):
     """ Marks the following method definition as being a handler for the
         extended trait change specified by *name(s)*.
@@ -696,6 +803,10 @@ def on_trait_change(name, post_init=False, dispatch="same"):
         becomes effective after all object constructor arguments have been
         processed. That is, trait values assigned as part of object
         construction will not cause the handler to be invoked.
+
+        See Also
+        --------
+        observe : A newer API for defining traits notifications.
     """
 
     def decorator(function):
@@ -1001,7 +1112,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             if handler.has_items:
                 cls.add_class_trait(name + "_items", handler.items_event())
             if handler.is_mapped:
-                cls.add_class_trait(name + "_", mapped_trait_for(trait))
+                cls.add_class_trait(name + "_", mapped_trait_for(trait, name))
 
         # Make the new trait inheritable (if allowed):
         if trait.is_base is not False:
@@ -1159,8 +1270,10 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         else:
             # Otherwise, apply the Traits 3.0 restore logic:
             self._init_trait_listeners()
+            self._init_trait_observers()
             self.trait_set(trait_change_notify=trait_change_notify, **state)
             self._post_init_trait_listeners()
+            self._post_init_trait_observers()
             self.traits_init()
 
         self._trait_set_inited()
@@ -1479,8 +1592,10 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         new = self.__new__(self.__class__)
         memo[id(self)] = new
         new._init_trait_listeners()
+        new._init_trait_observers()
         new.copy_traits(self, traits, memo, copy, **metadata)
         new._post_init_trait_listeners()
+        new._post_init_trait_observers()
         new.traits_init()
         new._trait_set_inited()
 
@@ -2053,6 +2168,93 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             else:
                 notifiers.append(wrapper)
 
+    def observe(self, handler, expression, *, remove=False, dispatch="same"):
+        """ Causes the object to invoke a handler whenever a trait attribute
+        matching a specified pattern is modified, or removes the association.
+
+        The *expression* parameter can be a single string or an Expression
+        object. A list of expressions is also accepted.
+
+        When *expression* is a string, its content should follow Traits Mini
+        Language semantics:
+
+        ============================== ======================================
+        Expression                       Meaning
+        ============================== ======================================
+        ``item1.item2``                Observes trait *item2* on the object
+                                       under trait *item1*.
+                                       Changes to either *item1* or *item2*
+                                       cause a notification to be fired.
+        ``item1:item2``                Similar to the above, except changes
+                                       to *item1* will not fire events
+                                       (the ':' indicates no notifications).
+        ``[item1, item2, ..., itemN]`` A list which matches any of the
+                                       specified items. Each item can itself
+                                       be an expression.
+        ``items``                      Special keyword for observing a trait
+                                       named *items* or items inside a list /
+                                       dict / set.
+        ``+metadata_name``             Matches any trait on the object having
+                                       *metadata_name* metadata.
+        ============================== ======================================
+
+        All spaces will be ignored.
+
+        The :py:class:`ObserverExpression` object supports
+        the above features and more.
+
+        Parameters
+        ----------
+        handler : callable(event)
+            A callable that will be invoked when the observed trait changes.
+            It must accept one argument, which is an event object providing
+            information about the change.
+            See :py:mod:`traits.observers.events` for details.
+        expression : str or list or ObserverExpression
+            A description of what traits are being observed.
+            If this is a list, each item must be a string or an Expression.
+        remove : boolean, optional
+            Whether to remove the event handler. Default is to add the event
+            handler.
+        dispatch : str, optional
+            A string indicating how the handler should be run.
+            Default is to run on the same thread where the change occurs.
+
+            Possible values are:
+
+            =========== =======================================================
+            value       dispatch
+            =========== =======================================================
+            ``same``    Run notifications on the same thread where the change
+                        occurs. The notifications are executed immediately.
+            ``ui``      Run notifications on the UI thread. If the current
+                        thread is the UI thread, the notifications are executed
+                        immediately; otherwise, they are placed on the UI
+                        event queue.
+            =========== =======================================================
+
+        """
+        # Handle the overloaded signature.
+        # Support list to be consistent with on_trait_change.
+        if isinstance(expression, list):
+            expressions = expression
+        else:
+            expressions = [expression]
+
+        expressions = [
+            observe_api.parse(expr) if isinstance(expr, str) else expr
+            for expr in expressions
+        ]
+
+        for expr in expressions:
+            observe_api.observe(
+                object=self,
+                expression=expr,
+                handler=handler,
+                remove=remove,
+                dispatcher=_ObserverDispatchers[dispatch],
+            )
+
     def on_trait_change(
         self,
         handler,
@@ -2267,6 +2469,9 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             ``new``     Run notifications in a new thread.
             =========== =======================================================
 
+        See Also
+        --------
+        HasTraits.observe : A newer API for defining traits notifications.
         """
         # Check to see if we can do a quick exit to the basic trait change
         # handler:
@@ -2517,7 +2722,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             if handler.has_items:
                 self.add_trait(name + "_items", handler.items_event())
             if handler.is_mapped:
-                self.add_trait(name + "_", mapped_trait_for(trait))
+                self.add_trait(name + "_", mapped_trait_for(trait, name))
 
         # See if there already is a class or instance trait with the same name:
         old_trait = self._trait(name, 0)
@@ -3092,6 +3297,30 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             self._init_trait_delegate_listener(
                 name, 0, self.__class__.__listener_traits__[name][1]
             )
+
+    def _init_trait_observers(self):
+        """ Initialize observers prior to setting object state.
+        """
+        for name, states in self.__class__.__observer_traits__.items():
+            for state in states:
+                if not state["post_init"]:
+                    self.observe(
+                        expression=state["expression"],
+                        handler=getattr(self, name),
+                        dispatch=state["dispatch"],
+                    )
+
+    def _post_init_trait_observers(self):
+        """ Initialize observers after setting object state.
+        """
+        for name, states in self.__class__.__observer_traits__.items():
+            for state in states:
+                if state["post_init"]:
+                    self.observe(
+                        expression=state["expression"],
+                        handler=getattr(self, name),
+                        dispatch=state["dispatch"],
+                    )
 
     def _trait_delegate_name(self, name, pattern):
         """ Returns the fully-formed 'on_trait_change' name for a specified

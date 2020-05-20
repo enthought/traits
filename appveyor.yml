@@ -20,11 +20,8 @@ install:
   - install-edm-windows.cmd
   - edm install -y wheel click coverage
   - edm run -- python etstool.py install --runtime=%runtime%
+
 test_script:
   - edm run -- python etstool.py flake8 --runtime=%runtime%
   - edm run -- python etstool.py test --runtime=%runtime%
   - edm run -- python etstool.py docs --runtime=%runtime%
-on_success:
-  - edm run -- coverage combine
-  - edm run -- pip install codecov
-  - edm run -- codecov

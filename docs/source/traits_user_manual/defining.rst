@@ -367,6 +367,9 @@ the table.
 | Type             | Type( [*value* = None, *klass* = None, *allow_none* =    |
 |                  | True, \*\*\ *metadata*] )                                |
 +------------------+----------------------------------------------------------+
+| Union            | Union( *val1*\ [, *val2*, ..., *valN*,                   |
+|                  | \*\*\ *metadata*] )                                      |
++------------------+----------------------------------------------------------+
 | UUID [3]_        | UUID( [\*\*\ *metadata*] )                               |
 +------------------+----------------------------------------------------------+
 | ValidatedTuple   | ValidatedTuple( [\*\ *traits*, *fvalidate* = None,       |
@@ -651,6 +654,9 @@ The following example illustrates the difference between `Either` and `Union`::
     ...     primes = Union([2], None, {'3':6}, 5, 7, 11)
     ValueError: Union trait declaration expects a trait type or an instance of trait type or None, but got [2] instead
 
+Note that static default values are defined on Union via the
+**default_value** attribute, whereas Either uses the **default** attribute.
+The naming of **default_value** is consistent with other trait types.
 
 .. index:: multiple values, defining trait with
 
