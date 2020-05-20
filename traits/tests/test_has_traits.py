@@ -29,7 +29,7 @@ from traits.has_traits import (
 )
 from traits.ctrait import CTrait
 from traits.observation.api import trait
-from traits.observation._exception_handling import (
+from traits.observation.exception_handling import (
     pop_exception_handler,
     push_exception_handler,
 )

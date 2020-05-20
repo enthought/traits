@@ -14,7 +14,7 @@ import io
 import unittest
 from unittest import mock
 
-from traits.observation._exception_handling import (
+from traits.observation.exception_handling import (
     ObserverExceptionHandlerStack,
 )
 

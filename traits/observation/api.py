@@ -8,6 +8,11 @@
 #
 # Thanks for using Enthought open source!
 
+from traits.observation.exception_handling import (     # noqa: F401
+    pop_exception_handler,
+    push_exception_handler,
+)
+
 from traits.observation.expression import (   # noqa: F401
     dict_items,
     list_items,
