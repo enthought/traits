@@ -60,7 +60,7 @@ def warn_comparison_mode(object, name):
 
     if (not ctrait.is_property
             and has_container_trait(ctrait)
-            and ctrait.comparison_mode > ComparisonMode.identity):
+            and ctrait.comparison_mode == ComparisonMode.equality):
         warnings.warn(
             "Trait {name!r} (trait type: {trait_type}) on class {class_name} "
             "is defined with comparison_mode={current_mode!r}. "
