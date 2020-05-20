@@ -37,7 +37,7 @@ def observe(
     ----------
     object : object
         An object to be observed. Usually an instance of ``HasTraits``.
-    expression : traits.observers.expressions.Expression
+    expression : ObserverExpression
         An object describing what traits are being observed.
     handler : callable(event)
         User-defined callable to handle change events.

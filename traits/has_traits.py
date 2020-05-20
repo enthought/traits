@@ -728,7 +728,7 @@ def observe(expression, *, post_init=False, dispatch="same"):
 
     Parameters
     ----------
-    expression : str or list or traits.observers.expression.Expression
+    expression : str or list or ObserverExpression
         A description of what traits are being observed.
         If this is a list, each item must be a string or Expression.
         See :py:func:`HasTraits.observe` for details on the
@@ -2200,7 +2200,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         All spaces will be ignored.
 
-        The :py:class:`traits.observers.expression.Expression` object supports
+        The :py:class:`ObserverExpression` object supports
         the above features and more.
 
         Parameters
@@ -2210,7 +2210,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             It must accept one argument, which is an event object providing
             information about the change.
             See :py:mod:`traits.observers.events` for details.
-        expression : str or list or traits.observers.expression.Expression
+        expression : str or list or ObserverExpression
             A description of what traits are being observed.
             If this is a list, each item must be a string or an Expression.
         remove : boolean, optional

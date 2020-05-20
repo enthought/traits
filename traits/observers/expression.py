@@ -32,22 +32,22 @@ from traits.observers._set_item_observer import (
     SetItemObserver as _SetItemObserver,
 )
 
-# Expression is a public user interface for constructing ObserverGraph.
+# ObserverExpression is a public user interface for constructing ObserverGraph.
 
 
-class Expression:
+class ObserverExpression:
     """
-    Expression is an object for describing what traits are being observed
-    for change notifications. It can be passed directly to
+    ObserverExpression is an object for describing what traits are being
+    observed for change notifications. It can be passed directly to
     ``HasTraits.observe`` method or the ``observe`` decorator.
 
-    An Expression is typically created using one of the top-level functions
-    provided in this module, e.g. ``trait``.
+    An ObserverExpression is typically created using one of the top-level
+    functions provided in this module, e.g. ``trait``.
     """
 
     def __eq__(self, other):
-        """ Return true if the other value is an Expression with equivalent
-        content.
+        """ Return true if the other value is an ObserverExpression with
+        equivalent content.
 
         Returns
         -------
@@ -66,13 +66,13 @@ class Expression:
 
         Parameters
         ----------
-        expression : traits.observers.expression.Expression
+        expression : ObserverExpression
 
         Returns
         -------
-        new_expression : traits.observers.expression.Expression
+        new_expression : ObserverExpression
         """
-        return ParallelExpression(self, expression)
+        return ParallelObserverExpression(self, expression)
 
     def then(self, expression):
         """ Create a new expression by extending this expression with
@@ -83,13 +83,13 @@ class Expression:
 
         Parameters
         ----------
-        expression : traits.observers.expression.Expression
+        expression : ObserverExpression
 
         Returns
         -------
-        new_expression : traits.observers.expression.Expression
+        new_expression : ObserverExpression
         """
-        return SeriesExpression(self, expression)
+        return SeriesObserverExpression(self, expression)
 
     def match(self, filter, notify=True):
         """ Create a new expression for observing traits using the
@@ -111,7 +111,7 @@ class Expression:
 
         Returns
         -------
-        new_expression : traits.observers.expression.Expression
+        new_expression : ObserverExpression
         """
         return self.then(match(filter=filter, notify=notify))
 
@@ -134,7 +134,7 @@ class Expression:
 
         Returns
         -------
-        new_expression : traits.observers.expression.Expression
+        new_expression : ObserverExpression
         """
         return self.match(
             filter=_MetadataFilter(metadata_name=metadata_name),
@@ -165,7 +165,7 @@ class Expression:
 
         Returns
         -------
-        new_expression : traits.observers.expression.Expression
+        new_expression : ObserverExpression
         """
         return self.then(dict_items(notify=notify, optional=optional))
 
@@ -192,7 +192,7 @@ class Expression:
 
         Returns
         -------
-        new_expression : traits.observers.expression.Expression
+        new_expression : ObserverExpression
         """
         return self.then(list_items(notify=notify, optional=optional))
 
@@ -213,7 +213,7 @@ class Expression:
 
         Returns
         -------
-        new_expression : traits.observers.expression.Expression
+        new_expression : ObserverExpression
         """
         return self.then(set_items(notify=notify, optional=optional))
 
@@ -237,7 +237,7 @@ class Expression:
 
         Returns
         -------
-        new_expression : traits.observers.expression.Expression
+        new_expression : ObserverExpression
         """
         return self.then(trait(name=name, notify=notify, optional=optional))
 
@@ -270,8 +270,8 @@ class Expression:
         raise NotImplementedError("'_create_graphs' must be implemented.")
 
 
-class SingleObserverExpression(Expression):
-    """ Container of Expression for wrapping a single observer.
+class SingleObserverExpression(ObserverExpression):
+    """ Container of ObserverExpression for wrapping a single observer.
     """
 
     def __init__(self, observer):
@@ -283,14 +283,14 @@ class SingleObserverExpression(Expression):
         ]
 
 
-class SeriesExpression(Expression):
-    """ Container of Expression for joining expressions in series.
+class SeriesObserverExpression(ObserverExpression):
+    """ Container of ObserverExpression for joining expressions in series.
 
     Parameters
     ----------
-    first : traits.observers.expression.Expression
+    first : ObserverExpression
         Left expression to be joined in series.
-    second : traits.observers.expression.Expression
+    second : ObserverExpression
         Right expression to be joined in series.
     """
 
@@ -303,14 +303,14 @@ class SeriesExpression(Expression):
         return self._first._create_graphs(branches=branches)
 
 
-class ParallelExpression(Expression):
-    """ Container of Expression for joining expressions in parallel.
+class ParallelObserverExpression(ObserverExpression):
+    """ Container of ObserverExpression for joining expressions in parallel.
 
     Parameters
     ----------
-    left : traits.observers.expression.Expression
+    left : ObserverExpression
         Left expression to be joined in parallel.
-    right : traits.observers.expression.Expression
+    right : ObserverExpression
         Right expression to be joined in parallel.
     """
 
@@ -326,15 +326,15 @@ class ParallelExpression(Expression):
 
 def join_(*expressions):
     """ Convenient function for joining many expressions in series
-    using ``Expression.then``
+    using ``ObserverExpression.then``
 
     Parameters
     ----------
-    *expressions : iterable of traits.observers.expression.Expression
+    *expressions : iterable of ObserverExpression
 
     Returns
     -------
-    new_expression : traits.observers.expression.Expression
+    new_expression : ObserverExpression
         Joined expression.
     """
     return _functools.reduce(lambda e1, e2: e1.then(e2), expressions)
@@ -364,7 +364,7 @@ def dict_items(notify=True, optional=False):
 
     Returns
     -------
-    new_expression : traits.observers.expression.Expression
+    new_expression : ObserverExpression
     """
     observer = _DictItemObserver(notify=notify, optional=optional)
     return SingleObserverExpression(observer)
@@ -393,7 +393,7 @@ def list_items(notify=True, optional=False):
 
     Returns
     -------
-    new_expression : traits.observers.expression.Expression
+    new_expression : ObserverExpression
     """
     observer = _ListItemObserver(notify=notify, optional=optional)
     return SingleObserverExpression(observer)
@@ -419,7 +419,7 @@ def match(filter, notify=True):
 
     Returns
     -------
-    new_expression : traits.observers.expression.Expression
+    new_expression : ObserverExpression
     """
     observer = _FilteredTraitObserver(notify=notify, filter=filter)
     return SingleObserverExpression(observer)
@@ -444,7 +444,7 @@ def metadata(metadata_name, notify=True):
 
     Returns
     -------
-    new_expression : traits.observers.expression.Expression
+    new_expression : ObserverExpression
     """
     return match(
         filter=_MetadataFilter(metadata_name=metadata_name),
@@ -469,7 +469,7 @@ def set_items(notify=True, optional=False):
 
     Returns
     -------
-    new_expression : traits.observers.expression.Expression
+    new_expression : ObserverExpression
     """
     observer = _SetItemObserver(notify=notify, optional=optional)
     return SingleObserverExpression(observer)
@@ -495,7 +495,7 @@ def trait(name, notify=True, optional=False):
 
     Returns
     -------
-    new_expression : traits.observers.expression.Expression
+    new_expression : ObserverExpression
     """
     observer = _NamedTraitObserver(
         name=name, notify=notify, optional=optional)
