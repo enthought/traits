@@ -37,17 +37,17 @@ from traits.observers._set_item_observer import (
 
 class ObserverExpression:
     """
-    ObserverExpression is an object for describing what traits are being observed
-    for change notifications. It can be passed directly to
+    ObserverExpression is an object for describing what traits are being
+    observed for change notifications. It can be passed directly to
     ``HasTraits.observe`` method or the ``observe`` decorator.
 
-    An ObserverExpression is typically created using one of the top-level functions
-    provided in this module, e.g. ``trait``.
+    An ObserverExpression is typically created using one of the top-level
+    functions provided in this module, e.g. ``trait``.
     """
 
     def __eq__(self, other):
-        """ Return true if the other value is an ObserverExpression with equivalent
-        content.
+        """ Return true if the other value is an ObserverExpression with
+        equivalent content.
 
         Returns
         -------
