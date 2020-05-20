@@ -24,8 +24,8 @@ signature:
    Mark an instance method of |HasTraits| as the handler being called
    when the specified trait change occurs.
 
-   :param expression: A description of the traits are being observed.
-   :type expression: str or list of str or |Expression|
+   :param expression: A description of the traits are being observed. See :ref:`observe-expression` for details.
+   :type expression: str or list of str or |ObserverExpression|
    :param bool post_init: Whether the change handler is added after the
     initial object state is set.
    :param str dispatch: A string dedicating how the handler should be run.
@@ -55,10 +55,10 @@ instance basis. The method has the following signature:
 
    Add or remove change handler to be fired when one or many traits change.
 
-   :param handler: The callable to be called when a change occurs. It will receive an event object as its single argument and shoul not raise any exceptions.
+   :param handler: The callable to be called when a change occurs. See :ref:`observe-handler` for details.
    :type handler: callable(object)
-   :param expression: A description of the traits are being observed.
-   :type expression: str or list of str or |Expression|
+   :param expression: A description of the traits are being observed. See :ref:`observe-expression` for details.
+   :type expression: str or list of str or |ObserverExpression|
    :param bool remove: If true, remove the change handler for the given expression.
    :param str dispatch: A string dedicating how the handler should be run.
 
@@ -67,12 +67,7 @@ Example:
 .. literalinclude:: /../../examples/tutorials/doc_examples/examples/observe_method.py
    :start-after: observe_method
 
-See :ref:`observer-expression` for further information on the ``expression``
-parameter.
-See :ref:`observe-handler-signatures` for further information on the signature
-of the notification handler.
-
-.. _observer-expression:
+.. _observe-expression:
 
 The *expression* Parameter
 --------------------------
@@ -82,111 +77,16 @@ attributes on nested objects and containers.
 
 There are two approaches for creating an expression:
 
-* Expressions as objects
-* Text using Traits domain specific language
+* :ref:`observe-mini-language`
+* :ref:`observe-expression-object`
 
-Expressions as objects
-``````````````````````
+.. _observe-mini-language:
 
-|Expression| objects can be composed programmatically and be given to
-|@observe|. These objects allow more fine grained control on how traits are
-observed than a text description can do. Users will typically use the following
-functions for constructing an expression. These functions can be imported from
-**traits.observers.api**:
-
-.. list-table::
-   :widths: 15 25
-   :header-rows: 1
-
-   * - Function
-     - Purpose
-   * - |Expression.trait|
-     - For observing a specific named trait.
-   * - |Expression.metadata|
-     - For observing multiple traits with a specific metadata. Support further
-       filtering on the metadata value.
-   * - |Expression.dict_items|
-     - For observing items in a dict.
-   * - |Expression.list_items|
-     - For observing items in a list.
-   * - |Expression.set_items|
-     - For observing items in a set.
-   * - |Expression.filter_|
-     - For observing traits satisfying a user-defined filter.
-   * - |Expression.parse|
-     - For parsing a string written in Traits domain specific language into an
-       expression object.
-
-Users can combine complex expressions using the functions |Expression.then|,
-|Expression.join_| or Python's bitwise-or (`|`) operation.
-
-Most of these functions will have a ``notify`` argument for setting whether
-notifications should be fired for changes.
-
-.. rubric:: Example expressions
-
-.. list-table::
-   :widths: 15 25
-   :header-rows: 1
-
-   * - Expression
-     - Meaning
-   * - *trait("attr1")*
-     - Matches a trait named *attr1* on an object and notifies for changes.
-   * - *trait("attr1", optional=True)*
-     - Matches a trait named *attr1* if it is defined. Ignore if it is not
-       defined.
-   * - *trait("attr1", notify=False).trait("attr2")*
-     - Matches a trait named *attr2* on an object referenced by a trait named
-       *attr1* on the current object. Changes to *attr2* will trigger
-       notifications, while changes to *attr1* do not.
-   * - *trait("foo").list_items().list_items().trait("value")*
-     - Matches the *value* trait on an item of a nested list in another list
-       *foo*. Assignment changes to *foo*, mutations to the lists or changes
-       to *value* will trigger notifications.
-   * - *metadata("updated")*
-     - Matches any trait on the current that has a metadata attribute named
-       *updated*. Changes on those traits will trigger notifications.
-   * - *trait("foo") | trait("bar")*
-     - Matches trait named *foo* or *bar* on the current object. Changes on
-       *foo* or *bar* will trigger notifications.
-   * - *trait("foo").then(trait("bar") | trait("baz"))*
-     - Matches *foo.bar* or *foo.baz* on the current object. Changes on *foo*,
-       *foo.bar* or *foo.baz* will trigger notifications.
-   * - *trait("foo").filter_(lambda n, t: True)*
-     - Matches any traits on *foo* on the current object. Changes on *foo* or
-       the nested attributes will trigger notifications.
-
-
-.. rubric:: Describe an expression
-
-Expression can be defined as a standalone object without being attached
-to an instance of |HasTraits|. To understand what an expression means, its
-|Expression.print| method can be used::
-
-    >>> from traits.observers.api import trait
-    >>> trait("children").list_items().trait("age").print()
-    Observes trait named 'children' with notifications,
-        then observes items in a list with notifications,
-            then observes trait named 'age' with notifications.
-
-
-Traits domain specific language
-```````````````````````````````
-Traits domain specific language (Traits DSL) provides a convenient and concise
-way to specify observation rules via a single text. It supports a subset of
-features in |Expression|.
-
-.. rubric:: Syntax
-
-.. productionList::
-    group: item (',' item)*
-    item: term (connector term)*
-    connector: '.' | ':'
-    term: (union_group | simple_term | items_term)
-    union_group: '[' group ']'
-    simple_term: NAME | '+' NAME
-    items_term: 'items'
+Traits Mini Language
+````````````````````
+Traits Mini Language is a domain specific language which provides a convenient
+and concise way to specify observation rules via a single text. It supports
+most of the use cases commonly encountered by users.
 
 .. rubric:: Sementics of Traits DSL
 
@@ -246,45 +146,104 @@ features in |Expression|.
      - Matches *foo.bar* or *foo.baz* on the current object. Changes on *foo*,
        *foo.bar* or *foo.baz* will trigger notifications.
 
-.. rubric:: Parsing the text
 
-Using the |Expression.parse| function, one can extend an expression in text
-with additional features supported by |Expression|. For example::
+.. _observe-expression-object:
 
-    parse("foo.bar").filter_(lambda name, trait: name.startswith("my_"))
+Expressions as objects
+``````````````````````
+
+|ObserverExpression| supports all the use cases supported by the Traits Mini Language
+and beyond. Users can also compose these objects programmatically and supply
+them to |@observe|. These objects typically constructed using the following
+functions from **traits.observation.api**:
+
+.. list-table::
+   :widths: 15 25
+   :header-rows: 1
+
+   * - Function
+     - Purpose
+   * - |trait|
+     - For observing a specific named trait.
+   * - |metadata|
+     - For observing multiple traits with a specific metadata. Support further
+       filtering on the metadata value.
+   * - |dict_items|
+     - For observing items in a dict.
+   * - |list_items|
+     - For observing items in a list.
+   * - |set_items|
+     - For observing items in a set.
+   * - |match|
+     - For observing traits satisfying a user-defined filter.
+   * - |parse|
+     - For parsing a string written in Traits domain specific language into an
+       expression object.
+
+Users can combine complex expressions using |ObserverExpression.then| or
+Python's bitwise-or (`|`) operation.
+
+Most of these functions will have a **notify** argument for setting whether
+notifications should be fired for changes.
+
+.. rubric:: Example expressions
+
+.. list-table::
+   :widths: 15 25
+   :header-rows: 1
+
+   * - Expression
+     - Meaning
+   * - *trait("attr1")*
+     - Matches a trait named *attr1* on an object and notifies for changes.
+   * - *trait("attr1", optional=True)*
+     - Matches a trait named *attr1* if it is defined. Ignore if it is not
+       defined.
+   * - *trait("attr1", notify=False).trait("attr2")*
+     - Matches a trait named *attr2* on an object referenced by a trait named
+       *attr1* on the current object. Changes to *attr2* will trigger
+       notifications, while changes to *attr1* do not.
+   * - *trait("foo").list_items().list_items().trait("value")*
+     - Matches the *value* trait on an item of a nested list in another list
+       *foo*. Assignment changes to *foo*, mutations to the lists or changes
+       to *value* will trigger notifications.
+   * - *metadata("updated")*
+     - Matches any trait on the current that has a metadata attribute named
+       *updated*. Changes on those traits will trigger notifications.
+   * - *trait("foo") | trait("bar")*
+     - Matches trait named *foo* or *bar* on the current object. Changes on
+       *foo* or *bar* will trigger notifications.
+   * - *trait("foo").then(trait("bar") | trait("baz"))*
+     - Matches *foo.bar* or *foo.baz* on the current object. Changes on *foo*,
+       *foo.bar* or *foo.baz* will trigger notifications.
+   * - *trait("foo").match(lambda n, t: True)*
+     - Matches any traits on *foo* on the current object. Changes on *foo* or
+       the nested attributes will trigger notifications.
+
+.. rubric:: Extend an expression in text
+
+Using the |parse| function, one can extend an expression in text
+with additional features supported by |ObserverExpression|. For example::
+
+    parse("foo.bar").match(lambda name, trait: name.startswith("my_"))
 
 will observe traits with a prefix "my\_" on *foo.bar* on the current object.
 
-.. rubric:: Describe an expression
 
-Since |Expression.parse| returns an instance of |Expression|. One can
-use |Expression.print| to inspect the meaning of the text::
+.. _observe-handler:
 
-    >>> from traits.observers.api import parse
-    >>> parse("container.items.value").print()
-    Observes a trait named 'container' with notifications,
-        then optionally observes a trait named 'items' with notifications,
-            then observes a trait named 'value' with notifications.
-        then optionally observes items in a list with notifications,
-            then observes a trait named 'value' with notifications.
-        then optionally observes items in a dict with notifications,
-            then observes a trait named 'value' with notifications.
-        then optionally observes items in a set with notifications,
-            then observes a trait named 'value' with notifications.
+Notification Handler
+--------------------
 
-
-.. _observe-handler-signatures:
-
-Notification Handler Signature
-------------------------------
-
-The handler passed to |@observe| must have the following signature:
+As soon as a change has occurred, the **handler** callable provided will be
+invoked as long as the change is observed for notifications. The handler will
+be given information about the change, and it must have the following
+signature:
 
 - handler(*event*)
 
 where the *event* parameter is an object representing the change observed.
-The type of *event* depends on the context of the change. The handler should
-not raise exceptions. Any unexpected exceptions will be captured and logged.
+The type of *event* depends on the context of the change.
 
 .. rubric:: Change event types
 
@@ -295,13 +254,13 @@ not raise exceptions. Any unexpected exceptions will be captured and logged.
    * - Change
      - Event Object Type
    * - Attribute value
-     - |TraitObserverEvent|
+     - |TraitChangeEvent|
    * - Dict membership
-     - |DictObserverEvent|
+     - |DictChangeEvent|
    * - List membership
-     - |ListObserverEvent|
+     - |ListChangeEvent|
    * - Set membership
-     - |SetObserverEvent|
+     - |SetChangeEvent|
 
 
 The signature of *event* depends on the change type. This means if the handler
@@ -312,6 +271,15 @@ The following example shows the first option:
 
 .. literalinclude:: /../../examples/tutorials/doc_examples/examples/observe_different_events.py
    :start-after: observe_different_events
+
+.. rubric:: Notes
+
+#. When a handler is invoked, the change has already occurred.
+#. Multiple handlers can be defined for a given change event and these handlers
+   should be independent of each other. No assumptions should be made about the
+   order of which handlers are called for a given event.
+#. Handlers should not raise exceptions. Any unexpected exceptions will be
+   captured and logged.
 
 
 Differences from |@on_trait_change|
@@ -326,7 +294,7 @@ Suppose we have these classes::
         value = Int()
 
     class Foo(HasTraits):
-        container = List(Instance(Bar))
+        container = List(Instance(Bar), comparison_mode=2)
 
 To notify for changes on *Bar.value* for an item in *Foo.container*,
 with |@on_trait_change|, one may do::
@@ -385,7 +353,7 @@ or::
 
 Note that assignment changes to *container* and mutations to the container will
 emit different event types for the change handler. See
-:ref:`observe-handler-signatures` for details.
+:ref:`observe-handler` for details.
 
 
 Syntax "-" is not supported
@@ -393,9 +361,9 @@ Syntax "-" is not supported
 
 With |@on_trait_change|, the syntax *"-metadata_name"* is used to notify
 for changes on traits that do NOT have a metadata with the give name. This
-usage can be replaced by |Expression.filter_|::
+usage can be replaced by |match|::
 
-  filter_(lambda name, trait: "metadata_name" not in trait.__dict__)
+  match(lambda name, trait: "metadata_name" not in trait.__dict__)
 
 
 Existence of observed items is checked by default
@@ -433,7 +401,7 @@ being added to the instance::
 There are situations where it is desirable to add the change handler before
 a trait is defined.
 
-In that case, the *optional* argument on |Expression.trait| can be used:
+In that case, the *optional* argument on |trait| can be used:
 
 .. literalinclude:: /../../examples/tutorials/doc_examples/examples/observe_optional.py
    :start-at: class
@@ -466,7 +434,7 @@ The change handler signature is fixed to one argument
 |@on_trait_change| supports a range of call signatures for the change handler.
 |@observe| supports only one. The single argument contains different content
 based on the type of changes being handled. See
-:ref:`observe-handler-signatures` for details.
+:ref:`observe-handler` for details.
 
 |@observe| decorator can be stacked
 ```````````````````````````````````
@@ -532,22 +500,21 @@ on an item that appears multiple times in a container.
 ..
    # substitutions
 
-.. |Expression| replace:: :class:`~traits.observers.expressions.Expression`
-.. |Expression.trait| replace:: :func:`~traits.observers.expressions.trait`
-.. |Expression.metadata| replace:: :func:`~traits.observers.expressions.metadata`
-.. |Expression.dict_items| replace:: :func:`~traits.observers.expressions.dict_items`
-.. |Expression.list_items| replace:: :func:`~traits.observers.expressions.list_items`
-.. |Expression.set_items| replace:: :func:`~traits.observers.expressions.set_items`
-.. |Expression.filter_| replace:: :func:`~traits.observers.expressions.filter_`
-.. |Expression.parse| replace:: :func:`~traits.observers.parsing.parse`
-.. |Expression.print| replace:: :func:`~traits.observers.expressions.Expression.print`
-.. |Expression.then| replace:: :func:`~traits.observers.expressions.Expression.then`
-.. |Expression.join_| replace:: :func:`~traits.observers.expressions.join_`
+.. |ObserverExpression| replace:: :class:`~traits.observation.expression.ObserverExpression`
+.. |trait| replace:: :func:`~traits.observation.expression.trait`
+.. |metadata| replace:: :func:`~traits.observation.expression.metadata`
+.. |dict_items| replace:: :func:`~traits.observation.expression.dict_items`
+.. |list_items| replace:: :func:`~traits.observation.expression.list_items`
+.. |set_items| replace:: :func:`~traits.observation.expression.set_items`
+.. |match| replace:: :func:`~traits.observation.expression.match`
+.. |parse| replace:: :func:`~traits.observation.parsing.parse`
+.. |print| replace:: :func:`~traits.observation.expression.print`
+.. |ObserverExpression.then| replace:: :func:`~traits.observation.expression.ObserverExpression.then`
 
-.. |TraitObserverEvent| replace:: :class:`~traits.observers.events.TraitObserverEvent`
-.. |ListObserverEvent| replace:: :class:`~traits.observers.events.ListObserverEvent`
-.. |DictObserverEvent| replace:: :class:`~traits.observers.events.DictObserverEvent`
-.. |SetObserverEvent| replace:: :class:`~traits.observers.events.SetObserverEvent`
+.. |TraitChangeEvent| replace:: :class:`~traits.observation.events.TraitChangeEvent`
+.. |ListChangeEvent| replace:: :class:`~traits.observation.events.ListChangeEvent`
+.. |DictChangeEvent| replace:: :class:`~traits.observation.events.DictChangeEvent`
+.. |SetChangeEvent| replace:: :class:`~traits.observation.events.SetChangeEvent`
 
 .. |HasTraits| replace:: :class:`~traits.has_traits.HasTraits`
 .. |@observe| replace:: :func:`~traits.has_traits.observe`
