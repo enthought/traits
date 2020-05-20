@@ -294,7 +294,7 @@ Suppose we have these classes::
         value = Int()
 
     class Foo(HasTraits):
-        container = List(Instance(Bar), comparison_mode=2)
+        container = List(Instance(Bar), comparison_mode=1)
 
 To notify for changes on *Bar.value* for an item in *Foo.container*,
 with |@on_trait_change|, one may do::
