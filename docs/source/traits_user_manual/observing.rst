@@ -24,7 +24,7 @@ signature:
    Mark an instance method of |HasTraits| as the handler being called
    when the specified trait change occurs.
 
-   :param expression: A description of the traits are being observed. See :ref:`observe-expression` for details.
+   :param expression: A description of the traits being observed. See :ref:`observe-expression` for details.
    :type expression: str or list or |ObserverExpression|
    :param bool post_init: Whether the change handler is added after the
     initial object state is set.
@@ -57,7 +57,7 @@ instance basis. The method has the following signature:
 
    :param handler: The callable to be called when a change occurs. See :ref:`observe-handler` for details.
    :type handler: callable(object)
-   :param expression: A description of the traits are being observed. See :ref:`observe-expression` for details.
+   :param expression: A description of the traits being observed. See :ref:`observe-expression` for details.
    :type expression: str or list or |ObserverExpression|
    :param bool remove: If true, remove the change handler for the given expression.
    :param str dispatch: A string dedicating how the handler should be run.
@@ -107,10 +107,9 @@ most of the use cases commonly encountered by users.
    * - *attr1\, attr2*
      - Matches trait named *attr1* or trait named *attr2*.
    * - *items*
-     - "items" is a special keyword for matching items in a list or dict or
-       set, or a trait named "items".
-   * - [*attr1*, *attr2*, ..., *attrN*]
-     - Matches any of the specified items.
+     - Matching items in a list or dict or set, or a trait named "items".
+   * - [*item1*, *item2*, ..., *itemN*]
+     - Matches any of the specified expressions.
    * - *+metadata_name*
      - Matches any trait on the object that has metadata *metadata_name*
 
@@ -122,30 +121,28 @@ most of the use cases commonly encountered by users.
 
    * - Example
      - Meaning
-   * - ``"attr1"``
-     - Matches a trait named *attr1* on an object and notifies for changes.
-   * - ``"attr1:attr2"``
-     - Matches a trait named *attr2* on an object referenced by a trait named
-       *attr1* on the current object. Changes to *attr2* will trigger
-       notifications, while changes to *attr1* do not.
-   * - ``"container.items.value"``
-     - Matches the *value* trait on an object which could be an element
-       of a container (list/dict/set) referenced via the *container* trait on
-       the current object; or the *value* trait on an object referenced via
-       *container.items* on the current object. Assignment change to
-       *container*, mutation on the container or changes on the *items* trait
-       on *container*, or changes to the *value* trait on the nested object,
-       will trigger notifications.
-   * - ``"+updated"``
-     - Matches any trait on the current that has a metadata attribute named
-       *updated*. Changes on those traits will trigger notifications.
-   * - ``"foo, bar"``
+   * - ``"foo.+updated"``
+     - Matches any trait on the *foo* that has a metadata attribute named
+       *updated*. Changes on those traits and changes on *foo* will trigger
+       notifications.
+   * - ``"foo,bar"``
      - Matches trait named *foo* or *bar* on the current object. Changes on
        *foo* or *bar* will trigger notifications.
-   * - ``"foo.[bar,baz]"``
-     - Matches *foo.bar* or *foo.baz* on the current object. Changes on *foo*,
-       *foo.bar* or *foo.baz* will trigger notifications.
-
+   * - ``"foo:[bar,baz]"``
+     - Matches *foo.bar* or *foo.baz* on the current object. Changes on
+       *foo.bar* or *foo.baz* will trigger notifications, but changes on *foo*
+       will not trigger notifications.
+   * - ``"container.items.value"``
+     - If *container* is a list or dict or set, matches the *value* trait on an
+       object that is an item of the container. If *container* is an instance
+       of *HasTraits*, matches attribute *container.items.value* on the current
+       object. Changes to any of these will trigger notifications.
+   * - ``"container:items:value"``
+     - If *container* is a list or dict or set, matches the *value* trait on an
+       object that is an item of the container. If *container* is an instance
+       of *HasTraits*, matches attribute *container.items.value* on the current
+       object. Only changes to *value* will trigger notifications, assignments
+       or mutations on *container* will not trigger notifications.
 
 .. _observe-expression-object:
 
@@ -153,9 +150,9 @@ Expressions as objects
 ``````````````````````
 
 |ObserverExpression| supports all the use cases supported by the Traits Mini Language
-and beyond. Users can also compose these objects programmatically and supply
-them to |@observe|. These objects typically constructed using the following
-functions from **traits.observation.api**:
+and beyond. Users can compose these objects programmatically and supply
+them to |@observe|. These objects are typically constructed using the following
+functions from the |observation.api| module.
 
 .. list-table::
    :widths: 15 25
@@ -333,12 +330,13 @@ Identity comparison mode for container traits
 `````````````````````````````````````````````
 
 While observing mutations and nested attributes inside ``List``, ``Set`` and
-``Dict``, one should set the trait's comparison mode to **identity** or
-**none** in :class:`~traits.constants.ComparisonMode`.
+``Dict``, one should set the trait's comparison mode to **identity** (1) or
+**none** (0) in the :class:`~traits.constants.ComparisonMode` enum.
 
 For backward compatibility, the default comparison mode is currently set to
-**equality**. This results in observers not being moved from the old container
-to the new one, if the new container compares equally to the old one.
+**equality** (2). This results in observers not being moved from the old
+container to the new one, if a new container compares equally to the old one
+is assigned to the trait.
 
 
 Syntax "[]" is not supported
@@ -378,7 +376,7 @@ With |@on_trait_change|, the syntax *"-metadata_name"* is used to notify
 for changes on traits that do NOT have a metadata with the give name. This
 usage can be replaced by |match|::
 
-  match(lambda name, trait: "metadata_name" not in trait.__dict__)
+  match(lambda name, trait: trait.metadata_name is None)
 
 
 Existence of observed items is checked by default
@@ -516,6 +514,7 @@ on an item that appears multiple times in a container.
    # substitutions
 
 .. |ObserverExpression| replace:: :class:`~traits.observation.expression.ObserverExpression`
+.. |observation.api| replace:: :mod:`~traits.observation.api`
 .. |trait| replace:: :func:`~traits.observation.expression.trait`
 .. |metadata| replace:: :func:`~traits.observation.expression.metadata`
 .. |dict_items| replace:: :func:`~traits.observation.expression.dict_items`
