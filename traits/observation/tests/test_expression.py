@@ -165,7 +165,7 @@ class TestObserverExpressionComposition(unittest.TestCase):
         actual = expr._as_graphs()
         self.assertEqual(actual, expected)
 
-    def test_joinexpressions(self):
+    def test_join_expressions(self):
         observer1 = 1
         observer2 = 2
         expr1 = create_expression(observer1)
@@ -621,7 +621,7 @@ class TestObserverExpressionEquality(unittest.TestCase):
         expr2 = create_expression(1)
         self.assertEqual(expr1, expr2)
 
-    def test_joinequality_with_then(self):
+    def test_join_equality_with_then(self):
         # The following all result in the same graphs
         expr1 = create_expression(1)
         expr2 = create_expression(2)
