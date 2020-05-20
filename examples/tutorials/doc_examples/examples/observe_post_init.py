@@ -11,14 +11,12 @@
 # observe_post_init.py --- Example of using observe with post_init
 from traits.api import HasTraits, Int, observe
 
-
 class Person(HasTraits):
     age = Int(0)
 
     @observe("age", post_init=True)
     def notify_age_change(self, event):
         print("age changed from {} to {}".format(event.old, event.new))
-
 
 person = Person(age=1)  # no output
 person.age = 2    # print 'age changed from 1 to 2'

@@ -10,8 +10,7 @@
 
 # observe_optional.py --- Example of using observe with post_init
 from traits.api import HasTraits, Int, observe
-from traits.observers.api import trait
-
+from traits.observation.api import trait
 
 class Person(HasTraits):
 

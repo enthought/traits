@@ -10,33 +10,27 @@
 
 # observe_different_events.py --- Example of using observe with post_init
 from traits.api import HasTraits, Int, List, observe
-from traits.observers.api import trait
+from traits.observation.api import trait
 
 class Person(HasTraits):
 
-    scores = List(Int)
+    scores = List(Int, comparison_mode=1)
 
     @observe("scores")
     def notify_scores_change(self, event):
         print(
-            "{name} changed from {old} to {new}. (Event type: {type_})".format(
-                name=event.name,
-                old=event.old,
-                new=event.new,
-                type_=type(event).__name__,
-            ))
+            "{event.name} changed from {event.old} to {event.new}. "
+            "(Event type: {event.__class__.__name__})".format(event=event)
+        )
 
     @observe(trait("scores", notify=False).list_items())
     def notify_scores_content_change(self, event):
         print(
-            "scores added: {added}. scores removed: {removed} "
-            "(Event type: {type_})".format(
-                added=event.added,
-                removed=event.removed,
-                type_=type(event).__name__,
-            ))
+            "scores added: {event.added}. scores removed: {event.removed} "
+            "(Event type: {event.__class__.__name__})".format(event=event)
+        )
 
 person = Person(scores=[1, 2])
-# print: scores changed from [] to [1, 2]. (Event type: TraitObserverEvent)
+# print: scores changed from [] to [1, 2]. (Event type: TraitChangeEvent)
 person.scores.append(3)
-# print: scores added: [3]. scores removed: [] (Event type: ListObserverEvent)
+# print: scores added: [3]. scores removed: [] (Event type: ListChangeEvent)
