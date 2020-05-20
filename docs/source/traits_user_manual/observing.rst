@@ -323,8 +323,23 @@ Or using expression objects::
 
     foo.observe(handler, trait("container").list_items().trait("value"))
 
-The specially named *name*\_items is not used by |@observe|, but is still
-defined for supporting |@on_trait_change|.
+The specially named *name*\_items for listening to container changes is still
+defined for supporting |@on_trait_change|. Monitoring this *name*\_items trait
+with |@observe| is discouraged as this special trait may be removed when
+|@on_trait_change| is removed.
+
+
+Identity comparison mode for container traits
+`````````````````````````````````````````````
+
+While observing mutations and nested attributes inside ``List``, ``Set`` and
+``Dict``, one should set the trait's comparison mode to **identity** or
+**none** in :class:`~traits.constants.ComparisonMode`.
+
+For backward compatibility, the default comparison mode is currently set to
+**equality**. This results in observers not being moved from the old container
+to the new one, if the new container compares equally to the old one.
+
 
 Syntax "[]" is not supported
 ````````````````````````````
