@@ -31,6 +31,25 @@ UNOBSERVABLE_VALUES = [
 ]
 
 
+def _has_container_trait(ctrait):
+    """ Return true if the CTrait trait type contains container trait
+    at the top-level.
+
+    Parameters
+    ----------
+    ctrait : CTrait
+    """
+    container_types = (Dict, List, Set)
+    is_container = ctrait.is_trait_type(container_types)
+    if is_container:
+        return True
+    # Try inner traits, e.g. to support Union
+    return any(
+        trait.is_trait_type(container_types)
+        for trait in ctrait.inner_traits
+    )
+
+
 def warn_comparison_mode(object, name):
     """ Check if the trait is a Dict/List/Set with comparison_mode set to
     equality (or higher). If so, warn about the fact that observers will be
@@ -45,21 +64,8 @@ def warn_comparison_mode(object, name):
     """
     ctrait = object.traits()[name]
 
-    def has_container_trait(ctrait):
-        # Return true if the CTrait trait type contains container trait
-        # at the top-level.
-        container_types = (Dict, List, Set)
-        is_container = ctrait.is_trait_type(container_types)
-        if is_container:
-            return True
-        # Try inner traits, e.g. to support Union
-        return any(
-            trait.is_trait_type(container_types)
-            for trait in ctrait.inner_traits
-        )
-
     if (not ctrait.is_property
-            and has_container_trait(ctrait)
+            and _has_container_trait(ctrait)
             and ctrait.comparison_mode == ComparisonMode.equality):
         warnings.warn(
             "Trait {name!r} (trait type: {trait_type}) on class {class_name} "
