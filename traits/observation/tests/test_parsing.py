@@ -27,7 +27,7 @@ class TestParsingSeriesJoin(unittest.TestCase):
         expected = trait("a").trait("b").trait("c")
         self.assertEqual(actual, expected)
 
-    def test_join_with_colon(self):
+    def test_joinwith_colon(self):
         actual = parse("a:b:c")
         expected = trait("a", False).trait("b", False).trait("c")
         self.assertEqual(actual, expected)
@@ -40,7 +40,7 @@ class TestParsingOr(unittest.TestCase):
         expected = trait("a") | trait("b") | trait("c")
         self.assertEqual(actual, expected)
 
-    def test_or_with_join_nested(self):
+    def test_or_with_joinnested(self):
         actual = parse("a.b.c,d.e")
         expected = (
             trait("a").trait("b").trait("c")

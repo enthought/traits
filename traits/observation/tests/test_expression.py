@@ -165,13 +165,13 @@ class TestObserverExpressionComposition(unittest.TestCase):
         actual = expr._as_graphs()
         self.assertEqual(actual, expected)
 
-    def test_join_expressions(self):
+    def test_joinexpressions(self):
         observer1 = 1
         observer2 = 2
         expr1 = create_expression(observer1)
         expr2 = create_expression(observer2)
 
-        expr = expression.join_(expr1, expr2)
+        expr = expression.join(expr1, expr2)
 
         expected = [
             create_graph(
@@ -621,12 +621,12 @@ class TestObserverExpressionEquality(unittest.TestCase):
         expr2 = create_expression(1)
         self.assertEqual(expr1, expr2)
 
-    def test_join_equality_with_then(self):
+    def test_joinequality_with_then(self):
         # The following all result in the same graphs
         expr1 = create_expression(1)
         expr2 = create_expression(2)
 
-        combined1 = expression.join_(expr1, expr2)
+        combined1 = expression.join(expr1, expr2)
         combined2 = expr1.then(expr2)
 
         self.assertEqual(combined1, combined2)

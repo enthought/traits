@@ -39,7 +39,7 @@ def _handle_series(trees, default_notifies):
         _handle_tree(tree, default_notifies=default_notifies)
         for tree in trees
     )
-    return _expr_module.join_(*expressions)
+    return _expr_module.join(*expressions)
 
 
 def _handle_parallel(trees, default_notifies):

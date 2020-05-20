@@ -324,7 +324,7 @@ class ParallelObserverExpression(ObserverExpression):
         return left_graphs + right_graphs
 
 
-def join_(*expressions):
+def join(*expressions):
     """ Convenient function for joining many expressions in series
     using ``ObserverExpression.then``
 
