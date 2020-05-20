@@ -1,6 +1,6 @@
-====================
-Traits 6 User Manual
-====================
+============================
+Traits |version| User Manual
+============================
 
 :Authors: David C. Morrill, Janet M. Swisher, and Enthought developers
 :Copyright: 2005-2020 Enthought, Inc. All Rights Reserved.
