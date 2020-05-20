@@ -11,10 +11,14 @@
 """ Module for HasTraits and CTrait specific utility functions for observers.
 """
 
+import warnings
+
+from traits.constants import ComparisonMode
 from traits.ctraits import CHasTraits
-from traits.trait_base import Undefined, Uninitialized
 from traits.observers._exceptions import NotifierNotFound
 from traits.observers._observe import add_or_remove_notifiers
+from traits.trait_base import Undefined, Uninitialized
+from traits.trait_types import Dict, List, Set
 
 
 #: List of values not to be passed onto the next observers because they are
@@ -25,6 +29,59 @@ UNOBSERVABLE_VALUES = [
     Uninitialized,
     None,
 ]
+
+
+def _has_container_trait(ctrait):
+    """ Return true if the CTrait trait type contains container trait
+    at the top-level.
+
+    Parameters
+    ----------
+    ctrait : CTrait
+    """
+    container_types = (Dict, List, Set)
+    is_container = ctrait.is_trait_type(container_types)
+    if is_container:
+        return True
+    # Try inner traits, e.g. to support Union
+    return any(
+        trait.is_trait_type(container_types)
+        for trait in ctrait.inner_traits
+    )
+
+
+def warn_comparison_mode(object, name):
+    """ Check if the trait is a Dict/List/Set with comparison_mode set to
+    equality (or higher). If so, warn about the fact that observers will be
+    lost in the event of reassignment.
+
+    Parameters
+    ----------
+    object : HasTraits
+        Object where a trait is defined
+    name : str
+        Name of a trait to check if warning needs to be issued for it.
+    """
+    ctrait = object.traits()[name]
+
+    if (not ctrait.is_property
+            and _has_container_trait(ctrait)
+            and ctrait.comparison_mode == ComparisonMode.equality):
+        warnings.warn(
+            "Trait {name!r} (trait type: {trait_type}) on class {class_name} "
+            "is defined with comparison_mode={current_mode!r}. "
+            "Mutations and extended traits cannot be observed if a new "
+            "container compared equally to the old one is set. Redefine the "
+            "trait with {trait_type}(..., comparison_mode={new_mode!r}) "
+            "to avoid this.".format(
+                name=name,
+                class_name=object.__class__.__name__,
+                current_mode=ctrait.comparison_mode,
+                trait_type=ctrait.trait_type.__class__.__name__,
+                new_mode=ComparisonMode.identity,
+            ),
+            RuntimeWarning,
+        )
 
 
 def object_has_named_trait(object, name):
@@ -66,6 +123,7 @@ def iter_objects(object, name):
         The value of the trait, if it is defined and is not one of those
         skipped values.
     """
+    warn_comparison_mode(object, name)
     value = object.__dict__.get(name, Undefined)
     if value not in UNOBSERVABLE_VALUES:
         yield value
