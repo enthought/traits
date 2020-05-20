@@ -28,8 +28,8 @@ from traits.has_traits import (
     SingletonHasPrivateTraits,
 )
 from traits.ctrait import CTrait
-from traits.observers.api import trait
-from traits.observers._exception_handling import (
+from traits.observation.api import trait
+from traits.observation._exception_handling import (
     pop_exception_handler,
     push_exception_handler,
 )
