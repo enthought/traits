@@ -40,7 +40,7 @@ Subpackages
 
     traits.adaptation
     traits.etsconfig
-    traits.observers
+    traits.observation
     traits.testing
     traits.util
 

@@ -12,7 +12,7 @@ import copy
 import operator
 from weakref import ref
 
-from traits.observers._i_observable import IObservable
+from traits.observation._i_observable import IObservable
 from traits.trait_base import class_of, Undefined, _validate_everything
 from traits.trait_errors import TraitError
 

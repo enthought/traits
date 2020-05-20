@@ -27,7 +27,7 @@ from .adaptation.adaptation_error import AdaptationError
 from .constants import DefaultValue, TraitKind
 from .ctrait import CTrait, __newobj__
 from .ctraits import CHasTraits
-from .observers import api as observe_api
+from .observation import api as observe_api
 from .traits import (
     ForwardProperty,
     Property,
@@ -724,7 +724,7 @@ def observe(expression, *, post_init=False, dispatch="same"):
             ...
 
     The decorated function must accept one argument which is the event object
-    representing the change. See :py:mod:`traits.observers.events` for details.
+    representing the change. See :mod:`traits.observation.events` for details.
 
     Parameters
     ----------
@@ -2209,7 +2209,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             A callable that will be invoked when the observed trait changes.
             It must accept one argument, which is an event object providing
             information about the change.
-            See :py:mod:`traits.observers.events` for details.
+            See :py:mod:`traits.observation.events` for details.
         expression : str or list or ObserverExpression
             A description of what traits are being observed.
             If this is a list, each item must be a string or an Expression.
