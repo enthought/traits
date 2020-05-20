@@ -32,7 +32,8 @@ script:
   - edm run -- python etstool.py test --runtime=${RUNTIME} || exit
   - edm run -- python etstool.py docs --runtime=${RUNTIME} || exit
 
-after_success:
-  - edm run -- coverage combine
-  - edm run -- pip install codecov
-  - edm run -- codecov
+notifications:
+  slack:
+    secure: dlu0Cw3+5yx8Ho7BvaB6PJ0kcj/tKSZKOZv08e3v5B5puhFvp7EtngjvEdmYkXRcUJ/oigI88MoF5DHM8JsZ4vT3TyiXpjMUv2A3uhPosn1TX4r7eGZH8wikAErFu8GFVg52vTxbpCCAe2wlZUmyqVkac/AAngGA98S8g3SDOD0=
+    on_success: change
+    on_failure: always

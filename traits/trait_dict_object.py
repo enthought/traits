@@ -11,6 +11,7 @@
 import copy
 from weakref import ref
 
+from traits.observation._i_observable import IObservable
 from traits.trait_base import Undefined, _validate_everything
 from traits.trait_errors import TraitError
 
@@ -56,6 +57,7 @@ class TraitDictEvent(object):
         )
 
 
+@IObservable.register
 class TraitDict(dict):
     """ A subclass of dict that validates keys and values and notifies
     listeners of any change.
@@ -343,6 +345,20 @@ class TraitDict(dict):
             notifiers=[]
         )
         return result
+
+    # -- Implement IObservable ------------------------------------------------
+
+    def _notifiers(self, force_create):
+        """ Return a list of callables where each callable is a notifier.
+        The list is expected to be mutated for contributing or removing
+        notifiers from the object.
+
+        Parameters
+        ----------
+        force_create: boolean
+            Not used here.
+        """
+        return self.notifiers
 
 
 class TraitDictObject(TraitDict):

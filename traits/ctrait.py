@@ -20,6 +20,7 @@ import inspect
 
 from . import ctraits
 from .constants import ComparisonMode, DefaultValue, default_value_map
+from .observation._i_observable import IObservable
 from .trait_base import SequenceTypes, Undefined
 from .trait_dict_object import TraitDictObject
 from .trait_list_object import TraitListObject
@@ -32,6 +33,7 @@ def __newobj__(cls, *args):
     return cls.__new__(cls, *args)
 
 
+@IObservable.register
 class CTrait(ctraits.cTrait):
     """ Extends the underlying C-based cTrait type.
     """

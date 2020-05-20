@@ -10,7 +10,7 @@
 
 import unittest
 
-from traits.observers._observer_graph import ObserverGraph
+from traits.observation._observer_graph import ObserverGraph
 
 
 def graph_from_nodes(*nodes):

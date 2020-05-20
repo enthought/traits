@@ -3810,8 +3810,10 @@ class Either(TraitType):
         return self.trait_maker.as_ctrait()
 
 
-class NoneTrait(TraitType):
+class _NoneTrait(TraitType):
     """ Defines a trait that only accepts the None value
+
+    This is primarily used for supporting ``Union``.
     """
 
     info_text = "None"
@@ -3821,11 +3823,11 @@ class NoneTrait(TraitType):
     default_value_type = DefaultValue.constant
 
     def __init__(self, **metadata):
-        default_value = metadata.pop("default", None)
+        default_value = metadata.pop("default_value", None)
         if default_value is not None:
             raise ValueError("Cannot set default value {} "
-                             "for NoneTrait".format(default_value))
-        super(NoneTrait, self).__init__(**metadata)
+                             "for _NoneTrait".format(default_value))
+        super(_NoneTrait, self).__init__(**metadata)
 
     def validate(self, obj, name, value):
         if value is None:
@@ -3837,28 +3839,39 @@ class NoneTrait(TraitType):
 class Union(TraitType):
     """ Defines a trait whose value can be any of of a specified list of
     trait types or list of trait type instances or None
+
+    If the default value is not defined on Union, the default value from the
+    first trait will be used.
     """
 
     def __init__(self, *traits, **metadata):
         self.list_ctrait_instances = []
 
         if not traits:
-            traits = (NoneTrait,)
+            traits = (_NoneTrait,)
 
         for trait in traits:
             if trait is None:
-                trait = NoneTrait
+                trait = _NoneTrait
             ctrait_instance = trait_cast(trait)
             if ctrait_instance is None:
                 raise ValueError("Union trait declaration expects a trait "
                                  "type or an instance of trait type or None,"
-                                 " but got {} instead".format(trait))
+                                 " but got {!r} instead".format(trait))
 
             self.list_ctrait_instances.append(ctrait_instance)
 
+        # ``Either`` uses 'default' for defining static default values.
+        # Raise if 'default' is found in order to help code migrate to Union
+        if "default" in metadata:
+            raise ValueError(
+                "Union default value should be set via 'default_value', not "
+                "'default'."
+            )
+
         default_value = None
-        if 'default' in metadata:
-            default_value = metadata.pop("default")
+        if 'default_value' in metadata:
+            default_value = metadata.pop("default_value")
         elif self.list_ctrait_instances:
             default_value = self.list_ctrait_instances[0].default
 
