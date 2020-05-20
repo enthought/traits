@@ -25,7 +25,7 @@ signature:
    when the specified trait change occurs.
 
    :param expression: A description of the traits are being observed. See :ref:`observe-expression` for details.
-   :type expression: str or list of str or |ObserverExpression|
+   :type expression: str or list or |ObserverExpression|
    :param bool post_init: Whether the change handler is added after the
     initial object state is set.
    :param str dispatch: A string dedicating how the handler should be run.
@@ -58,7 +58,7 @@ instance basis. The method has the following signature:
    :param handler: The callable to be called when a change occurs. See :ref:`observe-handler` for details.
    :type handler: callable(object)
    :param expression: A description of the traits are being observed. See :ref:`observe-expression` for details.
-   :type expression: str or list of str or |ObserverExpression|
+   :type expression: str or list or |ObserverExpression|
    :param bool remove: If true, remove the change handler for the given expression.
    :param str dispatch: A string dedicating how the handler should be run.
 
