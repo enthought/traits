@@ -1,6 +1,163 @@
 Traits CHANGELOG
 ================
 
+Release 6.1.0
+-------------
+
+Release notes
+~~~~~~~~~~~~~
+
+Mention these things:
+* observe, event object API is provisional
+* PrefixList trait type
+* Union trait type
+* Type annotation
+* PrefixMap and Map
+* TraitList, TraitDict, TraitSet : Their APIs are provisional
+
+
+More than 137 PRs went into this release. The following people contributed
+code changes for this release:
+
+* Ieva Cernyte
+* Kit Yan Choi
+* Maxime Costalonga
+* Mark Dickinson
+* Matt Hancock
+* Midhun Madhusoodanan
+* Shoeb Mohammed
+* Franklin Ventura
+* Corran Webster
+
+Features
+~~~~~~~~
+
+* Add ``os.PathLike`` support for ``Directory`` traits (#867)
+* Add ``Union`` trait type. (#779, #1103, #1107, #1116, #1115)
+* Add ``PrefixList`` trait type. (#871)
+* Add ``allow_none`` flag for ``Callable`` trait. (#885)
+* Add support for type annotation (#904, #1064)
+* Allow mutable values in ``Constant`` trait (#929)
+* Add ``Map`` and ``PrefixMap`` trait types (#886, #953, #956, #970)
+* Add ``TraitList`` as the base list object that can perform validation
+  and emit change notifications (#912, #981, #984, #989, #999, #1003, #1011,
+  #1026, #1009, #1040)
+* Add ``TraitDict`` as the base dict object that can perform validation and
+  emit change notifications (#913)
+* Add ``TraitSet`` as the base dict object that can perform validation and
+  emit change notifications (#922, #1043)
+* Implement ``observe`` to supersede ``on_trait_change`` for observing trait
+  changes (#976, #1000, #1007, #1065, #1023, #1066, #1070, #1069, #1067, #1080,
+  #1082, #1079, #1071, #1072, #1075, #1085, #1089, #1078, #1093, #1086, #1077,
+  #1095, #1102, #1108, #1110, #1112, #1117, #1118, #1123)
+* Make ``DefaultValue``, ``ValidateTrait`` and ``TraitKind`` available in
+  ``traits.api`` (#857)
+
+Changes
+~~~~~~~
+
+* GUI applications using Traits 6.1 will require TraitsUI >= 7.0
+* ``TraitSetEvent`` and ``TraitDictEvent`` initialization arguments are now
+  keyword-only (#1036)
+* ``TraitListObject`` will no longer skip notifications even if mutations
+  result in content that compares equally to the old values (#1026)
+* ``TraitListEvent.index`` reported by mutations to a list is now normalized
+  (#1009)
+
+Fixes
+~~~~~
+* Allow assigning None to ``CTrait.post_setattr``. (#833)
+* Fix reference count error (#907)
+* Improve ``HasTraits`` introspection with ``dir()``. (#927)
+* Fix the datetime-to-str converters used in ``DatetimeEditor``. (#937)
+* Raise ``TraitNotificationError`` on trailing comma in ``on_trait_change``.
+  (#926)
+* Fix exception swallowing by Trait attribute access. (#959, #960)
+* Allow collections in valid values for ``Enum`` trait. (#889)
+* Avoid containment-related ``DeprecationWarning`` on Python 3.7 (#855)
+* Fix ``TraitError`` when mutating a list/dict/set inside another container.
+  (#1018)
+* Fix setting default values via dynamic default methods or overriding trait in
+  subclasses for mapped traits, used by ``Map``, ``Expression``, ``PrefixMap``.
+  (#1091)
+* Fix setting default values via dynamic default methods or overriding trait in
+  subclasses for ``Expression`` and ``AdaptsTo``. (#1088, #1119)
+
+Deprecations
+~~~~~~~~~~~~
+
+* ``traits.testing.nose_tools`` is deprecated. (#880)
+* ``SingletonHasTraits``, ``SingletonHasStrictTraits`` and
+  ``SingletonHasPrivateTraits`` are deprecated. (#887)
+* ``TraitMap`` is deprecated, use ``Map`` instead. (#974)
+* ``TraitPrefixMap`` is deprecated, use ``PrefixMap`` instead. (#974)
+* ``TraitPrefixList`` is deprecated, use ``PrefixList``. (#974)
+* ``Color``, ``RBGColor`` and ``Font`` are now deprecated. Use the ones from
+  TraitsUI instead. (#1022)
+* Expand user manual on container traits and objects. (#1058)
+
+Removals
+~~~~~~~~
+
+* ``traits_super`` is removed. (#1015)
+
+Documentation
+~~~~~~~~~~~~~
+
+* Improved API documentation for ``trait_types``. (#843)
+* Add details on creating custom trait properties. (#387)
+* Cross reference special handler signatures for listening to nested attributes
+  in list and dict. (#894)
+* Replace 'Traits 5' with 'Traits 6' in the documentation. (#903)
+* Add initial documentation on Traits internals. (#958)
+* Fix example class ``OddInt``. (#973)
+* Add Dos and Donts for writing change handlers. (#1017)
+* Clarify when default initializer is called and when handlers are registered.
+  (#1019)
+* Fix documentation rendering issues and front matter. (#1039, #1053)
+* Clarify when dynamic default values are considered to have existed. (#1068)
+
+Test suite
+~~~~~~~~~~
+
+* Allow tests to be skipped if TraitsUI is not installed. (#848, #1038)
+* Add ``extras_require`` entry for testing. (#879)
+* Add tests for parsing ``on_trait_change`` mini-language. (#921)
+* Fix a missing import to allow a test module to be run standalone. (#961)
+* Add a GUI test for ``Enum.create_editor``. (#988)
+
+Build and continuous integration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* CI no longer runs on Python 3.5 (#1044)
+* Add configobj dependency and remove remaining 3.5 references in etstool.py
+  (#1051)
+* Codecov reports are no longer retrieved for pull requests. (#1109)
+
+Maintenance and code organization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Refactor CHasTraits ``traits_inited`` method. (#842)
+* Add support for prerelease section in version. (#864)
+* Rename comparison mode integer constants in ``ctraits.c``. (#862)
+* Follow best practices when opening files. (#872)
+* Initialize ``cTrait`` ``getattr``, ``setattr`` handlers in ``tp_new``. (#875)
+* Check ``trait_change_notify`` early in ``call_notifiers`` (#917)
+* Refactor ``ctraits.c`` for calling trait and object notifiers (#918)
+* Miscellaneous other minor fixes, refactorings and cleanups (#915, #924, #923,
+  #920, #935, #939, #944, #950)
+* ``BaseEnum`` and ``Enum`` fixes and cleanup (#968)
+* Split ``ctraits`` property api to ``_set_property`` and ``_get_property``
+  (#967)
+* Fix overcomplicated ``__deepcopy__`` implementation (#992)
+* Add ``__repr__`` implementation for ``TraitListEvent``, ``TraitDictEvent``
+  and ``TraitSetEvent``. (#1006)
+* Remove caching of editor factories. (#1032)
+* Remove conditional traitsui imports (#1033)
+* Remove code duplication in tutor.py (#1034)
+* Fix correctness in ``Enum`` default traitsui editor (#1012)
+* Use ``NULL`` for zero-argument ``PyObject_CallMethod`` format (#1100)
+
+
 Release 6.0.0
 -------------
 
