@@ -143,8 +143,6 @@ Maintenance and code organization
 * Initialize ``cTrait`` ``getattr``, ``setattr`` handlers in ``tp_new``. (#875)
 * Check ``trait_change_notify`` early in ``call_notifiers``. (#917)
 * Refactor ``ctraits.c`` for calling trait and object notifiers. (#918)
-* Miscellaneous other minor fixes, refactorings and cleanups. (#915, #924, #923,
-  #920, #935, #939, #944, #950)
 * ``BaseEnum`` and ``Enum`` fixes and cleanup. (#968)
 * Split ``ctraits`` property api to ``_set_property`` and ``_get_property``.
   (#967)
@@ -156,6 +154,8 @@ Maintenance and code organization
 * Remove code duplication in ``tutor.py``. (#1034)
 * Fix correctness in ``Enum`` default traitsui editor. (#1012)
 * Use ``NULL`` for zero-argument ``PyObject_CallMethod`` format. (#1100)
+* Miscellaneous other minor fixes, refactorings and cleanups. (#915, #924,
+  #923, #920, #935, #939, #944, #950)
 
 
 Release 6.0.0
