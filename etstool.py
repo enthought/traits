@@ -398,7 +398,7 @@ def generate_parser(edm, runtime, environment):
     parameters = get_parameters(edm, runtime, environment)
 
     root_dir = os.path.dirname(__file__)
-    observers_dir = os.path.join(root_dir, "traits", "observers")
+    observers_dir = os.path.join(root_dir, "traits", "observation")
 
     # parser file to be generated.
     out_path = os.path.join(observers_dir, "_generated_parser.py")
