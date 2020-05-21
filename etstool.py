@@ -92,7 +92,7 @@ common_dependencies = {
     "lark_parser",
     "mypy",
     "numpy",
-    "pyqt",
+    "pyqt5",
     "Sphinx",
     "traitsui",
 }
