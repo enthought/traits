@@ -449,28 +449,19 @@ usage can be replaced by |match|::
   match(lambda name, trait: trait.metadata_name is None)
 
 
+New behaviors provided by |@observe|
+------------------------------------
+
+In addition to the new flexibility provided by the |ObserverExpression|
+object, |@observe| aims at overcoming a number of design flaws and
+limitations in the older API. The following sections highlight the differences
+and new features supported by |@observe|.
+
 Existence of observed items is checked by default
 `````````````````````````````````````````````````
 
-With |@on_trait_change|, one can specify whether a trait name is optional using
-the "?" syntax. This is meant to be used for allowing trait to be defined after
-|@on_trait_change| is called. In practice, |@on_trait_change| does not always
-complain about missing attributes.
-
-This could lead to human errors being overlooked::
-
-    class Foo(HasTraits):
-        name = Str()
-
-        @on_trait_change("nam")   # typo, or an omission in renaming
-        def _name_updated(self):
-            print("name changed")
-
-    foo = Foo()         # does not fail.
-    foo.name = "Name"   # nothing fires :(
-
-With |@observe|, the existence of a trait is checked when the handler is
-being added to the instance::
+The existence of a trait is checked when the handler is being added to the
+instance::
 
     class Foo(HasTraits):
         name = Str()
@@ -511,34 +502,50 @@ Or::
 
     foo.observe(handler, trait("bars").dict_items().list_items().trait("value")
 
-The change handler signature is fixed to one argument
-`````````````````````````````````````````````````````
-
-|@on_trait_change| supports a range of call signatures for the change handler.
-|@observe| supports only one. The single argument contains different content
-based on the type of changes being handled. See
-:ref:`observe-handler` for details.
 
 |@observe| decorator can be stacked
 ```````````````````````````````````
 
-With |@on_trait_change|, in order to reuse the same handler with different
-parameters, one needs to create separate methods::
-
-    @on_trait_change("attr1", post_init=True)
-    def _handle_attr1_changed(self):
-        self._update_plots()
-
-    @on_trait_change("attr2", post_init=False)
-    def _handle_attr2_changed(self):
-        self._update_plots()
-
-With |@observe|, one can stack the decorator on the same method::
+The same handler can be used against different changes and with different
+parameters. With |@observe|, one can stack the decorator on the same method::
 
     @observe("attr1", post_init=True)
     @observe("attr2", post_init=False)
     def _update_plots(self, event):
         ...
+
+
+Duplicated objects are now monitored
+````````````````````````````````````
+
+Consider this example::
+
+    class Apple(HasTraits):
+        count = Int(0)
+
+    class Bowl(HasTraits):
+        apples = List(Instance(Apple))
+
+        @observe('apples:items:count')
+        def print_status(self, event):
+            print("Count changed")
+
+    granny_smith = Apple()
+    bowl = Bowl(apples=[granny_smith, granny_smith])
+    granny_smith.count += 1    # print: 'Count changed'
+
+The **granny_smith** object is repeated in the **apples** list. When one of the
+items is removed from the list, the **granny_smith** object is still there and
+we expect a change notification.
+
+    bowl.apples.pop()          # granny_smith is still in the list.
+    granny_smith.count += 1    # print: 'Count changed'
+
+In the older API, this situation was not accounted for. With |@observe|, this
+situation is handled by keeping a reference count on the observed objects.
+
+This means |HasTraits.observe| cannot be idempotent.
+
 
 |HasTraits.observe| is not idempotent
 `````````````````````````````````````
@@ -547,15 +554,10 @@ For most use cases, change handlers can be put up in a fire-and-forget
 fashion and they are never removed. However for some use cases, it is important
 to remove change handlers when they are no longer needed.
 
-For |HasTraits.on_trait_change|, multiple calls to add a change handler is
-equivalent to calling it once and can be undone by one single call with
-*remove* set to True. Multiple calls to remove a change handler would not
-fail even if the handler no longer exists.
-
-For |HasTraits.observe|, this is no longer true. Calling |HasTraits.observe|
-to add an existing change handler will increment an internal reference count.
-The change handler can only be completely removed by calling
-|HasTraits.observe| the same number of times with *remove* set to True.
+Calling |HasTraits.observe| to add an existing change handler will increment
+an internal reference count. The change handler can only be completely removed
+by calling |HasTraits.observe| the same number of times with *remove* set to
+True.
 
 In other words::
 
@@ -577,8 +579,6 @@ In other words::
 Attempts to remove change handlers that do not exist will also lead to an
 exception.
 
-This change in idempotency is introduced in order to support notifications
-on an item that appears multiple times in a container.
 
 ..
    # substitutions
