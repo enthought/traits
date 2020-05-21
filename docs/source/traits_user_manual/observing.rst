@@ -4,6 +4,10 @@
 Trait Notification with **observe**
 ===================================
 
+**observe** is a newer mechanism for setting up trait change notifications.
+It aims at fully replacing an older API which have a number of limitations. See
+:ref:`on-trait-change-notification` for details on this older API.
+
 Requesting trait attribute change notifications can be done in these
 ways:
 
