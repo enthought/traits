@@ -411,23 +411,10 @@ The following sections provide some guide to help migrations.
 Observe extended trait names
 ````````````````````````````
 
-The expression syntax has not changed for a simple chain of trait names.
-However, the change handler signature will require adjustments.
+The expression syntax has not changed for extended trait names excluding
+containers.
 
-With |@on_trait_change|::
-
-    class Bar(HasTraits):
-        value = Int()
-
-    class Foo(HasTraits):
-        bar = Instance(Bar)
-
-        @on_trait_change("bar.value")
-        def handler(self):
-            print("changed")
-
-With |@observe|::
-
+For example, given these classes::
 
     class Bar(HasTraits):
         value = Int()
@@ -435,36 +422,13 @@ With |@observe|::
     class Foo(HasTraits):
         bar = Instance(Bar)
 
-        @observe("bar.value")
-        def handler(self, event=None):
-            print("changed")
+To observe *bar.value* on an instance of *Foo*, this::
 
-Note that the handler now requires an additional argument. It can be made
-optional if the handler is called elsewhere with no arguments.
+    @on_trait_change("bar.value")
 
+will be changed to this::
 
-Change handler signature is changed
-```````````````````````````````````
-
-|@on_trait_change| supports a range of call
-:ref:`signatures <notification-handler-signatures>` for the change handler.
-|@observe| supports only one. The single argument contains different content
-based on the type of changes being handled (see
-:ref:`observe-handler`).
-
-For example, for this handler::
-
-    name = Str()
-
-    @on_trait_change("name")
-    def name_updated(self, object, name, old, new):
-        print(object, name, old, new)
-
-It will have to be changed to::
-
-    @observe("name")
-    def name_updated(self, event):
-        print(event.object, event.name, event.old, event.new)
+    @observe("bar.value")
 
 
 Observe nested attributes in a container
@@ -481,29 +445,31 @@ Suppose we have these classes::
 To notify for changes on *Bar.value* for an item in *Foo.container*,
 with |@on_trait_change|, one may do::
 
-    def handler():
-        print("changed")
-
-    foo = Foo()
-    foo.on_trait_change(handler, "container.value")
+    @on_trait_change("container.value")
 
 Where the container nature is deduced at runtime (see
 :ref:`trait-items-handlers`).
 
-With |@observe|, one will explicitly specify when items of a list are
-being observed.
+With |@observe|, one will explicitly specify when items of a container are
+being observed, like this::
 
-Using text as the expression::
+    @observe("container.items.value")
 
-    def handler(event):
-        print("changed")
+or::
 
-    foo = Foo()
-    foo.observe(handler, "container.items.value")
+    @observe(trait("container").list_items().trait("value"))
 
-Or using expression objects::
+Similarly, this::
 
-    foo.observe(handler, trait("container").list_items().trait("value"))
+    @on_trait_change("container_items.value")
+
+will be changed to this::
+
+    @observe("container:items.value")
+
+or this::
+
+    @observe(trait("container", notify=False).list_items().trait("value"))
 
 The specially named *name*\_items for listening to container changes is still
 defined for supporting |@on_trait_change|. Monitoring this *name*\_items trait
@@ -531,13 +497,58 @@ For example, with |@on_trait_change|::
     def container_updated(self):
         ...
 
-With |@observe|, it is safer to do this::
+With |@observe|, it would be best to change this to::
 
     container = List(comparison_mode=1)
 
     @observe("container.items")
     def container_updated(self):
         ...
+
+
+Change handler signature is changed
+```````````````````````````````````
+
+|@on_trait_change| supports a range of call
+:ref:`signatures <notification-handler-signatures>` for the change handler.
+|@observe| supports only one. The single argument contains different content
+based on the type of changes being handled (see
+:ref:`observe-handler`).
+
+For example, for this handler::
+
+    name = Str()
+
+    @on_trait_change("name")
+    def name_updated(self, object, name, old, new):
+        print(object, name, old, new)
+
+It will have to be changed to::
+
+    @observe("name")
+    def name_updated(self, event):
+        print(event.object, event.name, event.old, event.new)
+
+
+For mutations to container, e.g.::
+
+    container = List()
+
+    @on_trait_change("container_items")
+    def name_updated(self, object, name, old, new):
+        print("Index: {new.index}")
+        print("Added: {new.added}")
+        print("Removed: {new.removed}")
+
+It will have to be changed to::
+
+    container = List(comparison_mode=1)
+
+    @observe("container:items")
+    def name_updated(self, event):
+        print("Index: {event.index}")
+        print("Added: {event.added}")
+        print("Removed: {event.removed}")
 
 
 Syntax "[]" is not supported
