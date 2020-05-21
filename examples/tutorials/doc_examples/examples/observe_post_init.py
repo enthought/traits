@@ -14,7 +14,7 @@ for all instances of this class, but only after the object state is set during
 instantiation.
 
 The 'post_init' argument suppresses change notifications during instantiation,
-allowing subsequent changes to trigger notifications.
+but allows subsequent changes to trigger notifications.
 """
 
 from traits.api import HasTraits, Int, observe
