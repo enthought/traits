@@ -517,8 +517,8 @@ With |@observe|, it would be best to change this to::
         ...
 
 
-Change handler signature is changed
-```````````````````````````````````
+Change handler signature is different
+`````````````````````````````````````
 
 |@on_trait_change| supports a range of call
 :ref:`signatures <notification-handler-signatures>` for the change handler.
