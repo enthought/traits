@@ -134,7 +134,7 @@ Features
   #1026, #1009, #1040)
 * Add ``TraitDict`` as the base dict object that can perform validation and
   emit change notifications. (#913)
-* Add ``TraitSet`` as the base dict object that can perform validation and
+* Add ``TraitSet`` as the base set object that can perform validation and
   emit change notifications. (#922, #1043)
 * Implement ``observe`` to supersede ``on_trait_change`` for observing trait
   changes. (#976, #1000, #1007, #1065, #1023, #1066, #1070, #1069, #1067,
