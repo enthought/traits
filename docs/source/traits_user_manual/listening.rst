@@ -6,10 +6,8 @@ Trait Notification with **on_trait_change**
 
 **on_trait_change** is an older method for setting up change notifications. It
 has several design flaws and limitations. A newer mechanism **observe** is
-introduced for overcoming them. See :ref:`observe-notification` for details.
-
-The following sections document the usage of **on_trait_change** for supporting
-existing projects using this mechanism.
+introduced for overcoming them. See :ref:`observe-notification` for details and
+for how to migrate.
 
 Change notifications can be set up with **on_trait_change** in several ways:
 
