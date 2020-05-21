@@ -18,7 +18,7 @@ but no "setter" then the property is read-only.
 
 Additionally, we need to know when the value of the property might change, and
 so we need to declare what traits to observe to know when the property might
-change.  What all this this means is that we can define ``scan_width`` as a
+change.  What all this means is that we can define ``scan_width`` as a
 property by::
 
     class Image(HasTraits):
