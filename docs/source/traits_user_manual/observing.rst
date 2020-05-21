@@ -223,15 +223,23 @@ will observe traits with a prefix "my\_" on *foo.bar* on the current object.
 Notification Handler
 --------------------
 
-As soon as a change has occurred, the **handler** callable provided will be
-invoked as long as the change is observed for notifications. The handler will
-be given information about the change, and it must have the following
-signature:
+By default, the **handler** is invoked immediately after the change has
+occured. The **dispatch** parameter in |@observe| can be set such that the
+handler is dispatched elsewhere to be invoked later (e.g. on a GUI event loop).
 
-- handler(*event*)
+The following expectations apply to any change handler:
 
-where the *event* parameter is an object representing the change observed.
-The type of *event* depends on the context of the change.
+* It must accept one argument: the **event** parameter (see below)
+* It is called **after** a change has occured
+* No assumptions should be made about the order of which handlers are called
+  for a given change event. A change event can have many change handlers.
+* No exceptions should be raised from a change handler. Any unexpected
+  exceptions will be captured and logged.
+
+When the handler is invoked, it is given an **event** object which provides
+information about the change observed. The type and signature of *event*
+depends on the context of the change. However they all include a parameter
+*object* referring to the object being modified:
 
 .. rubric:: Change event types
 
@@ -251,23 +259,13 @@ The type of *event* depends on the context of the change.
      - |SetChangeEvent|
 
 
-The signature of *event* depends on the change type. This means if the handler
-needs to act on the specific details of the change event, |@observe| should be
-configured to only notify for that specific type of changes, or the
-handler will need to check the type of the event parameter when it is invoked.
-The following example shows the first option:
+This means if the handler needs to act on the specific details of the change
+event, |@observe| should be configured to only notify for that specific type of
+changes, or the handler will need to check the type of the event parameter when
+it is invoked. The following example shows the first option:
 
 .. literalinclude:: /../../examples/tutorials/doc_examples/examples/observe_different_events.py
    :start-after: observe_different_events
-
-.. rubric:: Notes
-
-#. When a handler is invoked, the change has already occurred.
-#. Multiple handlers can be defined for a given change event and these handlers
-   should be independent of each other. No assumptions should be made about the
-   order of which handlers are called for a given event.
-#. Handlers should not raise exceptions. Any unexpected exceptions will be
-   captured and logged.
 
 
 Differences from |@on_trait_change|
