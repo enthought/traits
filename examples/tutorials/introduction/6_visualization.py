@@ -41,7 +41,7 @@ import numpy as np
 
 from traits.api import (
     Array, Date, File, Float, HasStrictTraits, Property, Str, Tuple,
-    cached_property, on_trait_change as observe
+    cached_property, observe
 )
 from traitsui.api import Item, View
 

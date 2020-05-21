@@ -101,7 +101,7 @@ import numpy as np
 
 from traits.api import (
     Array, Date, File, Float, HasTraits, Property, Str, Tuple,
-    cached_property, on_trait_change as observe
+    cached_property, observe
 )
 
 

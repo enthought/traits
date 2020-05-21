@@ -108,8 +108,7 @@ from PIL import Image as PILImage
 import numpy as np
 
 from traits.api import (
-    Array, Date, File, Float, HasTraits, Str, Tuple,
-    on_trait_change as observe
+    Array, Date, File, Float, HasTraits, Str, Tuple, observe
 )
 
 
