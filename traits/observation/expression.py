@@ -8,29 +8,15 @@
 #
 # Thanks for using Enthought open source!
 
-import functools as _functools
+import functools
 
-from traits.observation._dict_item_observer import (
-    DictItemObserver as _DictItemObserver,
-)
-from traits.observation._filtered_trait_observer import (
-    FilteredTraitObserver as _FilteredTraitObserver,
-)
-from traits.observation._list_item_observer import (
-    ListItemObserver as _ListItemObserver,
-)
-from traits.observation._metadata_filter import (
-    MetadataFilter as _MetadataFilter,
-)
-from traits.observation._named_trait_observer import (
-    NamedTraitObserver as _NamedTraitObserver,
-)
-from traits.observation._observer_graph import (
-    ObserverGraph as _ObserverGraph,
-)
-from traits.observation._set_item_observer import (
-    SetItemObserver as _SetItemObserver,
-)
+from traits.observation._dict_item_observer import DictItemObserver
+from traits.observation._filtered_trait_observer import FilteredTraitObserver
+from traits.observation._list_item_observer import ListItemObserver
+from traits.observation._metadata_filter import MetadataFilter
+from traits.observation._named_trait_observer import NamedTraitObserver
+from traits.observation._observer_graph import ObserverGraph
+from traits.observation._set_item_observer import SetItemObserver
 
 # ObserverExpression is a public user interface for constructing ObserverGraph.
 
@@ -137,7 +123,7 @@ class ObserverExpression:
         new_expression : ObserverExpression
         """
         return self.match(
-            filter=_MetadataFilter(metadata_name=metadata_name),
+            filter=MetadataFilter(metadata_name=metadata_name),
             notify=notify,
         )
 
@@ -279,7 +265,7 @@ class SingleObserverExpression(ObserverExpression):
 
     def _create_graphs(self, branches):
         return [
-            _ObserverGraph(node=self.observer, children=branches),
+            ObserverGraph(node=self.observer, children=branches),
         ]
 
 
@@ -337,7 +323,7 @@ def join(*expressions):
     new_expression : ObserverExpression
         Joined expression.
     """
-    return _functools.reduce(lambda e1, e2: e1.then(e2), expressions)
+    return functools.reduce(lambda e1, e2: e1.then(e2), expressions)
 
 
 def dict_items(notify=True, optional=False):
@@ -366,7 +352,7 @@ def dict_items(notify=True, optional=False):
     -------
     new_expression : ObserverExpression
     """
-    observer = _DictItemObserver(notify=notify, optional=optional)
+    observer = DictItemObserver(notify=notify, optional=optional)
     return SingleObserverExpression(observer)
 
 
@@ -395,7 +381,7 @@ def list_items(notify=True, optional=False):
     -------
     new_expression : ObserverExpression
     """
-    observer = _ListItemObserver(notify=notify, optional=optional)
+    observer = ListItemObserver(notify=notify, optional=optional)
     return SingleObserverExpression(observer)
 
 
@@ -421,7 +407,7 @@ def match(filter, notify=True):
     -------
     new_expression : ObserverExpression
     """
-    observer = _FilteredTraitObserver(notify=notify, filter=filter)
+    observer = FilteredTraitObserver(notify=notify, filter=filter)
     return SingleObserverExpression(observer)
 
 
@@ -447,7 +433,7 @@ def metadata(metadata_name, notify=True):
     new_expression : ObserverExpression
     """
     return match(
-        filter=_MetadataFilter(metadata_name=metadata_name),
+        filter=MetadataFilter(metadata_name=metadata_name),
         notify=notify,
     )
 
@@ -471,7 +457,7 @@ def set_items(notify=True, optional=False):
     -------
     new_expression : ObserverExpression
     """
-    observer = _SetItemObserver(notify=notify, optional=optional)
+    observer = SetItemObserver(notify=notify, optional=optional)
     return SingleObserverExpression(observer)
 
 
@@ -497,6 +483,6 @@ def trait(name, notify=True, optional=False):
     -------
     new_expression : ObserverExpression
     """
-    observer = _NamedTraitObserver(
+    observer = NamedTraitObserver(
         name=name, notify=notify, optional=optional)
     return SingleObserverExpression(observer)

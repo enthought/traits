@@ -8,9 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-from traits.observation._observe import (
-    add_or_remove_notifiers as _add_or_remove_notifiers,
-)
+from traits.observation._observe import add_or_remove_notifiers
 
 
 def dispatch_same(handler, event):
@@ -52,7 +50,7 @@ def observe(
     # Implicit interface: ``expression`` can be anything with a method
     # ``_as_graphs`` that returns a list of ObserverGraph.
     for graph in expression._as_graphs():
-        _add_or_remove_notifiers(
+        add_or_remove_notifiers(
             object=object,
             graph=graph,
             handler=handler,
