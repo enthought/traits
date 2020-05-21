@@ -268,8 +268,73 @@ it is invoked. The following example shows the first option:
    :start-after: observe_different_events
 
 
-Differences from |@on_trait_change|
------------------------------------
+Migration from |@on_trait_change|
+---------------------------------
+
+|@observe| can be used alongside |@on_trait_change|. Therefore it is possible
+for projects to add new code using |@observe| while slowly migrating existing
+code from |@on_trait_change| to |@observe|.
+
+The following sections provide some guide to help migrations.
+
+Observe extended trait names
+````````````````````````````
+
+The expression syntax has not changed for a simple chain of trait names.
+However, the change handler signature will require adjustments.
+
+With |@on_trait_change|::
+
+    class Bar(HasTraits):
+        value = Int()
+
+    class Foo(HasTraits):
+        bar = Instance(Bar)
+
+        @on_trait_change("bar.value")
+        def handler(self):
+            print("changed")
+
+With |@observe|::
+
+
+    class Bar(HasTraits):
+        value = Int()
+
+    class Foo(HasTraits):
+        bar = Instance(Bar)
+
+        @observe("bar.value")
+        def handler(self, event=None):
+            print("changed")
+
+Note that the handler now requires an additional argument. It can be made
+optional if the handler is called elsewhere with no arguments.
+
+
+Change handler signature is changed
+```````````````````````````````````
+
+|@on_trait_change| supports a range of call
+:ref:`signatures <notification-handler-signatures>` for the change handler.
+|@observe| supports only one. The single argument contains different content
+based on the type of changes being handled (see
+:ref:`observe-handler`).
+
+For example, for this handler::
+
+    name = Str()
+
+    @on_trait_change("name")
+    def name_updated(self, object, name, old, new):
+        print(object, name, old, new)
+
+It will have to be changed to::
+
+    @observe("name")
+    def name_updated(self, event):
+        print(event.object, event.name, event.old, event.new)
+
 
 Observe nested attributes in a container
 ````````````````````````````````````````
