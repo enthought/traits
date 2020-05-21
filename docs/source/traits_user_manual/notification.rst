@@ -10,9 +10,9 @@ using the same, powerful event-driven model that is used in writing user
 interfaces and for other problem domains.
 
 Traits 6.1 introduces a new API for configuring traits notifications:
-|@observe|, which is intended to fully replace an older API using
-|@on_trait_change| in order to overcome some of its limitations and flaws.
-While |@on_trait_change| is still supported, it may be removed in the future.
+**observe**, which is intended to fully replace an older API
+(**on_trait_change**) in order to overcome some of its limitations and flaws.
+While **on_trait_change** is still supported, it may be removed in the future.
 See :ref:`on-trait-change-notification` for details on this older API.
 
 Requesting trait attribute change notifications can be done in these
