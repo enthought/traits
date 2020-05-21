@@ -4,21 +4,70 @@ Traits CHANGELOG
 Release 6.1.0
 -------------
 
-Released: 2020-XX-XX
+Released: 2020-05-XX
 
 Release notes
 ~~~~~~~~~~~~~
 
-Mention these things:
-* observe, event object API is provisional
-* PrefixList trait type
-* Union trait type
-* Type annotation
-* PrefixMap and Map
-* TraitList, TraitDict, TraitSet : Their APIs are provisional
+The Traits library is a foundational component of the Enthought Tool Suite. It
+provides observable, typed attributes for Python classes, making those classes
+suitable for event-driven dataflow programming and for immediate use as models
+for GUIs, like those provided by the TraitsUI library.
+
+Traits 6.1.0 is a feature release in the Traits 6 series, and contains several
+major improvements.
+
+Highlights of this release:
+
+* A new ``observe`` framework for observing traited attributes and other
+  observable objects has been introduced. This is intended to provide a full
+  replacement for the existing ``on_trait_change`` mechanism, and aims to fix a
+  number of fundamental flaws in the design of that mechanism. See the
+  `observation documentation <observe-notification_>`_ for more information.
+
+* New :class:`TraitList`, :class:`TraitDict` and :class:`TraitSet` classes have
+  been added, subclassing Python's built-in ``list``, ``dict`` and ``set``
+  (respectively). Instances of these classes are observable objects in their
+  own right, and it's possible to attach observers to them directly. These
+  classes were primarily introduced to support the new observer framework, and
+  are not expected to be used directly. The API for these objects and their
+  notification system is provisional, and may change in a future Traits
+  release.
+
+* ``mypy`` typing stubs for the Traits library have been added in a separate
+  ``traits-stubs`` package, which is installed alongside Traits. This should
+  help support Traits-using projects that want to make use of type annotations
+  and type checking.
+
+* A new :class:`Union` trait type has been added. This is intended as a simpler
+  replacement for the existing :class:`Either` trait type. The :class:`Either`
+  trait type may eventually be deprecated: users are encouraged to replace uses
+  of :class:`Either` with :class:`Union` where possible.
+
+* New :class:`PrefixList`, :class:`PrefixMap` and :class:`Map` trait types have
+  been added. These replace the existing :class:`TraitPrefixList`,
+  :class:`TraitPrefixMap` and :class:`TraitMap` subclasses of
+  :class:`TraitHandler`, which are deprecated.
+
+Deprecations
+
+* The existing :class:`TraitPrefixList`, :class:`
+
+... TraitPrefixList, TraitPrefixMap, TraitMap
 
 
-More than 137 PRs went into this release. The following people contributed
+Pending deprecations
+
+... Either
+... Unicode, Long
+...
+
+
+Notes on upgrading
+
+
+
+More than 140 PRs went into this release. The following people contributed
 code changes for this release:
 
 * Ieva Cernyte
