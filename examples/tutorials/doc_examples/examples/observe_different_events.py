@@ -8,7 +8,14 @@
 #
 # Thanks for using Enthought open source!
 
-# observe_different_events.py --- Example of using observe with post_init
+"""
+This example shows how to set up notifications for changes on an object that
+is an item in a list.
+
+Note that when a new list is assigned, the change event is of a different type
+compared to when a list is mutated.
+"""
+
 from traits.api import HasTraits, Int, List, observe
 from traits.observation.api import trait
 

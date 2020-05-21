@@ -8,7 +8,15 @@
 #
 # Thanks for using Enthought open source!
 
-# observe_optional.py --- Example of using observe with post_init
+"""
+This example shows how to set up notifications for a trait that is defined
+after the instance is created.
+
+The optional flag suppresses the error that would otherwise occur because the
+trait is not found at the time ``observe`` is called. When the observed trait
+is defined, the change handler will be aded to the new trait.
+"""
+
 from traits.api import HasTraits, Int, observe
 from traits.observation.api import trait
 

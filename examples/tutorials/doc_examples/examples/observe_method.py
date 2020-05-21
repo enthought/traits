@@ -8,7 +8,13 @@
 #
 # Thanks for using Enthought open source!
 
-# observe_method.py --- Example of using observe
+"""
+This example shows how to set up notifications for changes on a single trait,
+for a specific instance of HasTraits.
+
+The change handler can be removed using the 'remove' argument on ``observe``.
+"""
+
 from traits.api import HasTraits, Int, observe
 
 class Person(HasTraits):

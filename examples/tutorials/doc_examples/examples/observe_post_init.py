@@ -8,7 +8,15 @@
 #
 # Thanks for using Enthought open source!
 
-# observe_post_init.py --- Example of using observe with post_init
+"""
+This example shows how to set up notifications for changes on a single trait,
+for all instances of this class, but only after the object state is set during
+instantiation.
+
+The 'post_init' argument suppresses change notifications during instantiation,
+allowing subsequent changes to trigger notifications.
+"""
+
 from traits.api import HasTraits, Int, observe
 
 class Person(HasTraits):

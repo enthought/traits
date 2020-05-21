@@ -8,7 +8,15 @@
 #
 # Thanks for using Enthought open source!
 
-# observe_decorator.py --- Example of using observe
+"""
+This example shows how to set up notifications for changes on a single trait,
+for all instances of this class.
+
+Note that a change notification is also fired when the instance is created.
+This is because the value provided in the instance constructor is different
+from the default value.
+"""
+
 from traits.api import HasTraits, Int, observe
 
 class Person(HasTraits):
