@@ -35,11 +35,6 @@ Highlights of this release
   notification system is provisional, and may change in a future Traits
   release.
 
-* ``mypy`` typing stubs for the Traits library have been added in a separate
-  ``traits-stubs`` package, which is installed alongside Traits. This should
-  help support Traits-using projects that want to make use of type annotations
-  and type checking.
-
 * A new :class:`.Union` trait type has been added. This is intended as a simpler
   replacement for the existing :class:`.Either` trait type. The :class:`.Either`
   trait type may eventually be deprecated: users are encouraged to replace uses
@@ -49,6 +44,12 @@ Highlights of this release
   have been added. These replace the existing :class:`.TraitPrefixList`,
   :class:`.TraitPrefixMap` and :class:`.TraitMap` subclasses of
   :class:`.TraitHandler`, which are deprecated.
+
+* ``mypy`` typing stubs for the Traits library have been added in a separate
+  ``traits-stubs`` package, which will be released separately to PyPI. This
+  should help support Traits-using projects that want to make use of type
+  annotations and type checking.
+
 
 Notes on upgrading
 ~~~~~~~~~~~~~~~~~~
@@ -65,46 +66,45 @@ with Traits 6.0. However, there are a few things to be aware of.
 Deprecations
 ~~~~~~~~~~~~
 
-* The existing :class:`TraitPrefixList`, :class:`TraitPrefixMap` and
-  :class:`TraitMap` classes are deprecated. Use the :class:`PrefixList`,
-  :class:`PrefixMap` and :class:`Map` trait types instead.
+* The existing :class:`.TraitPrefixList`, :class:`.TraitPrefixMap` and
+  :class:`.TraitMap` classes are deprecated. Use the :class:`.PrefixList`,
+  :class:`.PrefixMap` and :class:`.Map` trait types instead.
 
-* The :class:`Unicode` trait type is a deprecated alias for :class:`Str`. Use
-  :class:`Str` instead. Similarly use :class:`CStr` instead of
-  :class:`CUnicode`.
-
-* The :class:`Long` trait type is a deprecated alias for :class:`Int`. Use
-  :class:`Int` instead. Similarly use :class:`CInt` instead of :class:`CLong`.
-
-* The :class:`Color`, :class:`RGBColor` and :class:`Font` trait factories
+* The :func:`.Color`, :func:`.RGBColor` and :func:`.Font` trait factories
   have moved to TraitsUI. Import them from there instead.
 
+* The :data:`.Unicode` trait type is a deprecated alias for :class:`.Str`. Use
+  :class:`.Str` instead. Similarly use :class:`.CStr` instead of
+  :data:`.CUnicode`. Uses of :data:`.Unicode` and :data:`.CUnicode` are likely
+  to result in deprecation warnings in a future Traits release.
+
+* The :data:`.Long` trait type is a deprecated alias for :class:`.Int`. Use
+  :class:`.Int` instead. Similarly use :class:`.CInt` instead of
+  :data:`.CLong`. Uses of :data:`.Long` and :data:`.CLong` are likely to result
+  in deprecation warnings in a future Traits release.
+
+* The :mod:`traits.testing.nosetools` package is deprecated.
 
 Pending deprecations
 ~~~~~~~~~~~~~~~~~~~~
 
-Traits 6.1 formally deprecates various classes and functions. See the
-"Deprecations" section below for more details. In addition, some parts of the
-Traits library are not yet formally deprecated, but are likely to be deprecated
-before Traits 7.0.
+In addition to the deprecations listed above, some parts of the Traits library
+are not yet formally deprecated, but are likely to be deprecated before Traits
+7.0.
 
-* The :class:`Either` trait type will eventually be deprecated. Where possible,
-  use :class:`Union` instead.
+* The :class:`.Either` trait type will eventually be deprecated. Where possible,
+  use :class:`.Union` instead.
 
-* The ``trait_modified`` event trait that's present on all :class:`HasTraits`
-  subclasses will eventually be removed. Do not rely on it being present
-  in an object's ``class_traits`` dictionary.
-
-* Uses of the :class:`Unicode` trait type will soon result in deprecation
-  warnings. Replace those uses with :class:`Str`.
-
-* Uses of the :class:`Long` trait type will soon result in deprecation
-  warnings. Replace those uses with :class:`Int`.
+* The ``trait_modified`` event trait that's present on all :class:`.HasTraits`
+  subclasses will eventually be removed. Users should not rely on it being
+  present in an object's ``class_traits`` dictionary.
 
 * Trait names starting with ``trait``, ``traits``, ``_trait`` or
   ``_traits`` may become reserved for use by ETS at some point in the future.
   Avoid using these names for your own traits.
 
+Detailed PR-by-PR changes
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 More than 140 PRs went into this release. The following people contributed
 code changes for this release:
