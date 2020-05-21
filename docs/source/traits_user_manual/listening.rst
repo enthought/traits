@@ -1,11 +1,17 @@
 .. _on-trait-change-notification:
 
 ===========================================
-Trait Notification with ``on_trait_change``
+Trait Notification with **on_trait_change**
 ===========================================
 
-Requesting trait attribute change notifications can be done in several
-ways:
+**on_trait_change** is an older method for setting up change notifications. It
+has several design flaws and limitations. A newer mechanism **observe** is
+introduced for overcoming them. See :ref:`observe-notification` for details.
+
+The following sections document the usage of **on_trait_change** for supporting
+existing projects using this mechanism.
+
+Change notifications can be set up with **on_trait_change** in several ways:
 
 .. index:: notification; strategies
 

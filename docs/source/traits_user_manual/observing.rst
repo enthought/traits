@@ -1,8 +1,8 @@
 .. _observe-notification:
 
-==================================
-Trait Notification with |@observe|
-==================================
+===================================
+Trait Notification with **observe**
+===================================
 
 Requesting trait attribute change notifications can be done in these
 ways:
