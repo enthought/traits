@@ -16,30 +16,21 @@ Via class definition
 --------------------
 
 Observers can be defined for every instance of a |HasTraits| subclass by
-applying the |@observe| decorator on an instance method. It has the following
-signature:
-
-.. py:decorator:: observe(expression[, post_init=False, dispatch="same"])
-
-   Mark an instance method of |HasTraits| as the handler being called
-   when the specified trait change occurs.
-
-   :param expression: A description of the traits being observed. See :ref:`observe-expression` for details.
-   :type expression: str or list or |ObserverExpression|
-   :param bool post_init: Whether the change handler is added after the
-    initial object state is set.
-   :param str dispatch: A string dedicating how the handler should be run.
-
-Example:
+applying the |@observe| decorator on an instance method. For example, to
+observe changes to a specific trait on an object:
 
 .. literalinclude:: /../../examples/tutorials/doc_examples/examples/observe_decorator.py
    :start-after: observe_decorator
 
-Notice that a change event is emitted at instance construction time because
-the initial value is different from the default value.
+The decorated function *notify_age_change* is called a **change handler**.
+Section :ref:`observe-handler` explains the signature and behaviour expected
+for these functions. The value *"age"* is called an **expression**. Section
+:ref:`observe-expression` explains how to write an expression for
+observing traits and containers following different patterns.
 
-The *post_init* argument can be used to delay adding the change handler
-until after the object state is set.
+Notice that a change event is emitted at instance construction time because the
+initial value is different from the default value. The *post_init* argument can
+be used to delay adding the change handler until after the object state is set.
 
 .. literalinclude:: /../../examples/tutorials/doc_examples/examples/observe_post_init.py
    :start-at: @observe
@@ -48,24 +39,24 @@ until after the object state is set.
 Via instance method
 -------------------
 
-The |HasTraits.observe| method is useful for adding or removing change handler on a per
-instance basis. The method has the following signature:
-
-.. py:method:: HasTraits.observe(handler, expression[, remove=False, dispatch="same"])
-
-   Add or remove change handler to be fired when one or many traits change.
-
-   :param handler: The callable to be called when a change occurs. See :ref:`observe-handler` for details.
-   :type handler: callable(object)
-   :param expression: A description of the traits being observed. See :ref:`observe-expression` for details.
-   :type expression: str or list or |ObserverExpression|
-   :param bool remove: If true, remove the change handler for the given expression.
-   :param str dispatch: A string dedicating how the handler should be run.
-
-Example:
+The |HasTraits.observe| method on |HasTraits| is useful for adding or removing
+change handler on a per instance basis. The example above can be rewritten like
+this:
 
 .. literalinclude:: /../../examples/tutorials/doc_examples/examples/observe_method.py
    :start-after: observe_method
+
+The behaviors of the |@observe| decorator and the |HasTraits.observe| instance
+are very similar. The only differences are:
+
+* |@observe| decorator does not support removing change handlers.
+* |@observe| decorator supports setting up change handlers prior to setting
+  object state at instantiation.
+* |@observe| decorator sets up change handlers for all instances of a class
+  and those change handlers can be inherited by subclasses.
+
+Unless otherwise stated, the following sections apply to both methods for
+setting up change notifications.
 
 .. _observe-expression:
 
