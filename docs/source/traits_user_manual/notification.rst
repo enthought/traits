@@ -279,8 +279,8 @@ it is invoked. The following example shows the first option:
    :start-after: observe_different_events
 
 
-New behaviors provided by |@observe|
-------------------------------------
+Features and fixes provided by |@observe|
+-----------------------------------------
 
 In addition to the new flexibility provided by the |ObserverExpression|
 object, |@observe| aims at overcoming a number of design flaws and
