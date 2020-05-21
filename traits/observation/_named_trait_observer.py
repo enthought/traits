@@ -51,7 +51,9 @@ class NamedTraitObserver:
         self.optional = optional
 
     def __hash__(self):
-        return hash((type(self), self.name, self.notify, self.optional))
+        return hash(
+            (type(self).__name__, self.name, self.notify, self.optional)
+        )
 
     def __eq__(self, other):
         return (
