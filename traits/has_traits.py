@@ -1765,7 +1765,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         # Provide a nicer failure mode when upgrading to Traits using
         # TraitsUI 6.x
-        _check_traitsui_major_version(7)
+        check_traitsui_major_version(7)
 
         if name:
             if view_element is None:
