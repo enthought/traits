@@ -6,31 +6,32 @@ Release 6.1.0
 
 Released: 2020-05-XX
 
-Release notes
-~~~~~~~~~~~~~
-
 The Traits library is a foundational component of the Enthought Tool Suite. It
 provides observable, typed attributes for Python classes, making those classes
 suitable for event-driven dataflow programming and for immediate use as models
-for GUIs, like those provided by the TraitsUI library.
+for graphical user interfaces, like those provided by the TraitsUI library.
 
-Traits 6.1.0 is a feature release in the Traits 6 series, and contains several
-major improvements.
+Traits 6.1 is the latest feature release in the Traits 6 series, and contains
+several major improvements.
 
-Highlights of this release:
+Highlights of this release
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* A new ``observe`` framework for observing traited attributes and other
-  observable objects has been introduced. This is intended to provide a full
-  replacement for the existing ``on_trait_change`` mechanism, and aims to fix a
-  number of fundamental flaws in the design of that mechanism. See the
-  `observation documentation <observe-notification_>`_ for more information.
+* A new :mod:`observation <traits.observation>` framework for observing traited
+  attributes and other observable objects has been introduced. This is intended
+  to provide a full replacement for the existing :func:`on_trait_change`
+  mechanism, and aims to fix a number of fundamental flaws in the design of
+  that mechanism. See the :ref:`observation <observe-notification>` section of
+  the user manual for an introduction to this framework.
 
-* New :class:`TraitList`, :class:`TraitDict` and :class:`TraitSet` classes have
-  been added, subclassing Python's built-in ``list``, ``dict`` and ``set``
-  (respectively). Instances of these classes are observable objects in their
-  own right, and it's possible to attach observers to them directly. These
-  classes were primarily introduced to support the new observer framework, and
-  are not expected to be used directly. The API for these objects and their
+* New :class:`~traits.trait_list_object.TraitList`,
+  :class:`~traits.trait_dict_object.TraitDict` and
+  :class:`~traits.trait_set_object.TraitSet` classes have been added,
+  subclassing Python's built-in ``list``, ``dict`` and ``set`` (respectively).
+  Instances of these classes are observable objects in their own right, and
+  it's possible to attach observers to them directly. These classes were
+  primarily introduced to support the new observation framework, and are not
+  expected to be used directly. The API for these objects and their
   notification system is provisional, and may change in a future Traits
   release.
 
@@ -39,32 +40,70 @@ Highlights of this release:
   help support Traits-using projects that want to make use of type annotations
   and type checking.
 
-* A new :class:`Union` trait type has been added. This is intended as a simpler
-  replacement for the existing :class:`Either` trait type. The :class:`Either`
+* A new :class:`.Union` trait type has been added. This is intended as a simpler
+  replacement for the existing :class:`.Either` trait type. The :class:`.Either`
   trait type may eventually be deprecated: users are encouraged to replace uses
-  of :class:`Either` with :class:`Union` where possible.
+  of :class:`.Either` with :class:`.Union` where possible.
 
-* New :class:`PrefixList`, :class:`PrefixMap` and :class:`Map` trait types have
-  been added. These replace the existing :class:`TraitPrefixList`,
-  :class:`TraitPrefixMap` and :class:`TraitMap` subclasses of
-  :class:`TraitHandler`, which are deprecated.
+* New :class:`.PrefixList`, :class:`.PrefixMap` and :class:`.Map` trait types
+  have been added. These replace the existing :class:`.TraitPrefixList`,
+  :class:`.TraitPrefixMap` and :class:`.TraitMap` subclasses of
+  :class:`.TraitHandler`, which are deprecated.
+
+Notes on upgrading
+~~~~~~~~~~~~~~~~~~
+
+For the most part, Traits 6.1 should be entirely backwards compatible
+with Traits 6.0. However, there are a few things to be aware of.
+
+* Traits 6.1 expects TraitsUI 7.0 or later to be installed: a combination
+  of Traits 6.1 or later with TraitsUI 6.x or earlier will fail to
+  properly recognise :class:`View` class variables as TraitsUI views. If you
+  need this combination, a possible workaround is to use the
+  :meth:`default_traits_view` method.
 
 Deprecations
+~~~~~~~~~~~~
 
-* The existing :class:`TraitPrefixList`, :class:`
+* The existing :class:`TraitPrefixList`, :class:`TraitPrefixMap` and
+  :class:`TraitMap` classes are deprecated. Use the :class:`PrefixList`,
+  :class:`PrefixMap` and :class:`Map` trait types instead.
 
-... TraitPrefixList, TraitPrefixMap, TraitMap
+* The :class:`Unicode` trait type is a deprecated alias for :class:`Str`. Use
+  :class:`Str` instead. Similarly use :class:`CStr` instead of
+  :class:`CUnicode`.
+
+* The :class:`Long` trait type is a deprecated alias for :class:`Int`. Use
+  :class:`Int` instead. Similarly use :class:`CInt` instead of :class:`CLong`.
+
+* The :class:`Color`, :class:`RGBColor` and :class:`Font` trait factories
+  have moved to TraitsUI. Import them from there instead.
 
 
 Pending deprecations
+~~~~~~~~~~~~~~~~~~~~
 
-... Either
-... Unicode, Long
-...
+Traits 6.1 formally deprecates various classes and functions. See the
+"Deprecations" section below for more details. In addition, some parts of the
+Traits library are not yet formally deprecated, but are likely to be deprecated
+before Traits 7.0.
 
+* The :class:`Either` trait type will eventually be deprecated. Where possible,
+  use :class:`Union` instead.
 
-Notes on upgrading
+* The ``trait_modified`` event trait that's present on all :class:`HasTraits`
+  subclasses will eventually be removed. Do not rely on it being present
+  in an object's ``class_traits`` dictionary.
 
+* Uses of the :class:`Unicode` trait type will soon result in deprecation
+  warnings. Replace those uses with :class:`Str`.
+
+* Uses of the :class:`Long` trait type will soon result in deprecation
+  warnings. Replace those uses with :class:`Int`.
+
+* Trait names starting with ``trait``, ``traits``, ``_trait`` or
+  ``_traits`` may become reserved for use by ETS at some point in the future.
+  Avoid using these names for your own traits.
 
 
 More than 140 PRs went into this release. The following people contributed
@@ -145,7 +184,6 @@ Deprecations
 * ``TraitPrefixList`` is deprecated, use ``PrefixList``. (#974)
 * ``Color``, ``RBGColor`` and ``Font`` are now deprecated. Use the ones from
   TraitsUI instead. (#1022)
-* Expand user manual on container traits and objects. (#1058)
 
 Removals
 ~~~~~~~~
@@ -168,6 +206,7 @@ Documentation
   (#1019)
 * Fix documentation rendering issues and front matter. (#1039, #1053)
 * Clarify when dynamic default values are considered to have existed. (#1068)
+* Expand user manual on container traits and objects. (#1058)
 
 Test suite
 ~~~~~~~~~~
@@ -184,6 +223,8 @@ Build and continuous integration
 * Add configobj dependency and remove remaining 3.5 references in
   ``etstool.py``. (#1051)
 * Codecov reports are no longer retrieved for pull requests. (#1109)
+* CI tests requiring a GUI are now run against PyQt5 rather than PyQt4.
+  (#1127)
 
 Maintenance and code organization
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
