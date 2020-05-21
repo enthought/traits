@@ -358,18 +358,18 @@ Consider this example::
 
         @observe('apples:items:count')
         def print_status(self, event):
-            print("Count changed")
+            print("Count changed to {event.new}".format(event))
 
     granny_smith = Apple()
     bowl = Bowl(apples=[granny_smith, granny_smith])
-    granny_smith.count += 1    # print: 'Count changed'
+    granny_smith.count += 1    # print: 'Count changed to 1'
 
 The **granny_smith** object is repeated in the **apples** list. When one of the
 items is removed from the list, the **granny_smith** object is still there and
 we expect a change notification.
 
     bowl.apples.pop()          # granny_smith is still in the list.
-    granny_smith.count += 1    # print: 'Count changed'
+    granny_smith.count += 1    # print: 'Count changed to 2'
 
 In the older API, this situation was not accounted for. With |@observe|, this
 situation is handled by keeping a reference count on the observed objects.
