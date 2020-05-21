@@ -392,6 +392,22 @@ For backward compatibility, the default comparison mode is currently set to
 container to the new one, if a new container compares equally to the old one
 is assigned to the trait.
 
+For example, with |@on_trait_change|::
+
+    container = List()
+
+    @on_trait_change("container[]")
+    def container_updated(self):
+        ...
+
+With |@observe|, it is safer to do this::
+
+    container = List(comparison_mode=1)
+
+    @observe("container.items")
+    def container_updated(self):
+        ...
+
 
 Syntax "[]" is not supported
 ````````````````````````````
