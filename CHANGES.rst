@@ -4,6 +4,8 @@ Traits CHANGELOG
 Release 6.1.0
 -------------
 
+Released: 2020-XX-XX
+
 Release notes
 ~~~~~~~~~~~~~
 
@@ -49,7 +51,7 @@ Features
 * Implement ``observe`` to supersede ``on_trait_change`` for observing trait
   changes. (#976, #1000, #1007, #1065, #1023, #1066, #1070, #1069, #1067,
   #1080, #1082, #1079, #1071, #1072, #1075, #1085, #1089, #1078, #1093, #1086,
-  #1077, #1095, #1102, #1108, #1110, #1112, #1117, #1118, #1123)
+  #1077, #1095, #1102, #1108, #1110, #1112, #1117, #1118, #1123, #1125, #1126)
 * Make ``DefaultValue``, ``ValidateTrait`` and ``TraitKind`` available in
   ``traits.api``. (#857)
 
@@ -109,6 +111,7 @@ Documentation
 * Cross reference special handler signatures for listening to nested attributes
   in list and dict. (#894)
 * Replace 'Traits 5' with 'Traits 6' in the documentation. (#903)
+* Use major.minor version in documentation. (#1124)
 * Add initial documentation on Traits internals. (#958)
 * Fix example class ``OddInt``. (#973)
 * Add Dos and Donts for writing change handlers. (#1017)
