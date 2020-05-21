@@ -12,7 +12,7 @@ from functools import partial
 import types
 import weakref
 
-from traits.observation._exception_handling import handle_exception
+from traits.observation.exception_handling import handle_exception
 from traits.observation._exceptions import NotifierNotFound
 
 
