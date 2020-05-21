@@ -43,7 +43,7 @@ Now, if we try and assign any other value to the ``operator`` attribute, we
 find that the class will raise a ``TraitError``::
 
     >>> image.operator = 3
-    TraitError: The 'operator' trait of an Image instance must be a , but a value of 3 <class 'int'> was specified.
+    TraitError: The 'operator' trait of an Image instance must be a string, but a value of 3 <class 'int'> was specified.
 
 Traits has trait types corresponding to all the basic Python data types:
 ``Int``, ``Float``, ``Complex``, ``Bool``, and ``Str``.  It also has trait
