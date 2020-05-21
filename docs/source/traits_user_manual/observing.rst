@@ -268,6 +268,137 @@ it is invoked. The following example shows the first option:
    :start-after: observe_different_events
 
 
+New behaviors provided by |@observe|
+------------------------------------
+
+In addition to the new flexibility provided by the |ObserverExpression|
+object, |@observe| aims at overcoming a number of design flaws and
+limitations in the older API. The following sections highlight the differences
+and new features supported by |@observe|.
+
+Existence of observed items is checked by default
+`````````````````````````````````````````````````
+
+The existence of a trait is checked when the handler is being added to the
+instance::
+
+    class Foo(HasTraits):
+        name = Str()
+
+        @observe("nam")   # typo, or an omission in renaming
+        def _name_updated(self, event):
+            print("name changed")
+
+    foo = Foo()   # Error here: Trait named 'nam' not found
+
+There are situations where it is desirable to add the change handler before
+a trait is defined.
+
+In that case, the *optional* argument on |trait| can be used:
+
+.. literalinclude:: /../../examples/tutorials/doc_examples/examples/observe_optional.py
+   :start-at: class
+
+
+Arbitrarily nested containers are supported
+```````````````````````````````````````````
+
+It is now possible to notify for changes on an object in a very nested
+container. Suppose we have these classes::
+
+    class Bar(HasTraits):
+        value = Int()
+
+    class Foo(HasTraits):
+        bars = Dict(Str(), List(Instance(Bar)))
+
+To observe *Bar.value*, one can do::
+
+    foo = Foo()
+    foo.observe(handler, "bars.items.items.value")
+
+Or::
+
+    foo.observe(handler, trait("bars").dict_items().list_items().trait("value")
+
+
+|@observe| decorator can be stacked
+```````````````````````````````````
+
+The same handler can be used against different changes and with different
+parameters. With |@observe|, one can stack the decorator on the same method::
+
+    @observe("attr1", post_init=True)
+    @observe("attr2", post_init=False)
+    def _update_plots(self, event):
+        ...
+
+
+Duplicated objects are now monitored
+````````````````````````````````````
+
+Consider this example::
+
+    class Apple(HasTraits):
+        count = Int(0)
+
+    class Bowl(HasTraits):
+        apples = List(Instance(Apple))
+
+        @observe('apples:items:count')
+        def print_status(self, event):
+            print("Count changed")
+
+    granny_smith = Apple()
+    bowl = Bowl(apples=[granny_smith, granny_smith])
+    granny_smith.count += 1    # print: 'Count changed'
+
+The **granny_smith** object is repeated in the **apples** list. When one of the
+items is removed from the list, the **granny_smith** object is still there and
+we expect a change notification.
+
+    bowl.apples.pop()          # granny_smith is still in the list.
+    granny_smith.count += 1    # print: 'Count changed'
+
+In the older API, this situation was not accounted for. With |@observe|, this
+situation is handled by keeping a reference count on the observed objects.
+
+This means |HasTraits.observe| cannot be idempotent.
+
+
+|HasTraits.observe| is not idempotent
+`````````````````````````````````````
+
+For most use cases, change handlers can be put up in a fire-and-forget
+fashion and they are never removed. However for some use cases, it is important
+to remove change handlers when they are no longer needed.
+
+Calling |HasTraits.observe| to add an existing change handler will increment
+an internal reference count. The change handler can only be completely removed
+by calling |HasTraits.observe| the same number of times with *remove* set to
+True.
+
+In other words::
+
+    foo.observe(handler, "number")
+    foo.observe(handler, "number")
+    foo.observe(handler, "number")
+
+    foo.number += 1  # handler is called once
+
+    foo.observe(handler, "number", remove=True)
+    foo.observe(handler, "number", remove=True)
+
+    foo.number += 1  # handler is still called once
+
+    foo.observe(handler, "number", remove=True)
+
+    foo.number += 1  # handler is not called.
+
+Attempts to remove change handlers that do not exist will also lead to an
+exception.
+
+
 Migration from |@on_trait_change|
 ---------------------------------
 
@@ -447,137 +578,6 @@ for changes on traits that do NOT have a metadata with the give name. This
 usage can be replaced by |match|::
 
   match(lambda name, trait: trait.metadata_name is None)
-
-
-New behaviors provided by |@observe|
-------------------------------------
-
-In addition to the new flexibility provided by the |ObserverExpression|
-object, |@observe| aims at overcoming a number of design flaws and
-limitations in the older API. The following sections highlight the differences
-and new features supported by |@observe|.
-
-Existence of observed items is checked by default
-`````````````````````````````````````````````````
-
-The existence of a trait is checked when the handler is being added to the
-instance::
-
-    class Foo(HasTraits):
-        name = Str()
-
-        @observe("nam")   # typo, or an omission in renaming
-        def _name_updated(self, event):
-            print("name changed")
-
-    foo = Foo()   # Error here: Trait named 'nam' not found
-
-There are situations where it is desirable to add the change handler before
-a trait is defined.
-
-In that case, the *optional* argument on |trait| can be used:
-
-.. literalinclude:: /../../examples/tutorials/doc_examples/examples/observe_optional.py
-   :start-at: class
-
-
-Arbitrarily nested containers are supported
-```````````````````````````````````````````
-
-It is now possible to notify for changes on an object in a very nested
-container. Suppose we have these classes::
-
-    class Bar(HasTraits):
-        value = Int()
-
-    class Foo(HasTraits):
-        bars = Dict(Str(), List(Instance(Bar)))
-
-To observe *Bar.value*, one can do::
-
-    foo = Foo()
-    foo.observe(handler, "bars.items.items.value")
-
-Or::
-
-    foo.observe(handler, trait("bars").dict_items().list_items().trait("value")
-
-
-|@observe| decorator can be stacked
-```````````````````````````````````
-
-The same handler can be used against different changes and with different
-parameters. With |@observe|, one can stack the decorator on the same method::
-
-    @observe("attr1", post_init=True)
-    @observe("attr2", post_init=False)
-    def _update_plots(self, event):
-        ...
-
-
-Duplicated objects are now monitored
-````````````````````````````````````
-
-Consider this example::
-
-    class Apple(HasTraits):
-        count = Int(0)
-
-    class Bowl(HasTraits):
-        apples = List(Instance(Apple))
-
-        @observe('apples:items:count')
-        def print_status(self, event):
-            print("Count changed")
-
-    granny_smith = Apple()
-    bowl = Bowl(apples=[granny_smith, granny_smith])
-    granny_smith.count += 1    # print: 'Count changed'
-
-The **granny_smith** object is repeated in the **apples** list. When one of the
-items is removed from the list, the **granny_smith** object is still there and
-we expect a change notification.
-
-    bowl.apples.pop()          # granny_smith is still in the list.
-    granny_smith.count += 1    # print: 'Count changed'
-
-In the older API, this situation was not accounted for. With |@observe|, this
-situation is handled by keeping a reference count on the observed objects.
-
-This means |HasTraits.observe| cannot be idempotent.
-
-
-|HasTraits.observe| is not idempotent
-`````````````````````````````````````
-
-For most use cases, change handlers can be put up in a fire-and-forget
-fashion and they are never removed. However for some use cases, it is important
-to remove change handlers when they are no longer needed.
-
-Calling |HasTraits.observe| to add an existing change handler will increment
-an internal reference count. The change handler can only be completely removed
-by calling |HasTraits.observe| the same number of times with *remove* set to
-True.
-
-In other words::
-
-    foo.observe(handler, "number")
-    foo.observe(handler, "number")
-    foo.observe(handler, "number")
-
-    foo.number += 1  # handler is called once
-
-    foo.observe(handler, "number", remove=True)
-    foo.observe(handler, "number", remove=True)
-
-    foo.number += 1  # handler is still called once
-
-    foo.observe(handler, "number", remove=True)
-
-    foo.number += 1  # handler is not called.
-
-Attempts to remove change handlers that do not exist will also lead to an
-exception.
 
 
 ..
