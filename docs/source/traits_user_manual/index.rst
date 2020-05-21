@@ -21,6 +21,11 @@ Contents
     debugging.rst
     internals.rst
 
+.. toctree::
+   :hidden:
+
+   listening.rst
+
 
 Indices and tables
 ==================
