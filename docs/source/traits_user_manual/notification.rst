@@ -31,7 +31,7 @@ applying the |@observe| decorator on an instance method. For example, to
 observe changes to a specific trait on an object:
 
 .. literalinclude:: /../../examples/tutorials/doc_examples/examples/observe_decorator.py
-   :start-after: observe_decorator
+   :start-at: from traits.api
 
 The decorated function *notify_age_change* is called a **change handler**.
 Section :ref:`observe-handler` explains the signature and behaviour expected
@@ -55,7 +55,7 @@ change handler on a per instance basis. The example above can be rewritten like
 this:
 
 .. literalinclude:: /../../examples/tutorials/doc_examples/examples/observe_method.py
-   :start-after: observe_method
+   :start-at: from traits.api
 
 The behaviors of the |@observe| decorator and the |HasTraits.observe| instance
 are very similar. The only differences are:
@@ -276,7 +276,7 @@ changes, or the handler will need to check the type of the event parameter when
 it is invoked. The following example shows the first option:
 
 .. literalinclude:: /../../examples/tutorials/doc_examples/examples/observe_different_events.py
-   :start-after: observe_different_events
+   :start-at: from traits.api
 
 
 Features and fixes provided by |@observe|
