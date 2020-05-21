@@ -20,11 +20,7 @@ Contents
     testing.rst
     debugging.rst
     internals.rst
-
-.. toctree::
-   :hidden:
-
-   listening.rst
+    appendix.rst
 
 
 Indices and tables
