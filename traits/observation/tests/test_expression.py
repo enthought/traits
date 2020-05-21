@@ -171,7 +171,7 @@ class TestObserverExpressionComposition(unittest.TestCase):
         expr1 = create_expression(observer1)
         expr2 = create_expression(observer2)
 
-        expr = expression.join_(expr1, expr2)
+        expr = expression.join(expr1, expr2)
 
         expected = [
             create_graph(
@@ -626,7 +626,7 @@ class TestObserverExpressionEquality(unittest.TestCase):
         expr1 = create_expression(1)
         expr2 = create_expression(2)
 
-        combined1 = expression.join_(expr1, expr2)
+        combined1 = expression.join(expr1, expr2)
         combined2 = expr1.then(expr2)
 
         self.assertEqual(combined1, combined2)

@@ -13,7 +13,7 @@ import unittest
 from unittest import mock
 import weakref
 
-from traits.observation._exception_handling import (
+from traits.observation.exception_handling import (
     pop_exception_handler,
     push_exception_handler,
 )
