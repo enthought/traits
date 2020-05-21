@@ -366,7 +366,7 @@ Consider this example::
 
 The **granny_smith** object is repeated in the **apples** list. When one of the
 items is removed from the list, the **granny_smith** object is still there and
-we expect a change notification.
+we expect a change notification::
 
     bowl.apples.pop()          # granny_smith is still in the list.
     granny_smith.count += 1    # print: 'Count changed to 2'
