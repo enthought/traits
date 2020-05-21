@@ -249,7 +249,7 @@ The following expectations apply to any change handler:
 
 When the handler is invoked, it is given an **event** object which provides
 information about the change observed. The type and signature of *event*
-depends on the context of the change. However they all include a parameter
+depend on the context of the change. However they all include a parameter
 *object* referring to the object being modified:
 
 .. rubric:: Change event types
@@ -565,7 +565,7 @@ It will have to be changed to::
 Syntax "[]" is not supported
 ````````````````````````````
 
-Support we have this class::
+Suppose we have this class::
 
     class Foo(HasTraits):
         container = List(Instance(Bar))
