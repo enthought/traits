@@ -54,7 +54,7 @@ from .trait_base import (
 )
 from .trait_errors import TraitError
 from .util.deprecated import deprecated
-from .util.traitsui_helpers import check_traitsui_major_version
+from .util._traitsui_helpers import check_traitsui_major_version
 from .trait_converters import check_trait, mapped_trait_for, trait_for
 
 
@@ -1765,7 +1765,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
 
         # Provide a nicer failure mode when upgrading to Traits using
         # TraitsUI 6.x
-        check_traitsui_major_version(7)
+        _check_traitsui_major_version(7)
 
         if name:
             if view_element is None:

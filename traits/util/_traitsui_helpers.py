@@ -9,6 +9,8 @@
 # Thanks for using Enthought open source!
 
 """ Functions to help removing TraitsUI being a dependency of Traits.
+
+Used internally by traits only.
 """
 # All imports of TraitsUI should be delayed.
 
@@ -16,6 +18,8 @@
 def check_traitsui_major_version(major):
     """ Raise RuntimeError if TraitsUI major version is less than the required
     value.
+
+    Used internally in traits only.
 
     Parameters
     ----------

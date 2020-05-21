@@ -13,7 +13,7 @@ import unittest
 from unittest import mock
 
 from traits.testing.optional_dependencies import requires_traitsui
-from traits.util.traitsui_helpers import check_traitsui_major_version
+from traits.util._traitsui_helpers import check_traitsui_major_version
 
 
 @requires_traitsui
