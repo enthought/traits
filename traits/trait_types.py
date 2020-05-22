@@ -2555,15 +2555,13 @@ class PrefixList(BaseStr):
     then the actual value assigned to the trait attribute is the
     corresponding *s*\ :sub:`i` value that *v* matched.
 
-    The list of legal values can be provided as a list or tuple of values.
-    That is, ``PrefixList(['one', 'two', 'three'])`` and
-    ``PrefixList('one', 'two', 'three')`` are equivalent.
+    The legal values can be provided as a list or tuple of values.
 
     Example
     -------
     ::
         class Person(HasTraits):
-            married = PrefixList('yes', 'no')
+            married = PrefixList(['yes', 'no'])
 
     The Person class has a **married** trait that accepts any of the
     strings 'y', 'ye', 'yes', 'n', or 'no' as valid values. However, the
@@ -2577,9 +2575,8 @@ class PrefixList(BaseStr):
 
     Parameters
     ----------
-    *values
-        Either all legal string values for the enumeration, or a single list
-        or tuple of legal string values.
+    values
+        A single list or tuple of legal string values.
 
     Attributes
     ----------
@@ -2593,11 +2590,13 @@ class PrefixList(BaseStr):
     #: The default value type to use (i.e. 'constant'):
     default_value_type = DefaultValue.constant
 
-    def __init__(self, *values, **metadata):
-
-        if (len(values) == 1) and (type(values[0]) in SequenceTypes):
-            values = values[0]
-        self.values = values[:]
+    def __init__(self, values, **metadata):
+        if not isinstance(values, SequenceTypes):
+            raise ValueError(
+                "Legal values should be provided via a list or a tuple, "
+                "got {!r}.".format(values)
+        )
+        self.values = tuple(values)
         self.values_ = values_ = {}
         for key in values:
             values_[key] = key

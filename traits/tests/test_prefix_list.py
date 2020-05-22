@@ -21,7 +21,7 @@ from traits.api import HasTraits, TraitError, PrefixList
 class TestPrefixList(unittest.TestCase):
     def test_assignment(self):
         class A(HasTraits):
-            foo = PrefixList("zero", "one", "two", default_value="one")
+            foo = PrefixList(["zero", "one", "two"], default_value="one")
 
         a = A()
 
@@ -33,7 +33,7 @@ class TestPrefixList(unittest.TestCase):
 
     def test_bad_types(self):
         class A(HasTraits):
-            foo = PrefixList("zero", "one", "two", default_value="one")
+            foo = PrefixList(["zero", "one", "two"], default_value="one")
 
         a = A()
 
@@ -45,7 +45,7 @@ class TestPrefixList(unittest.TestCase):
 
     def test_repeated_prefix(self):
         class A(HasTraits):
-            foo = PrefixList("abc1", "abc2")
+            foo = PrefixList(("abc1", "abc2"))
         a = A()
 
         a.foo = "abc1"
@@ -57,11 +57,27 @@ class TestPrefixList(unittest.TestCase):
     def test_invalid_default(self):
         with self.assertRaises(ValueError):
             class A(HasTraits):
-                foo = PrefixList("zero", "one", "two", default_value="uno")
+                foo = PrefixList(["zero", "one", "two"], default_value="uno")
+
+    def test_values_not_sequence(self):
+        # Defining values with this signature is not supported
+        with self.assertRaises(TypeError):
+            PrefixList("zero", "one", "two")
+
+    def test_values_not_all_iterables(self):
+        # Make sure we don't confuse other sequence types, e.g. str
+        with self.assertRaises(ValueError) as exception_context:
+            PrefixList("zero")
+
+        self.assertEqual(
+            str(exception_context.exception),
+            "Legal values should be provided via a list or a tuple, "
+            "got 'zero'."
+        )
 
     def test_pickle_roundtrip(self):
         class A(HasTraits):
-            foo = PrefixList("zero", "one", "two", default_value="one")
+            foo = PrefixList(["zero", "one", "two"], default_value="one")
 
         a = A()
         foo_trait = a.traits()["foo"]
