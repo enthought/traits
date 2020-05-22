@@ -16,6 +16,8 @@ but it usually is not what you would want to provide for your users.
 With a little more effort using the features of TraitsUI, you can
 design a dialog which is more pleasing::
 
+    from traitsui.api import Item, View
+
     class Image(HasStrictTraits):
         ...
 
