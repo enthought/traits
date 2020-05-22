@@ -654,9 +654,45 @@ The following example illustrates the difference between `Either` and `Union`::
     ...     primes = Union([2], None, {'3':6}, 5, 7, 11)
     ValueError: Union trait declaration expects a trait type or an instance of trait type or None, but got [2] instead
 
-Note that static default values are defined on Union via the
-**default_value** attribute, whereas Either uses the **default** attribute.
-The naming of **default_value** is consistent with other trait types.
+
+.. _migration_either_to_union:
+
+.. rubric:: Migration from Either to Union
+
+* Static default value on Union is provided via the **default_value**
+  attribute, whereas Either uses the **default** attribute.
+  The naming of **default_value** is consistent with other trait types.
+  For example::
+
+      Either(None, Str(), default="unknown")
+
+  would be changed to::
+
+      Union(None, Str(), default_value="unknown")
+
+* If a default value is not defined, Union uses the default value from the
+  first trait in its definition, whereas Either uses None.
+
+  For example::
+
+      Either(Int(), Float())
+
+  has a default value of None. However None is not one of the allowed values.
+  If the trait is later set to None from a non-None value, a validation error
+  will occur.
+
+  If the trait definition is changed to::
+
+      Union(Int(), Float())
+
+  Then the default value will be 0, which is the default value of the first
+  Int trait.
+
+  To keep None as the default, one could add None as the first item::
+
+      Union(None, Int(), Float())
+
+  With this, None also becomes one of the allowed values.
 
 .. index:: multiple values, defining trait with
 
