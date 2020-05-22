@@ -323,7 +323,7 @@ the table.
 | Password         | Password( [*value* = '', *minlen* = 0, *maxlen* =        |
 |                  | sys.maxint, *regex* = '', \*\*\ *metadata*] )            |
 +------------------+----------------------------------------------------------+
-| PrefixList       | PrefixList( [*values* = None, \*\*\ *metadata*] )        |
+| PrefixList       | PrefixList( *values*\ [, \*\*\ *metadata*] )             |
 +------------------+----------------------------------------------------------+
 | PrefixMap        | PrefixMap( *map*\ [, \*\*\ *metadata*] )                 |
 +------------------+----------------------------------------------------------+
@@ -535,7 +535,7 @@ The following is an example of using PrefixList::
     from traits.api import HasTraits, PrefixList
 
     class Person(HasTraits):
-        married = PrefixList("yes", "no")
+        married = PrefixList(["yes", "no"])
 
 This example defines a Person class which has a **married** trait
 attribute which accepts values "yes" and "no" or any unique
