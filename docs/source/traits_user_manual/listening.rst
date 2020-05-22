@@ -549,8 +549,11 @@ are:
 
 .. method:: _name_changed()
 .. method:: _name_changed(new)
+   :noindex:
 .. method:: _name_changed(old, new)
+   :noindex:
 .. method:: _name_changed(name, old, new)
+   :noindex:
 
 The method name can also be _\ *name*\ _fired(), with the same set of
 signatures.
@@ -598,8 +601,11 @@ supported are:
 
 .. method:: _anytrait_changed()
 .. method:: _anytrait_changed(name)
+   :noindex:
 .. method:: _anytrait_changed(name, new)
+   :noindex:
 .. method:: _anytrait_changed(name, old, new)
+   :noindex:
 
 The meanings for *name*, *new*, and *old* are the same as for
 attribute-specific notification functions.
