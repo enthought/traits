@@ -272,5 +272,6 @@ texinfo_documents = [
 
 intersphinx_mapping = {
     "pyface": ("https://docs.enthought.com/pyface", None),
+    "python": ("https://docs.python.org/3", None),
     "traitsui": ("https://docs.enthought.com/traitsui", None),
 }
