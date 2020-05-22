@@ -409,7 +409,7 @@ class CList(_List[_S, _T]):
 class PrefixList(BaseStr):
     def __init__(
             self,
-            *values: _Union[str, _Sequence[str]],
+            values: _Sequence[str],
             **metadata: _Any,
     ) -> None:
         ...
