@@ -21,7 +21,7 @@ Highlights of this release
   attributes and other observable objects has been introduced. This is intended
   to provide a full replacement for the existing :func:`on_trait_change`
   mechanism, and aims to fix a number of fundamental flaws and limitations of
-  that mechanism. See the :ref:`observation <observe-notification>` section of
+  that mechanism. See the :ref:`observe-notification` section of
   the user manual for an introduction to this framework.
 
 * New :class:`~traits.trait_list_object.TraitList`,
@@ -45,10 +45,10 @@ Highlights of this release
   :class:`.TraitPrefixMap` and :class:`.TraitMap` subclasses of
   :class:`.TraitHandler`, which are deprecated.
 
-* ``mypy`` typing stubs for the Traits library have been added in a separate
+* Typing stubs for the Traits library have been added in a
   ``traits-stubs`` package, which will be released separately to PyPI. This
   should help support Traits-using projects that want to make use of type
-  annotations and type checking.
+  annotations and type checkers like `mypy <http://mypy-lang.org/>`_.
 
 
 Notes on upgrading
