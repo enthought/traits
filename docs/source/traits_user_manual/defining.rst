@@ -659,9 +659,9 @@ The following example illustrates the difference between `Either` and `Union`::
 
 .. rubric:: Migration from Either to Union
 
-* Static default value on Union is provided via the **default_value**
-  attribute, whereas Either uses the **default** attribute.
-  The naming of **default_value** is consistent with other trait types.
+* Static default values are defined on Union via the **default_value**
+  attribute, whereas Either uses the **default** attribute. The naming of
+  **default_value** is consistent with other trait types.
   For example::
 
       Either(None, Str(), default="unknown")
@@ -686,7 +686,7 @@ The following example illustrates the difference between `Either` and `Union`::
       Union(Int(), Float())
 
   Then the default value will be 0, which is the default value of the first
-  Int trait.
+  trait.
 
   To keep None as the default, one could add None as the first item::
 
