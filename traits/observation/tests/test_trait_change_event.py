@@ -31,7 +31,7 @@ class TestTraitChangeEvent(unittest.TestCase):
         actual = repr(event)
         self.assertEqual(
             actual,
-            "<TraitChangeEvent(object=None, name='name', old=1, new=2)>"
+            "TraitChangeEvent(object=None, name='name', old=1, new=2)"
         )
 
 
