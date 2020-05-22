@@ -70,7 +70,7 @@ class ObserverGraph:
     def __hash__(self):
         """ Return the hash of this ObserverGraph."""
         return hash(
-            (type(self), self.node, frozenset(self.children))
+            (type(self).__name__, self.node, frozenset(self.children))
         )
 
     def __eq__(self, other):

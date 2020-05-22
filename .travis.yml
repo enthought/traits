@@ -3,6 +3,11 @@ dist: xenial
 services:
   - xvfb
 
+addons:
+  apt:
+    packages:
+    - libxkbcommon-x11-0
+
 env:
   global:
     - INSTALL_EDM_VERSION=2.0.0

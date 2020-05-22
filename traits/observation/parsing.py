@@ -12,12 +12,10 @@ import contextlib
 from functools import reduce
 import operator
 
-import traits.observation.expression as _expr_module
-from traits.observation._generated_parser import (
-    Lark_StandAlone as _Lark_StandAlone
-)
+from traits.observation import _generated_parser
+import traits.observation.expression as expression_module
 
-_LARK_PARSER = _Lark_StandAlone()
+_LARK_PARSER = _generated_parser.Lark_StandAlone()
 
 
 def _handle_series(trees, default_notifies):
@@ -39,7 +37,7 @@ def _handle_series(trees, default_notifies):
         _handle_tree(tree, default_notifies=default_notifies)
         for tree in trees
     )
-    return _expr_module.join(*expressions)
+    return expression_module.join(*expressions)
 
 
 def _handle_parallel(trees, default_notifies):
@@ -165,7 +163,7 @@ def _handle_trait(trees, default_notifies):
     token, = trees
     name = token.value
     notify = default_notifies[-1]
-    return _expr_module.trait(name, notify=notify)
+    return expression_module.trait(name, notify=notify)
 
 
 def _handle_metadata(trees, default_notifies):
@@ -186,7 +184,7 @@ def _handle_metadata(trees, default_notifies):
     token, = trees
     metadata_name = token.value
     notify = default_notifies[-1]
-    return _expr_module.metadata(metadata_name, notify=notify)
+    return expression_module.metadata(metadata_name, notify=notify)
 
 
 def _handle_items(trees, default_notifies):
@@ -212,10 +210,10 @@ def _handle_items(trees, default_notifies):
     return reduce(
         operator.or_,
         (
-            _expr_module.trait("items", notify=notify, optional=True),
-            _expr_module.dict_items(notify=notify, optional=True),
-            _expr_module.list_items(notify=notify, optional=True),
-            _expr_module.set_items(notify=notify, optional=True),
+            expression_module.trait("items", notify=notify, optional=True),
+            expression_module.dict_items(notify=notify, optional=True),
+            expression_module.list_items(notify=notify, optional=True),
+            expression_module.set_items(notify=notify, optional=True),
         )
     )
 
