@@ -28,8 +28,13 @@ class TestPrefixList(unittest.TestCase):
         a.foo = 'z'
         self.assertEqual(a.foo, "zero")
 
-        with self.assertRaises(TraitError):
+        with self.assertRaises(TraitError) as exception_context:
             a.foo = ''
+        self.assertIn(
+            "The 'foo' trait of an A instance must be 'zero' or 'one' or 'two'"
+            " (or any unique prefix), but a value of ''",
+            str(exception_context.exception),
+        )
 
     def test_bad_types(self):
         class A(HasTraits):
