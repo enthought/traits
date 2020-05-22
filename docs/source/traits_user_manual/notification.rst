@@ -100,7 +100,7 @@ most of the use cases commonly encountered by users.
      - Meaning
    * - *attr1\.attr2*
      - Matches a trait named *attr2* on an object referenced by a trait named
-       *item1* on the current object. Changes to *attr1* or *attr2* will
+       *attr1* on the current object. Changes to *attr1* or *attr2* will
        trigger notifications.
    * - *attr1\:attr2*
      - Matches a trait named *attr2* on an object referenced by a trait named
