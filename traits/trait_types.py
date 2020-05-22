@@ -2595,7 +2595,7 @@ class PrefixList(BaseStr):
             raise ValueError(
                 "Legal values should be provided via a list or a tuple, "
                 "got {!r}.".format(values)
-        )
+            )
         self.values = tuple(values)
         self.values_ = values_ = {}
         for key in values:
