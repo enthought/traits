@@ -259,7 +259,7 @@ Maintenance and code organization
   (#967)
 * Fix overcomplicated ``__deepcopy__`` implementation. (#992)
 * Add ``__repr__`` implementation for ``TraitListEvent``, ``TraitDictEvent``
-  and ``TraitSetEvent``. (#1006)
+  and ``TraitSetEvent``. (#1006, #1148, #1149)
 * Remove caching of editor factories. (#1032)
 * Remove conditional traitsui imports. (#1033)
 * Remove code duplication in ``tutor.py``. (#1034)

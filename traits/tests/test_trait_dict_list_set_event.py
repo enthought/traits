@@ -31,7 +31,8 @@ class Foo(HasTraits):
 
 class TestTraitEvent(unittest.TestCase):
 
-    foo = Foo()
+    def setUp(self):
+        self.foo = Foo()
 
     def test_list_repr(self):
         self.foo.alist[::2] = [4, 5]
