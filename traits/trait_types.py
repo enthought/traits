@@ -2613,8 +2613,9 @@ class PrefixList(TraitType):
     def value_for(self, value):
         if not isinstance(value, str):
             raise TraitError(
-                "Value must be {}, but a value of {!r} {!r} was "
-                "specified.".format(self.info(), value, type(value))
+                "The value of a {} trait must be {}, but a value of {!r} {!r} "
+                "was specified.".format(
+                    self.__class__.__name__, self.info(), value, type(value))
             )
 
         if value in self.values_:
@@ -2626,8 +2627,9 @@ class PrefixList(TraitType):
             return match
 
         raise TraitError(
-            "Value must be {}, but a value of {!r} {!r} was "
-            "specified.".format(self.info(), value, type(value))
+            "The value of a {} trait must be {}, but a value of {!r} {!r} was "
+            "specified.".format(
+                self.__class__.__name__, self.info(), value, type(value))
         )
 
     def info(self):

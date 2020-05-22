@@ -65,7 +65,8 @@ class TestPrefixList(unittest.TestCase):
                 foo = PrefixList(["zero", "one", "two"], default_value="uno")
 
         self.assertIn(
-            "but a value of 'uno'",
+            "The value of a PrefixList trait must be 'zero' or 'one' or 'two' "
+            "(or any unique prefix), but a value of 'uno'",
             str(exception_context.exception),
         )
 
