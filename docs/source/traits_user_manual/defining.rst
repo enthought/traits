@@ -688,7 +688,7 @@ The following example illustrates the difference between `Either` and `Union`::
   Then the default value will be 0, which is the default value of the first
   trait.
 
-  To keep None as the default, one could add None as the first item::
+  To keep None as the default, use None as the first item::
 
       Union(None, Int(), Float())
 
