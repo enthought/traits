@@ -19,7 +19,7 @@ import setuptools
 # together with information from the version control system, and then injected
 # into the package source.
 MAJOR = 6
-MINOR = 1
+MINOR = 2
 MICRO = 0
 PRERELEASE = ""
 IS_RELEASED = False
