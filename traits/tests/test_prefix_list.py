@@ -71,7 +71,7 @@ class TestPrefixList(unittest.TestCase):
 
         self.assertEqual(
             str(exception_context.exception),
-            "Legal values should be provided via a list, "
+            "Legal values should be provided via an iterable of strings, "
             "got 'zero'."
         )
 

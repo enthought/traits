@@ -2555,7 +2555,7 @@ class PrefixList(BaseStr):
     then the actual value assigned to the trait attribute is the
     corresponding *s*\ :sub:`i` value that *v* matched.
 
-    The legal values can be provided as a list of values.
+    The legal values can be provided as an iterable of values.
 
     Example
     -------
@@ -2576,7 +2576,7 @@ class PrefixList(BaseStr):
     Parameters
     ----------
     values
-        A single list of legal string values.
+        A single iterable of legal string values.
 
     Attributes
     ----------
@@ -2591,12 +2591,12 @@ class PrefixList(BaseStr):
     default_value_type = DefaultValue.constant
 
     def __init__(self, values, **metadata):
-        if not isinstance(values, SequenceTypes):
+        if isinstance(values, (str, bytes, bytearray)):
             raise TypeError(
-                "Legal values should be provided via a list, "
+                "Legal values should be provided via an iterable of strings, "
                 "got {!r}.".format(values)
             )
-        self.values = tuple(values)
+        self.values = list(values)
         self.values_ = values_ = {}
         for key in values:
             values_[key] = key
