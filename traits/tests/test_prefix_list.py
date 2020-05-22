@@ -55,7 +55,7 @@ class TestPrefixList(unittest.TestCase):
             a.foo = "abc"
 
     def test_invalid_default(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TraitError):
             class A(HasTraits):
                 foo = PrefixList("zero", "one", "two", default_value="uno")
 
