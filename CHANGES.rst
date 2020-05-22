@@ -36,10 +36,7 @@ Highlights of this release
   a future Traits release.
 
 * A new :class:`.Union` trait type has been added. This is intended as a
-  simpler replacement for the existing :class:`.Either` trait type. The
-  :class:`.Either` trait type may eventually be deprecated: users are
-  encouraged to replace uses of :class:`.Either` with :class:`.Union` where
-  possible.
+  simpler replacement for the existing :class:`.Either` trait type.
 
 * New :class:`.PrefixList`, :class:`.PrefixMap` and :class:`.Map` trait types
   have been added. These replace the existing :class:`.TraitPrefixList`,
@@ -108,7 +105,10 @@ deprecated before Traits 7.0. Users should be aware of the following possible
 future changes:
 
 * The :class:`.Either` trait type will eventually be deprecated. Where
-  possible, use :class:`.Union` instead.
+  possible, use :class:`.Union` instead. When transitioning, note that
+  :class:`.Either` and :class:`.Union` use different keywords for specifying a
+  static default value: :class:`.Either` uses ``default``, while
+  :class:`.Union` uses ``default_value``.
 
 * The ``trait_modified`` event trait that's present on all :class:`.HasTraits`
   subclasses will eventually be removed. Users should not rely on it being
