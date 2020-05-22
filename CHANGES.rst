@@ -60,7 +60,7 @@ However, there are a few things to be aware of when upgrading.
 
 * Traits 6.1 is not compatible with TraitsUI versions older than TraitsUI 7.0.
   A combination of Traits 6.1 or later with TraitsUI 6.x or earlier will fail
-  to properly recognise :class:`traitsui.view.View` class variables as TraitsUI
+  to properly recognise :class:`~traitsui.view.View` class variables as TraitsUI
   views, and an error will be raised if you attempt to create a TraitsUI view.
 
 * When listening for changes to the items of a :class:`.List` trait, an index
