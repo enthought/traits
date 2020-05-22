@@ -27,7 +27,8 @@ Highlights of this release
 * New :class:`~traits.trait_list_object.TraitList`,
   :class:`~traits.trait_dict_object.TraitDict` and
   :class:`~traits.trait_set_object.TraitSet` classes have been added,
-  subclassing Python's built-in ``list``, ``dict`` and ``set`` (respectively).
+  subclassing Python's built-in ``list``, ``dict`` and ``set``
+  (respectively).
   Instances of these classes are observable objects in their own right, and
   it's possible to attach observers to them directly. These classes were
   primarily introduced to support the new observation framework, and are not
@@ -57,16 +58,16 @@ Notes on upgrading
 As far as possible, Traits 6.1 is backwards compatible with Traits 6.0.
 However, there are a few things to be aware of when upgrading.
 
-* Traits 6.1 expects TraitsUI 7.0 or later to be installed: a combination
-  of Traits 6.1 or later with TraitsUI 6.x or earlier will fail to properly
-  recognise :class:`View` class variables as TraitsUI views, and consequently
-  an error will be raised if you attempt to create a TraitsUI view.
+* Traits 6.1 is not compatible with TraitsUI versions older than TraitsUI 7.0.
+  A combination of Traits 6.1 or later with TraitsUI 6.x or earlier will fail
+  to properly recognise :class:`traitsui.view.View` class variables as TraitsUI
+  views, and an error will be raised if you attempt to create a TraitsUI view.
 
-* When listening for changes to the items of a :class:`~List` trait, an index
+* When listening for changes to the items of a :class:`.List` trait, an index
   or slice set operation no longer performs an equality check between the
   replaced elements and the replacement elements when deciding whether to issue
-  a notification; instead, a notification is always issued. For example, given
-  the following code::
+  a notification; instead, a notification is always issued if at least one
+  element was replaced. For example, consider the following class::
 
     class Selection(HasTraits):
         indices = List(Int)
@@ -75,7 +76,7 @@ However, there are a few things to be aware of when upgrading.
         def report_change(self, event):
             print("Indices changed: ", event)
 
-  We now have::
+  When replacing the `8` with the same integer, we get this behavior::
 
     >>> selection = Selection(indices=[2, 5, 8])
     >>> selection.indices[2] = 8
@@ -89,12 +90,12 @@ However, there are a few things to be aware of when upgrading.
   available in :mod:`traits.api`, but they are deprecated and will eventually
   be removed.
 
-* As a reminder, the :data:`.Unicode` and :data:`.Long` trait types were
+* As a reminder, the :data:`.Unicode` and :data:`.Long` trait types are
   deprecated since Traits 6.0. Please replace uses with :class:`.Str` and
-  :class:`.Int` respectively. To avoid excessive noise, note that we are
-  not yet issuing deprecation warnings for existing uses of :data:`.Unicode`
-  and :data:`.Long`. Those warnings will be introduced in a future Traits
-  release, prior to the removal of these trait types.
+  :class:`.Int` respectively. To avoid excessive noise in Traits-using
+  projects, Traits does not yet issue deprecation warnings for existing uses of
+  :data:`.Unicode` and :data:`.Long`. Those warnings will be introduced in a
+  future Traits release, prior to the removal of these trait types.
 
 
 Pending deprecations
@@ -102,8 +103,8 @@ Pending deprecations
 
 In addition to the deprecations listed in the changelog below, some parts of
 the Traits library are not yet formally deprecated, but are likely to be
-deprecated before Traits 7.0. It's useful for users to be aware that these
-may change in future releases.
+deprecated before Traits 7.0. Users should be aware of the following possible
+future changes:
 
 * The :class:`.Either` trait type will eventually be deprecated. Where possible,
   use :class:`.Union` instead.
@@ -119,7 +120,7 @@ may change in future releases.
 Detailed PR-by-PR changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-More than 140 PRs went into this release. The following people contributed
+More than 150 PRs went into this release. The following people contributed
 code changes for this release:
 
 * Ieva Cernyte
