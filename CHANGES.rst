@@ -140,7 +140,7 @@ Features
 
 * Add ``os.PathLike`` support for ``Directory`` traits. (#867)
 * Add ``Union`` trait type. (#779, #1103, #1107, #1116, #1115)
-* Add ``PrefixList`` trait type. (#871, #1142, #1144)
+* Add ``PrefixList`` trait type. (#871, #1142, #1144, #1147)
 * Add ``allow_none`` flag for ``Callable`` trait. (#885)
 * Add support for type annotation. (#904, #1064)
 * Allow mutable values in ``Constant`` trait. (#929)
@@ -259,7 +259,7 @@ Maintenance and code organization
   (#967)
 * Fix overcomplicated ``__deepcopy__`` implementation. (#992)
 * Add ``__repr__`` implementation for ``TraitListEvent``, ``TraitDictEvent``
-  and ``TraitSetEvent``. (#1006)
+  and ``TraitSetEvent``. (#1006, #1148, #1149)
 * Remove caching of editor factories. (#1032)
 * Remove conditional traitsui imports. (#1033)
 * Remove code duplication in ``tutor.py``. (#1034)
