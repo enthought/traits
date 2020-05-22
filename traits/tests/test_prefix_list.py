@@ -55,9 +55,14 @@ class TestPrefixList(unittest.TestCase):
             a.foo = "abc"
 
     def test_invalid_default(self):
-        with self.assertRaises(TraitError):
+        with self.assertRaises(TraitError) as exception_context:
             class A(HasTraits):
                 foo = PrefixList(["zero", "one", "two"], default_value="uno")
+
+        self.assertIn(
+            "but a value 'uno' was specified",
+            str(exception_context.exception),
+        )
 
     def test_values_not_sequence(self):
         # Defining values with this signature is not supported
