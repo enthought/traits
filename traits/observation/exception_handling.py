@@ -30,7 +30,6 @@ class ObserverExceptionHandler:
     def __init__(self, handler, reraise_exceptions):
         self.handler = handler if handler is not None else self._log_exception
         self.reraise_exceptions = reraise_exceptions
-        self.logger = None
 
     def _log_exception(self, event):
         """ A handler that logs the exception with the given event.
@@ -40,14 +39,8 @@ class ObserverExceptionHandler:
         event : object
             An event object emitted by the notification.
         """
-        if self.logger is None:
-            self.logger = logging.getLogger("traits")
-            handler = logging.StreamHandler()
-            handler.setFormatter(logging.Formatter("%(message)s"))
-            self.logger.addHandler(handler)
-            self.logger.setLevel(logging.ERROR)
-
-        self.logger.exception(
+        logger = logging.getLogger("traits")
+        logger.exception(
             "Exception occurred in traits notification handler "
             "for event object: %r",
             event,
