@@ -36,7 +36,8 @@ Highlights of this release
   a future Traits release.
 
 * A new :class:`.Union` trait type has been added. This is intended as a
-  simpler replacement for the existing :class:`.Either` trait type.
+  simpler replacement for the existing :class:`.Either` trait type, which
+  will eventually be deprecated.
 
 * New :class:`.PrefixList`, :class:`.PrefixMap` and :class:`.Map` trait types
   have been added. These replace the existing :class:`.TraitPrefixList`,
