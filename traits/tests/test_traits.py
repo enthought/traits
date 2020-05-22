@@ -963,7 +963,9 @@ with warnings.catch_warnings():
         num3 = Trait(
             1,
             Range(1, 5),
-            TraitPrefixMap({"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}),
+            TraitPrefixMap(
+                {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}
+            ),
         )
         num4 = Trait(1, Trait(1, Tuple, slow), 10)
         num5 = Trait(1, 10, Trait(1, Tuple, slow))

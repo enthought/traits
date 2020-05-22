@@ -24,7 +24,6 @@ class TestTraitPrefixList(unittest.TestCase):
             class A(HasTraits):
                 foo = Trait("one", TraitPrefixList("zero", "one", "two"))
 
-
         a = A()
         foo_trait = a.traits()["foo"]
         reconstituted = pickle.loads(pickle.dumps(foo_trait))
