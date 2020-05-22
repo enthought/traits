@@ -144,7 +144,7 @@ Features
 * Add ``allow_none`` flag for ``Callable`` trait. (#885)
 * Add support for type annotation. (#904, #1064)
 * Allow mutable values in ``Constant`` trait. (#929)
-* Add ``Map`` and ``PrefixMap`` trait types. (#886, #953, #956, #970)
+* Add ``Map`` and ``PrefixMap`` trait types. (#886, #953, #956, #970, #1139)
 * Add ``TraitList`` as the base list object that can perform validation
   and emit change notifications. (#912, #981, #984, #989, #999, #1003, #1011,
   #1026, #1009, #1040)
@@ -157,8 +157,6 @@ Features
   #1080, #1082, #1079, #1071, #1072, #1075, #1085, #1089, #1078, #1093, #1086,
   #1077, #1095, #1102, #1108, #1110, #1112, #1117, #1118, #1123, #1125, #1126,
   #1128, #1129, #1135)
-* Make ``DefaultValue``, ``ValidateTrait`` and ``TraitKind`` available in
-  ``traits.api``. (#857)
 
 Changes
 ~~~~~~~
@@ -181,7 +179,6 @@ Fixes
   (#926)
 * Fix exception swallowing by Trait attribute access. (#959, #960)
 * Allow collections in valid values for ``Enum`` trait. (#889)
-* Avoid containment-related ``DeprecationWarning`` on Python 3.7 (#855)
 * Fix ``TraitError`` when mutating a list/dict/set inside another container.
   (#1018)
 * Fix setting default values via dynamic default methods or overriding trait in
@@ -210,7 +207,6 @@ Removals
 Documentation
 ~~~~~~~~~~~~~
 
-* Improved API documentation for ``trait_types``. (#843)
 * Add details on creating custom trait properties. (#387)
 * Cross reference special handler signatures for listening to nested attributes
   in list and dict. (#894)
@@ -224,13 +220,16 @@ Documentation
 * Fix documentation rendering issues and front matter. (#1039, #1053)
 * Clarify when dynamic default values are considered to have existed. (#1068)
 * Expand user manual on container traits and objects. (#1058)
+* Add user manual section on the new ``observe`` notification system. (#1060,
+  #1140)
+* Suppress Sphinx warnings about duplicate method definitions. (#1141)
 * Add intersphinx support to configuration. (#1136)
-* Add user manual section on the new ``observe`` notification system. (#1060)
+* Other minor cleanups and fixes. (#949)
 
 Test suite
 ~~~~~~~~~~
 
-* Allow tests to be skipped if TraitsUI is not installed. (#848, #1038)
+* Allow tests to be skipped if TraitsUI is not installed. (#1038)
 * Add ``extras_require`` entry for testing. (#879)
 * Add tests for parsing ``on_trait_change`` mini-language. (#921)
 * Fix a missing import to allow a test module to be run standalone. (#961)
@@ -244,6 +243,7 @@ Build and continuous integration
 * Codecov reports are no longer retrieved for pull requests. (#1109)
 * CI tests requiring a GUI are now run against PyQt5 rather than PyQt4.
   (#1127)
+* Add Slack notifications for CI. (#1074)
 
 Maintenance and code organization
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -266,8 +266,8 @@ Maintenance and code organization
 * Remove code duplication in ``tutor.py``. (#1034)
 * Fix correctness in ``Enum`` default traitsui editor. (#1012)
 * Use ``NULL`` for zero-argument ``PyObject_CallMethod`` format. (#1100)
-* Miscellaneous other minor fixes, refactorings and cleanups. (#915, #924,
-  #923, #920, #935, #939, #944, #950)
+* Miscellaneous other minor fixes, refactorings and cleanups. (#874, #882,
+  #915, #920, #923, #924, #935, #939, #944, #950, #964)
 
 
 Release 6.0.0
