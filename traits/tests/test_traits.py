@@ -475,8 +475,12 @@ class EnumTest(AnyTraitTest):
     _bad_values = [0, "zero", 4, None]
 
 
-class MappedTrait(HasTraits):
-    value = Trait("one", {"one": 1, "two": 2, "three": 3})
+# Suppress DeprecationWarning from (implicit) TraitMap instantiation
+with warnings.catch_warnings():
+    warnings.filterwarnings(action="ignore", category=DeprecationWarning)
+
+    class MappedTrait(HasTraits):
+        value = Trait("one", {"one": 1, "two": 2, "three": 3})
 
 
 class MappedTest(AnyTraitTest):
@@ -489,8 +493,12 @@ class MappedTest(AnyTraitTest):
     _bad_values = ["four", 1, 2, 3, [1], (1,), {1: 1}, None]
 
 
-class PrefixListTrait(HasTraits):
-    value = Trait("one", TraitPrefixList("one", "two", "three"))
+# Suppress DeprecationWarning from TraitPrefixList instantiation.
+with warnings.catch_warnings():
+    warnings.filterwarnings(action="ignore", category=DeprecationWarning)
+
+    class PrefixListTrait(HasTraits):
+        value = Trait("one", TraitPrefixList("one", "two", "three"))
 
 
 class PrefixListTest(AnyTraitTest):
@@ -515,8 +523,12 @@ class PrefixListTest(AnyTraitTest):
         return {"o": "one", "on": "one", "tw": "two", "th": "three"}[value[:2]]
 
 
-class PrefixMapTrait(HasTraits):
-    value = Trait("one", TraitPrefixMap({"one": 1, "two": 2, "three": 3}))
+# Suppress DeprecationWarning from TraitPrefixMap instantiation.
+with warnings.catch_warnings():
+    warnings.filterwarnings(action="ignore", category=DeprecationWarning)
+
+    class PrefixMapTrait(HasTraits):
+        value = Trait("one", TraitPrefixMap({"one": 1, "two": 2, "three": 3}))
 
 
 class PrefixMapTest(AnyTraitTest):
@@ -937,20 +949,24 @@ except AttributeError:
     pass
 
 
-class complex_value(HasTraits):
-    num1 = Trait(1, Range(1, 5), Range(-5, -1))
-    num2 = Trait(
-        1,
-        Range(1, 5),
-        TraitPrefixList("one", "two", "three", "four", "five"),
-    )
-    num3 = Trait(
-        1,
-        Range(1, 5),
-        TraitPrefixMap({"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}),
-    )
-    num4 = Trait(1, Trait(1, Tuple, slow), 10)
-    num5 = Trait(1, 10, Trait(1, Tuple, slow))
+# Suppress DeprecationWarnings from TraitPrefixList and TraitPrefixMap
+with warnings.catch_warnings():
+    warnings.filterwarnings(action="ignore", category=DeprecationWarning)
+
+    class complex_value(HasTraits):
+        num1 = Trait(1, Range(1, 5), Range(-5, -1))
+        num2 = Trait(
+            1,
+            Range(1, 5),
+            TraitPrefixList("one", "two", "three", "four", "five"),
+        )
+        num3 = Trait(
+            1,
+            Range(1, 5),
+            TraitPrefixMap({"one": 1, "two": 2, "three": 3, "four": 4, "five": 5}),
+        )
+        num4 = Trait(1, Trait(1, Tuple, slow), 10)
+        num5 = Trait(1, 10, Trait(1, Tuple, slow))
 
 
 class test_complex_value(test_base2):
