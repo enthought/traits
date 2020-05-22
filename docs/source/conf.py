@@ -43,6 +43,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.coverage",
     "sphinx.ext.githubpages",
+    "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "traits.util.trait_documenter",
@@ -265,3 +266,11 @@ texinfo_documents = [
         "Python",
     )
 ]
+
+# Options for intersphinx extension
+# ---------------------------------
+
+intersphinx_mapping = {
+    "pyface": ("https://docs.enthought.com/pyface", None),
+    "traitsui": ("https://docs.enthought.com/traitsui", None),
+}
