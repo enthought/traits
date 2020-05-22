@@ -2555,7 +2555,7 @@ class PrefixList(BaseStr):
     then the actual value assigned to the trait attribute is the
     corresponding *s*\ :sub:`i` value that *v* matched.
 
-    The legal values can be provided as a list or tuple of values.
+    The legal values can be provided as a list of values.
 
     Example
     -------
@@ -2576,7 +2576,7 @@ class PrefixList(BaseStr):
     Parameters
     ----------
     values
-        A single list or tuple of legal string values.
+        A single list of legal string values.
 
     Attributes
     ----------
