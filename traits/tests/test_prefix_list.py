@@ -66,7 +66,7 @@ class TestPrefixList(unittest.TestCase):
 
     def test_values_not_all_iterables(self):
         # Make sure we don't confuse other sequence types, e.g. str
-        with self.assertRaises(ValueError) as exception_context:
+        with self.assertRaises(TypeError) as exception_context:
             PrefixList("zero")
 
         self.assertEqual(
