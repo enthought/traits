@@ -20,7 +20,7 @@ Highlights of this release
 * A new :mod:`observation <traits.observation>` framework for observing traited
   attributes and other observable objects has been introduced. This is intended
   to provide a full replacement for the existing :func:`on_trait_change`
-  mechanism, and aims to fix a number of fundamental flaws in the design of
+  mechanism, and aims to fix a number of fundamental flaws and limitations of
   that mechanism. See the :ref:`observation <observe-notification>` section of
   the user manual for an introduction to this framework.
 
@@ -54,43 +54,56 @@ Highlights of this release
 Notes on upgrading
 ~~~~~~~~~~~~~~~~~~
 
-For the most part, Traits 6.1 should be entirely backwards compatible
-with Traits 6.0. However, there are a few things to be aware of.
+As far as possible, Traits 6.1 is backwards compatible with Traits 6.0.
+However, there are a few things to be aware of when upgrading.
 
 * Traits 6.1 expects TraitsUI 7.0 or later to be installed: a combination
-  of Traits 6.1 or later with TraitsUI 6.x or earlier will fail to
-  properly recognise :class:`View` class variables as TraitsUI views. If you
-  need this combination, a possible workaround is to use the
-  :meth:`default_traits_view` method.
+  of Traits 6.1 or later with TraitsUI 6.x or earlier will fail to properly
+  recognise :class:`View` class variables as TraitsUI views, and consequently
+  an error will be raised if you attempt to create a TraitsUI view.
 
-Deprecations
-~~~~~~~~~~~~
+* When listening for changes to the items of a :class:`~List` trait, an index
+  or slice set operation no longer performs an equality check between the
+  replaced elements and the replacement elements when deciding whether to issue
+  a notification; instead, a notification is always issued. For example, given
+  the following code::
 
-* The existing :class:`.TraitPrefixList`, :class:`.TraitPrefixMap` and
-  :class:`.TraitMap` classes are deprecated. Use the :class:`.PrefixList`,
-  :class:`.PrefixMap` and :class:`.Map` trait types instead.
+    class Selection(HasTraits):
+        indices = List(Int)
+
+        @on_trait_change("indices_items")
+        def report_change(self, event):
+            print("Indices changed: ", event)
+
+  We now have::
+
+    >>> selection = Selection(indices=[2, 5, 8])
+    >>> selection.indices[2] = 8
+    Indices changed:  TraitListEvent(index=2, removed=[8], added=[8])
+
+  Previously, no notification would have been issued.
 
 * The :func:`.Color`, :func:`.RGBColor` and :func:`.Font` trait factories
-  have moved to TraitsUI. Import them from there instead.
+  have moved to TraitsUI, and should be imported from there rather than from
+  :mod:`traits.api`. For backwards compatibility, the factories are still
+  available in :mod:`traits.api`, but they are deprecated and will eventually
+  be removed.
 
-* The :data:`.Unicode` trait type is a deprecated alias for :class:`.Str`. Use
-  :class:`.Str` instead. Similarly use :class:`.CStr` instead of
-  :data:`.CUnicode`. Uses of :data:`.Unicode` and :data:`.CUnicode` are likely
-  to result in deprecation warnings in a future Traits release.
+* As a reminder, the :data:`.Unicode` and :data:`.Long` trait types were
+  deprecated since Traits 6.0. Please replace uses with :class:`.Str` and
+  :class:`.Int` respectively. To avoid excessive noise, note that we are
+  not yet issuing deprecation warnings for existing uses of :data:`.Unicode`
+  and :data:`.Long`. Those warnings will be introduced in a future Traits
+  release, prior to the removal of these trait types.
 
-* The :data:`.Long` trait type is a deprecated alias for :class:`.Int`. Use
-  :class:`.Int` instead. Similarly use :class:`.CInt` instead of
-  :data:`.CLong`. Uses of :data:`.Long` and :data:`.CLong` are likely to result
-  in deprecation warnings in a future Traits release.
-
-* The :mod:`traits.testing.nosetools` package is deprecated.
 
 Pending deprecations
 ~~~~~~~~~~~~~~~~~~~~
 
-In addition to the deprecations listed above, some parts of the Traits library
-are not yet formally deprecated, but are likely to be deprecated before Traits
-7.0.
+In addition to the deprecations listed in the changelog below, some parts of
+the Traits library are not yet formally deprecated, but are likely to be
+deprecated before Traits 7.0. It's useful for users to be aware that these
+may change in future releases.
 
 * The :class:`.Either` trait type will eventually be deprecated. Where possible,
   use :class:`.Union` instead.
