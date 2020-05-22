@@ -2608,7 +2608,7 @@ class PrefixList(BaseStr):
             try:
                 default = self.validate(None, None, default)
             except TraitError:
-                raise TraitError("Default value for PrefixTrait must be "
+                raise ValueError("Default value for PrefixTrait must be "
                                  "a unique prefix present in the prefix list")
         elif self.values:
             default = self.values[0]
