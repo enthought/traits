@@ -20,6 +20,7 @@ Contents
     testing.rst
     debugging.rst
     internals.rst
+    appendix.rst
 
 
 Indices and tables
