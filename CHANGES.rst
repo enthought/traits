@@ -85,8 +85,8 @@ However, there are a few things to be aware of when upgrading.
 
 * The :func:`.Color`, :func:`.RGBColor` and :func:`.Font` trait factories
   have moved to TraitsUI, and should be imported from there rather than from
-  :mod:`traits.api`. For backwards compatibility, the factories are still
-  available in :mod:`traits.api`, but they are deprecated and will eventually
+  Traits. For backwards compatibility, the factories are still
+  available in Traits, but they are deprecated and will eventually
   be removed.
 
 * As a reminder, the :data:`.Unicode` and :data:`.Long` trait types are
