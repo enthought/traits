@@ -2608,7 +2608,7 @@ class PrefixList(BaseStr):
             try:
                 default = self.validate(None, None, default)
             except TraitError:
-                raise ValueError("Default value for PrefixTrait must be "
+                raise TraitError("Default value for PrefixTrait must be "
                                  "a unique prefix present in the prefix list")
         elif self.values:
             default = self.values[0]
@@ -2998,11 +2998,17 @@ class PrefixMap(TraitType):
 
         default_value = metadata.pop("default_value", Undefined)
 
+        if default_value is not Undefined:
+            default_value = self.value_for(default_value)
+
         super().__init__(default_value, **metadata)
 
-    def validate(self, object, name, value):
+    def value_for(self, value):
         if not isinstance(value, str):
-            self.error(object, name, value)
+            raise TraitError(
+                "Value must be {}, but a value {!r} was specified.".format(
+                    self.info(), value
+            ))
 
         if value in self._map:
             return self._map[value]
@@ -3012,7 +3018,10 @@ class PrefixMap(TraitType):
             self._map[value] = match = matches[0]
             return match
 
-        self.error(object, name, value)
+        raise TraitError(
+            "Value must be {}, but a value {!r} was specified.".format(
+                self.info(), value
+        ))
 
     def mapped_value(self, value):
         """ Get the mapped value for a value. """
