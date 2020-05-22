@@ -27,14 +27,13 @@ Highlights of this release
 * New :class:`~traits.trait_list_object.TraitList`,
   :class:`~traits.trait_dict_object.TraitDict` and
   :class:`~traits.trait_set_object.TraitSet` classes have been added,
-  subclassing Python's built-in ``list``, ``dict`` and ``set``
-  (respectively).
-  Instances of these classes are observable objects in their own right, and
-  it's possible to attach observers to them directly. These classes were
-  primarily introduced to support the new observation framework, and are not
-  expected to be used directly. The API for these objects and their
-  notification system is provisional, and may change in a future Traits
-  release.
+  subclassing Python's built-in :class:`python:list`, :class:`python:dict` and
+  :class:`python:set` (respectively). Instances of these classes are observable
+  objects in their own right, and it's possible to attach observers to them
+  directly. These classes were primarily introduced to support the new
+  observation framework, and are not expected to be used directly. The API for
+  these objects and their notification system is provisional, and may change in
+  a future Traits release.
 
 * A new :class:`.Union` trait type has been added. This is intended as a simpler
   replacement for the existing :class:`.Either` trait type. The :class:`.Either`
