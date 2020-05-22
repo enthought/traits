@@ -3007,8 +3007,8 @@ class PrefixMap(TraitType):
         if not isinstance(value, str):
             raise TraitError(
                 "Value must be {}, but a value {!r} was specified.".format(
-                    self.info(), value
-            ))
+                    self.info(), value)
+            )
 
         if value in self._map:
             return self._map[value]
@@ -3020,8 +3020,8 @@ class PrefixMap(TraitType):
 
         raise TraitError(
             "Value must be {}, but a value {!r} was specified.".format(
-                self.info(), value
-        ))
+                self.info(), value)
+        )
 
     def mapped_value(self, value):
         """ Get the mapped value for a value. """
