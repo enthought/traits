@@ -28,8 +28,13 @@ class TestPrefixList(unittest.TestCase):
         a.foo = 'z'
         self.assertEqual(a.foo, "zero")
 
-        with self.assertRaises(TraitError):
+        with self.assertRaises(TraitError) as exception_context:
             a.foo = ''
+        self.assertIn(
+            "The 'foo' trait of an A instance must be 'zero' or 'one' or 'two'"
+            " (or any unique prefix), but a value of ''",
+            str(exception_context.exception),
+        )
 
     def test_bad_types(self):
         class A(HasTraits):
@@ -55,9 +60,15 @@ class TestPrefixList(unittest.TestCase):
             a.foo = "abc"
 
     def test_invalid_default(self):
-        with self.assertRaises(TraitError):
+        with self.assertRaises(TraitError) as exception_context:
             class A(HasTraits):
                 foo = PrefixList(["zero", "one", "two"], default_value="uno")
+
+        self.assertIn(
+            "The value of a PrefixList trait must be 'zero' or 'one' or 'two' "
+            "(or any unique prefix), but a value of 'uno'",
+            str(exception_context.exception),
+        )
 
     def test_values_not_sequence(self):
         # Defining values with this signature is not supported
