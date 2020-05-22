@@ -35,10 +35,11 @@ Highlights of this release
   these objects and their notification system is provisional, and may change in
   a future Traits release.
 
-* A new :class:`.Union` trait type has been added. This is intended as a simpler
-  replacement for the existing :class:`.Either` trait type. The :class:`.Either`
-  trait type may eventually be deprecated: users are encouraged to replace uses
-  of :class:`.Either` with :class:`.Union` where possible.
+* A new :class:`.Union` trait type has been added. This is intended as a
+  simpler replacement for the existing :class:`.Either` trait type. The
+  :class:`.Either` trait type may eventually be deprecated: users are
+  encouraged to replace uses of :class:`.Either` with :class:`.Union` where
+  possible.
 
 * New :class:`.PrefixList`, :class:`.PrefixMap` and :class:`.Map` trait types
   have been added. These replace the existing :class:`.TraitPrefixList`,
@@ -59,8 +60,9 @@ However, there are a few things to be aware of when upgrading.
 
 * Traits 6.1 is not compatible with TraitsUI versions older than TraitsUI 7.0.
   A combination of Traits 6.1 or later with TraitsUI 6.x or earlier will fail
-  to properly recognise :class:`~traitsui.view.View` class variables as TraitsUI
-  views, and an error will be raised if you attempt to create a TraitsUI view.
+  to properly recognise :class:`~traitsui.view.View` class variables as
+  TraitsUI views, and an error will be raised if you attempt to create a
+  TraitsUI view.
 
 * When listening for changes to the items of a :class:`.List` trait, an index
   or slice set operation no longer performs an equality check between the
@@ -105,8 +107,8 @@ the Traits library are not yet formally deprecated, but are likely to be
 deprecated before Traits 7.0. Users should be aware of the following possible
 future changes:
 
-* The :class:`.Either` trait type will eventually be deprecated. Where possible,
-  use :class:`.Union` instead.
+* The :class:`.Either` trait type will eventually be deprecated. Where
+  possible, use :class:`.Union` instead.
 
 * The ``trait_modified`` event trait that's present on all :class:`.HasTraits`
   subclasses will eventually be removed. Users should not rely on it being
@@ -152,7 +154,8 @@ Features
 * Implement ``observe`` to supersede ``on_trait_change`` for observing trait
   changes. (#976, #1000, #1007, #1065, #1023, #1066, #1070, #1069, #1067,
   #1080, #1082, #1079, #1071, #1072, #1075, #1085, #1089, #1078, #1093, #1086,
-  #1077, #1095, #1102, #1108, #1110, #1112, #1117, #1118, #1123, #1125, #1126)
+  #1077, #1095, #1102, #1108, #1110, #1112, #1117, #1118, #1123, #1125, #1126,
+  #1128, #1129, #1135)
 * Make ``DefaultValue``, ``ValidateTrait`` and ``TraitKind`` available in
   ``traits.api``. (#857)
 
@@ -166,6 +169,8 @@ Changes
   result in content that compares equally to the old values. (#1026)
 * ``TraitListEvent.index`` reported by mutations to a list is now normalized.
   (#1009)
+* Raise a friendly error message when attempting to use Traits with
+  a TraitsUI version older than 7.0. (#1134)
 
 Fixes
 ~~~~~
@@ -220,6 +225,8 @@ Documentation
 * Fix documentation rendering issues and front matter. (#1039, #1053)
 * Clarify when dynamic default values are considered to have existed. (#1068)
 * Expand user manual on container traits and objects. (#1058)
+* Add intersphinx support to configuration. (#1136)
+* Add user manual section on the new ``observe`` notification system. (#1060)
 
 Test suite
 ~~~~~~~~~~
