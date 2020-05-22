@@ -224,7 +224,7 @@ Documentation
 * Add user manual section on the new ``observe`` notification system. (#1060,
   #1140, #1143)
 * Add user manual section on the ``Union`` trait type and how to migrate from
-  Either (#779, #1153)
+  ``Either`` (#779, #1153)
 * Other minor cleanups and fixes. (#949, #1141)
 
 Test suite
