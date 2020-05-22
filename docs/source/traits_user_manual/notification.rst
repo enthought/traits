@@ -187,37 +187,37 @@ notifications should be fired for changes.
 
 .. rubric:: Example expressions
 
-.. list-table::
-   :widths: 15 25
-   :header-rows: 1
+* ``trait("attr1")``
+   Matches a trait named *attr1* on an object and notifies for changes.
 
-   * - Expression
-     - Meaning
-   * - *trait("attr1")*
-     - Matches a trait named *attr1* on an object and notifies for changes.
-   * - *trait("attr1", optional=True)*
-     - Matches a trait named *attr1* if it is defined. Ignore if it is not
-       defined.
-   * - *trait("attr1", notify=False).trait("attr2")*
-     - Matches a trait named *attr2* on an object referenced by a trait named
-       *attr1* on the current object. Changes to *attr2* will trigger
-       notifications, while changes to *attr1* do not.
-   * - *trait("foo").list_items().list_items().trait("value")*
-     - Matches the *value* trait on an item of a nested list in another list
-       *foo*. Assignment changes to *foo*, mutations to the lists or changes
-       to *value* will trigger notifications.
-   * - *metadata("updated")*
-     - Matches any trait on the current that has a metadata attribute named
-       *updated*. Changes on those traits will trigger notifications.
-   * - *trait("foo") | trait("bar")*
-     - Matches trait named *foo* or *bar* on the current object. Changes on
-       *foo* or *bar* will trigger notifications.
-   * - *trait("foo").then(trait("bar") | trait("baz"))*
-     - Matches *foo.bar* or *foo.baz* on the current object. Changes on *foo*,
-       *foo.bar* or *foo.baz* will trigger notifications.
-   * - *trait("foo").match(lambda n, t: True)*
-     - Matches any traits on *foo* on the current object. Changes on *foo* or
-       the nested attributes will trigger notifications.
+* ``trait("attr1", optional=True)``
+   Matches a trait named *attr1* if it is defined. Ignore if it is not defined.
+
+* ``trait("attr1", notify=False).trait("attr2")``
+   Matches a trait named *attr2* on an object referenced by a trait named
+   *attr1* on the current object. Changes to *attr2* will trigger
+   notifications, while changes to *attr1* do not.
+
+* ``trait("foo").list_items().list_items().trait("value")``
+   Matches the *value* trait on an item of a nested list in another list
+   *foo*. Assignment changes to *foo*, mutations to the lists or changes
+   to *value* will trigger notifications.
+
+* ``metadata("updated")``
+   Matches any trait on the current that has a metadata attribute named
+   *updated*. Changes on those traits will trigger notifications.
+
+* ``trait("foo") | trait("bar")``
+   Matches trait named *foo* or *bar* on the current object. Changes on
+   *foo* or *bar* will trigger notifications.
+
+* ``trait("foo").then(trait("bar") | trait("baz"))``
+   Matches *foo.bar* or *foo.baz* on the current object. Changes on *foo*,
+   *foo.bar* or *foo.baz* will trigger notifications.
+
+* ``trait("foo").match(lambda n, t: True)``
+   Matches any traits on *foo* on the current object. Changes on *foo* or
+   the nested attributes will trigger notifications.
 
 .. rubric:: Extend an expression in text
 
