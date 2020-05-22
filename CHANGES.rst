@@ -139,7 +139,7 @@ Features
 ~~~~~~~~
 
 * Add ``os.PathLike`` support for ``Directory`` traits. (#867)
-* Add ``Union`` trait type. (#779, #1103, #1107, #1116, #1115)
+* Add ``Union`` trait type. (#779, #1103, #1107, #1116, #1115, #1153)
 * Add ``PrefixList`` trait type. (#871, #1142, #1144, #1147)
 * Add ``allow_none`` flag for ``Callable`` trait. (#885)
 * Add support for type annotation. (#904, #1064)
