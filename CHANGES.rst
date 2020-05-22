@@ -140,7 +140,7 @@ Features
 
 * Add ``os.PathLike`` support for ``Directory`` traits. (#867)
 * Add ``Union`` trait type. (#779, #1103, #1107, #1116, #1115)
-* Add ``PrefixList`` trait type. (#871)
+* Add ``PrefixList`` trait type. (#871, #1142, #1144)
 * Add ``allow_none`` flag for ``Callable`` trait. (#885)
 * Add support for type annotation. (#904, #1064)
 * Allow mutable values in ``Constant`` trait. (#929)
@@ -222,7 +222,7 @@ Documentation
 * Expand user manual on container traits and objects. (#1058)
 * Add intersphinx support to configuration. (#1136)
 * Add user manual section on the new ``observe`` notification system. (#1060,
-  #1140)
+  #1140, #1143)
 * Other minor cleanups and fixes. (#949, #1141)
 
 Test suite
