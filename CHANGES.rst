@@ -220,11 +220,10 @@ Documentation
 * Fix documentation rendering issues and front matter. (#1039, #1053)
 * Clarify when dynamic default values are considered to have existed. (#1068)
 * Expand user manual on container traits and objects. (#1058)
+* Add intersphinx support to configuration. (#1136)
 * Add user manual section on the new ``observe`` notification system. (#1060,
   #1140)
-* Suppress Sphinx warnings about duplicate method definitions. (#1141)
-* Add intersphinx support to configuration. (#1136)
-* Other minor cleanups and fixes. (#949)
+* Other minor cleanups and fixes. (#949, #1141)
 
 Test suite
 ~~~~~~~~~~
