@@ -2593,7 +2593,7 @@ class PrefixList(BaseStr):
     def __init__(self, values, **metadata):
         if not isinstance(values, SequenceTypes):
             raise TypeError(
-                "Legal values should be provided via a list or a tuple, "
+                "Legal values should be provided via a list, "
                 "got {!r}.".format(values)
             )
         self.values = tuple(values)
