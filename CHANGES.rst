@@ -162,15 +162,13 @@ Features
 Changes
 ~~~~~~~
 
-* GUI applications using Traits 6.1 will require TraitsUI >= 7.0
+* GUI applications using Traits 6.1 will require TraitsUI >= 7.0. (#1134)
 * ``TraitSetEvent`` and ``TraitDictEvent`` initialization arguments are now
   keyword-only. (#1036)
 * ``TraitListObject`` will no longer skip notifications even if mutations
   result in content that compares equally to the old values. (#1026)
 * ``TraitListEvent.index`` reported by mutations to a list is now normalized.
   (#1009)
-* Raise a friendly error message when attempting to use Traits with
-  a TraitsUI version older than 7.0. (#1134)
 
 Fixes
 ~~~~~
