@@ -11,11 +11,9 @@
 # This module provides the push_exception_handler and pop_exception_handler
 # for the observers.
 
-import logging
+import warnings
 import sys
-
-
-_logger = logging.getLogger("traits")
+import traceback
 
 
 class ObserverExceptionHandler:
@@ -25,27 +23,31 @@ class ObserverExceptionHandler:
     ----------
     handler : callable(event) or None
         A callable to handle an event, in the context of
-        an exception. If None, the exceptions will be logged.
+        an exception. If None, the exceptions will result in a warning.
     reraise_exceptions : boolean
         Whether to reraise the exception.
     """
 
     def __init__(self, handler, reraise_exceptions):
-        self.handler = handler if handler is not None else self._log_exception
+        self.handler = handler if handler is not None else self._warn
         self.reraise_exceptions = reraise_exceptions
 
-    def _log_exception(self, event):
-        """ A handler that logs the exception with the given event.
+    def _warn(self, event):
+        """ A handler that warns about the exception with the given event.
 
         Parameters
         ----------
         event : object
             An event object emitted by the notification.
         """
-        _logger.exception(
+        _, _, tb = sys.exc_info()
+        texts = traceback.format_tb(tb)
+        warnings.warn(
             "Exception occurred in traits notification handler "
-            "for event object: %r",
-            event,
+            "for event object: {!r}\n{}".format(
+                event, "\n".join(texts)
+            ),
+            RuntimeWarning,
         )
 
 
@@ -70,7 +72,7 @@ class ObserverExceptionHandlerStack:
         ----------
         handler : callable(event) or None
             A callable to handle an event, in the context of
-            an exception. If None, the exceptions will be logged.
+            an exception. If None, exceptions will result in warnings.
         reraise_exceptions : boolean
             Whether to reraise the exception.
         """
