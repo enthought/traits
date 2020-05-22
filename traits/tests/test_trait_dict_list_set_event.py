@@ -38,8 +38,8 @@ class TestTraitEvent(unittest.TestCase):
         event = self.foo.event
         event_str = ("TraitListEvent(index=slice(0, 3, 2), "
                      "removed=[1, 3], added=[4, 5])")
-        self.assertEqual(event.__repr__(), event_str)
-        self.assertIsInstance(eval(event.__repr__()), TraitListEvent)
+        self.assertEqual(repr(event), event_str)
+        self.assertIsInstance(eval(repr(event)), TraitListEvent)
 
     def test_dict_event_kwargs_only(self):
         with self.assertRaises(TypeError):
@@ -50,8 +50,8 @@ class TestTraitEvent(unittest.TestCase):
         event = self.foo.event
         event_str = ("TraitDictEvent(removed={}, added={'black': 0}, "
                      "changed={'blue': 0})")
-        self.assertEqual(event.__repr__(), event_str)
-        self.assertIsInstance(eval(event.__repr__()), TraitDictEvent)
+        self.assertEqual(repr(event), event_str)
+        self.assertIsInstance(eval(repr(event)), TraitDictEvent)
 
     def test_set_event_kwargs_only(self):
         with self.assertRaises(TypeError):
@@ -61,5 +61,5 @@ class TestTraitEvent(unittest.TestCase):
         self.foo.aset.symmetric_difference_update({3, 4})
         event = self.foo.event
         event_str = "TraitSetEvent(removed={3}, added={4})"
-        self.assertEqual(event.__repr__(), event_str)
-        self.assertIsInstance(eval(event.__repr__()), TraitSetEvent)
+        self.assertEqual(repr(event), event_str)
+        self.assertIsInstance(eval(repr(event)), TraitSetEvent)
