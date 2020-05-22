@@ -64,7 +64,7 @@ time the property is accessed.  For small images, this is probably OK, but
 for larger images, or if you are working with many images at once, this may
 impact performance.  In these cases, you can specify that the property
 should **cache** the returned value and use that value until the trait(s)
-the property depend on change::
+the property depend on changes::
 
     class Image(HasTraits):
         ...
