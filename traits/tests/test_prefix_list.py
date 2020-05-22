@@ -65,7 +65,7 @@ class TestPrefixList(unittest.TestCase):
                 foo = PrefixList(["zero", "one", "two"], default_value="uno")
 
         self.assertIn(
-            "but a value 'uno' was specified",
+            "but a value of 'uno'",
             str(exception_context.exception),
         )
 
