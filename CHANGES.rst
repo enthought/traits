@@ -235,6 +235,7 @@ Test suite
 * Add tests for parsing ``on_trait_change`` mini-language. (#921)
 * Fix a missing import to allow a test module to be run standalone. (#961)
 * Add a GUI test for ``Enum.create_editor``. (#988)
+* Fix some module-level ``DeprecationWarning``s. (#1157)
 
 Build and continuous integration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
