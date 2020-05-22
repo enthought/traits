@@ -15,6 +15,9 @@ import logging
 import sys
 
 
+_logger = logging.getLogger("traits")
+
+
 class ObserverExceptionHandler:
     """ State for an exception handler.
 
@@ -39,8 +42,7 @@ class ObserverExceptionHandler:
         event : object
             An event object emitted by the notification.
         """
-        logger = logging.getLogger("traits")
-        logger.exception(
+        _logger.exception(
             "Exception occurred in traits notification handler "
             "for event object: %r",
             event,
