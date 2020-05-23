@@ -168,6 +168,12 @@ Changes
   result in content that compares equally to the old values. (#1026)
 * ``TraitListEvent.index`` reported by mutations to a list is now normalized.
   (#1009)
+* The default notification error handler for Traits no longer configures
+  logging. It used to explicitly add a ``StreamHandler`` to the top-level
+  Traits logger so that trait notification exceptions would always be
+  visible. Instead, we rely on Python's "handler of last resort", which
+  will continue to make notification exceptions to the user visible in
+  the absence of any application-level log configuration. (#1161)
 
 Fixes
 ~~~~~
