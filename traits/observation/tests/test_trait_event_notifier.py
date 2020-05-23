@@ -169,16 +169,17 @@ class TestTraitEventNotifierException(unittest.TestCase):
         notifier = create_notifier(handler=misbehaving_handler)
 
         # when
-        with self.assertWarns(RuntimeWarning) as warn_context:
+        with self.assertLogs("traits", level="ERROR") as log_exception:
             notifier(a=1, b=2)
 
         # then
+        content, = log_exception.output
         self.assertIn(
             "Exception occurred in traits notification handler",
-            str(warn_context.warning),
+            content,
         )
         # The tracback should be included
-        self.assertIn("ZeroDivisionError", str(warn_context.warning))
+        self.assertIn("ZeroDivisionError", content)
 
 
 class TestTraitEventNotifierEqual(unittest.TestCase):

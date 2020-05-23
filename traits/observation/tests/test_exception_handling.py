@@ -24,16 +24,17 @@ class TestExceptionHandling(unittest.TestCase):
     def test_default_logging(self):
         stack = ObserverExceptionHandlerStack()
 
-        with self.assertWarns(RuntimeWarning) as warn_context:
+        with self.assertLogs("traits", level="ERROR") as log_context:
             try:
                 raise ZeroDivisionError()
             except Exception:
                 stack.handle_exception("Event")
 
+        content, = log_context.output
         self.assertIn(
             "Exception occurred in traits notification handler for "
             "event object: {!r}".format("Event"),
-            str(warn_context.warning),
+            content,
         )
 
     def test_push_exception_handler(self):
@@ -44,7 +45,7 @@ class TestExceptionHandling(unittest.TestCase):
 
         stack.push_exception_handler(reraise_exceptions=True)
 
-        with self.assertWarns(RuntimeWarning) as warn_context, \
+        with self.assertLogs("traits", level="ERROR") as log_context, \
                 self.assertRaises(ZeroDivisionError):
 
             try:
@@ -52,7 +53,8 @@ class TestExceptionHandling(unittest.TestCase):
             except Exception:
                 stack.handle_exception("Event")
 
-        self.assertIn("ZeroDivisionError", str(warn_context.warning))
+        content, = log_context.output
+        self.assertIn("ZeroDivisionError", content)
 
     def test_push_exception_handler_collect_events(self):
 
