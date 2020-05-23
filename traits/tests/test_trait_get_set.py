@@ -12,8 +12,6 @@
 Test the 'trait_set', 'trait_get' interface to the HasTraits class.
 
 """
-from contextlib import contextmanager
-import logging
 import unittest
 
 from traits.api import HasTraits, Str, Int
