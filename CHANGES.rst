@@ -70,9 +70,9 @@ However, there are a few things to be aware of when upgrading.
   exception handling. Previously, Traits added a
   :class:`~logging.StreamHandler` to the ``"traits"`` logger, so that log
   messages would automatically be printed to standard error. Traits also added
-  a :class:`~logging.NullHandler` to that logger. Both of those handlers are
-  now removed, and Traits now does no logging configuration at all, leaving all
-  such configuration to the application.
+  a :class:`~logging.NullHandler` to that logger. Both of those handlers have
+  been removed, and Traits now does no logging configuration at all, leaving
+  all such configuration to the application.
 
   The net effect of these changes is that in the absence of any logging
   configuration, errors occurring in notification handlers will show up on the
