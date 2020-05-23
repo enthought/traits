@@ -106,10 +106,11 @@ deprecated before Traits 7.0. Users should be aware of the following possible
 future changes:
 
 * The :class:`.Either` trait type will eventually be deprecated. Where
-  possible, use :class:`.Union` instead. When transitioning, note that
-  :class:`.Either` and :class:`.Union` use different keywords for specifying a
-  static default value: :class:`.Either` uses ``default``, while
-  :class:`.Union` uses ``default_value``.
+  possible, use :class:`.Union` instead. When replacing uses of
+  :class:`.Either` with :class:`.Union`, note that there are some significant
+  API and behavioral differences between the two trait types, particularly with
+  respect to handling of defaults. See :ref:`migration_either_to_union` for
+  more details.
 
 * The ``trait_modified`` event trait that's present on all :class:`.HasTraits`
   subclasses will eventually be removed. Users should not rely on it being
