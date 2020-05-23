@@ -62,6 +62,25 @@ However, there are a few things to be aware of when upgrading.
   TraitsUI views, and an error will be raised if you attempt to create a
   TraitsUI view.
 
+* The approach to logging configuration of the Traits library has changed.
+  Trait notification handlers should not raise exceptions in normal use, and as
+  before, an exception is logged whenever a trait notification handler raises.
+
+  What differs is the way that that log record is handled under default
+  exception handling. Previously, Traits added a
+  :class:`~logging.StreamHandler` to the ``"traits"`` logger, so that log
+  messages would automatically be printed to standard error. Traits also added
+  a :class:`~logging.NullHandler` to that logger. Both of those handlers are
+  now removed, and Traits now does no logging configuration at all, leaving all
+  such configuration to the application.
+
+  The net effect of these changes is that in the absence of any logging
+  configuration, errors occurring in notification handlers will show up on the
+  console as before, as a result of the logging module's "handler of last
+  resort". Traits-using applications that *do* configure logging may need to
+  double check that their log configuration suppresses or records these
+  messages as appropriate for their application.
+
 * When listening for changes to the items of a :class:`.List` trait, an index
   or slice set operation no longer performs an equality check between the
   replaced elements and the replacement elements when deciding whether to issue
