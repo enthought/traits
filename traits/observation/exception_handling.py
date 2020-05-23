@@ -11,9 +11,9 @@
 # This module provides the push_exception_handler and pop_exception_handler
 # for the observers.
 
+import warnings
 import sys
 import traceback
-import warnings
 
 
 class ObserverExceptionHandler:
