@@ -122,23 +122,8 @@ def datetime_editor():
     """ Factory function that returns an editor with date & time for
     editing Datetime values.
     """
-
-    try:
-        from traitsui.api import DatetimeEditor
-
-        return DatetimeEditor()
-
-    except ImportError:
-
-        logger.warn(msg="Could not import DatetimeEditor from "
-                        "traitsui.api, using TextEditor instead")
-
-        from traitsui.api import TextEditor
-
-        return TextEditor(
-            evaluate=_datetime_str_to_datetime,
-            format_func=_datetime_to_datetime_str
-        )
+    from traitsui.api import DatetimeEditor
+    return DatetimeEditor()
 
 
 def _expects_hastraits_instance(handler):
