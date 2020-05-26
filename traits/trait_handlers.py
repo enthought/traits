@@ -35,11 +35,6 @@ from .trait_handler import TraitHandler
 from .trait_list_object import TraitListEvent, TraitListObject
 from .util.deprecated import deprecated
 
-# Set up a logger:
-import logging
-
-logger = logging.getLogger(__name__)
-
 # Constants
 
 CallableTypes = (FunctionType, MethodType)
