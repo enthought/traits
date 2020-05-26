@@ -10,7 +10,7 @@
 """
 Test the push_exception_handler and pop_exception_handler for the observers
 """
-import io
+
 import unittest
 from unittest import mock
 
@@ -24,13 +24,13 @@ class TestExceptionHandling(unittest.TestCase):
     def test_default_logging(self):
         stack = ObserverExceptionHandlerStack()
 
-        with mock.patch("sys.stderr", new_callable=io.StringIO) as stderr:
+        with self.assertLogs("traits", level="ERROR") as log_context:
             try:
                 raise ZeroDivisionError()
             except Exception:
                 stack.handle_exception("Event")
 
-        content = stderr.getvalue()
+        content, = log_context.output
         self.assertIn(
             "Exception occurred in traits notification handler for "
             "event object: {!r}".format("Event"),
@@ -45,7 +45,7 @@ class TestExceptionHandling(unittest.TestCase):
 
         stack.push_exception_handler(reraise_exceptions=True)
 
-        with mock.patch("sys.stderr", new_callable=io.StringIO) as stderr, \
+        with self.assertLogs("traits", level="ERROR") as log_context, \
                 self.assertRaises(ZeroDivisionError):
 
             try:
@@ -53,7 +53,7 @@ class TestExceptionHandling(unittest.TestCase):
             except Exception:
                 stack.handle_exception("Event")
 
-        content = stderr.getvalue()
+        content, = log_context.output
         self.assertIn("ZeroDivisionError", content)
 
     def test_push_exception_handler_collect_events(self):
