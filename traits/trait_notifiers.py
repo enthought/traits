@@ -20,6 +20,7 @@ from types import MethodType
 import weakref
 import sys
 
+from .constants import ComparisonMode, TraitKind
 from .trait_base import Uninitialized
 from .trait_errors import TraitNotificationError
 
@@ -334,6 +335,18 @@ class AbstractStaticChangeNotifyWrapper(object):
         """ Dispatch to the appropriate handler method. """
 
         if old is not Uninitialized:
+
+            trait = object._trait(trait_name, 2)
+            if (trait.type == TraitKind.trait.name
+                    and trait.comparison_mode == ComparisonMode.equality):
+                try:
+                    is_equal = old == new
+                except Exception:
+                    pass
+                else:
+                    if is_equal:
+                        return
+
             # Extract the arguments needed from the handler.
             args = self.argument_transform(object, trait_name, old, new)
 
@@ -517,6 +530,17 @@ class TraitChangeNotifyWrapper(object):
 
     def _dispatch_change_event(self, object, trait_name, old, new, handler):
         """ Prepare and dispatch a trait change event to a listener. """
+
+        trait = object._trait(trait_name, 2)
+        if (trait.type == TraitKind.trait.name
+                and trait.comparison_mode == ComparisonMode.equality):
+            try:
+                is_equal = old == new
+            except Exception:
+                pass
+            else:
+                if is_equal:
+                    return
 
         # Extract the arguments needed from the handler.
         args = self.argument_transform(object, trait_name, old, new)
