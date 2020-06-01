@@ -62,18 +62,18 @@ However, there are a few things to be aware of when upgrading.
   TraitsUI views, and an error will be raised if you attempt to create a
   TraitsUI view.
 
-* The approach to logging configuration of the Traits library has changed.
-  Traits now does no logging configuration at all, leaving all such
+* Traits now does no logging configuration at all, leaving all such
   configuration to the application.
 
   In more detail: trait notification handlers should not raise exceptions in
   normal use, so an exception is logged whenever a trait notification handler
   raises. This part of the behaviour has not changed. What *has* changed is the
   way that logged exception is handled under default exception handling.
+
   Previously, Traits added a :class:`~logging.StreamHandler` to the
   top-level ``"traits"`` logger, so that trait notification exceptions would
   always be visible. Traits also added a :class:`~logging.NullHandler` to that
-  logger. Both of those handlers have now been removed. We now realy on
+  logger. Both of those handlers have now been removed. We now rely on
   Python's "handler of last resort", which will continue to make notification
   exceptions to the user visiable in the absence of any application-level
   log configuration.
