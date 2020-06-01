@@ -10,7 +10,7 @@
 
 import unittest
 
-from traits.utils.weakiddict import WeakIDDict, WeakIDKeyDict
+from traits.util.weakiddict import WeakIDDict, WeakIDKeyDict
 
 
 class AllTheSame(object):
