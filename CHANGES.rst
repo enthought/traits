@@ -75,7 +75,7 @@ However, there are a few things to be aware of when upgrading.
   always be visible. Traits also added a :class:`~logging.NullHandler` to that
   logger. Both of those handlers have now been removed. We now rely on
   Python's "handler of last resort", which will continue to make notification
-  exceptions to the user visiable in the absence of any application-level
+  exceptions to the user visible in the absence of any application-level
   log configuration.
 
 * When listening for changes to the items of a :class:`.List` trait, an index
