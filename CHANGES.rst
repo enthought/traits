@@ -62,6 +62,22 @@ However, there are a few things to be aware of when upgrading.
   TraitsUI views, and an error will be raised if you attempt to create a
   TraitsUI view.
 
+* Traits now does no logging configuration at all, leaving all such
+  configuration to the application.
+
+  In more detail: trait notification handlers should not raise exceptions in
+  normal use, so an exception is logged whenever a trait notification handler
+  raises. This part of the behaviour has not changed. What *has* changed is the
+  way that logged exception is handled under default exception handling.
+
+  Previously, Traits added a :class:`~logging.StreamHandler` to the
+  top-level ``"traits"`` logger, so that trait notification exceptions would
+  always be visible. Traits also added a :class:`~logging.NullHandler` to that
+  logger. Both of those handlers have now been removed. We now rely on
+  Python's "handler of last resort", which will continue to make notification
+  exceptions to the user visible in the absence of any application-level
+  log configuration.
+
 * When listening for changes to the items of a :class:`.List` trait, an index
   or slice set operation no longer performs an equality check between the
   replaced elements and the replacement elements when deciding whether to issue
@@ -106,10 +122,11 @@ deprecated before Traits 7.0. Users should be aware of the following possible
 future changes:
 
 * The :class:`.Either` trait type will eventually be deprecated. Where
-  possible, use :class:`.Union` instead. When transitioning, note that
-  :class:`.Either` and :class:`.Union` use different keywords for specifying a
-  static default value: :class:`.Either` uses ``default``, while
-  :class:`.Union` uses ``default_value``.
+  possible, use :class:`.Union` instead. When replacing uses of
+  :class:`.Either` with :class:`.Union`, note that there are some significant
+  API and behavioral differences between the two trait types, particularly with
+  respect to handling of defaults. See :ref:`migration_either_to_union` for
+  more details.
 
 * The ``trait_modified`` event trait that's present on all :class:`.HasTraits`
   subclasses will eventually be removed. Users should not rely on it being
@@ -140,7 +157,7 @@ Features
 
 * Add ``os.PathLike`` support for ``Directory`` traits. (#867)
 * Add ``Union`` trait type. (#779, #1103, #1107, #1116, #1115)
-* Add ``PrefixList`` trait type. (#871, #1142, #1144)
+* Add ``PrefixList`` trait type. (#871, #1142, #1144, #1147)
 * Add ``allow_none`` flag for ``Callable`` trait. (#885)
 * Add support for type annotation. (#904, #1064)
 * Allow mutable values in ``Constant`` trait. (#929)
@@ -156,7 +173,7 @@ Features
   changes. (#976, #1000, #1007, #1065, #1023, #1066, #1070, #1069, #1067,
   #1080, #1082, #1079, #1071, #1072, #1075, #1085, #1089, #1078, #1093, #1086,
   #1077, #1095, #1102, #1108, #1110, #1112, #1117, #1118, #1123, #1125, #1126,
-  #1128, #1129, #1135)
+  #1128, #1129, #1135, #1156)
 
 Changes
 ~~~~~~~
@@ -168,6 +185,9 @@ Changes
   result in content that compares equally to the old values. (#1026)
 * ``TraitListEvent.index`` reported by mutations to a list is now normalized.
   (#1009)
+* The default notification error handler for Traits no longer configures
+  logging, and the top-level ``NullHandler`` log handler has been removed.
+  (#1161)
 
 Fixes
 ~~~~~
@@ -185,7 +205,7 @@ Fixes
   subclasses for mapped traits, used by ``Map``, ``Expression``, ``PrefixMap``.
   (#1091)
 * Fix setting default values via dynamic default methods or overriding trait in
-  subclasses for ``Expression`` and ``AdaptsTo``. (#1088, #1119)
+  subclasses for ``Expression`` and ``AdaptsTo``. (#1088, #1119, #1152)
 
 Deprecations
 ~~~~~~~~~~~~
@@ -223,6 +243,8 @@ Documentation
 * Add intersphinx support to configuration. (#1136)
 * Add user manual section on the new ``observe`` notification system. (#1060,
   #1140, #1143)
+* Add user manual section on the ``Union`` trait type and how to migrate from
+  ``Either`` (#779, #1153, #1162)
 * Other minor cleanups and fixes. (#949, #1141)
 
 Test suite
@@ -233,6 +255,7 @@ Test suite
 * Add tests for parsing ``on_trait_change`` mini-language. (#921)
 * Fix a missing import to allow a test module to be run standalone. (#961)
 * Add a GUI test for ``Enum.create_editor``. (#988)
+* Fix some module-level ``DeprecationWarning`` messages. (#1157)
 
 Build and continuous integration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -259,7 +282,7 @@ Maintenance and code organization
   (#967)
 * Fix overcomplicated ``__deepcopy__`` implementation. (#992)
 * Add ``__repr__`` implementation for ``TraitListEvent``, ``TraitDictEvent``
-  and ``TraitSetEvent``. (#1006)
+  and ``TraitSetEvent``. (#1006, #1148, #1149)
 * Remove caching of editor factories. (#1032)
 * Remove conditional traitsui imports. (#1033)
 * Remove code duplication in ``tutor.py``. (#1034)

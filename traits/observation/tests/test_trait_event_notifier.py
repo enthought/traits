@@ -8,7 +8,6 @@
 #
 # Thanks for using Enthought open source!
 
-import io
 import unittest
 from unittest import mock
 import weakref
@@ -170,11 +169,11 @@ class TestTraitEventNotifierException(unittest.TestCase):
         notifier = create_notifier(handler=misbehaving_handler)
 
         # when
-        with mock.patch("sys.stderr", new_callable=io.StringIO) as stderr:
+        with self.assertLogs("traits", level="ERROR") as log_exception:
             notifier(a=1, b=2)
 
         # then
-        content = stderr.getvalue()
+        content, = log_exception.output
         self.assertIn(
             "Exception occurred in traits notification handler",
             content,

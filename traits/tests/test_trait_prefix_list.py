@@ -18,12 +18,12 @@ import unittest
 from traits.api import HasTraits, TraitError, TraitPrefixList, Trait
 
 
-class A(HasTraits):
-    foo = Trait("one", TraitPrefixList("zero", "one", "two"))
-
-
 class TestTraitPrefixList(unittest.TestCase):
     def test_pickle_roundtrip(self):
+        with self.assertWarns(DeprecationWarning):
+            class A(HasTraits):
+                foo = Trait("one", TraitPrefixList("zero", "one", "two"))
+
         a = A()
         foo_trait = a.traits()["foo"]
         reconstituted = pickle.loads(pickle.dumps(foo_trait))

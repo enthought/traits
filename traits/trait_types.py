@@ -2541,7 +2541,7 @@ class CList(List):
         )
 
 
-class PrefixList(BaseStr):
+class PrefixList(TraitType):
     r"""Ensures that a value assigned to the attribute is a member of a list of
      specified string values, or is a unique prefix of one of those values.
 
@@ -2604,19 +2604,19 @@ class PrefixList(BaseStr):
         default = self.default_value
         if 'default_value' in metadata:
             default = metadata.pop('default_value')
-            try:
-                default = self.validate(None, None, default)
-            except TraitError:
-                raise TraitError("Default value for PrefixTrait must be "
-                                 "a unique prefix present in the prefix list")
+            default = self.value_for(default)
         elif self.values:
             default = self.values[0]
 
         super().__init__(default, **metadata)
 
-    def validate(self, object, name, value):
+    def value_for(self, value):
         if not isinstance(value, str):
-            self.error(object, name, value)
+            raise TraitError(
+                "The value of a {} trait must be {}, but a value of {!r} {!r} "
+                "was specified.".format(
+                    self.__class__.__name__, self.info(), value, type(value))
+            )
 
         if value in self.values_:
             return self.values_[value]
@@ -2626,7 +2626,11 @@ class PrefixList(BaseStr):
             self.values_[value] = match = matches[0]
             return match
 
-        self.error(object, name, value)
+        raise TraitError(
+            "The value of a {} trait must be {}, but a value of {!r} {!r} was "
+            "specified.".format(
+                self.__class__.__name__, self.info(), value, type(value))
+        )
 
     def info(self):
         return (
