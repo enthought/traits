@@ -63,23 +63,20 @@ However, there are a few things to be aware of when upgrading.
   TraitsUI view.
 
 * The approach to logging configuration of the Traits library has changed.
-  Trait notification handlers should not raise exceptions in normal use, and as
-  before, an exception is logged whenever a trait notification handler raises.
+  Traits now does no logging configuration at all, leaving all such
+  configuration to the application.
 
-  What differs is the way that that log record is handled under default
-  exception handling. Previously, Traits added a
-  :class:`~logging.StreamHandler` to the ``"traits"`` logger, so that log
-  messages would automatically be printed to standard error. Traits also added
-  a :class:`~logging.NullHandler` to that logger. Both of those handlers have
-  been removed, and Traits now does no logging configuration at all, leaving
-  all such configuration to the application.
-
-  The net effect of these changes is that in the absence of any logging
-  configuration, errors occurring in notification handlers will show up on the
-  console as before, as a result of the logging module's "handler of last
-  resort". Traits-using applications that *do* configure logging may need to
-  double check that their log configuration suppresses or records these
-  messages as appropriate for their application.
+  In more detail: trait notification handlers should not raise exceptions in
+  normal use, so an exception is logged whenever a trait notification handler
+  raises. This part of the behaviour has not changed. What *has* changed is the
+  way that logged exception is handled under default exception handling.
+  Previously, Traits added a :class:`~logging.StreamHandler` to the
+  top-level ``"traits"`` logger, so that trait notification exceptions would
+  always be visible. Traits also added a :class:`~logging.NullHandler` to that
+  logger. Both of those handlers have now been removed. We now realy on
+  Python's "handler of last resort", which will continue to make notification
+  exceptions to the user visiable in the absence of any application-level
+  log configuration.
 
 * When listening for changes to the items of a :class:`.List` trait, an index
   or slice set operation no longer performs an equality check between the
@@ -188,11 +185,8 @@ Changes
 * ``TraitListEvent.index`` reported by mutations to a list is now normalized.
   (#1009)
 * The default notification error handler for Traits no longer configures
-  logging. It used to explicitly add a ``StreamHandler`` to the top-level
-  Traits logger so that trait notification exceptions would always be
-  visible. Instead, we rely on Python's "handler of last resort", which
-  will continue to make notification exceptions to the user visible in
-  the absence of any application-level log configuration. (#1161)
+  logging, and the top-level ``NullHandler`` log handler has been removed.
+  (#1161)
 
 Fixes
 ~~~~~
