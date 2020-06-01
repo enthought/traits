@@ -1833,6 +1833,7 @@ default_value_for(trait_object *trait, has_traits_object *obj, PyObject *name)
                         Py_DECREF(result);
                         return NULL;
                     }
+                    Py_DECREF(value);
                     return result;
                 }
                 else {

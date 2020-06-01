@@ -12,6 +12,7 @@
 """
 
 import contextlib
+import logging
 import threading
 from threading import local as thread_local
 from threading import Thread
@@ -211,16 +212,7 @@ class NotificationExceptionHandler(object):
 
         logger = self.traits_logger
         if logger is None:
-            import logging
-
             self.traits_logger = logger = logging.getLogger("traits")
-            handler = logging.StreamHandler()
-            handler.setFormatter(logging.Formatter("%(message)s"))
-            logger.addHandler(handler)
-            print(
-                "Exception occurred in traits notification handler.\n"
-                "Please check the log file for details."
-            )
 
         try:
             logger.exception(
