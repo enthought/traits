@@ -164,7 +164,7 @@ Features
 * Add ``Map`` and ``PrefixMap`` trait types. (#886, #953, #956, #970, #1139)
 * Add ``TraitList`` as the base list object that can perform validation
   and emit change notifications. (#912, #981, #984, #989, #999, #1003, #1011,
-  #1026, #1009, #1040)
+  #1026, #1009, #1040, #1172)
 * Add ``TraitDict`` as the base dict object that can perform validation and
   emit change notifications. (#913)
 * Add ``TraitSet`` as the base set object that can perform validation and
