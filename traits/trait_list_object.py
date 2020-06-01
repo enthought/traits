@@ -776,7 +776,7 @@ class TraitListObject(TraitList):
             If list is empty or index is out of range.
         """
 
-        self._validate_length(len(self) - 1)
+        self._validate_length(max(len(self) - 1, 0))
         return super().pop(index)
 
     def remove(self, value):
@@ -797,7 +797,7 @@ class TraitListObject(TraitList):
             If the value is not present.
         """
 
-        self._validate_length(len(self) - 1)
+        self._validate_length(max(len(self) - 1, 0))
         super().remove(value)
 
     # -- pickle and copy support ----------------------------------------------
