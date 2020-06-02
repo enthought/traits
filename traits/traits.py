@@ -535,18 +535,18 @@ def Property(
             def _get_foo(self):
                 return self._foo
 
-    You can use the **depends_on** metadata attribute to indicate that the
-    property depends on the value of another trait. The value of **depends_on**
-    is an extended name specifier for traits that the property depends on. The
-    property will a trait change notification if any of the traits specified
-    by **depends_on** change. For example::
+    You can use the **observes** metadata attribute to indicate that the
+    property depends on the value of another trait. The value of **observes**
+    follows the same signature as the **expression** parameter in
+    ``HasTraits.observe``. The property will fire a trait change notification
+    if any of the traits specified by **observes** change. For example::
 
         class Wheel ( Part ):
             axle     = Instanced( Axle )
-            position = Property( depends_on = 'axle.chassis.position' )
+            position = Property( observes = 'axle.chassis.position' )
 
     For details of the extended trait name syntax, refer to the
-    on_trait_change() method of the HasTraits class.
+    observe() method of the HasTraits class.
 
     Parameters
     ----------
