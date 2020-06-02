@@ -27,6 +27,7 @@ from traits.api import (
     Property,
     Str,
 )
+from traits.trait_base import Undefined
 from traits.observation.api import (
     trait,
     pop_exception_handler,
@@ -67,8 +68,8 @@ class TestPropertyNotifications(unittest.TestCase):
         self.assertEqual(output_buffer.getvalue(), "value_1value_2")
 
 
-
 # Integration test for Property notifications via 'observes' / 'depends_on'
+
 
 class PersonInfo(HasTraits):
 
@@ -457,13 +458,18 @@ class TestHasTraitsPropertyObserves(unittest.TestCase):
         instance = ClassWithPropertyMultipleObserves()
 
         for protocol in range(pickle.HIGHEST_PROTOCOL + 1):
-            serialized = pickle.dumps(foo, protocol=protocol)
+            serialized = pickle.dumps(instance, protocol=protocol)
             deserialized = pickle.loads(serialized)
+            handler = mock.Mock()
+            deserialized.observe(handler, "computed_value")
+            deserialized.age = 1
+            self.assertEqual(handler.call_count, 1)
 
 
 def get_otc_handler(mock_obj):
     """ Return a callable to be used with on_trait_change, which will
     inspect call signature.
+
     Parameters
     ----------
     mock_obj : mock.Mock

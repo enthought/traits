@@ -617,9 +617,7 @@ def Property(
             metadata["editor"] = trait.editor
 
     metadata.setdefault("depends_on", getattr(fget, "depends_on", None))
-    if (metadata.get("depends_on") is not None) and getattr(
-        fget, "cached_property", False
-    ):
+    if getattr(fget, "cached_property", False):
         metadata.setdefault("cached", True)
 
     trait = CTrait(TraitKind.property)

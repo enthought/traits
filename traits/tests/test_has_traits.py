@@ -200,11 +200,13 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
                         "expression": "name",
                         "post_init": False,
                         "dispatch": "same",
+                        "handler_getter": getattr,
                     },
                     {
                         "expression": trait("value"),
                         "post_init": True,
                         "dispatch": "ui",
+                        "handler_getter": getattr,
                     },
                 ],
             },
