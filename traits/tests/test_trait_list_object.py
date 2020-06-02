@@ -1150,6 +1150,8 @@ class HasLengthConstrainedLists(HasTraits):
 
     at_most_five = List(Int, maxlen=5)
 
+    unconstrained = List(Int)
+
 
 class TestTraitListObject(unittest.TestCase):
     def test_list_of_lists_pickle_with_notifier(self):
@@ -1213,6 +1215,11 @@ class TestTraitListObject(unittest.TestCase):
         with self.assertRaises(TraitError):
             del foo.at_least_two[:]
         self.assertEqual(foo.at_least_two, [1, 2])
+
+    def test_delitem_from_empty(self):
+        foo = HasLengthConstrainedLists()
+        with self.assertRaises(IndexError):
+            del foo.unconstrained[0]
 
     def test_iadd(self):
         foo = HasLengthConstrainedLists(at_most_five=[1, 2])
@@ -1381,6 +1388,13 @@ class TestTraitListObject(unittest.TestCase):
             foo.at_least_two.pop(10)
         self.assertEqual(foo.at_least_two, [1, 2])
 
+    def test_pop_from_empty(self):
+        foo = HasLengthConstrainedLists()
+        with self.assertRaises(IndexError):
+            foo.unconstrained.pop()
+        with self.assertRaises(IndexError):
+            foo.unconstrained.pop(10)
+
     def test_remove(self):
         foo = HasLengthConstrainedLists(at_least_two=[1, 2, 6, 4])
         foo.at_least_two.remove(2)
@@ -1397,6 +1411,11 @@ class TestTraitListObject(unittest.TestCase):
         with self.assertRaises(TraitError):
             foo.at_least_two.remove(10)
         self.assertEqual(foo.at_least_two, [1, 2])
+
+    def test_remove_from_empty(self):
+        foo = HasLengthConstrainedLists()
+        with self.assertRaises(ValueError):
+            foo.unconstrained.remove(35)
 
     def test_length_violation_error_message(self):
         # Regression test for enthought/traits#1170
