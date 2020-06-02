@@ -27,9 +27,6 @@ CHECK_INTERFACES: int
 class AbstractViewElement(abc.ABC): ...
 
 WrapperTypes: _Any
-BoundMethodTypes: _Any
-UnboundMethodTypes: _Any
-FunctionTypes: _Any
 BaseTraits: str
 ClassTraits: str
 PrefixTraits: str
@@ -43,10 +40,7 @@ DeferredCopy: _Any
 extended_trait_pat: _Any
 any_trait: _Any
 
-def is_cython_func_or_method(method: _Any): ...
-def is_bound_method_type(method: _Any): ...
 def is_unbound_method_type(method: _Any): ...
-def is_function_type(function: _Any): ...
 def get_delegate_pattern(name: _Any, trait: _Any): ...
 
 class _SimpleTest:
