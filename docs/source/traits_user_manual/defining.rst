@@ -312,7 +312,9 @@ the table.
 |                  | None, *kw* = None, *allow_none* = True, *adapt* = None,  |
 |                  | *module* = None, \*\*\ *metadata*] )                     |
 +------------------+----------------------------------------------------------+
-| List             | List([*trait* = None, *value* = None, *minlen* = 0,      |
+| List             | List( [*trait* = None, *value* = None, *minlen* = 0,     |
+|                  | *maxlen* = sys.maxint, *items* = True,                   |
+|                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | Map              | Map( *map*\ [, \*\*\ *metadata*] )                       |
 +------------------+----------------------------------------------------------+
