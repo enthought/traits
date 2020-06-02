@@ -10,10 +10,11 @@
 
 # event.py --- Example of a trait event
 
-# --<Imports>-------------------------------------------------------------------
-from traits.api import Event, HasTraits, List, RGBColor, Tuple
+# --<Imports>------------------------------------------------------------------
+from traits.api import Event, HasTraits, List, Tuple
+from traitsui.api import RGBColor
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 
 point_2d = Tuple(0, 0)
 

@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-# --(Rewritten Core Traits)-----------------------------------------------------
+# --(Rewritten Core Traits)----------------------------------------------------
 """
 Rewritten Core Traits
 =====================

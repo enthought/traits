@@ -17,10 +17,6 @@ with the object trait, and generates a TraitError exception if it is not
 consistent.
 """
 
-# -------------------------------------------------------------------------------
-#  Imports:
-# -------------------------------------------------------------------------------
-
 from importlib import import_module
 import sys
 from types import FunctionType, MethodType
@@ -29,7 +25,6 @@ from .constants import DefaultValue, ValidateTrait
 from .trait_base import (
     SequenceTypes,
     TypeTypes,
-    CoercableTypes,
     class_of,
 )
 from .trait_base import RangeTypes  # noqa: F401, used by TraitsUI
@@ -40,24 +35,21 @@ from .trait_handler import TraitHandler
 from .trait_list_object import TraitListEvent, TraitListObject
 from .util.deprecated import deprecated
 
-# Set up a logger:
-import logging
-
-logger = logging.getLogger(__name__)
-
-# -------------------------------------------------------------------------------
-#  Constants:
-# -------------------------------------------------------------------------------
+# Constants
 
 CallableTypes = (FunctionType, MethodType)
+
+# Mapping of coercable types.
+CoercableTypes = {
+    float: (ValidateTrait.coerce, float, int),
+    complex: (ValidateTrait.coerce, complex, float, int),
+}
 
 _WARNING_FORMAT_STR = ("'{handler}' trait handler has been deprecated. "
                        "Use {replacement} instead.")
 
 
-# -------------------------------------------------------------------------------
-#  Private functions:
-# -------------------------------------------------------------------------------
+# Private functions
 
 def _undefined_get(object, name):
     raise TraitError(
@@ -209,15 +201,15 @@ class TraitCastType(TraitCoerceType):
     To understand the difference between TraitCoerceType and TraitCastType (and
     also between Float and CFloat), consider the following example::
 
-        >>>class Person(HasTraits):
-        ...    weight = Float
-        ...    cweight = CFloat
-        >>>
-        >>>bill = Person()
-        >>>bill.weight = 180    # OK, coerced to 180.0
-        >>>bill.cweight = 180   # OK, cast to 180.0
-        >>>bill.weight = '180'  # Error, invalid coercion
-        >>>bill.cweight = '180' # OK, cast to float('180')
+        >>> class Person(HasTraits):
+        ...     weight = Float
+        ...     cweight = CFloat
+        ...
+        >>> bill = Person()
+        >>> bill.weight = 180    # OK, coerced to 180.0
+        >>> bill.cweight = 180   # OK, cast to 180.0
+        >>> bill.weight = '180'  # Error, invalid coercion
+        >>> bill.cweight = '180' # OK, cast to float('180')
 
     Parameters
     ----------
@@ -577,6 +569,8 @@ class TraitPrefixList(TraitHandler):
         Enumeration of all legal values for a trait.
     """
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitPrefixList", replacement="PrefixList"))
     def __init__(self, *values):
         if (len(values) == 1) and (type(values[0]) in SequenceTypes):
             values = values[0]
@@ -642,13 +636,13 @@ class TraitMap(TraitHandler):
 
     The following example defines a ``Person`` class::
 
-        >>>class Person(HasTraits):
-        ...    married = Trait('yes', TraitMap({'yes': 1, 'no': 0 })
-        >>>
-        >>>bob = Person()
-        >>>print bob.married
+        >>> class Person(HasTraits):
+        ...     married = Trait('yes', TraitMap({'yes': 1, 'no': 0 })
+        ...
+        >>> bob = Person()
+        >>> print bob.married
         yes
-        >>>print bob.married_
+        >>> print bob.married_
         1
 
     In this example, the default value of the ``married`` attribute of the
@@ -674,6 +668,8 @@ class TraitMap(TraitHandler):
 
     is_mapped = True
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitMap", replacement="Map"))
     def __init__(self, map):
         self.map = map
         self.fast_validate = (ValidateTrait.map, map)
@@ -744,6 +740,8 @@ class TraitPrefixMap(TraitMap):
         the shadow trait attribute.
     """
 
+    @deprecated(_WARNING_FORMAT_STR.format(
+        handler="TraitPrefixMap", replacement="PrefixMap"))
     def __init__(self, map):
         self.map = map
         self._map = _map = {}
@@ -1132,14 +1130,9 @@ def items_event():
     return TraitList._items_event
 
 
-# -------------------------------------------------------------------------------
-#  'TraitDict' class:
-# -------------------------------------------------------------------------------
-
-
 class TraitDict(TraitHandler):
-    """ Ensures that values assigned to a trait attribute are dictionaries whose
-    keys and values are of specified types.
+    """ Ensures that values assigned to a trait attribute are dictionaries
+    whose keys and values are of specified types.
 
     TraitDict also makes sure that any changes to keys or values made that are
     made after the dictionary is assigned to the trait attribute satisfy the

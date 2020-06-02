@@ -11,8 +11,8 @@
 """ Core Trait definitions.
 """
 
+import collections.abc
 import datetime
-import enum
 from importlib import import_module
 import operator
 import re
@@ -31,8 +31,6 @@ from .trait_base import (
     get_module_name,
     HandleWeakRef,
     class_of,
-    enum_default,
-    EnumTypes,
     RangeTypes,
     safe_contains,
     SequenceTypes,
@@ -41,12 +39,12 @@ from .trait_base import (
     TraitsCache,
     xgetattr,
 )
-from .trait_converters import trait_from
+from .trait_converters import trait_from, trait_cast
 from .trait_dict_object import TraitDictEvent, TraitDictObject
 from .trait_errors import TraitError
 from .trait_list_object import TraitListEvent, TraitListObject
 from .trait_set_object import TraitSetEvent, TraitSetObject
-from .trait_type import TraitType
+from .trait_type import TraitType, _infer_default_value_type
 from .traits import (
     Trait,
     _TraitMaker,
@@ -67,16 +65,11 @@ from .editor_factories import (
 )
 
 
-# -------------------------------------------------------------------------------
-#  Constants:
-# -------------------------------------------------------------------------------
+# Constants
 
-MutableTypes = (list, dict)
 SetTypes = SequenceTypes + (set,)
 
-# -------------------------------------------------------------------------------
-#  Numeric type fast validator definitions:
-# -------------------------------------------------------------------------------
+# Numeric type fast validator definitions
 
 # A few words about the next block of code:
 
@@ -164,9 +157,7 @@ def default_text_editor(trait, type=None):
     return TextEditor(auto_set=auto_set, enter_set=enter_set, evaluate=type)
 
 
-# -------------------------------------------------------------------------------
 # Generic validators
-# -------------------------------------------------------------------------------
 
 def _validate_int(value):
     """ Convert an integer-like Python object to an int, or raise TypeError.
@@ -191,9 +182,7 @@ def _validate_float(value):
     return nb_float(value)
 
 
-# -----------------------------------------------------------------------------
 # Trait Types
-# -----------------------------------------------------------------------------
 
 class Any(TraitType):
     """ A trait type whose value can be anything.
@@ -851,9 +840,13 @@ class BaseCallable(TraitType):
 class Callable(BaseCallable):
     """ A fast-validating trait type whose value must be a Python callable.
     """
+    def __init__(self, value=None, allow_none=True, **metadata):
 
-    #: The C-level fast validator to use
-    fast_validate = (ValidateTrait.callable,)
+        self.fast_validate = (ValidateTrait.callable, allow_none)
+
+        default_value = metadata.pop("default_value", value)
+
+        super().__init__(default_value, **metadata)
 
 
 class BaseType(TraitType):
@@ -1016,12 +1009,11 @@ class Constant(TraitType):
 
     Traits of this type are very space efficient (and fast) because
     *value* is not stored in each instance using the trait, but only in
-    the trait object itself. The *value* cannot be a list or dictionary,
-    because those types have mutable values.
+    the trait object itself.
 
     Parameters
     ----------
-    value : any type other than list or dict
+    value : any
         The constant value for the trait.
     **metadata
         Trait metadata for the trait.
@@ -1032,14 +1024,6 @@ class Constant(TraitType):
 
     #: The standard metadata for the trait:
     metadata = {"type": "constant", "transient": True}
-
-    def __init__(self, value, **metadata):
-        if type(value) in MutableTypes:
-            raise TraitError(
-                "Cannot define a constant using a mutable list or dictionary"
-            )
-
-        super(Constant, self).__init__(value, **metadata)
 
 
 class Delegate(TraitType):
@@ -1458,7 +1442,11 @@ class File(BaseFile):
 
 
 class BaseDirectory(BaseStr):
-    """ A trait type whose value is a directory path string.
+    """ A trait type whose value must be a directory path string.
+
+    For Python 3.6 and greater, it also accepts objects implementing
+    the :class:`os.PathLike` interface, converting them to the corresponding
+    string.
 
     Parameters
     ----------
@@ -1488,7 +1476,8 @@ class BaseDirectory(BaseStr):
     """
 
     #: A description of the type of value this trait accepts:
-    info_text = "a directory name"
+    info_text = ("a directory name or an object implementing "
+                 "the os.PathLike interface")
 
     def __init__(
         self, value="", auto_set=False, entries=0, exists=False, **metadata
@@ -1504,6 +1493,13 @@ class BaseDirectory(BaseStr):
 
         Note: The 'fast validator' version performs this check in C.
         """
+        if fspath is not None:
+            # Python 3.5 does not implement __fspath__
+            try:
+                value = fspath(value)
+            except TypeError:
+                pass
+
         validated_value = super(BaseDirectory, self).validate(
             object, name, value
         )
@@ -1523,6 +1519,10 @@ class BaseDirectory(BaseStr):
 
 class Directory(BaseDirectory):
     """ A fast-validating trait type whose value is a directory path string.
+
+    For Python 3.6 and greater, it also accepts objects implementing
+    the :class:`os.PathLike` interface, converting them to the corresponding
+    string.
 
     Parameters
     ----------
@@ -1554,10 +1554,7 @@ class Directory(BaseDirectory):
     def __init__(
         self, value="", auto_set=False, entries=0, exists=False, **metadata
     ):
-        # Define the C-level fast validator to use if the directory existence
-        #: test is not required:
-        if not exists:
-            self.fast_validate = (ValidateTrait.coerce, str)
+        # Fast validation is disabled (Github issue #877).
         super(Directory, self).__init__(
             value, auto_set, entries, exists, **metadata
         )
@@ -1902,50 +1899,96 @@ class Range(BaseRange):
 
 
 class BaseEnum(TraitType):
-    """ A trait type whose value is one of a set of values.
+    """ A trait type whose value is an element of a finite collection.
 
-    The default value is the first positional argument, or the first item of
-    the list, tuple or enum.Enum if that is the only argument or if the valid
-    values are provided dynamically.
+    This trait type can be either *static*, with the collection of valid values
+    specified directly in the constructor, or *dynamic*, with the collection
+    provided by the value of another trait attribute.
+
+    For both static and dynamic enumerations, a default value can be provided
+    as a positional argument. If no default is provided, the default is the
+    first item (in iteration order) of the underlying collection.
+
+    Notes
+    -----
+
+    1. If the enumeration is based on an unordered collection like a
+       ``set``, and no explicit default is given, the default used will
+       effectively be arbitrary (the first element of the set in iteration
+       order). It's recommended that a default be given explicitly in this
+       case.
+
+    2. Instances of ``str``, ``bytes`` and ``bytearray`` are not treated
+       as collections for the purposes of this trait type, both for pragmatic
+       reasons (it's more likely that a user wants to use a string as an
+       element in a collection than as a collection in its own right), and
+       because the behavior of the ``in`` operator for those types does not
+       express the usual membership semantics (for example, ``"bc" in "abc"``
+       is ``True``).
 
     Parameters
     ----------
     *args
-        The enumeration of all legal values for the trait.  The expected
-        signatures are either:
+        The enumeration of all valid values for the trait. For a static
+        enumeration trait (where the *values* keyword argument is not given)
+        the supported signatures for ``args`` are as follows:
 
-        - a single list, enum.Enum or tuple.  The default value is the first
-          item in the collection.
-        - a single default value, combined with the values keyword
-          argument.
-        - a default value, followed by a single list enum.Enum or tuple.
-        - arbitrary positional arguments each giving a valid value.
-    values : str
-        The name of a trait holding the legal values.  A default value may
-        be provided via a positional argument, otherwise it is the first
-        item stored in the .
+        (collection,)
+            A nonempty collection of valid values. The default is the first
+            element of the collection, in iteration order.
+        (default, collection)
+            The default value, followed by a nonempty collection of valid
+            values. The default should be an element of the collection, but
+            this is not checked.
+        (item1, item2, ..., itemn)
+            One or more items giving the valid values for the collection.
+            The default is *item1*.
+
+        For a dynamic enumeration trait, where the *values* keyword argument
+        is given, the supported signatures for ``args`` are:
+
+        ()
+            No arguments given. In this case the default is the first item
+            of the collection, in iteration order.
+        (default,)
+            The default value for the collection.
+
+        For the static case, the ambiguity in the signatures is resolved
+        as follows: if ``args`` has length ``1`` or ``2``, ``args[-1]`` can be
+        iterated over, and ``args[-1]`` is not an instance of ``str``,
+        ``bytes`` or ``bytearray``, then ``args[-1]`` is assumed to give the
+        collection of values. Otherwise, all elements of ``args`` are assumed
+        to be items in the collection. Thus the first two signatures are safe
+        from ambiguity, and it's recommended to use one of these two signatures
+        in preference to the third form.
+    values : str, optional
+        The name of a trait holding the valid values. If given, this is
+        a dynamic enumeration, otherwise it's a static numeration.
     **metadata
-        Trait metadata for the trait.
+        Metadata for the trait.
 
     Attributes
     ----------
-    values : tuple
-        A tuple holding the legal values.
-
-    name : str
-        The name of a trait holding the legal values, or the empty string if
-        unused.
+    values : tuple or None
+        For a static enumeration, this is a tuple holding the valid values.
+        For a dynamic enumeration, this is None.
+    name : str or None
+        For a dynamic enumeration, this is the name of a trait holding
+        the collection of valid values. For a static enumeration, this is
+        None.
     """
 
-    def __init__(self, *args, **metadata):
-        values = metadata.pop("values", None)
-        if isinstance(values, str):
-            self.name = values
+    def __init__(self, *args, values=None, **metadata):
+        self.name = values
+
+        nargs = len(args)
+        if self.name is not None:
+            # Dynamic enumeration
+            self.values = None
             self.get, self.set, self.validate = self._get, self._set, None
-            n = len(args)
-            if n == 0:
+            if nargs == 0:
                 super(BaseEnum, self).__init__(**metadata)
-            elif n == 1:
+            elif nargs == 1:
                 default_value = args[0]
                 super(BaseEnum, self).__init__(default_value, **metadata)
             else:
@@ -1954,19 +1997,29 @@ class BaseEnum(TraitType):
                     "when using the 'values' keyword"
                 )
         else:
-            default_value = args[0]
-            if (len(args) == 1) and isinstance(default_value, EnumTypes):
-                args = default_value
-                default_value = enum_default(args)
-            elif (len(args) == 2) and isinstance(args[1], EnumTypes):
-                args = args[1]
+            # Static enumeration
+            if nargs == 0:
+                raise TraitError("Enum trait requires at least 1 argument")
 
-            if isinstance(args, enum.EnumMeta):
-                metadata.setdefault('format_func', operator.attrgetter('name'))
-                metadata.setdefault('evaluate', args)
+            # If we have either 1 or 2 arguments and the last argument is a
+            # collection, then that collection provides the values of the
+            # enumeration. Otherwise, args itself is the collection.
+            have_collection_arg = (
+                nargs <= 2
+                and not isinstance(args[-1], (str, bytes, bytearray))
+                and isinstance(args[-1], collections.abc.Iterable)
+            )
+            self.values = tuple(args[-1]) if have_collection_arg else args
+            if not self.values:
+                raise TraitError("Enum collection should be nonempty")
 
-            self.name = ""
-            self.values = tuple(args)
+            # In the two-argument collection case, the first argument is
+            # the default. Otherwise, we take the first element of self.values.
+            if have_collection_arg and nargs == 2:
+                default_value = args[0]
+            else:
+                default_value = self.values[0]
+
             self.init_fast_validate(ValidateTrait.enum, self.values)
 
             super(BaseEnum, self).__init__(default_value, **metadata)
@@ -1981,7 +2034,7 @@ class BaseEnum(TraitType):
         """ Validates that the value is one of the enumerated set of valid
         values.
         """
-        if safe_contains(value, self.values):
+        if value in self.values:
             return value
 
         self.error(object, name, value)
@@ -1989,7 +2042,7 @@ class BaseEnum(TraitType):
     def full_info(self, object, name, value):
         """ Returns a description of the trait.
         """
-        if self.name == "":
+        if self.name is None:
             values = self.values
         else:
             values = xgetattr(object, self.name)
@@ -2001,18 +2054,24 @@ class BaseEnum(TraitType):
         """
         from traitsui.api import EnumEditor
 
-        values = self
-        if self.name != "":
+        if self.name is None:
+            values = self.values
+            name = ""
+        else:
             values = None
+            name = self.name
 
-        return EnumEditor(
-            values=values,
-            name=self.name,
+        editor = EnumEditor(
+            name=name,
             cols=self.cols or 3,
             evaluate=self.evaluate,
             format_func=self.format_func,
             mode=self.mode if self.mode else "radio",
         )
+        # Workaround enthought/traitsui#782
+        if values is not None:
+            editor.values = values
+        return editor
 
     def _get(self, object, name, trait):
         """ Returns the current value of a dynamic enum trait.
@@ -2020,7 +2079,7 @@ class BaseEnum(TraitType):
         value = self.get_value(object, name, trait)
         values = xgetattr(object, self.name)
         if not safe_contains(value, values):
-            value = enum_default(values)
+            value = next(iter(values), None)
         return value
 
     def _set(self, object, name, value):
@@ -2033,40 +2092,84 @@ class BaseEnum(TraitType):
 
 
 class Enum(BaseEnum):
-    """ A fast-validating trait type whose value is one of a set of values.
+    """ A fast-validating trait type whose value is an element of a finite
+    collection.
 
-    The default value is the first positional argument, or the first item of
-    the list, tuple or enum.Enum if that is the only argument or if the valid
-    values are provided dynamically.
+    This trait type can be either *static*, with the collection of valid values
+    specified directly in the constructor, or *dynamic*, with the collection
+    provided by the value of another trait attribute.
+
+    For both static and dynamic enumerations, a default value can be provided
+    as a positional argument. If no default is provided, the default is the
+    first item (in iteration order) of the underlying collection.
+
+    Notes
+    -----
+
+    1. If the enumeration is based on an unordered collection like a
+       ``set``, and no explicit default is given, the default used will
+       effectively be arbitrary (the first element of the set in iteration
+       order). It's recommended that a default be given explicitly in this
+       case.
+
+    2. Instances of ``str``, ``bytes`` and ``bytearray`` are not treated
+       as collections for the purposes of this trait type, both for pragmatic
+       reasons (it's more likely that a user wants to use a string as an
+       element in a collection than as a collection in its own right), and
+       because the behavior of the ``in`` operator for those types does not
+       express the usual membership semantics (for example, ``"bc" in "abc"``
+       is ``True``).
 
     Parameters
     ----------
     *args
-        The enumeration of all legal values for the trait.  The expected
-        signatures are either:
+        The enumeration of all valid values for the trait. For a static
+        enumeration trait (where the *values* keyword argument is not given)
+        the supported signatures for ``args`` are as follows:
 
-        - a single list, enum.Enum or tuple.  The default value is the first
-          item in the collection.
-        - a single default value, combined with the values keyword
-          argument.
-        - a default value, followed by a single list enum.Enum or tuple.
-        - arbitrary positional arguments each giving a valid value.
+        (collection,)
+            A nonempty collection of valid values. The default is the first
+            element of the collection, in iteration order.
+        (default, collection)
+            The default value, followed by a nonempty collection of valid
+            values. The default should be an element of the collection, but
+            this is not checked.
+        (item1, item2, ..., itemn)
+            One or more items giving the valid values for the collection.
+            The default is *item1*.
 
-    values : str
-        The name of a trait holding the legal values.  A default value may
-        be provided via a positional argument, otherwise it is the first
-        item stored in the .
+        For a dynamic enumeration trait, where the *values* keyword argument
+        is given, the supported signatures for ``args`` are:
+
+        ()
+            No arguments given. In this case the default is the first item
+            of the collection, in iteration order.
+        (default,)
+            The default value for the collection.
+
+        For the static case, the ambiguity in the signatures is resolved
+        as follows: if ``args`` has length ``1`` or ``2``, ``args[-1]`` can be
+        iterated over, and ``args[-1]`` is not an instance of ``str``,
+        ``bytes`` or ``bytearray``, then ``args[-1]`` is assumed to give the
+        collection of values. Otherwise, all elements of ``args`` are assumed
+        to be items in the collection. Thus the first two signatures are safe
+        from ambiguity, and it's recommended to use one of these two signatures
+        in preference to the third form.
+    values : str, optional
+        The name of a trait holding the valid values. If given, this is
+        a dynamic enumeration, otherwise it's a static numeration.
     **metadata
-        Trait metadata for the trait.
+        Metadata for the trait.
 
     Attributes
     ----------
-    values : tuple
-        A tuple holding the legal values.
-
-    name : str
-        The name of a trait holding the legal values, or the empty string if
-        unused.
+    values : tuple or None
+        For a static enumeration, this is a tuple holding the valid values.
+        For a dynamic enumeration, this is None.
+    name : str or None
+        For a dynamic enumeration, this is the name of a trait holding
+        the collection of valid values. For a static enumeration, this is
+        None.
     """
 
     def init_fast_validate(self, *args):
@@ -2438,6 +2541,104 @@ class CList(List):
         )
 
 
+class PrefixList(TraitType):
+    r"""Ensures that a value assigned to the attribute is a member of a list of
+     specified string values, or is a unique prefix of one of those values.
+
+    The values that can be assigned to a trait attribute of type PrefixList
+    type is the set of all strings supplied to the PrefixList constructor,
+    as well as any unique prefix of those strings. That is, if the set of
+    strings supplied to the constructor is described by
+    [*s*\ :sub:`1`\ , *s*\ :sub:`2`\ , ..., *s*\ :sub:`n`\ ], then the
+    string *v* is a valid value for the trait if *v* == *s*\ :sub:`i[:j]`
+    for one and only one pair of values (i, j). If *v* is a valid value,
+    then the actual value assigned to the trait attribute is the
+    corresponding *s*\ :sub:`i` value that *v* matched.
+
+    The legal values can be provided as an iterable of values.
+
+    Example
+    -------
+    ::
+        class Person(HasTraits):
+            married = PrefixList(['yes', 'no'])
+
+    The Person class has a **married** trait that accepts any of the
+    strings 'y', 'ye', 'yes', 'n', or 'no' as valid values. However, the
+    actual values assigned as the value of the trait attribute are limited
+    to either 'yes' or 'no'. That is, if the value 'y' is assigned to the
+    **married** attribute, the actual value assigned will be 'yes'.
+
+    Note that the algorithm used by PrefixList in determining whether
+    a string is a valid value is fairly efficient in terms of both time and
+    space, and is not based on a brute force set of comparisons.
+
+    Parameters
+    ----------
+    values
+        A single iterable of legal string values.
+
+    Attributes
+    ----------
+    values : tuple of strings
+        Enumeration of all legal values for a trait.
+    """
+
+    #: The default value for the trait:
+    default_value = None
+
+    #: The default value type to use (i.e. 'constant'):
+    default_value_type = DefaultValue.constant
+
+    def __init__(self, values, **metadata):
+        if isinstance(values, (str, bytes, bytearray)):
+            raise TypeError(
+                "Legal values should be provided via an iterable of strings, "
+                "got {!r}.".format(values)
+            )
+        self.values = list(values)
+        self.values_ = values_ = {}
+        for key in values:
+            values_[key] = key
+
+        default = self.default_value
+        if 'default_value' in metadata:
+            default = metadata.pop('default_value')
+            default = self.value_for(default)
+        elif self.values:
+            default = self.values[0]
+
+        super().__init__(default, **metadata)
+
+    def value_for(self, value):
+        if not isinstance(value, str):
+            raise TraitError(
+                "The value of a {} trait must be {}, but a value of {!r} {!r} "
+                "was specified.".format(
+                    self.__class__.__name__, self.info(), value, type(value))
+            )
+
+        if value in self.values_:
+            return self.values_[value]
+
+        matches = [key for key in self.values if key.startswith(value)]
+        if len(matches) == 1:
+            self.values_[value] = match = matches[0]
+            return match
+
+        raise TraitError(
+            "The value of a {} trait must be {}, but a value of {!r} {!r} was "
+            "specified.".format(
+                self.__class__.__name__, self.info(), value, type(value))
+        )
+
+    def info(self):
+        return (
+            " or ".join([repr(x) for x in self.values])
+            + " (or any unique prefix)"
+        )
+
+
 class Set(TraitType):
     """ A trait type for a set of values of the specified type.
 
@@ -2668,6 +2869,178 @@ class Dict(TraitType):
 #: - 'default': Adaptation is allowed. If adaptation fails, the
 #:   default value for the trait should be used.
 AdaptMap = {"no": 0, "yes": 1, "default": 2}
+
+
+class Map(TraitType):
+    """ Checks that the value assigned to a trait attribute is a key of a
+        specified dictionary, and also assigns the dictionary value
+        corresponding to that key to a *shadow* attribute.
+
+        A trait attribute of type Map is called a *mapped* trait
+        attribute. In practice, this means that the resulting object actually
+        contains two attributes: one whose value is a key of the Map
+        dictionary, and the other whose value is the corresponding value of the
+        Map dictionary. The name of the shadow attribute is simply the base
+        attribute name with an underscore ('_') appended. Mapped trait
+        attributes can be used to allow a variety of user-friendly input values
+        to be mapped to a set of internal, program-friendly values.
+
+        Example
+        -------
+
+        The following example defines a ``Person`` class::
+
+            >>> class Person(HasTraits):
+            ...     married = Map({'yes': 1, 'no': 0 }, default_value="yes")
+            ...
+            >>> bob = Person()
+            >>> print(bob.married)
+            yes
+            >>> print(bob.married_)
+            1
+
+        In this example, the default value of the ``married`` attribute of the
+        Person class is 'yes'. Because this attribute is defined using
+        Map, instances of Person have another attribute,
+        ``married_``, whose default value is 1, the dictionary value
+        corresponding to the key 'yes'.
+
+        Parameters
+        ----------
+        map : dict
+            A dictionary whose keys are valid values for the trait attribute,
+            and whose corresponding values are the values for the shadow
+            trait attribute.
+
+        Attributes
+        ----------
+        map : dict
+            A dictionary whose keys are valid values for the trait attribute,
+            and whose corresponding values are the values for the shadow
+            trait attribute.
+    """
+
+    is_mapped = True
+
+    def __init__(self, map, **metadata):
+
+        self.map = map
+        self.fast_validate = (ValidateTrait.map, map)
+
+        default_value = metadata.pop("default_value", Undefined)
+
+        super().__init__(default_value, **metadata)
+
+    def validate(self, object, name, value):
+        try:
+            if value in self.map:
+                return value
+        except TypeError:
+            pass
+
+        self.error(object, name, value)
+
+    def mapped_value(self, value):
+        """ Get the mapped value for a value. """
+        return self.map[value]
+
+    def post_setattr(self, object, name, value):
+        setattr(object, name + "_", self.mapped_value(value))
+
+    def info(self):
+        keys = sorted(repr(x) for x in self.map.keys())
+        return " or ".join(keys)
+
+    def get_editor(self, trait):
+        from traitsui.api import EnumEditor
+
+        return EnumEditor(values=self, cols=trait.cols or 3)
+
+
+class PrefixMap(TraitType):
+    """ A cross between the PrefixList and Map classes.
+
+    Like Map, PrefixMap is created using a dictionary, but in this
+    case, the keys of the dictionary must be strings. Like PrefixList,
+    a string *v* is a valid value for the trait attribute if it is a prefix of
+    one and only one key *k* in the dictionary. The actual values assigned to
+    the trait attribute is *k*, and its corresponding mapped attribute is
+    *map*[*k*].
+
+    Example
+    -------
+    ::
+
+        mapping = {'true': 1, 'yes': 1, 'false': 0, 'no': 0 }
+        boolean_map = PrefixMap(mapping)
+
+    This example defines a Boolean trait that accepts any prefix of 'true',
+    'yes', 'false', or 'no', and maps them to 1 or 0.
+
+    Parameters
+    ----------
+    map : dict
+        A dictionary whose keys are strings that are valid values for the
+        trait attribute, and whose corresponding values are the values for
+        the shadow trait attribute.
+
+    Attributes
+    ----------
+    map : dict
+        A dictionary whose keys are strings that are valid values for the
+        trait attribute, and whose corresponding values are the values for
+        the shadow trait attribute.
+    """
+    is_mapped = True
+
+    def __init__(self, map, **metadata):
+        self.map = map
+        self._map = {}
+        for key in map.keys():
+            self._map[key] = key
+
+        default_value = metadata.pop("default_value", Undefined)
+
+        if default_value is not Undefined:
+            default_value = self.value_for(default_value)
+
+        super().__init__(default_value, **metadata)
+
+    def value_for(self, value):
+        if not isinstance(value, str):
+            raise TraitError(
+                "Value must be {}, but a value {!r} was specified.".format(
+                    self.info(), value)
+            )
+
+        if value in self._map:
+            return self._map[value]
+
+        matches = [key for key in self.map if key.startswith(value)]
+        if len(matches) == 1:
+            self._map[value] = match = matches[0]
+            return match
+
+        raise TraitError(
+            "Value must be {}, but a value {!r} was specified.".format(
+                self.info(), value)
+        )
+
+    def mapped_value(self, value):
+        """ Get the mapped value for a value. """
+        return self.map[value]
+
+    def post_setattr(self, object, name, value):
+        setattr(object, name + "_", self.mapped_value(value))
+
+    def info(self):
+        keys = sorted(repr(x) for x in self.map.keys())
+        return " or ".join(keys) + " (or any unique prefix)"
+
+    def get_editor(self, trait):
+        from traitsui.api import EnumEditor
+
+        return EnumEditor(values=self, cols=trait.cols or 3)
 
 
 class BaseClass(TraitType):
@@ -3449,6 +3822,113 @@ class Either(TraitType):
         return self.trait_maker.as_ctrait()
 
 
+class _NoneTrait(TraitType):
+    """ Defines a trait that only accepts the None value
+
+    This is primarily used for supporting ``Union``.
+    """
+
+    info_text = "None"
+
+    default_value = None
+
+    default_value_type = DefaultValue.constant
+
+    def __init__(self, **metadata):
+        default_value = metadata.pop("default_value", None)
+        if default_value is not None:
+            raise ValueError("Cannot set default value {} "
+                             "for _NoneTrait".format(default_value))
+        super(_NoneTrait, self).__init__(**metadata)
+
+    def validate(self, obj, name, value):
+        if value is None:
+            return value
+
+        self.error(obj, name, value)
+
+
+class Union(TraitType):
+    """ Defines a trait whose value can be any of of a specified list of
+    trait types or list of trait type instances or None
+
+    If the default value is not defined on Union, the default value from the
+    first trait will be used.
+    """
+
+    def __init__(self, *traits, **metadata):
+        self.list_ctrait_instances = []
+
+        if not traits:
+            traits = (_NoneTrait,)
+
+        for trait in traits:
+            if trait is None:
+                trait = _NoneTrait
+            ctrait_instance = trait_cast(trait)
+            if ctrait_instance is None:
+                raise ValueError("Union trait declaration expects a trait "
+                                 "type or an instance of trait type or None,"
+                                 " but got {!r} instead".format(trait))
+
+            self.list_ctrait_instances.append(ctrait_instance)
+
+        # ``Either`` uses 'default' for defining static default values.
+        # Raise if 'default' is found in order to help code migrate to Union
+        if "default" in metadata:
+            raise ValueError(
+                "Union default value should be set via 'default_value', not "
+                "'default'."
+            )
+
+        default_value = None
+        if 'default_value' in metadata:
+            default_value = metadata.pop("default_value")
+        elif self.list_ctrait_instances:
+            default_value = self.list_ctrait_instances[0].default
+
+        self.default_value_type = _infer_default_value_type(default_value)
+        super().__init__(default_value, **metadata)
+
+    def validate(self, obj, name, value):
+        """ Return the value by the first trait in the list that can
+        validate the assigned value, raise an error if none of them can.
+        """
+        for trait_type_instance in self.list_ctrait_instances:
+            try:
+                return trait_type_instance.validate(obj, name, value)
+            except TraitError:
+                pass
+
+        self.error(obj, name, value)
+
+    def info(self):
+        return " or ".join([ctrait.info() for ctrait in
+                            self.list_ctrait_instances])
+
+    def inner_traits(self):
+        return tuple(self.list_ctrait_instances)
+
+    def get_editor(self, trait):
+        from traitsui.api import TextEditor, CompoundEditor
+
+        the_editors = [x.get_editor() for x in self.list_ctrait_instances]
+        text_editor = TextEditor()
+        count = 0
+        editors = []
+        for editor in the_editors:
+            if isinstance(text_editor, editor.__class__):
+                count += 1
+                if count > 1:
+                    continue
+            editors.append(editor)
+
+        return CompoundEditor(editors=editors)
+
+
+# -------------------------------------------------------------------------------
+#  'Symbol' trait:
+# -------------------------------------------------------------------------------
 class Symbol(TraitType):
     """ A property trait type that refers to a Python object by name.
 
@@ -3673,9 +4153,7 @@ Datetime = BaseInstance(datetime.datetime, editor=datetime_editor)
 Time = BaseInstance(datetime.time, editor=time_editor)
 
 
-# -----------------------------------------------------------------------------
-#  Create predefined, reusable trait instances:
-# -----------------------------------------------------------------------------
+# Predefined, reusable trait instances
 
 # Everything from this point onwards is deprecated, and has a simple
 # drop-in replacement.

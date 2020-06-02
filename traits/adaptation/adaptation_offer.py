@@ -94,8 +94,6 @@ class AdaptationOffer(HasTraits):
 
         self._factory = factory
 
-        return
-
     #: Shadow trait for the corresponding property.
     _from_protocol = Any
     _from_protocol_loaded = Bool(False)
@@ -116,8 +114,6 @@ class AdaptationOffer(HasTraits):
 
         self._from_protocol = from_protocol
 
-        return
-
     #: Shadow trait for the corresponding property.
     _to_protocol = Any
     _to_protocol_loaded = Bool(False)
@@ -137,8 +133,6 @@ class AdaptationOffer(HasTraits):
         """ Trait property setter. """
 
         self._to_protocol = to_protocol
-
-        return
 
     def _get_type_name(self, type_or_type_name):
         """ Returns the full dotted path for a type.

@@ -105,8 +105,6 @@ class CloneTestCase(unittest.TestCase):
         bc = b.clone_traits(traits="all", copy="deep")
         self.assertNotEqual(id(bc.x), id(f), "Foo x not cloned")
 
-        return
-
     def test_instance(self):
         b = ClassWithInstance()
 
@@ -117,8 +115,6 @@ class CloneTestCase(unittest.TestCase):
 
         bc = b.clone_traits(traits="all", copy="deep")
         self.assertNotEqual(id(bc.x), id(f), "Foo x not cloned")
-
-        return
 
     def test_class_attribute_missing(self):
         """ This test demonstrates a problem with Traits objects with class
@@ -146,8 +142,6 @@ class CloneTestCase(unittest.TestCase):
         # this is failing with AttributeError: 'ClassWithClassAttribute'
         # object has no attribute 'name'
         self.assertEqual(s, c.name)
-
-        return
 
     def test_Any_circular_references(self):
 

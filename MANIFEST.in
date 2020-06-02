@@ -12,3 +12,4 @@ graft examples
 recursive-exclude examples *.pyc
 include traits/ctraits.c
 recursive-include traits *.py
+include traits/observation/_dsl_grammar.lark

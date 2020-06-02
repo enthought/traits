@@ -9,4 +9,8 @@ Classes
 
 .. autoclass:: CHasTraits
 
+   .. automethod:: _class_traits
+
+   .. automethod:: _instance_traits
+
 .. autoclass:: cTrait

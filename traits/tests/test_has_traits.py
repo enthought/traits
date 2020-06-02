@@ -8,6 +8,8 @@
 #
 # Thanks for using Enthought open source!
 
+import copy
+import pickle
 import unittest
 
 from traits.has_traits import (
@@ -19,10 +21,20 @@ from traits.has_traits import (
     ListenerTraits,
     InstanceTraits,
     HasTraits,
+    observe,
+    ObserverTraits,
+    SingletonHasTraits,
+    SingletonHasStrictTraits,
+    SingletonHasPrivateTraits,
 )
 from traits.ctrait import CTrait
+from traits.observation.api import trait
+from traits.observation.exception_handling import (
+    pop_exception_handler,
+    push_exception_handler,
+)
 from traits.traits import ForwardProperty, generic_trait
-from traits.trait_types import Event, Float, Instance, Int
+from traits.trait_types import Event, Float, Instance, Int, List, Map, Str
 
 
 def _dummy_getter(self):
@@ -162,6 +174,39 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
                         "dispatch": "same",
                     },
                 )
+            },
+        )
+
+    def test_observe_trait(self):
+        # Given
+        @observe(trait("value"), post_init=True, dispatch="ui")
+        @observe("name")
+        def handler(event):
+            pass
+
+        class_name = "MyClass"
+        bases = (object,)
+        class_dict = {"attr": "something", "my_listener": handler}
+
+        # When
+        update_traits_class_dict(class_name, bases, class_dict)
+
+        # Then
+        self.assertEqual(
+            class_dict[ObserverTraits],
+            {
+                "my_listener": [
+                    {
+                        "expression": "name",
+                        "post_init": False,
+                        "dispatch": "same",
+                    },
+                    {
+                        "expression": trait("value"),
+                        "post_init": True,
+                        "dispatch": "ui",
+                    },
+                ],
             },
         )
 
@@ -308,6 +353,47 @@ class TestHasTraits(unittest.TestCase):
         target.event = event
         self.assertEqual(target.event_count, old_count + 1)
 
+    def test__object_notifiers_vetoed(self):
+
+        class SomeEvent(HasTraits):
+            event_id = Int()
+
+        class Target(HasTraits):
+            event = Event(Instance(SomeEvent))
+
+            event_count = Int(0)
+
+        target = Target()
+        event = SomeEvent(event_id=9)
+
+        def object_handler(object, name, old, new):
+            if name == "event":
+                object.event_count += 1
+
+        target.on_trait_change(object_handler, name="anytrait")
+
+        # Default state is not vetoed.
+        self.assertFalse(event._trait_notifications_vetoed())
+
+        # Firing the event increments the count.
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count + 1)
+
+        # Now veto the event. Firing the event won't affect the count.
+        event._trait_veto_notify(True)
+        self.assertTrue(event._trait_notifications_vetoed())
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count)
+
+        # Unveto the event.
+        event._trait_veto_notify(False)
+        self.assertFalse(event._trait_notifications_vetoed())
+        old_count = target.event_count
+        target.event = event
+        self.assertEqual(target.event_count, old_count + 1)
+
     def test_traits_inited(self):
         foo = HasTraits()
 
@@ -321,3 +407,346 @@ class TestHasTraits(unittest.TestCase):
         foo._trait_set_inited()
 
         self.assertTrue(foo.traits_inited())
+
+    def test_generic_getattr_exception(self):
+        # Regression test for enthought/traits#946.
+
+        class PropertyLike:
+            """
+            Data descriptor giving a property-like object that produces
+            successive reciprocals on __get__. This means that it raises
+            on first access, but not on subsequent accesses.
+            """
+            def __init__(self):
+                self.n = 0
+
+            def __get__(self, obj, type=None):
+                old_n = self.n
+                self.n += 1
+                return 1 / old_n
+
+            # Need a __set__ method to make this a data descriptor.
+            def __set__(self, obj, value):
+                raise AttributeError("Read-only descriptor")
+
+        class A(HasTraits):
+            fruit = PropertyLike()
+
+            banana_ = Int(1729)
+
+        a = A()
+
+        # The exception raised on the first attribute access should be
+        # propagated.
+        with self.assertRaises(ZeroDivisionError):
+            a.fruit
+
+        # Exercise the code path where the PyObject_GenericGetAttr call raises
+        # AttributeError. In this case, we catch the error but the prefix trait
+        # machinery raises a new AttributeError.
+        with self.assertRaises(AttributeError):
+            a.veg
+
+        # Exercise the case where the prefix traits machinery goes on to
+        # produce a valid result.
+        self.assertEqual(a.banananana, 1729)
+
+    def test_deepcopy_memoization(self):
+        class A(HasTraits):
+            x = Int()
+            y = Str()
+
+        a = A()
+        objs = [a, a]
+        objs_copy = copy.deepcopy(objs)
+        self.assertIsNot(objs_copy[0], objs[0])
+        self.assertIs(objs_copy[0], objs_copy[1])
+
+
+class TestObjectNotifiers(unittest.TestCase):
+    """ Test calling object notifiers. """
+
+    def test_notifiers_empty(self):
+
+        class Foo(HasTraits):
+            x = Int()
+
+        foo = Foo(x=1)
+        self.assertEqual(foo._notifiers(True), [])
+
+    def test_notifiers_on_object(self):
+
+        class Foo(HasTraits):
+            x = Int()
+
+        foo = Foo(x=1)
+        self.assertEqual(foo._notifiers(True), [])
+
+        # when
+        def handler():
+            pass
+
+        foo.on_trait_change(handler, name="anytrait")
+
+        # then
+        notifiers = foo._notifiers(True)
+        self.assertEqual(len(notifiers), 1)
+        onotifier, = notifiers
+        self.assertEqual(onotifier.handler, handler)
+
+
+class TestCallNotifiers(unittest.TestCase):
+
+    def test_trait_and_object_notifiers_called(self):
+
+        side_effects = []
+
+        class Foo(HasTraits):
+            x = Int()
+            y = Int()
+
+            def _x_changed(self):
+                side_effects.append("x")
+
+        def object_handler():
+            side_effects.append("object")
+
+        foo = Foo()
+        foo.on_trait_change(object_handler, name="anytrait")
+
+        # when
+        side_effects.clear()
+        foo.x = 3
+
+        # then
+        self.assertEqual(side_effects, ["x", "object"])
+
+        # when
+        side_effects.clear()
+        foo.y = 4
+
+        # then
+        self.assertEqual(side_effects, ["object"])
+
+    def test_trait_notifier_modify_object_notifier(self):
+        # Test when a trait notifier has a side effect of adding
+        # an object notifier
+
+        side_effects = []
+
+        def object_handler1():
+            side_effects.append("object1")
+
+        def object_handler2():
+            side_effects.append("object2")
+
+        class Foo(HasTraits):
+            x = Int()
+            y = Int()
+
+            def _x_changed(self):
+                side_effects.append("x")
+
+                # add the second object notifier
+                self.on_trait_change(object_handler2, name="anytrait")
+
+        # Add an object handler so that the list is created for mutation.
+        foo = Foo()
+        foo.on_trait_change(object_handler1, name="anytrait")
+
+        # when
+        side_effects.clear()
+        foo.x = 1
+
+        # then
+        # the second object notifier is not called.
+        self.assertEqual(side_effects, ["x", "object1"])
+
+        # But the object notifier is added and will be used the next time
+        # when
+        side_effects.clear()
+        foo.y = 2
+
+        # then
+        # the second object notifier is called.
+        self.assertEqual(side_effects, ["object1", "object2"])
+
+
+class TestDeprecatedHasTraits(unittest.TestCase):
+    def test_deprecated(self):
+        class TestSingletonHasTraits(SingletonHasTraits):
+            pass
+
+        class TestSingletonHasStrictTraits(SingletonHasStrictTraits):
+            pass
+
+        class TestSingletonHasPrivateTraits(SingletonHasPrivateTraits):
+            pass
+
+        with self.assertWarns(DeprecationWarning):
+            TestSingletonHasTraits()
+
+        with self.assertWarns(DeprecationWarning):
+            TestSingletonHasStrictTraits()
+
+        with self.assertWarns(DeprecationWarning):
+            TestSingletonHasPrivateTraits()
+
+
+class MappedWithDefault(HasTraits):
+
+    married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+
+    default_calls = Int(0)
+
+    def _married_default(self):
+        self.default_calls += 1
+        return "yes"
+
+
+class TestHasTraitsPickling(unittest.TestCase):
+
+    def test_pickle_mapped_default_method(self):
+        person = MappedWithDefault()
+
+        # Sanity check
+        self.assertEqual(person.default_calls, 0)
+
+        reconstituted = pickle.loads(pickle.dumps(person))
+
+        self.assertEqual(reconstituted.married_, 1)
+        self.assertEqual(reconstituted.married, "yes")
+        self.assertEqual(reconstituted.default_calls, 1)
+
+
+class Person(HasTraits):
+    age = Int()
+
+
+class PersonWithObserve(Person):
+    events = List()
+
+    @observe(trait("age"))
+    def handler(self, event):
+        self.events.append(event)
+
+
+class TestHasTraitsObserveHook(unittest.TestCase):
+    """ Test observe decorator and the observe method.
+    """
+
+    def setUp(self):
+        push_exception_handler(reraise_exceptions=True)
+        self.addCleanup(pop_exception_handler)
+
+    def test_overloaded_signature_expression(self):
+        # Test the overloaded signature for expression
+        expressions = [
+            trait("age"),
+            "age",
+            [trait("age")],
+            ["age"],
+        ]
+        for expression in expressions:
+
+            class NewPerson(Person):
+                events = List()
+
+                @observe(expression)
+                def handler(self, event):
+                    self.events.append(event)
+
+            person = NewPerson()
+            person.age += 1
+            self.assertEqual(len(person.events), 1)
+
+    def test_observe_method_remove(self):
+        events = []
+        person = Person()
+        person.observe(events.append, "age")
+
+        # sanity check
+        person.age += 1
+        self.assertEqual(len(events), 1)
+
+        # when
+        person.observe(events.append, "age", remove=True)
+
+        # then
+        person.age += 1
+        self.assertEqual(len(events), 1)  # unchanged
+
+    def test_observe_dispatch_ui(self):
+        # Test to ensure "ui" is one of the allowed value
+        # Not testing the actual effect as it requires GUI event loop
+        # as well as assumption on the local thread identity while running
+        # the test.
+        person = Person()
+
+        person.observe(repr, trait("age"), dispatch="ui")
+
+    def test_inherit_observer_from_superclass(self):
+        # Test observers can be inherited
+        class BaseClass(HasTraits):
+            events = List()
+
+            @observe("value")
+            def handler(self, event):
+                self.events.append(event)
+
+        class SubClass(BaseClass):
+            value = Int()
+
+        instance = SubClass()
+        instance.value += 1
+        self.assertEqual(len(instance.events), 1)
+
+    def test_observer_overridden(self):
+        # The handler is overriden, no change event should be registered.
+        class BaseClass(HasTraits):
+            events = List()
+
+            @observe("value")
+            def handler(self, event):
+                self.events.append(event)
+
+        class SubclassOverriden(BaseClass):
+            value = Int()
+            handler = None
+
+        instance = SubclassOverriden()
+        instance.value += 1
+        self.assertEqual(len(instance.events), 0)
+
+    def test_observe_post_init(self):
+
+        class PersonWithPostInt(Person):
+            events = List()
+
+            @observe("age", post_init=True)
+            def handler(self, event):
+                self.events.append(event)
+
+        person = PersonWithPostInt(age=10)
+        self.assertEqual(len(person.events), 0)
+
+        person.age += 1
+        self.assertEqual(len(person.events), 1)
+
+    def test_observe_pickability(self):
+        # Test an HasTraits with observe can be pickled.
+        person = PersonWithObserve()
+        for protocol in range(pickle.HIGHEST_PROTOCOL + 1):
+            serialized = pickle.dumps(person, protocol=protocol)
+            deserialized = pickle.loads(serialized)
+
+            deserialized.age += 1
+            self.assertEqual(len(deserialized.events), 1)
+
+    def test_observe_deepcopy(self):
+        # Test an HasTraits with observe can be deepcopied.
+        person = PersonWithObserve()
+        copied = copy.deepcopy(person)
+        copied.age += 1
+        self.assertEqual(len(copied.events), 1)
+        self.assertEqual(len(person.events), 0)

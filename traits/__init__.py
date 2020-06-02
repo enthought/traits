@@ -16,10 +16,3 @@ except ImportError:
     # hasn't been built, so this isn't a viable Traits installation. OTOH, it
     # can be useful if a simple "import traits" doesn't actually fail.
     __version__ = "unknown"
-
-# Add a NullHandler so 'traits' loggers don't complain when they get used.
-import logging
-
-logging.getLogger(__name__).addHandler(logging.NullHandler())
-
-del logging

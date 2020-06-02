@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-# --(New Trait Definition Style)------------------------------------------------
+# --(New Trait Definition Style)-----------------------------------------------
 """
 New Trait Definition Style
 ==========================
@@ -58,7 +58,7 @@ OddInt Redux
 Using the new style of defining traits, we can rewrite our previous **OddInt**
 example as follows::
 
-    class OddInt(Int):
+    class OddInt(BaseInt):
 
         # Define the default value:
         default_value = 1
@@ -76,17 +76,17 @@ example as follows::
 This provides the exact same functionality as the previous definition of
 **OddInt**. There are several points to make about the new definition however:
 
-- The **OddInt** class derives from **Int** (not **TraitHandler**). This
+- The **OddInt** class derives from **BaseInt** (not **TraitHandler**). This
   has several important side effects:
 
-  * **OddInt** can re-use and change any part of the **Int** class behavior
-    that it needs to. Note in this case the re-use of the **Int** class's
+  * **OddInt** can re-use and change any part of the **BaseInt** class behavior
+    that it needs to. Note in this case the re-use of the **BaseInt** class's
     *validate* method via the *super* call in **OddInt's** *validate* method.
 
-  * As a subclass of **Int**, it is related to **Int**, which can be
+  * As a subclass of **BaseInt**, it is related to **BaseInt**, which can be
     important both from a documentation and programming point of view. The
-    original definition of **OddInt** was related to **Int** only in that their
-    names were similar.
+    original definition of **OddInt** was related to **BaseInt** only in that
+    their names were similar.
 
 - The default value and trait description information are declared as class
   constants. Although there are more dynamic techniques that allow computing
@@ -98,12 +98,12 @@ This provides the exact same functionality as the previous definition of
   creating a new trait type a little more understandable to a wider group of
   developers.
 """
-# --<Imports>-------------------------------------------------------------------
+# --<Imports>------------------------------------------------------------------
 from traits.api import *
 
 
-# --[OddInt Definition]---------------------------------------------------------
-class OddInt(Int):
+# --[OddInt Definition]--------------------------------------------------------
+class OddInt(BaseInt):
 
     # Define the default value:
     default_value = 1
@@ -119,14 +119,14 @@ class OddInt(Int):
         self.error(object, name, value)
 
 
-# --[Test Class]----------------------------------------------------------------
+# --[Test Class]---------------------------------------------------------------
 class Test(HasTraits):
 
-    any_int = Int
+    any_int = BaseInt
     odd_int = OddInt
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 
 # Create a test object:
 t = Test()

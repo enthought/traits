@@ -8,26 +8,14 @@
 #
 # Thanks for using Enthought open source!
 
+"""
+Editor factory functions.
+"""
+
 import datetime
 from functools import partial
 import logging
 
-# -------------------------------------------------------------------------------
-#  Editor factory functions:
-# -------------------------------------------------------------------------------
-
-PasswordEditors = {}
-MultilineTextEditors = {}
-BytesEditors = {}
-SourceCodeEditor = None
-HTMLTextEditor = None
-PythonShellEditor = None
-DateEditor = None
-TimeEditor = None
-
-# -------------------------------------------------------------------------------
-#  Logging:
-# -------------------------------------------------------------------------------
 
 logger = logging.getLogger(__name__)
 
@@ -35,118 +23,77 @@ logger = logging.getLogger(__name__)
 def password_editor(auto_set=True, enter_set=False):
     """ Factory function that returns an editor for passwords.
     """
-    if (auto_set, enter_set) not in PasswordEditors:
-        from traitsui.api import TextEditor
-
-        PasswordEditors[auto_set, enter_set] = TextEditor(
-            password=True, auto_set=auto_set, enter_set=enter_set
-        )
-
-    return PasswordEditors[auto_set, enter_set]
+    from traitsui.api import TextEditor
+    return TextEditor(
+        password=True, auto_set=auto_set, enter_set=enter_set
+    )
 
 
 def multi_line_text_editor(auto_set=True, enter_set=False):
     """ Factory function that returns a text editor for multi-line strings.
     """
-    if (auto_set, enter_set) not in MultilineTextEditors:
-        from traitsui.api import TextEditor
-
-        MultilineTextEditors[auto_set, enter_set] = TextEditor(
-            multi_line=True, auto_set=auto_set, enter_set=enter_set
-        )
-
-    return MultilineTextEditors[auto_set, enter_set]
+    from traitsui.api import TextEditor
+    return TextEditor(
+        multi_line=True, auto_set=auto_set, enter_set=enter_set
+    )
 
 
 def bytes_editor(auto_set=True, enter_set=False, encoding=None):
     """ Factory function that returns a text editor for bytes.
     """
-    if (auto_set, enter_set, encoding) not in BytesEditors:
-        from traitsui.api import TextEditor
+    from traitsui.api import TextEditor
 
-        if encoding is None:
-            format = bytes.hex
-            evaluate = bytes.fromhex
-        else:
-            format = partial(bytes.decode, encoding=encoding)
-            evaluate = partial(str.encode, encoding=encoding)
+    if encoding is None:
+        format = bytes.hex
+        evaluate = bytes.fromhex
+    else:
+        format = partial(bytes.decode, encoding=encoding)
+        evaluate = partial(str.encode, encoding=encoding)
 
-        BytesEditors[(auto_set, enter_set, encoding)] = TextEditor(
-            multi_line=True,
-            format_func=format,
-            evaluate=evaluate,
-            auto_set=auto_set,
-            enter_set=enter_set,
-        )
-
-    return BytesEditors[(auto_set, enter_set, encoding)]
+    return TextEditor(
+        multi_line=True,
+        format_func=format,
+        evaluate=evaluate,
+        auto_set=auto_set,
+        enter_set=enter_set,
+    )
 
 
 def code_editor():
     """ Factory function that returns an editor that treats a multi-line string
     as source code.
     """
-    global SourceCodeEditor
-
-    if SourceCodeEditor is None:
-        from traitsui.api import CodeEditor
-
-        SourceCodeEditor = CodeEditor()
-
-    return SourceCodeEditor
+    from traitsui.api import CodeEditor
+    return CodeEditor()
 
 
 def html_editor():
     """ Factory function for an "editor" that displays a multi-line string as
     interpreted HTML.
     """
-    global HTMLTextEditor
-
-    if HTMLTextEditor is None:
-        from traitsui.api import HTMLEditor
-
-        HTMLTextEditor = HTMLEditor()
-
-    return HTMLTextEditor
+    from traitsui.api import HTMLEditor
+    return HTMLEditor()
 
 
 def shell_editor():
     """ Factory function that returns a Python shell for editing Python values.
     """
-    global PythonShellEditor
-
-    if PythonShellEditor is None:
-        from traitsui.api import ShellEditor
-
-        PythonShellEditor = ShellEditor()
-
-    return PythonShellEditor
+    from traitsui.api import ShellEditor
+    return ShellEditor()
 
 
 def time_editor():
     """ Factory function that returns a Time editor for editing Time values.
     """
-    global TimeEditor
-
-    if TimeEditor is None:
-        from traitsui.api import TimeEditor
-
-        TimeEditor = TimeEditor()
-
-    return TimeEditor
+    from traitsui.api import TimeEditor
+    return TimeEditor()
 
 
 def date_editor():
     """ Factory function that returns a Date editor for editing Date values.
     """
-    global DateEditor
-
-    if DateEditor is None:
-        from traitsui.api import DateEditor
-
-        DateEditor = DateEditor()
-
-    return DateEditor
+    from traitsui.api import DateEditor
+    return DateEditor()
 
 
 def _datetime_str_to_datetime(datetime_str, format="%Y-%m-%dT%H:%M:%S"):
@@ -155,39 +102,28 @@ def _datetime_str_to_datetime(datetime_str, format="%Y-%m-%dT%H:%M:%S"):
 
     Raises a ValueError if datetime_str does not match the format.
     """
-    if datetime_str is not None:
-        return datetime.datetime.strptime(datetime_str, format)
+    # Allow the empty string to be translated to None.
+    if not datetime_str:
+        return None
+    return datetime.datetime.strptime(datetime_str, format)
 
 
 def _datetime_to_datetime_str(datetime_obj, format="%Y-%m-%dT%H:%M:%S"):
     """ Returns a string representation for a datetime object in the specified
     format (default ISO format).
     """
-    if datetime_obj is not None:
-        return datetime.date.strftime(datetime_obj, format)
+    # A Datetime trait can contain None. We translate that to an empty string.
+    if datetime_obj is None:
+        return ""
+    return datetime.date.strftime(datetime_obj, format)
 
 
 def datetime_editor():
     """ Factory function that returns an editor with date & time for
     editing Datetime values.
     """
-
-    try:
-        from traitsui.api import DatetimeEditor
-
-        return DatetimeEditor()
-
-    except ImportError:
-
-        logger.warn(msg="Could not import DatetimeEditor from "
-                        "traitsui.api, using TextEditor instead")
-
-        from traitsui.api import TextEditor
-
-        return TextEditor(
-            evaluate=_datetime_str_to_datetime,
-            format_func=_datetime_to_datetime_str
-        )
+    from traitsui.api import DatetimeEditor
+    return DatetimeEditor()
 
 
 def _expects_hastraits_instance(handler):

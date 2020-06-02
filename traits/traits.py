@@ -55,7 +55,6 @@ from .trait_converters import (
 
 from .trait_handler import TraitHandler
 from .trait_type import (
-    _arg_count,
     _infer_default_value_type,
     _read_only,
     _write_only,
@@ -74,10 +73,9 @@ from .trait_handlers import (
 from .trait_factory import (
     TraitFactory,
 )
+from .util.deprecated import deprecated
 
-# -----------------------------------------------------------------------------
-#  Constants:
-# -----------------------------------------------------------------------------
+# Constants
 
 NoneType = type(None)  # Python 3's types does not include NoneType
 
@@ -145,11 +143,6 @@ class Default(object):
 
     def __init__(self, func=None, args=(), kw=None):
         self.default_value = (func, args, kw)
-
-
-# -------------------------------------------------------------------------------
-#  Factory function for creating C-based traits:
-# -------------------------------------------------------------------------------
 
 
 def Trait(*value_type, **metadata):
@@ -259,29 +252,18 @@ def Trait(*value_type, **metadata):
     """
     return _TraitMaker(*value_type, **metadata).as_ctrait()
 
-# -------------------------------------------------------------------------------
-#  '_TraitMaker' class:
-# -------------------------------------------------------------------------------
-
 
 class _TraitMaker(object):
 
     # Ctrait type map for special trait types:
     type_map = {"event": TraitKind.event, "constant": TraitKind.constant}
 
-    # ---------------------------------------------------------------------------
-    #  Initialize the object:
-    # ---------------------------------------------------------------------------
-
     def __init__(self, *value_type, **metadata):
         metadata.setdefault("type", "trait")
         self.define(*value_type, **metadata)
 
-    # ---------------------------------------------------------------------------
-    #  Define the trait:
-    # ---------------------------------------------------------------------------
-
     def define(self, *value_type, **metadata):
+        """ Define the trait. """
         default_value_type = DefaultValue.unspecified
         default_value = handler = clone = None
 
@@ -437,11 +419,8 @@ class _TraitMaker(object):
         self.default_value = default_value
         self.metadata = metadata.copy()
 
-    # ---------------------------------------------------------------------------
-    #  Determine the correct TraitHandler for each item in a list:
-    # ---------------------------------------------------------------------------
-
     def do_list(self, list, enum, map, other):
+        """ Determine the correct TraitHandler for each item in a list. """
         for item in list:
             if item in PythonTypes:
                 other.append(TraitCoerceType(item))
@@ -467,11 +446,8 @@ class _TraitMaker(object):
                 else:
                     other.append(TraitInstance(item))
 
-    # ---------------------------------------------------------------------------
-    #  Returns a properly initialized 'CTrait' instance:
-    # ---------------------------------------------------------------------------
-
     def as_ctrait(self):
+        """ Return a properly initialized 'CTrait' instance. """
         metadata = self.metadata
         trait = CTrait(
             self.type_map.get(metadata.get("type"), TraitKind.trait))
@@ -524,11 +500,6 @@ class _TraitMaker(object):
         return trait
 
 
-# -------------------------------------------------------------------------------
-#  Factory function for creating C-based trait properties:
-# -------------------------------------------------------------------------------
-
-
 def Property(
     fget=None,
     fset=None,
@@ -540,26 +511,6 @@ def Property(
 ):
     """ Returns a trait whose value is a Python property.
 
-    Parameters
-    ----------
-    fget : function
-        The "getter" function for the property.
-    fset : function
-        The "setter" function for the property.
-    fvalidate : function
-        The validation function for the property. The method should return the
-        value to set or raise TraitError if the new value is not valid.
-    force : bool
-        Indicates whether to use only the function definitions specified by
-        **fget** and **fset**, and not look elsewhere on the class.
-    handler : function
-        A trait handler function for the trait.
-    trait : Trait or value
-        A trait definition or a value that can be converted to a trait that
-        constrains the values of the property trait.
-
-    Description
-    -----------
     If no getter, setter or validate functions are specified (and **force** is
     not True), it is assumed that they are defined elsewhere on the class whose
     attribute this trait is assigned to. For example::
@@ -596,6 +547,24 @@ def Property(
 
     For details of the extended trait name syntax, refer to the
     on_trait_change() method of the HasTraits class.
+
+    Parameters
+    ----------
+    fget : function
+        The "getter" function for the property.
+    fset : function
+        The "setter" function for the property.
+    fvalidate : function
+        The validation function for the property. The method should return the
+        value to set or raise TraitError if the new value is not valid.
+    force : bool
+        Indicates whether to use only the function definitions specified by
+        **fget** and **fset**, and not look elsewhere on the class.
+    handler : function
+        A trait handler function for the trait.
+    trait : Trait or value
+        A trait definition or a value that can be converted to a trait that
+        constrains the values of the property trait.
     """
     metadata["type"] = "property"
 
@@ -653,15 +622,9 @@ def Property(
     ):
         metadata.setdefault("cached", True)
 
-    n = 0
     trait = CTrait(TraitKind.property)
     trait.__dict__ = metadata.copy()
-    if fvalidate is not None:
-        n = _arg_count(fvalidate)
-
-    trait.property(
-        fget, _arg_count(fget), fset, _arg_count(fset), fvalidate, n
-    )
+    trait.property_fields = (fget, fset, fvalidate)
     trait.handler = handler
 
     return trait
@@ -681,33 +644,22 @@ class ForwardProperty(object):
         self.handler = handler
 
 
-# -------------------------------------------------------------------------------
-#  Create predefined, reusable trait instances:
-# -------------------------------------------------------------------------------
+# Predefined, reusable trait instances
 
 # Generic trait with 'object' behavior:
 generic_trait = CTrait(TraitKind.generic)
 
-# -------------------------------------------------------------------------------
-#  User interface related color and font traits:
-# -------------------------------------------------------------------------------
 
+# User interface related color and font traits
 
+@deprecated("'Color' in 'traits' package has been deprecated. "
+            "Use 'Color' from 'traitsui' package instead.")
 def Color(*args, **metadata):
     """ Returns a trait whose value must be a GUI toolkit-specific color.
 
-    Description
-    -----------
-    For wxPython, the returned trait accepts any of the following values:
-
-    * A wx.Colour instance
-    * A wx.ColourPtr instance
-    * an integer whose hexadecimal form is 0x*RRGGBB*, where *RR* is the red
-      value, *GG* is the green value, and *BB* is the blue value
-
-    Default Value
-    -------------
-    For wxPython, 0xffffff (that is, white)
+    .. deprecated:: 6.1.0
+        ``Color`` trait in this package will be removed in the future. It is
+        replaced by ``Color`` trait in TraitsUI package.
     """
     from traitsui.toolkit_traits import ColorTrait
 
@@ -717,23 +669,15 @@ def Color(*args, **metadata):
 Color = TraitFactory(Color)
 
 
+@deprecated("'RGBColor' in 'traits' package has been deprecated. "
+            "Use 'RGBColor' from 'traitsui' package instead.")
 def RGBColor(*args, **metadata):
     """ Returns a trait whose value must be a GUI toolkit-specific RGB-based
-        color.
+    color.
 
-    Description
-    -----------
-    For wxPython, the returned trait accepts any of the following values:
-
-    * A tuple of the form (*r*, *g*, *b*), in which *r*, *g*, and *b* represent
-      red, green, and blue values, respectively, and are floats in the range
-      from 0.0 to 1.0
-    * An integer whose hexadecimal form is 0x*RRGGBB*, where *RR* is the red
-      value, *GG* is the green value, and *BB* is the blue value
-
-    Default Value
-    -------------
-    For wxPython, (1.0, 1.0, 1.0) (that is, white)
+    .. deprecated:: 6.1.0
+        ``RGBColor`` trait in this package will be removed in the future. It is
+        replaced by ``RGBColor`` trait in TraitsUI package.
     """
     from traitsui.toolkit_traits import RGBColorTrait
 
@@ -743,21 +687,14 @@ def RGBColor(*args, **metadata):
 RGBColor = TraitFactory(RGBColor)
 
 
+@deprecated("'Font' in 'traits' package has been deprecated. "
+            "Use 'Font' from 'traitsui' package instead.")
 def Font(*args, **metadata):
     """ Returns a trait whose value must be a GUI toolkit-specific font.
 
-    Description
-    -----------
-    For wxPython, the returned trait accepts any of the following:
-
-    * a wx.Font instance
-    * a wx.FontPtr instance
-    * a string describing the font, including one or more of the font family,
-      size, weight, style, and typeface name.
-
-    Default Value
-    -------------
-    For wxPython, 'Arial 10'
+    .. deprecated:: 6.1.0
+        ``Font`` trait in this package will be removed in the future. It is
+        replaced by ``Font`` trait in TraitsUI package.
     """
     from traitsui.toolkit_traits import FontTrait
 

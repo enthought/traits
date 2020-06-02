@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-# --(Creating New Trait Types)--------------------------------------------------
+# --(Creating New Trait Types)-------------------------------------------------
 """
 Creating New Trait Types
 ========================
@@ -57,7 +57,7 @@ post_setattr(self, object, name, value)
 The subclass can also define a constant default value by setting the class-
 level *default_value* attribute to the desired constant value. For example::
 
-    class OddInt(Int):
+    class OddInt(BaseInt):
 
         default_value = 1
 
@@ -71,7 +71,7 @@ If you have a constant string that can be used as the type's *info* value, you
 can provide it by simple setting the string as the value of the class-level
 *info_text* attribute::
 
-    class OddInt(Int):
+    class OddInt(BaseInt):
 
         info_text = 'an odd integer'
 
@@ -143,11 +143,11 @@ to the preceding section on defining a trait type for additional information
 that applies to properties as well.
 """
 
-# --<Imports>-------------------------------------------------------------------
+# --<Imports>------------------------------------------------------------------
 from traits.api import *
 
 
-# --[DiceRoll Type]-------------------------------------------------------------
+# --[DiceRoll Type]------------------------------------------------------------
 # Define a type whose value represents the roll of a pair of dice:
 class DiceRoll(TraitType):
 
@@ -175,7 +175,7 @@ class DiceRoll(TraitType):
         self.error(object, name, value)
 
 
-# --[RandInt Property]----------------------------------------------------------
+# --[RandInt Property]---------------------------------------------------------
 
 from random import randint
 
@@ -202,7 +202,7 @@ class RandInt(TraitType):
         )
 
 
-# --[Craps Class]---------------------------------------------------------------
+# --[Craps Class]--------------------------------------------------------------
 
 
 # Define a test class containing both new trait types/properties:
@@ -212,7 +212,7 @@ class Craps(HasTraits):
     die = RandInt(1, 6)
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 
 # Create a test object:
 craps = Craps()

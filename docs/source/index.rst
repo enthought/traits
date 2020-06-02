@@ -1,5 +1,5 @@
-Traits Documentation
-====================
+Traits |version| Documentation
+==============================
 
 User Reference
 --------------

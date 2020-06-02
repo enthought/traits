@@ -11,8 +11,9 @@
 """ Test cases for dictionary (Dict) traits. """
 
 import unittest
+from unittest import mock
 
-from traits.trait_types import Dict, Event, Str, TraitDictObject
+from traits.trait_types import Any, Dict, Event, Str, TraitDictObject
 from traits.has_traits import HasTraits, on_trait_change
 from traits.trait_errors import TraitError
 
@@ -29,7 +30,6 @@ def create_listener():
         listener.new = new
         listener.old = old
         listener.called += 1
-        return
 
     listener.initialize = lambda: initialize_listener(listener)
     return initialize_listener(listener)
@@ -63,7 +63,6 @@ class TestDict(unittest.TestCase):
             @on_trait_change("name")
             def _fire_modified_event(self):
                 self.modified = True
-                return
 
         class Bar(HasTraits):
             foos = Dict(Str, Foo)
@@ -72,7 +71,6 @@ class TestDict(unittest.TestCase):
             @on_trait_change("foos_items,foos.modified")
             def _fire_modified_event(self, obj, trait_name, old, new):
                 self.modified = True
-                return
 
         bar = Bar()
         listener = create_listener()
@@ -102,8 +100,6 @@ class TestDict(unittest.TestCase):
         self.assertEqual(1, listener.called)
         self.assertEqual("modified", listener.trait_name)
 
-        return
-
     def test_validate(self):
         """ Check the validation method.
 
@@ -121,3 +117,51 @@ class TestDict(unittest.TestCase):
         # object is None (check for issue #71)
         result = foo.validate(object=None, name="bar", value={})
         self.assertEqual(result, {})
+
+    def test_validate_key(self):
+
+        class Foo(HasTraits):
+
+            mapping = Dict(Str)
+
+        foo = Foo(mapping={})
+
+        # This is okay
+        foo.mapping["a"] = 1
+
+        # This raises
+        with self.assertRaises(TraitError):
+            foo.mapping[1] = 1
+
+    def test_validate_value(self):
+
+        class Foo(HasTraits):
+
+            mapping = Dict(Any, Str)
+
+        foo = Foo(mapping={})
+
+        # This is okay
+        foo.mapping["a"] = "1"
+
+        # This raises
+        with self.assertRaises(TraitError):
+            foo.mapping["a"] = 1
+
+    def test_items_set_to_false(self):
+
+        class Foo(HasTraits):
+
+            mapping = Dict(items=False)
+
+        handler = mock.Mock()
+        # Setting items to false effectively switches off
+        # notifications on mapping_items
+        foo = Foo(mapping={})
+        foo.on_trait_change(lambda: handler(), name="mapping_items")
+
+        # when
+        foo.mapping["1"] = 1
+
+        # then
+        handler.assert_not_called()

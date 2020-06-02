@@ -25,12 +25,10 @@ class MyClass(HasTraits):
     def __init__(self, callback):
         "The callback is called with the TraitDictEvent instance"
         self.callback = callback
-        return
 
     def _d_items_changed(self, event):
         if self.callback:
             self.callback(event)
-        return
 
 
 class MyOtherClass(HasTraits):
@@ -70,14 +68,12 @@ class DictEventTestCase(unittest.TestCase):
         bar = MyClass(cb)
         bar.d["g"] = "guava"
         self.assertTrue(cb.called)
-        return
 
     def test_delitem(self):
         cb = Callback(self, removed={"b": "banana"})
         foo = MyClass(cb)
         del foo.d["b"]
         self.assertTrue(cb.called)
-        return
 
     def test_clear(self):
         removed = MyClass(None).d.copy()
@@ -85,7 +81,6 @@ class DictEventTestCase(unittest.TestCase):
         foo = MyClass(cb)
         foo.d.clear()
         self.assertTrue(cb.called)
-        return
 
     def test_update(self):
         update_dict = {"a": "artichoke", "f": "fig"}
@@ -93,7 +88,6 @@ class DictEventTestCase(unittest.TestCase):
         foo = MyClass(cb)
         foo.d.update(update_dict)
         self.assertTrue(cb.called)
-        return
 
     def test_setdefault(self):
         # Test retrieving an existing value
@@ -107,7 +101,6 @@ class DictEventTestCase(unittest.TestCase):
         bar = MyClass(cb)
         self.assertTrue(bar.d.setdefault("f", "fig") == "fig")
         self.assertTrue(cb.called)
-        return
 
     def test_pop(self):
         # Test popping a non-existent key
@@ -121,7 +114,6 @@ class DictEventTestCase(unittest.TestCase):
         bar = MyClass(cb)
         self.assertEqual(bar.d.pop("c"), "cherry")
         self.assertTrue(cb.called)
-        return
 
     def test_popitem(self):
         foo = MyClass(None)
@@ -131,7 +123,6 @@ class DictEventTestCase(unittest.TestCase):
         foo.callback = cb
         self.assertEqual(foo.d.popitem(), ("x", "xylophone"))
         self.assertTrue(cb.called)
-        return
 
     def test_dynamic_listener(self):
         foo = MyOtherClass()
@@ -155,4 +146,3 @@ class DictEventTestCase(unittest.TestCase):
         foo.d["b"] = "broccoli"
         foo.on_trait_change(func3.__call__, "d_items", remove=True)
         self.assertTrue(func3.called)
-        return

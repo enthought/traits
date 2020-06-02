@@ -20,7 +20,7 @@ import unittest
 import pkg_resources
 
 
-def find_test_pickles():
+def find_pickles():
     """
     Iterate over the pickle files in the test_data directory.
 
@@ -54,7 +54,7 @@ def find_test_pickles():
 class TestHistoricalPickles(unittest.TestCase):
     def test_unpickling_historical_pickles(self):
         # Just test that the pickle can be unpickled.
-        for pickle_path in find_test_pickles():
+        for pickle_path in find_pickles():
             with self.subTest(filename=pickle_path.name):
                 with pickle_path.open("rb") as f:
                     pickle.load(f)

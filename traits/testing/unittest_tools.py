@@ -324,7 +324,6 @@ class UnittestTools(object):
             return reverse_assertion(context, msg)
         with reverse_assertion(context, msg):
             callableObj(*args, **kwargs)
-        return
 
     @contextlib.contextmanager
     def assertMultiTraitChanges(

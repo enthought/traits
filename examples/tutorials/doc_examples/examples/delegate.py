@@ -10,11 +10,11 @@
 
 # delegate.py --- Example of trait delegation
 
-# --[Imports]-------------------------------------------------------------------
+# --[Imports]------------------------------------------------------------------
 from traits.api import DelegatesTo, HasTraits, Instance, Str, TraitError
 
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 class Parent(HasTraits):
     first_name = Str
     last_name = Str
@@ -27,7 +27,7 @@ class Child(HasTraits):
     mother = Instance(Parent)
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 tony = Parent(first_name="Anthony", last_name="Jones")
 alice = Parent(first_name="Alice", last_name="Smith")
 sally = Child(first_name="Sally", father=tony, mother=alice)

@@ -10,11 +10,11 @@
 
 # deferring_notification.py -- Example of notification with deferring
 
-# --[Imports]-------------------------------------------------------------------
+# --[Imports]------------------------------------------------------------------
 from traits.api import HasTraits, Instance, PrototypedFrom, Str
 
 
-# --[Code]----------------------------------------------------------------------
+# --[Code]---------------------------------------------------------------------
 class Parent(HasTraits):
 
     first_name = Str
@@ -34,7 +34,7 @@ class Child(HasTraits):
         print("Child's last name changed to %s." % new)
 
 
-# --[Example*]------------------------------------------------------------------
+# --[Example*]-----------------------------------------------------------------
 dad = Parent(first_name="William", last_name="Chase")
 # Output: Parent's last name changed to Chase.
 

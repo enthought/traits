@@ -43,7 +43,8 @@ class TraitHandler(BaseTraitHandler):
     """
 
     def validate(self, object, name, value):
-        """ Verifies whether a new value assigned to a trait attribute is valid.
+        """ Verifies whether a new value assigned to a trait attribute is
+        valid.
 
         This method *must* be implemented by subclasses of TraitHandler. It is
         called whenever a new value is assigned to a trait attribute defined

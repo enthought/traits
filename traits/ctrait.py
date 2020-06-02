@@ -16,8 +16,11 @@ validate as well as maintining a list of notifiers and calling them when
 values are modified.
 """
 
+import inspect
+
 from . import ctraits
 from .constants import ComparisonMode, DefaultValue, default_value_map
+from .observation._i_observable import IObservable
 from .trait_base import SequenceTypes, Undefined
 from .trait_dict_object import TraitDictObject
 from .trait_list_object import TraitListObject
@@ -30,13 +33,10 @@ def __newobj__(cls, *args):
     return cls.__new__(cls, *args)
 
 
+@IObservable.register
 class CTrait(ctraits.cTrait):
     """ Extends the underlying C-based cTrait type.
     """
-
-    # ---------------------------------------------------------------------------
-    #  Callable interface
-    # ---------------------------------------------------------------------------
 
     def __call__(self, *args, **metadata):
         """ Allows a derivative trait to be defined from this one. """
@@ -53,10 +53,6 @@ class CTrait(ctraits.cTrait):
         metadata.setdefault("parent", self)
         return Trait(*(args + (self,)), **metadata)
 
-    # ---------------------------------------------------------------------------
-    #  (Python) property definitions:
-    # ---------------------------------------------------------------------------
-
     @property
     def default(self):
         kind, value = self.default_value()
@@ -70,13 +66,10 @@ class CTrait(ctraits.cTrait):
             DefaultValue.dict_copy,
             DefaultValue.trait_dict_object,
             DefaultValue.trait_set_object,
-        ):
-            return value.copy()
-        elif kind in (
             DefaultValue.list_copy,
             DefaultValue.trait_list_object,
         ):
-            return value[:]
+            return value.copy()
         elif kind in {DefaultValue.constant, DefaultValue.missing}:
             return value
         else:
@@ -107,10 +100,6 @@ class CTrait(ctraits.cTrait):
 
         return ()
 
-    # ---------------------------------------------------------------------------
-    #  CTrait interface methods
-    # ---------------------------------------------------------------------------
-
     @property
     def comparison_mode(self):
         """ Get or set the comparison mode on the trait.
@@ -123,6 +112,36 @@ class CTrait(ctraits.cTrait):
     @comparison_mode.setter
     def comparison_mode(self, value):
         ctraits.cTrait.comparison_mode.__set__(self, value)
+
+    @property
+    def property_fields(self):
+        """ Return a tuple of callables (fget, fset, validate) for the
+        property trait."""
+        return self._get_property()
+
+    @property_fields.setter
+    def property_fields(self, value):
+        """ Set the fget, fset, validate callables for the property.
+
+        Parameters
+        ----------
+        value : tuple
+            Value should be the tuple of callables (fget, fset, validate).
+
+        """
+        func_arg_counts = []
+
+        for arg in value:
+
+            if arg is None:
+                nargs = 0
+            else:
+                sig = inspect.signature(arg)
+                nargs = len(sig.parameters)
+
+            func_arg_counts.extend([arg, nargs])
+
+        self._set_property(*func_arg_counts)
 
     def is_trait_type(self, trait_type):
         """ Returns whether or not this trait is of a specified trait type.
@@ -176,17 +195,15 @@ class CTrait(ctraits.cTrait):
     def get_help(self, full=True):
         """ Returns the help text for a trait.
 
+        If *full* is False or the trait does not have a **help** string,
+        the returned string is constructed from the **desc** attribute on the
+        trait and the **info** string on the trait's handler.
+
         Parameters
         ----------
         full : bool
             Indicates whether to return the value of the *help* attribute of
             the trait itself.
-
-        Description
-        -----------
-        If *full* is False or the trait does not have a **help** string,
-        the returned string is constructed from the **desc** attribute on the
-        trait and the **info** string on the trait's handler.
         """
         if full:
             help = self.help
@@ -226,10 +243,6 @@ class CTrait(ctraits.cTrait):
     def as_ctrait(self):
         """ Method that returns self for trait converters. """
         return self
-
-    # ---------------------------------------------------------------------------
-    #  Private methods
-    # ---------------------------------------------------------------------------
 
     def __reduce_ex__(self, protocol):
         """ Returns the pickleable form of a CTrait object. """

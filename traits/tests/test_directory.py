@@ -8,19 +8,30 @@
 #
 # Thanks for using Enthought open source!
 
+import pathlib
+import sys
 from tempfile import gettempdir
 
 import unittest
 
-from traits.api import Directory, HasTraits, TraitError
+from traits.api import BaseDirectory, Directory, HasTraits, TraitError
+
+
+requires_fspath = unittest.skipIf(
+    sys.version_info < (3, 6),
+    "Test requires os.fspath, which is unavailable before Python 3.6")
 
 
 class ExampleModel(HasTraits):
     path = Directory(exists=True)
 
 
-class FastExampleModel(HasTraits):
-    path = Directory()
+class ExistsBaseDirectory(HasTraits):
+    path = BaseDirectory(value=pathlib.Path(gettempdir()), exists=True)
+
+
+class SimpleBaseDirectory(HasTraits):
+    path = BaseDirectory(exists=False)
 
 
 class DirectoryTestCase(unittest.TestCase):
@@ -52,6 +63,72 @@ class DirectoryTestCase(unittest.TestCase):
 
         self.assertRaises(TraitError, assign_invalid)
 
-    def test_fast(self):
-        example_model = FastExampleModel(path=gettempdir())
-        example_model.path = "."
+
+class TestBaseDirectory(unittest.TestCase):
+
+    def test_accepts_valid_dir_name(self):
+        foo = ExistsBaseDirectory()
+        tempdir = gettempdir()
+
+        self.assertIsInstance(tempdir, str)
+
+        foo.path = tempdir
+
+    def test_rejects_invalid_dir_name(self):
+        foo = ExistsBaseDirectory()
+
+        with self.assertRaises(TraitError):
+            foo.path = "!!!invalid_directory"
+
+    def test_rejects_valid_file_name(self):
+        foo = ExistsBaseDirectory()
+
+        with self.assertRaises(TraitError):
+            foo.path = __file__
+
+    @requires_fspath
+    def test_accepts_valid_pathlib_dir(self):
+        foo = ExistsBaseDirectory()
+        foo.path = pathlib.Path(gettempdir())
+
+        self.assertIsInstance(foo.path, str)
+
+    @requires_fspath
+    def test_rejects_invalid_pathlib_dir(self):
+        foo = ExistsBaseDirectory()
+
+        with self.assertRaises(TraitError):
+            foo.path = pathlib.Path("!!!invalid_directory")
+
+    @requires_fspath
+    def test_rejects_valid_pathlib_file(self):
+        foo = ExistsBaseDirectory()
+
+        with self.assertRaises(TraitError):
+            foo.path = pathlib.Path(__file__)
+
+    def test_rejects_invalid_type(self):
+        """ Rejects instances that are not `str` or `os.PathLike`.
+        """
+        foo = ExistsBaseDirectory()
+
+        with self.assertRaises(TraitError):
+            foo.path = 1
+
+        with self.assertRaises(TraitError):
+            foo.path = b"!!!invalid_directory"
+
+    def test_simple_accepts_any_name(self):
+        """ BaseDirectory with no existence check accepts any path name.
+        """
+        foo = SimpleBaseDirectory()
+        foo.path = "!!!invalid_directory"
+
+    @requires_fspath
+    def test_simple_accepts_any_pathlib(self):
+        """ BaseDirectory with no existence check accepts any pathlib path.
+        """
+        foo = SimpleBaseDirectory()
+        foo.path = pathlib.Path("!!!")
+
+        self.assertIsInstance(foo.path, str)
