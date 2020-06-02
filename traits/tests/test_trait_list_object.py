@@ -1398,6 +1398,18 @@ class TestTraitListObject(unittest.TestCase):
             foo.at_least_two.remove(10)
         self.assertEqual(foo.at_least_two, [1, 2])
 
+    def test_length_violation_error_message(self):
+        # Regression test for enthought/traits#1170
+        foo = HasLengthConstrainedLists(at_least_two=[1, 2])
+        with self.assertRaises(TraitError) as exc_cm:
+            foo.at_least_two.remove(1)
+
+        exc_message = str(exc_cm.exception)
+        self.assertIn("'at_least_two' trait", exc_message)
+        self.assertIn("HasLengthConstrainedLists instance", exc_message)
+        self.assertIn("an integer", exc_message)
+        self.assertIn("at least 2 items", exc_message)
+
     def test_dead_object_reference(self):
         foo = HasLengthConstrainedLists(at_most_five=[1, 2, 3, 4])
         list_object = foo.at_most_five
