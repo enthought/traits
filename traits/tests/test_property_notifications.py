@@ -9,6 +9,7 @@
 # Thanks for using Enthought open source!
 
 import io
+import pickle
 import unittest
 from unittest import mock
 import weakref
@@ -451,6 +452,13 @@ class TestHasTraitsPropertyObserves(unittest.TestCase):
                 "Having property with undefined getter/setter should not "
                 "prevent the observed traits from being changed."
             )
+
+    def test_pickle_has_traits_with_property_observe(self):
+        instance = ClassWithPropertyMultipleObserves()
+
+        for protocol in range(pickle.HIGHEST_PROTOCOL + 1):
+            serialized = pickle.dumps(foo, protocol=protocol)
+            deserialized = pickle.loads(serialized)
 
 
 def get_otc_handler(mock_obj):
