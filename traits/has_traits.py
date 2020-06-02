@@ -318,6 +318,7 @@ def _property_method(class_dict, name):
 
 def _create_property_observe_state(observes, property_name, cached):
     """ Create the metadata for setting up an observer for Property.
+
     Parameters
     ----------
     observes : str or list or Expression
@@ -327,6 +328,7 @@ def _create_property_observe_state(observes, property_name, cached):
         The name of the property trait.
     cached : boolean
         Whether the property is cached or not.
+
     Returns
     -------
     state : dict
