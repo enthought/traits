@@ -10,11 +10,20 @@
 
 import setuptools
 
+
+def get_long_description():
+    """ Read long description from README.rst. """
+    with open("README.rst", "r", encoding="utf-8") as readme:
+        return readme.read()
+
+
 if __name__ == "__main__":
     setuptools.setup(
         name="traits-stubs",
-        version="0.1.0",
-        description="type annotation integration stubs for traits",
+        version="6.1.0",
+        description="Type annotation integration stubs for the Traits library",
+        long_description=get_long_description(),
+        long_description_content_type="text/x-rst",
         install_requires=["mypy", "traits"],
         packages=["traits-stubs",
                   "traits_stubs_tests",
@@ -22,4 +31,8 @@ if __name__ == "__main__":
         package_data={
             'traits-stubs': ['./*.pyi', './**/*.pyi'],
         },
+        license="BSD",
+        maintainer="ETS Developers",
+        maintainer_email="enthought-dev@enthought.com",
+        python_requires=">=3.5",
     )
