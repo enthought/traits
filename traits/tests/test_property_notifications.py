@@ -265,6 +265,15 @@ class ClassWithPropertyMissingGetter(PersonInfo):
     discounted = Property(Bool(), observes="age")
 
 
+class ClassWithPropertyTraitNotFound(HasTraits):
+    """ Dummy class to test error, prevent issues like enthought/traits#447
+    """
+
+    person = Instance(PersonInfo)
+
+    last_name = Property(observes="person.last_name")  # last_name not defined
+
+
 class TestHasTraitsPropertyObserves(unittest.TestCase):
     """ Tests Property notifications using 'observes', and compared the
     behavior with 'depends_on'
@@ -453,6 +462,17 @@ class TestHasTraitsPropertyObserves(unittest.TestCase):
                 "Having property with undefined getter/setter should not "
                 "prevent the observed traits from being changed."
             )
+
+    def test_property_with_missing_dependent(self):
+        # This will prevent incidents like the one in enthought/traits#447
+        instance = ClassWithPropertyTraitNotFound()
+        with self.assertRaises(ValueError) as exception_context:
+            instance.person = PersonInfo()
+
+        self.assertIn(
+            "Trait named 'last_name' not found",
+            str(exception_context.exception),
+        )
 
     def test_pickle_has_traits_with_property_observe(self):
         instance = ClassWithPropertyMultipleObserves()
