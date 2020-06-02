@@ -13,15 +13,17 @@ python:
   - 3.6
   - 3.7
   - 3.8
+  - 3.9-dev
 
 before_install:
   - sudo apt-get install -y qt5-default
 
 install:
   - python -m pip install copyright_header/
-  - python -m pip install -e .[docs,test]
+  - python -m pip install .[docs,test]
 
 script:
   - python -m flake8
-  - python -m unittest discover -v
+  - mkdir testdir
+  - cd testdir && python -m unittest discover -v traits
   - python -m sphinx -b html -W docs/source docs/build
