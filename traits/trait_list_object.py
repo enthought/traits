@@ -634,7 +634,7 @@ class TraitListObject(TraitList):
         """
 
         removed_count = len(self[key]) if isinstance(key, slice) else 1
-        self._validate_length(len(self) - removed_count)
+        self._validate_length(max(len(self) - removed_count, 0))
         super().__delitem__(key)
 
     def __iadd__(self, value):
@@ -776,7 +776,7 @@ class TraitListObject(TraitList):
             If list is empty or index is out of range.
         """
 
-        self._validate_length(len(self) - 1)
+        self._validate_length(max(len(self) - 1, 0))
         return super().pop(index)
 
     def remove(self, value):
@@ -797,7 +797,7 @@ class TraitListObject(TraitList):
             If the value is not present.
         """
 
-        self._validate_length(len(self) - 1)
+        self._validate_length(max(len(self) - 1, 0))
         super().remove(value)
 
     # -- pickle and copy support ----------------------------------------------
@@ -889,8 +889,8 @@ class TraitListObject(TraitList):
                 "but you attempted to change its length to %d %s."
                 % (
                     self.name,
-                    class_of(object),
-                    self.trait.full_info(object, self.name, Undefined),
+                    class_of(self.object()),
+                    self.trait.full_info(self.object(), self.name, Undefined),
                     new_length,
                     "element" if new_length == 1 else "elements",
                 )
