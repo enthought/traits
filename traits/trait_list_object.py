@@ -889,8 +889,8 @@ class TraitListObject(TraitList):
                 "but you attempted to change its length to %d %s."
                 % (
                     self.name,
-                    class_of(object),
-                    self.trait.full_info(object, self.name, Undefined),
+                    class_of(self.object()),
+                    self.trait.full_info(self.object(), self.name, Undefined),
                     new_length,
                     "element" if new_length == 1 else "elements",
                 )
