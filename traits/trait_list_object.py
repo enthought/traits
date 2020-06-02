@@ -634,7 +634,7 @@ class TraitListObject(TraitList):
         """
 
         removed_count = len(self[key]) if isinstance(key, slice) else 1
-        self._validate_length(len(self) - removed_count)
+        self._validate_length(max(len(self) - removed_count, 0))
         super().__delitem__(key)
 
     def __iadd__(self, value):

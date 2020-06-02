@@ -1216,6 +1216,11 @@ class TestTraitListObject(unittest.TestCase):
             del foo.at_least_two[:]
         self.assertEqual(foo.at_least_two, [1, 2])
 
+    def test_delitem_from_empty(self):
+        foo = HasLengthConstrainedLists()
+        with self.assertRaises(IndexError):
+            del foo.unconstrained[0]
+
     def test_iadd(self):
         foo = HasLengthConstrainedLists(at_most_five=[1, 2])
         foo.at_most_five += [6, 7, 8]
