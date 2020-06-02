@@ -883,7 +883,7 @@ def cached_property(function):
         write boilerplate cache management code explicitly. For example::
 
             file_name = File
-            file_contents = Property( depends_on = 'file_name' )
+            file_contents = Property( observes = 'file_name' )
 
             @cached_property
             def _get_file_contents(self):
@@ -896,7 +896,7 @@ def cached_property(function):
         **_file_contents**, which maintained by the @cached_property wrapper
         code, is returned.
 
-        Note the use, in the example, of the **depends_on** metadata attribute
+        Note the use, in the example, of the **observes** metadata attribute
         to specify that the value of **file_contents** depends on
         **file_name**, so that _get_file_contents() is called only when
         **file_name** changes. For details, see the traits.traits.Property()
