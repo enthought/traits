@@ -39,11 +39,14 @@ jobs:
 
 install:
   - python3 --version
+  - python3 -m pip install --upgrade pip setuptools wheel
   - python3 -m pip install copyright_header/
   - python3 -m pip install .[docs,test]
+  - python3 -m pip install traits-stubs/
 
 script:
   - python3 -m flake8
   - mkdir testdir
   - pushd testdir && python3 -m unittest discover -v traits && popd
+  - pushd testdir && python3 -m unittest discover -v traits_stubs_tests && popd
   - pushd docs && python3 -m sphinx -b html -W source build && popd

@@ -302,11 +302,15 @@ setuptools.setup(
         "test": [
             "Cython",
             "flake8",
+            "mypy",
+            "setuptools",
+            "Sphinx",
+            # NumPy currently doesn't work on Python 3.9 on the Ubuntu Xenial
+            # system used by Travis CI. PySide2 is also currently not working
+            # on Python 3.9, so we don't install GUI-related packages.
             "numpy;python_version<'3.9'",
             "pyface;python_version<'3.9'",
             "PySide2;python_version<'3.9'",
-            "setuptools",
-            "Sphinx",
             "traitsui;python_version<'3.9'",
         ],
     },
