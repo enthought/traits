@@ -1937,8 +1937,7 @@ getattr_trait(trait_object *trait, has_traits_object *obj, PyObject *name)
     onotifiers = obj->notifiers;
     if (has_notifiers(tnotifiers, onotifiers)) {
         rc = call_notifiers(
-            tnotifiers, onotifiers, obj, name, Uninitialized,
-            result);
+            tnotifiers, onotifiers, obj, name, Uninitialized, result);
         if (rc < 0) {
             goto error;
         }
