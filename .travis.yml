@@ -36,6 +36,7 @@ jobs:
       language: shell
 
 install:
+  - python3 --version
   - python3 -m pip install copyright_header/
   - python3 -m pip install .[docs,test]
 
