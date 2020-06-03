@@ -1896,48 +1896,60 @@ getattr_trait(trait_object *trait, has_traits_object *obj, PyObject *name)
     PyListObject *tnotifiers;
     PyListObject *onotifiers;
     PyObject *result;
-    PyObject *dict = obj->obj_dict;
+    PyObject *dict;
 
+    /* This shouldn't ever happen. */
+    if (!PyUnicode_Check(name)) {
+        invalid_attribute_error(name);
+        return NULL;
+    }
+
+    /* Create the object's __dict__ if it's not already present. */
+    dict = obj->obj_dict;
     if (dict == NULL) {
         dict = PyDict_New();
         if (dict == NULL) {
             return NULL;
         }
-
         obj->obj_dict = dict;
     }
 
-    if (PyUnicode_Check(name)) {
-        if ((result = default_value_for(trait, obj, name)) != NULL) {
-            if (PyDict_SetItem(dict, name, result) >= 0) {
-                rc = 0;
-                if ((trait->post_setattr != NULL)
-                    && !(trait->flags & TRAIT_IS_MAPPED)) {
-                    rc = trait->post_setattr(trait, obj, name, result);
-                }
+    /* Retrieve the default value, and set it in the dict. */
+    result = default_value_for(trait, obj, name);
+    if (result == NULL) {
+        return NULL;
+    }
+    rc = PyDict_SetItem(dict, name, result);
+    if (rc < 0) {
+        goto error;
+    }
 
-                if (rc == 0) {
-                    tnotifiers = trait->notifiers;
-                    onotifiers = obj->notifiers;
-                    if (has_notifiers(tnotifiers, onotifiers)) {
-                        rc = call_notifiers(
-                            tnotifiers, onotifiers, obj, name, Uninitialized,
-                            result);
-                    }
-                }
-                if (rc == 0) {
-                    return result;
-                }
-            }
-            Py_DECREF(result);
+    /* Call any post_setattr operations. */
+    if ((trait->post_setattr != NULL)
+        && !(trait->flags & TRAIT_IS_MAPPED)) {
+        rc = trait->post_setattr(trait, obj, name, result);
+        if (rc < 0) {
+            goto error;
         }
+    }
 
-        return NULL;
+    /* Call notifiers. */
+    tnotifiers = trait->notifiers;
+    onotifiers = obj->notifiers;
+    if (has_notifiers(tnotifiers, onotifiers)) {
+        rc = call_notifiers(
+            tnotifiers, onotifiers, obj, name, Uninitialized,
+            result);
+        if (rc < 0) {
+            goto error;
+        }
     }
-    else {
-        invalid_attribute_error(name);
-        return NULL;
-    }
+
+    return result;
+
+  error:
+    Py_DECREF(result);
+    return NULL;
 }
 
 /*-----------------------------------------------------------------------------
