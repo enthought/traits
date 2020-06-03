@@ -19,6 +19,21 @@ env:
     - PYTHONUNBUFFERED="1"
       CFLAGS="-Werror -UNDEBUG"
 
+jobs:
+  include:
+    - name: "Python 3.8 on Xenial Linux"
+      python 3.8
+    - name: "Python 3.8 on Xenial Linux"
+      python 3.7
+    - name: "Python 3.8 on Xenial Linux"
+      python 3.6
+    - name: "Python 3.8 on Xenial Linux"
+      python 3.5
+    - name: "Python 3.7 on macOS"
+      os: osx
+      osx_image: xcode11.5
+      language: shell
+
 python:
   - 3.5
   - 3.6
