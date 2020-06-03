@@ -36,4 +36,4 @@ script:
   - python -m flake8
   - mkdir testdir
   - pushd testdir && python -m unittest discover -v traits && popd
-  - python -m sphinx -b html -W docs/source docs/build
+  - pushd docs && python -m sphinx -b html -W source build && popd
