@@ -25,7 +25,6 @@ python:
   - 3.6
   - 3.7
   - 3.8
-  - 3.9-dev
 
 before_install:
   - sudo apt-get install -y qt5-default
@@ -37,5 +36,5 @@ install:
 script:
   - python -m flake8
   - mkdir testdir
-  - cd testdir && python -m unittest discover -v traits
+  - pushd testdir && python -m unittest discover -v traits && popd
   - python -m sphinx -b html -W docs/source docs/build
