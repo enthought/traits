@@ -1934,42 +1934,10 @@ getattr_trait(trait_object *trait, has_traits_object *obj, PyObject *name)
 
         return NULL;
     }
-
-    if (!PyUnicode_Check(name)) {
+    else {
         invalid_attribute_error(name);
         return NULL;
     }
-
-    if ((result = default_value_for(trait, obj, name)) != NULL) {
-        if (PyDict_SetItem(dict, name, result) >= 0) {
-            rc = 0;
-            if ((trait->post_setattr != NULL)
-                && !(trait->flags & TRAIT_IS_MAPPED)) {
-                rc = trait->post_setattr(trait, obj, name, result);
-            }
-
-            if (rc == 0) {
-                tnotifiers = trait->notifiers;
-                onotifiers = obj->notifiers;
-                if (has_notifiers(tnotifiers, onotifiers)) {
-                    rc = call_notifiers(
-                        tnotifiers, onotifiers, obj, name, Uninitialized,
-                        result);
-                }
-            }
-            if (rc == 0) {
-                return result;
-            }
-        }
-        Py_DECREF(result);
-    }
-
-    if (PyErr_ExceptionMatches(PyExc_KeyError)) {
-        PyErr_SetObject(PyExc_AttributeError, name);
-    }
-
-    Py_DECREF(name);
-    return NULL;
 }
 
 /*-----------------------------------------------------------------------------
