@@ -50,3 +50,9 @@ script:
   - pushd testdir && python3 -m unittest discover -v traits && popd
   - pushd testdir && python3 -m unittest discover -v traits_stubs_tests && popd
   - pushd docs && python3 -m sphinx -b html -W source build && popd
+
+notifications:
+  slack:
+    secure: dlu0Cw3+5yx8Ho7BvaB6PJ0kcj/tKSZKOZv08e3v5B5puhFvp7EtngjvEdmYkXRcUJ/oigI88MoF5DHM8JsZ4vT3TyiXpjMUv2A3uhPosn1TX4r7eGZH8wikAErFu8GFVg52vTxbpCCAe2wlZUmyqVkac/AAngGA98S8g3SDOD0=
+    on_success: change
+    on_failure: always
