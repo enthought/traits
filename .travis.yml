@@ -36,11 +36,11 @@ jobs:
       language: shell
 
 install:
-  - python -m pip install copyright_header/
-  - python -m pip install .[docs,test]
+  - python3 -m pip install copyright_header/
+  - python3 -m pip install .[docs,test]
 
 script:
-  - python -m flake8
+  - python3 -m flake8
   - mkdir testdir
-  - pushd testdir && python -m unittest discover -v traits && popd
-  - pushd docs && python -m sphinx -b html -W source build && popd
+  - pushd testdir && python3 -m unittest discover -v traits && popd
+  - pushd docs && python3 -m sphinx -b html -W source build && popd
