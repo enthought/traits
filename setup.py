@@ -302,7 +302,7 @@ setuptools.setup(
         "test": [
             "Cython",
             "flake8",
-            "numpy",
+            "numpy;python_version<'3.9'",
             "pyface",
             "PySide2",
             "setuptools",
