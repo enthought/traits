@@ -266,7 +266,7 @@ Build and continuous integration
 * CI tests requiring a GUI are now run against PyQt5 rather than PyQt4.
   (#1127)
 * Add Slack notifications for CI. (#1074)
-* Fix and improve various ``setup.py`` package metadata fields. (#1181)
+* Fix and improve various ``setup.py`` package metadata fields. (#1185)
 
 Maintenance and code organization
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
