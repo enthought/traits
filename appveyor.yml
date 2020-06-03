@@ -1,3 +1,6 @@
+build: false
+image: Visual Studio 2019
+
 environment:
   global:
     PYTHONUNBUFFERED: "1"
@@ -13,8 +16,6 @@ environment:
 install:
   - "%PYTHON%/python.exe -m pip install copyright_header/"
   - "%PYTHON%/python.exe -m pip install -e .[docs,test]"
-
-build: off
 
 test_script:
   - "%PYTHON%/python.exe -m flake8"
