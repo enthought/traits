@@ -6,6 +6,7 @@ services:
 addons:
   apt:
     packages:
+    - qt5-default
     - libxkbcommon-x11-0
     - libxcb-icccm4
     - libxcb-image0
@@ -33,9 +34,6 @@ jobs:
       os: osx
       osx_image: xcode11.5
       language: shell
-
-before_install:
-  - sudo apt-get install -y qt5-default
 
 install:
   - python -m pip install copyright_header/
