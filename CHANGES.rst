@@ -245,7 +245,7 @@ Documentation
   #1140, #1143)
 * Add user manual section on the ``Union`` trait type and how to migrate from
   ``Either`` (#779, #1153, #1162)
-* Other minor cleanups and fixes. (#949, #1141)
+* Other minor cleanups and fixes. (#949, #1141, #1178)
 
 Test suite
 ~~~~~~~~~~
