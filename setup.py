@@ -302,12 +302,20 @@ setuptools.setup(
         "test": [
             "Cython",
             "flake8",
-            "mypy",
             "setuptools",
             "Sphinx",
-            # NumPy currently doesn't work on Python 3.9 on the Ubuntu Xenial
-            # system used by Travis CI. PySide2 is also currently not working
-            # on Python 3.9, so we don't install GUI-related packages.
+            # Python 3.9 exclusions:
+            #
+            # * The latest release of mypy from PyPI also has a bug that
+            #   causes our stubs tests to fail on Python 3.9. This is fixed
+            #   in mypy 0.780 (not yet available on PyPI).
+            # * NumPy installation fails on Python 3.9 on the Ubuntu Xenial
+            #   system used by Travis CI.
+            # * PySide2 is installable but also currently not working
+            #   on Python 3.9.
+            # * Because of the above, we also exclude GUI-using packages
+            #   Pyface and TraitsUI on Python 3.9.
+            "mypy;python_version<'3.9'",
             "numpy;python_version<'3.9'",
             "pyface;python_version<'3.9'",
             "PySide2;python_version<'3.9'",
