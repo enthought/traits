@@ -1925,8 +1925,7 @@ getattr_trait(trait_object *trait, has_traits_object *obj, PyObject *name)
     }
 
     /* Call any post_setattr operations. */
-    if ((trait->post_setattr != NULL)
-        && !(trait->flags & TRAIT_IS_MAPPED)) {
+    if ((trait->post_setattr != NULL) && !(trait->flags & TRAIT_IS_MAPPED)) {
         rc = trait->post_setattr(trait, obj, name, result);
         if (rc < 0) {
             goto error;
