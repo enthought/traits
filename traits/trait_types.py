@@ -2927,7 +2927,10 @@ class Map(TraitType):
         self.map = map
         self.fast_validate = (ValidateTrait.map, map)
 
-        default_value = metadata.pop("default_value", Undefined)
+        try:
+            default_value = metadata.pop("default_value")
+        except KeyError:
+            default_value = next(iter(self.map))
 
         super().__init__(default_value, **metadata)
 
@@ -2999,9 +3002,11 @@ class PrefixMap(TraitType):
         for key in map.keys():
             self._map[key] = key
 
-        default_value = metadata.pop("default_value", Undefined)
-
-        if default_value is not Undefined:
+        try:
+            default_value = metadata.pop("default_value")
+        except KeyError:
+            default_value = next(iter(self.map))
+        else:
             default_value = self.value_for(default_value)
 
         super().__init__(default_value, **metadata)

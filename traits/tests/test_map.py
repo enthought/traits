@@ -13,9 +13,10 @@ Tests for the Map handler.
 """
 
 import pickle
+import sys
 import unittest
 
-from traits.api import HasTraits, Int, Map, TraitError, Undefined
+from traits.api import HasTraits, Int, Map, TraitError
 
 
 class TestMap(unittest.TestCase):
@@ -24,8 +25,6 @@ class TestMap(unittest.TestCase):
             married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
 
         person = Person()
-
-        self.assertEqual(Undefined, person.married)
 
         person.married = "yes"
         self.assertEqual("yes", person.married)
@@ -42,12 +41,22 @@ class TestMap(unittest.TestCase):
             person.married = []
 
     def test_no_default(self):
+        mapping = {"yes": 1, "yeah": 1, "no": 0, "nah": 0}
+
         class Person(HasTraits):
-            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+            married = Map(mapping)
 
         p = Person()
-        self.assertEqual(p.married, Undefined)
-        self.assertEqual(p.married_, Undefined)
+        if sys.version_info >= (3, 6):
+            # If we're using Python >= 3.6, we can rely on dictionaries
+            # being ordered, and then the default is predictable.
+            self.assertEqual(p.married, "yes")
+            self.assertEqual(p.married_, 1)
+        else:
+            # Otherwise, all we can expect is that the default is _one_
+            # of the dictionary entries.
+            self.assertIn(p.married, mapping)
+            self.assertEqual(p.married_, mapping[p.married])
 
     def test_default(self):
         class Person(HasTraits):
