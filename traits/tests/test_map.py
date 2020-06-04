@@ -197,9 +197,6 @@ class TestMap(unittest.TestCase):
         self.assertEqual(len(preferences.primary_changes), 2)
         self.assertEqual(len(preferences.shadow_changes), 2)
 
-    # XXX Test whether change from Undefined to defined issues a
-    # notification; it should, since Undefined is an observable value.
-
     def test_pickle_roundtrip(self):
         class Person(HasTraits):
             married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
