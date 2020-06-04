@@ -29,7 +29,6 @@ unwieldy classmethod name ``instantiate_and_get_ctrait``.
 from functools import partial
 
 from .constants import DefaultValue
-from .trait_base import Undefined
 
 
 def trait_cast(obj):
