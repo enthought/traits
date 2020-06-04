@@ -2911,6 +2911,10 @@ class Map(TraitType):
             A dictionary whose keys are valid values for the trait attribute,
             and whose corresponding values are the values for the shadow
             trait attribute.
+        default_value : object, optional
+            The default value for the trait. If given, this should be a key
+            from the mapping. If not given, the first key from the mapping (in
+            normal dictionary iteration order) will be used as the default.
 
         Attributes
         ----------
@@ -2986,6 +2990,11 @@ class PrefixMap(TraitType):
         A dictionary whose keys are strings that are valid values for the
         trait attribute, and whose corresponding values are the values for
         the shadow trait attribute.
+    default_value : object, optional
+        The default value for the trait. If given, this should be either a key
+        from the mapping or a unique prefix of a key from the mapping. If not
+        given, the first key from the mapping (in normal dictionary iteration
+        order) will be used as the default.
 
     Attributes
     ----------
