@@ -15,7 +15,32 @@ Tests for the Map handler.
 import pickle
 import unittest
 
-from traits.api import HasTraits, Int, Map, TraitError, Undefined
+from traits.api import (
+    HasTraits, Int, List, Map, on_trait_change, TraitError, Undefined)
+
+
+class Preferences(HasTraits):
+    """
+    Example class with a Map that records changes to that map.
+    """
+
+    # Changes to primary trait of the mapped trait pair
+    primary_changes = List()
+
+    # Changes to the shadow trait of the mapped trait pair
+    shadow_changes = List()
+
+    color = Map({"red": 4, "green": 2, "yellow": 6}, default_value="yellow")
+
+    @on_trait_change("color")
+    def _record_primary_trait_change(self, obj, name, old, new):
+        change = obj, name, old, new
+        self.primary_changes.append(change)
+
+    @on_trait_change("color_")
+    def _record_shadow_trait_change(self, obj, name, old, new):
+        change = obj, name, old, new
+        self.shadow_changes.append(change)
 
 
 class TestMap(unittest.TestCase):
@@ -148,6 +173,32 @@ class TestMap(unittest.TestCase):
         self.assertEqual(p.married, "yes")
         self.assertEqual(p.married_, 1)
         self.assertEqual(p.default_calls, 1)
+
+    def test_notification(self):
+
+        preferences = Preferences()
+
+        self.assertEqual(len(preferences.primary_changes), 0)
+        self.assertEqual(len(preferences.shadow_changes), 0)
+
+        preferences.color = "red"
+
+        self.assertEqual(len(preferences.primary_changes), 1)
+        self.assertEqual(len(preferences.shadow_changes), 1)
+
+        preferences.color = "green"
+
+        self.assertEqual(len(preferences.primary_changes), 2)
+        self.assertEqual(len(preferences.shadow_changes), 2)
+
+        with self.assertRaises(TraitError):
+            preferences.color = "blue"
+
+        self.assertEqual(len(preferences.primary_changes), 2)
+        self.assertEqual(len(preferences.shadow_changes), 2)
+
+    # XXX Test whether change from Undefined to defined issues a
+    # notification; it should, since Undefined is an observable value.
 
     def test_pickle_roundtrip(self):
         class Person(HasTraits):

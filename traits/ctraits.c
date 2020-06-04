@@ -1925,7 +1925,7 @@ getattr_trait(trait_object *trait, has_traits_object *obj, PyObject *name)
     }
 
     /* Call any post_setattr operations. */
-    if ((trait->post_setattr != NULL) && !(trait->flags & TRAIT_IS_MAPPED)) {
+    if (trait->post_setattr != NULL) {
         rc = trait->post_setattr(trait, obj, name, result);
         if (rc < 0) {
             goto error;
@@ -2429,14 +2429,31 @@ setattr_trait(
         if (old_value == NULL) {
             if (traitd != traito) {
                 old_value = traito->getattr(traito, obj, name);
+                if (old_value == NULL) {
+                    Py_DECREF(value);
+                    return -1;
+                }
             }
             else {
                 old_value = default_value_for(traitd, obj, name);
-            }
-            if (old_value == NULL) {
-                Py_DECREF(value);
-
-                return -1;
+                if (old_value == NULL) {
+                    Py_DECREF(value);
+                    return -1;
+                }
+                rc = PyDict_SetItem(dict, name, old_value);
+                if (rc < 0) {
+                    Py_DECREF(old_value);
+                    Py_DECREF(value);
+                    return -1;
+                }
+                if (post_setattr != NULL) {
+                    rc = post_setattr(traitd, obj, name, old_value);
+                    if (rc < 0) {
+                        Py_DECREF(old_value);
+                        Py_DECREF(value);
+                        return -1;
+                    }
+                }
             }
         }
         else {
