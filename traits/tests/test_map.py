@@ -74,6 +74,14 @@ class TestMap(unittest.TestCase):
         self.assertEqual(p.married, Undefined)
         self.assertEqual(p.married_, Undefined)
 
+    def test_no_default_reverse_access_order(self):
+        class Person(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+
+        p = Person()
+        self.assertEqual(p.married_, Undefined)
+        self.assertEqual(p.married, Undefined)
+
     def test_default(self):
         class Person(HasTraits):
             married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
@@ -82,6 +90,15 @@ class TestMap(unittest.TestCase):
         p = Person()
         self.assertIsNone(p.married)
         self.assertEqual(p.married_, 2)
+
+    def test_default_reverse_access_order(self):
+        class Person(HasTraits):
+            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0,
+                           None: 2}, default_value=None)
+
+        p = Person()
+        self.assertEqual(p.married_, 2)
+        self.assertIsNone(p.married)
 
     def test_default_method(self):
         class Person(HasTraits):
