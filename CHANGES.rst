@@ -203,7 +203,7 @@ Fixes
   (#1018)
 * Fix setting default values via dynamic default methods or overriding trait in
   subclasses for mapped traits, used by ``Map``, ``Expression``, ``PrefixMap``.
-  (#1091)
+  (#1091, #1188)
 * Fix setting default values via dynamic default methods or overriding trait in
   subclasses for ``Expression`` and ``AdaptsTo``. (#1088, #1119, #1152)
 
