@@ -214,6 +214,31 @@ class TestMap(unittest.TestCase):
         self.assertEqual(len(preferences.primary_changes), 2)
         self.assertEqual(len(preferences.shadow_changes), 2)
 
+    def test_notification_init_value(self):
+
+        preferences = Preferences(color="green")
+
+        self.assertEqual(len(preferences.primary_changes), 1)
+        self.assertEqual(len(preferences.shadow_changes), 1)
+
+    def test_notification_change_shadow_value(self):
+
+        class PreferencesWithDynamicDefault(Preferences):
+
+            def _color_default(self):
+                return "yellow"
+
+        preferences = PreferencesWithDynamicDefault()
+        self.assertEqual(len(preferences.primary_changes), 0)
+        self.assertEqual(len(preferences.shadow_changes), 0)
+
+        # access the dynamic default of color_ should not trigger event
+        # because the value has not changed.
+        preferences.color_
+
+        self.assertEqual(len(preferences.primary_changes), 0)
+        self.assertEqual(len(preferences.shadow_changes), 0)
+
     def test_pickle_roundtrip(self):
         class Person(HasTraits):
             married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
