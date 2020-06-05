@@ -161,7 +161,8 @@ Features
 * Add ``allow_none`` flag for ``Callable`` trait. (#885)
 * Add support for type annotation. (#904, #1064)
 * Allow mutable values in ``Constant`` trait. (#929)
-* Add ``Map`` and ``PrefixMap`` trait types. (#886, #953, #956, #970, #1139)
+* Add ``Map`` and ``PrefixMap`` trait types. (#886, #953, #956, #970, #1139,
+  #1189)
 * Add ``TraitList`` as the base list object that can perform validation
   and emit change notifications. (#912, #981, #984, #989, #999, #1003, #1011,
   #1026, #1009, #1040, #1172, #1173)
