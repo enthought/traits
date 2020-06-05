@@ -2942,7 +2942,7 @@ class Map(TraitType):
 
     def mapped_value(self, value):
         """ Get the mapped value for a value. """
-        return self.map[value]
+        return Undefined if value is Undefined else self.map[value]
 
     def post_setattr(self, object, name, value):
         setattr(object, name + "_", self.mapped_value(value))
@@ -3028,7 +3028,7 @@ class PrefixMap(TraitType):
 
     def mapped_value(self, value):
         """ Get the mapped value for a value. """
-        return self.map[value]
+        return Undefined if value is Undefined else self.map[value]
 
     def post_setattr(self, object, name, value):
         setattr(object, name + "_", self.mapped_value(value))

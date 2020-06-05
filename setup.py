@@ -274,13 +274,13 @@ setuptools.setup(
         Operating System :: MacOS :: MacOS X
         Operating System :: Microsoft :: Windows
         Operating System :: POSIX :: Linux
-        Programming Language :: C
         Programming Language :: Python
         Programming Language :: Python :: 3
         Programming Language :: Python :: 3.5
         Programming Language :: Python :: 3.6
         Programming Language :: Python :: 3.7
         Programming Language :: Python :: 3.8
+        Programming Language :: Python :: 3.9
         Programming Language :: Python :: Implementation :: CPython
         Topic :: Scientific/Engineering
         Topic :: Software Development
@@ -289,10 +289,15 @@ setuptools.setup(
         """.splitlines()
         if len(c.strip()) > 0
     ],
-    description="Explicitly typed attributes for Python",
+    description="Observable typed attributes for Python classes",
     long_description=get_long_description(),
     long_description_content_type="text/x-rst",
-    download_url="https://github.com/enthought/traits",
+    download_url="https://pypi.python.org/pypi/traits",
+    project_urls={
+        "Issue Tracker": "https://github.com/enthought/traits/issues",
+        "Documentation": "https://docs.enthought.com/traits",
+        "Source Code": "https://github.com/enthought/traits",
+    },
     install_requires=[],
     extras_require={
         "docs": [
@@ -328,8 +333,6 @@ setuptools.setup(
         ],
     },
     license="BSD",
-    maintainer="ETS Developers",
-    maintainer_email="enthought-dev@enthought.com",
     packages=setuptools.find_packages(include=["traits", "traits.*"]),
     python_requires=">=3.5",
     zip_safe=False,
