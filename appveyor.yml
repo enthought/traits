@@ -18,5 +18,8 @@ install:
 
 test_script:
   - "%PYTHON%/python.exe -m flake8"
-  - "%PYTHON%/python.exe -m unittest discover -v"
+  - mkdir testdir
+  - cd testdir
+  - "%PYTHON%/python.exe -m unittest discover -v traits"
+  - cd ..
   - "%PYTHON%/python.exe -m sphinx -b html -W docs/source docs/build"
