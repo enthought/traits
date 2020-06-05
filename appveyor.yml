@@ -26,4 +26,5 @@ test_script:
   - "%PYTHON%/python.exe -m unittest discover -v traits"
   - "%PYTHON%/python.exe -m unittest discover -v traits_stubs_tests"
   - cd ..
-  - "%PYTHON%/python.exe -m sphinx -b html -W docs/source docs/build"
+  - cd docs
+  - "%PYTHON%/python.exe -m sphinx -b html -W source build"
