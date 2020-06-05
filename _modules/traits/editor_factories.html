@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.editor_factories &mdash; Traits 6 User Manual</title>
+    <title>traits.editor_factories &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -87,26 +87,14 @@
 <span class="c1">#</span>
 <span class="c1"># Thanks for using Enthought open source!</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Editor factory functions.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Editor factory functions:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-<span class="n">PasswordEditors</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">MultilineTextEditors</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">BytesEditors</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">SourceCodeEditor</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">HTMLTextEditor</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">PythonShellEditor</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">DateEditor</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">TimeEditor</span> <span class="o">=</span> <span class="kc">None</span>
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Logging:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -114,118 +102,77 @@
 <div class="viewcode-block" id="password_editor"><a class="viewcode-back" href="../../traits_api_reference/editor_factories.html#traits.editor_factories.password_editor">[docs]</a><span class="k">def</span> <span class="nf">password_editor</span><span class="p">(</span><span class="n">auto_set</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">enter_set</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Factory function that returns an editor for passwords.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">PasswordEditors</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TextEditor</span>
-
-        <span class="n">PasswordEditors</span><span class="p">[</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="p">]</span> <span class="o">=</span> <span class="n">TextEditor</span><span class="p">(</span>
-            <span class="n">password</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto_set</span><span class="o">=</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="o">=</span><span class="n">enter_set</span>
-        <span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">PasswordEditors</span><span class="p">[</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="p">]</span></div>
+    <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TextEditor</span>
+    <span class="k">return</span> <span class="n">TextEditor</span><span class="p">(</span>
+        <span class="n">password</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto_set</span><span class="o">=</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="o">=</span><span class="n">enter_set</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="multi_line_text_editor"><a class="viewcode-back" href="../../traits_api_reference/editor_factories.html#traits.editor_factories.multi_line_text_editor">[docs]</a><span class="k">def</span> <span class="nf">multi_line_text_editor</span><span class="p">(</span><span class="n">auto_set</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">enter_set</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Factory function that returns a text editor for multi-line strings.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">MultilineTextEditors</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TextEditor</span>
-
-        <span class="n">MultilineTextEditors</span><span class="p">[</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="p">]</span> <span class="o">=</span> <span class="n">TextEditor</span><span class="p">(</span>
-            <span class="n">multi_line</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto_set</span><span class="o">=</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="o">=</span><span class="n">enter_set</span>
-        <span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">MultilineTextEditors</span><span class="p">[</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="p">]</span></div>
+    <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TextEditor</span>
+    <span class="k">return</span> <span class="n">TextEditor</span><span class="p">(</span>
+        <span class="n">multi_line</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto_set</span><span class="o">=</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="o">=</span><span class="n">enter_set</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="bytes_editor"><a class="viewcode-back" href="../../traits_api_reference/editor_factories.html#traits.editor_factories.bytes_editor">[docs]</a><span class="k">def</span> <span class="nf">bytes_editor</span><span class="p">(</span><span class="n">auto_set</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">enter_set</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Factory function that returns a text editor for bytes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="p">,</span> <span class="n">encoding</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">BytesEditors</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TextEditor</span>
+    <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TextEditor</span>
 
-        <span class="k">if</span> <span class="n">encoding</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">format</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">hex</span>
-            <span class="n">evaluate</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">format</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="nb">bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">)</span>
-            <span class="n">evaluate</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">encode</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">encoding</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">format</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">hex</span>
+        <span class="n">evaluate</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">format</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="nb">bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="n">evaluate</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">encode</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">)</span>
 
-        <span class="n">BytesEditors</span><span class="p">[(</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="p">,</span> <span class="n">encoding</span><span class="p">)]</span> <span class="o">=</span> <span class="n">TextEditor</span><span class="p">(</span>
-            <span class="n">multi_line</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">format_func</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span>
-            <span class="n">evaluate</span><span class="o">=</span><span class="n">evaluate</span><span class="p">,</span>
-            <span class="n">auto_set</span><span class="o">=</span><span class="n">auto_set</span><span class="p">,</span>
-            <span class="n">enter_set</span><span class="o">=</span><span class="n">enter_set</span><span class="p">,</span>
-        <span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">BytesEditors</span><span class="p">[(</span><span class="n">auto_set</span><span class="p">,</span> <span class="n">enter_set</span><span class="p">,</span> <span class="n">encoding</span><span class="p">)]</span></div>
+    <span class="k">return</span> <span class="n">TextEditor</span><span class="p">(</span>
+        <span class="n">multi_line</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">format_func</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span>
+        <span class="n">evaluate</span><span class="o">=</span><span class="n">evaluate</span><span class="p">,</span>
+        <span class="n">auto_set</span><span class="o">=</span><span class="n">auto_set</span><span class="p">,</span>
+        <span class="n">enter_set</span><span class="o">=</span><span class="n">enter_set</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="code_editor"><a class="viewcode-back" href="../../traits_api_reference/editor_factories.html#traits.editor_factories.code_editor">[docs]</a><span class="k">def</span> <span class="nf">code_editor</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Factory function that returns an editor that treats a multi-line string</span>
 <span class="sd">    as source code.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">SourceCodeEditor</span>
-
-    <span class="k">if</span> <span class="n">SourceCodeEditor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">CodeEditor</span>
-
-        <span class="n">SourceCodeEditor</span> <span class="o">=</span> <span class="n">CodeEditor</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">SourceCodeEditor</span></div>
+    <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">CodeEditor</span>
+    <span class="k">return</span> <span class="n">CodeEditor</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="html_editor"><a class="viewcode-back" href="../../traits_api_reference/editor_factories.html#traits.editor_factories.html_editor">[docs]</a><span class="k">def</span> <span class="nf">html_editor</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Factory function for an &quot;editor&quot; that displays a multi-line string as</span>
 <span class="sd">    interpreted HTML.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">HTMLTextEditor</span>
-
-    <span class="k">if</span> <span class="n">HTMLTextEditor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">HTMLEditor</span>
-
-        <span class="n">HTMLTextEditor</span> <span class="o">=</span> <span class="n">HTMLEditor</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">HTMLTextEditor</span></div>
+    <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">HTMLEditor</span>
+    <span class="k">return</span> <span class="n">HTMLEditor</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="shell_editor"><a class="viewcode-back" href="../../traits_api_reference/editor_factories.html#traits.editor_factories.shell_editor">[docs]</a><span class="k">def</span> <span class="nf">shell_editor</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Factory function that returns a Python shell for editing Python values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">PythonShellEditor</span>
-
-    <span class="k">if</span> <span class="n">PythonShellEditor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">ShellEditor</span>
-
-        <span class="n">PythonShellEditor</span> <span class="o">=</span> <span class="n">ShellEditor</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">PythonShellEditor</span></div>
+    <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">ShellEditor</span>
+    <span class="k">return</span> <span class="n">ShellEditor</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="time_editor"><a class="viewcode-back" href="../../traits_api_reference/editor_factories.html#traits.editor_factories.time_editor">[docs]</a><span class="k">def</span> <span class="nf">time_editor</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Factory function that returns a Time editor for editing Time values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">TimeEditor</span>
-
-    <span class="k">if</span> <span class="n">TimeEditor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TimeEditor</span>
-
-        <span class="n">TimeEditor</span> <span class="o">=</span> <span class="n">TimeEditor</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">TimeEditor</span></div>
+    <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TimeEditor</span>
+    <span class="k">return</span> <span class="n">TimeEditor</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="date_editor"><a class="viewcode-back" href="../../traits_api_reference/editor_factories.html#traits.editor_factories.date_editor">[docs]</a><span class="k">def</span> <span class="nf">date_editor</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Factory function that returns a Date editor for editing Date values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">DateEditor</span>
-
-    <span class="k">if</span> <span class="n">DateEditor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">DateEditor</span>
-
-        <span class="n">DateEditor</span> <span class="o">=</span> <span class="n">DateEditor</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">DateEditor</span></div>
+    <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">DateEditor</span>
+    <span class="k">return</span> <span class="n">DateEditor</span><span class="p">()</span></div>
 
 
 <span class="k">def</span> <span class="nf">_datetime_str_to_datetime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S&quot;</span><span class="p">):</span>
@@ -234,16 +181,20 @@
 
 <span class="sd">    Raises a ValueError if datetime_str does not match the format.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">datetime_str</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span>
+    <span class="c1"># Allow the empty string to be translated to None.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">datetime_str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_datetime_to_datetime_str</span><span class="p">(</span><span class="n">datetime_obj</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns a string representation for a datetime object in the specified</span>
 <span class="sd">    format (default ISO format).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">datetime_obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">datetime_obj</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span>
+    <span class="c1"># A Datetime trait can contain None. We translate that to an empty string.</span>
+    <span class="k">if</span> <span class="n">datetime_obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">datetime_obj</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="datetime_editor"><a class="viewcode-back" href="../../traits_api_reference/editor_factories.html#traits.editor_factories.datetime_editor">[docs]</a><span class="k">def</span> <span class="nf">datetime_editor</span><span class="p">():</span>
@@ -372,7 +323,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

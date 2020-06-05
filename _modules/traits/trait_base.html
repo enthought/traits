@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_base &mdash; Traits 6 User Manual</title>
+    <title>traits.trait_base &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -90,10 +90,6 @@
 <span class="sd">&quot;&quot;&quot; Defines common, low-level capabilities needed by the Traits package.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Imports:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
 <span class="kn">import</span> <span class="nn">enum</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -102,18 +98,13 @@
 <span class="kn">from</span> <span class="nn">weakref</span> <span class="k">import</span> <span class="n">ref</span>
 
 <span class="kn">from</span> <span class="nn">.etsconfig.api</span> <span class="k">import</span> <span class="n">ETSConfig</span>
-<span class="kn">from</span> <span class="nn">.constants</span> <span class="k">import</span> <span class="n">ValidateTrait</span>
 
 <span class="c1"># backwards compatibility: trait_base used to provide a patched enumerate</span>
 <span class="nb">enumerate</span> <span class="o">=</span> <span class="nb">enumerate</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Constants:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1"># Constants</span>
 
 <span class="n">SequenceTypes</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span>
-
-<span class="n">EnumTypes</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">EnumMeta</span><span class="p">)</span>
 
 <span class="n">ComplexTypes</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
 
@@ -135,9 +126,7 @@
 <span class="c1"># The standard Traits property cache prefix:</span>
 <span class="n">TraitsCache</span> <span class="o">=</span> <span class="s2">&quot;_traits_cache_&quot;</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Singleton &#39;Uninitialized&#39; object:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1"># Singleton &#39;Uninitialized&#39; object:</span>
 <span class="n">Uninitialized</span> <span class="o">=</span> <span class="kc">None</span>
 
 
@@ -162,8 +151,8 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">_Uninitialized</span><span class="p">,</span> <span class="p">())</span>
 
 
-<span class="c1">#: When the first reference to a trait is a &#39;get&#39; reference, the default value of</span>
-<span class="c1">#: the trait is implicitly assigned and returned as the value of the trait.</span>
+<span class="c1">#: When the first reference to a trait is a &#39;get&#39; reference, the default value</span>
+<span class="c1">#: of the trait is implicitly assigned and returned as the value of the trait.</span>
 <span class="c1">#: Because of this implicit assignment, a trait change notification is</span>
 <span class="c1">#: generated with the Uninitialized object as the &#39;old&#39; value of the trait, and</span>
 <span class="c1">#: the default trait value as the &#39;new&#39; value. This allows other parts of the</span>
@@ -171,15 +160,13 @@
 <span class="c1">#: assignment, and treat it specially.</span>
 <span class="n">Uninitialized</span> <span class="o">=</span> <span class="n">_Uninitialized</span><span class="p">()</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Singleton &#39;Undefined&#39; object (used as undefined trait name and/or value):</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 <span class="n">Undefined</span> <span class="o">=</span> <span class="kc">None</span>
 
 
 <span class="k">class</span> <span class="nc">_Undefined</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Singleton &#39;Undefined&#39; object (used as undefined trait name and/or value)</span>
+    <span class="sd">&quot;&quot;&quot; Singleton &#39;Undefined&#39; object (used as undefined trait name and/or</span>
+<span class="sd">    value).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
@@ -213,10 +200,6 @@
 <span class="c1">#: parameter, to indicate that the attribute previously had no value.</span>
 <span class="n">Undefined</span> <span class="o">=</span> <span class="n">_Undefined</span><span class="p">()</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Singleton &#39;Missing&#39; object (used as missing method argument marker):</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
 
 <div class="viewcode-block" id="Missing"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.Missing">[docs]</a><span class="k">class</span> <span class="nc">Missing</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Singleton &#39;Missing&#39; object (used as missing method argument marker).</span>
@@ -230,10 +213,6 @@
 <span class="c1">#: type-checked method signature.</span>
 <span class="n">Missing</span> <span class="o">=</span> <span class="n">Missing</span><span class="p">()</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Singleton &#39;Self&#39; object (used as object reference to current &#39;object&#39;):</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
 
 <div class="viewcode-block" id="Self"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.Self">[docs]</a><span class="k">class</span> <span class="nc">Self</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Singleton &#39;Self&#39; object (used as object reference to current &#39;object&#39;).</span>
@@ -246,10 +225,6 @@
 <span class="c1">#: Singleton object that references the current &#39;object&#39;.</span>
 <span class="n">Self</span> <span class="o">=</span> <span class="n">Self</span><span class="p">()</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Define a special &#39;string&#39; coercion function:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
 
 <div class="viewcode-block" id="strx"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.strx">[docs]</a><span class="k">def</span> <span class="nf">strx</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Wraps the built-in str() function to raise a TypeError if the</span>
@@ -260,21 +235,16 @@
     <span class="k">raise</span> <span class="ne">TypeError</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Constants:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1"># Constants</span>
 
 <span class="n">StringTypes</span> <span class="o">=</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">)</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Define a mapping of coercable types:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
-<span class="c1"># Mapping of coercable types.</span>
-<span class="n">CoercableTypes</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nb">float</span><span class="p">:</span> <span class="p">(</span><span class="n">ValidateTrait</span><span class="o">.</span><span class="n">coerce</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
-    <span class="nb">complex</span><span class="p">:</span> <span class="p">(</span><span class="n">ValidateTrait</span><span class="o">.</span><span class="n">coerce</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
-<span class="p">}</span>
+<span class="c1"># Default item validator for TraitDict, TraitList and TraitSet.</span>
+<span class="k">def</span> <span class="nf">_validate_everything</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Item validator which accepts any item and returns it unaltered.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">item</span>
 
 
 <span class="k">def</span> <span class="nf">safe_contains</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
@@ -286,41 +256,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Do a LBYL check for Enums, to avoid the DeprecationWarning issued</span>
     <span class="c1"># by Python 3.7. Ref: enthought/traits#853.</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">EnumMeta</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">EnumMeta</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">container</span>
     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
-
-
-<span class="k">def</span> <span class="nf">enum_default</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Get a default value from the valid values of an Enum trait.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    values : tuple, list or enum.Enum</span>
-<span class="sd">        The collection of valid values for an enum trait.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    default : any</span>
-<span class="sd">        The first valid value, or None if the collection is empty.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">EnumMeta</span><span class="p">):</span>
-        <span class="n">default</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">default</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">default</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">return</span> <span class="n">default</span>
-
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Return a string containing the class name of an object with the correct</span>
-<span class="c1">#  article (a or an) preceding it (e.g. &#39;an Image&#39;, &#39;a PlotValue&#39;):</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="class_of"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.class_of">[docs]</a><span class="k">def</span> <span class="nf">class_of</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -334,25 +277,14 @@
     <span class="k">return</span> <span class="n">add_article</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Return a string containing the right article (i.e. &#39;a&#39; or &#39;an&#39;) prefixed to</span>
-<span class="c1">#  a specified string:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="add_article"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.add_article">[docs]</a><span class="k">def</span> <span class="nf">add_article</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Returns a string containing the correct indefinite article (&#39;a&#39; or &#39;an&#39;)</span>
-<span class="sd">    prefixed to the specified string.</span>
+    <span class="sd">&quot;&quot;&quot; Returns a string containing the correct indefinite article (&#39;a&#39; or</span>
+<span class="sd">    &#39;an&#39;) prefixed to the specified string.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">name</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="s2">&quot;aeiou&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;an &quot;</span> <span class="o">+</span> <span class="n">name</span>
 
     <span class="k">return</span> <span class="s2">&quot;a &quot;</span> <span class="o">+</span> <span class="n">name</span></div>
-
-
-<span class="c1"># ----------------------------------------------------------------------------</span>
-<span class="c1">#  Return a &#39;user-friendly&#39; name for a specified trait:</span>
-<span class="c1"># ----------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="user_name_for"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.user_name_for">[docs]</a><span class="k">def</span> <span class="nf">user_name_for</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
@@ -373,10 +305,6 @@
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Gets the path to the traits home directory:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
 <span class="n">_traits_home</span> <span class="o">=</span> <span class="kc">None</span>
 
 
@@ -389,11 +317,6 @@
         <span class="n">_traits_home</span> <span class="o">=</span> <span class="n">verify_path</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">ETSConfig</span><span class="o">.</span><span class="n">application_data</span><span class="p">,</span> <span class="s2">&quot;traits&quot;</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">_traits_home</span></div>
-
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Verify that a specified path exists, and try to create it if it doesn&#39;t:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="verify_path"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.verify_path">[docs]</a><span class="k">def</span> <span class="nf">verify_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
@@ -409,20 +332,10 @@
     <span class="k">return</span> <span class="n">path</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Returns the name of the module the caller&#39;s caller is located in:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="get_module_name"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.get_module_name">[docs]</a><span class="k">def</span> <span class="nf">get_module_name</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns the name of the module that the caller&#39;s caller is located in.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">_getframe</span><span class="p">(</span><span class="n">level</span><span class="p">)</span><span class="o">.</span><span class="n">f_globals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__name__&quot;</span><span class="p">,</span> <span class="s2">&quot;__main__&quot;</span><span class="p">)</span></div>
-
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Returns a resource path calculated from the caller&#39;s stack:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="get_resource_path"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.get_resource_path">[docs]</a><span class="k">def</span> <span class="nf">get_resource_path</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
@@ -471,12 +384,6 @@
     <span class="k">return</span> <span class="n">path</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Returns the value of an extended object attribute name of the form:</span>
-<span class="c1">#  name[.name2[.name3...]]:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="xgetattr"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.xgetattr">[docs]</a><span class="k">def</span> <span class="nf">xgetattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Undefined</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns the value of an extended object attribute name of the form:</span>
 <span class="sd">        name[.name2[.name3...]].</span>
@@ -496,12 +403,6 @@
     <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">default</span><span class="p">)</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Sets the value of an extended object attribute name of the form:</span>
-<span class="c1">#  name[.name2[.name3...]]:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="xsetattr"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.xsetattr">[docs]</a><span class="k">def</span> <span class="nf">xsetattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Sets the value of an extended object attribute name of the form:</span>
 <span class="sd">        name[.name2[.name3...]].</span>
@@ -513,9 +414,7 @@
     <span class="nb">setattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">value</span><span class="p">)</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1"># Helpers for weak references</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1"># Helpers for weak references.</span>
 
 <span class="k">def</span> <span class="nf">_make_value_freed_callback</span><span class="p">(</span><span class="n">object_ref</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">_value_freed</span><span class="p">(</span><span class="n">value_ref</span><span class="p">):</span>
@@ -534,10 +433,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">_value_freed</span><span class="p">)</span></div>
 
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Traits metadata selection functions:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="is_none"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.is_none">[docs]</a><span class="k">def</span> <span class="nf">is_none</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span></div>
@@ -596,7 +491,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

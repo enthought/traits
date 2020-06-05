@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_notifiers &mdash; Traits 6 User Manual</title>
+    <title>traits.trait_notifiers &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -90,11 +90,8 @@
 <span class="sd">&quot;&quot;&quot; Classes that implement and support the Traits change notification mechanism</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Imports:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
 <span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">local</span> <span class="k">as</span> <span class="n">thread_local</span>
 <span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Thread</span>
@@ -106,19 +103,13 @@
 <span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="n">Uninitialized</span>
 <span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="k">import</span> <span class="n">TraitNotificationError</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Global Data:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1"># Global Data</span>
 
 <span class="c1"># The thread ID for the user interface thread</span>
 <span class="n">ui_thread</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
 <span class="c1"># The handler for notifications that must be run on the UI thread</span>
 <span class="n">ui_handler</span> <span class="o">=</span> <span class="kc">None</span>
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Sets up the user interface thread handler:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="set_ui_handler"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.set_ui_handler">[docs]</a><span class="k">def</span> <span class="nf">set_ui_handler</span><span class="p">(</span><span class="n">handler</span><span class="p">):</span>
@@ -137,21 +128,11 @@
         <span class="n">ui_handler</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;NotificationExceptionHandlerState&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="NotificationExceptionHandlerState"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.NotificationExceptionHandlerState">[docs]</a><span class="k">class</span> <span class="nc">NotificationExceptionHandlerState</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">reraise_exceptions</span><span class="p">,</span> <span class="n">locked</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">handler</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reraise_exceptions</span> <span class="o">=</span> <span class="n">reraise_exceptions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">locked</span> <span class="o">=</span> <span class="n">locked</span></div>
-
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;NotificationExceptionHandler&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="NotificationExceptionHandler"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.NotificationExceptionHandler">[docs]</a><span class="k">class</span> <span class="nc">NotificationExceptionHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -160,7 +141,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">main_thread</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thread_local</span> <span class="o">=</span> <span class="n">thread_local</span><span class="p">()</span>
 
-    <span class="c1"># -- Private Methods ------------------------------------------------------------</span>
+    <span class="c1"># -- Private Methods ------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_push_handler</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reraise_exceptions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">main</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">locked</span><span class="o">=</span><span class="kc">False</span>
@@ -280,16 +261,12 @@
                 <span class="s2">&quot;No changes are allowed.&quot;</span>
             <span class="p">)</span>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  This method defines the default notification exception handling</span>
-    <span class="c1">#  behavior of traits. However, it can be completely overridden by pushing</span>
-    <span class="c1">#  a new handler using the &#39;_push_handler&#39; method.</span>
-    <span class="c1">#</span>
-    <span class="c1">#  It logs any exceptions generated in a trait notification handler.</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
     <span class="k">def</span> <span class="nf">_log_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Logs any exceptions generated in a trait notification handler.</span>
+
+<span class="sd">        This method defines the default notification exception handling</span>
+<span class="sd">        behavior of traits. However, it can be completely overridden by pushing</span>
+<span class="sd">        a new handler using the &#39;_push_handler&#39; method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># When the stack depth is too great, the logger can&#39;t always log the</span>
         <span class="c1"># message. Make sure that it goes to the console at a minimum:</span>
@@ -314,16 +291,7 @@
 
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">traits_logger</span>
         <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">logging</span>
-
             <span class="bp">self</span><span class="o">.</span><span class="n">traits_logger</span> <span class="o">=</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;traits&quot;</span><span class="p">)</span>
-            <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
-            <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">))</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">&quot;Exception occurred in traits notification handler.</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;Please check the log file for details.&quot;</span>
-            <span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
@@ -336,9 +304,7 @@
             <span class="k">pass</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Traits global notification exception handler:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1"># Traits global notification exception handler</span>
 
 <span class="n">notification_exception_handler</span> <span class="o">=</span> <span class="n">NotificationExceptionHandler</span><span class="p">()</span>
 
@@ -346,9 +312,7 @@
 <span class="n">pop_exception_handler</span> <span class="o">=</span> <span class="n">notification_exception_handler</span><span class="o">.</span><span class="n">_pop_handler</span>
 <span class="n">handle_exception</span> <span class="o">=</span> <span class="n">notification_exception_handler</span><span class="o">.</span><span class="n">_handle_exception</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Traits global notification event tracer:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1"># Traits global notification event tracer</span>
 
 <span class="n">_pre_change_event_tracer</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="n">_post_change_event_tracer</span> <span class="o">=</span> <span class="kc">None</span>
@@ -412,11 +376,6 @@
         <span class="n">set_change_event_tracers</span><span class="p">(</span><span class="n">old_pre_tracer</span><span class="p">,</span> <span class="n">old_post_tracer</span><span class="p">)</span>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;AbstractStaticChangeNotifyWrapper&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <span class="k">class</span> <span class="nc">AbstractStaticChangeNotifyWrapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Concrete implementation must define the &#39;argument_transforms&#39; class</span>
@@ -432,9 +391,9 @@
         <span class="k">if</span> <span class="n">arg_count</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">TraitNotificationError</span><span class="p">(</span>
                 <span class="p">(</span>
-                    <span class="s2">&quot;Invalid number of arguments for the static anytrait change &quot;</span>
-                    <span class="s2">&quot;notification handler: </span><span class="si">%s</span><span class="s2">. A maximum of 4 arguments is &quot;</span>
-                    <span class="s2">&quot;allowed, but </span><span class="si">%s</span><span class="s2"> were specified.&quot;</span>
+                    <span class="s2">&quot;Invalid number of arguments for the static anytrait &quot;</span>
+                    <span class="s2">&quot;change notification handler: </span><span class="si">%s</span><span class="s2">. A maximum of 4 &quot;</span>
+                    <span class="s2">&quot;arguments is allowed, but </span><span class="si">%s</span><span class="s2"> were specified.&quot;</span>
                 <span class="p">)</span>
                 <span class="o">%</span> <span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">arg_count</span><span class="p">)</span>
             <span class="p">)</span>
@@ -479,11 +438,6 @@
         <span class="k">return</span> <span class="kc">False</span>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;StaticAnyTraitChangeNotifyWrapper&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="StaticAnyTraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.StaticAnyTraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">StaticAnyTraitChangeNotifyWrapper</span><span class="p">(</span><span class="n">AbstractStaticChangeNotifyWrapper</span><span class="p">):</span>
 
     <span class="c1"># The wrapper is called with the full set of argument, and we need to</span>
@@ -498,11 +452,6 @@
     <span class="p">}</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;StaticTraitChangeNotifyWrapper&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="StaticTraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.StaticTraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">StaticTraitChangeNotifyWrapper</span><span class="p">(</span><span class="n">AbstractStaticChangeNotifyWrapper</span><span class="p">):</span>
 
     <span class="c1"># The wrapper is called with the full set of argument, and we need to</span>
@@ -515,11 +464,6 @@
         <span class="mi">3</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">),</span>
         <span class="mi">4</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">),</span>
     <span class="p">}</span></div>
-
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;TraitChangeNotifyWrapper&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="TraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.TraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">TraitChangeNotifyWrapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -558,9 +502,9 @@
                 <span class="k">if</span> <span class="n">arg_count</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">TraitNotificationError</span><span class="p">(</span>
                         <span class="p">(</span>
-                            <span class="s2">&quot;Invalid number of arguments for the dynamic trait &quot;</span>
-                            <span class="s2">&quot;change notification handler: </span><span class="si">%s</span><span class="s2">. A maximum of 4 &quot;</span>
-                            <span class="s2">&quot;arguments is allowed, but </span><span class="si">%s</span><span class="s2"> were specified.&quot;</span>
+                            <span class="s2">&quot;Invalid number of arguments for the dynamic &quot;</span>
+                            <span class="s2">&quot;trait change notification handler: </span><span class="si">%s</span><span class="s2">. A maximum &quot;</span>
+                            <span class="s2">&quot;of 4 arguments is allowed, but </span><span class="si">%s</span><span class="s2"> were specified.&quot;</span>
                         <span class="p">)</span>
                         <span class="o">%</span> <span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">arg_count</span><span class="p">)</span>
                     <span class="p">)</span>
@@ -694,11 +638,6 @@
             <span class="p">)</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;ExtendedTraitChangeNotifyWrapper&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="ExtendedTraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.ExtendedTraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">ExtendedTraitChangeNotifyWrapper</span><span class="p">(</span><span class="n">TraitChangeNotifyWrapper</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Change notify wrapper for &quot;extended&quot; trait change events..</span>
 
@@ -743,11 +682,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_change_event</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">)</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;FastUITraitChangeNotifyWrapper&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="FastUITraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.FastUITraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">FastUITraitChangeNotifyWrapper</span><span class="p">(</span><span class="n">TraitChangeNotifyWrapper</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Dynamic change notify wrapper, dispatching on the UI thread.</span>
 
@@ -761,11 +695,6 @@
             <span class="n">handler</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ui_handler</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div></div>
-
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;NewTraitChangeNotifyWrapper&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="NewTraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.NewTraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">NewTraitChangeNotifyWrapper</span><span class="p">(</span><span class="n">TraitChangeNotifyWrapper</span><span class="p">):</span>
@@ -817,7 +746,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

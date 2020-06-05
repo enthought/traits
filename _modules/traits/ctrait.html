@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.ctrait &mdash; Traits 6 User Manual</title>
+    <title>traits.ctrait &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -95,8 +95,11 @@
 <span class="sd">values are modified.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">inspect</span>
+
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">ctraits</span>
 <span class="kn">from</span> <span class="nn">.constants</span> <span class="k">import</span> <span class="n">ComparisonMode</span><span class="p">,</span> <span class="n">DefaultValue</span><span class="p">,</span> <span class="n">default_value_map</span>
+<span class="kn">from</span> <span class="nn">.observation._i_observable</span> <span class="k">import</span> <span class="n">IObservable</span>
 <span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="n">SequenceTypes</span><span class="p">,</span> <span class="n">Undefined</span>
 <span class="kn">from</span> <span class="nn">.trait_dict_object</span> <span class="k">import</span> <span class="n">TraitDictObject</span>
 <span class="kn">from</span> <span class="nn">.trait_list_object</span> <span class="k">import</span> <span class="n">TraitListObject</span>
@@ -109,13 +112,10 @@
     <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="CTrait"><a class="viewcode-back" href="../../traits_api_reference/ctrait.html#traits.ctrait.CTrait">[docs]</a><span class="k">class</span> <span class="nc">CTrait</span><span class="p">(</span><span class="n">ctraits</span><span class="o">.</span><span class="n">cTrait</span><span class="p">):</span>
+<div class="viewcode-block" id="CTrait"><a class="viewcode-back" href="../../traits_api_reference/ctrait.html#traits.ctrait.CTrait">[docs]</a><span class="nd">@IObservable</span><span class="o">.</span><span class="n">register</span>
+<span class="k">class</span> <span class="nc">CTrait</span><span class="p">(</span><span class="n">ctraits</span><span class="o">.</span><span class="n">cTrait</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extends the underlying C-based cTrait type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Callable interface</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Allows a derivative trait to be defined from this one. &quot;&quot;&quot;</span>
@@ -132,10 +132,6 @@
         <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;parent&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Trait</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">args</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="p">,)),</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  (Python) property definitions:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">kind</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span><span class="p">()</span>
@@ -149,13 +145,10 @@
             <span class="n">DefaultValue</span><span class="o">.</span><span class="n">dict_copy</span><span class="p">,</span>
             <span class="n">DefaultValue</span><span class="o">.</span><span class="n">trait_dict_object</span><span class="p">,</span>
             <span class="n">DefaultValue</span><span class="o">.</span><span class="n">trait_set_object</span><span class="p">,</span>
-        <span class="p">):</span>
-            <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span>
             <span class="n">DefaultValue</span><span class="o">.</span><span class="n">list_copy</span><span class="p">,</span>
             <span class="n">DefaultValue</span><span class="o">.</span><span class="n">trait_list_object</span><span class="p">,</span>
         <span class="p">):</span>
-            <span class="k">return</span> <span class="n">value</span><span class="p">[:]</span>
+            <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">elif</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">{</span><span class="n">DefaultValue</span><span class="o">.</span><span class="n">constant</span><span class="p">,</span> <span class="n">DefaultValue</span><span class="o">.</span><span class="n">missing</span><span class="p">}:</span>
             <span class="k">return</span> <span class="n">value</span>
         <span class="k">else</span><span class="p">:</span>
@@ -186,10 +179,6 @@
 
         <span class="k">return</span> <span class="p">()</span>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  CTrait interface methods</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">comparison_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get or set the comparison mode on the trait.</span>
@@ -202,6 +191,36 @@
     <span class="nd">@comparison_mode</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">comparison_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="n">ctraits</span><span class="o">.</span><span class="n">cTrait</span><span class="o">.</span><span class="n">comparison_mode</span><span class="o">.</span><span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">property_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return a tuple of callables (fget, fset, validate) for the</span>
+<span class="sd">        property trait.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_property</span><span class="p">()</span>
+
+    <span class="nd">@property_fields</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">property_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set the fget, fset, validate callables for the property.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : tuple</span>
+<span class="sd">            Value should be the tuple of callables (fget, fset, validate).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">func_arg_counts</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">nargs</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+                <span class="n">nargs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
+
+            <span class="n">func_arg_counts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">arg</span><span class="p">,</span> <span class="n">nargs</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_property</span><span class="p">(</span><span class="o">*</span><span class="n">func_arg_counts</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CTrait.is_trait_type"><a class="viewcode-back" href="../../traits_api_reference/ctrait.html#traits.ctrait.CTrait.is_trait_type">[docs]</a>    <span class="k">def</span> <span class="nf">is_trait_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait_type</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns whether or not this trait is of a specified trait type.</span>
@@ -255,17 +274,15 @@
 <div class="viewcode-block" id="CTrait.get_help"><a class="viewcode-back" href="../../traits_api_reference/ctrait.html#traits.ctrait.CTrait.get_help">[docs]</a>    <span class="k">def</span> <span class="nf">get_help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the help text for a trait.</span>
 
+<span class="sd">        If *full* is False or the trait does not have a **help** string,</span>
+<span class="sd">        the returned string is constructed from the **desc** attribute on the</span>
+<span class="sd">        trait and the **info** string on the trait&#39;s handler.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        full : bool</span>
 <span class="sd">            Indicates whether to return the value of the *help* attribute of</span>
 <span class="sd">            the trait itself.</span>
-
-<span class="sd">        Description</span>
-<span class="sd">        -----------</span>
-<span class="sd">        If *full* is False or the trait does not have a **help** string,</span>
-<span class="sd">        the returned string is constructed from the **desc** attribute on the</span>
-<span class="sd">        trait and the **info** string on the trait&#39;s handler.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">full</span><span class="p">:</span>
             <span class="n">help</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">help</span>
@@ -305,10 +322,6 @@
 <div class="viewcode-block" id="CTrait.as_ctrait"><a class="viewcode-back" href="../../traits_api_reference/ctrait.html#traits.ctrait.CTrait.as_ctrait">[docs]</a>    <span class="k">def</span> <span class="nf">as_ctrait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Method that returns self for trait converters. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Private methods</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">__reduce_ex__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the pickleable form of a CTrait object. &quot;&quot;&quot;</span>
@@ -378,7 +391,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

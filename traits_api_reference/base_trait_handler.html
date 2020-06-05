@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.base_trait_handler Module &mdash; Traits 6 User Manual</title>
+    <title>traits.base_trait_handler Module &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.constants Module" href="constants.html" >
     <link rel="prev" title="traits.has_traits Module" href="has_traits.html" > 
@@ -50,7 +50,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -117,18 +117,16 @@ wider range of cases, such as interactions with other components.</p></li>
 <dt id="traits.base_trait_handler.BaseTraitHandler.error">
 <code class="sig-name descname">error</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/base_trait_handler.html#BaseTraitHandler.error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.base_trait_handler.BaseTraitHandler.error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raises a TraitError exception.</p>
+<p>This method is called by the validate() method when an assigned value
+is not valid. Raising a TraitError exception either notifies the user
+of the problem, or, in the case of compound traits, provides a chance
+for another trait handler to handle to validate the value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>object</strong> (<em>object</em>) – The object whose attribute is being assigned.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
-<li><p><strong>value</strong> (<em>object</em>) – The proposed new value for the attribute.</p></li>
-<li><p><strong>Description</strong> – </p></li>
-<li><p><strong>-----------</strong> – </p></li>
-<li><p><strong>method is called by the validate</strong><strong>(</strong><strong>) </strong><strong>method when an assigned value</strong> (<a class="reference internal" href="trait_types.html#traits.trait_types.This" title="traits.trait_types.This"><em>This</em></a>) – </p></li>
-<li><p><strong>not valid. Raising a TraitError exception either notifies the user of</strong> (<em>is</em>) – </p></li>
-<li><p><strong>problem</strong><strong>, </strong><strong>or</strong><strong>, </strong><strong>in the case of compound traits</strong><strong>, </strong><strong>provides a chance for</strong> (<em>the</em>) – </p></li>
-<li><p><strong>trait handler to handle to validate the value.</strong> (<em>another</em>) – </p></li>
+<li><p><strong>object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – The proposed new value for the attribute.</p></li>
 </ul>
 </dd>
 </dl>
@@ -139,25 +137,23 @@ wider range of cases, such as interactions with other components.</p></li>
 <code class="sig-name descname">full_info</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/base_trait_handler.html#BaseTraitHandler.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.base_trait_handler.BaseTraitHandler.full_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string describing the type of value accepted by the
 trait handler.</p>
+<p>The string should be a phrase describing the type defined by the
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by full_info() is
+combined with other information whenever an error occurs and therefore
+makes more sense to the user if the result is a phrase. The full_info()
+method is similar in purpose and use to the <strong>info</strong> attribute of a
+validator function.</p>
+<p>Note that the result can include information specific to the particular
+trait handler instance. If the full_info() method is not overridden,
+the default method returns the value of calling the info() method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>object</strong> (<em>object</em>) – The object whose attribute is being assigned.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
 <li><p><strong>value</strong> – The proposed new value for the attribute.</p></li>
-<li><p><strong>Description</strong> – </p></li>
-<li><p><strong>-----------</strong> – </p></li>
-<li><p><strong>string should be a phrase describing the type defined by the</strong> (<em>The</em>) – </p></li>
-<li><p><strong>subclass</strong><strong>, </strong><strong>rather than a complete sentence. For example</strong><strong>, </strong><strong>use</strong> (<a class="reference internal" href="trait_handler.html#traits.trait_handler.TraitHandler" title="traits.trait_handler.TraitHandler"><em>TraitHandler</em></a>) – </p></li>
-<li><p><strong>phrase</strong><strong>, </strong><strong>&quot;a square sprocket&quot; instead of the sentence</strong><strong>, </strong><strong>&quot;The value must</strong> (<em>the</em>) – </p></li>
-<li><p><strong>a square sprocket.&quot; The value returned by full_info</strong><strong>(</strong><strong>) </strong><strong>is combined</strong> (<em>be</em>) – </p></li>
-<li><p><strong>other information whenever an error occurs and therefore makes more</strong> (<em>with</em>) – </p></li>
-<li><p><strong>to the user if the result is a phrase. The full_info</strong><strong>(</strong><strong>) </strong><strong>method is</strong> (<em>sense</em>) – </p></li>
-<li><p><strong>in purpose and use to the info attribute of a validator</strong> (<em>similar</em>) – </p></li>
-<li><p><strong>function.</strong> – </p></li>
-<li><p><strong>that the result can include information specific to the particular</strong> (<em>Note</em>) – </p></li>
-<li><p><strong>handler instance. If the full_info</strong><strong>(</strong><strong>) </strong><strong>method is not overridden</strong><strong>,</strong> (<em>trait</em>) – </p></li>
-<li><p><strong>default method returns the value of calling the info</strong><strong>(</strong><strong>) </strong><strong>method.</strong> (<em>the</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -169,11 +165,11 @@ trait handler.</p>
 <dd><p>Must return a string describing the type of value accepted by the
 trait handler.</p>
 <p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by info() is combined with
-other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The info() method is
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by info() is combined
+with other information whenever an error occurs and therefore makes
+more sense to the user if the result is a phrase. The info() method is
 similar in purpose and use to the <strong>info</strong> attribute of a validator
 function.</p>
 <p>Note that the result can include information specific to the particular
@@ -278,7 +274,7 @@ trait. For example, in <em>List( Int )</em>, the <em>inner traits</em> for
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

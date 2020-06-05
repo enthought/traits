@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.traits_listener &mdash; Traits 6 User Manual</title>
+    <title>traits.traits_listener &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -91,10 +91,6 @@
 <span class="sd">    patterns.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Imports:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">string</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
@@ -110,9 +106,7 @@
 <span class="kn">from</span> <span class="nn">.trait_notifiers</span> <span class="k">import</span> <span class="n">TraitChangeNotifyWrapper</span>
 <span class="kn">from</span> <span class="nn">.util.weakiddict</span> <span class="k">import</span> <span class="n">WeakIDKeyDict</span>
 
-<span class="c1"># ---------------------------------------------------------------------------</span>
-<span class="c1">#  Constants:</span>
-<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Constants</span>
 
 <span class="c1"># The name of the dictionary used to store active listeners</span>
 <span class="n">TraitsListener</span> <span class="o">=</span> <span class="s2">&quot;__traits_listener__&quot;</span>
@@ -158,10 +152,8 @@
 <span class="c1"># Characters valid in a traits name:</span>
 <span class="n">name_chars</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1"># Utility functions:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
+<span class="c1"># Utility functions</span>
 
 <div class="viewcode-block" id="indent"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.indent">[docs]</a><span class="k">def</span> <span class="nf">indent</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">first_line</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Indent lines of text.</span>
@@ -197,10 +189,7 @@
     <span class="k">return</span> <span class="n">indented</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Metadata filters:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
+<span class="c1"># Metadata filters</span>
 
 <div class="viewcode-block" id="is_not_none"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.is_not_none">[docs]</a><span class="k">def</span> <span class="nf">is_not_none</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
@@ -214,16 +203,7 @@
     <span class="k">return</span> <span class="n">value</span> <span class="o">!=</span> <span class="s2">&quot;event&quot;</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;ListenerBase&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="ListenerBase"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerBase">[docs]</a><span class="k">class</span> <span class="nc">ListenerBase</span><span class="p">(</span><span class="n">HasPrivateTraits</span><span class="p">):</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Trait definitions:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
     <span class="c1"># The handler to be called when any listened to trait is changed:</span>
     <span class="c1"># handler = Any</span>
@@ -249,63 +229,35 @@
     <span class="c1"># be deferred until the associated trait is first read or set?</span>
     <span class="c1"># deferred = Bool</span>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Registers new listeners:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
 <div class="viewcode-block" id="ListenerBase.register"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerBase.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Registers new listeners.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Unregisters any existing listeners:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="ListenerBase.unregister"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerBase.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Unregisters any existing listeners.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles a trait change for a simple trait:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
 <div class="viewcode-block" id="ListenerBase.handle"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerBase.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles a trait change for a simple trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles a trait change for a list trait:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="ListenerBase.handle_list"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerBase.handle_list">[docs]</a>    <span class="k">def</span> <span class="nf">handle_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles a trait change for a list trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles a trait change for a list traits items:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
 <div class="viewcode-block" id="ListenerBase.handle_list_items"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerBase.handle_list_items">[docs]</a>    <span class="k">def</span> <span class="nf">handle_list_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles a trait change for a list traits items.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles a trait change for a dictionary trait:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
 <div class="viewcode-block" id="ListenerBase.handle_dict"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerBase.handle_dict">[docs]</a>    <span class="k">def</span> <span class="nf">handle_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles a trait change for a dictionary trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles a trait change for a dictionary traits items:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="ListenerBase.handle_dict_items"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerBase.handle_dict_items">[docs]</a>    <span class="k">def</span> <span class="nf">handle_dict_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles a trait change for a dictionary traits items.</span>
@@ -313,16 +265,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;ListenerItem&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="ListenerItem"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem">[docs]</a><span class="k">class</span> <span class="nc">ListenerItem</span><span class="p">(</span><span class="n">ListenerBase</span><span class="p">):</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Trait definitions:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
     <span class="c1">#: The name of the trait to listen to:</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
@@ -366,8 +309,8 @@
     <span class="n">is_any_trait</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1">#: Is the associated handler a special list handler that handles both</span>
-    <span class="c1">#: &#39;foo&#39; and &#39;foo_items&#39; events by receiving a list of &#39;deleted&#39; and &#39;added&#39;</span>
-    <span class="c1">#: items as the &#39;old&#39; and &#39;new&#39; arguments?</span>
+    <span class="c1">#: &#39;foo&#39; and &#39;foo_items&#39; events by receiving a list of &#39;deleted&#39; and</span>
+    <span class="c1">#: &#39;added&#39; items as the &#39;old&#39; and &#39;new&#39; arguments?</span>
     <span class="n">is_list_handler</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1">#: A dictionary mapping objects to a list of all current active</span>
@@ -375,17 +318,13 @@
     <span class="c1">#: listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).</span>
     <span class="n">active</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">WeakIDKeyDict</span><span class="p">,</span> <span class="p">())</span>
 
-    <span class="c1"># -- &#39;ListenerBase&#39; Class Method Implementations ----------------------------</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  String representation:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
+    <span class="c1"># -- &#39;ListenerBase&#39; Class Method Implementations --------------------------</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seen</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a string representation of the object.</span>
 
-<span class="sd">        Since the object graph may have cycles, we extend the basic __repr__ API</span>
-<span class="sd">        to include a set of objects we&#39;ve already seen while constructing</span>
+<span class="sd">        Since the object graph may have cycles, we extend the basic __repr__</span>
+<span class="sd">        API to include a set of objects we&#39;ve already seen while constructing</span>
 <span class="sd">        a string representation. When this method tries to get the repr of</span>
 <span class="sd">        a ListenerItem or ListenerGroup, we will use the extended API and build</span>
 <span class="sd">        up the set of seen objects. The repr of a seen object will just be</span>
@@ -425,10 +364,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
             <span class="n">indent</span><span class="p">(</span><span class="n">next_repr</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
         <span class="p">)</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Registers new listeners:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="ListenerItem.register"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Registers new listeners.</span>
@@ -534,10 +469,6 @@
 
         <span class="k">return</span> <span class="n">INVALID_DESTINATION</span></div>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Unregisters any existing listeners:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
 <div class="viewcode-block" id="ListenerItem.unregister"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Unregisters any existing listeners.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -552,10 +483,6 @@
                 <span class="c1"># which a weakref cannot be created and used an a key for</span>
                 <span class="c1"># &#39;self.active&#39;:</span>
                 <span class="k">pass</span></div>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles a trait change for an intermediate link trait:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="ListenerItem.handle_simple"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.handle_simple">[docs]</a>    <span class="k">def</span> <span class="nf">handle_simple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles a trait change for an intermediate link trait.</span>
@@ -580,10 +507,6 @@
             <span class="k">if</span> <span class="n">wh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">wh</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">))</span></div>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles a trait change for a list (or set) trait:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
 <div class="viewcode-block" id="ListenerItem.handle_list"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.handle_list">[docs]</a>    <span class="k">def</span> <span class="nf">handle_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles a trait change for a list (or set) trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -595,10 +518,6 @@
         <span class="n">register</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">register</span>
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">new</span><span class="p">:</span>
             <span class="n">register</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles a trait change for a list (or set) traits items:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="ListenerItem.handle_list_items"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.handle_list_items">[docs]</a>    <span class="k">def</span> <span class="nf">handle_list_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles a trait change for items of a list (or set) trait.</span>
@@ -613,10 +532,6 @@
         <span class="k">if</span> <span class="n">wh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">wh</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">new</span><span class="o">.</span><span class="n">removed</span><span class="p">,</span> <span class="n">new</span><span class="o">.</span><span class="n">added</span><span class="p">)</span></div>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles a trait change for a dictionary trait:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
 <div class="viewcode-block" id="ListenerItem.handle_dict"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.handle_dict">[docs]</a>    <span class="k">def</span> <span class="nf">handle_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles a trait change for a dictionary trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -628,10 +543,6 @@
         <span class="n">register</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">register</span>
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">new</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">register</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles a trait change for a dictionary traits items:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="ListenerItem.handle_dict_items"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.handle_dict_items">[docs]</a>    <span class="k">def</span> <span class="nf">handle_dict_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles a trait change for items of a dictionary trait.</span>
@@ -654,11 +565,6 @@
                 <span class="n">unregister</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
                 <span class="n">register</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span></div>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles an invalid intermediate trait change to a handler that must be</span>
-    <span class="c1">#  applied to the final destination object.trait:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
 <div class="viewcode-block" id="ListenerItem.handle_error"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.handle_error">[docs]</a>    <span class="k">def</span> <span class="nf">handle_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles an invalid intermediate trait change to a handler that must</span>
 <span class="sd">            be applied to the final destination object.trait.</span>
@@ -669,11 +575,7 @@
                 <span class="s2">&quot;incompatible with a change to an intermediate trait&quot;</span>
             <span class="p">)</span></div>
 
-    <span class="c1"># -- Event Handlers ---------------------------------------------------------</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles the &#39;handler&#39; trait being changed:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
+    <span class="c1"># -- Event Handlers -------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_handler_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles the **handler** trait being changed.</span>
@@ -681,19 +583,11 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">handler</span>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles the &#39;wrapped_handler_ref&#39; trait being changed:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
     <span class="k">def</span> <span class="nf">_wrapped_handler_ref_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wrapped_handler_ref</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles the &#39;wrapped_handler_ref&#39; trait being changed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">wrapped_handler_ref</span> <span class="o">=</span> <span class="n">wrapped_handler_ref</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles the &#39;dispatch&#39; trait being changed:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_dispatch_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatch</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles the **dispatch** trait being changed.</span>
@@ -701,21 +595,13 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">dispatch</span> <span class="o">=</span> <span class="n">dispatch</span>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles the &#39;priority&#39; trait being changed:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
     <span class="k">def</span> <span class="nf">_priority_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles the **priority** trait being changed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">priority</span>
 
-    <span class="c1"># -- Private Methods --------------------------------------------------------</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Registers any &#39;anytrait&#39; listener:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
+    <span class="c1"># -- Private Methods ------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_register_anytrait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">remove</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Registers any &#39;anytrait&#39; listener.</span>
@@ -731,10 +617,6 @@
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Registers a handler for a simple trait:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_register_simple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">remove</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Registers a handler for a simple trait.</span>
@@ -790,8 +672,8 @@
             <span class="k">return</span> <span class="nb">next</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="ow">or</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">object</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
-            <span class="c1"># Sometimes, the trait may already be assigned. This can happen when</span>
-            <span class="c1"># there are chains of dynamic initializers and &#39;delegate&#39;</span>
+            <span class="c1"># Sometimes, the trait may already be assigned. This can happen</span>
+            <span class="c1"># when there are chains of dynamic initializers and &#39;delegate&#39;</span>
             <span class="c1"># notifications. If &#39;trait_a&#39; and &#39;trait_b&#39; have dynamic</span>
             <span class="c1"># initializers and &#39;trait_a&#39;s initializer creates &#39;trait_b&#39;, *and*</span>
             <span class="c1"># we have a DelegatesTo trait that delegates to &#39;trait_a&#39;, then the</span>
@@ -799,15 +681,11 @@
             <span class="c1"># thus &#39;trait_b&#39;. If we are creating an extended trait change</span>
             <span class="c1"># listener on &#39;trait_b.something&#39;, and the &#39;trait_a&#39; delegate</span>
             <span class="c1"># listeners just happen to get hooked up before this one, then</span>
-            <span class="c1"># &#39;trait_b&#39; will have been initialized already, and the registration</span>
-            <span class="c1"># that we are deferring will never happen.</span>
+            <span class="c1"># &#39;trait_b&#39; will have been initialized already, and the</span>
+            <span class="c1"># registration that we are deferring will never happen.</span>
             <span class="k">return</span> <span class="nb">next</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Registers a handler for a list trait:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_register_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">remove</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Registers a handler for a list trait.</span>
@@ -914,18 +792,14 @@
         <span class="k">return</span> <span class="n">INVALID_DESTINATION</span>
 
     <span class="c1"># Handle &#39;sets&#39; the same as &#39;lists&#39;:</span>
-    <span class="c1"># Note: Currently the behavior of sets is almost identical to that of lists,</span>
-    <span class="c1"># so we are able to share the same code for both. This includes some &#39;duck</span>
-    <span class="c1"># typing&#39; that occurs with the TraitListEvent and TraitSetEvent, that define</span>
-    <span class="c1"># &#39;removed&#39; and &#39;added&#39; attributes that behave similarly enough (from the</span>
-    <span class="c1"># point of view of this module) that they can be treated as equivalent. If</span>
-    <span class="c1"># the behavior of sets ever diverges from that of lists, then this code may</span>
-    <span class="c1"># need to be changed.</span>
+    <span class="c1"># Note: Currently the behavior of sets is almost identical to that of</span>
+    <span class="c1"># lists, so we are able to share the same code for both. This includes some</span>
+    <span class="c1"># &#39;duck typing&#39; that occurs with the TraitListEvent and TraitSetEvent, that</span>
+    <span class="c1"># define &#39;removed&#39; and &#39;added&#39; attributes that behave similarly enough</span>
+    <span class="c1"># (from the point of view of this module) that they can be treated as</span>
+    <span class="c1"># equivalent. If the behavior of sets ever diverges from that of lists,</span>
+    <span class="c1"># then this code may need to be changed.</span>
     <span class="n">_register_set</span> <span class="o">=</span> <span class="n">_register_list</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Registers a handler for a dictionary trait:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_register_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">remove</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Registers a handler for a dictionary trait.</span>
@@ -1012,10 +886,6 @@
 
         <span class="k">return</span> <span class="n">INVALID_DESTINATION</span>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles new traits being added to an object being monitored:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
     <span class="k">def</span> <span class="nf">_new_trait_added</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_trait</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles new traits being added to an object being monitored.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1052,11 +922,6 @@
         <span class="k">return</span> <span class="n">target</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;ListenerGroup&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <span class="k">def</span> <span class="nf">_set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -1074,10 +939,6 @@
 
 
 <div class="viewcode-block" id="ListenerGroup"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerGroup">[docs]</a><span class="k">class</span> <span class="nc">ListenerGroup</span><span class="p">(</span><span class="n">ListenerBase</span><span class="p">):</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Trait definitions:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
     <span class="c1">#: The handler to be called when any listened-to trait is changed</span>
     <span class="n">handler</span> <span class="o">=</span> <span class="n">Property</span>
@@ -1109,7 +970,7 @@
     <span class="c1"># The list of ListenerBase objects in the group</span>
     <span class="n">items</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">ListenerBase</span><span class="p">)</span>
 
-    <span class="c1"># -- Property Implementations -----------------------------------------------</span>
+    <span class="c1"># -- Property Implementations ---------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_set_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1129,17 +990,13 @@
             <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
                 <span class="n">item</span><span class="o">.</span><span class="n">dispatch</span> <span class="o">=</span> <span class="n">dispatch</span>
 
-    <span class="c1"># -- &#39;ListenerBase&#39; Class Method Implementations ----------------------------</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  String representation:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
+    <span class="c1"># -- &#39;ListenerBase&#39; Class Method Implementations --------------------------</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seen</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a string representation of the object.</span>
 
-<span class="sd">        Since the object graph may have cycles, we extend the basic __repr__ API</span>
-<span class="sd">        to include a set of objects we&#39;ve already seen while constructing</span>
+<span class="sd">        Since the object graph may have cycles, we extend the basic __repr__</span>
+<span class="sd">        API to include a set of objects we&#39;ve already seen while constructing</span>
 <span class="sd">        a string representation. When this method tries to get the repr of</span>
 <span class="sd">        a ListenerItem or ListenerGroup, we will use the extended API and build</span>
 <span class="sd">        up the set of seen objects. The repr of a seen object will just be</span>
@@ -1160,10 +1017,6 @@
 
         <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Registers new listeners:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
 <div class="viewcode-block" id="ListenerGroup.register"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerGroup.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Registers new listeners.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1172,10 +1025,6 @@
 
         <span class="k">return</span> <span class="n">INVALID_DESTINATION</span></div>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Unregisters any existing listeners:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
 <div class="viewcode-block" id="ListenerGroup.unregister"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerGroup.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Unregisters any existing listeners.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1183,16 +1032,7 @@
             <span class="n">item</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="n">old</span><span class="p">)</span></div></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;ListenerParser&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="ListenerParser"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser">[docs]</a><span class="k">class</span> <span class="nc">ListenerParser</span><span class="p">(</span><span class="n">HasPrivateTraits</span><span class="p">):</span>
-
-    <span class="c1"># -------------------------------------------------------------------------------</span>
-    <span class="c1">#  Trait definitions:</span>
-    <span class="c1"># -------------------------------------------------------------------------------</span>
 
     <span class="c1">#: The string being parsed</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">Str</span>
@@ -1218,7 +1058,7 @@
     <span class="c1">#: The ListenerBase object resulting from parsing **text**</span>
     <span class="n">listener</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">ListenerBase</span><span class="p">)</span>
 
-    <span class="c1"># -- Property Implementations -----------------------------------------------</span>
+    <span class="c1"># -- Property Implementations ---------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_get_next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span>
@@ -1246,18 +1086,13 @@
 
         <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="c1"># -- object Method Overrides ------------------------------------------------</span>
+    <span class="c1"># -- object Method Overrides ----------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ListenerParser</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span>
 
-    <span class="c1"># -- Private Methods --------------------------------------------------------</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Parses the text and returns the appropriate collection of ListenerBase</span>
-    <span class="c1">#  objects described by the text:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
+    <span class="c1"># -- Private Methods ------------------------------------------------------</span>
 
 <div class="viewcode-block" id="ListenerParser.parse"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Parses the text and returns the appropriate collection of</span>
@@ -1267,6 +1102,9 @@
         <span class="c1"># Python name never triggers this parser, so we don&#39;t try to make that</span>
         <span class="c1"># a shortcut too. Whitespace should already have been stripped from the</span>
         <span class="c1"># start and end.</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error parsing name. Trailing &#39;,&#39; is not allowed&quot;</span><span class="p">)</span>
 
         <span class="c1"># TODO: The use of regexes should be used throughout all of the parsing</span>
         <span class="c1"># functions to speed up all aspects of parsing.</span>
@@ -1279,10 +1117,6 @@
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_group</span><span class="p">(</span><span class="n">EOS</span><span class="p">)</span></div>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Parses the contents of a group:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="ListenerParser.parse_group"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.parse_group">[docs]</a>    <span class="k">def</span> <span class="nf">parse_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminator</span><span class="o">=</span><span class="s2">&quot;]&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Parses the contents of a group.</span>
@@ -1305,10 +1139,6 @@
             <span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">ListenerGroup</span><span class="p">(</span><span class="n">items</span><span class="o">=</span><span class="n">items</span><span class="p">)</span></div>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Parses a single, complete listener item/group string:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="ListenerParser.parse_item"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.parse_item">[docs]</a>    <span class="k">def</span> <span class="nf">parse_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terminator</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Parses a single, complete listener item or group string.</span>
@@ -1385,10 +1215,6 @@
 
         <span class="k">return</span> <span class="n">result</span></div>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Parses the metadata portion of a listener item:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
 <div class="viewcode-block" id="ListenerParser.parse_metadata"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.parse_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">parse_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Parses the metadata portion of a listener item.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1397,10 +1223,6 @@
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">backspace</span></div>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Raises a syntax error:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
 <div class="viewcode-block" id="ListenerParser.error"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.error">[docs]</a>    <span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Raises a syntax error.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1408,11 +1230,7 @@
             <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> at column </span><span class="si">%d</span><span class="s2"> of &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="p">)</span></div>
 
-    <span class="c1"># -- Event Handlers ---------------------------------------------------------</span>
-
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Handles the &#39;text&#39; trait being changed:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
+    <span class="c1"># -- Event Handlers -------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_text_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1420,14 +1238,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">listener</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;ListenerNotifyWrapper&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="ListenerNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">ListenerNotifyWrapper</span><span class="p">(</span><span class="n">TraitChangeNotifyWrapper</span><span class="p">):</span>
 
-    <span class="c1"># -- TraitChangeNotifyWrapper Method Overrides ------------------------------</span>
+    <span class="c1"># -- TraitChangeNotifyWrapper Method Overrides ----------------------------</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">listener</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">ListenerType</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
@@ -1454,11 +1267,6 @@
 
 <div class="viewcode-block" id="ListenerNotifyWrapper.owner_deleted"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerNotifyWrapper.owner_deleted">[docs]</a>    <span class="k">def</span> <span class="nf">owner_deleted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owner</span> <span class="o">=</span> <span class="kc">None</span></div></div>
-
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;ListenerHandler&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="ListenerHandler"><a class="viewcode-back" href="../../traits_api_reference/traits_listener.html#traits.traits_listener.ListenerHandler">[docs]</a><span class="k">class</span> <span class="nc">ListenerHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -1521,7 +1329,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

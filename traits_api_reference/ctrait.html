@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.ctrait Module &mdash; Traits 6 User Manual</title>
+    <title>traits.ctrait Module &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.ctraits Module" href="ctraits.html" >
     <link rel="prev" title="traits.constants Module" href="constants.html" > 
@@ -50,7 +50,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -108,6 +108,13 @@ Setter acceps either an int or a ComparisonMode enum.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="traits.ctrait.CTrait.property_fields">
+<em class="property">property </em><code class="sig-name descname">property_fields</code><a class="headerlink" href="#traits.ctrait.CTrait.property_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a tuple of callables (fget, fset, validate) for the
+property trait.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="traits.ctrait.CTrait.is_trait_type">
 <code class="sig-name descname">is_trait_type</code><span class="sig-paren">(</span><em class="sig-param">trait_type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.is_trait_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.ctrait.CTrait.is_trait_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns whether or not this trait is of a specified trait type.</p>
@@ -123,17 +130,13 @@ Setter acceps either an int or a ComparisonMode enum.</p>
 <dt id="traits.ctrait.CTrait.get_help">
 <code class="sig-name descname">get_help</code><span class="sig-paren">(</span><em class="sig-param">full=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/ctrait.html#CTrait.get_help"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.ctrait.CTrait.get_help" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the help text for a trait.</p>
+<p>If <em>full</em> is False or the trait does not have a <strong>help</strong> string,
+the returned string is constructed from the <strong>desc</strong> attribute on the
+trait and the <strong>info</strong> string on the trait’s handler.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>full</strong> (<em>bool</em>) – Indicates whether to return the value of the <em>help</em> attribute of
-the trait itself.</p></li>
-<li><p><strong>Description</strong> – </p></li>
-<li><p><strong>-----------</strong> – </p></li>
-<li><p><strong>full is False</strong><strong> or </strong><strong>the trait does not have a help string</strong><strong>,</strong> (<em>If</em>) – </p></li>
-<li><p><strong>returned string is constructed from the desc attribute on the</strong> (<em>the</em>) – </p></li>
-<li><p><strong>and the info string on the trait's handler.</strong> (<em>trait</em>) – </p></li>
-</ul>
+<dd class="field-odd"><p><strong>full</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Indicates whether to return the value of the <em>help</em> attribute of
+the trait itself.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -218,7 +221,7 @@ the trait itself.</p></li>
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

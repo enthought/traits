@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_set_object &mdash; Traits 6 User Manual</title>
+    <title>traits.trait_set_object &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -89,9 +89,12 @@
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">copyreg</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">chain</span>
 <span class="kn">from</span> <span class="nn">weakref</span> <span class="k">import</span> <span class="n">ref</span>
 
-<span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
+<span class="kn">from</span> <span class="nn">traits.observation._i_observable</span> <span class="k">import</span> <span class="n">IObservable</span>
+<span class="kn">from</span> <span class="nn">traits.trait_base</span> <span class="k">import</span> <span class="n">_validate_everything</span>
+<span class="kn">from</span> <span class="nn">traits.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
 
 
 <div class="viewcode-block" id="TraitSetEvent"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetEvent">[docs]</a><span class="k">class</span> <span class="nc">TraitSetEvent</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -99,69 +102,452 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    added : dict or None</span>
-<span class="sd">        New values added to the set, or optionally None if nothing was added.</span>
-<span class="sd">    removed : dict or None</span>
-<span class="sd">        Old values that were removed, or optionally None if nothing was</span>
-<span class="sd">        removed.</span>
+<span class="sd">    removed : set, optional</span>
+<span class="sd">        Old values that were removed from the set.</span>
+<span class="sd">    added : set, optional</span>
+<span class="sd">        New values added to the set.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    added : dict</span>
-<span class="sd">        New values added to the set. If nothing was added this is an empty</span>
-<span class="sd">        set.</span>
-<span class="sd">    removed : dict</span>
-<span class="sd">        Old values that were removed. If nothing was removed this is an empty</span>
-<span class="sd">        set.</span>
+<span class="sd">    removed : set</span>
+<span class="sd">        Old values that were removed from the set.</span>
+<span class="sd">    added : set</span>
+<span class="sd">        New values added to the set.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">removed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">removed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
         <span class="k">if</span> <span class="n">removed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">removed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">removed</span> <span class="o">=</span> <span class="n">removed</span>
 
         <span class="k">if</span> <span class="n">added</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">added</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">added</span> <span class="o">=</span> <span class="n">added</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">added</span> <span class="o">=</span> <span class="n">added</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;TraitSetEvent(removed=</span><span class="si">{!r}</span><span class="s2">, added=</span><span class="si">{!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">removed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">added</span>
+        <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="TraitSetObject"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject">[docs]</a><span class="k">class</span> <span class="nc">TraitSetObject</span><span class="p">(</span><span class="nb">set</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; A subclass of set that fires trait events when mutated.</span>
-
-<span class="sd">    This is used by the Set trait type, and all values set into a Set</span>
-<span class="sd">    trait will be copied into a new TraitSetObject instance.</span>
-
-<span class="sd">    Mutation of the TraitSetObject will fire a &quot;name_items&quot; event with</span>
-<span class="sd">    appropriate added and removed values.</span>
+<div class="viewcode-block" id="TraitSet"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet">[docs]</a><span class="nd">@IObservable</span><span class="o">.</span><span class="n">register</span>
+<span class="k">class</span> <span class="nc">TraitSet</span><span class="p">(</span><span class="nb">set</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A subclass of set that validates and notifies listeners of changes.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    trait : CTrait instance</span>
-<span class="sd">        The CTrait instance associated with the attribute that this Set</span>
-<span class="sd">        has been set to.</span>
-<span class="sd">    object : HasTraits instance</span>
-<span class="sd">        The HasTraits instance that the set has been set as an attribute for.</span>
-<span class="sd">    name : str</span>
-<span class="sd">        The name of the attribute on the object.</span>
-<span class="sd">    value : set</span>
-<span class="sd">        The set of values to initialize the TraitSetObject with.</span>
+<span class="sd">    value : iterable, optional</span>
+<span class="sd">        Iterable providing the items for the set.</span>
+<span class="sd">    item_validator : callable, optional</span>
+<span class="sd">        Called to validate and/or transform items added to the set. The</span>
+<span class="sd">        callable should accept a single item and return the transformed</span>
+<span class="sd">        item, raising TraitError for invalid items. If not given, no</span>
+<span class="sd">        item validation is performed.</span>
+<span class="sd">    notifiers : list of callable, optional</span>
+<span class="sd">        A list of callables with the signature::</span>
+
+<span class="sd">            notifier(trait_set, removed, added)</span>
+
+<span class="sd">        Where &#39;added&#39; is a set containing new values that have been added.</span>
+<span class="sd">        And &#39;removed&#39; is a set containing old values that have been removed.</span>
+
+<span class="sd">        If this argument is not given, the list of notifiers is initially</span>
+<span class="sd">        empty.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    trait : CTrait instance</span>
-<span class="sd">        The CTrait instance associated with the attribute that this set</span>
-<span class="sd">        has been set to.</span>
-<span class="sd">    object : weak reference to a HasTraits instance</span>
-<span class="sd">        A weak reference to a HasTraits instance that the set has been set</span>
-<span class="sd">        as an attribute for.</span>
+<span class="sd">    item_validator : callable</span>
+<span class="sd">        Called to validate and/or transform items added to the set. The</span>
+<span class="sd">        callable should accept a single item and return the transformed</span>
+<span class="sd">        item, raising TraitError for invalid items.</span>
+<span class="sd">    notifiers : list of callable</span>
+<span class="sd">        A list of callables with the signature::</span>
+
+<span class="sd">            notifier(trait_set, removed, added)</span>
+
+<span class="sd">        where &#39;added&#39; is a set containing new values that have been added</span>
+<span class="sd">        and &#39;removed&#39; is a set containing old values that have been removed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">item_validator</span> <span class="o">=</span> <span class="n">_validate_everything</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="p">(),</span> <span class="o">*</span><span class="p">,</span> <span class="n">item_validator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">notifiers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">item_validator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">item_validator</span> <span class="o">=</span> <span class="n">item_validator</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">item_validator</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">notifiers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span> <span class="o">=</span> <span class="n">notifiers</span>
+
+<div class="viewcode-block" id="TraitSet.notify"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.notify">[docs]</a>    <span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Call all notifiers.</span>
+
+<span class="sd">        This simply calls all notifiers provided by the class, if any.</span>
+<span class="sd">        The notifiers are expected to have the signature::</span>
+
+<span class="sd">            notifier(trait_set, removed, added)</span>
+
+<span class="sd">        Any return values are ignored. Any exceptions raised are not</span>
+<span class="sd">        handled. Notifiers are therefore expected not to raise any</span>
+<span class="sd">        exceptions under normal use.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        removed : set</span>
+<span class="sd">            The items that have been removed.</span>
+<span class="sd">        added : set</span>
+<span class="sd">            The new items that have been added to the set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">notifier</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span><span class="p">:</span>
+            <span class="n">notifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">)</span></div>
+
+    <span class="c1"># -- set interface -------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">__iand__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  Return self &amp;= value.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : set or frozenset</span>
+<span class="sd">            A value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : TraitSet</span>
+<span class="sd">            The updated set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">old_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__iand__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">removed</span> <span class="o">=</span> <span class="n">old_set</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">retval</span>
+
+    <span class="k">def</span> <span class="nf">__ior__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return self |= value.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : set or frozenset</span>
+<span class="sd">            A value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : TraitSet</span>
+<span class="sd">            The updated set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">old_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># Validate each item in value, only if value is a set or frozenset.</span>
+        <span class="c1"># We do not want to convert any other iterable type to a set</span>
+        <span class="c1"># so that super().__ior__ raises the appropriate error message</span>
+        <span class="c1"># for all other iterables.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">set</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">)):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">item_validator</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">value</span><span class="p">}</span>
+
+        <span class="n">retval</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__ior__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="n">added</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">old_set</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">added</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="nb">set</span><span class="p">(),</span> <span class="n">added</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">retval</span>
+
+    <span class="k">def</span> <span class="nf">__isub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return self-=value.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : set or frozenset</span>
+<span class="sd">            A value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : TraitSet</span>
+<span class="sd">            The updated set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">old_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__isub__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">removed</span> <span class="o">=</span> <span class="n">old_set</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">retval</span>
+
+    <span class="k">def</span> <span class="nf">__ixor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return self ^= value.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : set or frozenset</span>
+<span class="sd">            A value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : TraitSet</span>
+<span class="sd">            The updated set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">removed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">added</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="c1"># Validate each item in value, only if value is a set or frozenset.</span>
+        <span class="c1"># We do not want to convert any other iterable type to a set</span>
+        <span class="c1"># so that super().__ixor__ raises the appropriate error message</span>
+        <span class="c1"># for all other iterables.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">set</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">)):</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">removed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">raw_added</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span>
+            <span class="n">validated_added</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">item_validator</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span>
+                               <span class="n">raw_added</span><span class="p">}</span>
+            <span class="n">added</span> <span class="o">=</span> <span class="n">validated_added</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">added</span> <span class="o">|</span> <span class="n">removed</span>
+
+        <span class="n">retval</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__ixor__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">removed</span> <span class="ow">or</span> <span class="n">added</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">retval</span>
+
+<div class="viewcode-block" id="TraitSet.add"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add an element to a set.</span>
+
+<span class="sd">        This has no effect if the element is already present.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : any</span>
+<span class="sd">            The value to add to the set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item_validator</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">value_in_self</span> <span class="o">=</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">value_in_self</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="nb">set</span><span class="p">(),</span> <span class="p">{</span><span class="n">value</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="TraitSet.clear"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove all elements from this set. &quot;&quot;&quot;</span>
+
+        <span class="n">removed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">removed</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="TraitSet.discard"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.discard">[docs]</a>    <span class="k">def</span> <span class="nf">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove an element from the set if it is a member.</span>
+
+<span class="sd">        If the element is not a member, do nothing.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : any</span>
+<span class="sd">            An item in the set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">value_in_self</span> <span class="o">=</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">value_in_self</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">({</span><span class="n">value</span><span class="p">},</span> <span class="nb">set</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="TraitSet.difference_update"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.difference_update">[docs]</a>    <span class="k">def</span> <span class="nf">difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  Remove all elements of another set from this set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        args : iterables</span>
+<span class="sd">            The other iterables.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">old_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">removed</span> <span class="o">=</span> <span class="n">old_set</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="TraitSet.intersection_update"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.intersection_update">[docs]</a>    <span class="k">def</span> <span class="nf">intersection_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  Update the set with the intersection of itself and another set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        args : iterables</span>
+<span class="sd">            The other iterables.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">old_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">intersection_update</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">removed</span> <span class="o">=</span> <span class="n">old_set</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="TraitSet.pop"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.pop">[docs]</a>    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove and return an arbitrary set element.</span>
+
+<span class="sd">        Raises KeyError if the set is empty.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        item : any</span>
+<span class="sd">            An element from the set.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError</span>
+<span class="sd">            If the set is empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">removed</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">({</span><span class="n">removed</span><span class="p">},</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">removed</span></div>
+
+<div class="viewcode-block" id="TraitSet.remove"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove an element that is a member of the set.</span>
+
+<span class="sd">        If the element is not a member, raise a KeyError.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : any</span>
+<span class="sd">            An element in the set</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError</span>
+<span class="sd">            If the value is not found in the set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">({</span><span class="n">value</span><span class="p">},</span> <span class="nb">set</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="TraitSet.symmetric_difference_update"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.symmetric_difference_update">[docs]</a>    <span class="k">def</span> <span class="nf">symmetric_difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Update the set with the symmetric difference of itself and another.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : iterable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">values</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">removed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">raw_result</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span>
+        <span class="n">validated_result</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">item_validator</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">raw_result</span><span class="p">}</span>
+        <span class="n">added</span> <span class="o">=</span> <span class="n">validated_result</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">symmetric_difference_update</span><span class="p">(</span><span class="n">removed</span> <span class="o">|</span> <span class="n">added</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">removed</span> <span class="ow">or</span> <span class="n">added</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TraitSet.update"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Update the set with the union of itself and others.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        args : iterables</span>
+<span class="sd">            The other iterables.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">validated_values</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">item_validator</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">args</span><span class="p">)}</span>
+        <span class="n">added</span> <span class="o">=</span> <span class="n">validated_values</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">added</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">added</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="nb">set</span><span class="p">(),</span> <span class="n">added</span><span class="p">)</span></div>
+
+    <span class="c1"># -- pickle and copy support ----------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Perform a deepcopy operation.</span>
+
+<span class="sd">        Notifiers are transient and should not be copied.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># notifiers are transient and should not be copied</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">TraitSet</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">memo</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">],</span>
+            <span class="n">item_validator</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validator</span><span class="p">,</span> <span class="n">memo</span><span class="p">),</span>
+            <span class="n">notifiers</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get the state of the object for serialization.</span>
+
+<span class="sd">        Notifiers are transient and should not be serialized.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># notifiers are transient and should not be serialized</span>
+        <span class="k">del</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;notifiers&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Restore the state of the object after serialization.</span>
+
+<span class="sd">        Notifiers are transient and are restored to the empty list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state</span><span class="p">[</span><span class="s1">&#39;notifiers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="c1"># -- Implement IObservable ------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_notifiers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force_create</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return a list of callables where each callable is a notifier.</span>
+<span class="sd">        The list is expected to be mutated for contributing or removing</span>
+<span class="sd">        notifiers from the object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        force_create: boolean</span>
+<span class="sd">            Not used here.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span></div>
+
+
+<div class="viewcode-block" id="TraitSetObject"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject">[docs]</a><span class="k">class</span> <span class="nc">TraitSetObject</span><span class="p">(</span><span class="n">TraitSet</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A specialization of TraitSet with a default validator and notifier</span>
+<span class="sd">    for compatibility with Traits versions before 6.0.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trait : CTrait</span>
+<span class="sd">        The trait that the set has been assigned to.</span>
+<span class="sd">    object : HasTraits</span>
+<span class="sd">        The object the set belongs to.</span>
 <span class="sd">    name : str</span>
-<span class="sd">        The name of the attribute on the object.</span>
-<span class="sd">    name_items : str</span>
-<span class="sd">        The name of the items event trait that the trait set will fire when</span>
-<span class="sd">        mutated.</span>
+<span class="sd">        The name of the trait on the object.</span>
+<span class="sd">    value : iterable</span>
+<span class="sd">        The initial value of the set.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trait : CTrait</span>
+<span class="sd">        The trait that the set has been assigned to.</span>
+<span class="sd">    object : HasTraits</span>
+<span class="sd">        The object the set belongs to.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the trait on the object.</span>
+<span class="sd">    value : iterable</span>
+<span class="sd">        The initial value of the set.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">trait</span> <span class="o">=</span> <span class="n">trait</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -169,165 +555,117 @@
         <span class="k">if</span> <span class="n">trait</span><span class="o">.</span><span class="n">has_items</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_items&quot;</span>
 
-        <span class="c1"># Validate and assign the initial set value:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">item_validator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_validator</span><span class="p">,</span>
+                         <span class="n">notifiers</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">notifier</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Validates the value by calling the inner trait&#39;s validate method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : any</span>
+<span class="sd">            The value to be validated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        value : any</span>
+<span class="sd">            The validated value.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TraitError</span>
+<span class="sd">            On validation failure for the inner trait.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">object_ref</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">trait</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;trait&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">object_ref</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">trait</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="nb">object</span> <span class="o">=</span> <span class="n">object_ref</span><span class="p">()</span>
+
+        <span class="c1"># validate the new value(s)</span>
+        <span class="n">validate</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">item_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">validate</span>
+
+        <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span>
+
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">validate</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">item_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">validate</span>
-            <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
-
-            <span class="nb">super</span><span class="p">(</span><span class="n">TraitSetObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-
-            <span class="k">return</span>
-
+            <span class="k">return</span> <span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">excp</span><span class="p">:</span>
             <span class="n">excp</span><span class="o">.</span><span class="n">set_prefix</span><span class="p">(</span><span class="s2">&quot;Each element of the&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">excp</span>
 
-    <span class="k">def</span> <span class="nf">_send_trait_items_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">items_event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Send a TraitSetEvent to the owning object if there is one.</span>
+<div class="viewcode-block" id="TraitSetObject.notifier"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.notifier">[docs]</a>    <span class="k">def</span> <span class="nf">notifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait_set</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Converts and consolidates the parameters to a TraitSetEvent and</span>
+<span class="sd">        then fires the event.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        trait_set : set</span>
+<span class="sd">            The complete set</span>
+<span class="sd">        removed : set</span>
+<span class="sd">            Set of values that were removed.</span>
+<span class="sd">        added : set</span>
+<span class="sd">            Set of values that were added.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
         <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">items_event</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;trait&quot;</span><span class="p">):</span>
-                <span class="n">items_event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="o">.</span><span class="n">items_event</span><span class="p">()</span>
-            <span class="nb">object</span><span class="o">.</span><span class="n">trait_items_event</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">items_event</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
 
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="c1"># Workaround having this set inside another container which</span>
+            <span class="c1"># also uses the name_items trait for notification.</span>
+            <span class="c1"># Similar to enthought/traits#25</span>
+            <span class="k">return</span>
+
+        <span class="n">event</span> <span class="o">=</span> <span class="n">TraitSetEvent</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="n">added</span><span class="p">)</span>
+        <span class="n">items_event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="o">.</span><span class="n">items_event</span><span class="p">()</span>
+        <span class="nb">object</span><span class="o">.</span><span class="n">trait_items_event</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">items_event</span><span class="p">)</span></div>
+
+    <span class="c1"># -- pickle and copy support ----------------------------------------------</span>
     <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
-        <span class="n">id_self</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">id_self</span> <span class="ow">in</span> <span class="n">memo</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">memo</span><span class="p">[</span><span class="n">id_self</span><span class="p">]</span>
+        <span class="sd">&quot;&quot;&quot; Perform a deepcopy operation.</span>
 
-        <span class="n">memo</span><span class="p">[</span><span class="n">id_self</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span> <span class="o">=</span> <span class="n">TraitSetObject</span><span class="p">(</span>
+<span class="sd">        Notifiers are transient and should not be copied.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">TraitSetObject</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="p">,</span>
             <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="p">[</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">memo</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">],</span>
+            <span class="p">{</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">memo</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">},</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span>
 
-<div class="viewcode-block" id="TraitSetObject.update"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;trait&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">set</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">set</span><span class="p">):</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-            <span class="n">added</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">added</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span>
-                <span class="n">validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="o">.</span><span class="n">item_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">validate</span>
-                <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
-                    <span class="n">added</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
-                        <span class="p">[</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">added</span><span class="p">]</span>
-                    <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get the state of the object for serialization.</span>
 
-                <span class="nb">set</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">added</span><span class="p">)</span>
+<span class="sd">        Notifiers are transient and should not be serialized.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">TraitSetEvent</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">added</span><span class="p">)</span>
-                    <span class="p">)</span>
-        <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">excp</span><span class="p">:</span>
-            <span class="n">excp</span><span class="o">.</span><span class="n">set_prefix</span><span class="p">(</span><span class="s2">&quot;Each element of the&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="n">excp</span></div>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">()</span>
+        <span class="k">del</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;trait&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">result</span>
 
-<div class="viewcode-block" id="TraitSetObject.intersection_update"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.intersection_update">[docs]</a>    <span class="k">def</span> <span class="nf">intersection_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="n">removed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">set</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">removed</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Restore the state of the object after serialization.</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">TraitSetEvent</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span>
-                <span class="p">)</span></div>
+<span class="sd">        Notifiers are transient and are restored to the empty list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="TraitSetObject.difference_update"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.difference_update">[docs]</a>    <span class="k">def</span> <span class="nf">difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="n">removed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">set</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">removed</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">TraitSetEvent</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span>
-                <span class="p">)</span></div>
-
-<div class="viewcode-block" id="TraitSetObject.symmetric_difference_update"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.symmetric_difference_update">[docs]</a>    <span class="k">def</span> <span class="nf">symmetric_difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;trait&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">set</span><span class="o">.</span><span class="n">symmetric_difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">set</span><span class="p">):</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="n">removed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="n">added</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">added</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span>
-            <span class="nb">set</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">removed</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">added</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="o">.</span><span class="n">item_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">validate</span>
-                <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
-                    <span class="n">added</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
-                        <span class="p">[</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">added</span><span class="p">]</span>
-                    <span class="p">)</span>
-
-                <span class="nb">set</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">added</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">TraitSetEvent</span><span class="p">(</span><span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">)</span>
-                <span class="p">)</span></div>
-
-<div class="viewcode-block" id="TraitSetObject.add"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;trait&quot;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span>
-                <span class="n">validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="o">.</span><span class="n">item_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">validate</span>
-                <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-                <span class="nb">set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">TraitSetEvent</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="nb">set</span><span class="p">([</span><span class="n">value</span><span class="p">]))</span>
-                    <span class="p">)</span>
-            <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">excp</span><span class="p">:</span>
-                <span class="n">excp</span><span class="o">.</span><span class="n">set_prefix</span><span class="p">(</span><span class="s2">&quot;Each element of the&quot;</span><span class="p">)</span>
-                <span class="k">raise</span> <span class="n">excp</span></div>
-
-<div class="viewcode-block" id="TraitSetObject.remove"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="nb">set</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">TraitSetEvent</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">value</span><span class="p">]))</span>
-            <span class="p">)</span></div>
-
-<div class="viewcode-block" id="TraitSetObject.discard"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.discard">[docs]</a>    <span class="k">def</span> <span class="nf">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="TraitSetObject.pop"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.pop">[docs]</a>    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">TraitSetEvent</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">value</span><span class="p">]))</span>
-            <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">value</span></div>
-
-<div class="viewcode-block" id="TraitSetObject.clear"><a class="viewcode-back" href="../../traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">removed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="nb">set</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">TraitSetEvent</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span>
-            <span class="p">)</span></div>
+        <span class="n">state</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">state</span><span class="p">[</span><span class="s2">&quot;notifiers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">notifier</span><span class="p">]</span>
+        <span class="n">state</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="n">state</span><span class="p">[</span><span class="s2">&quot;trait&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__reduce_ex__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Overridden to make sure we call our custom __getstate__.</span>
@@ -336,40 +674,7 @@
             <span class="n">copyreg</span><span class="o">.</span><span class="n">_reconstructor</span><span class="p">,</span>
             <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">set</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">(),</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;trait&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">result</span>
-
-    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="nb">object</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__ior__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
-
-    <span class="k">def</span> <span class="nf">__iand__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">intersection_update</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
-
-    <span class="k">def</span> <span class="nf">__ixor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">symmetric_difference_update</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
-
-    <span class="k">def</span> <span class="nf">__isub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span></div>
+        <span class="p">)</span></div>
 </pre></div>
 
           </div>
@@ -409,7 +714,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

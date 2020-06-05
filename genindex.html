@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Index &mdash; Traits 6 User Manual</title>
+    <title>Index &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="_static/css/spc-extend.css">
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -31,7 +31,7 @@
     <link rel="shortcut icon" href="_static/img/favicon.ico">
     <link rel="index" title="Index" href="#" >
     <link rel="search" title="Search" href="search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="index.html" > 
+    <link rel="top" title="Traits 6.1 User Manual" href="index.html" > 
   </head>
   <body>
   <div class="container">
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="index.html">Traits 6.1 User Manual</a></li>
 	 
     </ul>
               
@@ -89,6 +89,7 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -109,6 +110,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.MetaInterface.__call__">__call__() (traits.has_traits.MetaInterface method)</a>
 </li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.__eq__">__eq__() (traits.observation.expression.ObserverExpression method)</a>
+</li>
       <li><a href="traits_user_manual/advanced.html#index-34">__getstate__()</a>
 
       <ul>
@@ -116,6 +119,8 @@
 </li>
       </ul></li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.MetaInterface.__init__">__init__() (traits.has_traits.MetaInterface method)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.__or__">__or__() (traits.observation.expression.ObserverExpression method)</a>
 </li>
       <li><a href="traits_user_manual/advanced.html#index-34">__setstate__()</a>
 
@@ -127,26 +132,28 @@
     _any_trait_changed()
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-23">examples</a>
+        <li><a href="traits_user_manual/listening.html#index-23">examples</a>
 </li>
       </ul></li>
-      <li><a href="traits_user_manual/notification.html#_anytrait_changed">_anytrait_changed()</a>, <a href="traits_user_manual/notification.html#_anytrait_changed">[1]</a>, <a href="traits_user_manual/notification.html#_anytrait_changed">[2]</a>, <a href="traits_user_manual/notification.html#_anytrait_changed">[3]</a>
+      <li><a href="traits_user_manual/listening.html#_anytrait_changed">_anytrait_changed()</a>
 </li>
-      <li><a href="traits_api_reference/trait_type.html#traits.trait_type._arg_count">_arg_count() (in module traits.trait_type)</a>
+      <li><a href="traits_api_reference/ctraits.html#traits.ctraits.CHasTraits._class_traits">_class_traits() (traits.ctraits.CHasTraits method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="traits_api_reference/trait_type.html#traits.trait_type._infer_default_value_type">_infer_default_value_type() (in module traits.trait_type)</a>
 </li>
+      <li><a href="traits_api_reference/ctraits.html#traits.ctraits.CHasTraits._instance_traits">_instance_traits() (traits.ctraits.CHasTraits method)</a>
+</li>
       <li><a href="traits_api_reference/traits.html#traits.traits._InstanceArgs">_InstanceArgs (class in traits.traits)</a>
 </li>
-      <li><a href="traits_user_manual/notification.html#_name_changed">_name_changed()</a>, <a href="traits_user_manual/notification.html#_name_changed">[1]</a>, <a href="traits_user_manual/notification.html#_name_changed">[2]</a>, <a href="traits_user_manual/notification.html#_name_changed">[3]</a>, <a href="traits_user_manual/notification.html#index-22">[4]</a>
+      <li><a href="traits_user_manual/listening.html#_name_changed">_name_changed()</a>, <a href="traits_user_manual/listening.html#index-22">[1]</a>
 </li>
       <li><a href="traits_user_manual/advanced.html#_name_default">_name_default()</a>
 </li>
-      <li><a href="traits_user_manual/notification.html#index-22">_name_fired()</a>
+      <li><a href="traits_user_manual/listening.html#index-22">_name_fired()</a>
 </li>
-      <li><a href="traits_user_manual/notification.html#index-27">_name_items_changed()</a>
+      <li><a href="traits_user_manual/listening.html#index-27">_name_items_changed()</a>
 </li>
       <li><a href="traits_api_reference/trait_type.html#traits.trait_type._read_only">_read_only() (in module traits.trait_type)</a>
 </li>
@@ -221,7 +228,7 @@
       </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.AdaptsTo">AdaptsTo (class in traits.trait_types)</a>
 </li>
-      <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.add">add() (traits.trait_set_object.TraitSetObject method)</a>
+      <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.add">add() (traits.trait_set_object.TraitSet method)</a>
 </li>
       <li><a href="traits_api_reference/trait_base.html#traits.trait_base.add_article">add_article() (in module traits.trait_base)</a>
 </li>
@@ -245,9 +252,17 @@
         <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.add_trait">(traits.has_traits.HasTraits method)</a>
 </li>
       </ul></li>
-      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictEvent.added">added (traits.trait_dict_object.TraitDictEvent attribute)</a>
+      <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.add_trait_listener">add_trait_listener() (traits.has_traits.HasTraits method)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.DictChangeEvent.added">added (traits.observation.events.DictChangeEvent attribute)</a>
 
       <ul>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.ListChangeEvent.added">(traits.observation.events.ListChangeEvent attribute)</a>
+</li>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.SetChangeEvent.added">(traits.observation.events.SetChangeEvent attribute)</a>
+</li>
+        <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictEvent.added">(traits.trait_dict_object.TraitDictEvent attribute)</a>
+</li>
         <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListEvent.added">(traits.trait_list_object.TraitListEvent attribute)</a>
 </li>
         <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetEvent.added">(traits.trait_set_object.TraitSetEvent attribute)</a>
@@ -267,13 +282,17 @@
 </li>
       <li><a href="traits_user_manual/defining.html#index-16">Any()</a>
 </li>
-      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.append">append() (traits.trait_list_object.TraitListObject method)</a>
+      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList.append">append() (traits.trait_list_object.TraitList method)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.append">(traits.trait_list_object.TraitListObject method)</a>
 </li>
+      </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.BaseInstance.args">args (traits.trait_types.BaseInstance attribute)</a>
 </li>
       <li><a href="traits_api_reference/trait_numeric.html#traits.trait_numeric.Array">Array (class in traits.trait_numeric)</a>
 </li>
-      <li><a href="traits_user_manual/defining.html#index-34">array metadata attribute</a>
+      <li><a href="traits_user_manual/defining.html#index-42">array metadata attribute</a>
 </li>
       <li><a href="traits_user_manual/defining.html#index-16">Array()</a>
 </li>
@@ -295,6 +314,8 @@
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Expression.as_ctrait">(traits.trait_types.Expression method)</a>
 </li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Supports.as_ctrait">(traits.trait_types.Supports method)</a>
+</li>
+        <li><a href="traits_api_reference/traits.html#traits.traits._TraitMaker.as_ctrait">(traits.traits._TraitMaker method)</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertDeprecated">assertDeprecated() (traits.testing.unittest_tools.UnittestTools method)</a>
@@ -502,12 +523,14 @@
 </li>
       <li><a href="traits_api_reference/traits.util.html#traits.util.clean_strings.clean_timestamp">clean_timestamp() (in module traits.util.clean_strings)</a>
 </li>
-      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.clear">clear() (traits.trait_dict_object.TraitDictObject method)</a>
+      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.clear">clear() (traits.trait_dict_object.TraitDict method)</a>
 
       <ul>
+        <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList.clear">(traits.trait_list_object.TraitList method)</a>
+</li>
         <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.clear">(traits.trait_list_object.TraitListObject method)</a>
 </li>
-        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.clear">(traits.trait_set_object.TraitSetObject method)</a>
+        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.clear">(traits.trait_set_object.TraitSet method)</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.CList">CList (class in traits.trait_types)</a>
@@ -543,13 +566,11 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="traits_api_reference/traits.html#traits.traits.Color">Color (in module traits.traits)</a>
-</li>
-      <li><a href="traits_user_manual/defining.html#index-17">Color()</a>
+      <li><a href="traits_api_reference/traits.html#traits.traits.Color">Color() (in module traits.traits)</a>
 </li>
       <li><a href="traits_api_reference/ctraits.html#traits.ctraits.cTrait.comparison_mode">comparison_mode (traits.ctraits.cTrait attribute)</a>
 </li>
-      <li><a href="traits_user_manual/defining.html#index-41">comparison_mode metadata attribute</a>
+      <li><a href="traits_user_manual/defining.html#index-49">comparison_mode metadata attribute</a>
 </li>
       <li><a href="traits_api_reference/ctrait.html#traits.ctrait.CTrait.comparison_mode">comparison_mode() (traits.ctrait.CTrait property)</a>
 </li>
@@ -581,7 +602,7 @@
     container items
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-27">event</a>
+        <li><a href="traits_user_manual/listening.html#index-27">event</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray.copy_default_value">copy_default_value() (traits.trait_numeric.AbstractArray method)</a>
@@ -687,12 +708,12 @@
     decorator
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-18">on_trait_change</a>
+        <li><a href="traits_user_manual/listening.html#index-18">on_trait_change</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/traits.html#traits.traits.Default">Default (class in traits.traits)</a>
 </li>
-      <li><a href="traits_user_manual/defining.html#index-34">default metadata attribute</a>
+      <li><a href="traits_user_manual/defining.html#index-42">default metadata attribute</a>
 </li>
       <li>
     default value
@@ -703,7 +724,7 @@
         <li><a href="traits_user_manual/advanced.html#index-3">overriding in a subclass</a>
 </li>
       </ul></li>
-      <li><a href="traits_user_manual/defining.html#index-35">default_kind metadata attribute</a>
+      <li><a href="traits_user_manual/defining.html#index-43">default_kind metadata attribute</a>
 </li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.default_text_editor">default_text_editor() (in module traits.trait_types)</a>
 </li>
@@ -730,6 +751,8 @@
 </li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Expression.default_value">(traits.trait_types.Expression attribute)</a>
 </li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.PrefixList.default_value">(traits.trait_types.PrefixList attribute)</a>
+</li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Python.default_value">(traits.trait_types.Python attribute)</a>
 </li>
       </ul></li>
@@ -739,8 +762,12 @@
 </li>
       <li><a href="traits_api_reference/ctraits.html#traits.ctraits.cTrait.default_value_for">default_value_for() (traits.ctraits.cTrait method)</a>
 </li>
-      <li><a href="traits_api_reference/trait_types.html#traits.trait_types.self.default_value_type">default_value_type (traits.trait_types.self attribute)</a>
+      <li><a href="traits_api_reference/trait_types.html#traits.trait_types.PrefixList.default_value_type">default_value_type (traits.trait_types.PrefixList attribute)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.self.default_value_type">(traits.trait_types.self attribute)</a>
 </li>
+      </ul></li>
       <li><a href="traits_api_reference/constants.html#traits.constants.DefaultValue">DefaultValue (in module traits.constants)</a>
 </li>
       <li><a href="traits_user_manual/deferring.html#index-0">deferral</a>, <a href="traits_user_manual/intro.html#index-2">[1]</a>
@@ -757,13 +784,15 @@
         <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.deferred">(traits.traits_listener.ListenerItem attribute)</a>
 </li>
       </ul></li>
-      <li><a href="traits_user_manual/defining.html#index-30">defining trait with</a>
+      <li><a href="traits_api_reference/traits.html#traits.traits._TraitMaker.define">define() (traits.traits._TraitMaker method)</a>
+</li>
+      <li><a href="traits_user_manual/defining.html#index-38">defining trait with</a>
 </li>
       <li>
     delegate
 
       <ul>
-        <li><a href="traits_user_manual/defining.html#index-35">metadata attribute</a>
+        <li><a href="traits_user_manual/defining.html#index-43">metadata attribute</a>
 </li>
       </ul></li>
   </ul></td>
@@ -798,11 +827,19 @@
         <li><a href="traits_api_reference/traits.util.html#traits.util.deprecated.deprecated">(in module traits.util.deprecated)</a>
 </li>
       </ul></li>
-      <li><a href="traits_user_manual/defining.html#index-40">desc metadata attribute</a>
+      <li><a href="traits_user_manual/defining.html#index-48">desc metadata attribute</a>
 </li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Dict">Dict (class in traits.trait_types)</a>
 </li>
       <li><a href="traits_user_manual/defining.html#index-17">Dict()</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.dict_items">dict_items() (in module traits.observation.expression)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.dict_items">(traits.observation.expression.ObserverExpression method)</a>
+</li>
+      </ul></li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.DictChangeEvent">DictChangeEvent (class in traits.observation.events)</a>
 </li>
       <li><a href="traits_user_manual/custom.html#index-14">dictionary parameter to Trait()</a>
 </li>
@@ -818,7 +855,7 @@
 </li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.DictStrStr">DictStrStr (in module traits.trait_types)</a>
 </li>
-      <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.difference_update">difference_update() (traits.trait_set_object.TraitSetObject method)</a>
+      <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.difference_update">difference_update() (traits.trait_set_object.TraitSet method)</a>
 </li>
       <li><a href="traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.directivetype">directivetype (traits.util.trait_documenter.TraitDocumenter attribute)</a>
 </li>
@@ -834,7 +871,7 @@
       </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Disallow">Disallow (in module traits.trait_types)</a>
 </li>
-      <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.discard">discard() (traits.trait_set_object.TraitSetObject method)</a>
+      <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.discard">discard() (traits.trait_set_object.TraitSet method)</a>
 </li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerGroup.dispatch">dispatch (traits.traits_listener.ListenerGroup attribute)</a>
 
@@ -850,6 +887,8 @@
         <li><a href="traits_api_reference/trait_notifiers.html#traits.trait_notifiers.TraitChangeNotifyWrapper.dispatch">(traits.trait_notifiers.TraitChangeNotifyWrapper method)</a>
 </li>
       </ul></li>
+      <li><a href="traits_api_reference/traits.html#traits.traits._TraitMaker.do_list">do_list() (traits.traits._TraitMaker method)</a>
+</li>
       <li><a href="traits_api_reference/traits.testing.html#traits.testing.doctest_tools.doctest_for_module">doctest_for_module() (in module traits.testing.doctest_tools)</a>
 </li>
       <li><a href="traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.document_members">document_members() (traits.util.trait_documenter.TraitDocumenter method)</a>
@@ -866,14 +905,14 @@
 </li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.editable_traits">editable_traits() (traits.has_traits.HasTraits method)</a>
 </li>
-      <li><a href="traits_user_manual/defining.html#index-40">editor metadata attribute</a>
+      <li><a href="traits_user_manual/defining.html#index-48">editor metadata attribute</a>
 </li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Either">Either (class in traits.trait_types)</a>
 </li>
-      <li><a href="traits_user_manual/defining.html#index-28">Either trait</a>
+      <li><a href="traits_user_manual/defining.html#index-34">Either trait</a>
 
       <ul>
-        <li><a href="traits_user_manual/defining.html#index-29">examples</a>
+        <li><a href="traits_user_manual/defining.html#index-35">examples</a>
 </li>
       </ul></li>
       <li><a href="traits_user_manual/defining.html#index-18">Either()</a>
@@ -924,17 +963,17 @@
     event
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-27">container items</a>
+        <li><a href="traits_user_manual/listening.html#index-27">container items</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Event">Event (class in traits.trait_types)</a>
 </li>
       <li><a href="traits_user_manual/defining.html#index-19">Event()</a>
 </li>
-      <li><a href="traits_user_manual/notification.html#index-24">events</a>
+      <li><a href="traits_user_manual/listening.html#index-24">events</a>
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-25">examples</a>
+        <li><a href="traits_user_manual/listening.html#index-25">examples</a>
 </li>
       </ul></li>
       <li>
@@ -948,7 +987,7 @@
     examples
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-23">_any_trait_changed()</a>
+        <li><a href="traits_user_manual/listening.html#index-23">_any_trait_changed()</a>
 </li>
         <li><a href="traits_user_manual/advanced.html#index-47">add_class_trait()</a>
 </li>
@@ -964,13 +1003,13 @@
 </li>
         <li><a href="traits_user_manual/advanced.html#index-9">Disallow object</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-4">dynamic notification</a>
+        <li><a href="traits_user_manual/listening.html#index-4">dynamic notification</a>
 </li>
-        <li><a href="traits_user_manual/defining.html#index-29">Either trait</a>
+        <li><a href="traits_user_manual/defining.html#index-35">Either trait</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-25">events</a>
+        <li><a href="traits_user_manual/listening.html#index-25">events</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-16">handlers</a>
+        <li><a href="traits_user_manual/listening.html#index-16">handlers</a>
 </li>
         <li><a href="traits_user_manual/advanced.html#index-17">interface definition</a>
 </li>
@@ -978,9 +1017,11 @@
 </li>
         <li><a href="traits_user_manual/advanced.html#index-20">interface usage</a>
 </li>
-        <li><a href="traits_user_manual/defining.html#index-31">list of values</a>
+        <li><a href="traits_user_manual/defining.html#index-39">list of values</a>
 </li>
-        <li><a href="traits_user_manual/defining.html#index-44">metadata attributes</a>
+        <li><a href="traits_user_manual/defining.html#index-29">Map trait</a>
+</li>
+        <li><a href="traits_user_manual/defining.html#index-52">metadata attributes</a>
 </li>
         <li><a href="traits_user_manual/defining.html#index-3">minimal</a>
 </li>
@@ -988,13 +1029,17 @@
 </li>
         <li><a href="traits_user_manual/advanced.html#index-15">per-object trait attributes</a>
 </li>
+        <li><a href="traits_user_manual/defining.html#index-33">PrefixList trait</a>
+</li>
+        <li><a href="traits_user_manual/defining.html#index-31">PrefixMap trait</a>
+</li>
         <li><a href="traits_user_manual/deferring.html#index-6">prototype prefix</a>
 </li>
         <li><a href="traits_user_manual/deferring.html#index-6">prototyping</a>
 </li>
         <li><a href="traits_user_manual/advanced.html#index-27">registering adapters</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-23">static notification</a>
+        <li><a href="traits_user_manual/listening.html#index-23">static notification</a>
 </li>
         <li><a href="traits_user_manual/custom.html#index-2">subclassing traits</a>
 </li>
@@ -1009,6 +1054,8 @@
         <li><a href="traits_user_manual/intro.html#index-5">Traits features</a>
 </li>
         <li><a href="traits_user_manual/advanced.html#index-37">transient metadata</a>
+</li>
+        <li><a href="traits_user_manual/defining.html#index-37">Union trait</a>
 </li>
         <li><a href="traits_user_manual/advanced.html#index-7">wildcard</a>
 </li>
@@ -1037,17 +1084,21 @@
 </li>
       <li><a href="traits_user_manual/defining.html#index-19">Expression()</a>
 </li>
-      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.extend">extend() (traits.trait_list_object.TraitListObject method)</a>
+      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList.extend">extend() (traits.trait_list_object.TraitList method)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.extend">(traits.trait_list_object.TraitListObject method)</a>
 </li>
+      </ul></li>
       <li>
     extended trait names
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-8">examples</a>
+        <li><a href="traits_user_manual/listening.html#index-8">examples</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-7">semantics</a>
+        <li><a href="traits_user_manual/listening.html#index-7">semantics</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-6">syntax</a>
+        <li><a href="traits_user_manual/listening.html#index-6">syntax</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/trait_notifiers.html#traits.trait_notifiers.ExtendedTraitChangeNotifyWrapper">ExtendedTraitChangeNotifyWrapper (class in traits.trait_notifiers)</a>
@@ -1074,8 +1125,6 @@
 
       <ul>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Bytes.fast_validate">(traits.trait_types.Bytes attribute)</a>
-</li>
-        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Callable.fast_validate">(traits.trait_types.Callable attribute)</a>
 </li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.CBool.fast_validate">(traits.trait_types.CBool attribute)</a>
 </li>
@@ -1118,10 +1167,10 @@
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.File.filter">(traits.trait_types.File attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.BaseClass.find_class">find_class() (traits.trait_types.BaseClass method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="traits_api_reference/traits.util.html#traits.util.resource.find_resource">find_resource() (in module traits.util.resource)</a>
 </li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Float">Float (class in traits.trait_types)</a>
@@ -1132,9 +1181,7 @@
 </li>
       <li><a href="traits_user_manual/defining.html#index-10">floating point number type</a>
 </li>
-      <li><a href="traits_api_reference/traits.html#traits.traits.Font">Font (in module traits.traits)</a>
-</li>
-      <li><a href="traits_user_manual/defining.html#index-19">Font()</a>
+      <li><a href="traits_api_reference/traits.html#traits.traits.Font">Font() (in module traits.traits)</a>
 </li>
       <li><a href="traits_api_reference/traits.html#traits.traits.ForwardProperty">ForwardProperty (class in traits.traits)</a>
 </li>
@@ -1146,6 +1193,12 @@
         <li><a href="traits_api_reference/ctrait.html#traits.ctrait.CTrait.full_info">(traits.ctrait.CTrait method)</a>
 </li>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitCompound.full_info">(traits.trait_handlers.TraitCompound method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitDict.full_info">(traits.trait_handlers.TraitDict method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitList.full_info">(traits.trait_handlers.TraitList method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitTuple.full_info">(traits.trait_handlers.TraitTuple method)</a>
 </li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.BaseEnum.full_info">(traits.trait_types.BaseEnum method)</a>
 </li>
@@ -1213,13 +1266,25 @@
 </li>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitCompound.get_editor">(traits.trait_handlers.TraitCompound method)</a>
 </li>
+        <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitDict.get_editor">(traits.trait_handlers.TraitDict method)</a>
+</li>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitEnum.get_editor">(traits.trait_handlers.TraitEnum method)</a>
 </li>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitInstance.get_editor">(traits.trait_handlers.TraitInstance method)</a>
 </li>
+        <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitList.get_editor">(traits.trait_handlers.TraitList method)</a>
+</li>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitMap.get_editor">(traits.trait_handlers.TraitMap method)</a>
 </li>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitPrefixList.get_editor">(traits.trait_handlers.TraitPrefixList method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitTuple.get_editor">(traits.trait_handlers.TraitTuple method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Map.get_editor">(traits.trait_types.Map method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.PrefixMap.get_editor">(traits.trait_types.PrefixMap method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Union.get_editor">(traits.trait_types.Union method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1266,6 +1331,12 @@
 </li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.handle_error">handle_error() (traits.traits_listener.ListenerItem method)</a>
 </li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.exception_handling.handle_exception">handle_exception() (in module traits.observation.exception_handling)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.exception_handling.ObserverExceptionHandlerStack.handle_exception">(traits.observation.exception_handling.ObserverExceptionHandlerStack method)</a>
+</li>
+      </ul></li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerBase.handle_list">handle_list() (traits.traits_listener.ListenerBase method)</a>
 
       <ul>
@@ -1286,7 +1357,7 @@
     handler
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-10">signatures</a>
+        <li><a href="traits_user_manual/listening.html#index-10">signatures</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/ctraits.html#traits.ctraits.cTrait.handler">handler (traits.ctraits.cTrait attribute)</a>
@@ -1308,19 +1379,21 @@
         <li><a href="traits_user_manual/custom.html#index-28">custom</a>
 </li>
       </ul></li>
-      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitCompound.handlers">handlers (traits.trait_handlers.TraitCompound attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitCompound.handlers">handlers (traits.trait_handlers.TraitCompound attribute)</a>
+</li>
       <li><a href="traits_api_reference/trait_base.html#traits.trait_base.HandleWeakRef">HandleWeakRef (class in traits.trait_base)</a>
 
       <ul>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.HandleWeakRef">(class in traits.trait_types)</a>
 </li>
       </ul></li>
-      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.has_items">has_items (in module traits.trait_handlers)</a>, <a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.has_items">[1]</a>
+      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitDict.has_items">has_items (traits.trait_handlers.TraitDict attribute)</a>
 
       <ul>
+        <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitList.has_items">(traits.trait_handlers.TraitList attribute)</a>
+</li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Dict.has_items">(traits.trait_types.Dict attribute)</a>
 </li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.List.has_items">(traits.trait_types.List attribute)</a>
@@ -1396,9 +1469,11 @@
       </ul></li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.indent">indent() (in module traits.traits_listener)</a>
 </li>
-      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListEvent.index">index (traits.trait_list_object.TraitListEvent attribute)</a>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.ListChangeEvent.index">index (traits.observation.events.ListChangeEvent attribute)</a>
 
       <ul>
+        <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListEvent.index">(traits.trait_list_object.TraitListEvent attribute)</a>
+</li>
         <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.index">(traits.traits_listener.ListenerParser attribute)</a>
 </li>
       </ul></li>
@@ -1429,11 +1504,19 @@
 </li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.BaseInstance.info">(traits.trait_types.BaseInstance method)</a>
 </li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Map.info">(traits.trait_types.Map method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.PrefixList.info">(traits.trait_types.PrefixList method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.PrefixMap.info">(traits.trait_types.PrefixMap method)</a>
+</li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.String.info">(traits.trait_types.String method)</a>
 </li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.This.info">(traits.trait_types.This method)</a>
 </li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Type.info">(traits.trait_types.Type method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Union.info">(traits.trait_types.Union method)</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Any.info_text">info_text (traits.trait_types.Any attribute)</a>
@@ -1506,7 +1589,7 @@
         <li><a href="traits_user_manual/advanced.html#index-0">dynamic</a>
 </li>
       </ul></li>
-      <li><a href="traits_user_manual/defining.html#index-36">inner_traits metadata attribute</a>
+      <li><a href="traits_user_manual/defining.html#index-44">inner_traits metadata attribute</a>
 </li>
       <li><a href="traits_api_reference/base_trait_handler.html#traits.base_trait_handler.BaseTraitHandler.inner_traits">inner_traits() (traits.base_trait_handler.BaseTraitHandler method)</a>
 
@@ -1517,9 +1600,15 @@
 </li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Set.inner_traits">(traits.trait_types.Set method)</a>
 </li>
-      </ul></li>
-      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.insert">insert() (traits.trait_list_object.TraitListObject method)</a>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Union.inner_traits">(traits.trait_types.Union method)</a>
 </li>
+      </ul></li>
+      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList.insert">insert() (traits.trait_list_object.TraitList method)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.insert">(traits.trait_list_object.TraitListObject method)</a>
+</li>
+      </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Instance">Instance (class in traits.trait_types)</a>
 </li>
       <li><a href="traits_user_manual/defining.html#index-20">Instance()</a>
@@ -1552,7 +1641,9 @@
         <li><a href="traits_user_manual/advanced.html#index-20">using</a>
 </li>
       </ul></li>
-      <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.intersection_update">intersection_update() (traits.trait_set_object.TraitSetObject method)</a>
+      <li><a href="traits_user_manual/internals.html#index-0">internals</a>
+</li>
+      <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.intersection_update">intersection_update() (traits.trait_set_object.TraitSet method)</a>
 </li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.is_any_trait">is_any_trait (traits.traits_listener.ListenerItem attribute)</a>
 </li>
@@ -1580,7 +1671,7 @@
 </li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.ISerializable">ISerializable (class in traits.has_traits)</a>
 </li>
-      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.item_trait">item_trait (in module traits.trait_handlers)</a>
+      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitList.item_trait">item_trait (traits.trait_handlers.TraitList attribute)</a>
 
       <ul>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.List.item_trait">(traits.trait_types.List attribute)</a>
@@ -1588,18 +1679,34 @@
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Set.item_trait">(traits.trait_types.Set attribute)</a>
 </li>
       </ul></li>
+      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList.item_validator">item_validator (traits.trait_list_object.TraitList attribute)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.item_validator">(traits.trait_set_object.TraitSet attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.join">join() (in module traits.observation.expression)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.key_trait">key_trait (in module traits.trait_handlers)</a>
+      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitDict.key_trait">key_trait (traits.trait_handlers.TraitDict attribute)</a>
 
       <ul>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Dict.key_trait">(traits.trait_types.Dict attribute)</a>
 </li>
       </ul></li>
+      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.key_validator">key_validator (traits.trait_dict_object.TraitDict attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.BaseClass.klass">klass (traits.trait_types.BaseClass attribute)</a>
@@ -1620,7 +1727,7 @@
     label
 
       <ul>
-        <li><a href="traits_user_manual/defining.html#index-41">metadata attribute</a>
+        <li><a href="traits_user_manual/defining.html#index-49">metadata attribute</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Button.label">label (traits.trait_types.Button attribute)</a>
@@ -1629,8 +1736,6 @@
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.ToolbarButton.label">(traits.trait_types.ToolbarButton attribute)</a>
 </li>
       </ul></li>
-      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.len_error">len_error() (traits.trait_list_object.TraitListObject method)</a>
-</li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.len_text">len_text (traits.traits_listener.ListenerParser attribute)</a>
 </li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.List">List (class in traits.trait_types)</a>
@@ -1639,7 +1744,15 @@
 </li>
       <li><a href="traits_api_reference/editor_factories.html#traits.editor_factories.list_editor">list_editor() (in module traits.editor_factories)</a>
 </li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.list_items">list_items() (in module traits.observation.expression)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.list_items">(traits.observation.expression.ObserverExpression method)</a>
+</li>
+      </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.ListBool">ListBool (in module traits.trait_types)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.ListChangeEvent">ListChangeEvent (class in traits.observation.events)</a>
 </li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.ListComplex">ListComplex (in module traits.trait_types)</a>
 </li>
@@ -1647,14 +1760,14 @@
 </li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.listener">listener (traits.traits_listener.ListenerParser attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerHandler.listener_deleted">listener_deleted() (traits.traits_listener.ListenerHandler method)</a>
 
       <ul>
         <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerNotifyWrapper.listener_deleted">(traits.traits_listener.ListenerNotifyWrapper method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerBase">ListenerBase (class in traits.traits_listener)</a>
 </li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerGroup">ListenerGroup (class in traits.traits_listener)</a>
@@ -1689,10 +1802,22 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Map">Map (class in traits.trait_types)</a>
+</li>
       <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitMap.map">map (traits.trait_handlers.TraitMap attribute)</a>
 
       <ul>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitPrefixMap.map">(traits.trait_handlers.TraitPrefixMap attribute)</a>
+</li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Map.map">(traits.trait_types.Map attribute)</a>
+</li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.PrefixMap.map">(traits.trait_types.PrefixMap attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="traits_user_manual/defining.html#index-28">Map trait</a>
+
+      <ul>
+        <li><a href="traits_user_manual/defining.html#index-29">examples</a>
 </li>
       </ul></li>
       <li><a href="traits_user_manual/custom.html#index-19">mapped traits</a>
@@ -1708,8 +1833,18 @@
       <ul>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Expression.mapped_value">(traits.trait_types.Expression method)</a>
 </li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Map.mapped_value">(traits.trait_types.Map method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.PrefixMap.mapped_value">(traits.trait_types.PrefixMap method)</a>
+</li>
       </ul></li>
-      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.maxlen">maxlen (in module traits.trait_handlers)</a>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.match">match() (in module traits.observation.expression)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.match">(traits.observation.expression.ObserverExpression method)</a>
+</li>
+      </ul></li>
+      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitList.maxlen">maxlen (traits.trait_handlers.TraitList attribute)</a>
 
       <ul>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.List.maxlen">(traits.trait_types.List attribute)</a>
@@ -1739,23 +1874,29 @@
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.PythonValue.metadata">(traits.trait_types.PythonValue attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     metadata attributes
 
       <ul>
-        <li><a href="traits_user_manual/defining.html#index-43">accessing</a>
+        <li><a href="traits_user_manual/defining.html#index-51">accessing</a>
 </li>
-        <li><a href="traits_user_manual/defining.html#index-44">examples</a>
+        <li><a href="traits_user_manual/defining.html#index-52">examples</a>
 </li>
-        <li><a href="traits_user_manual/defining.html#index-33">internal</a>
+        <li><a href="traits_user_manual/defining.html#index-41">internal</a>
 </li>
-        <li><a href="traits_user_manual/defining.html#index-32">on traits</a>
+        <li><a href="traits_user_manual/defining.html#index-40">on traits</a>
 </li>
-        <li><a href="traits_user_manual/defining.html#index-39">recognized</a>
+        <li><a href="traits_user_manual/defining.html#index-47">recognized</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.metadata">metadata() (in module traits.observation.expression)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.metadata">(traits.observation.expression.ObserverExpression method)</a>
+</li>
+      </ul></li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.metadata_defined">metadata_defined (traits.traits_listener.ListenerItem attribute)</a>
 </li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.metadata_name">metadata_name (traits.traits_listener.ListenerItem attribute)</a>
@@ -1768,7 +1909,7 @@
 </li>
       <li><a href="traits_user_manual/defining.html#index-20">Method()</a>
 </li>
-      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.minlen">minlen (in module traits.trait_handlers)</a>
+      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitList.minlen">minlen (traits.trait_handlers.TraitList attribute)</a>
 
       <ul>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.List.minlen">(traits.trait_types.List attribute)</a>
@@ -1798,7 +1939,7 @@
 </li>
       <li><a href="traits_api_reference/editor_factories.html#traits.editor_factories.multi_line_text_editor">multi_line_text_editor() (in module traits.editor_factories)</a>
 </li>
-      <li><a href="traits_user_manual/defining.html#index-30">multiple values</a>
+      <li><a href="traits_user_manual/defining.html#index-38">multiple values</a>
 </li>
       <li><a href="traits_api_reference/traits.util.html#traits.util.event_tracer.MultiThreadChangeEventRecorder">MultiThreadChangeEventRecorder (class in traits.util.event_tracer)</a>
 </li>
@@ -1810,9 +1951,11 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.name">name (traits.trait_dict_object.TraitDictObject attribute)</a>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.TraitChangeEvent.name">name (traits.observation.events.TraitChangeEvent attribute)</a>
 
       <ul>
+        <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.name">(traits.trait_dict_object.TraitDictObject attribute)</a>
+</li>
         <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.name">(traits.trait_list_object.TraitListObject attribute)</a>
 </li>
         <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.name">(traits.trait_set_object.TraitSetObject attribute)</a>
@@ -1832,24 +1975,22 @@
     name parameter
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-12">notification handlers</a>
+        <li><a href="traits_user_manual/listening.html#index-12">notification handlers</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-5">on_trait_change()</a>
+        <li><a href="traits_user_manual/listening.html#index-5">on_trait_change()</a>
 </li>
         <li><a href="traits_user_manual/custom.html#index-4">validate()</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.name_items">name_items (traits.trait_dict_object.TraitDictObject attribute)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.TraitChangeEvent.new">new (traits.observation.events.TraitChangeEvent attribute)</a>
 
       <ul>
-        <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.name_items">(traits.trait_list_object.TraitListObject attribute)</a>
-</li>
-        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.name_items">(traits.trait_set_object.TraitSetObject attribute)</a>
+        <li><a href="traits_api_reference/traits.util.html#traits.util.event_tracer.ChangeMessageRecord.new">(traits.util.event_tracer.ChangeMessageRecord attribute)</a>
 </li>
       </ul></li>
-      <li><a href="traits_api_reference/traits.util.html#traits.util.event_tracer.ChangeMessageRecord.new">new (traits.util.event_tracer.ChangeMessageRecord attribute)</a>
-</li>
-      <li><a href="traits_user_manual/notification.html#index-13">new parameter to the notification handlers</a>
+      <li><a href="traits_user_manual/listening.html#index-13">new parameter to the notification handlers</a>
 </li>
       <li><a href="traits_api_reference/trait_notifiers.html#traits.trait_notifiers.NewTraitChangeNotifyWrapper">NewTraitChangeNotifyWrapper (class in traits.trait_notifiers)</a>
 </li>
@@ -1861,14 +2002,14 @@
         <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.next">(traits.traits_listener.ListenerParser attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.no_adapter_necessary">no_adapter_necessary() (in module traits.adaptation.adaptation_manager)</a>
 </li>
       <li><a href="traits_api_reference/constants.html#traits.constants.NO_COMPARE">NO_COMPARE (in module traits.constants)</a>
 </li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.BaseTuple.no_type_check">no_type_check (traits.trait_types.BaseTuple attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="traits_api_reference/trait_type.html#traits.trait_type.NoDefaultSpecified">NoDefaultSpecified (in module traits.trait_type)</a>
 </li>
       <li><a href="traits_api_reference/trait_base.html#traits.trait_base.not_event">not_event() (in module traits.trait_base)</a>
@@ -1884,25 +2025,49 @@
       <li><a href="traits_user_manual/intro.html#index-3">notification</a>
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-1">dynamic</a>, <a href="traits_user_manual/notification.html#index-9">[1]</a>
+        <li><a href="traits_user_manual/listening.html#index-1">dynamic</a>, <a href="traits_user_manual/listening.html#index-9">[1]</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-15">special cases</a>
+        <li><a href="traits_user_manual/listening.html#index-15">special cases</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-21">specially-named handlers</a>
+        <li><a href="traits_user_manual/listening.html#index-21">specially-named handlers</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-17">static</a>
+        <li><a href="traits_user_manual/listening.html#index-17">static</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-0">strategies</a>
+        <li><a href="traits_user_manual/listening.html#index-0">strategies</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/trait_notifiers.html#traits.trait_notifiers.NotificationExceptionHandler">NotificationExceptionHandler (class in traits.trait_notifiers)</a>
 </li>
       <li><a href="traits_api_reference/trait_notifiers.html#traits.trait_notifiers.NotificationExceptionHandlerState">NotificationExceptionHandlerState (class in traits.trait_notifiers)</a>
 </li>
+      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.notifier">notifier() (traits.trait_dict_object.TraitDictObject method)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.notifier">(traits.trait_list_object.TraitListObject method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.notifier">(traits.trait_set_object.TraitSetObject method)</a>
+</li>
+      </ul></li>
+      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.notifiers">notifiers (traits.trait_dict_object.TraitDict attribute)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList.notifiers">(traits.trait_list_object.TraitList attribute)</a>
+</li>
+        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.notifiers">(traits.trait_set_object.TraitSet attribute)</a>
+</li>
+      </ul></li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerGroup.notify">notify (traits.traits_listener.ListenerGroup attribute)</a>
 
       <ul>
         <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.notify">(traits.traits_listener.ListenerItem attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.notify">notify() (traits.trait_dict_object.TraitDict method)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList.notify">(traits.trait_list_object.TraitList method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.notify">(traits.trait_set_object.TraitSet method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1911,9 +2076,17 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.object">object (traits.trait_dict_object.TraitDictObject attribute)</a>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.DictChangeEvent.object">object (traits.observation.events.DictChangeEvent attribute)</a>
 
       <ul>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.ListChangeEvent.object">(traits.observation.events.ListChangeEvent attribute)</a>
+</li>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.SetChangeEvent.object">(traits.observation.events.SetChangeEvent attribute)</a>
+</li>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.TraitChangeEvent.object">(traits.observation.events.TraitChangeEvent attribute)</a>
+</li>
+        <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.object">(traits.trait_dict_object.TraitDictObject attribute)</a>
+</li>
         <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.object">(traits.trait_list_object.TraitListObject attribute)</a>
 </li>
         <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.object">(traits.trait_set_object.TraitSetObject attribute)</a>
@@ -1923,7 +2096,7 @@
     object parameter
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-11">notification handlers</a>
+        <li><a href="traits_user_manual/listening.html#index-11">notification handlers</a>
 </li>
         <li><a href="traits_user_manual/custom.html#index-4">validate()</a>
 </li>
@@ -1932,26 +2105,42 @@
 </li>
       <li><a href="traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.objtype">objtype (traits.util.trait_documenter.TraitDocumenter attribute)</a>
 </li>
-      <li><a href="traits_api_reference/traits.util.html#traits.util.event_tracer.ChangeMessageRecord.old">old (traits.util.event_tracer.ChangeMessageRecord attribute)</a>
+      <li><a href="traits_api_reference/has_traits.html#traits.has_traits.observe">observe() (in module traits.has_traits)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.observe">(traits.has_traits.HasTraits method)</a>
 </li>
-      <li><a href="traits_user_manual/notification.html#index-14">old parameter to the notification handlers</a>
+      </ul></li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.exception_handling.ObserverExceptionHandler">ObserverExceptionHandler (class in traits.observation.exception_handling)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.exception_handling.ObserverExceptionHandlerStack">ObserverExceptionHandlerStack (class in traits.observation.exception_handling)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression">ObserverExpression (class in traits.observation.expression)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.TraitChangeEvent.old">old (traits.observation.events.TraitChangeEvent attribute)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/traits.util.html#traits.util.event_tracer.ChangeMessageRecord.old">(traits.util.event_tracer.ChangeMessageRecord attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="traits_user_manual/listening.html#index-14">old parameter to the notification handlers</a>
 </li>
       <li>
     on_trait_change
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-18">decorator</a>
+        <li><a href="traits_user_manual/listening.html#index-18">decorator</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-2">method</a>
+        <li><a href="traits_user_manual/listening.html#index-2">method</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-20">semantics</a>
+        <li><a href="traits_user_manual/listening.html#index-20">semantics</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-19">syntax</a>
+        <li><a href="traits_user_manual/listening.html#index-19">syntax</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="traits_user_manual/notification.html#on_trait_change">on_trait_change()</a>
+      <li><a href="traits_user_manual/listening.html#on_trait_change">on_trait_change()</a>
 
       <ul>
         <li><a href="traits_api_reference/has_traits.html#traits.has_traits.on_trait_change">(in module traits.has_traits)</a>
@@ -1959,10 +2148,10 @@
         <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.on_trait_change">(traits.has_traits.HasTraits method)</a>
 </li>
       </ul></li>
-      <li><a href="traits_user_manual/notification.html#on_trait_event">on_trait_event()</a>
+      <li><a href="traits_user_manual/listening.html#on_trait_event">on_trait_event()</a>
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-3">method</a>
+        <li><a href="traits_user_manual/listening.html#index-3">method</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.on_trait_event">on_trait_event() (traits.has_traits.HasTraits method)</a>
@@ -1990,10 +2179,16 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="traits_user_manual/defining.html#index-36">parent metadata attribute</a>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.ParallelObserverExpression">ParallelObserverExpression (class in traits.observation.expression)</a>
 </li>
-      <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.parse">parse() (traits.traits_listener.ListenerParser method)</a>
+      <li><a href="traits_user_manual/defining.html#index-44">parent metadata attribute</a>
 </li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.parsing.parse">parse() (in module traits.observation.parsing)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.parse">(traits.traits_listener.ListenerParser method)</a>
+</li>
+      </ul></li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.parse_group">parse_group() (traits.traits_listener.ListenerParser method)</a>
 </li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.parse_item">parse_item() (traits.traits_listener.ListenerParser method)</a>
@@ -2014,15 +2209,23 @@
 </li>
       <li><a href="traits_user_manual/advanced.html#index-35">pickling HasTraits objects</a>
 </li>
-      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.pop">pop() (traits.trait_dict_object.TraitDictObject method)</a>
+      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.pop">pop() (traits.trait_dict_object.TraitDict method)</a>
 
       <ul>
+        <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList.pop">(traits.trait_list_object.TraitList method)</a>
+</li>
         <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.pop">(traits.trait_list_object.TraitListObject method)</a>
 </li>
-        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.pop">(traits.trait_set_object.TraitSetObject method)</a>
+        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.pop">(traits.trait_set_object.TraitSet method)</a>
 </li>
       </ul></li>
-      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.popitem">popitem() (traits.trait_dict_object.TraitDictObject method)</a>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.exception_handling.pop_exception_handler">pop_exception_handler() (in module traits.observation.exception_handling)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.exception_handling.ObserverExceptionHandlerStack.pop_exception_handler">(traits.observation.exception_handling.ObserverExceptionHandlerStack method)</a>
+</li>
+      </ul></li>
+      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.popitem">popitem() (traits.trait_dict_object.TraitDict method)</a>
 </li>
       <li><a href="traits_api_reference/ctraits.html#traits.ctraits.cTrait.post_setattr">post_setattr (traits.ctraits.cTrait attribute)</a>
 </li>
@@ -2052,14 +2255,30 @@
 </li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Delegate.prefix">prefix (traits.trait_types.Delegate attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="traits_user_manual/defining.html#index-37">prefix metadata attribute</a>
+      <li><a href="traits_user_manual/defining.html#index-45">prefix metadata attribute</a>
 </li>
       <li><a href="traits_user_manual/deferring.html#index-5">prefix parameter to initializer methods</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Delegate.prefix_type">prefix_type (traits.trait_types.Delegate attribute)</a>
 </li>
+      <li><a href="traits_api_reference/trait_types.html#traits.trait_types.PrefixList">PrefixList (class in traits.trait_types)</a>
+</li>
+      <li><a href="traits_user_manual/defining.html#index-32">PrefixList trait</a>
+
+      <ul>
+        <li><a href="traits_user_manual/defining.html#index-33">examples</a>
+</li>
+      </ul></li>
+      <li><a href="traits_api_reference/trait_types.html#traits.trait_types.PrefixMap">PrefixMap (class in traits.trait_types)</a>
+</li>
+      <li><a href="traits_user_manual/defining.html#index-30">PrefixMap trait</a>
+
+      <ul>
+        <li><a href="traits_user_manual/defining.html#index-31">examples</a>
+</li>
+      </ul></li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.print_traits">print_traits() (traits.has_traits.HasTraits method)</a>
 </li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerGroup.priority">priority (traits.traits_listener.ListenerGroup attribute)</a>
@@ -2070,8 +2289,6 @@
         <li><a href="traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter.priority">(traits.util.trait_documenter.TraitDocumenter attribute)</a>
 </li>
       </ul></li>
-      <li><a href="traits_api_reference/traits.html#traits.traits.Property">Property (in module traits.traits)</a>
-</li>
       <li><a href="traits_user_manual/advanced.html#index-30">property traits</a>
 
       <ul>
@@ -2083,10 +2300,12 @@
       <ul>
         <li><a href="traits_user_manual/advanced.html#traits.adaptation.api.Property">(in module traits.adaptation.api)</a>
 </li>
-      </ul></li>
-      <li><a href="traits_api_reference/ctraits.html#traits.ctraits.cTrait.property">property() (traits.ctraits.cTrait method)</a>
+        <li><a href="traits_api_reference/traits.html#traits.traits.Property">(in module traits.traits)</a>
 </li>
+      </ul></li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.property_depends_on">property_depends_on() (in module traits.has_traits)</a>
+</li>
+      <li><a href="traits_api_reference/ctrait.html#traits.ctrait.CTrait.property_fields">property_fields() (traits.ctrait.CTrait property)</a>
 </li>
       <li><a href="traits_user_manual/deferring.html#index-4">prototype parameter to PrototypesFrom</a>
 </li>
@@ -2112,6 +2331,12 @@
       </ul></li>
       <li><a href="traits_api_reference/traits.adaptation.html#traits.adaptation.adapter.PurePythonAdapter">PurePythonAdapter (class in traits.adaptation.adapter)</a>
 </li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.exception_handling.push_exception_handler">push_exception_handler() (in module traits.observation.exception_handling)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.exception_handling.ObserverExceptionHandlerStack.push_exception_handler">(traits.observation.exception_handling.ObserverExceptionHandlerStack method)</a>
+</li>
+      </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Python">Python (class in traits.trait_types)</a>
 </li>
       <li><a href="traits_user_manual/defining.html#index-21">Python()</a>
@@ -2136,7 +2361,7 @@
 </li>
       <li><a href="traits_user_manual/defining.html#index-22">ReadOnly()</a>
 </li>
-      <li><a href="traits_user_manual/defining.html#index-39">recognized metadata attributes</a>
+      <li><a href="traits_user_manual/defining.html#index-47">recognized metadata attributes</a>
 </li>
       <li><a href="traits_api_reference/traits.util.html#traits.util.event_tracer.RecordContainer.record">record() (traits.util.event_tracer.RecordContainer method)</a>
 </li>
@@ -2183,21 +2408,31 @@
         <li><a href="traits_user_manual/advanced.html#index-26">adapters</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.remove">remove() (traits.trait_list_object.TraitListObject method)</a>
+      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList.remove">remove() (traits.trait_list_object.TraitList method)</a>
 
       <ul>
-        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.remove">(traits.trait_set_object.TraitSetObject method)</a>
+        <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.remove">(traits.trait_list_object.TraitListObject method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.remove">(traits.trait_set_object.TraitSet method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.MetaHasTraits.remove_listener">remove_listener() (traits.has_traits.MetaHasTraits class method)</a>
 </li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.remove_trait">remove_trait() (traits.has_traits.HasTraits method)</a>
 </li>
-      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictEvent.removed">removed (traits.trait_dict_object.TraitDictEvent attribute)</a>
+      <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.remove_trait_listener">remove_trait_listener() (traits.has_traits.HasTraits method)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.DictChangeEvent.removed">removed (traits.observation.events.DictChangeEvent attribute)</a>
 
       <ul>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.ListChangeEvent.removed">(traits.observation.events.ListChangeEvent attribute)</a>
+</li>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.SetChangeEvent.removed">(traits.observation.events.SetChangeEvent attribute)</a>
+</li>
+        <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictEvent.removed">(traits.trait_dict_object.TraitDictEvent attribute)</a>
+</li>
         <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListEvent.removed">(traits.trait_list_object.TraitListEvent attribute)</a>
 </li>
         <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetEvent.removed">(traits.trait_set_object.TraitSetEvent attribute)</a>
@@ -2228,13 +2463,11 @@
       </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Type.resolve_default_value">resolve_default_value() (traits.trait_types.Type method)</a>
 </li>
-      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.reverse">reverse() (traits.trait_list_object.TraitListObject method)</a>
+      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList.reverse">reverse() (traits.trait_list_object.TraitList method)</a>
 </li>
       <li><a href="traits_api_reference/traits.testing.html#traits.testing.unittest_tools.reverse_assertion">reverse_assertion() (in module traits.testing.unittest_tools)</a>
 </li>
-      <li><a href="traits_api_reference/traits.html#traits.traits.RGBColor">RGBColor (in module traits.traits)</a>
-</li>
-      <li><a href="traits_user_manual/defining.html#index-23">RGBColor()</a>
+      <li><a href="traits_api_reference/traits.html#traits.traits.RGBColor">RGBColor() (in module traits.traits)</a>
 </li>
       <li><a href="traits_api_reference/constants.html#traits.constants.RICH_COMPARE">RICH_COMPARE (in module traits.constants)</a>
 </li>
@@ -2258,12 +2491,14 @@
     semantics
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-7">extended trait names</a>
+        <li><a href="traits_user_manual/listening.html#index-7">extended trait names</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-20">on_trait_change</a>
+        <li><a href="traits_user_manual/listening.html#index-20">on_trait_change</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/traits.util.html#traits.util.event_tracer.SentinelRecord">SentinelRecord (class in traits.util.event_tracer)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.SeriesObserverExpression">SeriesObserverExpression (class in traits.observation.expression)</a>
 </li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Set">Set (class in traits.trait_types)</a>
 </li>
@@ -2279,6 +2514,12 @@
 </li>
       <li><a href="traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.set_global_adaptation_manager">set_global_adaptation_manager() (in module traits.adaptation.adaptation_manager)</a>
 </li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.set_items">set_items() (in module traits.observation.expression)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.set_items">(traits.observation.expression.ObserverExpression method)</a>
+</li>
+      </ul></li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.set_trait_dispatch_handler">set_trait_dispatch_handler() (traits.has_traits.HasTraits class method)</a>
 </li>
       <li><a href="traits_api_reference/trait_notifiers.html#traits.trait_notifiers.set_ui_handler">set_ui_handler() (in module traits.trait_notifiers)</a>
@@ -2289,7 +2530,9 @@
 </li>
       <li><a href="traits_api_reference/ctraits.html#traits.ctraits.cTrait.setattr_original_value">setattr_original_value (traits.ctraits.cTrait attribute)</a>
 </li>
-      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.setdefault">setdefault() (traits.trait_dict_object.TraitDictObject method)</a>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.SetChangeEvent">SetChangeEvent (class in traits.observation.events)</a>
+</li>
+      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.setdefault">setdefault() (traits.trait_dict_object.TraitDict method)</a>
 </li>
       <li><a href="traits_api_reference/traits.util.html#traits.util.trait_documenter.setup">setup() (in module traits.util.trait_documenter)</a>
 </li>
@@ -2299,19 +2542,21 @@
 </li>
       <li><a href="traits_user_manual/defining.html#index-6">simple types</a>
 </li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.SingleObserverExpression">SingleObserverExpression (class in traits.observation.expression)</a>
+</li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.SingletonHasPrivateTraits">SingletonHasPrivateTraits (class in traits.has_traits)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.SingletonHasStrictTraits">SingletonHasStrictTraits (class in traits.has_traits)</a>
 </li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.SingletonHasTraits">SingletonHasTraits (class in traits.has_traits)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="traits_api_reference/traits.testing.html#traits.testing.nose_tools.skip">skip() (in module traits.testing.nose_tools)</a>
 </li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.skip_ws">skip_ws (traits.traits_listener.ListenerParser attribute)</a>
 </li>
-      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.sort">sort() (traits.trait_list_object.TraitListObject method)</a>
+      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList.sort">sort() (traits.trait_list_object.TraitList method)</a>
 </li>
       <li><a href="traits_api_reference/traits.util.html#traits.util.event_tracer.CallingMessageRecord.source">source (traits.util.event_tracer.CallingMessageRecord attribute)</a>
 </li>
@@ -2319,7 +2564,7 @@
     static notification
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-23">examples</a>
+        <li><a href="traits_user_manual/listening.html#index-23">examples</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/trait_notifiers.html#traits.trait_notifiers.StaticAnyTraitChangeNotifyWrapper">StaticAnyTraitChangeNotifyWrapper (class in traits.trait_notifiers)</a>
@@ -2367,7 +2612,7 @@
       </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Symbol">Symbol (class in traits.trait_types)</a>
 </li>
-      <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.symmetric_difference_update">symmetric_difference_update() (traits.trait_set_object.TraitSetObject method)</a>
+      <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.symmetric_difference_update">symmetric_difference_update() (traits.trait_set_object.TraitSet method)</a>
 </li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.sync_trait">sync_trait() (traits.has_traits.HasTraits method)</a>
 </li>
@@ -2375,9 +2620,9 @@
     syntax
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-6">extended trait names</a>
+        <li><a href="traits_user_manual/listening.html#index-6">extended trait names</a>
 </li>
-        <li><a href="traits_user_manual/notification.html#index-19">on_trait_change</a>
+        <li><a href="traits_user_manual/listening.html#index-19">on_trait_change</a>
 </li>
       </ul></li>
   </ul></td>
@@ -2391,6 +2636,8 @@
       <li><a href="traits_user_manual/testing.html#index-0">testing</a>
 </li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerParser.text">text (traits.traits_listener.ListenerParser attribute)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.then">then() (traits.observation.expression.ObserverExpression method)</a>
 </li>
       <li><a href="traits_user_manual/defining.html#index-23">This</a>
 
@@ -2458,7 +2705,7 @@
     trait change handler
 
       <ul>
-        <li><a href="traits_user_manual/notification.html#index-10">signatures</a>
+        <li><a href="traits_user_manual/listening.html#index-10">signatures</a>
 </li>
       </ul></li>
       <li>
@@ -2483,10 +2730,16 @@
         <li><a href="traits_user_manual/custom.html#index-12">parameters</a>
 </li>
       </ul></li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.trait">trait() (in module traits.observation.expression)</a>
+</li>
       <li><a href="traits_api_reference/traits.html#traits.traits.Trait">Trait() (in module traits.traits)</a>
 </li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.trait">trait() (traits.has_traits.HasTraits method)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/traits.observation.html#traits.observation.expression.ObserverExpression.trait">(traits.observation.expression.ObserverExpression method)</a>
 </li>
+      </ul></li>
       <li>
     Trait() function
 
@@ -2524,7 +2777,7 @@
 </li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.trait_subclasses">trait_subclasses() (traits.has_traits.HasTraits class method)</a>
 </li>
-      <li><a href="traits_user_manual/defining.html#index-37">trait_type metadata attribute</a>
+      <li><a href="traits_user_manual/defining.html#index-45">trait_type metadata attribute</a>
 </li>
       <li><a href="traits_api_reference/has_traits.html#traits.has_traits.HasTraits.trait_view">trait_view() (traits.has_traits.HasTraits method)</a>
 </li>
@@ -2534,15 +2787,21 @@
 </li>
       <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitCastType">TraitCastType (class in traits.trait_handlers)</a>
 </li>
+      <li><a href="traits_api_reference/traits.observation.html#traits.observation.events.TraitChangeEvent">TraitChangeEvent (class in traits.observation.events)</a>
+</li>
       <li><a href="traits_api_reference/trait_notifiers.html#traits.trait_notifiers.TraitChangeNotifyWrapper">TraitChangeNotifyWrapper (class in traits.trait_notifiers)</a>
 </li>
       <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitCoerceType">TraitCoerceType (class in traits.trait_handlers)</a>
 </li>
       <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitCompound">TraitCompound (class in traits.trait_handlers)</a>
 </li>
-      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitDict">TraitDict (in module traits.trait_handlers)</a>
+      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict">TraitDict (class in traits.trait_dict_object)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitDict">(class in traits.trait_handlers)</a>
 </li>
-      <li><a href="traits_user_manual/notification.html#index-28">TraitDictEvent</a>, <a href="traits_user_manual/notification.html#index-31">[1]</a>
+      </ul></li>
+      <li><a href="traits_user_manual/listening.html#index-28">TraitDictEvent</a>, <a href="traits_user_manual/listening.html#index-31">[1]</a>
 
       <ul>
         <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictEvent">(class in traits.trait_dict_object)</a>
@@ -2570,9 +2829,13 @@
 </li>
       <li><a href="traits_api_reference/constants.html#traits.constants.TraitKind">TraitKind (in module traits.constants)</a>
 </li>
-      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitList">TraitList (in module traits.trait_handlers)</a>
+      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitList">TraitList (class in traits.trait_handlers)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitList">(class in traits.trait_list_object)</a>
 </li>
-      <li><a href="traits_user_manual/notification.html#index-28">TraitListEvent</a>, <a href="traits_user_manual/notification.html#index-29">[1]</a>
+      </ul></li>
+      <li><a href="traits_user_manual/listening.html#index-28">TraitListEvent</a>, <a href="traits_user_manual/listening.html#index-29">[1]</a>
 
       <ul>
         <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListEvent">(class in traits.trait_list_object)</a>
@@ -2638,6 +2901,18 @@
       <li><a href="traits_api_reference/has_traits.html#module-traits.has_traits">traits.has_traits (module)</a>
 </li>
       <li><a href="traits_api_reference/interface_checker.html#module-traits.interface_checker">traits.interface_checker (module)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#module-traits.observation">traits.observation (module)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#module-traits.observation.api">traits.observation.api (module)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#module-traits.observation.events">traits.observation.events (module)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#module-traits.observation.exception_handling">traits.observation.exception_handling (module)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#module-traits.observation.expression">traits.observation.expression (module)</a>
+</li>
+      <li><a href="traits_api_reference/traits.observation.html#module-traits.observation.parsing">traits.observation.parsing (module)</a>
 </li>
       <li><a href="traits_api_reference/traits.testing.html#module-traits.testing">traits.testing (module)</a>
 </li>
@@ -2709,9 +2984,9 @@
 </li>
       <li><a href="traits_api_reference/ctraits.html#traits.ctraits.CHasTraits.traits_inited">traits_inited() (traits.ctraits.CHasTraits method)</a>
 </li>
-      <li><a href="traits_api_reference/has_traits.html#traits.has_traits.traits_super">traits_super (class in traits.has_traits)</a>
+      <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet">TraitSet (class in traits.trait_set_object)</a>
 </li>
-      <li><a href="traits_user_manual/notification.html#index-28">TraitSetEvent</a>, <a href="traits_user_manual/notification.html#index-30">[1]</a>
+      <li><a href="traits_user_manual/listening.html#index-28">TraitSetEvent</a>, <a href="traits_user_manual/listening.html#index-30">[1]</a>
 
       <ul>
         <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetEvent">(class in traits.trait_set_object)</a>
@@ -2719,7 +2994,7 @@
       </ul></li>
       <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject">TraitSetObject (class in traits.trait_set_object)</a>
 </li>
-      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitTuple">TraitTuple (in module traits.trait_handlers)</a>
+      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitTuple">TraitTuple (class in traits.trait_handlers)</a>
 </li>
       <li><a href="traits_api_reference/trait_type.html#traits.trait_type.TraitType">TraitType (class in traits.trait_type)</a>
 </li>
@@ -2738,7 +3013,7 @@
         <li><a href="traits_user_manual/advanced.html#index-38">predefined traits</a>
 </li>
       </ul></li>
-      <li><a href="traits_user_manual/defining.html#index-42">transient metadata attribute</a>
+      <li><a href="traits_user_manual/defining.html#index-50">transient metadata attribute</a>
 </li>
       <li><a href="traits_user_manual/defining.html#index-24">true</a>
 
@@ -2767,7 +3042,7 @@
         <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.type">(traits.traits_listener.ListenerItem attribute)</a>
 </li>
       </ul></li>
-      <li><a href="traits_user_manual/defining.html#index-38">type metadata attribute</a>
+      <li><a href="traits_user_manual/defining.html#index-46">type metadata attribute</a>
 </li>
       <li><a href="traits_user_manual/defining.html#index-24">Type()</a>
 </li>
@@ -2794,18 +3069,26 @@
 </li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.undefined">undefined (in module traits.trait_types)</a>
 </li>
-      <li><a href="traits_user_manual/notification.html#index-26">Undefined object</a>
+      <li><a href="traits_user_manual/listening.html#index-26">Undefined object</a>
 </li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Unicode">Unicode (in module traits.trait_types)</a>
 </li>
       <li><a href="traits_api_reference/trait_base.html#traits.trait_base.Uninitialized">Uninitialized (in module traits.trait_base)</a>
 </li>
-      <li><a href="traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools">UnittestTools (class in traits.testing.unittest_tools)</a>
+      <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Union">Union (class in traits.trait_types)</a>
 </li>
-      <li><a href="traits_user_manual/advanced.html#index-40">unpickling HasTraits objects</a>
+      <li><a href="traits_user_manual/defining.html#index-36">Union trait</a>
+
+      <ul>
+        <li><a href="traits_user_manual/defining.html#index-37">examples</a>
+</li>
+      </ul></li>
+      <li><a href="traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools">UnittestTools (class in traits.testing.unittest_tools)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="traits_user_manual/advanced.html#index-40">unpickling HasTraits objects</a>
+</li>
       <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerBase.unregister">unregister() (traits.traits_listener.ListenerBase method)</a>
 
       <ul>
@@ -2814,10 +3097,10 @@
         <li><a href="traits_api_reference/traits_listener.html#traits.traits_listener.ListenerItem.unregister">(traits.traits_listener.ListenerItem method)</a>
 </li>
       </ul></li>
-      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.update">update() (traits.trait_dict_object.TraitDictObject method)</a>
+      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.update">update() (traits.trait_dict_object.TraitDict method)</a>
 
       <ul>
-        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.update">(traits.trait_set_object.TraitSetObject method)</a>
+        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSet.update">(traits.trait_set_object.TraitSet method)</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/trait_base.html#traits.trait_base.user_name_for">user_name_for() (in module traits.trait_base)</a>
@@ -2847,17 +3130,23 @@
 </li>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitCompound.validate">(traits.trait_handlers.TraitCompound method)</a>
 </li>
+        <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitDict.validate">(traits.trait_handlers.TraitDict method)</a>
+</li>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitEnum.validate">(traits.trait_handlers.TraitEnum method)</a>
 </li>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitFunction.validate">(traits.trait_handlers.TraitFunction method)</a>
 </li>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitInstance.validate">(traits.trait_handlers.TraitInstance method)</a>
 </li>
+        <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitList.validate">(traits.trait_handlers.TraitList method)</a>
+</li>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitMap.validate">(traits.trait_handlers.TraitMap method)</a>
 </li>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitPrefixList.validate">(traits.trait_handlers.TraitPrefixList method)</a>
 </li>
         <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitPrefixMap.validate">(traits.trait_handlers.TraitPrefixMap method)</a>
+</li>
+        <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitTuple.validate">(traits.trait_handlers.TraitTuple method)</a>
 </li>
         <li><a href="traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray.validate">(traits.trait_numeric.AbstractArray method)</a>
 </li>
@@ -2921,6 +3210,8 @@
 </li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Type.validate">(traits.trait_types.Type method)</a>
 </li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Union.validate">(traits.trait_types.Union method)</a>
+</li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.UUID.validate">(traits.trait_types.UUID method)</a>
 </li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.ValidatedTuple.validate">(traits.trait_types.ValidatedTuple method)</a>
@@ -2950,6 +3241,12 @@
 </li>
       <li><a href="traits_user_manual/defining.html#index-0">validation</a>, <a href="traits_user_manual/intro.html#index-1">[1]</a>
 </li>
+      <li><a href="traits_api_reference/trait_list_object.html#traits.trait_list_object.TraitListObject.value">value (traits.trait_list_object.TraitListObject attribute)</a>
+
+      <ul>
+        <li><a href="traits_api_reference/trait_set_object.html#traits.trait_set_object.TraitSetObject.value">(traits.trait_set_object.TraitSetObject attribute)</a>
+</li>
+      </ul></li>
       <li>
     value parameter
 
@@ -2957,15 +3254,17 @@
         <li><a href="traits_user_manual/custom.html#index-5">validate()</a>
 </li>
       </ul></li>
-      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.value_handler">value_handler (in module traits.trait_handlers)</a>
+      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitDict.value_handler">value_handler (traits.trait_handlers.TraitDict attribute)</a>
 </li>
-      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.value_trait">value_trait (in module traits.trait_handlers)</a>
+      <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitDict.value_trait">value_trait (traits.trait_handlers.TraitDict attribute)</a>
 
       <ul>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Dict.value_trait">(traits.trait_types.Dict attribute)</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Dict.value_trait_handler">value_trait_handler (traits.trait_types.Dict attribute)</a>
+</li>
+      <li><a href="traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.value_validator">value_validator (traits.trait_dict_object.TraitDict attribute)</a>
 </li>
       <li><a href="traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitEnum.values">values (traits.trait_handlers.TraitEnum attribute)</a>
 
@@ -2975,6 +3274,8 @@
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.BaseEnum.values">(traits.trait_types.BaseEnum attribute)</a>
 </li>
         <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Enum.values">(traits.trait_types.Enum attribute)</a>
+</li>
+        <li><a href="traits_api_reference/trait_types.html#traits.trait_types.PrefixList.values">(traits.trait_types.PrefixList attribute)</a>
 </li>
       </ul></li>
       <li><a href="traits_api_reference/trait_types.html#traits.trait_types.Button.values_trait">values_trait (traits.trait_types.Button attribute)</a>
@@ -3099,7 +3400,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

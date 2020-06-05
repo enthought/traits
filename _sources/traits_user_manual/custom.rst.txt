@@ -143,6 +143,31 @@ object. The set() method does not return a value, but will raise a TraitError if
 the specified *value* is not valid, and cannot be coerced or adapted to a valid
 value.
 
+In order for the property to trigger notifications you must call either:
+
+* object.trait_property_changed(name, old, value) to not cache the value.
+* self.set_value(object, name, value) to cache the value.
+
+Likewise if the property will not be read only the get method must use 
+self.get_value(object, name) in order to behave correctly.
+
+The following example demonstrates the use of a property trait to set temperature::
+
+    class TempFloat(BaseFloat):
+        default_value = 20.0
+        info_text = 'A calculated temperature float in Celsius'
+
+        def set(self, obj, name, value):
+            celsius = (value - 32) * (5/9)
+            setattr(self, name, celsius)
+            self.set_value(obj, name, celsius)
+
+        def get(self, obj, name):
+            val = self.get_value(obj, name)
+            if val is None:
+                val = self.default_value
+            return val
+
 .. index:: TraitType class; members
 
 .. _other-traittype-members:

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_numeric &mdash; Traits 6 User Manual</title>
+    <title>traits.trait_numeric &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -89,10 +89,6 @@
 
 <span class="sd">&quot;&quot;&quot; Trait definitions related to the numpy library.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Imports:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 
@@ -316,7 +312,7 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">editor</span></div>
 
-    <span class="c1"># -- Private Methods --------------------------------------------------------</span>
+    <span class="c1"># -- Private Methods ------------------------------------------------------</span>
 
 <div class="viewcode-block" id="AbstractArray.get_default_value"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.AbstractArray.get_default_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the default value constructor for the type (called from the</span>
@@ -444,16 +440,11 @@
         <span class="p">)</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;ArrayOrNone&#39; trait</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="ArrayOrNone"><a class="viewcode-back" href="../../traits_api_reference/trait_numeric.html#traits.trait_numeric.ArrayOrNone">[docs]</a><span class="k">class</span> <span class="nc">ArrayOrNone</span><span class="p">(</span><span class="n">CArray</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A coercing trait whose value may be either a NumPy array or None.</span>
 
-<span class="sd">    This trait is designed to avoid the comparison issues with numpy arrays that</span>
-<span class="sd">    can arise from the use of constructs like Either(None, Array).</span>
+<span class="sd">    This trait is designed to avoid the comparison issues with numpy arrays</span>
+<span class="sd">    that can arise from the use of constructs like Either(None, Array).</span>
 
 <span class="sd">    The default value is None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -525,7 +516,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.etsconfig.etsconfig &mdash; Traits 6 User Manual</title>
+    <title>traits.etsconfig.etsconfig &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -148,8 +148,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_user_data</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">return</span>
-
     <span class="c1">###########################################################################</span>
     <span class="c1"># &#39;ETSConfig&#39; interface.</span>
     <span class="c1">###########################################################################</span>
@@ -195,8 +193,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span> <span class="o">=</span> <span class="n">application_data</span>
-
-        <span class="k">return</span>
 
     <span class="k">def</span> <span class="nf">get_application_home</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return the application home directory path.</span>
@@ -256,8 +252,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span> <span class="o">=</span> <span class="n">application_home</span>
 
-        <span class="k">return</span>
-
     <span class="n">application_home</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_application_home</span><span class="p">,</span> <span class="n">_set_application_home</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_company</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -278,8 +272,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_company</span> <span class="o">=</span> <span class="n">company</span>
-
-        <span class="k">return</span>
 
     <span class="n">company</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_company</span><span class="p">,</span> <span class="n">_set_company</span><span class="p">)</span>
 
@@ -345,17 +337,16 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="n">toolkit</span>
 
-        <span class="k">return</span>
-
     <span class="n">toolkit</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_toolkit</span><span class="p">,</span> <span class="n">_set_toolkit</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_enable_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deprecated: This property is no longer used.</span>
 
-<span class="sd">        Property getter for the Enable backend.  The value returned is, in order</span>
-<span class="sd">        of preference: the value set by the application; the value specified by</span>
-<span class="sd">        the &#39;ENABLE_TOOLKIT&#39; environment variable; otherwise the empty string.</span>
+<span class="sd">        Property getter for the Enable backend.  The value returned is, in</span>
+<span class="sd">        order of preference: the value set by the application; the value</span>
+<span class="sd">        specified by the &#39;ENABLE_TOOLKIT&#39; environment variable; otherwise the</span>
+<span class="sd">        empty string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
 
@@ -367,30 +358,30 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deprecated.</span>
 
-<span class="sd">        Property setter for the Enable toolkit.  The toolkit can be set more than</span>
-<span class="sd">        once, but only if it is the same one each time.  An application that is</span>
-<span class="sd">        written for a particular toolkit can explicitly set it before any other</span>
-<span class="sd">        module that gets the value is imported.</span>
+<span class="sd">        Property setter for the Enable toolkit.  The toolkit can be set more</span>
+<span class="sd">        than once, but only if it is the same one each time.  An application</span>
+<span class="sd">        that is written for a particular toolkit can explicitly set it before</span>
+<span class="sd">        any other module that gets the value is imported.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
 
         <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Use of the enable_toolkit attribute is deprecated.&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span>
 
     <span class="n">enable_toolkit</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_enable_toolkit</span><span class="p">,</span> <span class="n">_set_enable_toolkit</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_kiva_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property getter for the Kiva backend. The value returned is dependent</span>
-<span class="sd">        on the value of the toolkit property. If toolkit specifies a kiva backend</span>
-<span class="sd">        using the extended syntax: &lt;enable toolkit&gt;[.&lt;kiva backend&gt;] then the</span>
-<span class="sd">        value of the property will be whatever was specified. Otherwise the</span>
-<span class="sd">        value will be a reasonable default for the given enable backend.</span>
+<span class="sd">        on the value of the toolkit property. If toolkit specifies a kiva</span>
+<span class="sd">        backend using the extended syntax: &lt;enable toolkit&gt;[.&lt;kiva backend&gt;]</span>
+<span class="sd">        then the value of the property will be whatever was specified.</span>
+<span class="sd">        Otherwise the value will be a reasonable default for the given enable</span>
+<span class="sd">        backend.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
-                <span class="s2">&quot;The kiva_backend attribute is dependent on toolkit, which has not been set.&quot;</span>
+                <span class="s2">&quot;The kiva_backend attribute is dependent on toolkit, &quot;</span>
+                <span class="s2">&quot;which has not been set.&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -436,8 +427,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_user_data</span> <span class="o">=</span> <span class="n">user_data</span>
-
-        <span class="k">return</span>
 
     <span class="n">user_data</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_user_data</span><span class="p">,</span> <span class="n">_set_user_data</span><span class="p">)</span>
 
@@ -500,7 +489,8 @@
             <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">directory_name</span> <span class="o">+=</span> <span class="s2">&quot;_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">user</span>
             <span class="n">warn</span><span class="p">(</span>
-                <span class="s1">&#39;Environment variable &quot;</span><span class="si">%s</span><span class="s1">&quot; not set, setting home directory to </span><span class="si">%s</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;Environment variable &quot;</span><span class="si">%s</span><span class="s1">&quot; not set, &#39;</span>
+                <span class="s1">&#39;setting home directory to </span><span class="si">%s</span><span class="s1">&#39;</span>
                 <span class="o">%</span> <span class="p">(</span><span class="n">environment_variable</span><span class="p">,</span> <span class="n">parent_directory</span><span class="p">)</span>
             <span class="p">)</span>
 
@@ -565,9 +555,10 @@
                 <span class="c1"># naive way...</span>
 
                 <span class="c1"># Check if the usr_dir is C:\\John Doe\\Documents and Settings.</span>
-                <span class="c1"># If yes, then we should modify the usr_dir to be &#39;My Documents&#39;.</span>
-                <span class="c1"># If no, then the user must have modified the os.environ</span>
-                <span class="c1"># variables and the directory chosen is a desirable one.</span>
+                <span class="c1"># If yes, then we should modify the usr_dir to be</span>
+                <span class="c1"># &#39;My Documents&#39;. If no, then the user must have modified the</span>
+                <span class="c1"># os.environ variables and the directory chosen is a desirable</span>
+                <span class="c1"># one.</span>
                 <span class="n">desired_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parent_directory</span><span class="p">,</span> <span class="s2">&quot;My Documents&quot;</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">desired_dir</span><span class="p">):</span>
@@ -635,7 +626,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

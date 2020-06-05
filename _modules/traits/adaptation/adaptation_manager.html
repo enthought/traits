@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.adaptation.adaptation_manager &mdash; Traits 6 User Manual</title>
+    <title>traits.adaptation.adaptation_manager &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -170,7 +170,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span></div>
 
-    <span class="c1">#### &#39;AdaptationManager&#39; protocol ##########################################</span>
+    <span class="c1">#### &#39;AdaptationManager&#39; protocol #########################################</span>
 
 <div class="viewcode-block" id="AdaptationManager.adapt"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.adapt">[docs]</a>    <span class="k">def</span> <span class="nf">adapt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">AdaptationError</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Attempt to adapt an object to a given protocol.</span>
@@ -220,9 +220,7 @@
         <span class="n">offers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adaptation_offers</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
             <span class="n">offer</span><span class="o">.</span><span class="n">from_protocol_name</span><span class="p">,</span> <span class="p">[]</span>
         <span class="p">)</span>
-        <span class="n">offers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">offer</span><span class="p">)</span>
-
-        <span class="k">return</span></div>
+        <span class="n">offers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">offer</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AdaptationManager.register_factory"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.register_factory">[docs]</a>    <span class="k">def</span> <span class="nf">register_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">from_protocol</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Register an adapter factory.</span>
@@ -240,18 +238,14 @@
                 <span class="n">from_protocol</span><span class="o">=</span><span class="n">from_protocol</span><span class="p">,</span>
                 <span class="n">to_protocol</span><span class="o">=</span><span class="n">to_protocol</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span></div>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="AdaptationManager.register_provides"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.register_provides">[docs]</a>    <span class="k">def</span> <span class="nf">register_provides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider_protocol</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Register that a protocol provides another. &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">register_factory</span><span class="p">(</span>
             <span class="n">no_adapter_necessary</span><span class="p">,</span> <span class="n">provider_protocol</span><span class="p">,</span> <span class="n">protocol</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span></div>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="AdaptationManager.supports_protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.supports_protocol">[docs]</a>    <span class="k">def</span> <span class="nf">supports_protocol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Does the object support a given protocol?</span>
@@ -557,7 +551,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
