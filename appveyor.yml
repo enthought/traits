@@ -13,13 +13,17 @@ environment:
     - PYTHON: "C:\\Python37-x64"
 
 install:
+  - "%PYTHON%/python.exe -- version"
+  - "%PYTHON%/python.exe -m pip install --upgrade pip setuptools wheel"
   - "%PYTHON%/python.exe -m pip install copyright_header/"
-  - "%PYTHON%/python.exe -m pip install -e .[docs,test]"
+  - "%PYTHON%/python.exe -m pip install .[docs,test]"
+  - "%PYTHON%/python.exe -m pip install traits-stubs/"
 
 test_script:
   - "%PYTHON%/python.exe -m flake8"
   - mkdir testdir
   - cd testdir
   - "%PYTHON%/python.exe -m unittest discover -v traits"
+  - "%PYTHON%/python.exe -m unittest discover -v traits_stubs_tests"
   - cd ..
   - "%PYTHON%/python.exe -m sphinx -b html -W docs/source docs/build"
