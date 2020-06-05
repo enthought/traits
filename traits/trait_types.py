@@ -2911,6 +2911,10 @@ class Map(TraitType):
             A dictionary whose keys are valid values for the trait attribute,
             and whose corresponding values are the values for the shadow
             trait attribute.
+        default_value : object, optional
+            The default value for the trait. If given, this should be a key
+            from the mapping. If not given, the first key from the mapping (in
+            normal dictionary iteration order) will be used as the default.
 
         Attributes
         ----------
@@ -2927,7 +2931,10 @@ class Map(TraitType):
         self.map = map
         self.fast_validate = (ValidateTrait.map, map)
 
-        default_value = metadata.pop("default_value", Undefined)
+        try:
+            default_value = metadata.pop("default_value")
+        except KeyError:
+            default_value = next(iter(self.map))
 
         super().__init__(default_value, **metadata)
 
@@ -2983,6 +2990,11 @@ class PrefixMap(TraitType):
         A dictionary whose keys are strings that are valid values for the
         trait attribute, and whose corresponding values are the values for
         the shadow trait attribute.
+    default_value : object, optional
+        The default value for the trait. If given, this should be either a key
+        from the mapping or a unique prefix of a key from the mapping. If not
+        given, the first key from the mapping (in normal dictionary iteration
+        order) will be used as the default.
 
     Attributes
     ----------
@@ -2999,9 +3011,11 @@ class PrefixMap(TraitType):
         for key in map.keys():
             self._map[key] = key
 
-        default_value = metadata.pop("default_value", Undefined)
-
-        if default_value is not Undefined:
+        try:
+            default_value = metadata.pop("default_value")
+        except KeyError:
+            default_value = next(iter(self.map))
+        else:
             default_value = self.value_for(default_value)
 
         super().__init__(default_value, **metadata)

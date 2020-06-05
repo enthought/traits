@@ -1896,79 +1896,57 @@ getattr_trait(trait_object *trait, has_traits_object *obj, PyObject *name)
     PyListObject *tnotifiers;
     PyListObject *onotifiers;
     PyObject *result;
-    PyObject *dict = obj->obj_dict;
+    PyObject *dict;
 
-    if (dict == NULL) {
-        dict = PyDict_New();
-        if (dict == NULL) {
-            return NULL;
-        }
-
-        obj->obj_dict = dict;
-    }
-
-    if (PyUnicode_Check(name)) {
-        if ((result = default_value_for(trait, obj, name)) != NULL) {
-            if (PyDict_SetItem(dict, name, result) >= 0) {
-                rc = 0;
-                if ((trait->post_setattr != NULL)
-                    && !(trait->flags & TRAIT_IS_MAPPED)) {
-                    rc = trait->post_setattr(trait, obj, name, result);
-                }
-
-                if (rc == 0) {
-                    tnotifiers = trait->notifiers;
-                    onotifiers = obj->notifiers;
-                    if (has_notifiers(tnotifiers, onotifiers)) {
-                        rc = call_notifiers(
-                            tnotifiers, onotifiers, obj, name, Uninitialized,
-                            result);
-                    }
-                }
-                if (rc == 0) {
-                    return result;
-                }
-            }
-            Py_DECREF(result);
-        }
-
-        return NULL;
-    }
-
+    /* This shouldn't ever happen. */
     if (!PyUnicode_Check(name)) {
         invalid_attribute_error(name);
         return NULL;
     }
 
-    if ((result = default_value_for(trait, obj, name)) != NULL) {
-        if (PyDict_SetItem(dict, name, result) >= 0) {
-            rc = 0;
-            if ((trait->post_setattr != NULL)
-                && !(trait->flags & TRAIT_IS_MAPPED)) {
-                rc = trait->post_setattr(trait, obj, name, result);
-            }
-
-            if (rc == 0) {
-                tnotifiers = trait->notifiers;
-                onotifiers = obj->notifiers;
-                if (has_notifiers(tnotifiers, onotifiers)) {
-                    rc = call_notifiers(
-                        tnotifiers, onotifiers, obj, name, Uninitialized,
-                        result);
-                }
-            }
-            if (rc == 0) {
-                return result;
-            }
+    /* Create the object's __dict__ if it's not already present. */
+    dict = obj->obj_dict;
+    if (dict == NULL) {
+        dict = PyDict_New();
+        if (dict == NULL) {
+            return NULL;
         }
-        Py_DECREF(result);
+        obj->obj_dict = dict;
     }
 
-    if (PyErr_ExceptionMatches(PyExc_KeyError)) {
-        PyErr_SetObject(PyExc_AttributeError, name);
+    /* Retrieve the default value, and set it in the dict. */
+    result = default_value_for(trait, obj, name);
+    if (result == NULL) {
+        return NULL;
+    }
+    rc = PyDict_SetItem(dict, name, result);
+    if (rc < 0) {
+        goto error;
     }
 
-    Py_DECREF(name);
+    /* Call any post_setattr operations. */
+    if (trait->post_setattr != NULL) {
+        rc = trait->post_setattr(trait, obj, name, result);
+        if (rc < 0) {
+            goto error;
+        }
+    }
+
+    /* Call notifiers. */
+    tnotifiers = trait->notifiers;
+    onotifiers = obj->notifiers;
+    if (has_notifiers(tnotifiers, onotifiers)) {
+        rc = call_notifiers(
+            tnotifiers, onotifiers, obj, name, Uninitialized, result);
+        if (rc < 0) {
+            goto error;
+        }
+    }
+
+    return result;
+
+  error:
+    Py_DECREF(result);
     return NULL;
 }
 
@@ -2451,14 +2429,31 @@ setattr_trait(
         if (old_value == NULL) {
             if (traitd != traito) {
                 old_value = traito->getattr(traito, obj, name);
+                if (old_value == NULL) {
+                    Py_DECREF(value);
+                    return -1;
+                }
             }
             else {
                 old_value = default_value_for(traitd, obj, name);
-            }
-            if (old_value == NULL) {
-                Py_DECREF(value);
-
-                return -1;
+                if (old_value == NULL) {
+                    Py_DECREF(value);
+                    return -1;
+                }
+                rc = PyDict_SetItem(dict, name, old_value);
+                if (rc < 0) {
+                    Py_DECREF(old_value);
+                    Py_DECREF(value);
+                    return -1;
+                }
+                if (post_setattr != NULL) {
+                    rc = post_setattr(traitd, obj, name, old_value);
+                    if (rc < 0) {
+                        Py_DECREF(old_value);
+                        Py_DECREF(value);
+                        return -1;
+                    }
+                }
             }
         }
         else {

@@ -161,7 +161,8 @@ Features
 * Add ``allow_none`` flag for ``Callable`` trait. (#885)
 * Add support for type annotation. (#904, #1064)
 * Allow mutable values in ``Constant`` trait. (#929)
-* Add ``Map`` and ``PrefixMap`` trait types. (#886, #953, #956, #970, #1139)
+* Add ``Map`` and ``PrefixMap`` trait types. (#886, #953, #956, #970, #1139,
+  #1189)
 * Add ``TraitList`` as the base list object that can perform validation
   and emit change notifications. (#912, #981, #984, #989, #999, #1003, #1011,
   #1026, #1009, #1040, #1172, #1173)
@@ -203,7 +204,7 @@ Fixes
   (#1018)
 * Fix setting default values via dynamic default methods or overriding trait in
   subclasses for mapped traits, used by ``Map``, ``Expression``, ``PrefixMap``.
-  (#1091)
+  (#1091, #1188)
 * Fix setting default values via dynamic default methods or overriding trait in
   subclasses for ``Expression`` and ``AdaptsTo``. (#1088, #1119, #1152)
 
@@ -245,7 +246,7 @@ Documentation
   #1140, #1143)
 * Add user manual section on the ``Union`` trait type and how to migrate from
   ``Either`` (#779, #1153, #1162)
-* Other minor cleanups and fixes. (#949, #1141)
+* Other minor cleanups and fixes. (#949, #1141, #1178)
 
 Test suite
 ~~~~~~~~~~
@@ -266,6 +267,7 @@ Build and continuous integration
 * CI tests requiring a GUI are now run against PyQt5 rather than PyQt4.
   (#1127)
 * Add Slack notifications for CI. (#1074)
+* Fix and improve various ``setup.py`` package metadata fields. (#1185)
 
 Maintenance and code organization
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
