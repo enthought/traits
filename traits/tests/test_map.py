@@ -95,6 +95,8 @@ class TestMap(unittest.TestCase):
             self.assertEqual(primary_value, "yes")
             self.assertEqual(shadow_value, 1)
         else:
+            # For Python < 3.6, dictionary ordering and hence the default
+            # value aren't predictable.
             self.assertIn(primary_value, mapping)
             self.assertEqual(shadow_value, mapping[primary_value])
 
