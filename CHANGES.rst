@@ -4,7 +4,7 @@ Traits CHANGELOG
 Release 6.1.0
 -------------
 
-Released: 2020-05-XX
+Released: 2020-06-05
 
 The Traits library is a foundational component of the Enthought Tool Suite. It
 provides observable, typed attributes for Python classes, making those classes
@@ -139,7 +139,7 @@ future changes:
 Detailed PR-by-PR changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-More than 150 PRs went into this release. The following people contributed
+More than 160 PRs went into this release. The following people contributed
 code changes for this release:
 
 * Ieva Cernyte
