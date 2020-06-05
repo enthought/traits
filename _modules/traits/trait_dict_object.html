@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_dict_object &mdash; Traits 6 User Manual</title>
+    <title>traits.trait_dict_object &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -88,14 +88,11 @@
 <span class="c1"># Thanks for using Enthought open source!</span>
 
 <span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">weakref</span> <span class="k">import</span> <span class="n">ref</span>
 
-<span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="n">Undefined</span>
-<span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
-
-<span class="c1"># Set up a logger:</span>
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">traits.observation._i_observable</span> <span class="k">import</span> <span class="n">IObservable</span>
+<span class="kn">from</span> <span class="nn">traits.trait_base</span> <span class="k">import</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">_validate_everything</span>
+<span class="kn">from</span> <span class="nn">traits.trait_errors</span> <span class="k">import</span> <span class="n">TraitError</span>
 
 
 <div class="viewcode-block" id="TraitDictEvent"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictEvent">[docs]</a><span class="k">class</span> <span class="nc">TraitDictEvent</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -103,31 +100,28 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    added : dict or None</span>
-<span class="sd">        New keys and values, or optionally None if nothing was added.</span>
-<span class="sd">    changed : dict or None</span>
-<span class="sd">        Updated keys and their previous values, or optionally None if nothing</span>
-<span class="sd">        was changed.</span>
-<span class="sd">    removed : dict or None</span>
-<span class="sd">        Old keys and values that were just removed, or optionally None if</span>
-<span class="sd">        nothing was removed.</span>
+<span class="sd">    removed : dict, optional</span>
+<span class="sd">        Old keys and values that were just removed.</span>
+<span class="sd">    added : dict, optional</span>
+<span class="sd">        New keys and values that were just added.</span>
+<span class="sd">    changed : dict, optional</span>
+<span class="sd">        Updated keys and their previous values.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    added : dict</span>
-<span class="sd">        New keys and values.  If nothing was added this is an empty dict.</span>
-<span class="sd">    changed : dict</span>
-<span class="sd">        Updated keys and their previous values.  If nothing was changed this</span>
-<span class="sd">        is an empty dict.</span>
 <span class="sd">    removed : dict</span>
-<span class="sd">        Old keys and values that were just removed.  If nothing was removed</span>
-<span class="sd">        this is an empty dict.</span>
+<span class="sd">        Old keys and values that were just removed.</span>
+<span class="sd">    added : dict</span>
+<span class="sd">        New keys and values that were just added.</span>
+<span class="sd">    changed : dict</span>
+<span class="sd">        Updated keys and their previous values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">changed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">removed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># Construct new empty dicts every time instead of using a default value</span>
-        <span class="c1"># in the method argument, just in case someone gets the bright idea of</span>
-        <span class="c1"># modifying the dict they get in-place.</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">removed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">changed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">removed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">removed</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">removed</span> <span class="o">=</span> <span class="n">removed</span>
+
         <span class="k">if</span> <span class="n">added</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">added</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">added</span> <span class="o">=</span> <span class="n">added</span>
@@ -136,13 +130,319 @@
             <span class="n">changed</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">changed</span> <span class="o">=</span> <span class="n">changed</span>
 
-        <span class="k">if</span> <span class="n">removed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">removed</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">removed</span> <span class="o">=</span> <span class="n">removed</span></div>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;TraitDictEvent(removed=</span><span class="si">{!r}</span><span class="s2">, added=</span><span class="si">{!r}</span><span class="s2">, changed=</span><span class="si">{!r}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">removed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">added</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">changed</span>
+        <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="TraitDictObject"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject">[docs]</a><span class="k">class</span> <span class="nc">TraitDictObject</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; A subclass of dict that fires trait events when mutated.</span>
+<div class="viewcode-block" id="TraitDict"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict">[docs]</a><span class="nd">@IObservable</span><span class="o">.</span><span class="n">register</span>
+<span class="k">class</span> <span class="nc">TraitDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A subclass of dict that validates keys and values and notifies</span>
+<span class="sd">    listeners of any change.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    value : dict or iterable, optional</span>
+<span class="sd">        The initial dict or an iterable containing key-value pairs.</span>
+<span class="sd">    key_validator : callable, optional</span>
+<span class="sd">        Called to validate a key in the dict.</span>
+<span class="sd">        The callable must accept a single key and</span>
+<span class="sd">        return a validated key or raise a TraitError</span>
+<span class="sd">        If not provided, all keys are considered valid.</span>
+<span class="sd">    value_validator : callable, optional</span>
+<span class="sd">        Called to validate a value in the dict.</span>
+<span class="sd">        The callable must accept a single value and</span>
+<span class="sd">        return a validated value or raise a TraitError</span>
+<span class="sd">        If not provided, all values are considered valid.</span>
+<span class="sd">    notifiers : list, optional</span>
+<span class="sd">        A list of callables with the signature::</span>
+
+<span class="sd">            notifier(trait_dict, removed, added, changed)</span>
+
+<span class="sd">        Where:</span>
+<span class="sd">        &#39;removed&#39; is a dict of key-values that are no longer in the dictionary.</span>
+<span class="sd">        &#39;added&#39; is a dict of new key-values that have been added.</span>
+<span class="sd">        &#39;changed&#39; is a dict with old values previously associated with the key.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    key_validator : callable</span>
+<span class="sd">        Called to validate a key in the dict.</span>
+<span class="sd">        The callable must accept a single key and</span>
+<span class="sd">        return a validated key or raise a TraitError</span>
+<span class="sd">    value_validator : callable</span>
+<span class="sd">        Called to validate a value in the dict.</span>
+<span class="sd">        The callable must accept a single value and</span>
+<span class="sd">        return a validated value or raise a TraitError</span>
+<span class="sd">    notifiers : list</span>
+<span class="sd">        A list of callables with the signature::</span>
+
+<span class="sd">            notifier(trait_dict, removed, added, changed)</span>
+
+<span class="sd">        Where:</span>
+<span class="sd">        &#39;removed&#39; is a dict of key-values that are no longer in the dictionary.</span>
+<span class="sd">        &#39;added&#39; is a dict of new key-values that have been added.</span>
+<span class="sd">        &#39;changed&#39; is a dict with old values previously associated with the key.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key_validator</span> <span class="o">=</span> <span class="n">_validate_everything</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_validator</span> <span class="o">=</span> <span class="n">_validate_everything</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key_validator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">value_validator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">notifiers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">key_validator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">key_validator</span> <span class="o">=</span> <span class="n">key_validator</span>
+
+        <span class="k">if</span> <span class="n">value_validator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value_validator</span> <span class="o">=</span> <span class="n">value_validator</span>
+
+        <span class="k">if</span> <span class="n">notifiers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">notifiers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span> <span class="o">=</span> <span class="n">notifiers</span>
+
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">items</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;keys&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">value</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key_validator</span><span class="p">(</span><span class="n">key</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_validator</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">items</span><span class="p">}</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TraitDict.notify"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.notify">[docs]</a>    <span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">,</span> <span class="n">changed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Call all notifiers.</span>
+
+<span class="sd">        This simply calls all notifiers provided by the class, if any.</span>
+<span class="sd">        The notifiers are expected to have the signature::</span>
+
+<span class="sd">            notifier(trait_dict, removed, added, changed)</span>
+
+<span class="sd">        Any return values are ignored.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">notifier</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span><span class="p">:</span>
+            <span class="n">notifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">,</span> <span class="n">changed</span><span class="p">)</span></div>
+
+    <span class="c1"># -- dict interface -------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set a value for the key, implements self[key] = value.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : A hashable object.</span>
+<span class="sd">            The key for the value.</span>
+<span class="sd">        value : any</span>
+<span class="sd">            The value to set for the corresponding key.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">removed</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">validated_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_validator</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">validated_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_validator</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">validated_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="p">{</span><span class="n">validated_key</span><span class="p">:</span> <span class="bp">self</span><span class="p">[</span><span class="n">validated_key</span><span class="p">]}</span>
+            <span class="n">added</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">added</span> <span class="o">=</span> <span class="p">{</span><span class="n">validated_key</span><span class="p">:</span> <span class="n">validated_value</span><span class="p">}</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">validated_key</span><span class="p">,</span> <span class="n">validated_value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="n">added</span><span class="p">,</span> <span class="n">changed</span><span class="o">=</span><span class="n">changed</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Delete the item from the dict indicated by the key.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : A hashable object.</span>
+<span class="sd">            The key to be deleted.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError</span>
+<span class="sd">            If the key is not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">removed</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]}</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__delitem__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="p">{},</span> <span class="n">changed</span><span class="o">=</span><span class="p">{})</span>
+
+<div class="viewcode-block" id="TraitDict.clear"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove all items from the dict. &quot;&quot;&quot;</span>
+        <span class="n">was_empty</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span> <span class="o">==</span> <span class="p">{})</span>
+        <span class="n">removed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">was_empty</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="p">{},</span> <span class="n">changed</span><span class="o">=</span><span class="p">{})</span></div>
+
+<div class="viewcode-block" id="TraitDict.update"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Update the values in the dict by the new dict or an iterable of</span>
+<span class="sd">        key-value pairs.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : dict or iterable</span>
+<span class="sd">            The dict from which values will be updated into this dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">validated_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">added</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">changed</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">items</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s1">&#39;keys&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">other</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+            <span class="n">validated_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_validator</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">validated_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_validator</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">validated_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="n">changed</span><span class="p">[</span><span class="n">validated_key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">validated_key</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">added</span><span class="p">[</span><span class="n">validated_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">validated_value</span>
+
+            <span class="n">validated_dict</span><span class="p">[</span><span class="n">validated_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">validated_value</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">validated_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="p">{},</span> <span class="n">added</span><span class="o">=</span><span class="n">added</span><span class="p">,</span> <span class="n">changed</span><span class="o">=</span><span class="n">changed</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TraitDict.setdefault"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.setdefault">[docs]</a>    <span class="k">def</span> <span class="nf">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the value if key is present in the dict, else creates the</span>
+<span class="sd">        key-value pair and returns the value.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : A hashable object.</span>
+<span class="sd">            Key to the item.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="n">validated_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_validator</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">validated_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_validator</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">validated_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="p">{</span><span class="n">validated_key</span><span class="p">:</span> <span class="bp">self</span><span class="p">[</span><span class="n">validated_key</span><span class="p">]}</span>
+            <span class="n">added</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">changed</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">added</span> <span class="o">=</span> <span class="p">{</span><span class="n">validated_key</span><span class="p">:</span> <span class="n">validated_value</span><span class="p">}</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">validated_key</span><span class="p">,</span> <span class="n">validated_value</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="p">{},</span> <span class="n">added</span><span class="o">=</span><span class="n">added</span><span class="p">,</span> <span class="n">changed</span><span class="o">=</span><span class="n">changed</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">validated_value</span></div>
+
+<div class="viewcode-block" id="TraitDict.pop"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.pop">[docs]</a>    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">Undefined</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove specified key and return the corresponding</span>
+<span class="sd">        value. If key is not found, the default value is returned</span>
+<span class="sd">        if given, otherwise KeyError is raised.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : A hashable object.</span>
+<span class="sd">            Key to the dict item.</span>
+
+<span class="sd">        value : any</span>
+<span class="sd">            Value to return if key is absent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">should_notify</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="n">Undefined</span> <span class="ow">or</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">Undefined</span><span class="p">:</span>
+            <span class="n">removed</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">removed</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">should_notify</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span>
+                <span class="n">removed</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">removed</span><span class="p">},</span>
+                <span class="n">added</span><span class="o">=</span><span class="p">{},</span>
+                <span class="n">changed</span><span class="o">=</span><span class="p">{}</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">removed</span></div>
+
+<div class="viewcode-block" id="TraitDict.popitem"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDict.popitem">[docs]</a>    <span class="k">def</span> <span class="nf">popitem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove and return some (key, value) pair as a tuple. Raise KeyError</span>
+<span class="sd">        if dict is empty.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        key_value : tuple</span>
+<span class="sd">            Some 2-tuple from the dict.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError</span>
+<span class="sd">            If the dict is empty</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">item</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">popitem</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="nb">dict</span><span class="p">([</span><span class="n">item</span><span class="p">]),</span> <span class="n">added</span><span class="o">=</span><span class="p">{},</span> <span class="n">changed</span><span class="o">=</span><span class="p">{})</span>
+        <span class="k">return</span> <span class="n">item</span></div>
+
+    <span class="c1"># -- pickle and copy support ----------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get the state of the object for serialization.</span>
+
+<span class="sd">        Notifiers are transient and should not be serialized.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># notifiers are transient and should not be serialized</span>
+        <span class="k">del</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;notifiers&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Restore the state of the object after serialization.</span>
+
+<span class="sd">        Notifiers are transient and are restored to the empty list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">state</span><span class="p">[</span><span class="s1">&#39;notifiers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Perform a deepcopy operation.</span>
+
+<span class="sd">        Notifiers are transient and should not be copied.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">TraitDict</span><span class="p">(</span>
+            <span class="nb">dict</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">memo</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span>
+            <span class="n">key_validator</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key_validator</span><span class="p">,</span> <span class="n">memo</span><span class="p">),</span>
+            <span class="n">value_validator</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_validator</span><span class="p">,</span> <span class="n">memo</span><span class="p">),</span>
+            <span class="n">notifiers</span><span class="o">=</span><span class="p">[]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="c1"># -- Implement IObservable ------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_notifiers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force_create</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return a list of callables where each callable is a notifier.</span>
+<span class="sd">        The list is expected to be mutated for contributing or removing</span>
+<span class="sd">        notifiers from the object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        force_create: boolean</span>
+<span class="sd">            Not used here.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">notifiers</span></div>
+
+
+<div class="viewcode-block" id="TraitDictObject"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject">[docs]</a><span class="k">class</span> <span class="nc">TraitDictObject</span><span class="p">(</span><span class="n">TraitDict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A subclass of TraitDict that fires trait events when mutated.</span>
+<span class="sd">    This is for backward compatibility with Traits 6.0 and lower.</span>
 
 <span class="sd">    This is used by the Dict trait type, and all values set into a Dict</span>
 <span class="sd">    trait will be copied into a new TraitDictObject instance.</span>
@@ -185,227 +485,153 @@
         <span class="k">if</span> <span class="n">trait</span><span class="o">.</span><span class="n">has_items</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_items&quot;</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_dic</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">key_validator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_key_validator</span><span class="p">,</span>
+                         <span class="n">value_validator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_value_validator</span><span class="p">,</span>
+                         <span class="n">notifiers</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">notifier</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">_send_trait_items_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">items_event</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Send a TraitDictEvent to the owning object if there is one.</span>
+    <span class="k">def</span> <span class="nf">_key_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Calls the trait&#39;s key_trait.handler.validate.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : A hashable object.</span>
+<span class="sd">            The key to validate.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        validated_key : A hashable object.</span>
+<span class="sd">            The validated key.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TraitError</span>
+<span class="sd">            If the validation fails.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">trait</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;trait&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="nb">object</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">)()</span>
+
+        <span class="c1"># Deserialized TraitDictObjects without &#39;trait&#39; and &#39;object&#39; set</span>
+        <span class="c1"># will not validate its keys</span>
+        <span class="k">if</span> <span class="n">trait</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">object</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">key</span>
+
+        <span class="n">validate</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">key_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">validate</span>
+        <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">key</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">excep</span><span class="p">:</span>
+            <span class="n">excep</span><span class="o">.</span><span class="n">set_prefix</span><span class="p">(</span><span class="s2">&quot;Each key of the&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">excep</span>
+
+    <span class="k">def</span> <span class="nf">_value_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Calls the trait&#39;s value_handler.validate</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : any</span>
+<span class="sd">            The value to validate.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        validated_value : any</span>
+<span class="sd">            The validated value.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TraitError</span>
+<span class="sd">            If the validation fails.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">trait</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;trait&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="nb">object</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">)()</span>
+
+        <span class="c1"># Deserialized TraitDictObjects without &#39;trait&#39; and &#39;object&#39; set</span>
+        <span class="c1"># will not validate its values</span>
+        <span class="k">if</span> <span class="n">trait</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">object</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="n">validate</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">value_handler</span><span class="o">.</span><span class="n">validate</span>
+        <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">excep</span><span class="p">:</span>
+            <span class="n">excep</span><span class="o">.</span><span class="n">set_prefix</span><span class="p">(</span><span class="s2">&quot;Each value of the&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">excep</span>
+
+<div class="viewcode-block" id="TraitDictObject.notifier"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.notifier">[docs]</a>    <span class="k">def</span> <span class="nf">notifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait_dict</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="p">,</span> <span class="n">changed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Fire the TraitDictEvent with the provided parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        trait_dict : dict</span>
+<span class="sd">            The complete dictionary.</span>
+<span class="sd">        removed : dict</span>
+<span class="sd">            Dict of removed items.</span>
+<span class="sd">        added : dict</span>
+<span class="sd">            Dict of added items.</span>
+<span class="sd">        changed : dict</span>
+<span class="sd">            Dict of changed items.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
         <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">items_event</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;trait&quot;</span><span class="p">):</span>
-                <span class="n">items_event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="o">.</span><span class="n">items_event</span><span class="p">()</span>
-            <span class="nb">object</span><span class="o">.</span><span class="n">trait_items_event</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">items_event</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="c1"># Workaround having this dict inside another container which</span>
+            <span class="c1"># also uses the name_items trait for notification.</span>
+            <span class="c1"># See enthought/traits#25</span>
+            <span class="k">return</span>
+
+        <span class="n">event</span> <span class="o">=</span> <span class="n">TraitDictEvent</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="n">removed</span><span class="p">,</span> <span class="n">added</span><span class="o">=</span><span class="n">added</span><span class="p">,</span> <span class="n">changed</span><span class="o">=</span><span class="n">changed</span><span class="p">)</span>
+        <span class="n">items_event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="o">.</span><span class="n">items_event</span><span class="p">()</span>
+        <span class="nb">object</span><span class="o">.</span><span class="n">trait_items_event</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">items_event</span><span class="p">)</span></div>
+
+    <span class="c1"># -- pickle and copy support ----------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get the state of the object for serialization.</span>
+
+<span class="sd">        Object and trait should not be serialized.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">()</span>
+        <span class="k">del</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;trait&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Restore the state of the object after serialization.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">state</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">state</span><span class="p">[</span><span class="s2">&quot;notifiers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">notifier</span><span class="p">]</span>
+        <span class="n">state</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span>
+        <span class="n">state</span><span class="p">[</span><span class="s1">&#39;trait&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
-        <span class="n">id_self</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">id_self</span> <span class="ow">in</span> <span class="n">memo</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">memo</span><span class="p">[</span><span class="n">id_self</span><span class="p">]</span>
+        <span class="sd">&quot;&quot;&quot; Perform a deepcopy operation..</span>
 
-        <span class="n">memo</span><span class="p">[</span><span class="n">id_self</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span> <span class="o">=</span> <span class="n">TraitDictObject</span><span class="p">(</span>
+<span class="sd">        Object is a weakref and should not be copied.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">TraitDictObject</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="p">,</span>
             <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="nb">dict</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">memo</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">result</span>
-
-    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="n">trait</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;trait&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">trait</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">dict</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">validate</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">key_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">validate</span>
-            <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">key</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-
-        <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">excp</span><span class="p">:</span>
-            <span class="n">excp</span><span class="o">.</span><span class="n">set_prefix</span><span class="p">(</span><span class="s2">&quot;Each key of the&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="n">excp</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">validate</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">value_handler</span><span class="o">.</span><span class="n">validate</span>
-            <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-                    <span class="n">added</span> <span class="o">=</span> <span class="kc">None</span>
-                    <span class="n">old</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-                    <span class="n">changed</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">old</span><span class="p">}</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">added</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span><span class="p">}</span>
-                    <span class="n">changed</span> <span class="o">=</span> <span class="kc">None</span>
-
-            <span class="nb">dict</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">added</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">old</span> <span class="o">==</span> <span class="n">value</span><span class="p">:</span>
-                            <span class="k">return</span>
-                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                        <span class="c1"># Treat incomparable objects as unequal:</span>
-                        <span class="k">pass</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span>
-                    <span class="n">TraitDictEvent</span><span class="p">(</span><span class="n">added</span><span class="p">,</span> <span class="n">changed</span><span class="p">),</span>
-                    <span class="n">trait</span><span class="o">.</span><span class="n">items_event</span><span class="p">(),</span>
-                <span class="p">)</span>
-
-        <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">excp</span><span class="p">:</span>
-            <span class="n">excp</span><span class="o">.</span><span class="n">set_prefix</span><span class="p">(</span><span class="s2">&quot;Each value of the&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="n">excp</span>
-
-    <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">removed</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]}</span>
-
-        <span class="nb">dict</span><span class="o">.</span><span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">TraitDictEvent</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="n">removed</span><span class="p">)</span>
-            <span class="p">)</span>
-
-<div class="viewcode-block" id="TraitDictObject.clear"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">removed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-            <span class="nb">dict</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">TraitDictEvent</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="n">removed</span><span class="p">)</span>
-                <span class="p">)</span></div>
-
-<div class="viewcode-block" id="TraitDictObject.update"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">):</span>
-        <span class="n">trait</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;trait&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">trait</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dic</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">new_dic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_dic</span><span class="p">(</span><span class="n">dic</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">added</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="n">changed</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">new_dic</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-                        <span class="n">changed</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">added</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-
-                <span class="nb">dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_dic</span><span class="p">)</span>
-
-                <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span>
-                    <span class="n">TraitDictEvent</span><span class="p">(</span><span class="n">added</span><span class="o">=</span><span class="n">added</span><span class="p">,</span> <span class="n">changed</span><span class="o">=</span><span class="n">changed</span><span class="p">),</span>
-                <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_dic</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="TraitDictObject.setdefault"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.setdefault">[docs]</a>    <span class="k">def</span> <span class="nf">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-
-        <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">TraitDictEvent</span><span class="p">(</span><span class="n">added</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
-            <span class="p">)</span>
-
         <span class="k">return</span> <span class="n">result</span></div>
-
-<div class="viewcode-block" id="TraitDictObject.pop"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.pop">[docs]</a>    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">Undefined</span><span class="p">):</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="n">Undefined</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">TraitDictEvent</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
-                <span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">result</span>
-
-        <span class="k">return</span> <span class="n">value</span></div>
-
-<div class="viewcode-block" id="TraitDictObject.popitem"><a class="viewcode-back" href="../../traits_api_reference/trait_dict_object.html#traits.trait_dict_object.TraitDictObject.popitem">[docs]</a>    <span class="k">def</span> <span class="nf">popitem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">popitem</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span> <span class="n">TraitDictEvent</span><span class="p">(</span><span class="n">removed</span><span class="o">=</span><span class="p">{</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]})</span>
-            <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">result</span></div>
-
-    <span class="k">def</span> <span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="n">trait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span><span class="o">.</span><span class="n">_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">trait</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">trait</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">handler</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                <span class="s2">&quot;rename: No &#39;trait&#39; in </span><span class="si">%s</span><span class="s2"> for &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span>
-            <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;trait&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">result</span>
-
-    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="nb">object</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-
-    <span class="c1"># -- Private Methods ------------------------------------------------------------</span>
-
-    <span class="k">def</span> <span class="nf">_validate_dic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
-        <span class="n">new_dic</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="n">key_validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="o">.</span><span class="n">key_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">validate</span>
-        <span class="k">if</span> <span class="n">key_validate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">key_validate</span> <span class="o">=</span> <span class="k">lambda</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">key</span>
-
-        <span class="n">value_validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="o">.</span><span class="n">value_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">validate</span>
-        <span class="k">if</span> <span class="n">value_validate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">value_validate</span> <span class="o">=</span> <span class="k">lambda</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">value</span>
-
-        <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dic</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">key</span> <span class="o">=</span> <span class="n">key_validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">excp</span><span class="p">:</span>
-                <span class="n">excp</span><span class="o">.</span><span class="n">set_prefix</span><span class="p">(</span><span class="s2">&quot;Each key of the&quot;</span><span class="p">)</span>
-                <span class="k">raise</span> <span class="n">excp</span>
-
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">value_validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">TraitError</span> <span class="k">as</span> <span class="n">excp</span><span class="p">:</span>
-                <span class="n">excp</span><span class="o">.</span><span class="n">set_prefix</span><span class="p">(</span><span class="s2">&quot;Each value of the&quot;</span><span class="p">)</span>
-                <span class="k">raise</span> <span class="n">excp</span>
-
-            <span class="n">new_dic</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-
-        <span class="k">return</span> <span class="n">new_dic</span></div>
 </pre></div>
 
           </div>
@@ -445,7 +671,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

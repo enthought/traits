@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.traits &mdash; Traits 6 User Manual</title>
+    <title>traits.traits &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -112,10 +112,6 @@
 <span class="sd">    feature.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Imports:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
 <span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
@@ -138,7 +134,6 @@
 
 <span class="kn">from</span> <span class="nn">.trait_handler</span> <span class="k">import</span> <span class="n">TraitHandler</span>
 <span class="kn">from</span> <span class="nn">.trait_type</span> <span class="k">import</span> <span class="p">(</span>
-    <span class="n">_arg_count</span><span class="p">,</span>
     <span class="n">_infer_default_value_type</span><span class="p">,</span>
     <span class="n">_read_only</span><span class="p">,</span>
     <span class="n">_write_only</span><span class="p">,</span>
@@ -157,10 +152,9 @@
 <span class="kn">from</span> <span class="nn">.trait_factory</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">TraitFactory</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.util.deprecated</span> <span class="k">import</span> <span class="n">deprecated</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Constants:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1"># Constants</span>
 
 <span class="n">NoneType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># Python 3&#39;s types does not include NoneType</span>
 
@@ -207,7 +201,7 @@
     <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
 
-<span class="c1"># --- &#39;instance&#39; traits ---------------------------------------------------------</span>
+<span class="c1"># --- &#39;instance&#39; traits -------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="_InstanceArgs"><a class="viewcode-back" href="../../traits_api_reference/traits.html#traits.traits._InstanceArgs">[docs]</a><span class="k">class</span> <span class="nc">_InstanceArgs</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -216,7 +210,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">kw</span> <span class="o">=</span> <span class="n">kw</span></div>
 
 
-<span class="c1"># --- &#39;creates a run-time default value&#39; ----------------------------------------</span>
+<span class="c1"># --- &#39;creates a run-time default value&#39; --------------------------------------</span>
 
 
 <div class="viewcode-block" id="Default"><a class="viewcode-back" href="../../traits_api_reference/traits.html#traits.traits.Default">[docs]</a><span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -228,11 +222,6 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(),</span> <span class="n">kw</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kw</span><span class="p">)</span></div>
-
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Factory function for creating C-based traits:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="Trait"><a class="viewcode-back" href="../../traits_user_manual/custom.html#traits.traits.Trait">[docs]</a><span class="k">def</span> <span class="nf">Trait</span><span class="p">(</span><span class="o">*</span><span class="n">value_type</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
@@ -327,9 +316,9 @@
 <span class="sd">        interface editor for the trait. See the &quot;Traits UI User Guide&quot; for</span>
 <span class="sd">        more information on trait editors.</span>
 <span class="sd">    comparison_mode : int</span>
-<span class="sd">        Indicates when trait change notifications should be generated based upon</span>
-<span class="sd">        the result of comparing the old and new values of a trait assignment.</span>
-<span class="sd">        Possible values come from the ``ComparisonMode`` enum:</span>
+<span class="sd">        Indicates when trait change notifications should be generated based</span>
+<span class="sd">        upon the result of comparing the old and new values of a trait</span>
+<span class="sd">        assignment. Possible values come from the ``ComparisonMode`` enum:</span>
 
 <span class="sd">        * 0 (none): The values are not compared and a trait change</span>
 <span class="sd">          notification is generated on each assignment.</span>
@@ -342,29 +331,18 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_TraitMaker</span><span class="p">(</span><span class="o">*</span><span class="n">value_type</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">()</span></div>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;_TraitMaker&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
 
 <div class="viewcode-block" id="_TraitMaker"><a class="viewcode-back" href="../../traits_api_reference/traits.html#traits.traits._TraitMaker">[docs]</a><span class="k">class</span> <span class="nc">_TraitMaker</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="c1"># Ctrait type map for special trait types:</span>
     <span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="n">TraitKind</span><span class="o">.</span><span class="n">event</span><span class="p">,</span> <span class="s2">&quot;constant&quot;</span><span class="p">:</span> <span class="n">TraitKind</span><span class="o">.</span><span class="n">constant</span><span class="p">}</span>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Initialize the object:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">value_type</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
         <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;trait&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="o">*</span><span class="n">value_type</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Define the trait:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
-    <span class="k">def</span> <span class="nf">define</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">value_type</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
+<div class="viewcode-block" id="_TraitMaker.define"><a class="viewcode-back" href="../../traits_api_reference/traits.html#traits.traits._TraitMaker.define">[docs]</a>    <span class="k">def</span> <span class="nf">define</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">value_type</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Define the trait. &quot;&quot;&quot;</span>
         <span class="n">default_value_type</span> <span class="o">=</span> <span class="n">DefaultValue</span><span class="o">.</span><span class="n">unspecified</span>
         <span class="n">default_value</span> <span class="o">=</span> <span class="n">handler</span> <span class="o">=</span> <span class="n">clone</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -518,13 +496,10 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">default_value_type</span> <span class="o">=</span> <span class="n">default_value_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">default_value</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Determine the correct TraitHandler for each item in a list:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
-    <span class="k">def</span> <span class="nf">do_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">enum</span><span class="p">,</span> <span class="nb">map</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="_TraitMaker.do_list"><a class="viewcode-back" href="../../traits_api_reference/traits.html#traits.traits._TraitMaker.do_list">[docs]</a>    <span class="k">def</span> <span class="nf">do_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="n">enum</span><span class="p">,</span> <span class="nb">map</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Determine the correct TraitHandler for each item in a list. &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">PythonTypes</span><span class="p">:</span>
                 <span class="n">other</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TraitCoerceType</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
@@ -548,15 +523,13 @@
                     <span class="n">other</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">other</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TraitInstance</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+                    <span class="n">other</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TraitInstance</span><span class="p">(</span><span class="n">item</span><span class="p">))</span></div>
 
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-    <span class="c1">#  Returns a properly initialized &#39;CTrait&#39; instance:</span>
-    <span class="c1"># ---------------------------------------------------------------------------</span>
-
-    <span class="k">def</span> <span class="nf">as_ctrait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="_TraitMaker.as_ctrait"><a class="viewcode-back" href="../../traits_api_reference/traits.html#traits.traits._TraitMaker.as_ctrait">[docs]</a>    <span class="k">def</span> <span class="nf">as_ctrait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return a properly initialized &#39;CTrait&#39; instance. &quot;&quot;&quot;</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span>
-        <span class="n">trait</span> <span class="o">=</span> <span class="n">CTrait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">),</span> <span class="n">TraitKind</span><span class="o">.</span><span class="n">trait</span><span class="p">))</span>
+        <span class="n">trait</span> <span class="o">=</span> <span class="n">CTrait</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">),</span> <span class="n">TraitKind</span><span class="o">.</span><span class="n">trait</span><span class="p">))</span>
         <span class="n">clone</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clone</span>
         <span class="k">if</span> <span class="n">clone</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">trait</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="n">clone</span><span class="p">)</span>
@@ -603,12 +576,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">trait</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">trait</span></div>
-
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Factory function for creating C-based trait properties:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
+        <span class="k">return</span> <span class="n">trait</span></div></div>
 
 
 <span class="k">def</span> <span class="nf">Property</span><span class="p">(</span>
@@ -622,26 +590,6 @@
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns a trait whose value is a Python property.</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    fget : function</span>
-<span class="sd">        The &quot;getter&quot; function for the property.</span>
-<span class="sd">    fset : function</span>
-<span class="sd">        The &quot;setter&quot; function for the property.</span>
-<span class="sd">    fvalidate : function</span>
-<span class="sd">        The validation function for the property. The method should return the</span>
-<span class="sd">        value to set or raise TraitError if the new value is not valid.</span>
-<span class="sd">    force : bool</span>
-<span class="sd">        Indicates whether to use only the function definitions specified by</span>
-<span class="sd">        **fget** and **fset**, and not look elsewhere on the class.</span>
-<span class="sd">    handler : function</span>
-<span class="sd">        A trait handler function for the trait.</span>
-<span class="sd">    trait : Trait or value</span>
-<span class="sd">        A trait definition or a value that can be converted to a trait that</span>
-<span class="sd">        constrains the values of the property trait.</span>
-
-<span class="sd">    Description</span>
-<span class="sd">    -----------</span>
 <span class="sd">    If no getter, setter or validate functions are specified (and **force** is</span>
 <span class="sd">    not True), it is assumed that they are defined elsewhere on the class whose</span>
 <span class="sd">    attribute this trait is assigned to. For example::</span>
@@ -676,8 +624,26 @@
 <span class="sd">            axle     = Instanced( Axle )</span>
 <span class="sd">            position = Property( depends_on = &#39;axle.chassis.position&#39; )</span>
 
-<span class="sd">    For details of the extended trait name syntax, refer to the on_trait_change()</span>
-<span class="sd">    method of the HasTraits class.</span>
+<span class="sd">    For details of the extended trait name syntax, refer to the</span>
+<span class="sd">    on_trait_change() method of the HasTraits class.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fget : function</span>
+<span class="sd">        The &quot;getter&quot; function for the property.</span>
+<span class="sd">    fset : function</span>
+<span class="sd">        The &quot;setter&quot; function for the property.</span>
+<span class="sd">    fvalidate : function</span>
+<span class="sd">        The validation function for the property. The method should return the</span>
+<span class="sd">        value to set or raise TraitError if the new value is not valid.</span>
+<span class="sd">    force : bool</span>
+<span class="sd">        Indicates whether to use only the function definitions specified by</span>
+<span class="sd">        **fget** and **fset**, and not look elsewhere on the class.</span>
+<span class="sd">    handler : function</span>
+<span class="sd">        A trait handler function for the trait.</span>
+<span class="sd">    trait : Trait or value</span>
+<span class="sd">        A trait definition or a value that can be converted to a trait that</span>
+<span class="sd">        constrains the values of the property trait.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;property&quot;</span>
 
@@ -735,15 +701,9 @@
     <span class="p">):</span>
         <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;cached&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">trait</span> <span class="o">=</span> <span class="n">CTrait</span><span class="p">(</span><span class="n">TraitKind</span><span class="o">.</span><span class="n">property</span><span class="p">)</span>
     <span class="n">trait</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">fvalidate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">_arg_count</span><span class="p">(</span><span class="n">fvalidate</span><span class="p">)</span>
-
-    <span class="n">trait</span><span class="o">.</span><span class="n">property</span><span class="p">(</span>
-        <span class="n">fget</span><span class="p">,</span> <span class="n">_arg_count</span><span class="p">(</span><span class="n">fget</span><span class="p">),</span> <span class="n">fset</span><span class="p">,</span> <span class="n">_arg_count</span><span class="p">(</span><span class="n">fset</span><span class="p">),</span> <span class="n">fvalidate</span><span class="p">,</span> <span class="n">n</span>
-    <span class="p">)</span>
+    <span class="n">trait</span><span class="o">.</span><span class="n">property_fields</span> <span class="o">=</span> <span class="p">(</span><span class="n">fget</span><span class="p">,</span> <span class="n">fset</span><span class="p">,</span> <span class="n">fvalidate</span><span class="p">)</span>
     <span class="n">trait</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">handler</span>
 
     <span class="k">return</span> <span class="n">trait</span>
@@ -763,33 +723,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">handler</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Create predefined, reusable trait instances:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1"># Predefined, reusable trait instances</span>
 
 <span class="c1"># Generic trait with &#39;object&#39; behavior:</span>
 <span class="n">generic_trait</span> <span class="o">=</span> <span class="n">CTrait</span><span class="p">(</span><span class="n">TraitKind</span><span class="o">.</span><span class="n">generic</span><span class="p">)</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  User interface related color and font traits:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
+<span class="c1"># User interface related color and font traits</span>
 
+<span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;&#39;Color&#39; in &#39;traits&#39; package has been deprecated. &quot;</span>
+            <span class="s2">&quot;Use &#39;Color&#39; from &#39;traitsui&#39; package instead.&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">Color</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns a trait whose value must be a GUI toolkit-specific color.</span>
 
-<span class="sd">    Description</span>
-<span class="sd">    -----------</span>
-<span class="sd">    For wxPython, the returned trait accepts any of the following values:</span>
-
-<span class="sd">    * A wx.Colour instance</span>
-<span class="sd">    * A wx.ColourPtr instance</span>
-<span class="sd">    * an integer whose hexadecimal form is 0x*RRGGBB*, where *RR* is the red</span>
-<span class="sd">      value, *GG* is the green value, and *BB* is the blue value</span>
-
-<span class="sd">    Default Value</span>
-<span class="sd">    -------------</span>
-<span class="sd">    For wxPython, 0xffffff (that is, white)</span>
+<span class="sd">    .. deprecated:: 6.1.0</span>
+<span class="sd">        ``Color`` trait in this package will be removed in the future. It is</span>
+<span class="sd">        replaced by ``Color`` trait in TraitsUI package.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">traitsui.toolkit_traits</span> <span class="k">import</span> <span class="n">ColorTrait</span>
 
@@ -799,23 +748,15 @@
 <span class="n">Color</span> <span class="o">=</span> <span class="n">TraitFactory</span><span class="p">(</span><span class="n">Color</span><span class="p">)</span>
 
 
+<span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;&#39;RGBColor&#39; in &#39;traits&#39; package has been deprecated. &quot;</span>
+            <span class="s2">&quot;Use &#39;RGBColor&#39; from &#39;traitsui&#39; package instead.&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">RGBColor</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns a trait whose value must be a GUI toolkit-specific RGB-based</span>
-<span class="sd">        color.</span>
+<span class="sd">    color.</span>
 
-<span class="sd">    Description</span>
-<span class="sd">    -----------</span>
-<span class="sd">    For wxPython, the returned trait accepts any of the following values:</span>
-
-<span class="sd">    * A tuple of the form (*r*, *g*, *b*), in which *r*, *g*, and *b* represent</span>
-<span class="sd">      red, green, and blue values, respectively, and are floats in the range</span>
-<span class="sd">      from 0.0 to 1.0</span>
-<span class="sd">    * An integer whose hexadecimal form is 0x*RRGGBB*, where *RR* is the red</span>
-<span class="sd">      value, *GG* is the green value, and *BB* is the blue value</span>
-
-<span class="sd">    Default Value</span>
-<span class="sd">    -------------</span>
-<span class="sd">    For wxPython, (1.0, 1.0, 1.0) (that is, white)</span>
+<span class="sd">    .. deprecated:: 6.1.0</span>
+<span class="sd">        ``RGBColor`` trait in this package will be removed in the future. It is</span>
+<span class="sd">        replaced by ``RGBColor`` trait in TraitsUI package.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">traitsui.toolkit_traits</span> <span class="k">import</span> <span class="n">RGBColorTrait</span>
 
@@ -825,21 +766,14 @@
 <span class="n">RGBColor</span> <span class="o">=</span> <span class="n">TraitFactory</span><span class="p">(</span><span class="n">RGBColor</span><span class="p">)</span>
 
 
+<span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;&#39;Font&#39; in &#39;traits&#39; package has been deprecated. &quot;</span>
+            <span class="s2">&quot;Use &#39;Font&#39; from &#39;traitsui&#39; package instead.&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">Font</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns a trait whose value must be a GUI toolkit-specific font.</span>
 
-<span class="sd">    Description</span>
-<span class="sd">    -----------</span>
-<span class="sd">    For wxPython, the returned trait accepts any of the following:</span>
-
-<span class="sd">    * a wx.Font instance</span>
-<span class="sd">    * a wx.FontPtr instance</span>
-<span class="sd">    * a string describing the font, including one or more of the font family,</span>
-<span class="sd">      size, weight, style, and typeface name.</span>
-
-<span class="sd">    Default Value</span>
-<span class="sd">    -------------</span>
-<span class="sd">    For wxPython, &#39;Arial 10&#39;</span>
+<span class="sd">    .. deprecated:: 6.1.0</span>
+<span class="sd">        ``Font`` trait in this package will be removed in the future. It is</span>
+<span class="sd">        replaced by ``Font`` trait in TraitsUI package.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">traitsui.toolkit_traits</span> <span class="k">import</span> <span class="n">FontTrait</span>
 
@@ -886,7 +820,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

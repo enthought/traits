@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.testing.unittest_tools &mdash; Traits 6 User Manual</title>
+    <title>traits.testing.unittest_tools &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -341,11 +341,10 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        context : context manager or None</span>
-<span class="sd">            If ``callableObj`` is None, an assertion context manager is returned,</span>
-<span class="sd">            inside of which a trait-change trigger can be invoked. Otherwise,</span>
-<span class="sd">            the context is used internally with ``callableObj`` as the trigger,</span>
-<span class="sd">            in which case None is returned.</span>
-
+<span class="sd">            If ``callableObj`` is None, an assertion context manager is</span>
+<span class="sd">            returned, inside of which a trait-change trigger can be invoked.</span>
+<span class="sd">            Otherwise, the context is used internally with ``callableObj`` as</span>
+<span class="sd">            the trigger, in which case None is returned.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
@@ -392,11 +391,10 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        context : context manager or None</span>
-<span class="sd">            If ``callableObj`` is None, an assertion context manager is returned,</span>
-<span class="sd">            inside of which a trait-change trigger can be invoked. Otherwise,</span>
-<span class="sd">            the context is used internally with ``callableObj`` as the trigger,</span>
-<span class="sd">            in which case None is returned.</span>
-
+<span class="sd">            If ``callableObj`` is None, an assertion context manager is</span>
+<span class="sd">            returned, inside of which a trait-change trigger can be invoked.</span>
+<span class="sd">            Otherwise, the context is used internally with ``callableObj`` as</span>
+<span class="sd">            the trigger, in which case None is returned.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;A change event was fired for: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trait</span><span class="p">)</span>
@@ -404,8 +402,7 @@
         <span class="k">if</span> <span class="n">callableObj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">reverse_assertion</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">reverse_assertion</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-            <span class="n">callableObj</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">return</span></div>
+            <span class="n">callableObj</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UnittestTools.assertMultiTraitChanges"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges">[docs]</a>    <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
     <span class="k">def</span> <span class="nf">assertMultiTraitChanges</span><span class="p">(</span>
@@ -619,7 +616,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

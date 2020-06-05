@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_handlers &mdash; Traits 6 User Manual</title>
+    <title>traits.trait_handlers &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -96,10 +96,6 @@
 <span class="sd">consistent.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Imports:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
 <span class="kn">from</span> <span class="nn">importlib</span> <span class="k">import</span> <span class="n">import_module</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span>
@@ -108,7 +104,6 @@
 <span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="p">(</span>
     <span class="n">SequenceTypes</span><span class="p">,</span>
     <span class="n">TypeTypes</span><span class="p">,</span>
-    <span class="n">CoercableTypes</span><span class="p">,</span>
     <span class="n">class_of</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="n">RangeTypes</span>  <span class="c1"># noqa: F401, used by TraitsUI</span>
@@ -124,19 +119,21 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Constants:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1"># Constants</span>
 
 <span class="n">CallableTypes</span> <span class="o">=</span> <span class="p">(</span><span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">)</span>
+
+<span class="c1"># Mapping of coercable types.</span>
+<span class="n">CoercableTypes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nb">float</span><span class="p">:</span> <span class="p">(</span><span class="n">ValidateTrait</span><span class="o">.</span><span class="n">coerce</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+    <span class="nb">complex</span><span class="p">:</span> <span class="p">(</span><span class="n">ValidateTrait</span><span class="o">.</span><span class="n">coerce</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+<span class="p">}</span>
 
 <span class="n">_WARNING_FORMAT_STR</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;&#39;</span><span class="si">{handler}</span><span class="s2">&#39; trait handler has been deprecated. &quot;</span>
                        <span class="s2">&quot;Use </span><span class="si">{replacement}</span><span class="s2"> instead.&quot;</span><span class="p">)</span>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Private functions:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
+<span class="c1"># Private functions</span>
 
 <div class="viewcode-block" id="_undefined_get"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers._undefined_get">[docs]</a><span class="k">def</span> <span class="nf">_undefined_get</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
     <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
@@ -288,15 +285,15 @@
 <span class="sd">    To understand the difference between TraitCoerceType and TraitCastType (and</span>
 <span class="sd">    also between Float and CFloat), consider the following example::</span>
 
-<span class="sd">        &gt;&gt;&gt;class Person(HasTraits):</span>
-<span class="sd">        ...    weight = Float</span>
-<span class="sd">        ...    cweight = CFloat</span>
-<span class="sd">        &gt;&gt;&gt;</span>
-<span class="sd">        &gt;&gt;&gt;bill = Person()</span>
-<span class="sd">        &gt;&gt;&gt;bill.weight = 180    # OK, coerced to 180.0</span>
-<span class="sd">        &gt;&gt;&gt;bill.cweight = 180   # OK, cast to 180.0</span>
-<span class="sd">        &gt;&gt;&gt;bill.weight = &#39;180&#39;  # Error, invalid coercion</span>
-<span class="sd">        &gt;&gt;&gt;bill.cweight = &#39;180&#39; # OK, cast to float(&#39;180&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; class Person(HasTraits):</span>
+<span class="sd">        ...     weight = Float</span>
+<span class="sd">        ...     cweight = CFloat</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; bill = Person()</span>
+<span class="sd">        &gt;&gt;&gt; bill.weight = 180    # OK, coerced to 180.0</span>
+<span class="sd">        &gt;&gt;&gt; bill.cweight = 180   # OK, cast to 180.0</span>
+<span class="sd">        &gt;&gt;&gt; bill.weight = &#39;180&#39;  # Error, invalid coercion</span>
+<span class="sd">        &gt;&gt;&gt; bill.cweight = &#39;180&#39; # OK, cast to float(&#39;180&#39;)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -342,8 +339,8 @@
 <span class="sd">    attribute, which accepts either None or an instance of Employee</span>
 <span class="sd">    as its value.</span>
 
-<span class="sd">    TraitInstance ensures that assigned values are exactly of the type specified</span>
-<span class="sd">    (i.e., no coercion is performed).</span>
+<span class="sd">    TraitInstance ensures that assigned values are exactly of the type</span>
+<span class="sd">    specified (i.e., no coercion is performed).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -440,8 +437,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">aClass</span> <span class="o">=</span> <span class="n">aClass</span>
 
         <span class="c1"># fixme: The following is quite ugly, because it wants to try and fix</span>
-        <span class="c1"># the trait referencing this handler to use the &#39;fast path&#39; now that the</span>
-        <span class="c1"># actual class has been resolved. The problem is finding the trait,</span>
+        <span class="c1"># the trait referencing this handler to use the &#39;fast path&#39; now that</span>
+        <span class="c1"># the actual class has been resolved. The problem is finding the trait,</span>
         <span class="c1"># especially in the case of List(Instance(&#39;foo&#39;)), where the</span>
         <span class="c1"># object.base_trait(...) value is the List trait, not the Instance</span>
         <span class="c1"># trait, so we need to check for this and pull out the List</span>
@@ -608,18 +605,20 @@
 
 
 <div class="viewcode-block" id="TraitPrefixList"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitPrefixList">[docs]</a><span class="k">class</span> <span class="nc">TraitPrefixList</span><span class="p">(</span><span class="n">TraitHandler</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Ensures that a value assigned to a trait attribute is a member of a list</span>
-<span class="sd">    of specified string values, or is a unique prefix of one of those values.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Ensures that a value assigned to a trait attribute is a member of a</span>
+<span class="sd">    list of specified string values, or is a unique prefix of one of those</span>
+<span class="sd">    values.</span>
 
 <span class="sd">    TraitPrefixList is a variation on TraitEnum. The values that can be</span>
-<span class="sd">    assigned to a trait attribute defined using a TraitPrefixList handler is the</span>
-<span class="sd">    set of all strings supplied to the TraitPrefixList constructor, as well as</span>
-<span class="sd">    any unique prefix of those strings. That is, if the set of strings supplied</span>
-<span class="sd">    to the constructor is described by [*s*\ :sub:`1`\ , *s*\ :sub:`2`\ , ...,</span>
-<span class="sd">    *s*\ :sub:`n`\ ], then the string *v* is a valid value for the trait if</span>
-<span class="sd">    *v* == *s*\ :sub:`i[:j]` for one and only one pair of values (i, j). If *v*</span>
-<span class="sd">    is a valid value, then the actual value assigned to the trait attribute is</span>
-<span class="sd">    the corresponding *s*\ :sub:`i` value that *v* matched.</span>
+<span class="sd">    assigned to a trait attribute defined using a TraitPrefixList handler is</span>
+<span class="sd">    the set of all strings supplied to the TraitPrefixList constructor, as well</span>
+<span class="sd">    as any unique prefix of those strings. That is, if the set of strings</span>
+<span class="sd">    supplied to the constructor is described by</span>
+<span class="sd">    [*s*\ :sub:`1`\ , *s*\ :sub:`2`\ , ..., *s*\ :sub:`n`\ ], then the string</span>
+<span class="sd">    *v* is a valid value for the trait if *v* == *s*\ :sub:`i[:j]` for one and</span>
+<span class="sd">    only one pair of values (i, j). If *v* is a valid value, then the actual</span>
+<span class="sd">    value assigned to the trait attribute is the corresponding *s*\ :sub:`i`</span>
+<span class="sd">    value that *v* matched.</span>
 
 <span class="sd">    As with TraitEnum, the list of legal values can be provided as a list</span>
 <span class="sd">    or tuple of values.  That is, ``TraitPrefixList([&#39;one&#39;, &#39;two&#39;, &#39;three&#39;])``</span>
@@ -639,8 +638,8 @@
 <span class="sd">    attribute, the actual value assigned will be &#39;yes&#39;.</span>
 
 <span class="sd">    Note that the algorithm used by TraitPrefixList in determining whether a</span>
-<span class="sd">    string is a valid value is fairly efficient in terms of both time and space,</span>
-<span class="sd">    and is not based on a brute force set of comparisons.</span>
+<span class="sd">    string is a valid value is fairly efficient in terms of both time and</span>
+<span class="sd">    space, and is not based on a brute force set of comparisons.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -654,6 +653,8 @@
 <span class="sd">        Enumeration of all legal values for a trait.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">_WARNING_FORMAT_STR</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">handler</span><span class="o">=</span><span class="s2">&quot;TraitPrefixList&quot;</span><span class="p">,</span> <span class="n">replacement</span><span class="o">=</span><span class="s2">&quot;PrefixList&quot;</span><span class="p">))</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">in</span> <span class="n">SequenceTypes</span><span class="p">):</span>
             <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -719,13 +720,13 @@
 
 <span class="sd">    The following example defines a ``Person`` class::</span>
 
-<span class="sd">        &gt;&gt;&gt;class Person(HasTraits):</span>
-<span class="sd">        ...    married = Trait(&#39;yes&#39;, TraitMap({&#39;yes&#39;: 1, &#39;no&#39;: 0 })</span>
-<span class="sd">        &gt;&gt;&gt;</span>
-<span class="sd">        &gt;&gt;&gt;bob = Person()</span>
-<span class="sd">        &gt;&gt;&gt;print bob.married</span>
+<span class="sd">        &gt;&gt;&gt; class Person(HasTraits):</span>
+<span class="sd">        ...     married = Trait(&#39;yes&#39;, TraitMap({&#39;yes&#39;: 1, &#39;no&#39;: 0 })</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; bob = Person()</span>
+<span class="sd">        &gt;&gt;&gt; print bob.married</span>
 <span class="sd">        yes</span>
-<span class="sd">        &gt;&gt;&gt;print bob.married_</span>
+<span class="sd">        &gt;&gt;&gt; print bob.married_</span>
 <span class="sd">        1</span>
 
 <span class="sd">    In this example, the default value of the ``married`` attribute of the</span>
@@ -751,6 +752,8 @@
 
     <span class="n">is_mapped</span> <span class="o">=</span> <span class="kc">True</span>
 
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">_WARNING_FORMAT_STR</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">handler</span><span class="o">=</span><span class="s2">&quot;TraitMap&quot;</span><span class="p">,</span> <span class="n">replacement</span><span class="o">=</span><span class="s2">&quot;Map&quot;</span><span class="p">))</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">map</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">map</span> <span class="o">=</span> <span class="nb">map</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fast_validate</span> <span class="o">=</span> <span class="p">(</span><span class="n">ValidateTrait</span><span class="o">.</span><span class="n">map</span><span class="p">,</span> <span class="nb">map</span><span class="p">)</span>
@@ -821,6 +824,8 @@
 <span class="sd">        the shadow trait attribute.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">_WARNING_FORMAT_STR</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">handler</span><span class="o">=</span><span class="s2">&quot;TraitPrefixMap&quot;</span><span class="p">,</span> <span class="n">replacement</span><span class="o">=</span><span class="s2">&quot;PrefixMap&quot;</span><span class="p">))</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">map</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">map</span> <span class="o">=</span> <span class="nb">map</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_map</span> <span class="o">=</span> <span class="n">_map</span> <span class="o">=</span> <span class="p">{}</span>
@@ -854,8 +859,8 @@
     <span class="sd">&quot;&quot;&quot; Provides a logical-OR combination of other trait handlers.</span>
 
 <span class="sd">    This class provides a means of creating complex trait definitions by</span>
-<span class="sd">    combining several simpler trait definitions. TraitCompound is the underlying</span>
-<span class="sd">    handler for the general forms of the Trait() function.</span>
+<span class="sd">    combining several simpler trait definitions. TraitCompound is the</span>
+<span class="sd">    underlying handler for the general forms of the Trait() function.</span>
 
 <span class="sd">    A value is a valid value for a trait attribute based on a TraitCompound</span>
 <span class="sd">    instance if the value is valid for at least one of the TraitHandler or</span>
@@ -1051,7 +1056,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">types</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">trait_from</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fast_validate</span> <span class="o">=</span> <span class="p">(</span><span class="n">ValidateTrait</span><span class="o">.</span><span class="n">tuple</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="TraitTuple.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitTuple.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
                 <span class="n">types</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span>
@@ -1065,9 +1070,9 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">full_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="TraitTuple.full_info"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitTuple.full_info">[docs]</a>    <span class="k">def</span> <span class="nf">full_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;a tuple of the form: (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span>
             <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="p">[</span>
@@ -1075,7 +1080,7 @@
                     <span class="k">for</span> <span class="nb">type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span>
                 <span class="p">]</span>
             <span class="p">)</span>
-        <span class="p">)</span>
+        <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_trait_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="n">handler</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">handler</span>
@@ -1084,12 +1089,12 @@
 
         <span class="k">return</span> <span class="n">handler</span><span class="o">.</span><span class="n">full_info</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait</span><span class="p">):</span>
+<div class="viewcode-block" id="TraitTuple.get_editor"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitTuple.get_editor">[docs]</a>    <span class="k">def</span> <span class="nf">get_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TupleEditor</span>
 
         <span class="k">return</span> <span class="n">TupleEditor</span><span class="p">(</span>
             <span class="n">types</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">trait</span><span class="o">.</span><span class="n">labels</span> <span class="ow">or</span> <span class="p">[],</span> <span class="n">cols</span><span class="o">=</span><span class="n">trait</span><span class="o">.</span><span class="n">cols</span> <span class="ow">or</span> <span class="mi">1</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="TraitList"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitList">[docs]</a><span class="k">class</span> <span class="nc">TraitList</span><span class="p">(</span><span class="n">TraitHandler</span><span class="p">):</span>
@@ -1162,15 +1167,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">item_trait</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minlen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxlen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_items</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="TraitList.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitList.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">minlen</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxlen</span>
         <span class="p">):</span>
             <span class="k">return</span> <span class="n">TraitListObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">full_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="TraitList.full_info"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitList.full_info">[docs]</a>    <span class="k">def</span> <span class="nf">full_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">minlen</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxlen</span> <span class="o">==</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span><span class="p">:</span>
                 <span class="n">size</span> <span class="o">=</span> <span class="s2">&quot;items&quot;</span>
@@ -1187,12 +1192,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot; which are </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">handler</span><span class="o">.</span><span class="n">full_info</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="s2">&quot;a list of </span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;a list of </span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">get_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait</span><span class="p">):</span>
+<div class="viewcode-block" id="TraitList.get_editor"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitList.get_editor">[docs]</a>    <span class="k">def</span> <span class="nf">get_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">traits.editor_factories</span> <span class="k">import</span> <span class="n">list_editor</span>
 
-        <span class="k">return</span> <span class="n">list_editor</span><span class="p">(</span><span class="n">trait</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">list_editor</span><span class="p">(</span><span class="n">trait</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">items_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">items_event</span><span class="p">()</span></div>
@@ -1209,14 +1214,9 @@
     <span class="k">return</span> <span class="n">TraitList</span><span class="o">.</span><span class="n">_items_event</span>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;TraitDict&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="TraitDict"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitDict">[docs]</a><span class="k">class</span> <span class="nc">TraitDict</span><span class="p">(</span><span class="n">TraitHandler</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Ensures that values assigned to a trait attribute are dictionaries whose</span>
-<span class="sd">    keys and values are of specified types.</span>
+    <span class="sd">&quot;&quot;&quot; Ensures that values assigned to a trait attribute are dictionaries</span>
+<span class="sd">    whose keys and values are of specified types.</span>
 
 <span class="sd">    TraitDict also makes sure that any changes to keys or values made that are</span>
 <span class="sd">    made after the dictionary is assigned to the trait attribute satisfy the</span>
@@ -1286,12 +1286,12 @@
     <span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">TraitDict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key_trait</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_trait</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_items</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="TraitDict.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitDict.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">TraitDictObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">full_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="TraitDict.full_info"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitDict.full_info">[docs]</a>    <span class="k">def</span> <span class="nf">full_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="n">extra</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">handler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_trait</span><span class="o">.</span><span class="n">handler</span>
         <span class="k">if</span> <span class="n">handler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1307,15 +1307,15 @@
             <span class="n">extra</span> <span class="o">+=</span> <span class="s2">&quot; values which are </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">handler</span><span class="o">.</span><span class="n">full_info</span><span class="p">(</span>
                 <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;a dictionary</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">extra</span>
+        <span class="k">return</span> <span class="s2">&quot;a dictionary</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">extra</span></div>
 
-    <span class="k">def</span> <span class="nf">get_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait</span><span class="p">):</span>
+<div class="viewcode-block" id="TraitDict.get_editor"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitDict.get_editor">[docs]</a>    <span class="k">def</span> <span class="nf">get_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">editor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">TextEditor</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">editor</span> <span class="o">=</span> <span class="n">TextEditor</span><span class="p">(</span><span class="n">evaluate</span><span class="o">=</span><span class="nb">eval</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">editor</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">editor</span></div>
 
     <span class="k">def</span> <span class="nf">items_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">.trait_types</span> <span class="k">import</span> <span class="n">Event</span>
@@ -1365,7 +1365,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

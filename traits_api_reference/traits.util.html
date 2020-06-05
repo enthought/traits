@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.util Package &mdash; Traits 6 User Manual</title>
+    <title>traits.util Package &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="Traits CHANGELOG" href="../changelog.html" >
     <link rel="prev" title="traits.testing Package" href="traits.testing.html" > 
@@ -50,7 +50,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -121,7 +121,7 @@ returned.</p>
 <dl class="class">
 <dt id="traits.util.camel_case.CamelCaseToPython">
 <em class="property">class </em><code class="sig-prename descclassname">traits.util.camel_case.</code><code class="sig-name descname">CamelCaseToPython</code><a class="reference internal" href="../_modules/traits/util/camel_case.html#CamelCaseToPython"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.camel_case.CamelCaseToPython" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Simple functor class to convert names from camel case to idiomatic
 Python variable names.</p>
 <dl>
@@ -165,8 +165,8 @@ different input strings can result in the same output string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – The string to be made safe.</p></li>
-<li><p><strong>replace_empty</strong> (<em>str</em><em>, </em><em>optional</em>) – The return value to be used in the event that the sanitised
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The string to be made safe.</p></li>
+<li><p><strong>replace_empty</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – The return value to be used in the event that the sanitised
 string ends up being empty. No validation is done on this
 input - it’s up to the user to ensure that the default is
 itself safe. The default is to return the empty string.</p></li>
@@ -176,7 +176,7 @@ itself safe. The default is to return the empty string.</p></li>
 <dd class="field-even"><p><strong>safe_string</strong> – A filename-safe version of string.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -199,8 +199,8 @@ is provided, then uses the current time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dt</strong> (<em>None</em><em> or </em><em>datetime.datetime</em>) – If None, then the current time is used.</p></li>
-<li><p><strong>microseconds</strong> (<em>bool</em>) – Display microseconds or not.</p></li>
+<li><p><strong>dt</strong> (<a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.8)"><em>datetime.datetime</em></a>) – If None, then the current time is used.</p></li>
+<li><p><strong>microseconds</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Display microseconds or not.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -240,17 +240,17 @@ is provided, then uses the current time.</p>
 </div>
 <div class="section" id="module-traits.util.resource">
 <span id="traits-util-resource-module"></span><h2><a class="reference internal" href="#module-traits.util.resource" title="traits.util.resource"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.util.resource</span></code></a> Module<a class="headerlink" href="#module-traits.util.resource" title="Permalink to this headline">¶</a></h2>
-<p>Utility functions for managing and finding resources (ie. images/files etc).</p>
+<p>Utility functions for managing and finding resources (e.g. images, files).</p>
 <p>get_path :           Returns the absolute path of a class or instance</p>
 <dl class="simple">
-<dt>create_unique_name<span class="classifier">Creates a name with a given prefix that is not in a</span></dt><dd><p>given list of existing names. The separator between the
-prefix and the rest of the name can also be specified
-(default is a ‘_’)</p>
+<dt>create_unique_name<span class="classifier">Creates a name with a given prefix that is not in a</span></dt><dd><p>given list of existing names. The separator between
+the prefix and the rest of the name can also be
+specified (default is a ‘_’)</p>
 </dd>
 <dt>find_resource:       Given a setuptools project specification string</dt><dd><p>(‘MyProject&gt;=2.1’) and a partial path leading from the
 projects base directory to the desired resource, will
-return either an opened file object or, if specified, a
-full path to the resource.</p>
+return either an opened file object or, if specified,
+a full path to the resource.</p>
 </dd>
 </dl>
 <dl class="function">
@@ -270,38 +270,37 @@ full path to the resource.</p>
 <dt id="traits.util.resource.find_resource">
 <code class="sig-prename descclassname">traits.util.resource.</code><code class="sig-name descname">find_resource</code><span class="sig-paren">(</span><em class="sig-param">project</em>, <em class="sig-param">resource_path</em>, <em class="sig-param">alt_path=None</em>, <em class="sig-param">return_path=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/resource.html#find_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.find_resource" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a file object or file path pointing to the desired resource.</p>
+<p>This function will find a desired resource file and return an opened file
+object. The main method of finding the resource uses the pkg_resources
+resource_stream method, which searches your working set for the installed
+project specified and appends the resource_path given to the project
+path, leading it to the file. If setuptools is not installed or it cannot
+find/open the resource, find_resource will use the sys.path[0] to find the
+resource if alt_path is defined.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> (<em>str</em>) – The name of the project to look for the resource in. Can be the name or
-a requirement string. Ex: ‘MyProject’, ‘MyProject&gt;1.0’, ‘MyProject==1.1’</p></li>
-<li><p><strong>resource_path</strong> (<em>str</em>) – The path to the file from inside the package. If the file desired is
+<li><p><strong>project</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the project to look for the resource in. Can be the name or
+a requirement string. Ex: ‘MyProject’, ‘MyProject&gt;1.0’,
+‘MyProject==1.1’</p></li>
+<li><p><strong>resource_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The path to the file from inside the package. If the file desired is
 MyProject/data/image.jpg, resource_path would be ‘data/image.jpg’.</p></li>
-<li><p><strong>alt_path</strong> (<em>str</em>) – The path to the resource relative to the location of the application’s
+<li><p><strong>alt_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The path to the resource relative to the location of the application’s
 top-level script (the one with __main__). If this function is called in
 code/scripts/myscript.py and the resource is code/data/image.jpg, the
 alt_path would be ‘../data/image.jpg’. This path is only used if the
 resource cannot be found using setuptools.</p></li>
-<li><p><strong>return_path</strong> (<em>bool</em>) – Determines whether the function should return a file object or a full
+<li><p><strong>return_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Determines whether the function should return a file object or a full
 path to the resource.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>file</strong> (<em>file object or file path</em>) – A file object containing the resource. If return_path is True, ‘file’
+<dd class="field-even"><p><strong>file</strong> – A file object containing the resource. If return_path is True, ‘file’
 will be the full path to the resource. If the file is not found or
-cannot be opened, None is returned.</p></li>
-<li><p><em>Description</em></p></li>
-<li><p><em>———–</em></p></li>
-<li><p><em>This function will find a desired resource file and return an opened file</em></p></li>
-<li><p><em>object. The main method of finding the resource uses the pkg_resources</em></p></li>
-<li><p><em>resource_stream method, which searches your working set for the installed</em></p></li>
-<li><p><em>project specified and appends the resource_path given to the project</em></p></li>
-<li><p><em>path, leading it to the file. If setuptools is not installed or it cannot</em></p></li>
-<li><p><em>find/open the resource, find_resource will use the sys.path[0] to find the</em></p></li>
-<li><p><em>resource if alt_path is defined.</em></p></li>
-</ul>
-</p>
+cannot be opened, None is returned.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>file object or file path</p>
 </dd>
 </dl>
 </dd></dl>
@@ -343,7 +342,7 @@ from the module.</p>
 <dl class="exception">
 <dt id="traits.util.toposort.CyclicGraph">
 <em class="property">exception </em><code class="sig-prename descclassname">traits.util.toposort.</code><code class="sig-name descname">CyclicGraph</code><a class="reference internal" href="../_modules/traits/util/toposort.html#CyclicGraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.toposort.CyclicGraph" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <p>Exception for cyclic graphs.</p>
 </dd></dl>
 
@@ -615,7 +614,7 @@ RecordContainer is created.</p>
 <dd><p>Indentation level when reporting chained events.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -664,7 +663,7 @@ for each thread.</p>
 <dd><p>Mapping from threads to ChangeEventRecorder instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -778,7 +777,7 @@ traced.</p>
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

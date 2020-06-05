@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.testing.nose_tools &mdash; Traits 6 User Manual</title>
+    <title>traits.testing.nose_tools &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -87,7 +87,15 @@
 <span class="c1">#</span>
 <span class="c1"># Thanks for using Enthought open source!</span>
 
-<span class="s2">&quot;Non-standard functions for the &#39;nose&#39; testing framework.&quot;</span>
+<span class="sd">&quot;&quot;&quot; Non-standard functions for the &#39;nose&#39; testing framework</span>
+
+<span class="sd">This module is deprecated, and will be removed in a future release.</span>
+
+<span class="sd">.. deprecated:: 6.1.0</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">nose</span> <span class="k">import</span> <span class="n">DeprecatedTest</span><span class="p">,</span> <span class="n">SkipTest</span>
@@ -95,7 +103,16 @@
 
     <span class="k">def</span> <span class="nf">skip</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Decorator to indicate a test should be skipped.</span>
+
+<span class="sd">        .. deprecated:: 6.1.0</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;The traits.testing.nose_tools module and its contents &quot;</span>
+            <span class="s2">&quot;are deprecated&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">SkipTest</span><span class="p">()</span>
@@ -104,7 +121,16 @@
 
     <span class="k">def</span> <span class="nf">deprecated</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Decorator to indicate a test is deprecated.</span>
+
+<span class="sd">        .. deprecated:: 6.1.0</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;The traits.testing.nose_tools module and its contents &quot;</span>
+            <span class="s2">&quot;are deprecated&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">DeprecatedTest</span><span class="p">()</span>
@@ -115,12 +141,18 @@
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="c1"># Define stubs in case nose isn&#39;t installed.</span>
 
-    <span class="kn">import</span> <span class="nn">warnings</span>
-
 <div class="viewcode-block" id="skip"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.nose_tools.skip">[docs]</a>    <span class="k">def</span> <span class="nf">skip</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Stub replacement for marking a unit test to be skipped in the</span>
 <span class="sd">        absence of &#39;nose&#39;.</span>
+
+<span class="sd">        .. deprecated:: 6.1.0</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;The traits.testing.nose_tools module and its contents &quot;</span>
+            <span class="s2">&quot;are deprecated&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;skipping unit tests requires the package &#39;nose&#39;&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">f</span></div>
@@ -128,7 +160,15 @@
 <div class="viewcode-block" id="deprecated"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.nose_tools.deprecated">[docs]</a>    <span class="k">def</span> <span class="nf">deprecated</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Stub replacement for marking a unit test deprecated in the absence</span>
 <span class="sd">        of &#39;nose&#39;.</span>
+
+<span class="sd">        .. deprecated:: 6.1.0</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;The traits.testing.nose_tools module and its contents &quot;</span>
+            <span class="s2">&quot;are deprecated&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;skipping deprecated unit tests requires the package &#39;nose&#39;&quot;</span>
@@ -139,7 +179,17 @@
 <div class="viewcode-block" id="performance"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.nose_tools.performance">[docs]</a><span class="k">def</span> <span class="nf">performance</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Decorator to add an attribute to the test to mark it as</span>
 <span class="sd">    a performance-measuring test.</span>
+
+<span class="sd">    .. deprecated:: 6.1.0</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="s2">&quot;The traits.testing.nose_tools module and its contents &quot;</span>
+        <span class="s2">&quot;are deprecated&quot;</span><span class="p">,</span>
+        <span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+
     <span class="n">f</span><span class="o">.</span><span class="n">performance</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="n">f</span></div>
 </pre></div>
@@ -181,7 +231,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

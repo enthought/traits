@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Custom Traits &mdash; Traits 6 User Manual</title>
+    <title>Custom Traits &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,8 +30,8 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../index.html" >
-    <link rel="up" title="Traits 6 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
+    <link rel="up" title="Traits 6.1 User Manual" href="index.html" >
     <link rel="next" title="Advanced Topics" href="advanced.html" >
     <link rel="prev" title="Deferring Trait Definitions" href="deferring.html" > 
   </head>
@@ -50,9 +50,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.1 User Manual</a></li> 
     </ul>
               
               
@@ -204,6 +204,30 @@ set() method is defined, the property behaves as write-only.</p>
 object. The set() method does not return a value, but will raise a TraitError if
 the specified <em>value</em> is not valid, and cannot be coerced or adapted to a valid
 value.</p>
+<p>In order for the property to trigger notifications you must call either:</p>
+<ul class="simple">
+<li><p>object.trait_property_changed(name, old, value) to not cache the value.</p></li>
+<li><p>self.set_value(object, name, value) to cache the value.</p></li>
+</ul>
+<p>Likewise if the property will not be read only the get method must use
+self.get_value(object, name) in order to behave correctly.</p>
+<p>The following example demonstrates the use of a property trait to set temperature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TempFloat</span><span class="p">(</span><span class="n">BaseFloat</span><span class="p">):</span>
+    <span class="n">default_value</span> <span class="o">=</span> <span class="mf">20.0</span>
+    <span class="n">info_text</span> <span class="o">=</span> <span class="s1">&#39;A calculated temperature float in Celsius&#39;</span>
+
+    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">celsius</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">5</span><span class="o">/</span><span class="mi">9</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">celsius</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">celsius</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span>
+        <span class="k">return</span> <span class="n">val</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="other-traittype-members">
 <span id="index-7"></span><span id="id6"></span><h3>Other TraitType Members<a class="headerlink" href="#other-traittype-members" title="Permalink to this headline">¶</a></h3>
@@ -620,7 +644,7 @@ BaseType version that does not have the <strong>fast_validate</strong> attribute
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

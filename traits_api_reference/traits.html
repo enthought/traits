@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.traits Module &mdash; Traits 6 User Manual</title>
+    <title>traits.traits Module &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.has_traits Module" href="has_traits.html" >
     <link rel="prev" title="API Reference" href="index.html" > 
@@ -50,7 +50,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -123,32 +123,12 @@ feature.</p>
 be specified, to generate a default value dynamically.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="traits.traits.Property">
-<code class="sig-prename descclassname">traits.traits.</code><code class="sig-name descname">Property</code><a class="headerlink" href="#traits.traits.Property" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="class">
 <dt id="traits.traits.ForwardProperty">
 <em class="property">class </em><code class="sig-prename descclassname">traits.traits.</code><code class="sig-name descname">ForwardProperty</code><span class="sig-paren">(</span><em class="sig-param">metadata</em>, <em class="sig-param">validate=None</em>, <em class="sig-param">handler=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#ForwardProperty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.ForwardProperty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used to implement Property traits where accessor functions are defined
 implicitly on the class.</p>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="traits.traits.Color">
-<code class="sig-prename descclassname">traits.traits.</code><code class="sig-name descname">Color</code><a class="headerlink" href="#traits.traits.Color" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="traits.traits.RGBColor">
-<code class="sig-prename descclassname">traits.traits.</code><code class="sig-name descname">RGBColor</code><a class="headerlink" href="#traits.traits.RGBColor" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="traits.traits.Font">
-<code class="sig-prename descclassname">traits.traits.</code><code class="sig-name descname">Font</code><a class="headerlink" href="#traits.traits.Font" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </div>
 <div class="section" id="functions">
@@ -301,9 +281,9 @@ interface editors for traits.</p>
 interface editor for the trait. See the “Traits UI User Guide” for
 more information on trait editors.</p>
 </dd>
-<dt>comparison_mode<span class="classifier">int</span></dt><dd><p>Indicates when trait change notifications should be generated based upon
-the result of comparing the old and new values of a trait assignment.
-Possible values come from the <code class="docutils literal notranslate"><span class="pre">ComparisonMode</span></code> enum:</p>
+<dt>comparison_mode<span class="classifier">int</span></dt><dd><p>Indicates when trait change notifications should be generated based
+upon the result of comparing the old and new values of a trait
+assignment. Possible values come from the <code class="docutils literal notranslate"><span class="pre">ComparisonMode</span></code> enum:</p>
 <ul class="simple">
 <li><p>0 (none): The values are not compared and a trait change
 notification is generated on each assignment.</p></li>
@@ -317,6 +297,94 @@ testing. This is the default.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="function">
+<dt id="traits.traits.Property">
+<code class="sig-prename descclassname">traits.traits.</code><code class="sig-name descname">Property</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.traits.Property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a trait whose value is a Python property.</p>
+<p>If no getter, setter or validate functions are specified (and <strong>force</strong> is
+not True), it is assumed that they are defined elsewhere on the class whose
+attribute this trait is assigned to. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Bar</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+
+    <span class="c1"># A float traits Property that should be always positive.</span>
+    <span class="n">foo</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Float</span><span class="p">)</span>
+
+    <span class="c1"># Shadow trait attribute</span>
+    <span class="n">_foo</span> <span class="o">=</span> <span class="n">Float</span>
+
+    <span class="k">def</span> <span class="nf">_set_foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_foo</span> <span class="o">=</span> <span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">_validate_foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
+                <span class="s1">&#39;foo property should be a positive number&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">_get_foo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_foo</span>
+</pre></div>
+</div>
+<p>You can use the <strong>depends_on</strong> metadata attribute to indicate that the
+property depends on the value of another trait. The value of <strong>depends_on</strong>
+is an extended name specifier for traits that the property depends on. The
+property will a trait change notification if any of the traits specified
+by <strong>depends_on</strong> change. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Wheel</span> <span class="p">(</span> <span class="n">Part</span> <span class="p">):</span>
+    <span class="n">axle</span>     <span class="o">=</span> <span class="n">Instanced</span><span class="p">(</span> <span class="n">Axle</span> <span class="p">)</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">depends_on</span> <span class="o">=</span> <span class="s1">&#39;axle.chassis.position&#39;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>For details of the extended trait name syntax, refer to the
+on_trait_change() method of the HasTraits class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fget</strong> (<em>function</em>) – The “getter” function for the property.</p></li>
+<li><p><strong>fset</strong> (<em>function</em>) – The “setter” function for the property.</p></li>
+<li><p><strong>fvalidate</strong> (<em>function</em>) – The validation function for the property. The method should return the
+value to set or raise TraitError if the new value is not valid.</p></li>
+<li><p><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Indicates whether to use only the function definitions specified by
+<strong>fget</strong> and <strong>fset</strong>, and not look elsewhere on the class.</p></li>
+<li><p><strong>handler</strong> (<em>function</em>) – A trait handler function for the trait.</p></li>
+<li><p><strong>trait</strong> (<em>Trait</em><em> or </em><em>value</em>) – A trait definition or a value that can be converted to a trait that
+constrains the values of the property trait.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.traits.Color">
+<code class="sig-prename descclassname">traits.traits.</code><code class="sig-name descname">Color</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.traits.Color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a trait whose value must be a GUI toolkit-specific color.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 6.1.0: </span><code class="docutils literal notranslate"><span class="pre">Color</span></code> trait in this package will be removed in the future. It is
+replaced by <code class="docutils literal notranslate"><span class="pre">Color</span></code> trait in TraitsUI package.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.traits.RGBColor">
+<code class="sig-prename descclassname">traits.traits.</code><code class="sig-name descname">RGBColor</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.traits.RGBColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a trait whose value must be a GUI toolkit-specific RGB-based
+color.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 6.1.0: </span><code class="docutils literal notranslate"><span class="pre">RGBColor</span></code> trait in this package will be removed in the future. It is
+replaced by <code class="docutils literal notranslate"><span class="pre">RGBColor</span></code> trait in TraitsUI package.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.traits.Font">
+<code class="sig-prename descclassname">traits.traits.</code><code class="sig-name descname">Font</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.traits.Font" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a trait whose value must be a GUI toolkit-specific font.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 6.1.0: </span><code class="docutils literal notranslate"><span class="pre">Font</span></code> trait in this package will be removed in the future. It is
+replaced by <code class="docutils literal notranslate"><span class="pre">Font</span></code> trait in TraitsUI package.</p>
+</div>
+</dd></dl>
+
 </div>
 <div class="section" id="private-classes">
 <h2>Private Classes<a class="headerlink" href="#private-classes" title="Permalink to this headline">¶</a></h2>
@@ -328,7 +396,25 @@ testing. This is the default.</p></li>
 <dl class="class">
 <dt id="traits.traits._TraitMaker">
 <em class="property">class </em><code class="sig-prename descclassname">traits.traits.</code><code class="sig-name descname">_TraitMaker</code><span class="sig-paren">(</span><em class="sig-param">*value_type</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#_TraitMaker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits._TraitMaker" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="method">
+<dt id="traits.traits._TraitMaker.define">
+<code class="sig-name descname">define</code><span class="sig-paren">(</span><em class="sig-param">*value_type</em>, <em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#_TraitMaker.define"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits._TraitMaker.define" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits._TraitMaker.do_list">
+<code class="sig-name descname">do_list</code><span class="sig-paren">(</span><em class="sig-param">list</em>, <em class="sig-param">enum</em>, <em class="sig-param">map</em>, <em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#_TraitMaker.do_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits._TraitMaker.do_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the correct TraitHandler for each item in a list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.traits._TraitMaker.as_ctrait">
+<code class="sig-name descname">as_ctrait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#_TraitMaker.as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits._TraitMaker.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a properly initialized ‘CTrait’ instance.</p>
+</dd></dl>
+
+</dd></dl>
 
 </div>
 </div>
@@ -392,7 +478,7 @@ testing. This is the default.</p></li>
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

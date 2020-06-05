@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Advanced Topics &mdash; Traits 6 User Manual</title>
+    <title>Advanced Topics &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,8 +30,8 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../index.html" >
-    <link rel="up" title="Traits 6 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
+    <link rel="up" title="Traits 6.1 User Manual" href="index.html" >
     <link rel="next" title="Testing" href="testing.html" >
     <link rel="prev" title="Custom Traits" href="custom.html" > 
   </head>
@@ -50,9 +50,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.1 User Manual</a></li> 
     </ul>
               
               
@@ -106,16 +106,32 @@ validation features of the Traits package.</p>
 <p>When you define trait attributes using predefined traits, the Trait() factory
 function or trait handlers, you typically specify their default values
 statically. You can also define a method that dynamically initializes a trait
-attribute the first time that the attribute value is accessed. To do this, you
-define a method on the same class as the trait attribute, with a name based on
-the name of the trait attribute:</p>
+attribute. To do this, you define a method on the same class as the trait
+attribute, with a name based on the name of the trait attribute:</p>
 <span class="target" id="index-1"></span><dl class="method">
 <dt id="_name_default">
 <code class="sig-name descname">_name_default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_name_default" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>This method initializes the <em>name</em> trait attribute, returning its initial value.
-The method overrides any default value specified in the trait definition.</p>
+<p>This method returns the default value for the <em>name</em> trait attribute and it
+overrides any default value specified in the trait definition.</p>
+<p>Similar to static default values, default values defined dynamically should be
+thought of as existing <strong>prior to</strong> setting object state during
+initialization. For performance purposes, a default initializer method is
+called when:</p>
+<ol class="arabic simple">
+<li><p>the attribute value is accessed the first time or</p></li>
+<li><p>an instance is constructed with a specific value, if there is a change
+handler defined for the trait. This is needed so the default can be reported
+as the old value (see <a class="reference internal" href="listening.html#static-notification"><span class="std std-ref">Static Notification</span></a>).</p></li>
+</ol>
+<p>While it is possible to use a default initializer method to lazily initialize
+attributes based on the object state post-instantiation, this relies on not
+having to observe for changes on the trait. This is often difficult in
+practice, since trait notifications can be set up by external objects, and are
+often needed for Property traits, delegation and GUI applications. These use
+cases may cause the default values to be computed eagerly prior to
+instantiation, instead of lazily after instantiation.</p>
 <p id="index-2">It is also possible to define a dynamic method for the default value in a trait
 type subclass (get_default_value()). However, using a
 _<em>name</em>_default()  method avoids the overhead of subclassing a trait.</p>
@@ -1063,7 +1079,7 @@ indicate that a getter method’s return value should be cached. Use
 preceding the property’s getter method.</p>
 <p>The <strong>depends_on</strong> metadata attribute accepts extended trait references, using
 the same syntax as the on_trait_change() method’s name parameter, described in
-<a class="reference internal" href="notification.html#the-name-parameter"><span class="std std-ref">The name Parameter</span></a>. As a result, it can take values that specify
+<a class="reference internal" href="listening.html#the-name-parameter"><span class="std std-ref">The name Parameter</span></a>. As a result, it can take values that specify
 attributes on referenced objects, multiple attributes, or attributes that are
 selected based on their metadata attributes.</p>
 </div>
@@ -1455,7 +1471,7 @@ the tool is justified and appropriate.</p>
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

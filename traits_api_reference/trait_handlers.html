@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_handlers Module &mdash; Traits 6 User Manual</title>
+    <title>traits.trait_handlers Module &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.trait_list_object Module" href="trait_list_object.html" >
     <link rel="prev" title="traits.trait_handler Module" href="trait_handler.html" > 
@@ -50,7 +50,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -149,7 +149,7 @@ The following table lists the allowed coercions.</p>
 </table>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>aType</strong> (<em>type</em><em> or </em><em>object</em>) – Either a Python type or a Python value.  If this is an object, it is
+<dd class="field-odd"><p><strong>aType</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.8)"><em>type</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – Either a Python type or a Python value.  If this is an object, it is
 mapped to its corresponding type. For example, the string ‘cat’ is
 automatically mapped to <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p>
 </dd>
@@ -160,7 +160,7 @@ automatically mapped to <code class="docutils literal notranslate"><span class="
 <dd><p>A Python type to coerce values to.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>type</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.8)">type</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -168,7 +168,8 @@ automatically mapped to <code class="docutils literal notranslate"><span class="
 <dl class="method">
 <dt id="traits.trait_handlers.TraitCoerceType.validate">
 <code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitCoerceType.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitCoerceType.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Verifies whether a new value assigned to a trait attribute is valid.</p>
+<dd><p>Verifies whether a new value assigned to a trait attribute is
+valid.</p>
 <p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
 called whenever a new value is assigned to a trait attribute defined
 using this trait handler.</p>
@@ -179,7 +180,7 @@ raise a TraitError exception</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
 <li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
 </ul>
 </dd>
@@ -201,11 +202,11 @@ is the actual value assigned to <em>object.name</em>.</p>
 <dd><p>Must return a string describing the type of value accepted by the
 trait handler.</p>
 <p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by info() is combined with
-other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The info() method is
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by info() is combined
+with other information whenever an error occurs and therefore makes
+more sense to the user if the result is a phrase. The info() method is
 similar in purpose and use to the <strong>info</strong> attribute of a validator
 function.</p>
 <p>Note that the result can include information specific to the particular
@@ -260,20 +261,20 @@ essentially the same as writing:</p>
 </div>
 <p>To understand the difference between TraitCoerceType and TraitCastType (and
 also between Float and CFloat), consider the following example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;class Person(HasTraits):</span>
-<span class="gp">... </span>   <span class="n">weight</span> <span class="o">=</span> <span class="n">Float</span>
-<span class="gp">... </span>   <span class="n">cweight</span> <span class="o">=</span> <span class="n">CFloat</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="go">&gt;&gt;&gt;bill = Person()</span>
-<span class="go">&gt;&gt;&gt;bill.weight = 180    # OK, coerced to 180.0</span>
-<span class="go">&gt;&gt;&gt;bill.cweight = 180   # OK, cast to 180.0</span>
-<span class="go">&gt;&gt;&gt;bill.weight = &#39;180&#39;  # Error, invalid coercion</span>
-<span class="go">&gt;&gt;&gt;bill.cweight = &#39;180&#39; # OK, cast to float(&#39;180&#39;)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">weight</span> <span class="o">=</span> <span class="n">Float</span>
+<span class="gp">... </span>    <span class="n">cweight</span> <span class="o">=</span> <span class="n">CFloat</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="mi">180</span>    <span class="c1"># OK, coerced to 180.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span><span class="o">.</span><span class="n">cweight</span> <span class="o">=</span> <span class="mi">180</span>   <span class="c1"># OK, cast to 180.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="s1">&#39;180&#39;</span>  <span class="c1"># Error, invalid coercion</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span><span class="o">.</span><span class="n">cweight</span> <span class="o">=</span> <span class="s1">&#39;180&#39;</span> <span class="c1"># OK, cast to float(&#39;180&#39;)</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>aType</strong> (<em>type</em>) – Either a Python type or a Python value.  If this is an object, it is
+<dd class="field-odd"><p><strong>aType</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.8)"><em>type</em></a>) – Either a Python type or a Python value.  If this is an object, it is
 mapped to its corresponding type. For example, the string ‘cat’ is
 automatically mapped to <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p>
 </dd>
@@ -284,7 +285,7 @@ automatically mapped to <code class="docutils literal notranslate"><span class="
 <dd><p>A Python type to cast values to.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>type</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.8)">type</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -292,7 +293,8 @@ automatically mapped to <code class="docutils literal notranslate"><span class="
 <dl class="method">
 <dt id="traits.trait_handlers.TraitCastType.validate">
 <code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitCastType.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitCastType.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Verifies whether a new value assigned to a trait attribute is valid.</p>
+<dd><p>Verifies whether a new value assigned to a trait attribute is
+valid.</p>
 <p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
 called whenever a new value is assigned to a trait attribute defined
 using this trait handler.</p>
@@ -303,7 +305,7 @@ raise a TraitError exception</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
 <li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
 </ul>
 </dd>
@@ -334,18 +336,18 @@ to the specified type or class (or one of its subclasses). For example:</p>
 <p>This example defines a class Employee, which has a <strong>manager</strong> trait
 attribute, which accepts either None or an instance of Employee
 as its value.</p>
-<p>TraitInstance ensures that assigned values are exactly of the type specified
-(i.e., no coercion is performed).</p>
+<p>TraitInstance ensures that assigned values are exactly of the type
+specified (i.e., no coercion is performed).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>aClass</strong> (<em>type</em><em>, </em><em>object</em><em> or </em><em>str</em>) – A Python type or a string that identifies the type, or an object.
+<li><p><strong>aClass</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.8)"><em>type</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A Python type or a string that identifies the type, or an object.
 If this is an object, it is mapped to the class it is an instance of.
 If this is a str, it is either the name  of a class in the module
 identified by the module parameter, or an identifier of the form
 “<em>module_name*[.*module_name</em>….].*class_name*”.</p></li>
-<li><p><strong>allow_none</strong> (<em>bool</em>) – Flag indicating whether None is accepted as a valid value.</p></li>
-<li><p><strong>module</strong> (<em>str</em>) – The name of the module that the class belongs to.  This is ignored if
+<li><p><strong>allow_none</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag indicating whether None is accepted as a valid value.</p></li>
+<li><p><strong>module</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the module that the class belongs to.  This is ignored if
 the type is provided directly, or the str value is an identifier with
 ‘.’s in it.</p></li>
 </ul>
@@ -362,7 +364,7 @@ be replaced by the actual type object the first time the trait is used
 to validate an object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>type or str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.8)">type</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -375,7 +377,7 @@ the type is provided directly, or the str value is an identifier with
 ‘.’s in it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -389,7 +391,7 @@ the type is provided directly, or the str value is an identifier with
 <dd class="field-odd"><p>Whether or not None is a valid value.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -397,7 +399,8 @@ the type is provided directly, or the str value is an identifier with
 <dl class="method">
 <dt id="traits.trait_handlers.TraitInstance.validate">
 <code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitInstance.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitInstance.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Verifies whether a new value assigned to a trait attribute is valid.</p>
+<dd><p>Verifies whether a new value assigned to a trait attribute is
+valid.</p>
 <p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
 called whenever a new value is assigned to a trait attribute defined
 using this trait handler.</p>
@@ -408,7 +411,7 @@ raise a TraitError exception</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
 <li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
 </ul>
 </dd>
@@ -430,11 +433,11 @@ is the actual value assigned to <em>object.name</em>.</p>
 <dd><p>Must return a string describing the type of value accepted by the
 trait handler.</p>
 <p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by info() is combined with
-other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The info() method is
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by info() is combined
+with other information whenever an error occurs and therefore makes
+more sense to the user if the result is a phrase. The info() method is
 similar in purpose and use to the <strong>info</strong> attribute of a validator
 function.</p>
 <p>Note that the result can include information specific to the particular
@@ -494,7 +497,8 @@ is not, the function must raise a TraitError exception.</p>
 <dl class="method">
 <dt id="traits.trait_handlers.TraitFunction.validate">
 <code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitFunction.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitFunction.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Verifies whether a new value assigned to a trait attribute is valid.</p>
+<dd><p>Verifies whether a new value assigned to a trait attribute is
+valid.</p>
 <p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
 called whenever a new value is assigned to a trait attribute defined
 using this trait handler.</p>
@@ -505,7 +509,7 @@ raise a TraitError exception</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
 <li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
 </ul>
 </dd>
@@ -527,11 +531,11 @@ is the actual value assigned to <em>object.name</em>.</p>
 <dd><p>Must return a string describing the type of value accepted by the
 trait handler.</p>
 <p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by info() is combined with
-other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The info() method is
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by info() is combined
+with other information whenever an error occurs and therefore makes
+more sense to the user if the result is a phrase. The info() method is
 similar in purpose and use to the <strong>info</strong> attribute of a validator
 function.</p>
 <p>Note that the result can include information specific to the particular
@@ -581,7 +585,7 @@ of the legal values.</p>
 <dd><p>Enumeration of all legal values for a trait.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>tuple</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -589,7 +593,8 @@ of the legal values.</p>
 <dl class="method">
 <dt id="traits.trait_handlers.TraitEnum.validate">
 <code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitEnum.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitEnum.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Verifies whether a new value assigned to a trait attribute is valid.</p>
+<dd><p>Verifies whether a new value assigned to a trait attribute is
+valid.</p>
 <p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
 called whenever a new value is assigned to a trait attribute defined
 using this trait handler.</p>
@@ -600,7 +605,7 @@ raise a TraitError exception</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
 <li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
 </ul>
 </dd>
@@ -622,11 +627,11 @@ is the actual value assigned to <em>object.name</em>.</p>
 <dd><p>Must return a string describing the type of value accepted by the
 trait handler.</p>
 <p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by info() is combined with
-other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The info() method is
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by info() is combined
+with other information whenever an error occurs and therefore makes
+more sense to the user if the result is a phrase. The info() method is
 similar in purpose and use to the <strong>info</strong> attribute of a validator
 function.</p>
 <p>Note that the result can include information specific to the particular
@@ -655,339 +660,12 @@ User Guide</em>.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="traits.trait_handlers.TraitPrefixList">
-<em class="property">class </em><code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">TraitPrefixList</code><span class="sig-paren">(</span><em class="sig-param">*values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixList" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ensures that a value assigned to a trait attribute is a member of a list
-of specified string values, or is a unique prefix of one of those values.</p>
-<p>TraitPrefixList is a variation on TraitEnum. The values that can be
-assigned to a trait attribute defined using a TraitPrefixList handler is the
-set of all strings supplied to the TraitPrefixList constructor, as well as
-any unique prefix of those strings. That is, if the set of strings supplied
-to the constructor is described by [<em>s</em><sub>1</sub>, <em>s</em><sub>2</sub>, …,
-<em>s</em><sub>n</sub>], then the string <em>v</em> is a valid value for the trait if
-<em>v</em> == <em>s</em><sub>i[:j]</sub> for one and only one pair of values (i, j). If <em>v</em>
-is a valid value, then the actual value assigned to the trait attribute is
-the corresponding <em>s</em><sub>i</sub> value that <em>v</em> matched.</p>
-<p>As with TraitEnum, the list of legal values can be provided as a list
-or tuple of values.  That is, <code class="docutils literal notranslate"><span class="pre">TraitPrefixList(['one',</span> <span class="pre">'two',</span> <span class="pre">'three'])</span></code>
-and <code class="docutils literal notranslate"><span class="pre">TraitPrefixList('one',</span> <span class="pre">'two',</span> <span class="pre">'three')</span></code> are equivalent.</p>
-<p class="rubric">Example</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">married</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="n">TraitPrefixList</span><span class="p">(</span><span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The Person class has a <strong>married</strong> trait that accepts any of the
-strings ‘y’, ‘ye’, ‘yes’, ‘n’, or ‘no’ as valid values. However, the actual
-values assigned as the value of the trait attribute are limited to either
-‘yes’ or ‘no’. That is, if the value ‘y’ is assigned to the <strong>married</strong>
-attribute, the actual value assigned will be ‘yes’.</p>
-<p>Note that the algorithm used by TraitPrefixList in determining whether a
-string is a valid value is fairly efficient in terms of both time and space,
-and is not based on a brute force set of comparisons.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>*values</strong> – Either all legal string values for the enumeration, or a single list
-or tuple of legal string values.</p>
-</dd>
-</dl>
-<dl class="attribute">
-<dt id="traits.trait_handlers.TraitPrefixList.values">
-<code class="sig-name descname">values</code><a class="headerlink" href="#traits.trait_handlers.TraitPrefixList.values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enumeration of all legal values for a trait.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>tuple of strings</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.trait_handlers.TraitPrefixList.validate">
-<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixList.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixList.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Verifies whether a new value assigned to a trait attribute is valid.</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
-<li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>If the new value is valid, this method must return either the
-original value passed to it, or an alternate value to be assigned
-in place of the original value. Whatever value this method returns
-is the actual value assigned to <em>object.name</em>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>any</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.trait_handlers.TraitPrefixList.info">
-<code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixList.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixList.info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Must return a string describing the type of value accepted by the
-trait handler.</p>
-<p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by info() is combined with
-other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The info() method is
-similar in purpose and use to the <strong>info</strong> attribute of a validator
-function.</p>
-<p>Note that the result can include information specific to the particular
-trait handler instance. If the info() method is not overridden, the
-default method returns the value of the ‘info_text’ attribute.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.trait_handlers.TraitPrefixList.get_editor">
-<code class="sig-name descname">get_editor</code><span class="sig-paren">(</span><em class="sig-param">trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixList.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixList.get_editor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a trait editor that allows the user to modify the <em>trait</em>
-trait.
-This method only needs to be specified if traits defined using this
-trait handler require a non-default trait editor in trait user
-interfaces. The default implementation of this method returns a trait
-editor that allows the user to type an arbitrary string as the value.</p>
-<p>For more information on trait user interfaces, refer to the <em>Traits UI
-User Guide</em>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.trait_handlers.TraitMap">
-<em class="property">class </em><code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">TraitMap</code><span class="sig-paren">(</span><em class="sig-param">map</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitMap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks that the value assigned to a trait attribute is a key of a
-specified dictionary, and also assigns the dictionary value corresponding
-to that key to a <em>shadow</em> attribute.</p>
-<p>A trait attribute that uses a TraitMap handler is called <em>mapped</em> trait
-attribute. In practice, this means that the resulting object actually
-contains two attributes: one whose value is a key of the TraitMap
-dictionary, and the other whose value is the corresponding value of the
-TraitMap dictionary. The name of the shadow attribute is simply the base
-attribute name with an underscore (‘_’) appended. Mapped trait attributes
-can be used to allow a variety of user-friendly input values to be mapped
-to a set of internal, program-friendly values.</p>
-<p class="rubric">Example</p>
-<p>The following example defines a <code class="docutils literal notranslate"><span class="pre">Person</span></code> class:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;class Person(HasTraits):</span>
-<span class="gp">... </span>   <span class="n">married</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="n">TraitMap</span><span class="p">({</span><span class="s1">&#39;yes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">})</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="go">&gt;&gt;&gt;bob = Person()</span>
-<span class="go">&gt;&gt;&gt;print bob.married</span>
-<span class="go">yes</span>
-<span class="go">&gt;&gt;&gt;print bob.married_</span>
-<span class="go">1</span>
-</pre></div>
-</div>
-<p>In this example, the default value of the <code class="docutils literal notranslate"><span class="pre">married</span></code> attribute of the
-Person class is ‘yes’. Because this attribute is defined using
-TraitPrefixList, instances of Person have another attribute,
-<code class="docutils literal notranslate"><span class="pre">married_</span></code>, whose default value is 1, the dictionary value corresponding
-to the key ‘yes’.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>map</strong> (<em>dict</em>) – A dictionary whose keys are valid values for the trait attribute,
-and whose corresponding values are the values for the shadow
-trait attribute.</p>
-</dd>
-</dl>
-<dl class="attribute">
-<dt id="traits.trait_handlers.TraitMap.map">
-<code class="sig-name descname">map</code><a class="headerlink" href="#traits.trait_handlers.TraitMap.map" title="Permalink to this definition">¶</a></dt>
-<dd><p>A dictionary whose keys are valid values for the trait attribute,
-and whose corresponding values are the values for the shadow
-trait attribute.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.trait_handlers.TraitMap.validate">
-<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitMap.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitMap.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Verifies whether a new value assigned to a trait attribute is valid.</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
-<li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>If the new value is valid, this method must return either the
-original value passed to it, or an alternate value to be assigned
-in place of the original value. Whatever value this method returns
-is the actual value assigned to <em>object.name</em>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>any</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.trait_handlers.TraitMap.mapped_value">
-<code class="sig-name descname">mapped_value</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitMap.mapped_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitMap.mapped_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the mapped value for a value.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.trait_handlers.TraitMap.info">
-<code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitMap.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitMap.info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Must return a string describing the type of value accepted by the
-trait handler.</p>
-<p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by info() is combined with
-other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The info() method is
-similar in purpose and use to the <strong>info</strong> attribute of a validator
-function.</p>
-<p>Note that the result can include information specific to the particular
-trait handler instance. If the info() method is not overridden, the
-default method returns the value of the ‘info_text’ attribute.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.trait_handlers.TraitMap.get_editor">
-<code class="sig-name descname">get_editor</code><span class="sig-paren">(</span><em class="sig-param">trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitMap.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitMap.get_editor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a trait editor that allows the user to modify the <em>trait</em>
-trait.
-This method only needs to be specified if traits defined using this
-trait handler require a non-default trait editor in trait user
-interfaces. The default implementation of this method returns a trait
-editor that allows the user to type an arbitrary string as the value.</p>
-<p>For more information on trait user interfaces, refer to the <em>Traits UI
-User Guide</em>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.trait_handlers.TraitPrefixMap">
-<em class="property">class </em><code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">TraitPrefixMap</code><span class="sig-paren">(</span><em class="sig-param">map</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixMap" title="Permalink to this definition">¶</a></dt>
-<dd><p>A cross between the TraitPrefixList and TraitMap classes.</p>
-<p>Like TraitMap, TraitPrefixMap is created using a dictionary, but in this
-case, the keys of the dictionary must be strings. Like TraitPrefixList,
-a string <em>v</em> is a valid value for the trait attribute if it is a prefix of
-one and only one key <em>k</em> in the dictionary. The actual values assigned to
-the trait attribute is <em>k</em>, and its corresponding mapped attribute is
-<em>map*[*k</em>].</p>
-<p class="rubric">Example</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;true&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">}</span>
-<span class="n">boolean_map</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="n">TraitPrefixMap</span><span class="p">(</span><span class="n">mapping</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>This example defines a Boolean trait that accepts any prefix of ‘true’,
-‘yes’, ‘false’, or ‘no’, and maps them to 1 or 0.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>map</strong> (<em>dict</em>) – A dictionary whose keys are strings that are valid values for the
-trait attribute, and whose corresponding values are the values for
-the shadow trait attribute.</p>
-</dd>
-</dl>
-<dl class="attribute">
-<dt id="traits.trait_handlers.TraitPrefixMap.map">
-<code class="sig-name descname">map</code><a class="headerlink" href="#traits.trait_handlers.TraitPrefixMap.map" title="Permalink to this definition">¶</a></dt>
-<dd><p>A dictionary whose keys are strings that are valid values for the
-trait attribute, and whose corresponding values are the values for
-the shadow trait attribute.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.trait_handlers.TraitPrefixMap.validate">
-<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixMap.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixMap.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Verifies whether a new value assigned to a trait attribute is valid.</p>
-<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
-called whenever a new value is assigned to a trait attribute defined
-using this trait handler.</p>
-<p>If the value received by validate() is not valid for the trait
-attribute, the method must called the predefined error() method to
-raise a TraitError exception</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
-<li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>If the new value is valid, this method must return either the
-original value passed to it, or an alternate value to be assigned
-in place of the original value. Whatever value this method returns
-is the actual value assigned to <em>object.name</em>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>any</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.trait_handlers.TraitPrefixMap.info">
-<code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixMap.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixMap.info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Must return a string describing the type of value accepted by the
-trait handler.</p>
-<p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by info() is combined with
-other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The info() method is
-similar in purpose and use to the <strong>info</strong> attribute of a validator
-function.</p>
-<p>Note that the result can include information specific to the particular
-trait handler instance. If the info() method is not overridden, the
-default method returns the value of the ‘info_text’ attribute.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="traits.trait_handlers.TraitCompound">
 <em class="property">class </em><code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">TraitCompound</code><span class="sig-paren">(</span><em class="sig-param">*handlers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitCompound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitCompound" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provides a logical-OR combination of other trait handlers.</p>
 <p>This class provides a means of creating complex trait definitions by
-combining several simpler trait definitions. TraitCompound is the underlying
-handler for the general forms of the Trait() function.</p>
+combining several simpler trait definitions. TraitCompound is the
+underlying handler for the general forms of the Trait() function.</p>
 <p>A value is a valid value for a trait attribute based on a TraitCompound
 instance if the value is valid for at least one of the TraitHandler or
 trait objects supplied to the constructor. In addition, if at least one of
@@ -1006,7 +684,7 @@ list or tuple of TraitHandlers or trait objects.</p>
 <dd><p>A list or tuple of TraitHandler or trait objects to be combined.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>list or tuple</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1014,7 +692,8 @@ list or tuple of TraitHandlers or trait objects.</p>
 <dl class="method">
 <dt id="traits.trait_handlers.TraitCompound.validate">
 <code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitCompound.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitCompound.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Verifies whether a new value assigned to a trait attribute is valid.</p>
+<dd><p>Verifies whether a new value assigned to a trait attribute is
+valid.</p>
 <p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
 called whenever a new value is assigned to a trait attribute defined
 using this trait handler.</p>
@@ -1025,7 +704,7 @@ raise a TraitError exception</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
 <li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
 </ul>
 </dd>
@@ -1046,25 +725,23 @@ is the actual value assigned to <em>object.name</em>.</p>
 <code class="sig-name descname">full_info</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitCompound.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitCompound.full_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string describing the type of value accepted by the
 trait handler.</p>
+<p>The string should be a phrase describing the type defined by the
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by full_info() is
+combined with other information whenever an error occurs and therefore
+makes more sense to the user if the result is a phrase. The full_info()
+method is similar in purpose and use to the <strong>info</strong> attribute of a
+validator function.</p>
+<p>Note that the result can include information specific to the particular
+trait handler instance. If the full_info() method is not overridden,
+the default method returns the value of calling the info() method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>object</strong> (<em>object</em>) – The object whose attribute is being assigned.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
 <li><p><strong>value</strong> – The proposed new value for the attribute.</p></li>
-<li><p><strong>Description</strong> – </p></li>
-<li><p><strong>-----------</strong> – </p></li>
-<li><p><strong>string should be a phrase describing the type defined by the</strong> (<em>The</em>) – </p></li>
-<li><p><strong>subclass</strong><strong>, </strong><strong>rather than a complete sentence. For example</strong><strong>, </strong><strong>use</strong> (<a class="reference internal" href="trait_handler.html#traits.trait_handler.TraitHandler" title="traits.trait_handler.TraitHandler"><em>TraitHandler</em></a>) – </p></li>
-<li><p><strong>phrase</strong><strong>, </strong><strong>&quot;a square sprocket&quot; instead of the sentence</strong><strong>, </strong><strong>&quot;The value must</strong> (<em>the</em>) – </p></li>
-<li><p><strong>a square sprocket.&quot; The value returned by full_info</strong><strong>(</strong><strong>) </strong><strong>is combined</strong> (<em>be</em>) – </p></li>
-<li><p><strong>other information whenever an error occurs and therefore makes more</strong> (<em>with</em>) – </p></li>
-<li><p><strong>to the user if the result is a phrase. The full_info</strong><strong>(</strong><strong>) </strong><strong>method is</strong> (<em>sense</em>) – </p></li>
-<li><p><strong>in purpose and use to the info attribute of a validator</strong> (<em>similar</em>) – </p></li>
-<li><p><strong>function.</strong> – </p></li>
-<li><p><strong>that the result can include information specific to the particular</strong> (<em>Note</em>) – </p></li>
-<li><p><strong>handler instance. If the full_info</strong><strong>(</strong><strong>) </strong><strong>method is not overridden</strong><strong>,</strong> (<em>trait</em>) – </p></li>
-<li><p><strong>default method returns the value of calling the info</strong><strong>(</strong><strong>) </strong><strong>method.</strong> (<em>the</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -1076,11 +753,11 @@ trait handler.</p>
 <dd><p>Must return a string describing the type of value accepted by the
 trait handler.</p>
 <p>The string should be a phrase describing the type defined by the
-TraitHandler subclass, rather than a complete sentence. For example, use
-the phrase, “a square sprocket” instead of the sentence, “The value must
-be a square sprocket.” The value returned by info() is combined with
-other information whenever an error occurs and therefore makes more
-sense to the user if the result is a phrase. The info() method is
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by info() is combined
+with other information whenever an error occurs and therefore makes
+more sense to the user if the result is a phrase. The info() method is
 similar in purpose and use to the <strong>info</strong> attribute of a validator
 function.</p>
 <p>Note that the result can include information specific to the particular
@@ -1129,11 +806,11 @@ User Guide</em>.</p>
 </div>
 <p>The following <a class="reference internal" href="trait_handler.html#traits.trait_handler.TraitHandler" title="traits.trait_handler.TraitHandler"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitHandler</span></code></a> classes and instances are deprecated,
 and may be removed in a future version of Traits.</p>
-<dl class="data">
+<dl class="class">
 <dt id="traits.trait_handlers.TraitDict">
-<code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">TraitDict</code><em class="property"> = &lt;class 'traits.trait_handlers.TraitDict'&gt;</em><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitDict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ensures that values assigned to a trait attribute are dictionaries whose
-keys and values are of specified types.</p>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">TraitDict</code><span class="sig-paren">(</span><em class="sig-param">key_trait=None</em>, <em class="sig-param">value_trait=None</em>, <em class="sig-param">has_items=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures that values assigned to a trait attribute are dictionaries
+whose keys and values are of specified types.</p>
 <p>TraitDict also makes sure that any changes to keys or values made that are
 made after the dictionary is assigned to the trait attribute satisfy the
 type constraints. TraitDict is the underlying handler for the
@@ -1160,61 +837,137 @@ values in the dictionary can be of any type. Otherwise, this must be
 either a trait, or a value that can be converted to a trait using the
 trait_from() function.  In this case, all dictionary values are
 checked to ensure that they are of the type specified.</p></li>
-<li><p><strong>has_items</strong> (<em>bool</em>) – Flag indicating whether the dictionary contains entries.</p></li>
+<li><p><strong>has_items</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag indicating whether the dictionary contains entries.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="attribute">
-<dt id="traits.trait_handlers.key_trait">
-<code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">key_trait</code><a class="headerlink" href="#traits.trait_handlers.key_trait" title="Permalink to this definition">¶</a></dt>
+<dt id="traits.trait_handlers.TraitDict.key_trait">
+<code class="sig-name descname">key_trait</code><a class="headerlink" href="#traits.trait_handlers.TraitDict.key_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>The type for the dictionary keys.  If this is None then the keys are
 not validated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait">CTrait</a> or <a class="reference internal" href="trait_handler.html#traits.trait_handler.TraitHandler" title="traits.trait_handler.TraitHandler">TraitHandler</a> or None</p>
+<dd class="field-odd"><p><a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait">CTrait</a> or <a class="reference internal" href="trait_handler.html#traits.trait_handler.TraitHandler" title="traits.trait_handler.TraitHandler">TraitHandler</a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="traits.trait_handlers.value_trait">
-<code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">value_trait</code><a class="headerlink" href="#traits.trait_handlers.value_trait" title="Permalink to this definition">¶</a></dt>
+<dt id="traits.trait_handlers.TraitDict.value_trait">
+<code class="sig-name descname">value_trait</code><a class="headerlink" href="#traits.trait_handlers.TraitDict.value_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>The type for the dictionary values.  If this is None then the values
 are not validated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait">CTrait</a> or <a class="reference internal" href="trait_handler.html#traits.trait_handler.TraitHandler" title="traits.trait_handler.TraitHandler">TraitHandler</a> or None</p>
+<dd class="field-odd"><p><a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait">CTrait</a> or <a class="reference internal" href="trait_handler.html#traits.trait_handler.TraitHandler" title="traits.trait_handler.TraitHandler">TraitHandler</a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="traits.trait_handlers.value_handler">
-<code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">value_handler</code><a class="headerlink" href="#traits.trait_handlers.value_handler" title="Permalink to this definition">¶</a></dt>
+<dt id="traits.trait_handlers.TraitDict.value_handler">
+<code class="sig-name descname">value_handler</code><a class="headerlink" href="#traits.trait_handlers.TraitDict.value_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>The trait handler for the dictionary values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="base_trait_handler.html#traits.base_trait_handler.BaseTraitHandler" title="traits.base_trait_handler.BaseTraitHandler">BaseTraitHandler</a> or None</p>
+<dd class="field-odd"><p><a class="reference internal" href="base_trait_handler.html#traits.base_trait_handler.BaseTraitHandler" title="traits.base_trait_handler.BaseTraitHandler">BaseTraitHandler</a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="traits.trait_handlers.has_items">
-<code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">has_items</code><a class="headerlink" href="#traits.trait_handlers.has_items" title="Permalink to this definition">¶</a></dt>
+<dt id="traits.trait_handlers.TraitDict.has_items">
+<code class="sig-name descname">has_items</code><a class="headerlink" href="#traits.trait_handlers.TraitDict.has_items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flag indicating whether the dictionary contains entries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitDict.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitDict.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitDict.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies whether a new value assigned to a trait attribute is
+valid.</p>
+<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
+called whenever a new value is assigned to a trait attribute defined
+using this trait handler.</p>
+<p>If the value received by validate() is not valid for the trait
+attribute, the method must called the predefined error() method to
+raise a TraitError exception</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If the new value is valid, this method must return either the
+original value passed to it, or an alternate value to be assigned
+in place of the original value. Whatever value this method returns
+is the actual value assigned to <em>object.name</em>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitDict.full_info">
+<code class="sig-name descname">full_info</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitDict.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitDict.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string describing the type of value accepted by the
+trait handler.</p>
+<p>The string should be a phrase describing the type defined by the
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by full_info() is
+combined with other information whenever an error occurs and therefore
+makes more sense to the user if the result is a phrase. The full_info()
+method is similar in purpose and use to the <strong>info</strong> attribute of a
+validator function.</p>
+<p>Note that the result can include information specific to the particular
+trait handler instance. If the full_info() method is not overridden,
+the default method returns the value of calling the info() method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>value</strong> – The proposed new value for the attribute.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitDict.get_editor">
+<code class="sig-name descname">get_editor</code><span class="sig-paren">(</span><em class="sig-param">trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitDict.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitDict.get_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a trait editor that allows the user to modify the <em>trait</em>
+trait.
+This method only needs to be specified if traits defined using this
+trait handler require a non-default trait editor in trait user
+interfaces. The default implementation of this method returns a trait
+editor that allows the user to type an arbitrary string as the value.</p>
+<p>For more information on trait user interfaces, refer to the <em>Traits UI
+User Guide</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</p>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="data">
+<dl class="class">
 <dt id="traits.trait_handlers.TraitList">
-<code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">TraitList</code><em class="property"> = &lt;class 'traits.trait_handlers.TraitList'&gt;</em><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitList" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">TraitList</code><span class="sig-paren">(</span><em class="sig-param">trait=None</em>, <em class="sig-param">minlen=0</em>, <em class="sig-param">maxlen=9223372036854775807</em>, <em class="sig-param">has_items=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that a value assigned to a trait attribute is a list containing
 elements of a specified type, and that the length of the list is also
 within a specified range.</p>
@@ -1240,62 +993,138 @@ list.</p>
 then no type checking is performed on any items in the list;
 otherwise, this must be either a trait, or a value that can be
 converted to a trait using the trait_from() function.</p></li>
-<li><p><strong>minlen</strong> (<em>int</em>) – The minimum length of the list.</p></li>
-<li><p><strong>maxlen</strong> (<em>int</em>) – The maximum length of the list.</p></li>
-<li><p><strong>has_items</strong> (<em>bool</em>) – Flag indicating whether the list contains elements.</p></li>
+<li><p><strong>minlen</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The minimum length of the list.</p></li>
+<li><p><strong>maxlen</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The maximum length of the list.</p></li>
+<li><p><strong>has_items</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag indicating whether the list contains elements.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="attribute">
-<dt id="traits.trait_handlers.item_trait">
-<code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">item_trait</code><a class="headerlink" href="#traits.trait_handlers.item_trait" title="Permalink to this definition">¶</a></dt>
+<dt id="traits.trait_handlers.TraitList.item_trait">
+<code class="sig-name descname">item_trait</code><a class="headerlink" href="#traits.trait_handlers.TraitList.item_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>The type of items the list can contain.  If None, no type checking is
 performed on the items of the list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait">CTrait</a> or None</p>
+<dd class="field-odd"><p><a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait">CTrait</a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="traits.trait_handlers.minlen">
-<code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">minlen</code><a class="headerlink" href="#traits.trait_handlers.minlen" title="Permalink to this definition">¶</a></dt>
+<dt id="traits.trait_handlers.TraitList.minlen">
+<code class="sig-name descname">minlen</code><a class="headerlink" href="#traits.trait_handlers.TraitList.minlen" title="Permalink to this definition">¶</a></dt>
 <dd><p>The minimum length of the list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="traits.trait_handlers.maxlen">
-<code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">maxlen</code><a class="headerlink" href="#traits.trait_handlers.maxlen" title="Permalink to this definition">¶</a></dt>
+<dt id="traits.trait_handlers.TraitList.maxlen">
+<code class="sig-name descname">maxlen</code><a class="headerlink" href="#traits.trait_handlers.TraitList.maxlen" title="Permalink to this definition">¶</a></dt>
 <dd><p>The maximum length of the list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="attribute">
-<dt>
-<code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">has_items</code></dt>
+<dt id="traits.trait_handlers.TraitList.has_items">
+<code class="sig-name descname">has_items</code><a class="headerlink" href="#traits.trait_handlers.TraitList.has_items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flag indicating whether the list contains elements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitList.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitList.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitList.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies whether a new value assigned to a trait attribute is
+valid.</p>
+<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
+called whenever a new value is assigned to a trait attribute defined
+using this trait handler.</p>
+<p>If the value received by validate() is not valid for the trait
+attribute, the method must called the predefined error() method to
+raise a TraitError exception</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If the new value is valid, this method must return either the
+original value passed to it, or an alternate value to be assigned
+in place of the original value. Whatever value this method returns
+is the actual value assigned to <em>object.name</em>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitList.full_info">
+<code class="sig-name descname">full_info</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitList.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitList.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string describing the type of value accepted by the
+trait handler.</p>
+<p>The string should be a phrase describing the type defined by the
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by full_info() is
+combined with other information whenever an error occurs and therefore
+makes more sense to the user if the result is a phrase. The full_info()
+method is similar in purpose and use to the <strong>info</strong> attribute of a
+validator function.</p>
+<p>Note that the result can include information specific to the particular
+trait handler instance. If the full_info() method is not overridden,
+the default method returns the value of calling the info() method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>value</strong> – The proposed new value for the attribute.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitList.get_editor">
+<code class="sig-name descname">get_editor</code><span class="sig-paren">(</span><em class="sig-param">trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitList.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitList.get_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a trait editor that allows the user to modify the <em>trait</em>
+trait.
+This method only needs to be specified if traits defined using this
+trait handler require a non-default trait editor in trait user
+interfaces. The default implementation of this method returns a trait
+editor that allows the user to type an arbitrary string as the value.</p>
+<p>For more information on trait user interfaces, refer to the <em>Traits UI
+User Guide</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</p>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="data">
+<dl class="class">
 <dt id="traits.trait_handlers.TraitTuple">
-<code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">TraitTuple</code><em class="property"> = &lt;class 'traits.trait_handlers.TraitTuple'&gt;</em><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitTuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitTuple" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">TraitTuple</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitTuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitTuple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that values assigned to a trait attribute are tuples of a
 specified length, with elements that are of specified types.</p>
 <p>TraitTuple is the underlying handler for the predefined trait <strong>Tuple</strong>,
@@ -1326,6 +1155,417 @@ trait handler accepts values that are tuples of the same length as
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="traits.trait_handlers.TraitTuple.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitTuple.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitTuple.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies whether a new value assigned to a trait attribute is
+valid.</p>
+<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
+called whenever a new value is assigned to a trait attribute defined
+using this trait handler.</p>
+<p>If the value received by validate() is not valid for the trait
+attribute, the method must called the predefined error() method to
+raise a TraitError exception</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If the new value is valid, this method must return either the
+original value passed to it, or an alternate value to be assigned
+in place of the original value. Whatever value this method returns
+is the actual value assigned to <em>object.name</em>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitTuple.full_info">
+<code class="sig-name descname">full_info</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitTuple.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitTuple.full_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string describing the type of value accepted by the
+trait handler.</p>
+<p>The string should be a phrase describing the type defined by the
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by full_info() is
+combined with other information whenever an error occurs and therefore
+makes more sense to the user if the result is a phrase. The full_info()
+method is similar in purpose and use to the <strong>info</strong> attribute of a
+validator function.</p>
+<p>Note that the result can include information specific to the particular
+trait handler instance. If the full_info() method is not overridden,
+the default method returns the value of calling the info() method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>value</strong> – The proposed new value for the attribute.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitTuple.get_editor">
+<code class="sig-name descname">get_editor</code><span class="sig-paren">(</span><em class="sig-param">trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitTuple.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitTuple.get_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a trait editor that allows the user to modify the <em>trait</em>
+trait.
+This method only needs to be specified if traits defined using this
+trait handler require a non-default trait editor in trait user
+interfaces. The default implementation of this method returns a trait
+editor that allows the user to type an arbitrary string as the value.</p>
+<p>For more information on trait user interfaces, refer to the <em>Traits UI
+User Guide</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 6.1.0.</span></p>
+</div>
+<dl class="class">
+<dt id="traits.trait_handlers.TraitPrefixList">
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">TraitPrefixList</code><span class="sig-paren">(</span><em class="sig-param">*values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures that a value assigned to a trait attribute is a member of a
+list of specified string values, or is a unique prefix of one of those
+values.</p>
+<p>TraitPrefixList is a variation on TraitEnum. The values that can be
+assigned to a trait attribute defined using a TraitPrefixList handler is
+the set of all strings supplied to the TraitPrefixList constructor, as well
+as any unique prefix of those strings. That is, if the set of strings
+supplied to the constructor is described by
+[<em>s</em><sub>1</sub>, <em>s</em><sub>2</sub>, …, <em>s</em><sub>n</sub>], then the string
+<em>v</em> is a valid value for the trait if <em>v</em> == <em>s</em><sub>i[:j]</sub> for one and
+only one pair of values (i, j). If <em>v</em> is a valid value, then the actual
+value assigned to the trait attribute is the corresponding <em>s</em><sub>i</sub>
+value that <em>v</em> matched.</p>
+<p>As with TraitEnum, the list of legal values can be provided as a list
+or tuple of values.  That is, <code class="docutils literal notranslate"><span class="pre">TraitPrefixList(['one',</span> <span class="pre">'two',</span> <span class="pre">'three'])</span></code>
+and <code class="docutils literal notranslate"><span class="pre">TraitPrefixList('one',</span> <span class="pre">'two',</span> <span class="pre">'three')</span></code> are equivalent.</p>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">married</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="n">TraitPrefixList</span><span class="p">(</span><span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The Person class has a <strong>married</strong> trait that accepts any of the
+strings ‘y’, ‘ye’, ‘yes’, ‘n’, or ‘no’ as valid values. However, the actual
+values assigned as the value of the trait attribute are limited to either
+‘yes’ or ‘no’. That is, if the value ‘y’ is assigned to the <strong>married</strong>
+attribute, the actual value assigned will be ‘yes’.</p>
+<p>Note that the algorithm used by TraitPrefixList in determining whether a
+string is a valid value is fairly efficient in terms of both time and
+space, and is not based on a brute force set of comparisons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*values</strong> – Either all legal string values for the enumeration, or a single list
+or tuple of legal string values.</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="traits.trait_handlers.TraitPrefixList.values">
+<code class="sig-name descname">values</code><a class="headerlink" href="#traits.trait_handlers.TraitPrefixList.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enumeration of all legal values for a trait.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>tuple of strings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitPrefixList.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixList.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixList.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies whether a new value assigned to a trait attribute is
+valid.</p>
+<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
+called whenever a new value is assigned to a trait attribute defined
+using this trait handler.</p>
+<p>If the value received by validate() is not valid for the trait
+attribute, the method must called the predefined error() method to
+raise a TraitError exception</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If the new value is valid, this method must return either the
+original value passed to it, or an alternate value to be assigned
+in place of the original value. Whatever value this method returns
+is the actual value assigned to <em>object.name</em>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitPrefixList.info">
+<code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixList.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixList.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must return a string describing the type of value accepted by the
+trait handler.</p>
+<p>The string should be a phrase describing the type defined by the
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by info() is combined
+with other information whenever an error occurs and therefore makes
+more sense to the user if the result is a phrase. The info() method is
+similar in purpose and use to the <strong>info</strong> attribute of a validator
+function.</p>
+<p>Note that the result can include information specific to the particular
+trait handler instance. If the info() method is not overridden, the
+default method returns the value of the ‘info_text’ attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitPrefixList.get_editor">
+<code class="sig-name descname">get_editor</code><span class="sig-paren">(</span><em class="sig-param">trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixList.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixList.get_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a trait editor that allows the user to modify the <em>trait</em>
+trait.
+This method only needs to be specified if traits defined using this
+trait handler require a non-default trait editor in trait user
+interfaces. The default implementation of this method returns a trait
+editor that allows the user to type an arbitrary string as the value.</p>
+<p>For more information on trait user interfaces, refer to the <em>Traits UI
+User Guide</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_handlers.TraitMap">
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">TraitMap</code><span class="sig-paren">(</span><em class="sig-param">map</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that the value assigned to a trait attribute is a key of a
+specified dictionary, and also assigns the dictionary value corresponding
+to that key to a <em>shadow</em> attribute.</p>
+<p>A trait attribute that uses a TraitMap handler is called <em>mapped</em> trait
+attribute. In practice, this means that the resulting object actually
+contains two attributes: one whose value is a key of the TraitMap
+dictionary, and the other whose value is the corresponding value of the
+TraitMap dictionary. The name of the shadow attribute is simply the base
+attribute name with an underscore (‘_’) appended. Mapped trait attributes
+can be used to allow a variety of user-friendly input values to be mapped
+to a set of internal, program-friendly values.</p>
+<p class="rubric">Example</p>
+<p>The following example defines a <code class="docutils literal notranslate"><span class="pre">Person</span></code> class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">married</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="n">TraitMap</span><span class="p">({</span><span class="s1">&#39;yes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">})</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bob</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">bob</span><span class="o">.</span><span class="n">married</span>
+<span class="go">yes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">bob</span><span class="o">.</span><span class="n">married_</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+<p>In this example, the default value of the <code class="docutils literal notranslate"><span class="pre">married</span></code> attribute of the
+Person class is ‘yes’. Because this attribute is defined using
+TraitPrefixList, instances of Person have another attribute,
+<code class="docutils literal notranslate"><span class="pre">married_</span></code>, whose default value is 1, the dictionary value corresponding
+to the key ‘yes’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – A dictionary whose keys are valid values for the trait attribute,
+and whose corresponding values are the values for the shadow
+trait attribute.</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="traits.trait_handlers.TraitMap.map">
+<code class="sig-name descname">map</code><a class="headerlink" href="#traits.trait_handlers.TraitMap.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary whose keys are valid values for the trait attribute,
+and whose corresponding values are the values for the shadow
+trait attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitMap.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitMap.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitMap.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies whether a new value assigned to a trait attribute is
+valid.</p>
+<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
+called whenever a new value is assigned to a trait attribute defined
+using this trait handler.</p>
+<p>If the value received by validate() is not valid for the trait
+attribute, the method must called the predefined error() method to
+raise a TraitError exception</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If the new value is valid, this method must return either the
+original value passed to it, or an alternate value to be assigned
+in place of the original value. Whatever value this method returns
+is the actual value assigned to <em>object.name</em>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitMap.mapped_value">
+<code class="sig-name descname">mapped_value</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitMap.mapped_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitMap.mapped_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the mapped value for a value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitMap.info">
+<code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitMap.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitMap.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must return a string describing the type of value accepted by the
+trait handler.</p>
+<p>The string should be a phrase describing the type defined by the
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by info() is combined
+with other information whenever an error occurs and therefore makes
+more sense to the user if the result is a phrase. The info() method is
+similar in purpose and use to the <strong>info</strong> attribute of a validator
+function.</p>
+<p>Note that the result can include information specific to the particular
+trait handler instance. If the info() method is not overridden, the
+default method returns the value of the ‘info_text’ attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitMap.get_editor">
+<code class="sig-name descname">get_editor</code><span class="sig-paren">(</span><em class="sig-param">trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitMap.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitMap.get_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a trait editor that allows the user to modify the <em>trait</em>
+trait.
+This method only needs to be specified if traits defined using this
+trait handler require a non-default trait editor in trait user
+interfaces. The default implementation of this method returns a trait
+editor that allows the user to type an arbitrary string as the value.</p>
+<p>For more information on trait user interfaces, refer to the <em>Traits UI
+User Guide</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>trait</strong> (<em>Trait</em>) – The trait to be edited.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_handlers.TraitPrefixMap">
+<em class="property">class </em><code class="sig-prename descclassname">traits.trait_handlers.</code><code class="sig-name descname">TraitPrefixMap</code><span class="sig-paren">(</span><em class="sig-param">map</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>A cross between the TraitPrefixList and TraitMap classes.</p>
+<p>Like TraitMap, TraitPrefixMap is created using a dictionary, but in this
+case, the keys of the dictionary must be strings. Like TraitPrefixList,
+a string <em>v</em> is a valid value for the trait attribute if it is a prefix of
+one and only one key <em>k</em> in the dictionary. The actual values assigned to
+the trait attribute is <em>k</em>, and its corresponding mapped attribute is
+<em>map*[*k</em>].</p>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;true&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">}</span>
+<span class="n">boolean_map</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="n">TraitPrefixMap</span><span class="p">(</span><span class="n">mapping</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This example defines a Boolean trait that accepts any prefix of ‘true’,
+‘yes’, ‘false’, or ‘no’, and maps them to 1 or 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – A dictionary whose keys are strings that are valid values for the
+trait attribute, and whose corresponding values are the values for
+the shadow trait attribute.</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="traits.trait_handlers.TraitPrefixMap.map">
+<code class="sig-name descname">map</code><a class="headerlink" href="#traits.trait_handlers.TraitPrefixMap.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary whose keys are strings that are valid values for the
+trait attribute, and whose corresponding values are the values for
+the shadow trait attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitPrefixMap.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixMap.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixMap.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies whether a new value assigned to a trait attribute is
+valid.</p>
+<p>This method <em>must</em> be implemented by subclasses of TraitHandler. It is
+called whenever a new value is assigned to a trait attribute defined
+using this trait handler.</p>
+<p>If the value received by validate() is not valid for the trait
+attribute, the method must called the predefined error() method to
+raise a TraitError exception</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<em>HasTraits instance</em>) – The object whose attribute is being assigned.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the attribute being assigned.</p></li>
+<li><p><strong>value</strong> (<em>any</em>) – The proposed new value for the attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If the new value is valid, this method must return either the
+original value passed to it, or an alternate value to be assigned
+in place of the original value. Whatever value this method returns
+is the actual value assigned to <em>object.name</em>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_handlers.TraitPrefixMap.info">
+<code class="sig-name descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixMap.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixMap.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must return a string describing the type of value accepted by the
+trait handler.</p>
+<p>The string should be a phrase describing the type defined by the
+TraitHandler subclass, rather than a complete sentence. For example,
+use the phrase, “a square sprocket” instead of the sentence, “The value
+must be a square sprocket.” The value returned by info() is combined
+with other information whenever an error occurs and therefore makes
+more sense to the user if the result is a phrase. The info() method is
+similar in purpose and use to the <strong>info</strong> attribute of a validator
+function.</p>
+<p>Note that the result can include information specific to the particular
+trait handler instance. If the info() method is not overridden, the
+default method returns the value of the ‘info_text’ attribute.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -1390,7 +1630,7 @@ trait handler accepts values that are tuples of the same length as
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

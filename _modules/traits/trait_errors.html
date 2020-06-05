@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_errors &mdash; Traits 6 User Manual</title>
+    <title>traits.trait_errors &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -90,15 +90,7 @@
 <span class="sd">&quot;&quot;&quot; Defines the standard exceptions raised by the Traits package.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Imports:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
 <span class="kn">from</span> <span class="nn">.trait_base</span> <span class="k">import</span> <span class="n">class_of</span>
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  Utilities</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="repr_type"><a class="viewcode-back" href="../../traits_api_reference/trait_errors.html#traits.trait_errors.repr_type">[docs]</a><span class="k">def</span> <span class="nf">repr_type</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
@@ -110,22 +102,17 @@
     <span class="k">return</span> <span class="n">msg</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;TraitError&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="TraitError"><a class="viewcode-back" href="../../traits_api_reference/trait_errors.html#traits.trait_errors.TraitError">[docs]</a><span class="k">class</span> <span class="nc">TraitError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># If the given args is not a tuple then assume that the user intended</span>
-            <span class="c1"># it to be the single item in a one-element tuple.</span>
+            <span class="c1"># If the given args is not a tuple then assume that the user</span>
+            <span class="c1"># intended it to be the single item in a one-element tuple.</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
                 <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">args</span><span class="p">,)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Save the information, in case the &#39;args&#39; object is not the correct</span>
-            <span class="c1"># one, and we need to regenerate the message later:</span>
+            <span class="c1"># Save the information, in case the &#39;args&#39; object is not the</span>
+            <span class="c1"># correct one, and we need to regenerate the message later:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">info</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
@@ -186,19 +173,9 @@
             <span class="p">)</span></div>
 
 
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;TraitNotificationError&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
-
-
 <div class="viewcode-block" id="TraitNotificationError"><a class="viewcode-back" href="../../traits_api_reference/trait_errors.html#traits.trait_errors.TraitNotificationError">[docs]</a><span class="k">class</span> <span class="nc">TraitNotificationError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 
     <span class="k">pass</span></div>
-
-
-<span class="c1"># -------------------------------------------------------------------------------</span>
-<span class="c1">#  &#39;DelegationError&#39; class:</span>
-<span class="c1"># -------------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="DelegationError"><a class="viewcode-back" href="../../traits_api_reference/trait_errors.html#traits.trait_errors.DelegationError">[docs]</a><span class="k">class</span> <span class="nc">DelegationError</span><span class="p">(</span><span class="n">TraitError</span><span class="p">):</span>
@@ -244,7 +221,7 @@
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Defining Traits: Initialization and Validation &mdash; Traits 6 User Manual</title>
+    <title>Defining Traits: Initialization and Validation &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,8 +30,8 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../index.html" >
-    <link rel="up" title="Traits 6 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
+    <link rel="up" title="Traits 6.1 User Manual" href="index.html" >
     <link rel="next" title="Trait Notification" href="notification.html" >
     <link rel="prev" title="Introduction" href="intro.html" > 
   </head>
@@ -50,9 +50,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.1 User Manual</a></li> 
     </ul>
               
               
@@ -149,6 +149,12 @@ loss of precision (but assigning a float to an Int trait would cause an error).<
 <p>The Traits package allows creation of a wide variety of trait types, ranging
 from very simple to very sophisticated. The following section presents some of
 the simpler, more commonly used forms.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Unless otherwise stated as safe to do so, avoid naming
+attributes with the prefix ‘trait’ or ‘_trait’. This avoids overshadowing
+existing methods on HasTraits.</p>
+</div>
 <div class="section" id="predefined-traits">
 <span id="index-5"></span><span id="id2"></span><h2>Predefined Traits<a class="headerlink" href="#predefined-traits" title="Permalink to this headline">¶</a></h2>
 <p>The Traits package includes a large number of predefined traits for commonly
@@ -166,7 +172,7 @@ pass it as an argument to the trait:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">account_balance</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Most predefined traits are callable, <a class="footnote-reference brackets" href="#id15" id="id3">2</a> and can accept a default value and
+<p>Most predefined traits are callable, <a class="footnote-reference brackets" href="#id19" id="id3">2</a> and can accept a default value and
 possibly other arguments; all that are callable can also accept metadata as
 keyword arguments. (See <a class="reference internal" href="#other-predefined-traits"><span class="std std-ref">Other Predefined Traits</span></a> for information on trait
 signatures, and see <a class="reference internal" href="#trait-metadata"><span class="std std-ref">Trait Metadata</span></a> for information on metadata
@@ -279,7 +285,7 @@ casting traits:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Person</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
 <span class="gp">... </span>   <span class="n">weight</span>  <span class="o">=</span> <span class="n">Float</span>
 <span class="gp">... </span>   <span class="n">cweight</span> <span class="o">=</span> <span class="n">CFloat</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span><span class="o">.</span><span class="n">weight</span>  <span class="o">=</span> <span class="mi">180</span>    <span class="c1"># OK, coerced to 180.0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span><span class="o">.</span><span class="n">cweight</span> <span class="o">=</span> <span class="mi">180</span>    <span class="c1"># OK, cast to float(180)</span>
@@ -291,7 +297,6 @@ casting traits:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span><span class="o">.</span><span class="n">cweight</span> <span class="o">=</span> <span class="s1">&#39;180&#39;</span>  <span class="c1"># OK, cast to float(&#39;180&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bill</span><span class="o">.</span><span class="n">cweight</span><span class="p">)</span>
 <span class="go">180.0</span>
-<span class="go">&gt;&gt;&gt;</span>
 </pre></div>
 </div>
 </div>
@@ -342,49 +347,44 @@ the table.</p>
 <em>typecode</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
 <tr class="row-even"><td><p>Code</p></td>
-<td><p>Code( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
-<em>regex</em> = ‘’, **<em>metadata</em>] )</p></td>
+<td><p>Code( [<em>value</em> = ‘’, <em>minlen</em> = 0,
+<em>maxlen</em> = sys.maxsize, <em>regex</em> = ‘’,
+**<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td><p>Color</p></td>
-<td><p>Color( [*<em>args</em>, **<em>metadata</em>] )</p></td>
-</tr>
-<tr class="row-even"><td><p>CSet</p></td>
+<tr class="row-odd"><td><p>CSet</p></td>
 <td><p>CSet( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
 **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td><p>Constant</p></td>
+<tr class="row-even"><td><p>Constant</p></td>
 <td><p>Constant( <em>value</em>[, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td><p>Dict</p></td>
+<tr class="row-odd"><td><p>Dict</p></td>
 <td><p>Dict( [<em>key_trait</em> = None, <em>value_trait</em> = None,
 <em>value</em> = None, <em>items</em> = True, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td><p>Directory</p></td>
+<tr class="row-even"><td><p>Directory</p></td>
 <td><p>Directory( [<em>value</em> = ‘’, <em>auto_set</em> = False, <em>entries</em> =
 10, <em>exists</em> = False, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td><p>Disallow</p></td>
+<tr class="row-odd"><td><p>Disallow</p></td>
 <td><p>n/a</p></td>
 </tr>
-<tr class="row-odd"><td><p>Either</p></td>
+<tr class="row-even"><td><p>Either</p></td>
 <td><p>Either( <em>val1</em>[, <em>val2</em>, …, <em>valN</em>,
 **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td><p>Enum</p></td>
+<tr class="row-odd"><td><p>Enum</p></td>
 <td><p>Enum( <em>values</em>[, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td><p>Event</p></td>
+<tr class="row-even"><td><p>Event</p></td>
 <td><p>Event( [<em>trait</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td><p>Expression</p></td>
+<tr class="row-odd"><td><p>Expression</p></td>
 <td><p>Expression( [<em>value</em> = ‘0’, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td><p>File</p></td>
+<tr class="row-even"><td><p>File</p></td>
 <td><p>File( [<em>value</em> = ‘’, <em>filter</em> = None, <em>auto_set</em> = False,
 <em>entries</em> = 10, <em>exists</em> = False,  **<em>metadata</em> ] )</p></td>
-</tr>
-<tr class="row-even"><td><p>Font</p></td>
-<td><p>Font( [*<em>args</em>, **<em>metadata</em>] )</p></td>
 </tr>
 <tr class="row-odd"><td><p>Function</p></td>
 <td><p>Function( [<em>value</em> = None, **<em>metadata</em>] )</p></td>
@@ -393,8 +393,9 @@ the table.</p>
 <td><p>n/a</p></td>
 </tr>
 <tr class="row-odd"><td><p>HTML</p></td>
-<td><p>HTML( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
-<em>regex</em> = ‘’,  **<em>metadata</em> ] )</p></td>
+<td><p>HTML( [<em>value</em> = ‘’, <em>minlen</em> = 0,
+<em>maxlen</em> = sys.maxsize, <em>regex</em> = ‘’,
+**<em>metadata</em> ] )</p></td>
 </tr>
 <tr class="row-even"><td><p>Instance</p></td>
 <td><p>Instance( [<em>klass</em> = None, <em>factory</em> = None, <em>args</em> =
@@ -402,44 +403,52 @@ None, <em>kw</em> = None, <em>allow_none</em> = True, <em>adapt</em> = None,
 <em>module</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
 <tr class="row-odd"><td><p>List</p></td>
-<td><p>List([<em>trait</em> = None, <em>value</em> = None, <em>minlen</em> = 0,</p></td>
+<td><p>List( [<em>trait</em> = None, <em>value</em> = None, <em>minlen</em> = 0,
+<em>maxlen</em> = sys.maxsize, <em>items</em> = True,
+**<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td><p>Method</p></td>
+<tr class="row-even"><td><p>Map</p></td>
+<td><p>Map( <em>map</em>[, **<em>metadata</em>] )</p></td>
+</tr>
+<tr class="row-odd"><td><p>Method</p></td>
 <td><p>Method ([**<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td><p>Module</p></td>
+<tr class="row-even"><td><p>Module</p></td>
 <td><p>Module ( [**<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td><p>Password</p></td>
+<tr class="row-odd"><td><p>Password</p></td>
 <td><p>Password( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> =
-sys.maxint, <em>regex</em> = ‘’, **<em>metadata</em>] )</p></td>
+sys.maxsize, <em>regex</em> = ‘’, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td><p>Property</p></td>
+<tr class="row-even"><td><p>PrefixList</p></td>
+<td><p>PrefixList( <em>values</em>[, **<em>metadata</em>] )</p></td>
+</tr>
+<tr class="row-odd"><td><p>PrefixMap</p></td>
+<td><p>PrefixMap( <em>map</em>[, **<em>metadata</em>] )</p></td>
+</tr>
+<tr class="row-even"><td><p>Property</p></td>
 <td><p>Property( [<em>fget</em> = None, <em>fset</em> = None, <em>fvalidate</em> =
 None, <em>force</em> = False, <em>handler</em> = None, <em>trait</em> = None,
 **<em>metadata</em>] )</p>
 <p>See <a class="reference internal" href="advanced.html#property-traits"><span class="std std-ref">Property Traits</span></a>, for details.</p>
 </td>
 </tr>
-<tr class="row-even"><td><p>Python</p></td>
+<tr class="row-odd"><td><p>Python</p></td>
 <td><p>Python ( [<em>value</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td><p>PythonValue</p></td>
+<tr class="row-even"><td><p>PythonValue</p></td>
 <td><p>PythonValue( [<em>value</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td><p>Range</p></td>
+<tr class="row-odd"><td><p>Range</p></td>
 <td><p>Range( [<em>low</em> = None, <em>high</em> = None, <em>value</em> = None,
 <em>exclude_low</em> = False, <em>exclude_high</em> = False,
 *<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td><p>ReadOnly</p></td>
+<tr class="row-even"><td><p>ReadOnly</p></td>
 <td><p>ReadOnly( [<em>value</em> = Undefined, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td><p>Regex</p></td>
+<tr class="row-odd"><td><p>Regex</p></td>
 <td><p>Regex( [<em>value</em> = ‘’, <em>regex</em> = ‘.*’, **<em>metadata</em>])</p></td>
-</tr>
-<tr class="row-odd"><td><p>RGBColor</p></td>
-<td><p>RGBColor( [*<em>args</em>, **<em>metadata</em>] )</p></td>
 </tr>
 <tr class="row-even"><td><p>self</p></td>
 <td><p>n/a</p></td>
@@ -450,7 +459,7 @@ None, <em>force</em> = False, <em>handler</em> = None, <em>trait</em> = None,
 </tr>
 <tr class="row-even"><td><p>String</p></td>
 <td><p>String( [<em>value</em> = ‘’, <em>minlen</em> = 0, <em>maxlen</em> =
-sys.maxint, <em>regex</em> = ‘’, **<em>metadata</em>] )</p></td>
+sys.maxsize, <em>regex</em> = ‘’, **<em>metadata</em>] )</p></td>
 </tr>
 <tr class="row-odd"><td><p>Subclass</p></td>
 <td><p>Subclass( [<em>value</em> = None, <em>klass</em> = None, <em>allow_none</em> =
@@ -471,14 +480,18 @@ True, **<em>metadata</em>] )</p></td>
 <td><p>Type( [<em>value</em> = None, <em>klass</em> = None, <em>allow_none</em> =
 True, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td><p>UUID <a class="footnote-reference brackets" href="#id16" id="id8">3</a></p></td>
+<tr class="row-even"><td><p>Union</p></td>
+<td><p>Union( <em>val1</em>[, <em>val2</em>, …, <em>valN</em>,
+**<em>metadata</em>] )</p></td>
+</tr>
+<tr class="row-odd"><td><p>UUID <a class="footnote-reference brackets" href="#id20" id="id8">3</a></p></td>
 <td><p>UUID( [**<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td><p>ValidatedTuple</p></td>
+<tr class="row-even"><td><p>ValidatedTuple</p></td>
 <td><p>ValidatedTuple( [*<em>traits</em>, <em>fvalidate</em> = None,
 <em>fvalidate_info</em> = ‘’ , **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-even"><td><p>WeakRef</p></td>
+<tr class="row-odd"><td><p>WeakRef</p></td>
 <td><p>WeakRef( [<em>klass</em> = ‘traits.HasTraits’,
 <em>allow_none</em> = False, <em>adapt</em> = ‘yes’, **<em>metadata</em>])</p></td>
 </tr>
@@ -532,14 +545,106 @@ on the class on which it was defined. For example:</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="map">
+<span id="index-28"></span><span id="id10"></span><h4>Map<a class="headerlink" href="#map" title="Permalink to this headline">¶</a></h4>
+<p>The map trait ensures that the value assigned to a trait attribute
+is a key of a specified dictionary, and also assigns the dictionary
+value corresponding to that key to a shadow attribute.</p>
+<p id="index-29">The following is an example of using Map:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># map.py --- Example of Map predefined trait</span>
+
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Map</span>
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">married</span> <span class="o">=</span> <span class="n">Map</span><span class="p">({</span><span class="s1">&#39;yes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">},</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;yes&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This example defines a Person class which has a <strong>married</strong> trait
+attribute which accepts values “yes” and “no”. The default value
+is set to “yes”. The name of the shadow attribute is the name of
+the Map attribute followed by an underscore, i.e <code class="docutils literal notranslate"><span class="pre">married_</span></code>
+Instantiating the class produces the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Map</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bob</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bob</span><span class="o">.</span><span class="n">married</span><span class="p">)</span>
+<span class="go">yes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bob</span><span class="o">.</span><span class="n">married_</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="prefixmap">
+<span id="index-30"></span><span id="id11"></span><h4>PrefixMap<a class="headerlink" href="#prefixmap" title="Permalink to this headline">¶</a></h4>
+<p>Like Map, PrefixMap is created using a dictionary, but in this
+case, the keys of the dictionary must be strings. Like PrefixList,
+a string <em>v</em> is a valid value for the trait attribute if it is a prefix of
+one and only one key <em>k</em> in the dictionary. The actual values assigned to
+the trait attribute is <em>k</em>, and its corresponding mapped attribute is map[<em>k</em>].</p>
+<p id="index-31">The following is an example of using PrefixMap:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># prefixmap.py --- Example of PrefixMap predefined trait</span>
+
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">PrefixMap</span>
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">married</span> <span class="o">=</span> <span class="n">PrefixMap</span><span class="p">({</span><span class="s1">&#39;yes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">},</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;yes&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This example defines a Person class which has a <strong>married</strong> trait
+attribute which accepts values “yes” and “no” or any unique
+prefix. The default value is set to “yes”. The name of the shadow attribute
+is the name of the PrefixMap attribute followed by an underscore, i.e <code class="docutils literal notranslate"><span class="pre">married_</span></code>
+Instantiating the class produces the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bob</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bob</span><span class="o">.</span><span class="n">married</span><span class="p">)</span>
+<span class="go">yes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bob</span><span class="o">.</span><span class="n">married_</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bob</span><span class="o">.</span><span class="n">married</span> <span class="o">=</span> <span class="s2">&quot;n&quot;</span> <span class="c1"># Setting a prefix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bob</span><span class="o">.</span><span class="n">married</span><span class="p">)</span>
+<span class="go">no</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bob</span><span class="o">.</span><span class="n">married_</span><span class="p">)</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="prefixlist">
+<span id="index-32"></span><span id="id12"></span><h4>PrefixList<a class="headerlink" href="#prefixlist" title="Permalink to this headline">¶</a></h4>
+<p>Ensures that a value assigned to the attribute is a member of a list of
+specified string values, or is a unique prefix of one of those values.
+The values that can be assigned to a trait attribute of type PrefixList
+is the set of all strings supplied to the PrefixList constructor, as well
+as any unique prefix of those strings. The actual value assigned to the
+trait is limited to the set of complete strings assigned to the
+PrefixList constructor.</p>
+<p id="index-33">The following is an example of using PrefixList:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># prefixlist.py --- Example of PrefixList predefined trait</span>
+
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">PrefixList</span>
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">married</span> <span class="o">=</span> <span class="n">PrefixList</span><span class="p">([</span><span class="s2">&quot;yes&quot;</span><span class="p">,</span> <span class="s2">&quot;no&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>This example defines a Person class which has a <strong>married</strong> trait
+attribute which accepts values “yes” and “no” or any unique
+prefix. Instantiating the class produces the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bob</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bob</span><span class="o">.</span><span class="n">married</span><span class="p">)</span>
+<span class="go">yes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bob</span><span class="o">.</span><span class="n">married</span> <span class="o">=</span> <span class="s2">&quot;n&quot;</span> <span class="c1"># Setting a prefix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">bob</span><span class="o">.</span><span class="n">married</span><span class="p">)</span>
+<span class="go">no</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="either">
-<span id="index-28"></span><span id="id10"></span><h4>Either<a class="headerlink" href="#either" title="Permalink to this headline">¶</a></h4>
+<span id="index-34"></span><span id="id13"></span><h4>Either<a class="headerlink" href="#either" title="Permalink to this headline">¶</a></h4>
 <p>Another predefined trait that merits special explanation is Either. The
 Either trait is intended for attributes that may take a value of more than
 a single trait type, including None. The default value of Either is None, even
 if None is not one of the types the user explicitly defines in the constructor,
 but a different default value can be provided using the <code class="docutils literal notranslate"><span class="pre">default</span></code> argument.</p>
-<p id="index-29">The following is an example of using Either:</p>
+<p id="index-35">The following is an example of using Either:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># either.py --- Example of Either predefined trait</span>
 
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Either</span><span class="p">,</span> <span class="n">Str</span>
@@ -569,8 +674,99 @@ will raise a TraitError if a value of any other type is assigned. For example:</
 </pre></div>
 </div>
 </div>
+<div class="section" id="union">
+<span id="index-36"></span><span id="id14"></span><h4>Union<a class="headerlink" href="#union" title="Permalink to this headline">¶</a></h4>
+<p>The Union trait accepts a value that is considered valid by at least one
+of the traits in its definition. It is a simpler and therefore less error-prone
+alternative to the <cite>Either</cite> trait, which allows more complex constructs and
+may sometimes exhibit mysterious validation behaviour. The Union trait however,
+validates the value assigned to it against each of the traits in its definition
+in the order they are defined. Union only accepts trait types or trait type
+instances or None in its definition. Prefer to use Union over <cite>Either</cite> to
+remain future proof.</p>
+<p id="index-37">The following is an example of using Union:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># union.py --- Example of Union predefined trait</span>
+
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Instance</span>
+
+<span class="k">class</span> <span class="nc">Salary</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">basic</span> <span class="o">=</span> <span class="n">Float</span>
+    <span class="n">bonus</span> <span class="o">=</span> <span class="n">Float</span>
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">manager_name</span> <span class="o">=</span> <span class="n">Union</span><span class="p">(</span><span class="n">Str</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">pay</span> <span class="o">=</span> <span class="n">Union</span><span class="p">(</span><span class="n">Instance</span><span class="p">(</span><span class="n">Salary</span><span class="p">),</span> <span class="n">Float</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This example defines an Employee class, which has a <strong>manager_name</strong> trait
+attribute, which accepts either an Str instance or None as its value, a
+<strong>salary</strong> trait that accepts an instance of Salary or Float and will raise a
+TraitError if a value of any other type is assigned. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Either</span><span class="p">,</span> <span class="n">Str</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">manager_name</span> <span class="o">=</span> <span class="n">Union</span><span class="p">(</span><span class="n">Str</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">steven</span> <span class="o">=</span> <span class="n">Employee</span><span class="p">(</span><span class="n">manager_name</span><span class="o">=</span><span class="s2">&quot;Jenni&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Here steven&#39;s manager is named &quot;Jenni&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Assigning a value that is neither a string nor None will fail.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">steven</span><span class="o">.</span><span class="n">manager_name</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="go">traits.trait_errors.TraitError: The &#39;manager_name&#39; trait of an Employee instance must be a string or a None type, but a value of 5 &lt;class &#39;int&#39;&gt; was specified.</span>
+</pre></div>
+</div>
+<p>The following example illustrates the difference between <cite>Either</cite> and <cite>Union</cite>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Either</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Str</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">IntegerClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">primes</span> <span class="o">=</span> <span class="n">Either</span><span class="p">([</span><span class="mi">2</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;3&#39;</span><span class="p">:</span><span class="mi">6</span><span class="p">},</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="n">IntegerClass</span><span class="p">(</span><span class="n">primes</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># Acceptable value, no error</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="n">IntegerClass</span><span class="p">(</span><span class="n">primes</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">traits.trait_errors.TraitError: The &#39;primes&#39; trait of an IntegerClass instance must be 2 or None or 5 or 7 or 11 or &#39;3&#39;, but a value of 4 &lt;class &#39;int&#39;&gt; was specified.</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># But Union does not allow such declarations.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">IntegerClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">primes</span> <span class="o">=</span> <span class="n">Union</span><span class="p">([</span><span class="mi">2</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;3&#39;</span><span class="p">:</span><span class="mi">6</span><span class="p">},</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="go">ValueError: Union trait declaration expects a trait type or an instance of trait type or None, but got [2] instead</span>
+</pre></div>
+</div>
+<p class="rubric" id="migration-either-to-union">Migration from Either to Union</p>
+<ul>
+<li><p>Static default values are defined on Union via the <strong>default_value</strong>
+attribute, whereas Either uses the <strong>default</strong> attribute. The naming of
+<strong>default_value</strong> is consistent with other trait types.
+For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Either</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">Str</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;unknown&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>would be changed to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Union</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">Str</span><span class="p">(),</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;unknown&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>If a default value is not defined, Union uses the default value from the
+first trait in its definition, whereas Either uses None.</p>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Either</span><span class="p">(</span><span class="n">Int</span><span class="p">(),</span> <span class="n">Float</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>has a default value of None. However None is not one of the allowed values.
+If the trait is later set to None from a non-None value, a validation error
+will occur.</p>
+<p>If the trait definition is changed to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Union</span><span class="p">(</span><span class="n">Int</span><span class="p">(),</span> <span class="n">Float</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Then the default value will be 0, which is the default value of the first
+trait.</p>
+<p>To keep None as the default, use None as the first item:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Union</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">Int</span><span class="p">(),</span> <span class="n">Float</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>With this, None also becomes one of the allowed values.</p>
+</li>
+</ul>
+</div>
 <div class="section" id="list-of-possible-values">
-<span id="list-of-possibl-values"></span><span id="index-30"></span><h4>List of Possible Values<a class="headerlink" href="#list-of-possible-values" title="Permalink to this headline">¶</a></h4>
+<span id="list-of-possibl-values"></span><span id="index-38"></span><h4>List of Possible Values<a class="headerlink" href="#list-of-possible-values" title="Permalink to this headline">¶</a></h4>
 <p>You can define a trait whose possible values include disparate types. To do
 this, use the predefined Enum trait, and pass it a list of all possible values.
 The values must all be of simple Python data types, such as strings, integers,
@@ -578,7 +774,7 @@ and floats, but they do not have to be all of the same type. This list of
 values can be a typical parameter list, an explicit (bracketed) list, or a
 variable whose type is list. The first item in the list is used as the default
 value.</p>
-<p id="index-31">A trait defined in this fashion can accept only values that are contained in
+<p id="index-39">A trait defined in this fashion can accept only values that are contained in
 the list of permitted values. The default value is the first value specified;
 it is also a valid value for assignment.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
@@ -639,7 +835,7 @@ one can specify <strong>another trait</strong> that holds the list of possible v
 </div>
 </div>
 <div class="section" id="trait-metadata">
-<span id="index-32"></span><span id="id11"></span><h2>Trait Metadata<a class="headerlink" href="#trait-metadata" title="Permalink to this headline">¶</a></h2>
+<span id="index-40"></span><span id="id15"></span><h2>Trait Metadata<a class="headerlink" href="#trait-metadata" title="Permalink to this headline">¶</a></h2>
 <p>Trait objects can contain metadata attributes, which fall into three categories:</p>
 <ul class="simple">
 <li><p>Internal attributes, which you can query but not set.</p></li>
@@ -652,10 +848,10 @@ passing them as keyword arguments to callable traits. The value of each
 keyword argument becomes bound to the resulting trait object as the value
 of an attribute having the same name as the keyword.</p>
 <div class="section" id="internal-metadata-attributes">
-<span id="index-33"></span><span id="id12"></span><h3>Internal Metadata Attributes<a class="headerlink" href="#internal-metadata-attributes" title="Permalink to this headline">¶</a></h3>
+<span id="index-41"></span><span id="id16"></span><h3>Internal Metadata Attributes<a class="headerlink" href="#internal-metadata-attributes" title="Permalink to this headline">¶</a></h3>
 <p>The following metadata attributes are used internally by the Traits package,
 and can be queried:</p>
-<span class="target" id="index-34"></span><span class="target" id="index-35"></span><span class="target" id="index-36"></span><span class="target" id="index-37"></span><ul class="simple" id="index-38">
+<span class="target" id="index-42"></span><span class="target" id="index-43"></span><span class="target" id="index-44"></span><span class="target" id="index-45"></span><ul class="simple" id="index-46">
 <li><p><strong>array</strong>: Indicates whether the trait is an array.</p></li>
 <li><p><strong>default</strong>: Returns the default value for the trait, if known; otherwise it
 returns Undefined.</p></li>
@@ -696,10 +892,10 @@ derived from TraitType.</p></li>
 </ul>
 </div>
 <div class="section" id="recognized-metadata-attributes">
-<span id="index-39"></span><span id="id13"></span><h3>Recognized Metadata Attributes<a class="headerlink" href="#recognized-metadata-attributes" title="Permalink to this headline">¶</a></h3>
+<span id="index-47"></span><span id="id17"></span><h3>Recognized Metadata Attributes<a class="headerlink" href="#recognized-metadata-attributes" title="Permalink to this headline">¶</a></h3>
 <p>The following metadata attributes are not predefined, but are recognized by
 HasTraits objects:</p>
-<span class="target" id="index-40"></span><span class="target" id="index-41"></span><ul class="simple" id="index-42">
+<span class="target" id="index-48"></span><span class="target" id="index-49"></span><ul class="simple" id="index-50">
 <li><p><strong>desc</strong>: A string describing the intended meaning of the trait. It is used
 in exception messages and fly-over help in user interface trait editors.</p></li>
 <li><p><strong>editor</strong>: Specifies an instance of a subclass of TraitEditor to use when
@@ -723,8 +919,8 @@ False, as doing so is likely to create unintended consequences. See
 <p>Other metadata attributes may be recognized by specific predefined traits.</p>
 </div>
 <div class="section" id="accessing-metadata-attributes">
-<span id="index-43"></span><span id="id14"></span><h3>Accessing Metadata Attributes<a class="headerlink" href="#accessing-metadata-attributes" title="Permalink to this headline">¶</a></h3>
-<p id="index-44">Here is an example of setting trait metadata using keyword arguments:</p>
+<span id="index-51"></span><span id="id18"></span><h3>Accessing Metadata Attributes<a class="headerlink" href="#accessing-metadata-attributes" title="Permalink to this headline">¶</a></h3>
+<p id="index-52">Here is an example of setting trait metadata using keyword arguments:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># keywords.py --- Example of trait keywords</span>
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
 
@@ -791,14 +987,14 @@ the metadata attribute:</p>
 </div>
 <p class="rubric">Footnotes</p>
 <dl class="footnote brackets">
-<dt class="label" id="id15"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
+<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
 <dd><p>Most callable predefined traits are classes, but a few are functions.
 The distinction does not make a difference unless you are trying to
 extend an existing predefined trait. See the <em>Traits API Reference</em> for
 details on particular traits, and see Chapter 5 for details on extending
 existing traits.</p>
 </dd>
-<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id8">3</a></span></dt>
+<dt class="label" id="id20"><span class="brackets"><a class="fn-backref" href="#id8">3</a></span></dt>
 <dd><p>Available in Python 2.5.</p>
 </dd>
 </dl>
@@ -826,7 +1022,11 @@ existing traits.</p>
 </li>
 <li><a class="reference internal" href="#other-predefined-traits">Other Predefined Traits</a><ul>
 <li><a class="reference internal" href="#this-and-self">This and self</a></li>
+<li><a class="reference internal" href="#map">Map</a></li>
+<li><a class="reference internal" href="#prefixmap">PrefixMap</a></li>
+<li><a class="reference internal" href="#prefixlist">PrefixList</a></li>
 <li><a class="reference internal" href="#either">Either</a></li>
+<li><a class="reference internal" href="#union">Union</a></li>
 <li><a class="reference internal" href="#list-of-possible-values">List of Possible Values</a></li>
 </ul>
 </li>
@@ -882,7 +1082,7 @@ existing traits.</p>
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.ctraits Module &mdash; Traits 6 User Manual</title>
+    <title>traits.ctraits Module &mdash; Traits 6.1 User Manual</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.0.0',
+        VERSION:     '6.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6 User Manual" href="../index.html" >
+    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.editor_factories Module" href="editor_factories.html" >
     <link rel="prev" title="traits.ctrait Module" href="ctrait.html" > 
@@ -50,7 +50,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -104,9 +104,40 @@ CHasTraits and cTrait (respectively).</p>
 Instead, it serves as a base class for the HasTraits class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>**traits</strong> (<em>dict</em>) – Dictionary mapping trait names to trait values.</p>
+<dd class="field-odd"><p><strong>**traits</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Dictionary mapping trait names to trait values.</p>
 </dd>
 </dl>
+<dl class="method">
+<dt id="traits.ctraits.CHasTraits._class_traits">
+<code class="sig-name descname">_class_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits._class_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>_instance_traits()</p>
+<p>Return this object’s class traits dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>class_traits</strong> – Dictionary mapping trait names to corresponding CTrait instances.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.ctraits.CHasTraits._instance_traits">
+<code class="sig-name descname">_instance_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits._instance_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return this object’s instance traits dictionary.</p>
+<p>The object’s instance traits dictionary is created if it doesn’t
+already exist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>instance_traits</strong> – Dictionary mapping trait names to corresponding CTrait instances.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="traits.ctraits.CHasTraits.trait_items_event">
 <code class="sig-name descname">trait_items_event</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">event_object</em>, <em class="sig-param">event_trait</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.trait_items_event" title="Permalink to this definition">¶</a></dt>
@@ -114,9 +145,9 @@ Instead, it serves as a base class for the HasTraits class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – Name of the item trait for which an event is being fired. (The name
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the item trait for which an event is being fired. (The name
 will usually end in ‘_items’.)</p></li>
-<li><p><strong>event_object</strong> (<em>object</em>) – Object of type <code class="docutils literal notranslate"><span class="pre">TraitListEvent</span></code>, <code class="docutils literal notranslate"><span class="pre">TraitDictEvent</span></code> or <code class="docutils literal notranslate"><span class="pre">TraitSetEvent</span></code>
+<li><p><strong>event_object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – Object of type <code class="docutils literal notranslate"><span class="pre">TraitListEvent</span></code>, <code class="docutils literal notranslate"><span class="pre">TraitDictEvent</span></code> or <code class="docutils literal notranslate"><span class="pre">TraitSetEvent</span></code>
 describing the changes to the underlying collection trait value.</p></li>
 <li><p><strong>event_trait</strong> (<a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><em>CTrait</em></a>) – The items trait, of trait type <code class="docutils literal notranslate"><span class="pre">Event</span></code>.</p></li>
 </ul>
@@ -132,7 +163,7 @@ describing the changes to the underlying collection trait value.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – Name of the trait whose value has changed</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the trait whose value has changed</p></li>
 <li><p><strong>old_value</strong> (<em>any</em>) – Old value for this trait.</p></li>
 <li><p><strong>new_value</strong> (<em>any</em><em>, </em><em>optional</em>) – New value for this trait. If the new value is not provided,
 it’s looked up on the object.</p></li>
@@ -151,21 +182,13 @@ it’s looked up on the object.</p></li>
 <dl class="method">
 <dt id="traits.ctraits.CHasTraits.traits_inited">
 <code class="sig-name descname">traits_inited</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.CHasTraits.traits_inited" title="Permalink to this definition">¶</a></dt>
-<dd><p>traits_inited(value)</p>
-<p>Get or set the initialization state of this object.</p>
-<p>With zero arguments, get the state: return True if the object has
-already been initialized, and False otherwise.</p>
-<p>With a single argument, if that argument is true, mark the object
-as initialized. If the argument is false, the state is unchanged.</p>
+<dd><p>Get the initialization state of this object.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>value</strong> (<em>bool</em>) – Only the value True (or another truthy value) should be passed.</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>initialized</strong> – True if the object is initialized, else False.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>initialized</strong> – True if the object is initialized, else False.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -180,10 +203,11 @@ as initialized. If the argument is false, the state is unchanged.</p>
 Instead, it serves as a base class for CTrait.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kind</strong> (<em>int</em>) – Integer between 0 and 8 representing the kind of this trait. The
-kind determines how attribute get and set operations behave for
-attributes using this trait. The values for <em>kind</em> correspond
-to the members of the <code class="docutils literal notranslate"><span class="pre">TraitKind</span></code> enumeration type.</p>
+<dd class="field-odd"><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Integer between 0 and 8 representing the kind of this trait, with
+the default value being 0. The kind determines how attribute get
+and set operations behave for attributes using this trait. The
+values for <em>kind</em> correspond to the members of the <code class="docutils literal notranslate"><span class="pre">TraitKind</span></code>
+enumeration type.</p>
 </dd>
 </dl>
 <dl class="method">
@@ -234,7 +258,7 @@ and trait name.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The object the trait is attached to.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the trait.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the trait.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -253,11 +277,11 @@ and trait name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>delegate_name</strong> (<em>str</em>) – Name of an attribute on the current object with references the
+<li><p><strong>delegate_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of an attribute on the current object with references the
 object that is the trait’s delegate.</p></li>
-<li><p><strong>delegate_prefix</strong> (<em>str</em>) – A prefix or substitution applied to the original attribute when
+<li><p><strong>delegate_prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A prefix or substitution applied to the original attribute when
 looking up the delegated attribute.</p></li>
-<li><p><strong>prefix_type</strong> (<em>int</em>) – <p>An integer between 0 and 3, inclusive. This controls how the
+<li><p><strong>prefix_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – <p>An integer between 0 and 3, inclusive. This controls how the
 delegator attribute name is mapped to an attribute name on the
 delegate object. The meanings of the values are as follows:</p>
 <dl class="simple">
@@ -277,7 +301,7 @@ the delegator attribute name.</p>
 </dd>
 </dl>
 </p></li>
-<li><p><strong>modify_delegate</strong> (<em>bool</em>) – Whether to modify the delegate when the value of this trait
+<li><p><strong>modify_delegate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to modify the delegate when the value of this trait
 is modified.</p></li>
 </ul>
 </dd>
@@ -296,7 +320,7 @@ method.</p>
 <dd class="field-odd"><p><strong>validator</strong></p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>tuple, callable, or None</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a>, callable, or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -351,70 +375,13 @@ If false, the validated value is provided to post_setattr.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="traits.ctraits.cTrait.property">
-<code class="sig-name descname">property</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.property" title="Permalink to this definition">¶</a></dt>
-<dd><p>property(get, get_n, set, set_n, validate, validate_n)</p>
-<p>Get or set property fields for this trait.</p>
-<p>When called with no arguments on a property trait, this method returns a
-tuple (get, set, validate) of length 3 containing the getter, setter and
-validator for this property trait.</p>
-<p>When called with no arguments on a non-property trait, this method
-returns <em>None</em>.</p>
-<p>Otherwise, the <em>property</em> method expects six arguments, and uses these
-arguments to set the get, set and validation for the trait. It also
-sets the property flag on the trait.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>get</strong> (<em>callable</em>) – <p>Function called when getting the value of this property trait.
-This function will be called with one of the following argument
-combinations, depending on the value of <em>get_n</em>.</p>
-<ul>
-<li><p>no arguments</p></li>
-<li><p>a single argument <code class="docutils literal notranslate"><span class="pre">obj</span></code></p></li>
-<li><p>a pair of arguments <code class="docutils literal notranslate"><span class="pre">obj,</span> <span class="pre">name</span></code></p></li>
-<li><p>a triple of arguments <code class="docutils literal notranslate"><span class="pre">obj,</span> <span class="pre">name,</span> <span class="pre">trait</span></code></p></li>
-</ul>
-</p></li>
-<li><p><strong>get_n</strong> (<em>int</em>) – Number of arguments to supply to the getter. This should be
-between 0 and 3, inclusive.</p></li>
-<li><p><strong>set</strong> (<em>callable</em>) – <p>Function called when setting the value of this property trait.
-This function will be called with one of the following argument
-combinations, depending on the value of <em>set_n</em>.</p>
-<ul>
-<li><p>no arguments</p></li>
-<li><p>a single argument <code class="docutils literal notranslate"><span class="pre">value</span></code></p></li>
-<li><p>a pair of arguments <code class="docutils literal notranslate"><span class="pre">obj,</span> <span class="pre">value</span></code></p></li>
-<li><p>a triple of arguments <code class="docutils literal notranslate"><span class="pre">obj,</span> <span class="pre">name,</span> <span class="pre">value</span></code></p></li>
-</ul>
-</p></li>
-<li><p><strong>set_n</strong> (<em>int</em>) – Number of arguments to supply to the setter. This should be
-between 0 and 3, inclusive.</p></li>
-<li><p><strong>validate</strong> (<em>callable</em><em> or </em><em>None</em>) – <p>Function called for validation. This function will be called
-with one of the following argument combinations, depending on
-the value of <em>validate_n</em>.</p>
-<ul>
-<li><p>no arguments</p></li>
-<li><p>a single argument <code class="docutils literal notranslate"><span class="pre">value</span></code></p></li>
-<li><p>a pair of arguments <code class="docutils literal notranslate"><span class="pre">obj,</span> <span class="pre">value</span></code></p></li>
-<li><p>a triple of arguments <code class="docutils literal notranslate"><span class="pre">obj,</span> <span class="pre">name,</span> <span class="pre">value</span></code></p></li>
-</ul>
-</p></li>
-<li><p><strong>validate_n</strong> (<em>int</em>) – Number of arguments to supply to the validator. This should be
-between 0 and 3, inclusive.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="traits.ctraits.cTrait.set_default_value">
 <code class="sig-name descname">set_default_value</code><span class="sig-paren">(</span><em class="sig-param">default_value_type</em>, <em class="sig-param">default_value</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.ctraits.cTrait.set_default_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the default value information for this trait.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>default_value_type</strong> (<em>int</em>) – An integer representing the kind of the default value</p></li>
+<li><p><strong>default_value_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – An integer representing the kind of the default value</p></li>
 <li><p><strong>default_value</strong> (<em>value</em>) – A value or callable providing the default</p></li>
 </ul>
 </dd>
@@ -427,7 +394,7 @@ between 0 and 3, inclusive.</p></li>
 <dd><p>Set the validator of a CTrait instance</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>validator</strong> (<em>callable</em><em> or </em><em>tuple</em>) – <p>Either a callable used for validation, or a tuple representing
+<dd class="field-odd"><p><strong>validator</strong> (<em>callable</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a>) – <p>Either a callable used for validation, or a tuple representing
 validation information.</p>
 <p>A callable used for validation should have signature
 validator(obj, name, value) -&gt; value, and should return the
@@ -440,7 +407,7 @@ to the validation type</p>
 </p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the given tuple does not have any of the expected forms.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If the given tuple does not have any of the expected forms.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -462,8 +429,8 @@ from the validator will be stored.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>object</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><em>HasTraits</em></a>) – The HasTraits object that validation is being performed for.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – The name of the trait.</p></li>
-<li><p><strong>value</strong> (<em>object</em>) – The value to be validated.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the trait.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – The value to be validated.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -540,7 +507,7 @@ from the validator will be stored.</p>
         &copy; Copyright 2008-2020, Enthought Inc
       </li>
       <li>
-      Last updated on May 20, 2020.
+      Last updated on Jun 05, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
