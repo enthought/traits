@@ -139,7 +139,7 @@ future changes:
 Detailed PR-by-PR changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-More than 150 PRs went into this release. The following people contributed
+More than 160 PRs went into this release. The following people contributed
 code changes for this release:
 
 * Ieva Cernyte
