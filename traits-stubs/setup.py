@@ -21,11 +21,13 @@ if __name__ == "__main__":
     setuptools.setup(
         name="traits-stubs",
         version="6.1.0",
+        url="https://github.com/enthought/traits",
         author="Enthought",
         author_email="info@enthought.com",
         description="Type annotations for the Traits package",
         long_description=get_long_description(),
         long_description_content_type="text/x-rst",
+        download_url="https://pypi.python.org/pypi/traits-stubs",
         install_requires=["traits"],
         extras_require={"test": ["mypy"]},
         packages=[
