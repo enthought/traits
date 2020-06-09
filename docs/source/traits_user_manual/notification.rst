@@ -602,6 +602,28 @@ usage can be replaced by |match|::
   match(lambda name, trait: trait.metadata_name is None)
 
 
+Dispatch parameter differentiates observers
+```````````````````````````````````````````
+
+In the following example with |@on_trait_change|, the second call is an no-op
+because a handler for *"name"* has already been added::
+
+    instance.on_trait_change(handler, "name", dispatch="same")
+    instance.on_trait_change(handler, "name", dispatch="ui")    # does nothing
+
+With |@observe|, the **dispatch** parameter is taken into account for
+distinguishing observers. The following example will result in the change
+handler being called twice, via different dispatching routes::
+
+    instance.observe(handler, "name", dispatch="same")
+    instance.observe(handler, "name", dispatch="ui")
+
+Likewise, when removing change handlers, **dispatch** must match the value
+used for putting up the observer::
+
+    instance.observe(handler, "name", dispatch="ui")
+    instance.observe(handler, "name", dispatch="ui", remove=True)
+
 ..
    # substitutions
 
