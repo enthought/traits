@@ -23,7 +23,7 @@ if __name__ == "__main__":
         version="6.1.0",
         author="Enthought",
         author_email="info@enthought.com",
-        description="Type annotation integration stubs for the Traits library",
+        description="Type annotations for the Traits package",
         long_description=get_long_description(),
         long_description_content_type="text/x-rst",
         install_requires=["traits"],
