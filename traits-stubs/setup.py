@@ -24,7 +24,10 @@ if __name__ == "__main__":
         description="Type annotation integration stubs for the Traits library",
         long_description=get_long_description(),
         long_description_content_type="text/x-rst",
-        install_requires=["mypy", "traits"],
+        install_requires=["traits"],
+        extras_require={
+            "test": ["mypy"],
+        },
         packages=["traits-stubs",
                   "traits_stubs_tests",
                   "traits_stubs_tests.examples"],
