@@ -27,7 +27,7 @@ if __name__ == "__main__":
         classifiers=[
             c.strip()
             for c in """
-            Development Status :: 5 - Production/Stable
+            Development Status :: 4 - Beta
             Intended Audience :: Developers
             Intended Audience :: Science/Research
             License :: OSI Approved :: BSD License
@@ -46,6 +46,7 @@ if __name__ == "__main__":
             Topic :: Software Development
             Topic :: Software Development :: Libraries
             Topic :: Software Development :: User Interfaces
+            Typing :: Typed
             """.splitlines()
             if len(c.strip()) > 0
         ],
