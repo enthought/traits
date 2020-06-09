@@ -24,6 +24,31 @@ if __name__ == "__main__":
         url="https://github.com/enthought/traits",
         author="Enthought",
         author_email="info@enthought.com",
+        classifiers=[
+            c.strip()
+            for c in """
+            Development Status :: 5 - Production/Stable
+            Intended Audience :: Developers
+            Intended Audience :: Science/Research
+            License :: OSI Approved :: BSD License
+            Operating System :: MacOS :: MacOS X
+            Operating System :: Microsoft :: Windows
+            Operating System :: POSIX :: Linux
+            Programming Language :: C
+            Programming Language :: Python
+            Programming Language :: Python :: 3
+            Programming Language :: Python :: 3.5
+            Programming Language :: Python :: 3.6
+            Programming Language :: Python :: 3.7
+            Programming Language :: Python :: 3.8
+            Programming Language :: Python :: Implementation :: CPython
+            Topic :: Scientific/Engineering
+            Topic :: Software Development
+            Topic :: Software Development :: Libraries
+            Topic :: Software Development :: User Interfaces
+            """.splitlines()
+            if len(c.strip()) > 0
+        ],
         description="Type annotations for the Traits package",
         long_description=get_long_description(),
         long_description_content_type="text/x-rst",
