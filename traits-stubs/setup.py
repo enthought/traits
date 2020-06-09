@@ -27,15 +27,13 @@ if __name__ == "__main__":
         long_description=get_long_description(),
         long_description_content_type="text/x-rst",
         install_requires=["traits"],
-        extras_require={
-            "test": ["mypy"],
-        },
-        packages=["traits-stubs",
-                  "traits_stubs_tests",
-                  "traits_stubs_tests.examples"],
-        package_data={
-            'traits-stubs': ['./*.pyi', './**/*.pyi'],
-        },
+        extras_require={"test": ["mypy"]},
+        packages=[
+            "traits-stubs",
+            "traits_stubs_tests",
+            "traits_stubs_tests.examples",
+        ],
+        package_data={"traits-stubs": ["./*.pyi", "./**/*.pyi"]},
         license="BSD",
         python_requires=">=3.5",
     )
