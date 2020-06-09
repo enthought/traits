@@ -21,6 +21,8 @@ if __name__ == "__main__":
     setuptools.setup(
         name="traits-stubs",
         version="6.1.0",
+        author="Enthought",
+        author_email="info@enthought.com",
         description="Type annotation integration stubs for the Traits library",
         long_description=get_long_description(),
         long_description_content_type="text/x-rst",
@@ -35,7 +37,5 @@ if __name__ == "__main__":
             'traits-stubs': ['./*.pyi', './**/*.pyi'],
         },
         license="BSD",
-        maintainer="ETS Developers",
-        maintainer_email="enthought-dev@enthought.com",
         python_requires=">=3.5",
     )
