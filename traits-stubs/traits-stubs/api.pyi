@@ -19,11 +19,27 @@ from .traits import (
 )
 
 from .has_traits import (
+    ABCHasStrictTraits as ABCHasStrictTraits,
+    ABCHasTraits as ABCHasTraits,
+    ABCMetaHasTraits as ABCMetaHasTraits,
+    AbstractViewElement as AbstractViewElement,
     HasTraits as HasTraits,
     HasStrictTraits as HasStrictTraits,
+    HasPrivateTraits as HasPrivateTraits,
+    HasRequiredTraits as HasRequiredTraits,
     Interface as Interface,
+    SingletonHasTraits as SingletonHasTraits,
+    SingletonHasStrictTraits as SingletonHasStrictTraits,
+    SingletonHasPrivateTraits as SingletonHasPrivateTraits,
+    MetaHasTraits as MetaHasTraits,
+    Vetoable as Vetoable,
+    VetoableEvent as VetoableEvent,
     observe as observe,
+    on_trait_change as on_trait_change,
+    cached_property as cached_property,
+    property_depends_on as property_depends_on,
     provides as provides,
+    isinterface as isinterface,
 )
 
 from .trait_types import (
