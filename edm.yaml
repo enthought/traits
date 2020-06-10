@@ -1,0 +1,7 @@
+# Change this if you are using on-premise brood
+store_url: "https://packages.enthought.com"
+
+repositories:
+  - enthought/free
+  - enthought/lgpl
+  - enthought/gpl
