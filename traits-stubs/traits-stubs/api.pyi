@@ -18,6 +18,8 @@ from .traits import (
     Trait as Trait
 )
 
+from .ctrait import CTrait as CTrait
+
 from .has_traits import (
     ABCHasStrictTraits as ABCHasStrictTraits,
     ABCHasTraits as ABCHasTraits,
