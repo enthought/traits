@@ -13,10 +13,10 @@ Tests for the Map handler.
 """
 
 import pickle
+import sys
 import unittest
 
-from traits.api import (
-    HasTraits, Int, List, Map, on_trait_change, TraitError, Undefined)
+from traits.api import HasTraits, Int, List, Map, on_trait_change, TraitError
 
 
 class Preferences(HasTraits):
@@ -50,8 +50,6 @@ class TestMap(unittest.TestCase):
 
         person = Person()
 
-        self.assertEqual(Undefined, person.married)
-
         person.married = "yes"
         self.assertEqual("yes", person.married)
         self.assertEqual(1, person.married_)
@@ -67,20 +65,40 @@ class TestMap(unittest.TestCase):
             person.married = []
 
     def test_no_default(self):
+        mapping = {"yes": 1, "yeah": 1, "no": 0, "nah": 0}
+
         class Person(HasTraits):
-            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+            married = Map(mapping)
 
         p = Person()
-        self.assertEqual(p.married, Undefined)
-        self.assertEqual(p.married_, Undefined)
+        if sys.version_info >= (3, 6):
+            # If we're using Python >= 3.6, we can rely on dictionaries
+            # being ordered, and then the default is predictable.
+            self.assertEqual(p.married, "yes")
+            self.assertEqual(p.married_, 1)
+        else:
+            # Otherwise, all we can expect is that the default is _one_
+            # of the dictionary entries.
+            self.assertIn(p.married, mapping)
+            self.assertEqual(p.married_, mapping[p.married])
 
     def test_no_default_reverse_access_order(self):
+        mapping = {"yes": 1, "yeah": 1, "no": 0, "nah": 0}
+
         class Person(HasTraits):
-            married = Map({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+            married = Map(mapping)
 
         p = Person()
-        self.assertEqual(p.married_, Undefined)
-        self.assertEqual(p.married, Undefined)
+        shadow_value = p.married_
+        primary_value = p.married
+        if sys.version_info >= (3, 6):
+            self.assertEqual(primary_value, "yes")
+            self.assertEqual(shadow_value, 1)
+        else:
+            # For Python < 3.6, dictionary ordering and hence the default
+            # value aren't predictable.
+            self.assertIn(primary_value, mapping)
+            self.assertEqual(shadow_value, mapping[primary_value])
 
     def test_default(self):
         class Person(HasTraits):
