@@ -8,6 +8,16 @@
 #
 # Thanks for using Enthought open source!
 
+from .constants import (
+    ComparisonMode as ComparisonMode,
+    DefaultValue as DefaultValue,
+    TraitKind as TraitKind,
+    ValidateTrait as ValidateTrait,
+    NO_COMPARE as NO_COMPARE,
+    OBJECT_IDENTITY_COMPARE as OBJECT_IDENTITY_COMPARE,
+    RICH_COMPARE as RICH_COMPARE,
+)
+
 from .traits import (
     Color as Color,
     Default as Default,
