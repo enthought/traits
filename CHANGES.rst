@@ -4,7 +4,7 @@ Traits CHANGELOG
 Release 6.1.0
 -------------
 
-Released: 2020-05-XX
+Released: 2020-06-05
 
 The Traits library is a foundational component of the Enthought Tool Suite. It
 provides observable, typed attributes for Python classes, making those classes
@@ -61,6 +61,22 @@ However, there are a few things to be aware of when upgrading.
   to properly recognise :class:`~traitsui.view.View` class variables as
   TraitsUI views, and an error will be raised if you attempt to create a
   TraitsUI view.
+
+* Traits now does no logging configuration at all, leaving all such
+  configuration to the application.
+
+  In more detail: trait notification handlers should not raise exceptions in
+  normal use, so an exception is logged whenever a trait notification handler
+  raises. This part of the behaviour has not changed. What *has* changed is the
+  way that logged exception is handled under default exception handling.
+
+  Previously, Traits added a :class:`~logging.StreamHandler` to the
+  top-level ``"traits"`` logger, so that trait notification exceptions would
+  always be visible. Traits also added a :class:`~logging.NullHandler` to that
+  logger. Both of those handlers have now been removed. We now rely on
+  Python's "handler of last resort", which will continue to make notification
+  exceptions to the user visible in the absence of any application-level
+  log configuration.
 
 * When listening for changes to the items of a :class:`.List` trait, an index
   or slice set operation no longer performs an equality check between the
@@ -123,7 +139,7 @@ future changes:
 Detailed PR-by-PR changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-More than 150 PRs went into this release. The following people contributed
+More than 160 PRs went into this release. The following people contributed
 code changes for this release:
 
 * Ieva Cernyte
@@ -145,10 +161,11 @@ Features
 * Add ``allow_none`` flag for ``Callable`` trait. (#885)
 * Add support for type annotation. (#904, #1064)
 * Allow mutable values in ``Constant`` trait. (#929)
-* Add ``Map`` and ``PrefixMap`` trait types. (#886, #953, #956, #970, #1139)
+* Add ``Map`` and ``PrefixMap`` trait types. (#886, #953, #956, #970, #1139,
+  #1189)
 * Add ``TraitList`` as the base list object that can perform validation
   and emit change notifications. (#912, #981, #984, #989, #999, #1003, #1011,
-  #1026, #1009, #1040)
+  #1026, #1009, #1040, #1172, #1173)
 * Add ``TraitDict`` as the base dict object that can perform validation and
   emit change notifications. (#913)
 * Add ``TraitSet`` as the base set object that can perform validation and
@@ -157,7 +174,7 @@ Features
   changes. (#976, #1000, #1007, #1065, #1023, #1066, #1070, #1069, #1067,
   #1080, #1082, #1079, #1071, #1072, #1075, #1085, #1089, #1078, #1093, #1086,
   #1077, #1095, #1102, #1108, #1110, #1112, #1117, #1118, #1123, #1125, #1126,
-  #1128, #1129, #1135)
+  #1128, #1129, #1135, #1156)
 
 Changes
 ~~~~~~~
@@ -169,6 +186,9 @@ Changes
   result in content that compares equally to the old values. (#1026)
 * ``TraitListEvent.index`` reported by mutations to a list is now normalized.
   (#1009)
+* The default notification error handler for Traits no longer configures
+  logging, and the top-level ``NullHandler`` log handler has been removed.
+  (#1161)
 
 Fixes
 ~~~~~
@@ -184,7 +204,7 @@ Fixes
   (#1018)
 * Fix setting default values via dynamic default methods or overriding trait in
   subclasses for mapped traits, used by ``Map``, ``Expression``, ``PrefixMap``.
-  (#1091)
+  (#1091, #1188)
 * Fix setting default values via dynamic default methods or overriding trait in
   subclasses for ``Expression`` and ``AdaptsTo``. (#1088, #1119, #1152)
 
@@ -226,7 +246,7 @@ Documentation
   #1140, #1143)
 * Add user manual section on the ``Union`` trait type and how to migrate from
   ``Either`` (#779, #1153, #1162)
-* Other minor cleanups and fixes. (#949, #1141)
+* Other minor cleanups and fixes. (#949, #1141, #1178)
 
 Test suite
 ~~~~~~~~~~
@@ -247,6 +267,7 @@ Build and continuous integration
 * CI tests requiring a GUI are now run against PyQt5 rather than PyQt4.
   (#1127)
 * Add Slack notifications for CI. (#1074)
+* Fix and improve various ``setup.py`` package metadata fields. (#1185)
 
 Maintenance and code organization
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

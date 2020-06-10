@@ -1,4 +1,4 @@
-language: generic
+language: python
 dist: xenial
 services:
   - xvfb
@@ -6,36 +6,50 @@ services:
 addons:
   apt:
     packages:
+    - qt5-default
     - libxkbcommon-x11-0
+    - libxcb-icccm4
+    - libxcb-image0
+    - libxcb-keysyms1
+    - libxcb-randr0
+    - libxcb-render-util0
+    - libxcb-xinerama0
 
 env:
   global:
-    - INSTALL_EDM_VERSION=2.0.0
-      PYTHONUNBUFFERED="1"
+    - PYTHONUNBUFFERED="1"
       CFLAGS="-Werror -UNDEBUG"
 
-matrix:
+jobs:
   include:
-    - env: RUNTIME=3.6
-    - os: osx
-      env: RUNTIME=3.6
+    - name: "Python 3.5 on Xenial Linux"
+      python: "3.5"
+    - name: "Python 3.6 on Xenial Linux"
+      python: "3.6"
+    - name: "Python 3.7 on Xenial Linux"
+      python: "3.7"
+    - name: "Python 3.8 on Xenial Linux"
+      python: "3.8"
+    - name: "Python 3.9 (dev) on Xenial Linux"
+      python: "3.9-dev"
+    - name: "Python 3.7 on macOS"
+      os: osx
+      osx_image: xcode11.5
+      language: shell
 
-cache:
-  directories:
-    - "~/.cache"
-
-before_install:
-  - mkdir -p "${HOME}/.cache/download"
-  - if [[ ${TRAVIS_OS_NAME} == 'linux' ]]; then ./install-edm-linux.sh; export PATH="${HOME}/edm/bin:${PATH}"; fi
-  - if [[ ${TRAVIS_OS_NAME} == 'osx' ]]; then ./install-edm-osx.sh; export PATH="${PATH}:/usr/local/bin"; fi
-  - edm install -y wheel click coverage
 install:
-  - edm run -- python etstool.py install --runtime=${RUNTIME} || exit
-  - if [[ ${TRAVIS_EVENT_TYPE} == 'cron' ]]; then edm run -- python etstool.py install --runtime=${RUNTIME} --source || exit; fi
+  - python3 --version
+  - python3 -m pip install --upgrade pip setuptools wheel
+  - python3 -m pip install copyright_header/
+  - python3 -m pip install .[docs,test]
+  - python3 -m pip install traits-stubs/[test]
+
 script:
-  - edm run -- python etstool.py flake8 --runtime=${RUNTIME} || exit
-  - edm run -- python etstool.py test --runtime=${RUNTIME} || exit
-  - edm run -- python etstool.py docs --runtime=${RUNTIME} || exit
+  - python3 -m flake8
+  - mkdir testdir
+  - pushd testdir && python3 -m unittest discover -v traits && popd
+  - pushd testdir && python3 -m unittest discover -v traits_stubs_tests && popd
+  - pushd docs && python3 -m sphinx -b html -W source build && popd
 
 notifications:
   slack:

@@ -273,8 +273,9 @@ the table.
 | CArray           | CArray( [*dtype* = None, *shape* = None, *value* = None, |
 |                  | *typecode* = None, \*\*\ *metadata*] )                   |
 +------------------+----------------------------------------------------------+
-| Code             | Code( [*value* = '', *minlen* = 0, *maxlen* = sys.maxint,|
-|                  | *regex* = '', \*\*\ *metadata*] )                        |
+| Code             | Code( [*value* = '', *minlen* = 0,                       |
+|                  | *maxlen* = sys.maxsize, *regex* = '',                    |
+|                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | CSet             | CSet( [*trait* = None, *value* = None, *items* = True,   |
 |                  | \*\*\ *metadata*] )                                      |
@@ -305,14 +306,17 @@ the table.
 +------------------+----------------------------------------------------------+
 | generic_trait    | n/a                                                      |
 +------------------+----------------------------------------------------------+
-| HTML             | HTML( [*value* = '', *minlen* = 0, *maxlen* = sys.maxint,|
-|                  | *regex* = '',  \*\*\ *metadata* ] )                      |
+| HTML             | HTML( [*value* = '', *minlen* = 0,                       |
+|                  | *maxlen* = sys.maxsize, *regex* = '',                    |
+|                  | \*\*\ *metadata* ] )                                     |
 +------------------+----------------------------------------------------------+
 | Instance         | Instance( [*klass* = None, *factory* = None, *args* =    |
 |                  | None, *kw* = None, *allow_none* = True, *adapt* = None,  |
 |                  | *module* = None, \*\*\ *metadata*] )                     |
 +------------------+----------------------------------------------------------+
-| List             | List([*trait* = None, *value* = None, *minlen* = 0,      |
+| List             | List( [*trait* = None, *value* = None, *minlen* = 0,     |
+|                  | *maxlen* = sys.maxsize, *items* = True,                  |
+|                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | Map              | Map( *map*\ [, \*\*\ *metadata*] )                       |
 +------------------+----------------------------------------------------------+
@@ -321,7 +325,7 @@ the table.
 | Module           | Module ( [\*\*\ *metadata*] )                            |
 +------------------+----------------------------------------------------------+
 | Password         | Password( [*value* = '', *minlen* = 0, *maxlen* =        |
-|                  | sys.maxint, *regex* = '', \*\*\ *metadata*] )            |
+|                  | sys.maxsize, *regex* = '', \*\*\ *metadata*] )           |
 +------------------+----------------------------------------------------------+
 | PrefixList       | PrefixList( *values*\ [, \*\*\ *metadata*] )             |
 +------------------+----------------------------------------------------------+
@@ -351,7 +355,7 @@ the table.
 |                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | String           | String( [*value* = '', *minlen* = 0, *maxlen* =          |
-|                  | sys.maxint, *regex* = '', \*\*\ *metadata*] )            |
+|                  | sys.maxsize, *regex* = '', \*\*\ *metadata*] )           |
 +------------------+----------------------------------------------------------+
 | Subclass         | Subclass( [*value* = None, *klass* = None, *allow_none* =|
 |                  | True, \*\*\ *metadata*] )                                |

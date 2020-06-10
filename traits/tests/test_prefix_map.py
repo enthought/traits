@@ -13,9 +13,10 @@ Tests for the PrefixMap handler.
 """
 
 import pickle
+import sys
 import unittest
 
-from traits.api import HasTraits, Int, PrefixMap, TraitError, Undefined
+from traits.api import HasTraits, Int, PrefixMap, TraitError
 
 
 class Person(HasTraits):
@@ -25,8 +26,6 @@ class Person(HasTraits):
 class TestPrefixMap(unittest.TestCase):
     def test_assignment(self):
         person = Person()
-
-        self.assertEqual(Undefined, person.married)
 
         # Test prefix
         person.married = "yea"
@@ -58,12 +57,22 @@ class TestPrefixMap(unittest.TestCase):
                     person.married = value
 
     def test_no_default(self):
+        mapping = {"yes": 1, "yeah": 1, "no": 0, "nah": 0}
+
         class Person(HasTraits):
-            married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0})
+            married = PrefixMap(mapping)
 
         p = Person()
-        self.assertEqual(p.married, Undefined)
-        self.assertEqual(p.married_, Undefined)
+        if sys.version_info >= (3, 6):
+            # If we're using Python >= 3.6, we can rely on dictionaries
+            # being ordered, and then the default is predictable.
+            self.assertEqual(p.married, "yes")
+            self.assertEqual(p.married_, 1)
+        else:
+            # Otherwise, all we can expect is that the default is _one_
+            # of the dictionary entries.
+            self.assertIn(p.married, mapping)
+            self.assertEqual(p.married_, mapping[p.married])
 
     def test_default(self):
         class Person(HasTraits):

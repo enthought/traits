@@ -10,16 +10,57 @@
 
 import setuptools
 
+
+def get_long_description():
+    """ Read long description from README.rst. """
+    with open("README.rst", "r", encoding="utf-8") as readme:
+        return readme.read()
+
+
 if __name__ == "__main__":
     setuptools.setup(
         name="traits-stubs",
-        version="0.1.0",
-        description="type annotation integration stubs for traits",
-        install_requires=["mypy", "traits"],
-        packages=["traits-stubs",
-                  "traits_stubs_tests",
-                  "traits_stubs_tests.examples"],
-        package_data={
-            'traits-stubs': ['./*.pyi', './**/*.pyi'],
-        },
+        version="6.1.0",
+        url="https://github.com/enthought/traits",
+        author="Enthought",
+        author_email="info@enthought.com",
+        classifiers=[
+            c.strip()
+            for c in """
+            Development Status :: 4 - Beta
+            Intended Audience :: Developers
+            Intended Audience :: Science/Research
+            License :: OSI Approved :: BSD License
+            Operating System :: MacOS :: MacOS X
+            Operating System :: Microsoft :: Windows
+            Operating System :: POSIX :: Linux
+            Programming Language :: Python
+            Programming Language :: Python :: 3
+            Programming Language :: Python :: 3.5
+            Programming Language :: Python :: 3.6
+            Programming Language :: Python :: 3.7
+            Programming Language :: Python :: 3.8
+            Programming Language :: Python :: Implementation :: CPython
+            Topic :: Scientific/Engineering
+            Topic :: Software Development
+            Topic :: Software Development :: Libraries
+            Topic :: Software Development :: User Interfaces
+            Typing :: Typed
+            """.splitlines()
+            if len(c.strip()) > 0
+        ],
+        description="Type annotations for the Traits package",
+        long_description=get_long_description(),
+        long_description_content_type="text/x-rst",
+        download_url="https://pypi.python.org/pypi/traits-stubs",
+        install_requires=["traits"],
+        extras_require={"test": ["mypy"]},
+        packages=[
+            "traits-stubs",
+            "traits_stubs_tests",
+            "traits_stubs_tests.examples",
+        ],
+        package_data={"traits-stubs": ["./*.pyi", "./**/*.pyi"]},
+        license="BSD",
+        python_requires=">=3.5",
     )
