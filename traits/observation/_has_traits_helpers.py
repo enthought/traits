@@ -116,6 +116,12 @@ def observer_change_handler(event, graph, handler, target, dispatcher):
 
 
 def ctrait_prevent_event(event):
+    """ Return true if the CTrait change event should be skipped.
+
+    Parameters
+    ----------
+    event : TraitChangeEvent
+    """
     if event.old is Uninitialized:
         return True
 
