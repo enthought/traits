@@ -37,6 +37,19 @@ if sphinx is not None:
     )
 
 
+# Configuration file content for testing.
+CONF_PY = """\
+extensions = ['sphinx.ext.autodoc']
+
+# The suffix of source filenames.
+source_suffix = '.rst'
+
+autodoc_mock_imports = [
+    'dummy'
+]
+"""
+
+
 class MyTestClass(HasTraits):
     """
     Class-level docstring.
@@ -143,10 +156,10 @@ class TestTraitDocumenter(unittest.TestCase):
             A context manager that returns a DocumenterBridge instance.
         """
         with self.tmpdir() as tmpdir:
-            # The configuration file must exist, but it's okay if it's empty.
+            # Ensure configuration file exists.
             conf_file = os.path.join(tmpdir, "conf.py")
-            with open(conf_file, "w", encoding="utf-8"):
-                pass
+            with open(conf_file, "w", encoding="utf-8") as f:
+                f.write(CONF_PY)
 
             app = SphinxTestApp(srcdir=path(tmpdir))
             app.builder.env.app = app
