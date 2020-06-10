@@ -300,14 +300,28 @@ setuptools.setup(
     },
     install_requires=[],
     extras_require={
+        "docs": [
+            "enthought-sphinx-theme",
+            "Sphinx",
+        ],
         "test": [
             "Cython",
-            "numpy",
-            "pyface",
-            "PySide2",
+            "flake8",
+            "mypy",
             "setuptools",
             "Sphinx",
-            "traitsui",
+            # Python 3.9 exclusions:
+            #
+            # * NumPy installation fails on Python 3.9 on the Ubuntu Xenial
+            #   system used by Travis CI.
+            # * PySide2 is installable but also currently not working
+            #   on Python 3.9.
+            # * Because of the above, we also exclude GUI-using packages
+            #   Pyface and TraitsUI on Python 3.9.
+            "numpy;python_version<'3.9'",
+            "pyface;python_version<'3.9'",
+            "PySide2;python_version<'3.9'",
+            "traitsui;python_version<'3.9'",
         ],
     },
     ext_modules=[setuptools.Extension("traits.ctraits", ["traits/ctraits.c"])],
