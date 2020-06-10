@@ -17,7 +17,7 @@ install:
   - "%PYTHON%/python.exe -m pip install --upgrade pip setuptools wheel"
   - "%PYTHON%/python.exe -m pip install copyright_header/"
   - "%PYTHON%/python.exe -m pip install .[docs,test]"
-  - "%PYTHON%/python.exe -m pip install traits-stubs/"
+  - "%PYTHON%/python.exe -m pip install traits-stubs/[test]"
 
 test_script:
   - "%PYTHON%/python.exe -m flake8"
