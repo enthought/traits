@@ -326,18 +326,7 @@ class AbstractStaticChangeNotifyWrapper(object):
     def __call__(self, object, trait_name, old, new):
         """ Dispatch to the appropriate handler method. """
 
-        if old is not Uninitialized:
-
-            trait = object._trait(trait_name, 2)
-            if (trait.type == TraitKind.trait.name
-                    and trait.comparison_mode == ComparisonMode.equality):
-                try:
-                    is_equal = old == new
-                except Exception:
-                    pass
-                else:
-                    if is_equal:
-                        return
+        if _change_accepted(object, trait_name, old, new):
 
             # Extract the arguments needed from the handler.
             args = self.argument_transform(object, trait_name, old, new)
@@ -523,17 +512,6 @@ class TraitChangeNotifyWrapper(object):
     def _dispatch_change_event(self, object, trait_name, old, new, handler):
         """ Prepare and dispatch a trait change event to a listener. """
 
-        trait = object._trait(trait_name, 2)
-        if (trait.type == TraitKind.trait.name
-                and trait.comparison_mode == ComparisonMode.equality):
-            try:
-                is_equal = old == new
-            except Exception:
-                pass
-            else:
-                if is_equal:
-                    return
-
         # Extract the arguments needed from the handler.
         args = self.argument_transform(object, trait_name, old, new)
 
@@ -562,7 +540,8 @@ class TraitChangeNotifyWrapper(object):
         """ Dispatch a trait change event to a method listener. """
 
         obj_weak_ref = self.object
-        if (obj_weak_ref is not None) and (old is not Uninitialized):
+        if (obj_weak_ref is not None
+                and _change_accepted(object, trait_name, old, new)):
             # We make sure to hold a reference to the object before invoking
             # `getattr` so that the listener does not disappear in a
             # multi-threaded case.
@@ -577,7 +556,7 @@ class TraitChangeNotifyWrapper(object):
     def _notify_function_listener(self, object, trait_name, old, new):
         """ Dispatch a trait change event to a function listener. """
 
-        if old is not Uninitialized:
+        if _change_accepted(object, trait_name, old, new):
             self._dispatch_change_event(
                 object, trait_name, old, new, self.handler
             )
@@ -652,3 +631,30 @@ class NewTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
 
     def dispatch(self, handler, *args):
         Thread(target=handler, args=args).start()
+
+
+def _change_accepted(object, name, old, new):
+    """ Return true if notifications should be emitted for the change.
+
+    Parameters
+    ----------
+    object : HasTraits
+        The object on which the trait is changed.
+    name : str
+        The name of the trait changed.
+    old : any
+        The old value
+    new : any
+        The new value
+    """
+    if old is Uninitialized:
+        return False
+
+    trait = object._trait(name, 2)
+    if (trait.type == TraitKind.trait.name
+            and trait.comparison_mode == ComparisonMode.equality):
+        try:
+            return old != new
+        except Exception:
+            pass
+    return True
