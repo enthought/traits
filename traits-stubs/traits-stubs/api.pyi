@@ -20,7 +20,10 @@ from .traits import (
 
 from .has_traits import (
     HasTraits as HasTraits,
+    HasStrictTraits as HasStrictTraits,
+    Interface as Interface,
     observe as observe,
+    provides as provides,
 )
 
 from .trait_types import (
