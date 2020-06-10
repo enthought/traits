@@ -8,7 +8,6 @@
 #
 # Thanks for using Enthought open source!
 
-from .trait_type import TraitType as TraitType
 from .traits import (
     Color as Color,
     Default as Default,
@@ -167,6 +166,9 @@ from .trait_types import (
     ValidatedTuple as ValidatedTuple
 )
 
+from .base_trait_handler import BaseTraitHandler as BaseTraitHandler
+from .trait_handler import TraitHandler as TraitHandler
+from .trait_type import TraitType as TraitType
 from .trait_handlers import (
     TraitCoerceType as TraitCoerceType,
     TraitCastType as TraitCastType,
