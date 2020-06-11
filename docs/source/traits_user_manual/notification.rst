@@ -165,8 +165,7 @@ functions from the |observation.api| module.
    * - |trait|
      - For observing a specific named trait.
    * - |metadata|
-     - For observing multiple traits with a specific metadata. Support further
-       filtering on the metadata value.
+     - For observing multiple traits with specific metadata.
    * - |dict_items|
      - For observing items in a dict.
    * - |list_items|
