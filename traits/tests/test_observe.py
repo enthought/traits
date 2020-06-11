@@ -191,6 +191,11 @@ class SingleValue(HasTraits):
     value = Int()
 
 
+class ClassWithListOfInstance(HasTraits):
+
+    list_of_instances = List(Instance(SingleValue), comparison_mode=1)
+
+
 class ClassWithListOfListOfInstance(HasTraits):
 
     list_of_list_of_instances = List(
@@ -269,6 +274,47 @@ class TestHasTraitsObserveListOfInstance(unittest.TestCase):
         self.assertEqual(event.name, "value")
         self.assertEqual(event.old, 0)
         self.assertEqual(event.new, 1)
+
+    def test_duplicated_items_tracked(self):
+        # test for enthought/traits#237
+        container = ClassWithListOfInstance()
+        handler = mock.Mock()
+        container.observe(
+            expression=(
+                trait("list_of_instances", notify=False)
+                .list_items(notify=False)
+                .trait("value")
+            ),
+            handler=handler,
+        )
+
+        instance = SingleValue()
+        # The item is repeated.
+        container.list_of_instances.append(instance)
+        container.list_of_instances.append(instance)
+        self.assertEqual(handler.call_count, 0)
+
+        # when
+        instance.value += 1
+
+        # then
+        self.assertEqual(handler.call_count, 1)
+        handler.reset_mock()
+
+        # when
+        container.list_of_instances.pop()
+        instance.value += 1
+
+        # then
+        self.assertEqual(handler.call_count, 1)
+        handler.reset_mock()
+
+        # when
+        container.list_of_instances.pop()
+        instance.value += 1
+
+        # then
+        self.assertEqual(handler.call_count, 0)
 
 
 # Integration tests for nested Dict and extended traits -----------------------
