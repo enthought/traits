@@ -8,6 +8,10 @@
 #
 # Thanks for using Enthought open source!
 
+""" Integration tests between HasTraits and observe.
+See tests in ``traits.observations`` for more targeted tests.
+"""
+
 import unittest
 from unittest import mock
 
