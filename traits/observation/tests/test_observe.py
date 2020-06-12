@@ -13,6 +13,10 @@ from unittest import mock
 
 from traits.has_traits import HasTraits
 from traits.trait_types import Instance, Int
+from traits.observation.api import (
+    pop_exception_handler,
+    push_exception_handler,
+)
 from traits.observation._exceptions import NotifierNotFound
 from traits.observation.expression import trait
 from traits.observation.observe import (
@@ -450,6 +454,10 @@ class ClassWithInstance(HasTraits):
 class TestObserverIntegration(unittest.TestCase):
     """ Test the public facing observe function."""
 
+    def setUp(self):
+        push_exception_handler(reraise_exceptions=True)
+        self.addCleanup(pop_exception_handler)
+
     def test_observe_with_expression(self):
         foo = ClassWithNumber()
         handler = mock.Mock()
@@ -530,3 +538,21 @@ class TestObserverIntegration(unittest.TestCase):
         # then
         # the handler should be called twice as the targets are different.
         self.assertEqual(handler.call_count, 2)
+
+    def test_observe_with_any_callables_accepting_one_argument(self):
+        # If it is a callable that works with one positional argument, it
+        # can be used.
+
+        def handler_with_one_pos_arg(arg, *, optional=None):
+            pass
+
+        callables = [
+            repr,
+            lambda e: False,
+            handler_with_one_pos_arg,
+        ]
+        for callable_ in callables:
+            with self.subTest(callable=callable_):
+                instance = ClassWithNumber()
+                instance.observe(callable_, "number")
+                instance.number += 1
