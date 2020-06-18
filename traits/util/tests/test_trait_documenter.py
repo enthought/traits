@@ -165,16 +165,10 @@ class TestTraitDocumenter(unittest.TestCase):
             app.builder.env.app = app
             app.builder.env.temp_data["docname"] = "dummy"
 
-            # Backwards compatibility hack: for now, we need to be compatible
-            # with both Sphinx < 2.1 (whose DocumenterBridge doesn't take
-            # a state argument) and Sphinx >= 2.3 (which warns if the state
-            # isn't passed). Eventually we should be able to drop support
-            # for Sphinx < 2.1.
             kwds = {}
-            if sphinx.version_info >= (2, 1):
-                state = mock.Mock()
-                state.document.settings.tab_width = 8
-                kwds["state"] = state
+            state = mock.Mock()
+            state.document.settings.tab_width = 8
+            kwds["state"] = state
             yield DocumenterBridge(
                 app.env, LoggingReporter(''), Options(), 1, **kwds)
 
