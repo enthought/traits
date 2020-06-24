@@ -1,6 +1,6 @@
-==============================================
-traits: explicitly typed attributes for Python
-==============================================
+======================================================
+Traits: observable typed attributes for Python classes
+======================================================
 
 http://docs.enthought.com/traits
 
