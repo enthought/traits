@@ -178,12 +178,32 @@ class InterfacesTest(unittest.TestCase):
     def test_provides_one(self):
         @provides(IFoo)
         class Test(HasTraits):
-            pass
+            def get_foo(self):
+                return "foo_and_only_foo"
+
+            def get_average(self):
+                return 42
+
+        test = Test()
+        self.assertIsInstance(test, IFoo)
+        self.assertNotIsInstance(test, IAverage)
 
     def test_provides_multi(self):
         @provides(IFoo, IAverage, IList)
         class Test(HasTraits):
-            pass
+            def get_foo(self):
+                return "test_foo"
+
+            def get_average(self):
+                return 42
+
+            def get_list(self):
+                return [42]
+
+        test = Test()
+        self.assertIsInstance(test, IFoo)
+        self.assertIsInstance(test, IAverage)
+        self.assertIsInstance(test, IList)
 
     def test_provides_extended(self):
         """ Ensure that subclasses of Interfaces imply the superinterface.
@@ -191,10 +211,19 @@ class InterfacesTest(unittest.TestCase):
 
         @provides(IFooPlus)
         class Test(HasTraits):
-            pass
+            def get_foo(self):
+                return "some_test_foo"
+
+            def get_foo_plus(self):
+                return "more_test_foo"
+
+        test = Test()
+        self.assertIsInstance(test, IFoo)
+        self.assertIsInstance(test, IFooPlus)
 
         ta = TraitsHolder()
-        ta.foo_adapted_to = Test()
+        ta.foo_adapted_to = test
+        self.assertIs(ta.foo_adapted_to, test)
 
     def test_provides_bad(self):
         with self.assertRaises(Exception):
