@@ -121,6 +121,11 @@ def ctrait_prevent_event(event):
     Parameters
     ----------
     event : TraitChangeEvent
+
+    Returns
+    -------
+    skipped: bool
+        Whether the event should be skipped
     """
     if event.old is Uninitialized:
         return True
