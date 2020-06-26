@@ -450,7 +450,7 @@ Suppose we have these classes::
         value = Int()
 
     class Foo(HasTraits):
-        container = List(Instance(Bar), comparison_mode=1)
+        container = List(Instance(Bar), comparison_mode=ComparisonMode.identity)
 
 To notify for changes on *Bar.value* for an item in *Foo.container*,
 with |@on_trait_change|, one may do::
@@ -523,7 +523,7 @@ For mutations to container, e.g.::
 
 It will have to be changed to::
 
-    container = List(comparison_mode=1)
+    container = List(comparison_mode=ComparisonMode.identity)
 
     @observe("container:items")
     def name_updated(self, event):

@@ -17,6 +17,7 @@ import unittest
 from traits.api import (
     Any,
     Bool,
+    ComparisonMode,
     DelegatesTo,
     Dict,
     Event,
@@ -44,7 +45,7 @@ class Student(HasTraits):
 class Teacher(HasTraits):
     """ Model for testing list + post_init (enthought/traits#275) """
 
-    students = List(Instance(Student), comparison_mode=1)
+    students = List(Instance(Student), comparison_mode=ComparisonMode.identity)
 
     student_graduate_events = List()
 
@@ -102,13 +103,14 @@ class Record(HasTraits):
 
 class Album(HasTraits):
 
-    records = List(Instance(Record), comparison_mode=1)
+    records = List(Instance(Record), comparison_mode=ComparisonMode.identity)
 
     records_default_call_count = Int()
 
     record_number_change_events = List()
 
-    name_to_records = Dict(Str, Record, comparison_mode=1)
+    name_to_records = Dict(
+        Str, Record, comparison_mode=ComparisonMode.identity)
 
     name_to_records_default_call_count = Int()
 
@@ -192,13 +194,14 @@ class SingleValue(HasTraits):
 
 class ClassWithListOfInstance(HasTraits):
 
-    list_of_instances = List(Instance(SingleValue), comparison_mode=1)
+    list_of_instances = List(
+        Instance(SingleValue), comparison_mode=ComparisonMode.identity)
 
 
 class ClassWithListOfListOfInstance(HasTraits):
 
     list_of_list_of_instances = List(
-        List(Instance(SingleValue)), comparison_mode=1)
+        List(Instance(SingleValue)), comparison_mode=ComparisonMode.identity)
 
 
 class TestHasTraitsObserveListOfInstance(unittest.TestCase):
@@ -324,7 +327,8 @@ class TestHasTraitsObserveListOfInstance(unittest.TestCase):
 
 class ClassWithDictOfInstance(HasTraits):
 
-    name_to_instance = Dict(Str, Instance(SingleValue), comparison_mode=1)
+    name_to_instance = Dict(
+        Str, Instance(SingleValue), comparison_mode=ComparisonMode.identity)
 
 
 class TestHasTraitsObserveDictOfInstance(unittest.TestCase):
@@ -367,10 +371,11 @@ class TestHasTraitsObserveDictOfInstance(unittest.TestCase):
 
 class ClassWithSetOfInstance(HasTraits):
 
-    instances = Set(Instance(SingleValue), comparison_mode=1)
+    instances = Set(
+        Instance(SingleValue), comparison_mode=ComparisonMode.identity)
 
     instances_compat = Set(
-        Instance(SingleValue), comparison_mode=1)
+        Instance(SingleValue), comparison_mode=ComparisonMode.identity)
 
 
 class TestHasTraitsObserveSetOfInstance(unittest.TestCase):
@@ -417,12 +422,12 @@ class Potato(HasTraits):
 
 class PotatoBag(HasTraits):
 
-    potatos = List(Instance(Potato), comparison_mode=1)
+    potatos = List(Instance(Potato), comparison_mode=ComparisonMode.identity)
 
 
 class Crate(HasTraits):
 
-    potato_bags = List(PotatoBag, comparison_mode=1)
+    potato_bags = List(PotatoBag, comparison_mode=ComparisonMode.identity)
 
 
 class TestHasTraitsObserverDifferentiateParent(unittest.TestCase):
@@ -532,7 +537,7 @@ class Person(HasTraits):
 class Team(HasTraits):
     leader = Instance(Person)
 
-    member_names = List(Str(), comparison_mode=1)
+    member_names = List(Str(), comparison_mode=ComparisonMode.identity)
 
     any_value = Any()
 

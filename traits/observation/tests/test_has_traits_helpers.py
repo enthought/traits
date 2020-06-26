@@ -146,9 +146,9 @@ class CannotCompare:
 class ObjectWithEqualityComparisonMode(HasTraits):
     """ Class for supporting TestHasTraitsHelpersWarning """
 
-    list_values = List(comparison_mode=2)
-    dict_values = Dict(comparison_mode=2)
-    set_values = Set(comparison_mode=2)
+    list_values = List(comparison_mode=ComparisonMode.equality)
+    dict_values = Dict(comparison_mode=ComparisonMode.equality)
+    set_values = Set(comparison_mode=ComparisonMode.equality)
     number = Any(comparison_mode=ComparisonMode.equality)
     calculated = Property(depends_on="number")
 
