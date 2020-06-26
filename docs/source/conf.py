@@ -60,7 +60,7 @@ master_doc = "index"
 
 # General substitutions.
 project = "traits"
-copyright = "2008-{date.year}, Enthought Inc".format(
+copyright = "2005-{date.year}, Enthought Inc".format(
     date=datetime.date.today())
 
 # The default replacements for |version| and |release|, also used in various
