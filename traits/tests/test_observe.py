@@ -578,18 +578,6 @@ class TestObserverError(unittest.TestCase):
             "Trait named 'does_not_exist' not found on 'Paul'."
         )
 
-    def test_trait_on_undefined_instance(self):
-        team = Team()
-        # The default value for Instance is None, but that is assigned when
-        # someone accesses the attribute.
-        self.assertIsNone(team.leader)
-
-        team.observe(
-            lambda e: None, trait("leader", notify=False).trait("name"))
-
-        # when
-        team.leader = Person()
-
     def test_extended_trait_on_any_value(self):
         team = Team()
         team.any_value = 123
