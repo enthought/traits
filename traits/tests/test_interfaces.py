@@ -11,8 +11,11 @@
 """ Unit test case for testing interfaces and adaptation.
 """
 
+import contextlib
+import logging
 import unittest
 
+from traits import has_traits
 from traits.api import (
     HasTraits,
     Adapter,
@@ -27,6 +30,7 @@ from traits.api import (
     TraitError,
 )
 from traits.adaptation.api import reset_global_adaptation_manager
+from traits.interface_checker import InterfaceError
 
 
 class IFoo(Interface):
@@ -232,6 +236,47 @@ class InterfacesTest(unittest.TestCase):
             class Test(HasTraits):
                 pass
 
+    def test_provides_with_no_interface_check(self):
+
+        class Test(HasTraits):
+            # Deliberately _not_ implementing get_foo. This class
+            # should not pass an IFoo interface check.
+            pass
+
+        provides_ifoo = provides(IFoo)
+        with self.set_check_interfaces(0):
+            # Simulate application of the decorator
+            Test = provides_ifoo(Test)
+
+        test = Test()
+        self.assertIsInstance(test, IFoo)
+
+    def test_provides_with_interface_check_warn(self):
+
+        class Test(HasTraits):
+            # Deliberately _not_ implementing get_foo. This class
+            # should not pass an IFoo interface check.
+            pass
+
+        provides_ifoo = provides(IFoo)
+        with self.set_check_interfaces(1):
+            with self.assertLogs("traits", logging.WARNING):
+                # Simulate application of the decorator
+                Test = provides_ifoo(Test)
+
+    def test_provides_with_interface_check_error(self):
+
+        class Test(HasTraits):
+            # Deliberately _not_ implementing get_foo. This class
+            # should not pass an IFoo interface check.
+            pass
+
+        provides_ifoo = provides(IFoo)
+        with self.set_check_interfaces(2):
+            with self.assertRaises(InterfaceError):
+                # Simulate application of the decorator
+                Test = provides_ifoo(Test)
+
     def test_instance_adapt_no(self):
         ta = TraitsHolder()
 
@@ -346,3 +391,26 @@ class InterfacesTest(unittest.TestCase):
         provider = UndeclaredAverageProvider()
         with self.assertRaises(TraitError):
             ta.a_no = provider
+
+    @contextlib.contextmanager
+    def set_check_interfaces(self, check_interfaces_value):
+        """
+        Context manager to temporarily set has_traits.CHECK_INTERFACES
+        to the given value.
+
+        Parameters
+        ----------
+        check_interfaces_value : int
+            One of 0 (don't check), 1 (check and log a warning on interface
+            mismatch) or 2 (check and raise on interface mismatch).
+
+        Returns
+        -------
+        context manager
+        """
+        old_check_interfaces = has_traits.CHECK_INTERFACES
+        has_traits.CHECK_INTERFACES = check_interfaces_value
+        try:
+            yield
+        finally:
+            has_traits.CHECK_INTERFACES = old_check_interfaces
