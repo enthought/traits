@@ -8,7 +8,7 @@
 #
 # Thanks for using Enthought open source!
 
-from .base_trait_hander import BaseTraitHandler
+from .base_trait_handler import BaseTraitHandler
 
 
 class TraitHandler(BaseTraitHandler):
