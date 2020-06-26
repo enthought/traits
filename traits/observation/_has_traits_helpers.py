@@ -136,5 +136,7 @@ def ctrait_prevent_event(event):
         try:
             return event.old == event.new
         except Exception:
+            # Maybe do something else about the exception
+            # enthought/traits#1230
             pass
     return False

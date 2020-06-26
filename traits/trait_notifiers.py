@@ -661,5 +661,7 @@ def _change_accepted(object, name, old, new):
         try:
             return old != new
         except Exception:
+            # Maybe do something else about the exception
+            # enthought/traits#1230
             pass
     return True
