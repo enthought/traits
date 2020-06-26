@@ -60,7 +60,10 @@ master_doc = "index"
 
 # General substitutions.
 project = "traits"
-copyright = "2005-2020 Enthought, Inc."
+copyright = """\
+(C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+All rights reserved.
+"""
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
