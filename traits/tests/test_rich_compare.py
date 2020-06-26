@@ -11,7 +11,9 @@
 import unittest
 import warnings
 
-from traits.api import Any, ComparisonMode, HasTraits, Str
+from traits.api import (
+    Any, cached_property, ComparisonMode, HasTraits, Property, Str,
+)
 
 
 class IdentityCompare(HasTraits):
@@ -242,3 +244,29 @@ class OldRichCompareTestCase(unittest.TestCase):
         self.assertEqual(len(events), 1)
         old_compare.bar = [4, 5, 6]
         self.assertEqual(len(events), 2)
+
+    def test_rich_compare_with_cached_property(self):
+        # Even though the property is cached such that old value equals new
+        # value, its change event is tied to the dependent.
+
+        class Model(HasTraits):
+            value = Property(depends_on="name")
+            name = Str(comparison_mode=ComparisonMode.none)
+
+            @cached_property
+            def _get_value(self):
+                return self.trait_names
+
+        instance = Model()
+        events = []
+        instance.on_trait_change(lambda: events.append(None), "value")
+
+        instance.name = "A"
+
+        events.clear()
+
+        # when
+        instance.name = "A"
+
+        # then
+        self.assertEqual(len(events), 1)

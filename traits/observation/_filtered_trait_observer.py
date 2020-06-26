@@ -9,6 +9,7 @@
 # Thanks for using Enthought open source!
 
 from traits.observation._has_traits_helpers import (
+    ctrait_prevent_event,
     iter_objects,
     observer_change_handler,
 )
@@ -18,7 +19,6 @@ from traits.observation._observer_graph import ObserverGraph
 from traits.observation._trait_change_event import trait_event_factory
 from traits.observation._trait_added_observer import TraitAddedObserver
 from traits.observation._trait_event_notifier import TraitEventNotifier
-from traits.trait_base import Uninitialized
 
 
 @IObserver.register
@@ -118,7 +118,7 @@ class FilteredTraitObserver:
             target=target,
             dispatcher=dispatcher,
             event_factory=trait_event_factory,
-            prevent_event=lambda event: event.old is Uninitialized,
+            prevent_event=ctrait_prevent_event,
         )
 
     def get_maintainer(self, graph, handler, target, dispatcher):
