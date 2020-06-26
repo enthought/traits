@@ -9,9 +9,9 @@
 # Thanks for using Enthought open source!
 
 from traits.observation._has_traits_helpers import (
+    ctrait_prevent_event,
     iter_objects,
     observer_change_handler,
-    ctrait_prevent_event,
 )
 from traits.observation._i_observer import IObserver
 from traits.observation._observer_change_notifier import ObserverChangeNotifier

@@ -10,10 +10,10 @@
 
 from traits.observation._trait_change_event import trait_event_factory
 from traits.observation._has_traits_helpers import (
+    ctrait_prevent_event,
     iter_objects,
     object_has_named_trait,
     observer_change_handler,
-    ctrait_prevent_event,
 )
 from traits.observation._i_observer import IObserver
 from traits.observation._observer_change_notifier import ObserverChangeNotifier
