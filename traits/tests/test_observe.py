@@ -13,7 +13,6 @@ See tests in ``traits.observations`` for more targeted tests.
 """
 
 import unittest
-from unittest import mock
 
 from traits.api import (
     Any,
@@ -211,7 +210,8 @@ class TestHasTraitsObserveListOfInstance(unittest.TestCase):
     def test_observe_instance_in_nested_list(self):
 
         container = ClassWithListOfListOfInstance()
-        handler = mock.Mock()
+        events = []
+        handler = events.append
         container.observe(
             expression=(
                 trait("list_of_list_of_instances", notify=False)
@@ -226,13 +226,13 @@ class TestHasTraitsObserveListOfInstance(unittest.TestCase):
         single_value_instance = SingleValue()
         inner_list = [single_value_instance]
         container.list_of_list_of_instances.append(inner_list)
-        self.assertEqual(handler.call_count, 0)
+        self.assertEqual(len(events), 0)
 
         # when
         single_value_instance.value += 1
 
         # then
-        ((event, ), _), = handler.call_args_list
+        event, = events
         self.assertEqual(event.object, single_value_instance)
         self.assertEqual(event.name, "value")
         self.assertEqual(event.old, 0)
@@ -240,7 +240,8 @@ class TestHasTraitsObserveListOfInstance(unittest.TestCase):
 
     def test_nested_list_reassigned_value_compared_equally(self):
         container = ClassWithListOfListOfInstance()
-        handler = mock.Mock()
+        events = []
+        handler = events.append
         container.observe(
             expression=(
                 trait("list_of_list_of_instances", notify=False)
@@ -254,7 +255,7 @@ class TestHasTraitsObserveListOfInstance(unittest.TestCase):
         inner_list = [SingleValue()]
         container.list_of_list_of_instances = [inner_list]
         # sanity check
-        self.assertEqual(handler.call_count, 0)
+        self.assertEqual(len(events), 0)
 
         # assignment of a list that compares equally should be handled
         # correctly.
@@ -263,13 +264,13 @@ class TestHasTraitsObserveListOfInstance(unittest.TestCase):
         container.list_of_list_of_instances[0] = inner_list
         second_instance = SingleValue()
         container.list_of_list_of_instances[0].append(second_instance)
-        self.assertEqual(handler.call_count, 0)
+        self.assertEqual(len(events), 0)
 
         # when
         second_instance.value += 1
 
         # then
-        ((event, ), _), = handler.call_args_list
+        event, = events
         self.assertEqual(event.object, second_instance)
         self.assertEqual(event.name, "value")
         self.assertEqual(event.old, 0)
@@ -278,7 +279,8 @@ class TestHasTraitsObserveListOfInstance(unittest.TestCase):
     def test_duplicated_items_tracked(self):
         # test for enthought/traits#237
         container = ClassWithListOfInstance()
-        handler = mock.Mock()
+        events = []
+        handler = events.append
         container.observe(
             expression=(
                 trait("list_of_instances", notify=False)
@@ -292,29 +294,29 @@ class TestHasTraitsObserveListOfInstance(unittest.TestCase):
         # The item is repeated.
         container.list_of_instances.append(instance)
         container.list_of_instances.append(instance)
-        self.assertEqual(handler.call_count, 0)
+        self.assertEqual(len(events), 0)
 
         # when
         instance.value += 1
 
         # then
-        self.assertEqual(handler.call_count, 1)
-        handler.reset_mock()
-
-        # when
-        container.list_of_instances.pop()
-        instance.value += 1
-
-        # then
-        self.assertEqual(handler.call_count, 1)
-        handler.reset_mock()
+        self.assertEqual(len(events), 1)
+        events.clear()
 
         # when
         container.list_of_instances.pop()
         instance.value += 1
 
         # then
-        self.assertEqual(handler.call_count, 0)
+        self.assertEqual(len(events), 1)
+        events.clear()
+
+        # when
+        container.list_of_instances.pop()
+        instance.value += 1
+
+        # then
+        self.assertEqual(len(events), 0)
 
 
 # Integration tests for nested Dict and extended traits -----------------------
@@ -333,7 +335,8 @@ class TestHasTraitsObserveDictOfInstance(unittest.TestCase):
 
     def test_observe_instance_in_dict(self):
         container = ClassWithDictOfInstance()
-        handler = mock.Mock()
+        events = []
+        handler = events.append
         container.observe(
             handler=handler,
             expression=(
@@ -346,13 +349,13 @@ class TestHasTraitsObserveDictOfInstance(unittest.TestCase):
         single_value_instance = SingleValue()
         container.name_to_instance = {"name": single_value_instance}
         # sanity check
-        self.assertEqual(handler.call_count, 0)
+        self.assertEqual(len(events), 0)
 
         # when
         single_value_instance.value += 1
 
         # then
-        ((event, ), _), = handler.call_args_list
+        event, = events
         self.assertEqual(event.object, single_value_instance)
         self.assertEqual(event.name, "value")
         self.assertEqual(event.old, 0)
@@ -378,7 +381,8 @@ class TestHasTraitsObserveSetOfInstance(unittest.TestCase):
 
     def test_observe_instance_in_set(self):
         container = ClassWithSetOfInstance()
-        handler = mock.Mock()
+        events = []
+        handler = events.append
         container.observe(
             handler=handler,
             expression=(
@@ -391,13 +395,13 @@ class TestHasTraitsObserveSetOfInstance(unittest.TestCase):
         single_value_instance = SingleValue()
         container.instances = set([single_value_instance])
         # sanity check
-        self.assertEqual(handler.call_count, 0)
+        self.assertEqual(len(events), 0)
 
         # when
         single_value_instance.value += 1
 
         # then
-        ((event, ), _), = handler.call_args_list
+        event, = events
         self.assertEqual(event.object, single_value_instance)
         self.assertEqual(event.name, "value")
         self.assertEqual(event.old, 0)
@@ -432,7 +436,8 @@ class TestHasTraitsObserverDifferentiateParent(unittest.TestCase):
         crate2 = Crate(potato_bags=[potato_bag])
 
         # when
-        handler = mock.Mock()
+        events = []
+        handler = events.append
         crate1.observe(
             handler, "potato_bags:items:potatos:items:name",
         )
@@ -444,7 +449,7 @@ class TestHasTraitsObserverDifferentiateParent(unittest.TestCase):
         # then
         # there are two notifiers, because they are observed from different
         # objects.
-        self.assertEqual(handler.call_count, 2)
+        self.assertEqual(len(events), 2)
 
     def test_shared_instance_same_graph_different_target(self):
 
@@ -452,7 +457,8 @@ class TestHasTraitsObserverDifferentiateParent(unittest.TestCase):
         crate2 = Crate()
 
         # given
-        handler = mock.Mock()
+        events = []
+        handler = events.append
         crate1.observe(handler, "potato_bags:items:potatos:items:name")
         crate2.observe(handler, "potato_bags:items:potatos:items:name")
 
@@ -461,8 +467,8 @@ class TestHasTraitsObserverDifferentiateParent(unittest.TestCase):
         crate1.potato_bags = [new_potato_bag]
         crate2.potato_bags = [new_potato_bag]
         new_potato.name = "King Edward I"
-        self.assertEqual(handler.call_count, 2)
-        handler.reset_mock()
+        self.assertEqual(len(events), 2)
+        events.clear()
 
         # when
         # remove the second observer
@@ -471,19 +477,19 @@ class TestHasTraitsObserverDifferentiateParent(unittest.TestCase):
         new_potato.name = "King Edward II"
 
         # then
-        self.assertEqual(handler.call_count, 1)
-        handler.reset_mock()
+        self.assertEqual(len(events), 1)
+        events.clear()
 
         # then
         # This check the observer is maintained.
         maris_piper = Potato()
         crate2.potato_bags[0].potatos.append(maris_piper)
         crate1.potato_bags = []
-        self.assertEqual(handler.call_count, 0)  # sanity check
+        self.assertEqual(len(events), 0)  # sanity check
 
         # this fails if targets were not compared.
         maris_piper.name = "Maris Piper"
-        self.assertEqual(handler.call_count, 0)
+        self.assertEqual(len(events), 0)
 
 
 # Integration test for the special event metadata ----------------------------
@@ -543,7 +549,7 @@ class TestObserverError(unittest.TestCase):
         # The `list_items` should not be used here.
         # Error is not emitted now as leader is not defined so there is no
         # way to check.
-        team.observe(mock.Mock(), trait("leader").list_items())
+        team.observe(lambda e: None, trait("leader").list_items())
 
         person = Person()
         with self.assertRaises(ValueError) as exception_cm:
@@ -560,7 +566,7 @@ class TestObserverError(unittest.TestCase):
         team = Team()
 
         team.observe(
-            mock.Mock(),
+            lambda e: None,
             trait("member_names").list_items().trait("does_not_exist")
         )
 
@@ -578,8 +584,8 @@ class TestObserverError(unittest.TestCase):
         # someone accesses the attribute.
         self.assertIsNone(team.leader)
 
-        handler = mock.Mock()
-        team.observe(handler, trait("leader", notify=False).trait("name"))
+        team.observe(
+            lambda e: None, trait("leader", notify=False).trait("name"))
 
         # when
         team.leader = Person()
@@ -590,7 +596,7 @@ class TestObserverError(unittest.TestCase):
 
         with self.assertRaises(ValueError) as exception_cm:
             team.observe(
-                mock.Mock(), trait("any_value").trait("does_not_exist"))
+                lambda e: None, trait("any_value").trait("does_not_exist"))
 
         self.assertEqual(
             str(exception_cm.exception),
@@ -600,7 +606,7 @@ class TestObserverError(unittest.TestCase):
     def test_no_new_trait_added(self):
         # Test enthought/traits#447 can be avoided with observe
         team = Team()
-        team.observe(mock.Mock(), trait("leader").trait("does_not_exist"))
+        team.observe(lambda e: None, trait("leader").trait("does_not_exist"))
 
         with self.assertRaises(ValueError):
             team.leader = Person()
