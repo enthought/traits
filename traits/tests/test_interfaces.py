@@ -260,9 +260,10 @@ class InterfacesTest(unittest.TestCase):
 
         provides_ifoo = provides(IFoo)
         with self.set_check_interfaces(1):
-            with self.assertLogs("traits", logging.WARNING):
-                # Simulate application of the decorator
-                Test = provides_ifoo(Test)
+            with self.assertWarns(DeprecationWarning):
+                with self.assertLogs("traits", logging.WARNING):
+                    # Simulate application of the decorator
+                    Test = provides_ifoo(Test)
 
     def test_provides_with_interface_check_error(self):
 
@@ -273,9 +274,10 @@ class InterfacesTest(unittest.TestCase):
 
         provides_ifoo = provides(IFoo)
         with self.set_check_interfaces(2):
-            with self.assertRaises(InterfaceError):
-                # Simulate application of the decorator
-                Test = provides_ifoo(Test)
+            with self.assertWarns(DeprecationWarning):
+                with self.assertRaises(InterfaceError):
+                    # Simulate application of the decorator
+                    Test = provides_ifoo(Test)
 
     def test_instance_adapt_no(self):
         ta = TraitsHolder()

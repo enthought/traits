@@ -529,6 +529,11 @@ traits.has_traits module::
     import traits.has_traits
     traits.has_traits.CHECK_INTERFACES = 1
 
+.. deprecated:: 6.2.0
+   Interface checking with the ``@provides`` decorator is deprecated. In the
+   future, the ``@provides`` decorator will ignore the value of
+   ``CHECK_INTERFACES`` and will not do any interface checking.
+
 .. index:: interfaces; using, examples; interface usage
 
 .. _using-interfaces:
