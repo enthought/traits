@@ -309,7 +309,7 @@ setuptools.setup(
             "flake8",
             "mypy",
             "setuptools",
-            "Sphinx",
+            "Sphinx>=2.1.0",
             # Python 3.9 exclusions:
             #
             # * NumPy installation fails on Python 3.9 on the Ubuntu Xenial
