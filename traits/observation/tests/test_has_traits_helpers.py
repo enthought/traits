@@ -13,7 +13,8 @@ from unittest import mock
 import warnings
 
 from traits.api import (
-    Bool, Dict, HasTraits, List, Instance, Int, Property, Set, Union,
+    Bool, ComparisonMode, Dict, HasTraits, List, Instance, Int, Property, Set,
+    Union,
 )
 from traits.observation import _has_traits_helpers as helpers
 from traits.observation import expression
@@ -140,14 +141,14 @@ class TestHasTraitsHelpersIterObjects(unittest.TestCase):
 class ObjectWithEqualityComparisonMode(HasTraits):
     """ Class for supporting TestHasTraitsHelpersWarning """
 
-    list_values = List(comparison_mode=2)
-    dict_values = Dict(comparison_mode=2)
-    set_values = Set(comparison_mode=2)
-    property_list = Property(List(comparison_mode=2))
+    list_values = List(comparison_mode=ComparisonMode.equality)
+    dict_values = Dict(comparison_mode=ComparisonMode.equality)
+    set_values = Set(comparison_mode=ComparisonMode.equality)
+    property_list = Property(List(comparison_mode=ComparisonMode.equality))
     container_in_union = Union(
         None,
-        Set(comparison_mode=1),
-        comparison_mode=2,
+        Set(comparison_mode=ComparisonMode.identity),
+        comparison_mode=ComparisonMode.equality,
     )
 
 
