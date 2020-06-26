@@ -659,7 +659,7 @@ def _change_accepted(object, name, old, new):
     if (trait.type == TraitKind.trait.name
             and trait.comparison_mode == ComparisonMode.equality):
         try:
-            return old != new
+            return bool(old != new)
         except Exception:
             # Maybe do something else about the exception
             # enthought/traits#1230

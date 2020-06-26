@@ -134,7 +134,7 @@ def ctrait_prevent_event(event):
     if (ctrait.type == TraitKind.trait.name
             and ctrait.comparison_mode == ComparisonMode.equality):
         try:
-            return event.old == event.new
+            return bool(event.old == event.new)
         except Exception:
             # Maybe do something else about the exception
             # enthought/traits#1230
