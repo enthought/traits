@@ -12,7 +12,6 @@
 Editor factory functions.
 """
 
-import datetime
 from functools import partial
 import logging
 
