@@ -124,7 +124,7 @@ def ctrait_prevent_event(event):
 
     Returns
     -------
-    skipped: bool
+    skipped : bool
         Whether the event should be skipped
     """
     if event.old is Uninitialized:

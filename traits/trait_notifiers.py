@@ -649,7 +649,7 @@ def _change_accepted(object, name, old, new):
 
     Returns
     -------
-    accepted: bool
+    accepted : bool
         Whether the event should be emitted.
     """
     if old is Uninitialized:
