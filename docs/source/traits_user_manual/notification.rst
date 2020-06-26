@@ -491,6 +491,10 @@ with |@observe| is discouraged as this special trait may be removed when
 Identity comparison mode for container traits
 `````````````````````````````````````````````
 
+.. note:: This section is for Traits 6.1 only. Since Traits 6.2, the
+   comparison mode handling has changed such that there should be no visible
+   behaviorial differences between |@observe| and |@on_trait_change|.
+
 While observing mutations and nested attributes inside ``List``, ``Set`` and
 ``Dict``, one should set the trait's comparison mode to **identity** (1) or
 **none** (0) in the :class:`~traits.constants.ComparisonMode` enum.
