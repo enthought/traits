@@ -3584,10 +3584,12 @@ def provides(*protocols):
 
             warnings.warn(
                 (
-                    "In the future, the @provides decorator will no longer "
-                    "perform runtime interface checks."
+                    "In the future, the @provides decorator will not perform "
+                    "interface checks. Set has_traits.CHECK_INTERFACES to 0 "
+                    "to suppress this warning."
                 ),
                 DeprecationWarning,
+                stacklevel=2,
             )
             check_implements(klass, protocols, CHECK_INTERFACES)
 

@@ -260,10 +260,19 @@ class InterfacesTest(unittest.TestCase):
 
         provides_ifoo = provides(IFoo)
         with self.set_check_interfaces(1):
-            with self.assertWarns(DeprecationWarning):
+            with self.assertWarns(DeprecationWarning) as warnings_cm:
                 with self.assertLogs("traits", logging.WARNING):
                     # Simulate application of the decorator
                     Test = provides_ifoo(Test)
+
+        self.assertIn(
+            "the @provides decorator will not perform interface checks",
+            str(warnings_cm.warning),
+        )
+
+        # Check we used the appropriate stacklevel.
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warnings_cm.filename)
 
     def test_provides_with_interface_check_error(self):
 
@@ -274,10 +283,19 @@ class InterfacesTest(unittest.TestCase):
 
         provides_ifoo = provides(IFoo)
         with self.set_check_interfaces(2):
-            with self.assertWarns(DeprecationWarning):
+            with self.assertWarns(DeprecationWarning) as warnings_cm:
                 with self.assertRaises(InterfaceError):
                     # Simulate application of the decorator
                     Test = provides_ifoo(Test)
+
+        self.assertIn(
+            "the @provides decorator will not perform interface checks",
+            str(warnings_cm.warning),
+        )
+
+        # Check we used the appropriate stacklevel.
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warnings_cm.filename)
 
     def test_instance_adapt_no(self):
         ta = TraitsHolder()
