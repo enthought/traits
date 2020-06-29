@@ -33,8 +33,6 @@ from traits.interface_checker import InterfaceError, check_implements
 # checks explicitly:
 from traits import has_traits
 
-has_traits.CHECK_INTERFACES = 0
-
 
 class InterfaceCheckerTestCase(unittest.TestCase):
     """ Tests to help find out if we can do type-safe casting. """
@@ -45,7 +43,15 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
+        # Make sure implicit interface checking is turned off, so that we can
+        # make the checks explicitly:
+        self._old_check_interfaces = has_traits.CHECK_INTERFACES
+        has_traits.CHECK_INTERFACES = 0
+
         reset_global_adaptation_manager()
+
+    def tearDown(self):
+        has_traits.CHECK_INTERFACES = self._old_check_interfaces
 
     ###########################################################################
     # Tests.
