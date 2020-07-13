@@ -450,7 +450,7 @@ Suppose we have these classes::
         value = Int()
 
     class Foo(HasTraits):
-        container = List(Instance(Bar), comparison_mode=ComparisonMode.identity)
+        container = List(Instance(Bar))
 
 To notify for changes on *Bar.value* for an item in *Foo.container*,
 with |@on_trait_change|, one may do::

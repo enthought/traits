@@ -144,7 +144,7 @@ class CannotCompare:
 
 
 class ObjectWithEqualityComparisonMode(HasTraits):
-    """ Class for supporting TestHasTraitsHelpersWarning """
+    """ Class for supporting TestHasTraitsHelpersComparisonMode """
 
     list_values = List(comparison_mode=ComparisonMode.equality)
     dict_values = Dict(comparison_mode=ComparisonMode.equality)

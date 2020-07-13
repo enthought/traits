@@ -21,7 +21,7 @@ from traits.observation.api import trait
 
 class Person(HasTraits):
 
-    scores = List(Int, comparison_mode=ComparisonMode.identity)
+    scores = List(Int)
 
     @observe("scores")
     def notify_scores_change(self, event):
