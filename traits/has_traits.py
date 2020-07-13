@@ -14,13 +14,14 @@
 
 import abc
 import copy as copy_module
+import inspect
 import os
 import pickle
 import re
 import warnings
 import weakref
 
-from types import FunctionType, MethodType
+from types import FunctionType
 
 from . import __version__ as TraitsVersion
 from .adaptation.adaptation_error import AdaptationError
@@ -85,11 +86,6 @@ WrapperTypes = (
     StaticAnyTraitChangeNotifyWrapper,
     StaticTraitChangeNotifyWrapper,
 )
-
-# In Python 3, unbound methods do not exist anymore, they're just functions
-BoundMethodTypes = (MethodType,)
-UnboundMethodTypes = (FunctionType,)
-FunctionTypes = (FunctionType,)
 
 # Class dictionary entries used to save trait, listener and view information
 # and definitions:
@@ -161,7 +157,7 @@ def _get_def(class_name, class_dict, bases, method):
     result = class_dict.get(method)
     if (
         (result is not None)
-        and is_function_type(result)
+        and is_unbound_method_type(result)
         and (getattr(result, "on_trait_change", None) is None)
     ):
         return result
@@ -178,31 +174,17 @@ def _get_def(class_name, class_dict, bases, method):
     return None
 
 
-def is_cython_func_or_method(method):
-    """ Test if the given input is a Cython method or function. """
-    # The only way to get the type from the method with str comparison ...
-    return "cython_function_or_method" in str(type(method))
-
-
-def is_bound_method_type(method):
-    """ Test if the given input is a Python method or a Cython method. """
-    return isinstance(method, BoundMethodTypes) or is_cython_func_or_method(
-        method
-    )
-
-
 def is_unbound_method_type(method):
-    """ Test if the given input is a Python method or a Cython method. """
-    return isinstance(method, UnboundMethodTypes) or is_cython_func_or_method(
-        method
-    )
+    """ Check for something that looks like an unbound class method.
 
+    This is used in practice to identify magic-named _name_changed
+    and _name_fired methods.
 
-def is_function_type(function):
-    """ Test if the given input is a Python function or a Cython method. """
-    return isinstance(function, FunctionTypes) or is_cython_func_or_method(
-        function
-    )
+    """
+    # The ismethoddescriptor check catches methods written in C or Cython
+    # extensions. It excludes things that pass an isfunction check, so we have
+    # to explicitly re-include that check.
+    return inspect.isfunction(method) or inspect.ismethoddescriptor(method)
 
 
 def _is_serializable(value):
@@ -247,7 +229,7 @@ def _get_instance_handlers(class_dict, bases):
 
     # Merge in the information from the class dictionary:
     for name, value in class_dict.items():
-        if (name[:1] == "_") and is_function_type(value):
+        if (name[:1] == "_") and is_unbound_method_type(value):
             n = 13
             col = name.find("_changed_for_")
             if col < 2:
@@ -479,9 +461,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
                 prefix_list.append(name)
                 prefix_traits[name] = value
 
-        elif isinstance(value, FunctionType) or is_cython_func_or_method(
-            value
-        ):
+        elif is_unbound_method_type(value):
             pattern = getattr(value, "on_trait_change", None)
             if pattern is not None:
                 listeners[name] = ("method", pattern)
@@ -3125,7 +3105,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         dic = {}
         for klass in object.__class__.__mro__:
             for name, method in klass.__dict__.items():
-                if (type(method) is FunctionType) and (name not in dic):
+                if (is_unbound_method_type(method) and name not in dic):
                     dic[name] = True
                     yield name
 
