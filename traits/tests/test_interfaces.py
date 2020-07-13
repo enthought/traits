@@ -265,6 +265,9 @@ class InterfacesTest(unittest.TestCase):
                     # Simulate application of the decorator
                     Test = provides_ifoo(Test)
 
+        test = Test()
+        self.assertIsInstance(test, IFoo)
+
         self.assertIn(
             "the @provides decorator will not perform interface checks",
             str(warnings_cm.warning),
@@ -287,6 +290,9 @@ class InterfacesTest(unittest.TestCase):
                 with self.assertRaises(InterfaceError):
                     # Simulate application of the decorator
                     Test = provides_ifoo(Test)
+
+        test = Test()
+        self.assertIsInstance(test, IFoo)
 
         self.assertIn(
             "the @provides decorator will not perform interface checks",

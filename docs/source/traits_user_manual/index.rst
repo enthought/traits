@@ -3,7 +3,8 @@ Traits |version| User Manual
 ============================
 
 :Authors: David C. Morrill, Janet M. Swisher, and Enthought developers
-:Copyright: 2005-2020 Enthought, Inc. All Rights Reserved.
+:Copyright: | (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+            | All rights reserved.
 
 Contents
 ========

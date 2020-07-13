@@ -20,7 +20,7 @@
 #
 # All configuration values have a default value; values that are commented out
 # serve to show the default value.
-import datetime
+
 import os
 import sys
 
@@ -60,8 +60,10 @@ master_doc = "index"
 
 # General substitutions.
 project = "traits"
-copyright = "2008-{date.year}, Enthought Inc".format(
-    date=datetime.date.today())
+copyright = """\
+(C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+All rights reserved.
+"""
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.

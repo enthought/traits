@@ -2361,14 +2361,6 @@ setattr_trait(
 
                 if (!changed) {
                     changed = (old_value != value);
-                    if (changed
-                        && !(traitd->flags & TRAIT_COMPARISON_MODE_IDENTITY)) {
-                        changed =
-                            PyObject_RichCompareBool(old_value, value, Py_NE);
-                        if (changed == -1) {
-                            PyErr_Clear();
-                        }
-                    }
                 }
 
                 if (changed) {
@@ -2462,12 +2454,6 @@ setattr_trait(
 
         if (!changed) {
             changed = (old_value != value);
-            if (changed && !(traitd->flags & TRAIT_COMPARISON_MODE_IDENTITY)) {
-                changed = PyObject_RichCompareBool(old_value, value, Py_NE);
-                if (changed == -1) {
-                    PyErr_Clear();
-                }
-            }
         }
     }
 
