@@ -3,6 +3,8 @@ dist: xenial
 services:
   - xvfb
 
+cache: pip
+
 addons:
   apt:
     packages:
