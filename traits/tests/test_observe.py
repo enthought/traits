@@ -17,7 +17,6 @@ import unittest
 from traits.api import (
     Any,
     Bool,
-    ComparisonMode,
     DelegatesTo,
     Dict,
     Event,
