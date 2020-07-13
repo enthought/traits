@@ -264,6 +264,9 @@ class InterfacesTest(unittest.TestCase):
                 # Simulate application of the decorator
                 Test = provides_ifoo(Test)
 
+        test = Test()
+        self.assertIsInstance(test, IFoo)
+
     def test_provides_with_interface_check_error(self):
 
         class Test(HasTraits):
@@ -276,6 +279,9 @@ class InterfacesTest(unittest.TestCase):
             with self.assertRaises(InterfaceError):
                 # Simulate application of the decorator
                 Test = provides_ifoo(Test)
+
+        test = Test()
+        self.assertIsInstance(test, IFoo)
 
     def test_instance_adapt_no(self):
         ta = TraitsHolder()
