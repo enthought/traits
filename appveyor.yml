@@ -1,5 +1,8 @@
 build: false
 
+cache:
+  - '%LOCALAPPDATA%\pip\Cache'
+
 environment:
   global:
     PYTHONUNBUFFERED: "1"
