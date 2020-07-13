@@ -1,6 +1,7 @@
 build: false
+
 cache:
-  - '%LOCALAPPDATA%\pip\Cache'
+  - C:\Users\appveyor\AppData\Local\pip\Cache -> appveyor.yml
 
 environment:
   global:
