@@ -66,6 +66,11 @@ from .trait_converters import check_trait, mapped_trait_for, trait_for
 #       logs a warning if they don't.
 #  - 2: Ensures that classes implement the interfaces they say they do, and
 #       raises an InterfaceError if they don't.
+#
+#  This constant is used by the @provides decorator when deciding whether to
+#  do interface checking. This behaviour is deprecated. In the future, the
+#  provides decorator will no longer perform interface checking, regardless of
+#  the value of this constant.
 
 CHECK_INTERFACES = 0
 
@@ -3557,6 +3562,15 @@ def provides(*protocols):
         if CHECK_INTERFACES:
             from .interface_checker import check_implements
 
+            warnings.warn(
+                (
+                    "In the future, the @provides decorator will not perform "
+                    "interface checks. Set has_traits.CHECK_INTERFACES to 0 "
+                    "to suppress this warning."
+                ),
+                DeprecationWarning,
+                stacklevel=2,
+            )
             check_implements(klass, protocols, CHECK_INTERFACES)
 
         return klass
