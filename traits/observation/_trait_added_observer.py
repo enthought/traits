@@ -170,7 +170,7 @@ class TraitAddedObserver:
                 name=event.new,
                 wrapped_observer=graph.node,
             ),
-            children=graph.children
+            branches=graph.children
         )
         add_or_remove_notifiers(
             object=event.object,

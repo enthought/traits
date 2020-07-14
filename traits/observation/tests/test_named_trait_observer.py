@@ -77,13 +77,13 @@ class TestObserverGraphIntegrateNamedTraitObserver(unittest.TestCase):
 
         path1 = ObserverGraph(
             node=create_observer(name="foo"),
-            children=[
+            branches=[
                 ObserverGraph(node=create_observer(name="bar")),
             ],
         )
         path2 = ObserverGraph(
             node=create_observer(name="foo"),
-            children=[
+            branches=[
                 ObserverGraph(node=create_observer(name="bar")),
             ],
         )

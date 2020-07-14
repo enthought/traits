@@ -87,7 +87,7 @@ class TestObserveAddNotifier(unittest.TestCase):
         # two children, each will have a maintainer
         graph = ObserverGraph(
             node=root_observer,
-            children=[
+            branches=[
                 ObserverGraph(node=DummyObserver()),
                 ObserverGraph(node=DummyObserver()),
             ],
@@ -119,7 +119,7 @@ class TestObserveAddNotifier(unittest.TestCase):
         )
         graph = ObserverGraph(
             node=parent_observer,
-            children=[
+            branches=[
                 ObserverGraph(
                     node=child_observer1,
                 ),
@@ -279,7 +279,7 @@ class TestObserveRemoveNotifier(unittest.TestCase):
         # two maintainers will be removed.
         graph = ObserverGraph(
             node=root_observer,
-            children=[
+            branches=[
                 ObserverGraph(node=DummyObserver()),
                 ObserverGraph(node=DummyObserver()),
             ],
@@ -313,7 +313,7 @@ class TestObserveRemoveNotifier(unittest.TestCase):
 
         graph = ObserverGraph(
             node=parent_observer,
-            children=[
+            branches=[
                 ObserverGraph(
                     node=child_observer1,
                 ),

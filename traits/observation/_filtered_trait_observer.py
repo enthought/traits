@@ -170,5 +170,5 @@ class FilteredTraitObserver:
                 match_func=self.filter,
                 optional=False,
             ),
-            children=[graph],
+            branches=[graph],
         )

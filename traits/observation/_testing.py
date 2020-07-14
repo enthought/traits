@@ -38,7 +38,7 @@ def create_graph(*nodes):
     node = nodes[-1]
     graph = ObserverGraph(node=node)
     for node in nodes[:-1][::-1]:
-        graph = ObserverGraph(node=node, children=[graph])
+        graph = ObserverGraph(node=node, branches=[graph])
     return graph
 
 

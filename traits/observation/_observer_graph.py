@@ -59,18 +59,28 @@ class ObserverGraph:
         If not all children are unique.
     """
 
-    def __init__(self, *, node, children=None):
+    def __init__(self, *, node, branches=None, cycles=None):
 
-        if children is not None and len(set(children)) != len(children):
+        if branches is not None and len(set(branches)) != len(branches):
             raise ValueError("Not all children are unique.")
 
         self.node = node
-        self.children = list(children) if children is not None else []
+        self.branches = list(branches) if branches is not None else []
+        self.cycles = list(cycles) if cycles is not None else []
+
+    @property
+    def children(self):
+        return self.branches + self.cycles
 
     def __hash__(self):
         """ Return the hash of this ObserverGraph."""
         return hash(
-            (type(self).__name__, self.node, frozenset(self.children))
+            (
+                type(self),
+                self.node,
+                frozenset(c.node for c in self.branches),
+                frozenset(c.node for c in self.cycles),
+            )
         )
 
     def __eq__(self, other):
@@ -78,8 +88,12 @@ class ObserverGraph:
         same content. The order of children is not taken into account
         in the comparison.
         """
+        if type(self) is not type(other):
+            return False
+        self_cycle_nodes = [cycle.node for cycle in self.cycles]
+        other_cycle_nodes = [cycle.node for cycle in other.cycles]
         return (
-            type(self) is type(other)
-            and self.node == other.node
-            and set(self.children) == set(other.children)
+            self.node == other.node
+            and set(self.branches) == set(other.branches)
+            and set(self_cycle_nodes) == set(other_cycle_nodes)
         )

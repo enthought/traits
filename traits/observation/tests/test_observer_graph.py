@@ -17,7 +17,7 @@ def graph_from_nodes(*nodes):
     nodes = nodes[::-1]
     graph = ObserverGraph(node=nodes[0])
     for node in nodes[1:]:
-        graph = ObserverGraph(node=node, children=[graph])
+        graph = ObserverGraph(node=node, branches=[graph])
     return graph
 
 
@@ -37,14 +37,14 @@ class TestObserverGraph(unittest.TestCase):
     def test_equality_different_length_children(self):
         graph1 = ObserverGraph(
             node=1,
-            children=[
+            branches=[
                 ObserverGraph(node=2),
                 ObserverGraph(node=3),
             ],
         )
         graph2 = ObserverGraph(
             node=1,
-            children=[
+            branches=[
                 ObserverGraph(node=2),
             ],
         )
@@ -54,14 +54,14 @@ class TestObserverGraph(unittest.TestCase):
         # The order of items in children does not matter
         graph1 = ObserverGraph(
             node=1,
-            children=[
+            branches=[
                 ObserverGraph(node=2),
                 ObserverGraph(node=3),
             ],
         )
         graph2 = ObserverGraph(
             node=1,
-            children=[
+            branches=[
                 ObserverGraph(node=3),
                 ObserverGraph(node=2),
             ],
@@ -73,7 +73,7 @@ class TestObserverGraph(unittest.TestCase):
         child_graph = ObserverGraph(node=2)
         graph = ObserverGraph(
             node=1,
-            children=[
+            branches=[
                 child_graph,
                 ObserverGraph(node=3),
             ],
@@ -86,7 +86,7 @@ class TestObserverGraph(unittest.TestCase):
         with self.assertRaises(ValueError) as exception_cm:
             ObserverGraph(
                 node=1,
-                children=[
+                branches=[
                     child_graph,
                     ObserverGraph(node=2),
                 ],

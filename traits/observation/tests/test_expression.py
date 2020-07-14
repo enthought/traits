@@ -35,7 +35,7 @@ def create_graph(*nodes):
     node = nodes[-1]
     graph = ObserverGraph(node=node)
     for node in nodes[:-1][::-1]:
-        graph = ObserverGraph(node=node, children=[graph])
+        graph = ObserverGraph(node=node, branches=[graph])
     return graph
 
 
@@ -149,14 +149,14 @@ class TestObserverExpressionComposition(unittest.TestCase):
         expected = [
             ObserverGraph(
                 node=observer1,
-                children=[
+                branches=[
                     create_graph(observer3),
                     create_graph(observer4),
                 ],
             ),
             ObserverGraph(
                 node=observer2,
-                children=[
+                branches=[
                     create_graph(observer3),
                     create_graph(observer4),
                 ],

@@ -196,5 +196,5 @@ class NamedTraitObserver:
                 match_func=lambda name, trait: name == self.name,
                 optional=self.optional,
             ),
-            children=[graph],
+            branches=[graph],
         )

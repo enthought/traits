@@ -265,7 +265,7 @@ class SingleObserverExpression(ObserverExpression):
 
     def _create_graphs(self, branches):
         return [
-            ObserverGraph(node=self.observer, children=branches),
+            ObserverGraph(node=self.observer, branches=branches),
         ]
 
 
