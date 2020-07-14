@@ -12,6 +12,7 @@ import inspect
 import unittest
 
 from traits.observation import expression
+from traits.observation.expression import trait, recursive
 from traits.observation._dict_item_observer import DictItemObserver
 from traits.observation._filtered_trait_observer import FilteredTraitObserver
 from traits.observation._list_item_observer import ListItemObserver
@@ -634,3 +635,373 @@ class TestObserverExpressionEquality(unittest.TestCase):
     def test_equality_different_type(self):
         expr = create_expression(1)
         self.assertNotEqual(expr, "1")
+
+
+class TestRecursion(unittest.TestCase):
+
+    def test_recursion(self):
+        expression = trait("root").recursive(trait("left") | trait("right"))
+        actual, = expression._as_graphs()
+        self.assertEqual(actual.node.name, "root")
+
+        self.assertEqual(
+            [p.node.name for p in actual.children],
+            ["left", "right"]
+        )
+        left, right = list(actual.children)
+        self.assertEqual(left.children, actual.children)
+        self.assertEqual(right.children, actual.children)
+
+    def test_recursion_with_equals(self):
+        # Same test but use equality check
+        expression = trait("root").recursive(trait("left") | trait("right"))
+        actual, = expression._as_graphs()
+
+        expected = ObserverGraph(
+            node=NamedTraitObserver(
+                name="root",
+                notify=True,
+                optional=False,
+            ),
+        )
+        left = ObserverGraph(
+            node=NamedTraitObserver(
+                name="left",
+                notify=True,
+                optional=False,
+            ),
+        )
+        right = ObserverGraph(
+            node=NamedTraitObserver(
+                name="right",
+                notify=True,
+                optional=False,
+            )
+        )
+        expected.branches.extend([left, right])
+        left.cycles.extend([left, right])
+        right.cycles.extend([left, right])
+
+        self.assertEqual(actual, expected)
+
+    def test_recursion_then_extend(self):
+        expression = (
+            trait("root").recursive(
+                trait("left") | trait("right")).trait("value")
+        )
+        actual, = expression._as_graphs()
+
+        # First level, root only
+        self.assertEqual(actual.node.name, "root")
+
+        # Second level, left or right
+        self.assertCountEqual(
+            [p.node.name for p in actual.children],
+            ["left", "right"],
+        )
+
+        # Third level, left or right or value
+        for path in actual.children:
+            self.assertCountEqual(
+                [p.node.name for p in path.children],
+                ["left", "right", "value"],
+            )
+
+    def test_recursion_then_extend_with_equals(self):
+        # Same test but use equality check
+        expression = trait("root").recursive(
+            trait("left") | trait("right")).trait("value")
+        actual, = expression._as_graphs()
+
+        expected = ObserverGraph(
+            node=NamedTraitObserver(
+                name="root",
+                notify=True,
+                optional=False,
+            ),
+        )
+        left = ObserverGraph(
+            node=NamedTraitObserver(
+                name="left",
+                notify=True,
+                optional=False,
+            ),
+        )
+        right = ObserverGraph(
+            node=NamedTraitObserver(
+                name="right",
+                notify=True,
+                optional=False,
+            )
+        )
+        value = ObserverGraph(
+            node=NamedTraitObserver(
+                name="value",
+                notify=True,
+                optional=False,
+            )
+        )
+        expected.branches.extend([left, right])
+        left.cycles.extend([left, right])
+        left.branches.append(value)
+        right.cycles.extend([left, right])
+        right.branches.append(value)
+
+        self.assertEqual(actual, expected)
+
+    def test_recursion_not_equal(self):
+        expression1 = trait("root").recursive(trait("left") | trait("right")).trait("value")
+        expression2 = trait("root").recursive(trait("prev") | trait("right")).trait("value")
+        self.assertNotEqual(
+            expression1._as_graphs(),
+            expression2._as_graphs(),
+        )
+
+    def test_recursion_branch_not_equal(self):
+        expression1 = trait("root").recursive(trait("left") | trait("right")).trait("value")
+        expression2 = trait("root").recursive(trait("left") | trait("right")).trait("age")
+        self.assertNotEqual(
+            expression1._as_graphs(),
+            expression2._as_graphs(),
+        )
+
+    def test_recursion_multi_level(self):
+        left_then_right = trait("left").trait("right")
+        expression = (
+            trait("root").recursive(left_then_right)
+        )
+        actual, = expression._as_graphs()
+
+        # First level, root only
+        self.assertEqual(actual.node.name, "root")
+
+        # Second level, left
+        path, = actual.children
+        self.assertEqual(path.node.name, "left")
+
+        # Third level, right
+        path, = path.children
+        self.assertEqual(path.node.name, "right")
+
+        # Fourth level, back to left again
+        path, = path.children
+        left_path = path
+        self.assertEqual(path.node.name, "left")
+
+        # And so on
+        path, = path.children
+        self.assertEqual(path.node.name, "right")
+        path, = path.children
+        self.assertIs(path, left_path)
+
+        # The original left_or_right should not be
+        # mutated
+        new_left_then_right = trait("left").trait("right")
+        self.assertEqual(
+            left_then_right,
+            new_left_then_right,
+        )
+
+    def test_recursion_multi_level_with_equals(self):
+        # Same test but use equality check
+        left_then_right = trait("left").trait("right")
+        expression = (
+            trait("root").recursive(left_then_right)
+        )
+        actual, = expression._as_graphs()
+
+        expected = ObserverGraph(
+            node=NamedTraitObserver(
+                name="root",
+                notify=True,
+                optional=False,
+            )
+        )
+        left_path = ObserverGraph(
+            node=NamedTraitObserver(
+                name="left",
+                notify=True,
+                optional=False,
+            ),
+        )
+        right_path = ObserverGraph(
+            node=NamedTraitObserver(
+                name="right",
+                notify=True,
+                optional=False,
+            )
+        )
+        right_path.cycles.append(left_path)
+        left_path.branches.append(right_path)
+        expected.branches.append(left_path)
+
+        self.assertEqual(actual, expected)
+
+    def test_recursion_extended_twice(self):
+        # This would match
+        # root.left.right.value
+        # root.left.right.left.right.value
+        # root.left.right.left.right.left.right.value
+        expression = trait("root").recursive(
+            trait("left").trait("right")).trait("value")
+
+        path, = expression._as_graphs()
+
+        # first is root
+        self.assertEqual(path.node.name, "root")
+
+        # second is left
+        self.assertEqual([p.node.name for p in path.children], ["left"])
+        path, = path.children
+
+        # then it matches right
+        self.assertEqual([p.node.name for p in path.children], ["right"])
+        path, = path.children
+
+        # then it might match left again, or value
+        names = [p.node.name for p in path.children]
+        self.assertCountEqual(names, ["left", "value"])
+
+        # if it matches left, then it has to match right again
+        for left_path in path.children:
+            if left_path.node.name == "left":
+                right_path, = left_path.children
+                self.assertEqual(right_path.node.name, "right")
+                break
+        else:
+            self.fail("No left node found.")
+
+    def test_recursion_extended_twice_with_equals(self):
+        # Same test, but use equality check
+        # This would match
+        # root.left.right.value
+        # root.left.right.left.right.value
+        # root.left.right.left.right.left.right.value
+        expression = trait("root").recursive(
+            trait("left").trait("right")).trait("value")
+
+        expected = ObserverGraph(
+            node=NamedTraitObserver(
+                name="root",
+                notify=True,
+                optional=False,
+            ),
+        )
+        left = ObserverGraph(
+            node=NamedTraitObserver(
+                name="left",
+                notify=True,
+                optional=False,
+            ),
+        )
+        right = ObserverGraph(
+            node=NamedTraitObserver(
+                name="right",
+                notify=True,
+                optional=False,
+            )
+        )
+        value = ObserverGraph(
+            node=NamedTraitObserver(
+                name="value",
+                notify=True,
+                optional=False,
+            )
+        )
+        right.branches.append(value)
+        right.cycles.append(left)
+        left.branches.append(right)
+        expected.branches.append(left)
+
+        actual, = expression._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_recursive_from_empty(self):
+        expression = recursive(trait("name"))
+        expected = ObserverGraph(
+            node=NamedTraitObserver(
+                name="name",
+                notify=True,
+                optional=False,
+            ),
+        )
+        expected.cycles.append(expected)
+
+        actual, = expression._as_graphs()
+        self.assertEqual(actual, expected)
+
+    def test_recursive_different_paths(self):
+        expression1 = trait("root").recursive(trait("one").trait("two"))
+        expression2 = trait("root").recursive(trait("one").trait("three"))
+        self.assertNotEqual(
+            expression1._as_graphs(),
+            expression2._as_graphs()
+        )
+
+    def test_deepcopy_strange_behaviour(self):
+        e1 = recursive(trait("value") | trait("name"))
+        e2 = trait("name")
+        e3 = e1 | e2
+
+        self.assertCountEqual(
+            set(e1._as_graphs()) | set(e2._as_graphs()),
+            e3._as_graphs(),
+        )
+
+    def test_recurse_extend_then_recurse(self):
+        recurse_c = recursive(trait("c"))
+        e = recursive(recurse_c.trait("d"))
+        e = recursive(recursive(trait("c")).trait("d"))
+
+        path, = e._as_graphs()
+
+        # First is just "c"
+        self.assertEqual(path.node.name, "c")
+
+        # Then it matches either "c" or "d"
+        self.assertCountEqual(
+            [p.node.name for p in path.children],
+            ["c", "d"]
+        )
+
+        # d is the branch...
+        d_path, = path.branches
+
+        # it should then go back to c
+        self.assertEqual([p.node.name for p in d_path.children], ["c"])
+
+    def test_extend_recurse_recurse(self):
+        e = recursive(trait("b", False).recursive(trait("c").trait("d")))
+
+        path, = e._as_graphs()
+
+        # First it is just b
+        self.assertEqual(path.node.name, "b")
+
+        # then it matches "c"
+        self.assertCountEqual([p.node.name for p in path.children], ["c"])
+
+        c_path, = path.children
+
+        # then it is "d"
+        self.assertCountEqual([p.node.name for p in c_path.children], ["d"])
+
+        d_path, = c_path.children
+
+        # then it loops to "c" or "b"
+        self.assertCountEqual([p.node.name for p in d_path.children], ["c", "b"])
+
+        # With equality check
+        expected = ObserverGraph(
+            node=NamedTraitObserver(name="b", notify=False, optional=False),
+        )
+        c_path = ObserverGraph(
+            node=NamedTraitObserver(name="c", notify=True, optional=False),
+        )
+        d_path = ObserverGraph(
+            node=NamedTraitObserver(name="d", notify=True, optional=False),
+        )
+        d_path.cycles.extend([expected, c_path])
+        c_path.branches.append(d_path)
+        expected.branches.append(c_path)
+        self.assertEqual(path, expected)

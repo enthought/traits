@@ -77,6 +77,9 @@ class ObserverExpression:
         """
         return SeriesObserverExpression(self, expression)
 
+    def recursive(self, expression):
+        return SeriesObserverExpression(self, RecursedExpression(expression))
+
     def match(self, filter, notify=True):
         """ Create a new expression for observing traits using the
         given filter.
@@ -241,19 +244,30 @@ class ObserverExpression:
         """
         return self._create_graphs(branches=[])
 
-    def _create_graphs(self, branches):
+    def _create_graphs(self, branches=None, cycles=None, id_to_graph=None):
         """ Return a list of ObserverGraph with the given branches.
 
         Parameters
         ----------
         branches : list of ObserverGraph
             Graphs to be used as branches.
+        cycles : list of ObserverGraph
+            Graphs to be used as cycles.
+        id_to_graph : dict(int, ObserverGraph)
+            A mapping from an ObserverGraph's id to the instance.
 
         Returns
         -------
         graphs : list of ObserverGraph
         """
         raise NotImplementedError("'_create_graphs' must be implemented.")
+
+    def _root_observers(self):
+        """ Return a list of IObserver which are the root(s) of the underlying
+        graphs.
+        """
+        raise NotImplementedError("'_root_observers' must be implemented.")
+
 
 
 class SingleObserverExpression(ObserverExpression):
@@ -263,10 +277,22 @@ class SingleObserverExpression(ObserverExpression):
     def __init__(self, observer):
         self.observer = observer
 
-    def _create_graphs(self, branches):
-        return [
-            ObserverGraph(node=self.observer, branches=branches),
-        ]
+    def _create_graphs(self, branches=None, cycles=None, id_to_graph=None):
+        if id_to_graph is None:
+            id_to_graph = {}
+
+        graph = _get_graph(
+            observer=self.observer,
+            id_to_graph=id_to_graph,
+        )
+        if branches:
+            graph.branches.extend(branches)
+        if cycles:
+            graph.cycles.extend(cycles)
+        return [graph]
+
+    def _root_observers(self):
+        return [self.observer]
 
 
 class SeriesObserverExpression(ObserverExpression):
@@ -284,9 +310,23 @@ class SeriesObserverExpression(ObserverExpression):
         self._first = first
         self._second = second
 
-    def _create_graphs(self, branches):
-        branches = self._second._create_graphs(branches=branches)
-        return self._first._create_graphs(branches=branches)
+    def _create_graphs(self, branches=None, cycles=None, id_to_graph=None):
+        if id_to_graph is None:
+            id_to_graph = {}
+        branches = self._second._create_graphs(
+            branches=branches, cycles=cycles, id_to_graph=id_to_graph,
+        )
+        return self._first._create_graphs(
+            branches=branches,
+            cycles=None,
+            id_to_graph=id_to_graph,
+        )
+
+    def _root_observers(self):
+        first_observers = self._first._root_observers()
+        if first_observers:
+            return first_observers
+        return self._second._root_observers()
 
 
 class ParallelObserverExpression(ObserverExpression):
@@ -304,10 +344,61 @@ class ParallelObserverExpression(ObserverExpression):
         self._left = left
         self._right = right
 
-    def _create_graphs(self, branches):
-        left_graphs = self._left._create_graphs(branches=branches)
-        right_graphs = self._right._create_graphs(branches=branches)
+    def _create_graphs(self, branches=None, cycles=None, id_to_graph=None):
+        if id_to_graph is None:
+            id_to_graph = {}
+        left_graphs = self._left._create_graphs(
+            branches=branches, cycles=cycles, id_to_graph=id_to_graph,
+        )
+        right_graphs = self._right._create_graphs(
+            branches=branches, cycles=cycles, id_to_graph=id_to_graph,
+        )
         return left_graphs + right_graphs
+
+    def _root_observers(self):
+        return (
+            self._left._root_observers() + self._right._root_observers()
+        )
+
+
+class RecursedExpression(ObserverExpression):
+
+    def __init__(self, expression):
+        self.expression = expression
+
+    def _create_graphs(self, branches=None, cycles=None, id_to_graph=None):
+        if id_to_graph is None:
+            id_to_graph = {}
+        observers = self.expression._root_observers()
+
+        new_cycles = [
+            _get_graph(
+                observer=observer,
+                id_to_graph=id_to_graph,
+            )
+            for observer in observers
+        ]
+        if cycles:
+            cycles = cycles + new_cycles
+        else:
+            cycles = new_cycles
+
+        return self.expression._create_graphs(
+            branches=branches, cycles=cycles, id_to_graph=id_to_graph,
+        )
+
+    def _root_observers(self):
+        return self.expression._root_observers()
+
+
+def _get_graph(observer, id_to_graph):
+    observer_id = id(observer)
+    if observer_id in id_to_graph:
+        return id_to_graph[observer_id]
+
+    graph = ObserverGraph(node=observer)
+    id_to_graph[observer_id] = graph
+    return graph
 
 
 def join(*expressions):
@@ -486,3 +577,7 @@ def trait(name, notify=True, optional=False):
     observer = NamedTraitObserver(
         name=name, notify=notify, optional=optional)
     return SingleObserverExpression(observer)
+
+
+def recursive(expression):
+    return RecursedExpression(expression)
