@@ -1,5 +1,8 @@
 build: false
 
+cache:
+  - C:\Users\appveyor\AppData\Local\pip\Cache -> appveyor.yml
+
 environment:
   global:
     PYTHONUNBUFFERED: "1"
