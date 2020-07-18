@@ -181,8 +181,10 @@ def copyright_header(lines):
         )
         return
 
+    matched_header_lines = header_match.group().splitlines()
+
     # Check the year range in the header.
-    for lineno, line in enumerate(lines, start=1):
+    for lineno, line in enumerate(matched_header_lines, start=1):
         try:
             start_year, end_year, match_pos = parse_years(line)
         except ValueError:
