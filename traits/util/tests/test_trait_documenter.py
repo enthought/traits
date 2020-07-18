@@ -25,7 +25,7 @@ from traits.testing.optional_dependencies import sphinx, requires_sphinx
 
 
 if sphinx is not None:
-    from sphinx.ext.autodoc import Options
+    from sphinx.ext.autodoc import ClassDocumenter, INSTANCEATTR, Options
     from sphinx.ext.autodoc.directive import DocumenterBridge
     from sphinx.testing.path import path
     from sphinx.testing.util import SphinxTestApp
@@ -63,6 +63,27 @@ class MyTestClass(HasTraits):
 
         and Everything.
     """)
+
+
+class FindTheTraits(HasTraits):
+    """
+    Class for testing the can_document_member functionality.
+    """
+
+    #: A TraitType subclass on the right-hand side.
+    an_int = Int
+
+    #: A TraitType instance on the right-hand side.
+    another_int = Int()
+
+    #: A non-trait integer
+    magic_number = 1729
+
+    @property
+    def not_a_trait(self):
+        """
+        I'm a regular property, not a trait.
+        """
 
 
 @requires_sphinx
@@ -142,6 +163,40 @@ class TestTraitDocumenter(unittest.TestCase):
         # Annotation should be a single line.
         self.assertIn("First line", item)
         self.assertNotIn("\n", item)
+
+    def test_can_document_member(self):
+        # Regression test for enthought/traits#1238
+
+        with self.create_directive() as directive:
+            class_documenter = ClassDocumenter(
+                directive, __name__ + ".FindTheTraits"
+            )
+            class_documenter.parse_name()
+            class_documenter.import_object()
+
+            self.assertTrue(
+                TraitDocumenter.can_document_member(
+                    INSTANCEATTR, "an_int", True, class_documenter,
+                )
+            )
+
+            self.assertTrue(
+                TraitDocumenter.can_document_member(
+                    INSTANCEATTR, "another_int", True, class_documenter,
+                )
+            )
+
+            self.assertFalse(
+                TraitDocumenter.can_document_member(
+                    INSTANCEATTR, "magic_number", True, class_documenter,
+                )
+            )
+
+            self.assertFalse(
+                TraitDocumenter.can_document_member(
+                    INSTANCEATTR, "not_a_trait", True, class_documenter,
+                )
+            )
 
     @contextlib.contextmanager
     def create_directive(self):
