@@ -21,9 +21,13 @@ import tokenize
 import traceback
 
 from sphinx.ext.autodoc import ClassLevelDocumenter
+from sphinx.util import logging
 
 from ..trait_type import TraitType
 from ..has_traits import MetaHasTraits
+
+
+logger = logging.getLogger(__name__)
 
 
 def _is_class_trait(name, cls):
@@ -123,6 +127,10 @@ class TraitDocumenter(ClassLevelDocumenter):
         except ValueError:
             # Without this, a failure to find the trait definition aborts
             # the whole documentation build.
+            logger.warn(
+                "No definition for the trait {!r} could be found in "
+                "class {!r}.".format(self.object_name, self.parent),
+                exc_info=True)
             return
 
         # Workaround for enthought/traits#493: if the definition is multiline,
