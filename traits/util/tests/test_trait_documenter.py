@@ -20,7 +20,7 @@ import tokenize
 import unittest
 import unittest.mock as mock
 
-from traits.api import HasTraits, Int
+from traits.api import Bool, HasTraits, Int, Property
 from traits.testing.optional_dependencies import sphinx, requires_sphinx
 
 
@@ -65,6 +65,12 @@ class MyTestClass(HasTraits):
     """)
 
 
+class Fake(HasTraits):
+
+    #: Test attribute
+    test_attribute = Property(Bool, label="ミスあり")
+
+
 @requires_sphinx
 class TestTraitDocumenter(unittest.TestCase):
     """ Tests for the trait documenter. """
@@ -97,29 +103,19 @@ class TestTraitDocumenter(unittest.TestCase):
 
     def test_add_line(self):
 
-        src = textwrap.dedent(
-            """\
-        class Fake(HasTraits):
-
-            #: Test attribute
-            test = Property(Bool, label="ミスあり")
-        """
-        )
         mocked_directive = mock.MagicMock()
 
         documenter = TraitDocumenter(mocked_directive, "test", "   ")
-        documenter.object_name = "Property"
+        documenter.object_name = "test_attribute"
+        documenter.parent = Fake
 
         with mock.patch(
-            "traits.util.trait_documenter.inspect.getsource", return_value=src
+            (
+                "traits.util.trait_documenter.ClassLevelDocumenter"
+                ".add_directive_header"
+            )
         ):
-            with mock.patch(
-                (
-                    "traits.util.trait_documenter.ClassLevelDocumenter"
-                    ".add_directive_header"
-                )
-            ):
-                documenter.add_directive_header("")
+            documenter.add_directive_header("")
 
         self.assertEqual(
             len(documenter.directive.result.append.mock_calls), 1)
