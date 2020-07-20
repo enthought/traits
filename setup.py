@@ -20,9 +20,9 @@ import setuptools
 # into the package source.
 MAJOR = 6
 MINOR = 1
-MICRO = 0
+MICRO = 1
 PRERELEASE = ""
-IS_RELEASED = True
+IS_RELEASED = False
 
 # If this file is part of a Git export (for example created with "git archive",
 # or downloaded from GitHub), ARCHIVE_COMMIT_HASH gives the full hash of the
