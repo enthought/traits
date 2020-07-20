@@ -115,7 +115,7 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
-        definition = self._get_trait_definition(
+        definition = _get_trait_definition(
             parent=self.parent,
             object_name=self.object_name,
         )
@@ -127,46 +127,53 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         self.add_line("   :annotation: = {0}".format(definition), "<autodoc>")
 
-    # Private Interface #####################################################
 
-    def _get_trait_definition(self, *, parent, object_name):
-        """ Retrieve the Trait attribute definition.
+def _get_trait_definition(*, parent, object_name):
+    """ Retrieve the portion of the source defining a Trait attribute.
 
-        Parameters
-        ----------
-        parent : type
-            Class being documented, typically a HasTraits subclass.
-        object_name : str
-            Name of the attribute being documented.
+    For example, given a class::
 
-        Returns
-        -------
-        str
-            The portion of the source containing the trait definition. For
-            example, for a class trait defined as ``"my_trait = Float(3.5)"``,
-            the returned string will contain ``"Float(3.5)"``.
+        class MyModel(HasStrictTraits)
+            foo = List(Int, [1, 2, 3])
 
-        """
-        # Get the class source and tokenize it.
-        source = inspect.getsource(self.parent)
-        string_io = io.StringIO(source)
-        tokens = tokenize.generate_tokens(string_io.readline)
+    ``_get_trait_definition(MyModel, "foo")`` will return
+    ``"List(Int, [1, 2, 3])"``.
 
-        # find the trait definition start
-        trait_found = False
-        name_found = False
-        while not trait_found:
-            item = next(tokens)
-            if name_found and item[:2] == (token.OP, "="):
-                trait_found = True
-                continue
-            if item[:2] == (token.NAME, self.object_name):
-                name_found = True
+    Parameters
+    ----------
+    parent : type
+        Class being documented, typically a HasTraits subclass.
+    object_name : str
+        Name of the attribute being documented.
 
-        # Retrieve the trait definition.
-        definition_tokens = _get_definition_tokens(tokens)
-        definition = tokenize.untokenize(definition_tokens).strip()
-        return definition
+    Returns
+    -------
+    str
+        The portion of the source containing the trait definition. For
+        example, for a class trait defined as ``"my_trait = Float(3.5)"``,
+        the returned string will contain ``"Float(3.5)"``.
+
+    """
+    # Get the class source and tokenize it.
+    source = inspect.getsource(parent)
+    string_io = io.StringIO(source)
+    tokens = tokenize.generate_tokens(string_io.readline)
+
+    # find the trait definition start
+    trait_found = False
+    name_found = False
+    while not trait_found:
+        item = next(tokens)
+        if name_found and item[:2] == (token.OP, "="):
+            trait_found = True
+            continue
+        if item[:2] == (token.NAME, object_name):
+            name_found = True
+
+    # Retrieve the trait definition.
+    definition_tokens = _get_definition_tokens(tokens)
+    definition = tokenize.untokenize(definition_tokens).strip()
+    return definition
 
 
 def _get_definition_tokens(tokens):
