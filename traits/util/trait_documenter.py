@@ -115,7 +115,10 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
-        definition = self._get_trait_definition()
+        definition = self._get_trait_definition(
+            parent=self.parent,
+            object_name=self.object_name,
+        )
 
         # Workaround for enthought/traits#493: if the definition is multiline,
         # throw away all lines after the first.
@@ -126,10 +129,24 @@ class TraitDocumenter(ClassLevelDocumenter):
 
     # Private Interface #####################################################
 
-    def _get_trait_definition(self):
-        """ Retrieve the Trait attribute definition
-        """
+    def _get_trait_definition(self, *, parent, object_name):
+        """ Retrieve the Trait attribute definition.
 
+        Parameters
+        ----------
+        parent : type
+            Class being documented, typically a HasTraits subclass.
+        object_name : str
+            Name of the attribute being documented.
+
+        Returns
+        -------
+        str
+            The portion of the source containing the trait definition. For
+            example, for a class trait defined as ``"my_trait = Float(3.5)"``,
+            the returned string will contain ``"Float(3.5)"``.
+
+        """
         # Get the class source and tokenize it.
         source = inspect.getsource(self.parent)
         string_io = io.StringIO(source)
