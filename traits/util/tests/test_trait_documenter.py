@@ -140,6 +140,13 @@ class TestTraitDocumenter(unittest.TestCase):
         self.assertIn("First line", item)
         self.assertNotIn("\n", item)
 
+    def test_successful_trait_definition(self):
+        definition = trait_definition(cls=Fake, trait_name="test_attribute")
+        self.assertEqual(
+            definition,
+            "Property(Bool, label=\"ミスあり\")",
+        )
+
     def test_failed_trait_definition(self):
         with self.assertRaises(ValueError):
             trait_definition(cls=Fake, trait_name="not_a_trait")
