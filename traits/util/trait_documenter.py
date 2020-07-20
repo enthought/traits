@@ -115,9 +115,9 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
-        definition = _get_trait_definition(
-            parent=self.parent,
-            object_name=self.object_name,
+        definition = trait_definition(
+            cls=self.parent,
+            trait_name=self.object_name,
         )
 
         # Workaround for enthought/traits#493: if the definition is multiline,
@@ -128,7 +128,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         self.add_line("   :annotation: = {0}".format(definition), "<autodoc>")
 
 
-def _get_trait_definition(*, parent, object_name):
+def trait_definition(*, cls, trait_name):
     """ Retrieve the portion of the source defining a Trait attribute.
 
     For example, given a class::
@@ -136,15 +136,14 @@ def _get_trait_definition(*, parent, object_name):
         class MyModel(HasStrictTraits)
             foo = List(Int, [1, 2, 3])
 
-    ``_get_trait_definition(MyModel, "foo")`` will return
-    ``"List(Int, [1, 2, 3])"``.
+    ``trait_definition(MyModel, "foo")`` returns ``"List(Int, [1, 2, 3])"``.
 
     Parameters
     ----------
-    parent : type
-        Class being documented, typically a HasTraits subclass.
-    object_name : str
-        Name of the attribute being documented.
+    cls : MetaHasTraits
+        Class being documented.
+    trait_name : str
+        Name of the trait being documented.
 
     Returns
     -------
@@ -155,7 +154,7 @@ def _get_trait_definition(*, parent, object_name):
 
     """
     # Get the class source and tokenize it.
-    source = inspect.getsource(parent)
+    source = inspect.getsource(cls)
     string_io = io.StringIO(source)
     tokens = tokenize.generate_tokens(string_io.readline)
 
@@ -167,7 +166,7 @@ def _get_trait_definition(*, parent, object_name):
         if name_found and item[:2] == (token.OP, "="):
             trait_found = True
             continue
-        if item[:2] == (token.NAME, object_name):
+        if item[:2] == (token.NAME, trait_name):
             name_found = True
 
     # Retrieve the trait definition.
