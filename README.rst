@@ -59,7 +59,7 @@ Traits has the following optional dependencies:
 
 To build the full documentation one needs:
 
-* `Sphinx <https://pypi.org/project/Sphinx>`_ = 1.8
+* `Sphinx <https://pypi.org/project/Sphinx>`_ version 1.8 or later.
 * The `Enthought Sphinx Theme <https://pypi.org/project/enthought-sphinx-theme>`_.
   (A version of the documentation can be built without this, but
   some formatting may be incorrect.)
