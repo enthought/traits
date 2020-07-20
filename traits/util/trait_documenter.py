@@ -115,10 +115,15 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
-        definition = trait_definition(
-            cls=self.parent,
-            trait_name=self.object_name,
-        )
+        try:
+            definition = trait_definition(
+                cls=self.parent,
+                trait_name=self.object_name,
+            )
+        except ValueError:
+            # Without this, a failure to find the trait definition aborts
+            # the whole documentation build.
+            return
 
         # Workaround for enthought/traits#493: if the definition is multiline,
         # throw away all lines after the first.
@@ -152,6 +157,11 @@ def trait_definition(*, cls, trait_name):
         example, for a class trait defined as ``"my_trait = Float(3.5)"``,
         the returned string will contain ``"Float(3.5)"``.
 
+    Raises
+    ------
+    ValueError
+        If *trait_name* doesn't appear as a class-level variable in the
+        source.
     """
     # Get the class source and tokenize it.
     source = inspect.getsource(cls)
@@ -162,12 +172,20 @@ def trait_definition(*, cls, trait_name):
     trait_found = False
     name_found = False
     while not trait_found:
-        item = next(tokens)
+        item = next(tokens, None)
+        if item is None:
+            break
         if name_found and item[:2] == (token.OP, "="):
             trait_found = True
             continue
         if item[:2] == (token.NAME, trait_name):
             name_found = True
+
+    if not trait_found:
+        raise ValueError(
+            "No trait definition for {!r} found in {!r}".format(
+                trait_name, cls)
+        )
 
     # Retrieve the trait definition.
     definition_tokens = _get_definition_tokens(tokens)

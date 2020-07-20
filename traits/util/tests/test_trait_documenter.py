@@ -33,6 +33,7 @@ if sphinx is not None:
 
     from traits.util.trait_documenter import (
         _get_definition_tokens,
+        trait_definition,
         TraitDocumenter,
     )
 
@@ -138,6 +139,10 @@ class TestTraitDocumenter(unittest.TestCase):
         # Annotation should be a single line.
         self.assertIn("First line", item)
         self.assertNotIn("\n", item)
+
+    def test_failed_trait_definition(self):
+        with self.assertRaises(ValueError):
+            trait_definition(cls=Fake, trait_name="not_a_trait")
 
     @contextlib.contextmanager
     def create_directive(self):
