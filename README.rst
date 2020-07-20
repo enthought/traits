@@ -54,7 +54,7 @@ Traits has the following optional dependencies:
 
 * `NumPy <http://pypi.python.org/pypi/numpy>`_ to support the trait types
   for arrays.
-* `TraitsUI <https://pypi.python.org/pypi/traitsui>`_ to support Gui
+* `TraitsUI <https://pypi.python.org/pypi/traitsui>`_ to support GUI
   Views.
 
 To build the full documentation one needs:
