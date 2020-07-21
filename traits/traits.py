@@ -535,15 +535,15 @@ def Property(
             def _get_foo(self):
                 return self._foo
 
-    You can use the **observes** metadata attribute to indicate that the
-    property depends on the value of another trait. The value of **observes**
+    You can use the **observe** metadata attribute to indicate that the
+    property depends on the value of another trait. The value of **observe**
     follows the same signature as the **expression** parameter in
     ``HasTraits.observe``. The property will fire a trait change notification
-    if any of the traits specified by **observes** change. For example::
+    if any of the traits specified by **observe** change. For example::
 
         class Wheel ( Part ):
             axle     = Instanced( Axle )
-            position = Property( observes = 'axle.chassis.position' )
+            position = Property( observe = 'axle.chassis.position' )
 
     For details of the extended trait name syntax, refer to the
     observe() method of the HasTraits class.

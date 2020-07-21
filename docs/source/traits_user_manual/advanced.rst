@@ -1159,9 +1159,9 @@ next time its value is requested.
 One strategy to accomplish caching would be to use a private attribute for the
 cached value, and notification observer methods on the attributes that are
 depended on. However, to simplify the situation, Property traits support a
-@cached_property decorator and **observes** metadata. Use @cached_property to
+@cached_property decorator and **observe** metadata. Use @cached_property to
 indicate that a getter method's return value should be cached. Use
-**observes** to indicate the other attributes that the property depends on.
+**observe** to indicate the other attributes that the property depends on.
 
 .. index:: examples; cached property
 
@@ -1173,7 +1173,7 @@ For example:
 The @cached_property decorator takes no arguments. Place it on the line
 preceding the property's getter method.
 
-The **observes** metadata attribute accepts extended trait references, using
+The **observe** metadata attribute accepts extended trait references, using
 the same syntax as the :func:`~traits.has_traits.HasTraits.observe` method's
 expression parameter, which is also described in
 :ref:`the expression section <observe-expression>`. As a result,

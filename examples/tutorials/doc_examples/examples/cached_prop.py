@@ -21,7 +21,7 @@ from traits.api import (
 class Person(HasPrivateTraits):
 
     full_name = Str()
-    last_name = Property(observes="full_name")
+    last_name = Property(observe="full_name")
 
     @cached_property
     def _get_last_name(self):

@@ -316,14 +316,14 @@ def _property_method(class_dict, name):
     return class_dict.get(name)
 
 
-def _create_property_observe_state(observes, property_name, cached):
+def _create_property_observe_state(observe, property_name, cached):
     """ Create the metadata for setting up an observer for Property.
 
     Parameters
     ----------
-    observes : str or list or Expression
+    observe : str or list or Expression
         As is accepted by HasTraits.observe
-        This is the value provided in Property(observes=...)
+        This is the value provided in Property(observe=...)
     property_name : str
         The name of the property trait.
     cached : boolean
@@ -347,7 +347,7 @@ def _create_property_observe_state(observes, property_name, cached):
         return types.MethodType(handler, instance)
 
     return dict(
-        expression=observes,
+        expression=observe,
         dispatch="same",
         handler_getter=handler_getter,
         post_init=False,
@@ -720,9 +720,9 @@ def update_traits_class_dict(class_name, bases, class_dict):
 
             listeners[name] = ("property", cached, depends_on)
 
-        if trait.type == "property" and trait.observes is not None:
+        if trait.type == "property" and trait.observe is not None:
             observer_state = _create_property_observe_state(
-                observes=trait.observes,
+                observe=trait.observe,
                 property_name=name,
                 cached=trait.cached,
             )
@@ -883,7 +883,7 @@ def cached_property(function):
         write boilerplate cache management code explicitly. For example::
 
             file_name = File
-            file_contents = Property( observes = 'file_name' )
+            file_contents = Property( observe = 'file_name' )
 
             @cached_property
             def _get_file_contents(self):
@@ -896,7 +896,7 @@ def cached_property(function):
         **_file_contents**, which maintained by the @cached_property wrapper
         code, is returned.
 
-        Note the use, in the example, of the **observes** metadata attribute
+        Note the use, in the example, of the **observe** metadata attribute
         to specify that the value of **file_contents** depends on
         **file_name**, so that _get_file_contents() is called only when
         **file_name** changes. For details, see the traits.traits.Property()

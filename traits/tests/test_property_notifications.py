@@ -68,7 +68,7 @@ class TestPropertyNotifications(unittest.TestCase):
         self.assertEqual(output_buffer.getvalue(), "value_1value_2")
 
 
-# Integration test for Property notifications via 'observes' / 'depends_on'
+# Integration test for Property notifications via 'observe' / 'depends_on'
 
 
 class PersonInfo(HasTraits):
@@ -107,7 +107,7 @@ class ClassWithPropertyObservesDefault(ClassWithInstanceDefaultInit):
     To be compared with the next class using depends_on
     """
 
-    extended_age = Property(observes="info_with_default.age")
+    extended_age = Property(observe="info_with_default.age")
 
     extended_age_n_calculations = Int()
 
@@ -138,7 +138,7 @@ class ClassWithPropertyObservesInit(ClassWithInstanceDefaultInit):
     To be compared with the next class using depends_on.
     """
 
-    extended_age = Property(observes="sample_info.age")
+    extended_age = Property(observe="sample_info.age")
 
     extended_age_n_calculations = Int()
 
@@ -161,7 +161,7 @@ class ClassWithPropertyMultipleObserves(PersonInfo):
     """ Dummy class to test observing multiple values.
     """
 
-    computed_value = Property(observes=[trait("age"), trait("gender")])
+    computed_value = Property(observe=[trait("age"), trait("gender")])
 
     computed_value_n_calculations = Int()
 
@@ -187,7 +187,7 @@ class ClassWithPropertyObservesItems(ClassWithInstanceDefaultInit):
     """ Dummy class to test property observing container items"""
 
     discounted = Property(
-        Bool(), observes=trait("list_of_infos").list_items().trait("age"))
+        Bool(), observe=trait("list_of_infos").list_items().trait("age"))
 
     discounted_n_calculations = Int()
 
@@ -198,7 +198,7 @@ class ClassWithPropertyObservesItems(ClassWithInstanceDefaultInit):
 
 class ClassWithPropertyDependsOnItems(ClassWithInstanceDefaultInit):
     """ Dummy class using depends_on to be compared with the one using
-    observes."""
+    observe."""
 
     discounted = Property(Bool(), depends_on="list_of_infos.age")
 
@@ -211,7 +211,7 @@ class ClassWithPropertyDependsOnItems(ClassWithInstanceDefaultInit):
 
 class ClassWithPropertyObservesWithCache(PersonInfo):
 
-    discounted = Property(Bool(), observes="age")
+    discounted = Property(Bool(), observe="age")
 
     discounted_n_calculations = Int()
 
@@ -224,7 +224,7 @@ class ClassWithPropertyObservesWithCache(PersonInfo):
 class ClassWithPropertyObservesDecorated(PersonInfo):
     """ Dummy class to test property with observers setup at init time."""
 
-    discounted = Property(Bool(), observes="age")
+    discounted = Property(Bool(), observe="age")
 
     discounted_n_calculations = Int()
 
@@ -262,7 +262,7 @@ class ClassWithPropertyMissingGetter(PersonInfo):
     """ Dummy class to test property that does not have getter/setter.
     """
 
-    discounted = Property(Bool(), observes="age")
+    discounted = Property(Bool(), observe="age")
 
 
 class ClassWithPropertyTraitNotFound(HasTraits):
@@ -271,11 +271,11 @@ class ClassWithPropertyTraitNotFound(HasTraits):
 
     person = Instance(PersonInfo)
 
-    last_name = Property(observes="person.last_name")  # last_name not defined
+    last_name = Property(observe="person.last_name")  # last_name not defined
 
 
 class TestHasTraitsPropertyObserves(unittest.TestCase):
-    """ Tests Property notifications using 'observes', and compared the
+    """ Tests Property notifications using 'observe', and compared the
     behavior with 'depends_on'
     """
 
@@ -283,10 +283,10 @@ class TestHasTraitsPropertyObserves(unittest.TestCase):
         push_exception_handler(reraise_exceptions=True)
         self.addCleanup(pop_exception_handler)
 
-    def test_property_observes_extended_trait(self):
-        instance_observes = ClassWithPropertyObservesDefault()
-        handler_observes = mock.Mock()
-        instance_observes.observe(handler_observes, "extended_age")
+    def test_property_observe_extended_trait(self):
+        instance_observe = ClassWithPropertyObservesDefault()
+        handler_observe = mock.Mock()
+        instance_observe.observe(handler_observe, "extended_age")
 
         # sanity check against depends_on
         instance_depends_on = ClassWithPropertyDependsOnDefault()
@@ -294,8 +294,8 @@ class TestHasTraitsPropertyObserves(unittest.TestCase):
         instance_depends_on.on_trait_change(
             get_otc_handler(handler_otc), "extended_age"
         )
-        instances = [instance_observes, instance_depends_on]
-        handlers = [handler_observes, handler_otc]
+        instances = [instance_observe, instance_depends_on]
+        handlers = [handler_observe, handler_otc]
 
         for instance, handler in zip(instances, handlers):
             with self.subTest(instance=instance, handler=handler):
@@ -305,10 +305,10 @@ class TestHasTraitsPropertyObserves(unittest.TestCase):
                 self.assertEqual(handler.call_count, 1)
                 self.assertEqual(instance.extended_age_n_calculations, 1)
 
-    def test_property_observes_does_not_fire_default(self):
-        instance_observes = ClassWithPropertyObservesDefault()
-        handler_observes = mock.Mock()
-        instance_observes.observe(handler_observes, "extended_age")
+    def test_property_observe_does_not_fire_default(self):
+        instance_observe = ClassWithPropertyObservesDefault()
+        handler_observe = mock.Mock()
+        instance_observe.observe(handler_observe, "extended_age")
 
         # compared with 'depends_on'
         instance_depends_on = ClassWithPropertyDependsOnDefault()
@@ -317,21 +317,21 @@ class TestHasTraitsPropertyObserves(unittest.TestCase):
 
         # then
         # they are different. See enthought/traits#481, #709
-        self.assertFalse(instance_observes.info_with_default_computed)
+        self.assertFalse(instance_observe.info_with_default_computed)
         self.assertTrue(instance_depends_on.info_with_default_computed)
 
-    def test_property_multi_observes(self):
-        instance_observes = ClassWithPropertyMultipleObserves()
-        handler_observes = mock.Mock()
-        instance_observes.observe(handler_observes, "computed_value")
-        self.assertEqual(instance_observes.computed_value_n_calculations, 0)
+    def test_property_multi_observe(self):
+        instance_observe = ClassWithPropertyMultipleObserves()
+        handler_observe = mock.Mock()
+        instance_observe.observe(handler_observe, "computed_value")
+        self.assertEqual(instance_observe.computed_value_n_calculations, 0)
 
         instance_depends_on = ClassWithPropertyMultipleDependsOn()
         instance_depends_on.on_trait_change(
             get_otc_handler(mock.Mock()), "computed_value")
         self.assertEqual(instance_depends_on.computed_value_n_calculations, 0)
 
-        for instance in [instance_observes, instance_depends_on]:
+        for instance in [instance_observe, instance_depends_on]:
             with self.subTest(instance=instance):
                 # when
                 instance.age = 1
@@ -342,16 +342,16 @@ class TestHasTraitsPropertyObserves(unittest.TestCase):
                 # then
                 self.assertEqual(instance.computed_value_n_calculations, 2)
 
-    def test_property_observes_container(self):
-        instance_observes = ClassWithPropertyObservesItems()
-        handler_observes = mock.Mock()
-        instance_observes.observe(handler_observes, "discounted")
+    def test_property_observe_container(self):
+        instance_observe = ClassWithPropertyObservesItems()
+        handler_observe = mock.Mock()
+        instance_observe.observe(handler_observe, "discounted")
 
         instance_depends_on = ClassWithPropertyDependsOnItems()
         instance_depends_on.on_trait_change(
             get_otc_handler(mock.Mock()), "discounted")
 
-        for instance in [instance_observes, instance_depends_on]:
+        for instance in [instance_observe, instance_depends_on]:
             with self.subTest(instance=instance):
                 self.assertEqual(instance.discounted_n_calculations, 0)
 
@@ -411,7 +411,7 @@ class TestHasTraitsPropertyObserves(unittest.TestCase):
             ClassWithPropertyDependsOnInit(
                 info_without_default=PersonInfo(age=30))
 
-        # With "observes", initialization works.
+        # With "observe", initialization works.
         instance = ClassWithPropertyObservesInit(
             info_without_default=PersonInfo(age=30)
         )
@@ -437,10 +437,10 @@ class TestHasTraitsPropertyObserves(unittest.TestCase):
         self.assertEqual(instance_no_property.sample_info.age, 30)
 
     def test_property_decorated_observer(self):
-        instance_observes = ClassWithPropertyObservesDecorated(age=30)
+        instance_observe = ClassWithPropertyObservesDecorated(age=30)
         instance_depends_on = ClassWithPropertyDependsOnDecorated(age=30)
 
-        for instance in [instance_observes, instance_depends_on]:
+        for instance in [instance_observe, instance_depends_on]:
             with self.subTest(instance=instance):
                 self.assertEqual(len(instance.discounted_events), 1)
 
