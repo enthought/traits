@@ -164,8 +164,7 @@ class TestTraitDocumenter(unittest.TestCase):
     def test_successful_trait_definition(self):
         definition = trait_definition(cls=Fake, trait_name="test_attribute")
         self.assertEqual(
-            definition,
-            "Property(Bool, label=\"ミスあり\")",
+            definition, 'Property(Bool, label="ミスあり")',
         )
 
     def test_failed_trait_definition(self):
