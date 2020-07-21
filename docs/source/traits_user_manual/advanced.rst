@@ -1162,39 +1162,28 @@ next time its value is requested.
 .. index:: cached_property decorator, depends_on metadata
 
 One strategy to accomplish caching would be to use a private attribute for the
-cached value, and notification listener methods on the attributes that are
+cached value, and notification observer methods on the attributes that are
 depended on. However, to simplify the situation, Property traits support a
-@cached_property decorator and **depends_on** metadata. Use @cached_property to
-indicate that a getter method's return value should be cached. Use
-**depends_on** to indicate the other attributes that the property depends on.
+|@cached_property| decorator and **observe** metadata. Use |@cached_property|
+to indicate that a getter method's return value should be cached. Use
+**observe** to indicate the other attributes that the property depends on.
 
 .. index:: examples; cached property
 
-For example::
+For example:
 
-    # cached_prop.py -- Example of @cached_property decorator
-    from traits.api import HasPrivateTraits, List, Int,\
-                                     Property, cached_property
+.. literalinclude:: /../../examples/tutorials/doc_examples/examples/cached_prop.py
+   :start-at: from traits.api
 
-    class TestScores ( HasPrivateTraits ):
-
-        scores  = List( Int )
-        average = Property( depends_on = 'scores' )
-
-        @cached_property
-        def _get_average ( self ):
-            s = self.scores
-            return (float( reduce( lambda n1, n2: n1 + n2, s, 0 ) )
-                     / len( s ))
-
-The @cached_property decorator takes no arguments. Place it on the line
+The |@cached_property| decorator takes no arguments. Place it on the line
 preceding the property's getter method.
 
-The **depends_on** metadata attribute accepts extended trait references, using
-the same syntax as the on_trait_change() method's name parameter, described in
-:ref:`the-name-parameter`. As a result, it can take values that specify
-attributes on referenced objects, multiple attributes, or attributes that are
-selected based on their metadata attributes.
+The **observe** metadata attribute accepts extended trait references, using
+the same syntax as the |HasTraits.observe| method's expression parameter,
+which is also described in :ref:`expression section <observe-expression>`.
+As a result, it can take values that specify attributes on referenced objects,
+multiple attributes, or attributes that are selected based on their metadata
+attributes.
 
 .. index:: persistence, __getstate__(), __setstate__()
 
@@ -1525,3 +1514,9 @@ course, this is offset by the convenience and flexibility provided by the
 deferral model. As with any powerful tool, it is best to understand its
 strengths and weaknesses and apply that understanding in determining when use of
 the tool is justified and appropriate.
+
+..
+   # substitutions
+
+.. |HasTraits.observe| replace:: :func:`~traits.has_traits.HasTraits.observe`
+.. |@cached_property| replace:: :func:`~traits.has_traits.cached_property`

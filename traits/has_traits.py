@@ -18,6 +18,7 @@ import inspect
 import os
 import pickle
 import re
+import types
 import warnings
 import weakref
 
@@ -302,6 +303,44 @@ def _property_method(class_dict, name):
     return class_dict.get(name)
 
 
+def _create_property_observe_state(observe, property_name, cached):
+    """ Create the metadata for setting up an observer for Property.
+
+    Parameters
+    ----------
+    observe : str or list or Expression
+        As is accepted by HasTraits.observe expression argument
+        This is the value provided in Property(observe=...)
+    property_name : str
+        The name of the property trait.
+    cached : boolean
+        Whether the property is cached or not.
+
+    Returns
+    -------
+    state : dict
+        State to be used by _init_traits_observers
+    """
+
+    def handler(instance, event):
+        if cached:
+            cache_name = TraitsCache + property_name
+            old = instance.__dict__.pop(cache_name, Undefined)
+        else:
+            old = Undefined
+        instance.trait_property_changed(property_name, old)
+
+    def handler_getter(instance, name):
+        return types.MethodType(handler, instance)
+
+    return dict(
+        expression=observe,
+        dispatch="same",
+        handler_getter=handler_getter,
+        post_init=False,
+    )
+
+
 # This really should be 'HasTraits', but it's not defined yet:
 _HasTraits = None
 
@@ -382,7 +421,7 @@ def update_traits_class_dict(class_name, bases, class_dict):
     prefix_list = []
     view_elements = {}
 
-    # Mapping from method names to list(dict)
+    # Mapping from method/trait names to list(dict)
     # where each nested dict provides the input arguments for calling
     # ``HasTraits.observe`` once. See ``_init_trait_observers``.`
     observers = {}
@@ -666,6 +705,15 @@ def update_traits_class_dict(class_name, bases, class_dict):
 
             listeners[name] = ("property", cached, depends_on)
 
+        if trait.type == "property" and trait.observe is not None:
+            observer_state = _create_property_observe_state(
+                observe=trait.observe,
+                property_name=name,
+                cached=trait.cached,
+            )
+            stack = observers.setdefault(name, [])
+            stack.append(observer_state)
+
     # Add processed traits back into class_dict.
     class_dict[BaseTraits] = base_traits
     class_dict[ClassTraits] = class_traits
@@ -768,6 +816,7 @@ def observe(expression, *, post_init=False, dispatch="same"):
             expression=expression,
             dispatch=dispatch,
             post_init=post_init,
+            handler_getter=getattr,
         )
         observe_inputs.append(observe_input)
 
@@ -819,7 +868,7 @@ def cached_property(function):
         write boilerplate cache management code explicitly. For example::
 
             file_name = File
-            file_contents = Property( depends_on = 'file_name' )
+            file_contents = Property(observe='file_name')
 
             @cached_property
             def _get_file_contents(self):
@@ -832,7 +881,7 @@ def cached_property(function):
         **_file_contents**, which maintained by the @cached_property wrapper
         code, is returned.
 
-        Note the use, in the example, of the **depends_on** metadata attribute
+        Note the use, in the example, of the **observe** metadata attribute
         to specify that the value of **file_contents** depends on
         **file_name**, so that _get_file_contents() is called only when
         **file_name** changes. For details, see the traits.traits.Property()
@@ -3296,7 +3345,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 if not state["post_init"]:
                     self.observe(
                         expression=state["expression"],
-                        handler=getattr(self, name),
+                        handler=state["handler_getter"](self, name),
                         dispatch=state["dispatch"],
                     )
 
@@ -3308,7 +3357,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 if state["post_init"]:
                     self.observe(
                         expression=state["expression"],
-                        handler=getattr(self, name),
+                        handler=state["handler_getter"](self, name),
                         dispatch=state["dispatch"],
                     )
 
