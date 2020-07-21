@@ -15,10 +15,10 @@ support.
 """
 
 from traits.api import (
-    cached_property, HasPrivateTraits, Str, observe, Property,
+    cached_property, HasStrictTraits, Str, observe, Property,
 )
 
-class Person(HasPrivateTraits):
+class Person(HasStrictTraits):
 
     full_name = Str()
     last_name = Property(observe="full_name")
