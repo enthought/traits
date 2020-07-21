@@ -1,6 +1,33 @@
 Traits CHANGELOG
 ================
 
+Release 6.1.1
+-------------
+
+Released: XXXX-XX-XX
+
+Traits 6.1.1 is a bugfix release fixing a handful of minor documentation and
+test-related issues with the Traits 6.1.0 release. There are no API-breaking
+changes in this release. It's recommended that all users of Traits 6.1.0
+upgrade to Traits 6.1.1.
+
+Fixes
+~~~~~
+
+* Don't mutate global state at import time in a test module. (#1222)
+* Standardize and fix copyright years in source files. (#1227, #1198)
+* Fix trait-documenter extension tests for Sphinx 3.1. (#1206)
+
+Documentation fixes
+~~~~~~~~~~~~~~~~~~~
+
+* Fix some spelling and grammar errors in the user manual. (#1210)
+* Fix description in README to match the one in the setup script. (#1219)
+* Update PyPI links and capitalization in README.rst. (#1250)
+* Fix user manual mentioning a nonexisting feature in metadata filter. (#1207)
+* Fix typo in comment in optional_dependencies. (#1235)
+
+
 Release 6.1.0
 -------------
 
