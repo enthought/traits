@@ -322,7 +322,7 @@ def _create_property_observe_state(observe, property_name, cached):
     Parameters
     ----------
     observe : str or list or Expression
-        As is accepted by HasTraits.observe
+        As is accepted by HasTraits.observe expression argument
         This is the value provided in Property(observe=...)
     property_name : str
         The name of the property trait.
