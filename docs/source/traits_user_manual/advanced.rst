@@ -1159,8 +1159,8 @@ next time its value is requested.
 One strategy to accomplish caching would be to use a private attribute for the
 cached value, and notification observer methods on the attributes that are
 depended on. However, to simplify the situation, Property traits support a
-@cached_property decorator and **observe** metadata. Use @cached_property to
-indicate that a getter method's return value should be cached. Use
+|@cached_property| decorator and **observe** metadata. Use |@cached_property|
+to indicate that a getter method's return value should be cached. Use
 **observe** to indicate the other attributes that the property depends on.
 
 .. index:: examples; cached property
@@ -1170,15 +1170,15 @@ For example:
 .. literalinclude:: /../../examples/tutorials/doc_examples/examples/cached_prop.py
    :start-at: from traits.api
 
-The @cached_property decorator takes no arguments. Place it on the line
+The |@cached_property| decorator takes no arguments. Place it on the line
 preceding the property's getter method.
 
 The **observe** metadata attribute accepts extended trait references, using
-the same syntax as the :func:`~traits.has_traits.HasTraits.observe` method's
-expression parameter, which is also described in
-:ref:`the expression section <observe-expression>`. As a result,
-it can take values that specify attributes on referenced objects, multiple
-attributes, or attributes that are selected based on their metadata attributes.
+the same syntax as the |HasTraits.observe| method's expression parameter,
+which is also described in :ref:`expression section <observe-expression>`.
+As a result, it can take values that specify attributes on referenced objects,
+multiple attributes, or attributes that are selected based on their metadata
+attributes.
 
 .. index:: persistence, __getstate__(), __setstate__()
 
@@ -1509,3 +1509,9 @@ course, this is offset by the convenience and flexibility provided by the
 deferral model. As with any powerful tool, it is best to understand its
 strengths and weaknesses and apply that understanding in determining when use of
 the tool is justified and appropriate.
+
+..
+   # substitutions
+
+.. |HasTraits.observe| replace:: :func:`~traits.has_traits.HasTraits.observe`
+.. |@cached_property| replace:: :func:`~traits.has_traits.cached_property`
