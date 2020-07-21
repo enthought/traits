@@ -541,9 +541,9 @@ def Property(
     ``HasTraits.observe``. The property will fire a trait change notification
     if any of the traits specified by **observe** change. For example::
 
-        class Wheel ( Part ):
-            axle     = Instanced( Axle )
-            position = Property( observe = 'axle.chassis.position' )
+        class Wheel(Part):
+            axle = Instance(Axle)
+            position = Property(observe='axle.chassis.position')
 
     For details of the extended trait name syntax, refer to the
     observe() method of the HasTraits class.

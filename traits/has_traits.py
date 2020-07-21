@@ -883,7 +883,7 @@ def cached_property(function):
         write boilerplate cache management code explicitly. For example::
 
             file_name = File
-            file_contents = Property( observe = 'file_name' )
+            file_contents = Property(observe='file_name')
 
             @cached_property
             def _get_file_contents(self):
