@@ -28,17 +28,16 @@ is an older API. See :ref:`caching-a-property-value` for the current API.
 
 For example::
 
-    from traits.api import HasPrivateTraits, List, Int, Property
+    from traits.api import HasStrictTraits, List, Int, Property
 
-    class TestScores ( HasPrivateTraits ):
+    class TestScores (HasStrictTraits):
 
-        scores  = List( Int )
-        average = Property( depends_on = 'scores' )
+        scores = List(Int)
+        average = Property(depends_on='scores')
 
-        def _get_average ( self ):
+        def _get_average (self):
             s = self.scores
-            return (float( reduce( lambda n1, n2: n1 + n2, s, 0 ) )
-                     / len( s ))
+            return (float(reduce(lambda n1, n2: n1 + n2, s, 0)) / len(s))
 
 The **depends_on** metadata attribute accepts extended trait references, using
 the same syntax as the on_trait_change() method's name parameter, described in
