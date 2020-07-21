@@ -50,7 +50,7 @@ requires_sphinx = unittest.skipIf(sphinx is None, "Sphinx not available")
 
 traitsui = optional_import("traitsui")
 requires_traitsui = unittest.skipIf(traitsui is None, "TraitsUI not available")
-# Import traitsui.api so that client code can use traits.api directly without
+# Import traitsui.api so that client code can use traitsui.api directly without
 # an extra import.
 if traitsui is not None:
     import traitsui.api

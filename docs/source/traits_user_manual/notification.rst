@@ -18,7 +18,7 @@ See :ref:`on-trait-change-notification` for details on this older API.
 Requesting trait attribute change notifications can be done in these
 ways:
 
-* Via class defintion: By decorating methods on the class with the |@observe|
+* Via class definition: By decorating methods on the class with the |@observe|
   decorator to indicate that they handle notification for specified attributes.
 * Via instance method: By calling |HasTraits.observe| instance method to establish (or remove) change
   notification handlers.
@@ -51,7 +51,7 @@ Via instance method
 -------------------
 
 The |HasTraits.observe| method on |HasTraits| is useful for adding or removing
-change handler on a per instance basis. The example above can be rewritten like
+change handlers on a per instance basis. The example above can be rewritten like
 this:
 
 .. literalinclude:: /../../examples/tutorials/doc_examples/examples/observe_method.py
@@ -90,7 +90,7 @@ Traits Mini Language is a domain specific language which provides a convenient
 and concise way to specify observation rules via a single text. It supports
 most of the use cases commonly encountered by users.
 
-.. rubric:: Sementics of Traits DSL
+.. rubric:: Semantics of Traits DSL
 
 .. list-table::
    :widths: 15 25
@@ -128,7 +128,7 @@ most of the use cases commonly encountered by users.
        *updated*. Changes on those traits and changes on *foo* will trigger
        notifications.
    * - ``"foo,bar"``
-     - Matches trait named *foo* or *bar* on the current object. Changes on
+     - Matches traits named *foo* or *bar* on the current object. Changes on
        *foo* or *bar* will trigger notifications.
    * - ``"foo:[bar,baz]"``
      - Matches *foo.bar* or *foo.baz* on the current object. Changes on
@@ -165,8 +165,7 @@ functions from the |observation.api| module.
    * - |trait|
      - For observing a specific named trait.
    * - |metadata|
-     - For observing multiple traits with a specific metadata. Support further
-       filtering on the metadata value.
+     - For observing multiple traits with specific metadata.
    * - |dict_items|
      - For observing items in a dict.
    * - |list_items|
@@ -208,7 +207,7 @@ notifications should be fired for changes.
    *updated*. Changes on those traits will trigger notifications.
 
 * ``trait("foo") | trait("bar")``
-   Matches trait named *foo* or *bar* on the current object. Changes on
+   Matches traits named *foo* or *bar* on the current object. Changes on
    *foo* or *bar* will trigger notifications.
 
 * ``trait("foo").then(trait("bar") | trait("baz"))``
@@ -216,7 +215,7 @@ notifications should be fired for changes.
    *foo.bar* or *foo.baz* will trigger notifications.
 
 * ``trait("foo").match(lambda n, t: True)``
-   Matches any traits on *foo* on the current object. Changes on *foo* or
+   Matches all traits on *foo* on the current object. Changes on *foo* or
    the nested attributes will trigger notifications.
 
 .. rubric:: Extend an expression in text
@@ -235,13 +234,13 @@ Notification Handler
 --------------------
 
 By default, the **handler** is invoked immediately after the change has
-occured. The **dispatch** parameter in |@observe| can be set such that the
+occurred. The **dispatch** parameter in |@observe| can be set such that the
 handler is dispatched elsewhere to be invoked later (e.g. on a GUI event loop).
 
 The following expectations apply to any change handler:
 
 * It must accept one argument: the **event** parameter (see below)
-* It is called **after** a change has occured
+* It is called **after** a change has occurred
 * No assumptions should be made about the order of which handlers are called
   for a given change event. A change event can have many change handlers.
 * No exceptions should be raised from a change handler. Any unexpected
@@ -596,8 +595,8 @@ Syntax "-" is not supported
 ```````````````````````````
 
 With |@on_trait_change|, the syntax *"-metadata_name"* is used to notify
-for changes on traits that do NOT have a metadata with the give name. This
-usage can be replaced by |match|::
+for changes on traits that do NOT have a metadata attribute with the given
+name. This usage can be replaced by |match|::
 
   match(lambda name, trait: trait.metadata_name is None)
 
