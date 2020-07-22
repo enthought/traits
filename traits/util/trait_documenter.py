@@ -154,7 +154,8 @@ def trait_definition(*, cls, trait_name):
         class MyModel(HasStrictTraits)
             foo = List(Int, [1, 2, 3])
 
-    ``trait_definition(MyModel, "foo")`` returns ``"List(Int, [1, 2, 3])"``.
+    ``trait_definition(cls=MyModel, trait_name="foo")`` returns
+    ``"List(Int, [1, 2, 3])"``.
 
     Parameters
     ----------
