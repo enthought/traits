@@ -20,7 +20,7 @@ import tokenize
 import unittest
 import unittest.mock as mock
 
-from traits.api import HasTraits, Int
+from traits.api import Bool, HasTraits, Int, Property
 from traits.testing.optional_dependencies import sphinx, requires_sphinx
 
 
@@ -33,6 +33,7 @@ if sphinx is not None:
 
     from traits.util.trait_documenter import (
         _get_definition_tokens,
+        trait_definition,
         TraitDocumenter,
     )
 
@@ -63,6 +64,12 @@ class MyTestClass(HasTraits):
 
         and Everything.
     """)
+
+
+class Fake(HasTraits):
+
+    #: Test attribute
+    test_attribute = Property(Bool, label="ミスあり")
 
 
 class FindTheTraits(HasTraits):
@@ -118,29 +125,19 @@ class TestTraitDocumenter(unittest.TestCase):
 
     def test_add_line(self):
 
-        src = textwrap.dedent(
-            """\
-        class Fake(HasTraits):
-
-            #: Test attribute
-            test = Property(Bool, label="ミスあり")
-        """
-        )
         mocked_directive = mock.MagicMock()
 
         documenter = TraitDocumenter(mocked_directive, "test", "   ")
-        documenter.object_name = "Property"
+        documenter.object_name = "test_attribute"
+        documenter.parent = Fake
 
         with mock.patch(
-            "traits.util.trait_documenter.inspect.getsource", return_value=src
+            (
+                "traits.util.trait_documenter.ClassLevelDocumenter"
+                ".add_directive_header"
+            )
         ):
-            with mock.patch(
-                (
-                    "traits.util.trait_documenter.ClassLevelDocumenter"
-                    ".add_directive_header"
-                )
-            ):
-                documenter.add_directive_header("")
+            documenter.add_directive_header("")
 
         self.assertEqual(
             len(documenter.directive.result.append.mock_calls), 1)
@@ -163,6 +160,16 @@ class TestTraitDocumenter(unittest.TestCase):
         # Annotation should be a single line.
         self.assertIn("First line", item)
         self.assertNotIn("\n", item)
+
+    def test_successful_trait_definition(self):
+        definition = trait_definition(cls=Fake, trait_name="test_attribute")
+        self.assertEqual(
+            definition, 'Property(Bool, label="ミスあり")',
+        )
+
+    def test_failed_trait_definition(self):
+        with self.assertRaises(ValueError):
+            trait_definition(cls=Fake, trait_name="not_a_trait")
 
     def test_can_document_member(self):
         # Regression test for enthought/traits#1238
