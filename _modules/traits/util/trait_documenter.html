@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.1.0',
+        VERSION:     '6.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -101,14 +101,19 @@
 
 <span class="kn">from</span> <span class="nn">sphinx.ext.autodoc</span> <span class="k">import</span> <span class="n">ClassLevelDocumenter</span>
 
-<span class="kn">from</span> <span class="nn">..trait_type</span> <span class="k">import</span> <span class="n">TraitType</span>
-<span class="kn">from</span> <span class="nn">..has_traits</span> <span class="k">import</span> <span class="n">MetaHasTraits</span>
+<span class="kn">from</span> <span class="nn">traits.has_traits</span> <span class="k">import</span> <span class="n">MetaHasTraits</span>
+<span class="kn">from</span> <span class="nn">traits.trait_type</span> <span class="k">import</span> <span class="n">TraitType</span>
+<span class="kn">from</span> <span class="nn">traits.traits</span> <span class="k">import</span> <span class="n">generic_trait</span>
 
 
 <span class="k">def</span> <span class="nf">_is_class_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Check if the name is in the list of class defined traits of ``cls``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">MetaHasTraits</span><span class="p">)</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__class_traits__</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">MetaHasTraits</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__class_traits__</span>
+        <span class="ow">and</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__class_traits__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">generic_trait</span>
+    <span class="p">)</span>
 
 
 <div class="viewcode-block" id="TraitDocumenter"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.TraitDocumenter">[docs]</a><span class="k">class</span> <span class="nc">TraitDocumenter</span><span class="p">(</span><span class="n">ClassLevelDocumenter</span><span class="p">):</span>
@@ -306,10 +311,12 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2020, Enthought Inc
+        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+All rights reserved.
+
       </li>
       <li>
-      Last updated on Jun 05, 2020.
+      Last updated on Jul 23, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

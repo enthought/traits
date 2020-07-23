@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.1.0',
+        VERSION:     '6.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -129,7 +129,7 @@
 
 <span class="n">traitsui</span> <span class="o">=</span> <span class="n">optional_import</span><span class="p">(</span><span class="s2">&quot;traitsui&quot;</span><span class="p">)</span>
 <span class="n">requires_traitsui</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">skipIf</span><span class="p">(</span><span class="n">traitsui</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;TraitsUI not available&quot;</span><span class="p">)</span>
-<span class="c1"># Import traitsui.api so that client code can use traits.api directly without</span>
+<span class="c1"># Import traitsui.api so that client code can use traitsui.api directly without</span>
 <span class="c1"># an extra import.</span>
 <span class="k">if</span> <span class="n">traitsui</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">traitsui.api</span>
@@ -169,10 +169,12 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2020, Enthought Inc
+        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+All rights reserved.
+
       </li>
       <li>
-      Last updated on Jun 05, 2020.
+      Last updated on Jul 23, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.1.0',
+        VERSION:     '6.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -101,7 +101,7 @@ See <a class="reference internal" href="listening.html#on-trait-change-notificat
 <p>Requesting trait attribute change notifications can be done in these
 ways:</p>
 <ul class="simple">
-<li><p>Via class defintion: By decorating methods on the class with the <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a>
+<li><p>Via class definition: By decorating methods on the class with the <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a>
 decorator to indicate that they handle notification for specified attributes.</p></li>
 <li><p>Via instance method: By calling <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.observe" title="traits.has_traits.HasTraits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> instance method to establish (or remove) change
 notification handlers.</p></li>
@@ -141,7 +141,7 @@ be used to delay adding the change handler until after the object state is set.<
 <div class="section" id="via-instance-method">
 <h2>Via instance method<a class="headerlink" href="#via-instance-method" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.observe" title="traits.has_traits.HasTraits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> method on <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasTraits</span></code></a> is useful for adding or removing
-change handler on a per instance basis. The example above can be rewritten like
+change handlers on a per instance basis. The example above can be rewritten like
 this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">observe</span>
 
@@ -186,7 +186,7 @@ attributes on nested objects and containers.</p>
 <p>Traits Mini Language is a domain specific language which provides a convenient
 and concise way to specify observation rules via a single text. It supports
 most of the use cases commonly encountered by users.</p>
-<p class="rubric">Sementics of Traits DSL</p>
+<p class="rubric">Semantics of Traits DSL</p>
 <table class="colwidths-given docutils align-default">
 <colgroup>
 <col style="width: 38%" />
@@ -240,7 +240,7 @@ notifications. Changes to <em>attr1</em> will not.</p></td>
 notifications.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;foo,bar&quot;</span></code></p></td>
-<td><p>Matches trait named <em>foo</em> or <em>bar</em> on the current object. Changes on
+<td><p>Matches traits named <em>foo</em> or <em>bar</em> on the current object. Changes on
 <em>foo</em> or <em>bar</em> will trigger notifications.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;foo:[bar,baz]&quot;</span></code></p></td>
@@ -285,8 +285,7 @@ functions from the <a class="reference internal" href="../traits_api_reference/t
 <td><p>For observing a specific named trait.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../traits_api_reference/traits.observation.html#traits.observation.expression.metadata" title="traits.observation.expression.metadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">metadata()</span></code></a></p></td>
-<td><p>For observing multiple traits with a specific metadata. Support further
-filtering on the metadata value.</p></td>
+<td><p>For observing multiple traits with specific metadata.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../traits_api_reference/traits.observation.html#traits.observation.expression.dict_items" title="traits.observation.expression.dict_items"><code class="xref py py-func docutils literal notranslate"><span class="pre">dict_items()</span></code></a></p></td>
 <td><p>For observing items in a dict.</p></td>
@@ -343,7 +342,7 @@ to <em>value</em> will trigger notifications.</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">trait(&quot;foo&quot;)</span> <span class="pre">|</span> <span class="pre">trait(&quot;bar&quot;)</span></code></dt><dd><p>Matches trait named <em>foo</em> or <em>bar</em> on the current object. Changes on
+<dt><code class="docutils literal notranslate"><span class="pre">trait(&quot;foo&quot;)</span> <span class="pre">|</span> <span class="pre">trait(&quot;bar&quot;)</span></code></dt><dd><p>Matches traits named <em>foo</em> or <em>bar</em> on the current object. Changes on
 <em>foo</em> or <em>bar</em> will trigger notifications.</p>
 </dd>
 </dl>
@@ -355,7 +354,7 @@ to <em>value</em> will trigger notifications.</p>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">trait(&quot;foo&quot;).match(lambda</span> <span class="pre">n,</span> <span class="pre">t:</span> <span class="pre">True)</span></code></dt><dd><p>Matches any traits on <em>foo</em> on the current object. Changes on <em>foo</em> or
+<dt><code class="docutils literal notranslate"><span class="pre">trait(&quot;foo&quot;).match(lambda</span> <span class="pre">n,</span> <span class="pre">t:</span> <span class="pre">True)</span></code></dt><dd><p>Matches all traits on <em>foo</em> on the current object. Changes on <em>foo</em> or
 the nested attributes will trigger notifications.</p>
 </dd>
 </dl>
@@ -373,12 +372,12 @@ with additional features supported by <a class="reference internal" href="../tra
 <div class="section" id="notification-handler">
 <span id="observe-handler"></span><h2>Notification Handler<a class="headerlink" href="#notification-handler" title="Permalink to this headline">¶</a></h2>
 <p>By default, the <strong>handler</strong> is invoked immediately after the change has
-occured. The <strong>dispatch</strong> parameter in <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> can be set such that the
+occurred. The <strong>dispatch</strong> parameter in <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> can be set such that the
 handler is dispatched elsewhere to be invoked later (e.g. on a GUI event loop).</p>
 <p>The following expectations apply to any change handler:</p>
 <ul class="simple">
 <li><p>It must accept one argument: the <strong>event</strong> parameter (see below)</p></li>
-<li><p>It is called <strong>after</strong> a change has occured</p></li>
+<li><p>It is called <strong>after</strong> a change has occurred</p></li>
 <li><p>No assumptions should be made about the order of which handlers are called
 for a given change event. A change event can have many change handlers.</p></li>
 <li><p>No exceptions should be raised from a change handler. Any unexpected
@@ -741,9 +740,31 @@ emit different event types for the change handler. See
 <div class="section" id="id1">
 <h3>Syntax “-” is not supported<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>With <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a>, the syntax <em>“-metadata_name”</em> is used to notify
-for changes on traits that do NOT have a metadata with the give name. This
-usage can be replaced by <a class="reference internal" href="../traits_api_reference/traits.observation.html#traits.observation.expression.match" title="traits.observation.expression.match"><code class="xref py py-func docutils literal notranslate"><span class="pre">match()</span></code></a>:</p>
+for changes on traits that do NOT have a metadata attribute with the given
+name. This usage can be replaced by <a class="reference internal" href="../traits_api_reference/traits.observation.html#traits.observation.expression.match" title="traits.observation.expression.match"><code class="xref py py-func docutils literal notranslate"><span class="pre">match()</span></code></a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">match</span><span class="p">(</span><span class="k">lambda</span> <span class="n">name</span><span class="p">,</span> <span class="n">trait</span><span class="p">:</span> <span class="n">trait</span><span class="o">.</span><span class="n">metadata_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dispatch-parameter-differentiates-observers">
+<h3>Dispatch parameter differentiates observers<a class="headerlink" href="#dispatch-parameter-differentiates-observers" title="Permalink to this headline">¶</a></h3>
+<p>In the following example with <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a>, the second call is an no-op
+because a handler for <em>“name”</em> has already been added:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">dispatch</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span>
+<span class="n">instance</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">dispatch</span><span class="o">=</span><span class="s2">&quot;ui&quot;</span><span class="p">)</span>    <span class="c1"># does nothing</span>
+</pre></div>
+</div>
+<p>With <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a>, the <strong>dispatch</strong> parameter is taken into account for
+distinguishing observers. The following example will result in the change
+handler being called twice, via different dispatching routes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">dispatch</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)</span>
+<span class="n">instance</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">dispatch</span><span class="o">=</span><span class="s2">&quot;ui&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Likewise, when removing change handlers, <strong>dispatch</strong> must match the value
+used for putting up the observer:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">dispatch</span><span class="o">=</span><span class="s2">&quot;ui&quot;</span><span class="p">)</span>
+<span class="n">instance</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">dispatch</span><span class="o">=</span><span class="s2">&quot;ui&quot;</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -785,6 +806,7 @@ usage can be replaced by <a class="reference internal" href="../traits_api_refer
 <li><a class="reference internal" href="#change-handler-signature-is-different">Change handler signature is different</a></li>
 <li><a class="reference internal" href="#syntax-is-not-supported">Syntax “[]” is not supported</a></li>
 <li><a class="reference internal" href="#id1">Syntax “-” is not supported</a></li>
+<li><a class="reference internal" href="#dispatch-parameter-differentiates-observers">Dispatch parameter differentiates observers</a></li>
 </ul>
 </li>
 </ul>
@@ -828,10 +850,12 @@ usage can be replaced by <a class="reference internal" href="../traits_api_refer
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright 2008-2020, Enthought Inc
+        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+All rights reserved.
+
       </li>
       <li>
-      Last updated on Jun 05, 2020.
+      Last updated on Jul 23, 2020.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
