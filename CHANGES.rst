@@ -4,7 +4,7 @@ Traits CHANGELOG
 Release 6.1.1
 -------------
 
-Released: XXXX-XX-XX
+Released: 2020-07-23
 
 Traits 6.1.1 is a bugfix release fixing a handful of minor documentation and
 test-related issues with the Traits 6.1.0 release. There are no API-breaking
