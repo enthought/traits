@@ -53,7 +53,7 @@ all the traits at once::
     class Image(HasTraits):
         ...
 
-        @observe('scan_width,scan_height,image')
+        @observe('scan_width, scan_height, image')
         def update_pixel_area(self, event):
             if self.image.size > 0:
                 self.pixel_area = (
@@ -139,7 +139,7 @@ class Image(HasTraits):
         pil_image = PILImage.open(self.filename).convert("L")
         self.image = np.array(pil_image)
 
-    @observe('scan_width,scan_height,image')
+    @observe('scan_width, scan_height, image')
     def update_pixel_area(self, event):
         if self.image.size > 0:
             self.pixel_area = (

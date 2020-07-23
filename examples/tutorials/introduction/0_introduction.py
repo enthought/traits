@@ -17,7 +17,7 @@ information, such as the sample that was imaged, the size of the scanned
 region, and the operator who took the image.
 
 We would like to read in the image and provide a number of standard
-analysis steps to for the user, as well as making the raw image data
+analysis steps to the user, as well as making the raw image data
 available as a NumPy array.
 
 The sample code here shows how you might create a class in standard
