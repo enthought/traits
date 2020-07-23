@@ -4,7 +4,7 @@ Initialization
 
 If you have done any significant amount of object-oriented Python
 programming, you may have noticed that your ``__init__`` methods often
-have a lot of boilerplate.  In our orignal example, the code copies all of
+have a lot of boilerplate.  In our original example, the code copies all of
 the ``__init__`` arguments to corresponding attributes before doing any
 real work::
 

@@ -42,6 +42,7 @@ type::
 Now, if we try and assign any other value to the ``operator`` attribute, we
 find that the class will raise a ``TraitError``::
 
+    >>> image = Image()
     >>> image.operator = 3
     TraitError: The 'operator' trait of an Image instance must be a string, but a value of 3 <class 'int'> was specified.
 

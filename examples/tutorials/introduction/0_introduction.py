@@ -22,10 +22,10 @@ available as a NumPy array.
 
 The sample code here shows how you might create a class in standard
 object-oriented Python with NumPy for analysis and Pillow for image
-loading.  Modify the code in the sample and see how you can use it.
+loading.  Experiment with the code in the example to see how you can use it.
 
-In the tutorial, we'll look at how we can use Traits to simplify and
-improve the code here.
+In the subsequent steps of the tutorial, we'll look at how we can use Traits
+to simplify and improve the code here.
 """
 
 import datetime
