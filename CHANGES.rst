@@ -1,6 +1,328 @@
 Traits CHANGELOG
 ================
 
+Release 6.1.1
+-------------
+
+Released: 2020-07-23
+
+Traits 6.1.1 is a bugfix release fixing a handful of minor documentation and
+test-related issues with the Traits 6.1.0 release. There are no API-breaking
+changes in this release. It's recommended that all users of Traits 6.1.0
+upgrade to Traits 6.1.1.
+
+Fixes
+~~~~~
+
+* Don't mutate global state at import time in a test module. (#1222)
+* Standardize and fix copyright years in source files. (#1227, #1198)
+* Fix trait-documenter extension tests for Sphinx 3.1. (#1206)
+* Fix trait-documenter extension to handle properties correctly. (#1246)
+
+Documentation fixes
+~~~~~~~~~~~~~~~~~~~
+
+* Expand user manual to mention dispatch. (#1195)
+* Fix some spelling and grammar errors in the user manual. (#1210)
+* Fix description in README to match the one in the setup script. (#1219)
+* Update PyPI links and capitalization in README.rst. (#1250)
+* Fix user manual mentioning a nonexisting feature in metadata filter. (#1207)
+* Fix typo in comment in optional_dependencies. (#1235)
+
+
+Release 6.1.0
+-------------
+
+Released: 2020-06-05
+
+The Traits library is a foundational component of the Enthought Tool Suite. It
+provides observable, typed attributes for Python classes, making those classes
+suitable for event-driven dataflow programming and for immediate use as models
+for graphical user interfaces, like those provided by the TraitsUI library.
+
+Traits 6.1 is the latest feature release in the Traits 6 series, and contains
+several major improvements.
+
+Highlights of this release
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* A new :mod:`observation <traits.observation>` framework for observing traited
+  attributes and other observable objects has been introduced. This is intended
+  to provide a full replacement for the existing :func:`on_trait_change`
+  mechanism, and aims to fix a number of fundamental flaws and limitations of
+  that mechanism. See the :ref:`observe-notification` section of
+  the user manual for an introduction to this framework.
+
+* New :class:`~traits.trait_list_object.TraitList`,
+  :class:`~traits.trait_dict_object.TraitDict` and
+  :class:`~traits.trait_set_object.TraitSet` classes have been added,
+  subclassing Python's built-in :class:`python:list`, :class:`python:dict` and
+  :class:`python:set` (respectively). Instances of these classes are observable
+  objects in their own right, and it's possible to attach observers to them
+  directly. These classes were primarily introduced to support the new
+  observation framework, and are not expected to be used directly. The API for
+  these objects and their notification system is provisional, and may change in
+  a future Traits release.
+
+* A new :class:`.Union` trait type has been added. This is intended as a
+  simpler replacement for the existing :class:`.Either` trait type, which
+  will eventually be deprecated.
+
+* New :class:`.PrefixList`, :class:`.PrefixMap` and :class:`.Map` trait types
+  have been added. These replace the existing :class:`.TraitPrefixList`,
+  :class:`.TraitPrefixMap` and :class:`.TraitMap` subclasses of
+  :class:`.TraitHandler`, which are deprecated.
+
+* Typing stubs for the Traits library have been added in a
+  ``traits-stubs`` package, which will be released separately to PyPI. This
+  should help support Traits-using projects that want to make use of type
+  annotations and type checkers like `mypy <http://mypy-lang.org/>`_.
+
+
+Notes on upgrading
+~~~~~~~~~~~~~~~~~~
+
+As far as possible, Traits 6.1 is backwards compatible with Traits 6.0.
+However, there are a few things to be aware of when upgrading.
+
+* Traits 6.1 is not compatible with TraitsUI versions older than TraitsUI 7.0.
+  A combination of Traits 6.1 or later with TraitsUI 6.x or earlier will fail
+  to properly recognise :class:`~traitsui.view.View` class variables as
+  TraitsUI views, and an error will be raised if you attempt to create a
+  TraitsUI view.
+
+* Traits now does no logging configuration at all, leaving all such
+  configuration to the application.
+
+  In more detail: trait notification handlers should not raise exceptions in
+  normal use, so an exception is logged whenever a trait notification handler
+  raises. This part of the behaviour has not changed. What *has* changed is the
+  way that logged exception is handled under default exception handling.
+
+  Previously, Traits added a :class:`~logging.StreamHandler` to the
+  top-level ``"traits"`` logger, so that trait notification exceptions would
+  always be visible. Traits also added a :class:`~logging.NullHandler` to that
+  logger. Both of those handlers have now been removed. We now rely on
+  Python's "handler of last resort", which will continue to make notification
+  exceptions to the user visible in the absence of any application-level
+  log configuration.
+
+* When listening for changes to the items of a :class:`.List` trait, an index
+  or slice set operation no longer performs an equality check between the
+  replaced elements and the replacement elements when deciding whether to issue
+  a notification; instead, a notification is always issued if at least one
+  element was replaced. For example, consider the following class::
+
+    class Selection(HasTraits):
+        indices = List(Int)
+
+        @on_trait_change("indices_items")
+        def report_change(self, event):
+            print("Indices changed: ", event)
+
+  When replacing the `8` with the same integer, we get this behavior::
+
+    >>> selection = Selection(indices=[2, 5, 8])
+    >>> selection.indices[2] = 8
+    Indices changed:  TraitListEvent(index=2, removed=[8], added=[8])
+
+  Previously, no notification would have been issued.
+
+* The :func:`.Color`, :func:`.RGBColor` and :func:`.Font` trait factories
+  have moved to TraitsUI, and should be imported from there rather than from
+  Traits. For backwards compatibility, the factories are still
+  available in Traits, but they are deprecated and will eventually
+  be removed.
+
+* As a reminder, the :data:`.Unicode` and :data:`.Long` trait types are
+  deprecated since Traits 6.0. Please replace uses with :class:`.Str` and
+  :class:`.Int` respectively. To avoid excessive noise in Traits-using
+  projects, Traits does not yet issue deprecation warnings for existing uses of
+  :data:`.Unicode` and :data:`.Long`. Those warnings will be introduced in a
+  future Traits release, prior to the removal of these trait types.
+
+
+Pending deprecations
+~~~~~~~~~~~~~~~~~~~~
+
+In addition to the deprecations listed in the changelog below, some parts of
+the Traits library are not yet formally deprecated, but are likely to be
+deprecated before Traits 7.0. Users should be aware of the following possible
+future changes:
+
+* The :class:`.Either` trait type will eventually be deprecated. Where
+  possible, use :class:`.Union` instead. When replacing uses of
+  :class:`.Either` with :class:`.Union`, note that there are some significant
+  API and behavioral differences between the two trait types, particularly with
+  respect to handling of defaults. See :ref:`migration_either_to_union` for
+  more details.
+
+* The ``trait_modified`` event trait that's present on all :class:`.HasTraits`
+  subclasses will eventually be removed. Users should not rely on it being
+  present in an object's ``class_traits`` dictionary.
+
+* Trait names starting with ``trait``, ``traits``, ``_trait`` or
+  ``_traits`` may become reserved for use by ETS at some point in the future.
+  Avoid using these names for your own traits.
+
+Detailed PR-by-PR changes
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+More than 160 PRs went into this release. The following people contributed
+code changes for this release:
+
+* Ieva Cernyte
+* Kit Yan Choi
+* Maxime Costalonga
+* Mark Dickinson
+* Matt Hancock
+* Midhun Madhusoodanan
+* Shoeb Mohammed
+* Franklin Ventura
+* Corran Webster
+
+Features
+~~~~~~~~
+
+* Add ``os.PathLike`` support for ``Directory`` traits. (#867)
+* Add ``Union`` trait type. (#779, #1103, #1107, #1116, #1115)
+* Add ``PrefixList`` trait type. (#871, #1142, #1144, #1147)
+* Add ``allow_none`` flag for ``Callable`` trait. (#885)
+* Add support for type annotation. (#904, #1064)
+* Allow mutable values in ``Constant`` trait. (#929)
+* Add ``Map`` and ``PrefixMap`` trait types. (#886, #953, #956, #970, #1139,
+  #1189)
+* Add ``TraitList`` as the base list object that can perform validation
+  and emit change notifications. (#912, #981, #984, #989, #999, #1003, #1011,
+  #1026, #1009, #1040, #1172, #1173)
+* Add ``TraitDict`` as the base dict object that can perform validation and
+  emit change notifications. (#913)
+* Add ``TraitSet`` as the base set object that can perform validation and
+  emit change notifications. (#922, #1043)
+* Implement ``observe`` to supersede ``on_trait_change`` for observing trait
+  changes. (#976, #1000, #1007, #1065, #1023, #1066, #1070, #1069, #1067,
+  #1080, #1082, #1079, #1071, #1072, #1075, #1085, #1089, #1078, #1093, #1086,
+  #1077, #1095, #1102, #1108, #1110, #1112, #1117, #1118, #1123, #1125, #1126,
+  #1128, #1129, #1135, #1156)
+
+Changes
+~~~~~~~
+
+* GUI applications using Traits 6.1 will require TraitsUI >= 7.0. (#1134)
+* ``TraitSetEvent`` and ``TraitDictEvent`` initialization arguments are now
+  keyword-only. (#1036)
+* ``TraitListObject`` will no longer skip notifications even if mutations
+  result in content that compares equally to the old values. (#1026)
+* ``TraitListEvent.index`` reported by mutations to a list is now normalized.
+  (#1009)
+* The default notification error handler for Traits no longer configures
+  logging, and the top-level ``NullHandler`` log handler has been removed.
+  (#1161)
+
+Fixes
+~~~~~
+* Allow assigning None to ``CTrait.post_setattr``. (#833)
+* Fix reference count error. (#907)
+* Improve ``HasTraits`` introspection with ``dir()``. (#927)
+* Fix the datetime-to-str converters used in ``DatetimeEditor``. (#937)
+* Raise ``TraitNotificationError`` on trailing comma in ``on_trait_change``.
+  (#926)
+* Fix exception swallowing by Trait attribute access. (#959, #960)
+* Allow collections in valid values for ``Enum`` trait. (#889)
+* Fix ``TraitError`` when mutating a list/dict/set inside another container.
+  (#1018)
+* Fix setting default values via dynamic default methods or overriding trait in
+  subclasses for mapped traits, used by ``Map``, ``Expression``, ``PrefixMap``.
+  (#1091, #1188)
+* Fix setting default values via dynamic default methods or overriding trait in
+  subclasses for ``Expression`` and ``AdaptsTo``. (#1088, #1119, #1152)
+
+Deprecations
+~~~~~~~~~~~~
+
+* ``traits.testing.nose_tools`` is deprecated. (#880)
+* ``SingletonHasTraits``, ``SingletonHasStrictTraits`` and
+  ``SingletonHasPrivateTraits`` are deprecated. (#887)
+* ``TraitMap`` is deprecated, use ``Map`` instead. (#974)
+* ``TraitPrefixMap`` is deprecated, use ``PrefixMap`` instead. (#974)
+* ``TraitPrefixList`` is deprecated, use ``PrefixList``. (#974)
+* ``Color``, ``RBGColor`` and ``Font`` are now deprecated. Use the ones from
+  TraitsUI instead. (#1022)
+
+Removals
+~~~~~~~~
+
+* ``traits_super`` is removed. (#1015)
+
+Documentation
+~~~~~~~~~~~~~
+
+* Add details on creating custom trait properties. (#387)
+* Cross reference special handler signatures for listening to nested attributes
+  in list and dict. (#894)
+* Replace 'Traits 5' with 'Traits 6' in the documentation. (#903)
+* Use major.minor version in documentation. (#1124)
+* Add initial documentation on Traits internals. (#958)
+* Fix example class ``OddInt``. (#973)
+* Add Dos and Donts for writing change handlers. (#1017)
+* Clarify when default initializer is called and when handlers are registered.
+  (#1019)
+* Fix documentation rendering issues and front matter. (#1039, #1053)
+* Clarify when dynamic default values are considered to have existed. (#1068)
+* Expand user manual on container traits and objects. (#1058)
+* Add intersphinx support to configuration. (#1136)
+* Add user manual section on the new ``observe`` notification system. (#1060,
+  #1140, #1143)
+* Add user manual section on the ``Union`` trait type and how to migrate from
+  ``Either`` (#779, #1153, #1162)
+* Other minor cleanups and fixes. (#949, #1141, #1178)
+
+Test suite
+~~~~~~~~~~
+
+* Allow tests to be skipped if TraitsUI is not installed. (#1038)
+* Add ``extras_require`` entry for testing. (#879)
+* Add tests for parsing ``on_trait_change`` mini-language. (#921)
+* Fix a missing import to allow a test module to be run standalone. (#961)
+* Add a GUI test for ``Enum.create_editor``. (#988)
+* Fix some module-level ``DeprecationWarning`` messages. (#1157)
+
+Build and continuous integration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+* CI no longer runs on Python 3.5 (#1044)
+* Add configobj dependency and remove remaining 3.5 references in
+  ``etstool.py``. (#1051)
+* Codecov reports are no longer retrieved for pull requests. (#1109)
+* CI tests requiring a GUI are now run against PyQt5 rather than PyQt4.
+  (#1127)
+* Add Slack notifications for CI. (#1074)
+* Fix and improve various ``setup.py`` package metadata fields. (#1185)
+
+Maintenance and code organization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Refactor CHasTraits ``traits_inited`` method. (#842)
+* Add support for prerelease section in version. (#864)
+* Rename comparison mode integer constants in ``ctraits.c``. (#862)
+* Follow best practices when opening files. (#872)
+* Initialize ``cTrait`` ``getattr``, ``setattr`` handlers in ``tp_new``. (#875)
+* Check ``trait_change_notify`` early in ``call_notifiers``. (#917)
+* Refactor ``ctraits.c`` for calling trait and object notifiers. (#918)
+* ``BaseEnum`` and ``Enum`` fixes and cleanup. (#968)
+* Split ``ctraits`` property api to ``_set_property`` and ``_get_property``.
+  (#967)
+* Fix overcomplicated ``__deepcopy__`` implementation. (#992)
+* Add ``__repr__`` implementation for ``TraitListEvent``, ``TraitDictEvent``
+  and ``TraitSetEvent``. (#1006, #1148, #1149)
+* Remove caching of editor factories. (#1032)
+* Remove conditional traitsui imports. (#1033)
+* Remove code duplication in ``tutor.py``. (#1034)
+* Fix correctness in ``Enum`` default traitsui editor. (#1012)
+* Use ``NULL`` for zero-argument ``PyObject_CallMethod`` format. (#1100)
+* Miscellaneous other minor fixes, refactorings and cleanups. (#874, #882,
+  #915, #920, #923, #924, #935, #939, #944, #950, #964)
+
+
 Release 6.0.0
 -------------
 

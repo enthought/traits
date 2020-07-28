@@ -41,8 +41,6 @@ Classes
 
 .. autoclass:: ISerializable
 
-.. autoclass:: traits_super
-
 ABC classes
 -----------
 
@@ -60,6 +58,8 @@ Functions
 .. autofunction:: cached_property
 
 .. autofunction:: get_delegate_pattern
+
+.. autofunction:: observe
 
 .. autofunction:: on_trait_change
 

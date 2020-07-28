@@ -21,15 +21,24 @@ import tokenize
 import traceback
 
 from sphinx.ext.autodoc import ClassLevelDocumenter
+from sphinx.util import logging
 
-from ..trait_type import TraitType
-from ..has_traits import MetaHasTraits
+from traits.has_traits import MetaHasTraits
+from traits.trait_type import TraitType
+from traits.traits import generic_trait
+
+
+logger = logging.getLogger(__name__)
 
 
 def _is_class_trait(name, cls):
     """ Check if the name is in the list of class defined traits of ``cls``.
     """
-    return isinstance(cls, MetaHasTraits) and name in cls.__class_traits__
+    return (
+        isinstance(cls, MetaHasTraits)
+        and name in cls.__class_traits__
+        and cls.__class_traits__[name] is not generic_trait
+    )
 
 
 class TraitDocumenter(ClassLevelDocumenter):
@@ -115,7 +124,19 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
-        definition = self._get_trait_definition()
+        try:
+            definition = trait_definition(
+                cls=self.parent,
+                trait_name=self.object_name,
+            )
+        except ValueError:
+            # Without this, a failure to find the trait definition aborts
+            # the whole documentation build.
+            logger.warn(
+                "No definition for the trait {!r} could be found in "
+                "class {!r}.".format(self.object_name, self.parent),
+                exc_info=True)
+            return
 
         # Workaround for enthought/traits#493: if the definition is multiline,
         # throw away all lines after the first.
@@ -124,32 +145,66 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         self.add_line("   :annotation: = {0}".format(definition), "<autodoc>")
 
-    # Private Interface #####################################################
 
-    def _get_trait_definition(self):
-        """ Retrieve the Trait attribute definition
-        """
+def trait_definition(*, cls, trait_name):
+    """ Retrieve the portion of the source defining a Trait attribute.
 
-        # Get the class source and tokenize it.
-        source = inspect.getsource(self.parent)
-        string_io = io.StringIO(source)
-        tokens = tokenize.generate_tokens(string_io.readline)
+    For example, given a class::
 
-        # find the trait definition start
-        trait_found = False
-        name_found = False
-        while not trait_found:
-            item = next(tokens)
-            if name_found and item[:2] == (token.OP, "="):
-                trait_found = True
-                continue
-            if item[:2] == (token.NAME, self.object_name):
-                name_found = True
+        class MyModel(HasStrictTraits)
+            foo = List(Int, [1, 2, 3])
 
-        # Retrieve the trait definition.
-        definition_tokens = _get_definition_tokens(tokens)
-        definition = tokenize.untokenize(definition_tokens).strip()
-        return definition
+    ``trait_definition(cls=MyModel, trait_name="foo")`` returns
+    ``"List(Int, [1, 2, 3])"``.
+
+    Parameters
+    ----------
+    cls : MetaHasTraits
+        Class being documented.
+    trait_name : str
+        Name of the trait being documented.
+
+    Returns
+    -------
+    str
+        The portion of the source containing the trait definition. For
+        example, for a class trait defined as ``"my_trait = Float(3.5)"``,
+        the returned string will contain ``"Float(3.5)"``.
+
+    Raises
+    ------
+    ValueError
+        If *trait_name* doesn't appear as a class-level variable in the
+        source.
+    """
+    # Get the class source and tokenize it.
+    source = inspect.getsource(cls)
+    string_io = io.StringIO(source)
+    tokens = tokenize.generate_tokens(string_io.readline)
+
+    # find the trait definition start
+    trait_found = False
+    name_found = False
+    while not trait_found:
+        item = next(tokens, None)
+        if item is None:
+            break
+        if name_found and item[:2] == (token.OP, "="):
+            trait_found = True
+            continue
+        if item[:2] == (token.NAME, trait_name):
+            name_found = True
+
+    if not trait_found:
+        raise ValueError(
+            "No trait definition for {!r} found in {!r}".format(
+                trait_name, cls)
+        )
+
+    # Retrieve the trait definition.
+    definition_tokens = _get_definition_tokens(tokens)
+    definition = tokenize.untokenize(definition_tokens).strip()
+    return definition
 
 
 def _get_definition_tokens(tokens):

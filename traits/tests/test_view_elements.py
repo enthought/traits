@@ -10,7 +10,7 @@
 
 import unittest
 
-from traits.api import HasTraits, Int, TraitError
+from traits.api import AbstractViewElement, HasTraits, Int, TraitError
 from traits.testing.optional_dependencies import requires_traitsui
 
 
@@ -125,3 +125,8 @@ class TestViewElements(unittest.TestCase):
 
         with self.assertRaises(TraitError):
             Model.class_trait_view_elements()
+
+    def test_view_element_superclass(self):
+        from traitsui.api import ViewElement
+
+        self.assertIsInstance(ViewElement(), AbstractViewElement)

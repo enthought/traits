@@ -20,12 +20,12 @@ import tokenize
 import unittest
 import unittest.mock as mock
 
-from traits.api import HasTraits, Int
+from traits.api import Bool, HasTraits, Int, Property
 from traits.testing.optional_dependencies import sphinx, requires_sphinx
 
 
 if sphinx is not None:
-    from sphinx.ext.autodoc import Options
+    from sphinx.ext.autodoc import ClassDocumenter, INSTANCEATTR, Options
     from sphinx.ext.autodoc.directive import DocumenterBridge
     from sphinx.testing.path import path
     from sphinx.testing.util import SphinxTestApp
@@ -33,8 +33,22 @@ if sphinx is not None:
 
     from traits.util.trait_documenter import (
         _get_definition_tokens,
+        trait_definition,
         TraitDocumenter,
     )
+
+
+# Configuration file content for testing.
+CONF_PY = """\
+extensions = ['sphinx.ext.autodoc']
+
+# The suffix of source filenames.
+source_suffix = '.rst'
+
+autodoc_mock_imports = [
+    'dummy'
+]
+"""
 
 
 class MyTestClass(HasTraits):
@@ -50,6 +64,33 @@ class MyTestClass(HasTraits):
 
         and Everything.
     """)
+
+
+class Fake(HasTraits):
+
+    #: Test attribute
+    test_attribute = Property(Bool, label="ミスあり")
+
+
+class FindTheTraits(HasTraits):
+    """
+    Class for testing the can_document_member functionality.
+    """
+
+    #: A TraitType subclass on the right-hand side.
+    an_int = Int
+
+    #: A TraitType instance on the right-hand side.
+    another_int = Int()
+
+    #: A non-trait integer
+    magic_number = 1729
+
+    @property
+    def not_a_trait(self):
+        """
+        I'm a regular property, not a trait.
+        """
 
 
 @requires_sphinx
@@ -84,29 +125,19 @@ class TestTraitDocumenter(unittest.TestCase):
 
     def test_add_line(self):
 
-        src = textwrap.dedent(
-            """\
-        class Fake(HasTraits):
-
-            #: Test attribute
-            test = Property(Bool, label="ミスあり")
-        """
-        )
         mocked_directive = mock.MagicMock()
 
         documenter = TraitDocumenter(mocked_directive, "test", "   ")
-        documenter.object_name = "Property"
+        documenter.object_name = "test_attribute"
+        documenter.parent = Fake
 
         with mock.patch(
-            "traits.util.trait_documenter.inspect.getsource", return_value=src
+            (
+                "traits.util.trait_documenter.ClassLevelDocumenter"
+                ".add_directive_header"
+            )
         ):
-            with mock.patch(
-                (
-                    "traits.util.trait_documenter.ClassLevelDocumenter"
-                    ".add_directive_header"
-                )
-            ):
-                documenter.add_directive_header("")
+            documenter.add_directive_header("")
 
         self.assertEqual(
             len(documenter.directive.result.append.mock_calls), 1)
@@ -130,6 +161,50 @@ class TestTraitDocumenter(unittest.TestCase):
         self.assertIn("First line", item)
         self.assertNotIn("\n", item)
 
+    def test_successful_trait_definition(self):
+        definition = trait_definition(cls=Fake, trait_name="test_attribute")
+        self.assertEqual(
+            definition, 'Property(Bool, label="ミスあり")',
+        )
+
+    def test_failed_trait_definition(self):
+        with self.assertRaises(ValueError):
+            trait_definition(cls=Fake, trait_name="not_a_trait")
+
+    def test_can_document_member(self):
+        # Regression test for enthought/traits#1238
+
+        with self.create_directive() as directive:
+            class_documenter = ClassDocumenter(
+                directive, __name__ + ".FindTheTraits"
+            )
+            class_documenter.parse_name()
+            class_documenter.import_object()
+
+            self.assertTrue(
+                TraitDocumenter.can_document_member(
+                    INSTANCEATTR, "an_int", True, class_documenter,
+                )
+            )
+
+            self.assertTrue(
+                TraitDocumenter.can_document_member(
+                    INSTANCEATTR, "another_int", True, class_documenter,
+                )
+            )
+
+            self.assertFalse(
+                TraitDocumenter.can_document_member(
+                    INSTANCEATTR, "magic_number", True, class_documenter,
+                )
+            )
+
+            self.assertFalse(
+                TraitDocumenter.can_document_member(
+                    INSTANCEATTR, "not_a_trait", True, class_documenter,
+                )
+            )
+
     @contextlib.contextmanager
     def create_directive(self):
         """
@@ -143,25 +218,19 @@ class TestTraitDocumenter(unittest.TestCase):
             A context manager that returns a DocumenterBridge instance.
         """
         with self.tmpdir() as tmpdir:
-            # The configuration file must exist, but it's okay if it's empty.
+            # Ensure configuration file exists.
             conf_file = os.path.join(tmpdir, "conf.py")
-            with open(conf_file, "w", encoding="utf-8"):
-                pass
+            with open(conf_file, "w", encoding="utf-8") as f:
+                f.write(CONF_PY)
 
             app = SphinxTestApp(srcdir=path(tmpdir))
             app.builder.env.app = app
             app.builder.env.temp_data["docname"] = "dummy"
 
-            # Backwards compatibility hack: for now, we need to be compatible
-            # with both Sphinx < 2.1 (whose DocumenterBridge doesn't take
-            # a state argument) and Sphinx >= 2.3 (which warns if the state
-            # isn't passed). Eventually we should be able to drop support
-            # for Sphinx < 2.1.
             kwds = {}
-            if sphinx.version_info >= (2, 1):
-                state = mock.Mock()
-                state.document.settings.tab_width = 8
-                kwds["state"] = state
+            state = mock.Mock()
+            state.document.settings.tab_width = 8
+            kwds["state"] = state
             yield DocumenterBridge(
                 app.env, LoggingReporter(''), Options(), 1, **kwds)
 

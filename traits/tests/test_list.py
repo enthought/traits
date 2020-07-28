@@ -47,33 +47,28 @@ class ListTestCase(unittest.TestCase):
         f = Foo()
         self.assertNotEqual(f.l, None)
         self.assertEqual(len(f.l), 0)
-        return
 
     def test_initializer(self):
         f = Foo(l=["a", "list"])
         self.assertNotEqual(f.l, None)
         self.assertEqual(f.l, ["a", "list"])
-        return
 
     def test_type_check(self):
         f = Foo()
         f.l.append("string")
 
         self.assertRaises(TraitError, f.l.append, 123.456)
-        return
 
     def test_append(self):
         f = Foo()
         f.l.append("bar")
         self.assertEqual(f.l, ["bar"])
-        return
 
     def test_remove(self):
         f = Foo()
         f.l.append("bar")
         f.l.remove("bar")
         self.assertEqual(f.l, [])
-        return
 
     def test_slice(self):
         f = Foo(l=["zero", "one", "two", "three"])
@@ -85,7 +80,6 @@ class ListTestCase(unittest.TestCase):
         self.assertEqual(f.l[-1], "three")
         self.assertEqual(f.l[-2], "two")
         self.assertEqual(f.l[:-1], ["zero", "one", "two"])
-        return
 
     def test_slice_assignment(self):
         # Exhaustive testing.
@@ -156,7 +150,6 @@ class ListTestCase(unittest.TestCase):
 
         f.l.append("more change")
         self.assertEqual(l, ["initial", "value", "change", "more change"])
-        return
 
     def test_assignment_makes_copy(self):
         f = Foo(l=["initial", "value"])
@@ -175,8 +168,6 @@ class ListTestCase(unittest.TestCase):
 
         f.l.append("f.l change")
         self.assertNotIn("f.l change", l)
-
-        return
 
     def test_should_not_allow_none(self):
         f = Foo(l=["initial", "value"])
@@ -207,8 +198,6 @@ class ListTestCase(unittest.TestCase):
         baz_copy_bar_names.sort()
         self.assertEqual(baz_copy_bar_names, baz_bar_names)
 
-        return
-
     def test_clone_ref(self):
         baz = BazRef()
         for name in ["a", "b", "c", "d"]:
@@ -224,8 +213,6 @@ class ListTestCase(unittest.TestCase):
         self.assertEqual(len(baz_copy.bars), len(baz.bars))
         for bar in baz.bars:
             self.assertIn(bar, baz_copy.bars)
-
-        return
 
     def test_clone_deep_baz(self):
         baz = Baz()
@@ -255,7 +242,6 @@ class ListTestCase(unittest.TestCase):
         baz_bar_names.sort()
         baz_copy_bar_names.sort()
         self.assertEqual(baz_copy_bar_names, baz_bar_names)
-        return
 
     def test_clone_deep_baz_ref(self):
         baz = BazRef()
@@ -277,7 +263,6 @@ class ListTestCase(unittest.TestCase):
         self.assertEqual(len(baz_copy.bars), len(baz.bars))
         for bar in baz.bars:
             self.assertIn(bar, baz_copy.bars)
-        return
 
     def test_coercion(self):
         f = CFoo()

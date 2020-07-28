@@ -11,8 +11,11 @@
 """ Unit test case for testing interfaces and adaptation.
 """
 
+import contextlib
+import logging
 import unittest
 
+from traits import has_traits
 from traits.api import (
     HasTraits,
     Adapter,
@@ -27,6 +30,7 @@ from traits.api import (
     TraitError,
 )
 from traits.adaptation.api import reset_global_adaptation_manager
+from traits.interface_checker import InterfaceError
 
 
 class IFoo(Interface):
@@ -178,12 +182,32 @@ class InterfacesTest(unittest.TestCase):
     def test_provides_one(self):
         @provides(IFoo)
         class Test(HasTraits):
-            pass
+            def get_foo(self):
+                return "foo_and_only_foo"
+
+            def get_average(self):
+                return 42
+
+        test = Test()
+        self.assertIsInstance(test, IFoo)
+        self.assertNotIsInstance(test, IAverage)
 
     def test_provides_multi(self):
         @provides(IFoo, IAverage, IList)
         class Test(HasTraits):
-            pass
+            def get_foo(self):
+                return "test_foo"
+
+            def get_average(self):
+                return 42
+
+            def get_list(self):
+                return [42]
+
+        test = Test()
+        self.assertIsInstance(test, IFoo)
+        self.assertIsInstance(test, IAverage)
+        self.assertIsInstance(test, IList)
 
     def test_provides_extended(self):
         """ Ensure that subclasses of Interfaces imply the superinterface.
@@ -191,10 +215,19 @@ class InterfacesTest(unittest.TestCase):
 
         @provides(IFooPlus)
         class Test(HasTraits):
-            pass
+            def get_foo(self):
+                return "some_test_foo"
+
+            def get_foo_plus(self):
+                return "more_test_foo"
+
+        test = Test()
+        self.assertIsInstance(test, IFoo)
+        self.assertIsInstance(test, IFooPlus)
 
         ta = TraitsHolder()
-        ta.foo_adapted_to = Test()
+        ta.foo_adapted_to = test
+        self.assertIs(ta.foo_adapted_to, test)
 
     def test_provides_bad(self):
         with self.assertRaises(Exception):
@@ -202,6 +235,73 @@ class InterfacesTest(unittest.TestCase):
             @provides(Sample)
             class Test(HasTraits):
                 pass
+
+    def test_provides_with_no_interface_check(self):
+
+        class Test(HasTraits):
+            # Deliberately _not_ implementing get_foo. This class
+            # should not pass an IFoo interface check.
+            pass
+
+        provides_ifoo = provides(IFoo)
+        with self.set_check_interfaces(0):
+            # Simulate application of the decorator
+            Test = provides_ifoo(Test)
+
+        test = Test()
+        self.assertIsInstance(test, IFoo)
+
+    def test_provides_with_interface_check_warn(self):
+
+        class Test(HasTraits):
+            # Deliberately _not_ implementing get_foo. This class
+            # should not pass an IFoo interface check.
+            pass
+
+        provides_ifoo = provides(IFoo)
+        with self.set_check_interfaces(1):
+            with self.assertWarns(DeprecationWarning) as warnings_cm:
+                with self.assertLogs("traits", logging.WARNING):
+                    # Simulate application of the decorator
+                    Test = provides_ifoo(Test)
+
+        test = Test()
+        self.assertIsInstance(test, IFoo)
+
+        self.assertIn(
+            "the @provides decorator will not perform interface checks",
+            str(warnings_cm.warning),
+        )
+
+        # Check we used the appropriate stacklevel.
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warnings_cm.filename)
+
+    def test_provides_with_interface_check_error(self):
+
+        class Test(HasTraits):
+            # Deliberately _not_ implementing get_foo. This class
+            # should not pass an IFoo interface check.
+            pass
+
+        provides_ifoo = provides(IFoo)
+        with self.set_check_interfaces(2):
+            with self.assertWarns(DeprecationWarning) as warnings_cm:
+                with self.assertRaises(InterfaceError):
+                    # Simulate application of the decorator
+                    Test = provides_ifoo(Test)
+
+        test = Test()
+        self.assertIsInstance(test, IFoo)
+
+        self.assertIn(
+            "the @provides decorator will not perform interface checks",
+            str(warnings_cm.warning),
+        )
+
+        # Check we used the appropriate stacklevel.
+        _, _, this_module = __name__.rpartition(".")
+        self.assertIn(this_module, warnings_cm.filename)
 
     def test_instance_adapt_no(self):
         ta = TraitsHolder()
@@ -317,3 +417,26 @@ class InterfacesTest(unittest.TestCase):
         provider = UndeclaredAverageProvider()
         with self.assertRaises(TraitError):
             ta.a_no = provider
+
+    @contextlib.contextmanager
+    def set_check_interfaces(self, check_interfaces_value):
+        """
+        Context manager to temporarily set has_traits.CHECK_INTERFACES
+        to the given value.
+
+        Parameters
+        ----------
+        check_interfaces_value : int
+            One of 0 (don't check), 1 (check and log a warning on interface
+            mismatch) or 2 (check and raise on interface mismatch).
+
+        Returns
+        -------
+        context manager
+        """
+        old_check_interfaces = has_traits.CHECK_INTERFACES
+        has_traits.CHECK_INTERFACES = check_interfaces_value
+        try:
+            yield
+        finally:
+            has_traits.CHECK_INTERFACES = old_check_interfaces

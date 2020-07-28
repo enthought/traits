@@ -11,7 +11,9 @@
 import unittest
 import warnings
 
-from traits.api import Any, ComparisonMode, HasTraits, Str
+from traits.api import (
+    Any, cached_property, ComparisonMode, HasTraits, Property, Str,
+)
 
 
 class IdentityCompare(HasTraits):
@@ -43,7 +45,6 @@ class RichCompareTests:
         self.assertEqual(trait, self.changed_trait)
         self.assertIs(old, self.changed_old)
         self.assertIs(new, self.changed_new)
-        return
 
     def test_id_first_assignment(self):
         ic = IdentityCompare()
@@ -54,7 +55,6 @@ class RichCompareTests:
         default_value = ic.bar
         ic.bar = self.a
         self.check_tracker(ic, "bar", default_value, self.a, 1)
-        return
 
     def test_rich_first_assignment(self):
         rich = RichCompare()
@@ -65,7 +65,6 @@ class RichCompareTests:
         default_value = rich.bar
         rich.bar = self.a
         self.check_tracker(rich, "bar", default_value, self.a, 1)
-        return
 
     def test_id_same_object(self):
         ic = IdentityCompare()
@@ -79,7 +78,6 @@ class RichCompareTests:
 
         ic.bar = self.a
         self.check_tracker(ic, "bar", default_value, self.a, 1)
-        return
 
     def test_rich_same_object(self):
         rich = RichCompare()
@@ -93,7 +91,6 @@ class RichCompareTests:
 
         rich.bar = self.a
         self.check_tracker(rich, "bar", default_value, self.a, 1)
-        return
 
     def test_id_different_object(self):
         ic = IdentityCompare()
@@ -107,7 +104,6 @@ class RichCompareTests:
 
         ic.bar = self.different_from_a
         self.check_tracker(ic, "bar", self.a, self.different_from_a, 2)
-        return
 
     def test_rich_different_object(self):
         rich = RichCompare()
@@ -121,7 +117,6 @@ class RichCompareTests:
 
         rich.bar = self.different_from_a
         self.check_tracker(rich, "bar", self.a, self.different_from_a, 2)
-        return
 
     def test_id_different_object_same_as(self):
         ic = IdentityCompare()
@@ -135,7 +130,6 @@ class RichCompareTests:
 
         ic.bar = self.same_as_a
         self.check_tracker(ic, "bar", self.a, self.same_as_a, 2)
-        return
 
     def test_rich_different_object_same_as(self):
         rich = RichCompare()
@@ -151,7 +145,6 @@ class RichCompareTests:
         # be considered a change.
         rich.bar = self.same_as_a
         self.check_tracker(rich, "bar", default_value, self.a, 1)
-        return
 
 
 class Foo(HasTraits):
@@ -172,7 +165,6 @@ class RichCompareHasTraitsTestCase(unittest.TestCase, RichCompareTests):
         self.a = Foo(name="a")
         self.same_as_a = Foo(name="a")
         self.different_from_a = Foo(name="not a")
-        return
 
     def test_assumptions(self):
         self.assertIsNot(self.a, self.same_as_a)
@@ -180,7 +172,6 @@ class RichCompareHasTraitsTestCase(unittest.TestCase, RichCompareTests):
 
         self.assertEqual(self.a.name, self.same_as_a.name)
         self.assertNotEqual(self.a.name, self.different_from_a.name)
-        return
 
 
 class OldRichCompareTestCase(unittest.TestCase):
@@ -253,3 +244,29 @@ class OldRichCompareTestCase(unittest.TestCase):
         self.assertEqual(len(events), 1)
         old_compare.bar = [4, 5, 6]
         self.assertEqual(len(events), 2)
+
+    def test_rich_compare_with_cached_property(self):
+        # Even though the property is cached such that old value equals new
+        # value, its change event is tied to the dependent.
+
+        class Model(HasTraits):
+            value = Property(depends_on="name")
+            name = Str(comparison_mode=ComparisonMode.none)
+
+            @cached_property
+            def _get_value(self):
+                return self.trait_names
+
+        instance = Model()
+        events = []
+        instance.on_trait_change(lambda: events.append(None), "value")
+
+        instance.name = "A"
+
+        events.clear()
+
+        # when
+        instance.name = "A"
+
+        # then
+        self.assertEqual(len(events), 1)

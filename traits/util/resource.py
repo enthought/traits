@@ -83,6 +83,14 @@ def create_unique_name(prefix, names, separator="_"):
 def find_resource(project, resource_path, alt_path=None, return_path=False):
     """ Returns a file object or file path pointing to the desired resource.
 
+    This function will find a desired resource file and return an opened file
+    object. The main method of finding the resource uses the pkg_resources
+    resource_stream method, which searches your working set for the installed
+    project specified and appends the resource_path given to the project
+    path, leading it to the file. If setuptools is not installed or it cannot
+    find/open the resource, find_resource will use the sys.path[0] to find the
+    resource if alt_path is defined.
+
     Parameters
     ----------
     project : str
@@ -108,16 +116,6 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
         A file object containing the resource. If return_path is True, 'file'
         will be the full path to the resource. If the file is not found or
         cannot be opened, None is returned.
-
-    Description
-    -----------
-    This function will find a desired resource file and return an opened file
-    object. The main method of finding the resource uses the pkg_resources
-    resource_stream method, which searches your working set for the installed
-    project specified and appends the resource_path given to the project
-    path, leading it to the file. If setuptools is not installed or it cannot
-    find/open the resource, find_resource will use the sys.path[0] to find the
-    resource if alt_path is defined.
     """
 
     try:
@@ -160,7 +158,7 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
         # script is called directly from the command line using
         # 'python %SOMEPATH%/<script>'
         if alt_path is None:
-            return
+            return None
         if return_path:
             return os.path.join(sys.path[0], alt_path)
 
@@ -168,7 +166,7 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
         try:
             return open(os.path.join(sys.path[0], alt_path), "rb")
         except:
-            return
+            return None
 
 
 def store_resource(project, resource_path, filename):

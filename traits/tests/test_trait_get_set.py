@@ -12,8 +12,6 @@
 Test the 'trait_set', 'trait_get' interface to the HasTraits class.
 
 """
-from contextlib import contextmanager
-import logging
 import unittest
 
 from traits.api import HasTraits, Str, Int
@@ -24,28 +22,6 @@ class TraitsObject(HasTraits):
 
     string = Str
     integer = Int
-
-
-class ListHandler(logging.Handler):
-    def __init__(self):
-        logging.Handler.__init__(self)
-        self.records = []
-
-    def emit(self, record):
-        self.records.append(record)
-
-
-@contextmanager
-def catch_logs(module_name):
-    logger = logging.getLogger(module_name)
-    logger.propagate = False
-    handler = ListHandler()
-    logger.addHandler(handler)
-    try:
-        yield handler
-    finally:
-        logger.removeHandler(handler)
-        logger.propagate = True
 
 
 class TestTraitGet(UnittestTools, unittest.TestCase):

@@ -82,6 +82,10 @@ The Traits package allows creation of a wide variety of trait types, ranging
 from very simple to very sophisticated. The following section presents some of
 the simpler, more commonly used forms.
 
+.. warning:: Unless otherwise stated as safe to do so, avoid naming
+   attributes with the prefix 'trait' or '_trait'. This avoids overshadowing
+   existing methods on HasTraits.
+
 .. index:: predefined traits
 
 .. _predefined-traits:
@@ -207,7 +211,7 @@ casting traits::
     >>> class Person ( HasTraits ):
     ...    weight  = Float
     ...    cweight = CFloat
-    >>>
+    ...
     >>> bill = Person()
     >>> bill.weight  = 180    # OK, coerced to 180.0
     >>> bill.cweight = 180    # OK, cast to float(180)
@@ -219,7 +223,7 @@ casting traits::
     >>> bill.cweight = '180'  # OK, cast to float('180')
     >>> print(bill.cweight)
     180.0
-    >>>
+
 
 .. _other-predefined-traits:
 
@@ -235,13 +239,13 @@ trait cannot be used as a simple name, it is omitted from the Name column of
 the table.
 
 .. index:: Any(), Array(), Button(), Callable(), CArray(), Code()
-.. index:: Color(), CSet(), Constant(), Dict()
+.. index:: CSet(), Constant(), Dict()
 .. index:: Directory(), Disallow, Either(), Enum()
-.. index:: Event(), Expression(), false, File(), Font()
+.. index:: Event(), Expression(), false, File()
 .. index:: Instance(), List(), Method(), Module()
 .. index:: Password(), Property(), Python()
 .. index:: PythonValue(), Range(), ReadOnly(), Regex()
-.. index:: RGBColor(), Set() String(), This,
+.. index:: Set() String(), This,
 .. index:: ToolbarButton(), true, Tuple(), Type()
 .. index:: undefined, UUID(), ValidatedTuple(), WeakRef()
 
@@ -269,10 +273,9 @@ the table.
 | CArray           | CArray( [*dtype* = None, *shape* = None, *value* = None, |
 |                  | *typecode* = None, \*\*\ *metadata*] )                   |
 +------------------+----------------------------------------------------------+
-| Code             | Code( [*value* = '', *minlen* = 0, *maxlen* = sys.maxint,|
-|                  | *regex* = '', \*\*\ *metadata*] )                        |
-+------------------+----------------------------------------------------------+
-| Color            | Color( [\*\ *args*, \*\*\ *metadata*] )                  |
+| Code             | Code( [*value* = '', *minlen* = 0,                       |
+|                  | *maxlen* = sys.maxsize, *regex* = '',                    |
+|                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | CSet             | CSet( [*trait* = None, *value* = None, *items* = True,   |
 |                  | \*\*\ *metadata*] )                                      |
@@ -299,27 +302,34 @@ the table.
 | File             | File( [*value* = '', *filter* = None, *auto_set* = False,|
 |                  | *entries* = 10, *exists* = False,  \*\*\ *metadata* ] )  |
 +------------------+----------------------------------------------------------+
-| Font             | Font( [\*\ *args*, \*\*\ *metadata*] )                   |
-+------------------+----------------------------------------------------------+
 | Function         | Function( [*value* = None, \*\*\ *metadata*] )           |
 +------------------+----------------------------------------------------------+
 | generic_trait    | n/a                                                      |
 +------------------+----------------------------------------------------------+
-| HTML             | HTML( [*value* = '', *minlen* = 0, *maxlen* = sys.maxint,|
-|                  | *regex* = '',  \*\*\ *metadata* ] )                      |
+| HTML             | HTML( [*value* = '', *minlen* = 0,                       |
+|                  | *maxlen* = sys.maxsize, *regex* = '',                    |
+|                  | \*\*\ *metadata* ] )                                     |
 +------------------+----------------------------------------------------------+
 | Instance         | Instance( [*klass* = None, *factory* = None, *args* =    |
 |                  | None, *kw* = None, *allow_none* = True, *adapt* = None,  |
 |                  | *module* = None, \*\*\ *metadata*] )                     |
 +------------------+----------------------------------------------------------+
-| List             | List([*trait* = None, *value* = None, *minlen* = 0,      |
+| List             | List( [*trait* = None, *value* = None, *minlen* = 0,     |
+|                  | *maxlen* = sys.maxsize, *items* = True,                  |
+|                  | \*\*\ *metadata*] )                                      |
++------------------+----------------------------------------------------------+
+| Map              | Map( *map*\ [, \*\*\ *metadata*] )                       |
 +------------------+----------------------------------------------------------+
 | Method           | Method ([\*\*\ *metadata*] )                             |
 +------------------+----------------------------------------------------------+
 | Module           | Module ( [\*\*\ *metadata*] )                            |
 +------------------+----------------------------------------------------------+
 | Password         | Password( [*value* = '', *minlen* = 0, *maxlen* =        |
-|                  | sys.maxint, *regex* = '', \*\*\ *metadata*] )            |
+|                  | sys.maxsize, *regex* = '', \*\*\ *metadata*] )           |
++------------------+----------------------------------------------------------+
+| PrefixList       | PrefixList( *values*\ [, \*\*\ *metadata*] )             |
++------------------+----------------------------------------------------------+
+| PrefixMap        | PrefixMap( *map*\ [, \*\*\ *metadata*] )                 |
 +------------------+----------------------------------------------------------+
 | Property         | Property( [*fget* = None, *fset* = None, *fvalidate* =   |
 |                  | None, *force* = False, *handler* = None, *trait* = None, |
@@ -339,15 +349,13 @@ the table.
 +------------------+----------------------------------------------------------+
 | Regex            | Regex( [*value* = '', *regex* = '.\*', \*\*\ *metadata*])|
 +------------------+----------------------------------------------------------+
-| RGBColor         | RGBColor( [\*\ *args*, \*\*\ *metadata*] )               |
-+------------------+----------------------------------------------------------+
 | self             | n/a                                                      |
 +------------------+----------------------------------------------------------+
 | Set              | Set( [*trait* = None, *value* = None, *items* = True,    |
 |                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | String           | String( [*value* = '', *minlen* = 0, *maxlen* =          |
-|                  | sys.maxint, *regex* = '', \*\*\ *metadata*] )            |
+|                  | sys.maxsize, *regex* = '', \*\*\ *metadata*] )           |
 +------------------+----------------------------------------------------------+
 | Subclass         | Subclass( [*value* = None, *klass* = None, *allow_none* =|
 |                  | True, \*\*\ *metadata*] )                                |
@@ -362,6 +370,9 @@ the table.
 +------------------+----------------------------------------------------------+
 | Type             | Type( [*value* = None, *klass* = None, *allow_none* =    |
 |                  | True, \*\*\ *metadata*] )                                |
++------------------+----------------------------------------------------------+
+| Union            | Union( *val1*\ [, *val2*, ..., *valN*,                   |
+|                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | UUID [3]_        | UUID( [\*\*\ *metadata*] )                               |
 +------------------+----------------------------------------------------------+
@@ -427,6 +438,119 @@ on the class on which it was defined. For example::
     >>> fred.manager = mary
     >>> # This is also OK, because mary's manager can be an Employee
     >>> mary.manager = fred
+
+.. index:: Map trait
+
+.. _map:
+
+Map
+:::
+The map trait ensures that the value assigned to a trait attribute
+is a key of a specified dictionary, and also assigns the dictionary
+value corresponding to that key to a shadow attribute.
+
+.. index::
+   pair: Map trait; examples
+
+The following is an example of using Map::
+
+    # map.py --- Example of Map predefined trait
+
+    from traits.api import HasTraits, Map
+
+    class Person(HasTraits):
+        married = Map({'yes': 1, 'no': 0 }, default_value="yes")
+
+This example defines a Person class which has a **married** trait
+attribute which accepts values "yes" and "no". The default value
+is set to "yes". The name of the shadow attribute is the name of
+the Map attribute followed by an underscore, i.e ``married_``
+Instantiating the class produces the following::
+
+    >>> from traits.api import HasTraits, Map
+    >>> bob = Person()
+    >>> print(bob.married)
+    yes
+    >>> print(bob.married_)
+    1
+
+.. index:: PrefixMap trait
+
+.. _prefixmap:
+
+PrefixMap
+:::::::::
+Like Map, PrefixMap is created using a dictionary, but in this
+case, the keys of the dictionary must be strings. Like PrefixList,
+a string *v* is a valid value for the trait attribute if it is a prefix of
+one and only one key *k* in the dictionary. The actual values assigned to
+the trait attribute is *k*, and its corresponding mapped attribute is map[*k*].
+
+.. index::
+   pair: PrefixMap trait; examples
+
+The following is an example of using PrefixMap::
+
+    # prefixmap.py --- Example of PrefixMap predefined trait
+
+    from traits.api import HasTraits, PrefixMap
+
+    class Person(HasTraits):
+        married = PrefixMap({'yes': 1, 'no': 0 }, default_value="yes")
+
+This example defines a Person class which has a **married** trait
+attribute which accepts values "yes" and "no" or any unique
+prefix. The default value is set to "yes". The name of the shadow attribute
+is the name of the PrefixMap attribute followed by an underscore, i.e ``married_``
+Instantiating the class produces the following::
+
+    >>> bob = Person()
+    >>> print(bob.married)
+    yes
+    >>> print(bob.married_)
+    1
+    >>> bob.married = "n" # Setting a prefix
+    >>> print(bob.married)
+    no
+    >>> print(bob.married_)
+    0
+
+.. index:: PrefixList trait
+
+.. _prefixlist:
+
+PrefixList
+::::::::::
+Ensures that a value assigned to the attribute is a member of a list of
+specified string values, or is a unique prefix of one of those values.
+The values that can be assigned to a trait attribute of type PrefixList
+is the set of all strings supplied to the PrefixList constructor, as well
+as any unique prefix of those strings. The actual value assigned to the
+trait is limited to the set of complete strings assigned to the
+PrefixList constructor.
+
+.. index::
+   pair: PrefixList trait; examples
+
+The following is an example of using PrefixList::
+
+    # prefixlist.py --- Example of PrefixList predefined trait
+
+    from traits.api import HasTraits, PrefixList
+
+    class Person(HasTraits):
+        married = PrefixList(["yes", "no"])
+
+This example defines a Person class which has a **married** trait
+attribute which accepts values "yes" and "no" or any unique
+prefix. Instantiating the class produces the following::
+
+    >>> bob = Person()
+    >>> print(bob.married)
+    yes
+    >>> bob.married = "n" # Setting a prefix
+    >>> print(bob.married)
+    no
 
 .. index:: Either trait
 
@@ -529,11 +653,50 @@ The following example illustrates the difference between `Either` and `Union`::
     >>> i = IntegerClass(primes=4)
     traits.trait_errors.TraitError: The 'primes' trait of an IntegerClass instance must be 2 or None or 5 or 7 or 11 or '3', but a value of 4 <class 'int'> was specified.
     >>>
-    >>> # But Union does not allow such declerations.
+    >>> # But Union does not allow such declarations.
     >>> class IntegerClass(HasTraits):
     ...     primes = Union([2], None, {'3':6}, 5, 7, 11)
     ValueError: Union trait declaration expects a trait type or an instance of trait type or None, but got [2] instead
 
+
+.. _migration_either_to_union:
+
+.. rubric:: Migration from Either to Union
+
+* Static default values are defined on Union via the **default_value**
+  attribute, whereas Either uses the **default** attribute. The naming of
+  **default_value** is consistent with other trait types.
+  For example::
+
+      Either(None, Str(), default="unknown")
+
+  would be changed to::
+
+      Union(None, Str(), default_value="unknown")
+
+* If a default value is not defined, Union uses the default value from the
+  first trait in its definition, whereas Either uses None.
+
+  For example::
+
+      Either(Int(), Float())
+
+  has a default value of None. However None is not one of the allowed values.
+  If the trait is later set to None from a non-None value, a validation error
+  will occur.
+
+  If the trait definition is changed to::
+
+      Union(Int(), Float())
+
+  Then the default value will be 0, which is the default value of the first
+  trait.
+
+  To keep None as the default, use None as the first item::
+
+      Union(None, Int(), Float())
+
+  With this, None also becomes one of the allowed values.
 
 .. index:: multiple values, defining trait with
 

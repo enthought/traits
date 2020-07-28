@@ -1,16 +1,12 @@
-==============================================
-traits: explicitly typed attributes for Python
-==============================================
+======================================================
+Traits: observable typed attributes for Python classes
+======================================================
 
 http://docs.enthought.com/traits
 
 .. image:: https://travis-ci.org/enthought/traits.svg?branch=master
    :target: https://travis-ci.org/enthought/traits
    :alt: Build status
-
-.. image:: https://coveralls.io/repos/github/enthought/traits/badge.svg?branch=master
-   :target: https://coveralls.io/github/enthought/traits
-   :alt: Coverage status
 
 The Traits project is at the center of all Enthought Tool Suite development
 and has changed the mental model used at Enthought for programming in the
@@ -54,13 +50,12 @@ Traits has the following optional dependencies:
 
 * `NumPy <http://pypi.python.org/pypi/numpy>`_ to support the trait types
   for arrays.
-* `Traitsui <https://pypi.python.org/pypi/traitsui>`_ to support Gui
+* `TraitsUI <https://pypi.python.org/pypi/traitsui>`_ to support GUI
   Views.
 
 To build the full documentation one needs:
 
-* sphinx >= 1.8
-* `enthought-sphinx-theme
-  <https://github.com/enthought/enthought-sphinx-theme>`_
-  (a version of the documentation can be built without this, but
-  some formatting may be incorrect)
+* `Sphinx <https://pypi.org/project/Sphinx>`_ version 1.8 or later.
+* The `Enthought Sphinx Theme <https://pypi.org/project/enthought-sphinx-theme>`_.
+  (A version of the documentation can be built without this, but
+  some formatting may be incorrect.)

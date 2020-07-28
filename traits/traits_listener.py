@@ -1024,6 +1024,9 @@ class ListenerParser(HasPrivateTraits):
         # a shortcut too. Whitespace should already have been stripped from the
         # start and end.
 
+        if self.text.strip().endswith(","):
+            self.error("Error parsing name. Trailing ',' is not allowed")
+
         # TODO: The use of regexes should be used throughout all of the parsing
         # functions to speed up all aspects of parsing.
         match = simple_pat.match(self.text)

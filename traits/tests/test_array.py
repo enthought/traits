@@ -44,8 +44,6 @@ class ArrayTestCase(unittest.TestCase):
         # Confirm that the static trait handler was invoked.
         self.assertEqual(f.event_fired, True)
 
-        return
-
     def test_safe_casting(self):
         class Bar(HasTraits):
             unsafe_f32 = Array(dtype="float32")

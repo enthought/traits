@@ -2,51 +2,34 @@
 traits-stubs: Type annotations for Traits
 =========================================
 
-This package contains stub files which are type annotations for the most
-commonly used classes in the Traits package.
-
-Type annotations are used by static type checkers
-to find common bugs without running the program. These merely recommend
-and does not enforce changes to the source code for api compatibility.
-
-These annotations have been tested with the `mypy` static type checker.
-
-Information on how to setup and run `mypy` can be found here:
-
-- Repository & Quickstart: https://github.com/python/mypy
-- Documentation: https://mypy.readthedocs.io/en/stable/index.html
+The *traits-stubs* package contains external type annotations for the Traits_
+package. These annotations can be used with static type checkers like mypy_ to
+type-check your Traits-using Python code.
 
 
 Installation
 ------------
-- Activate an environment with `traits` installed.
-- Install mypy by following the instructions found in the links above.
-- Run `pip install .` inside the dirctory /traits-stubs.
-- Run `mypy` with `mypy <somefile.py>`.
+- To install from PyPI, simply use ``pip install traits-stubs``.
 
-Note: `mypy` creates a `.mypy_cache` folder when run. This may be excluded
-from source control.
+- To install from source, run ``pip install .`` from this directory.
 
-Plugins
--------
-The recommended way to use `mypy` is by installing the plugin for your favourite
-editor. Some plugins call out errors as the files are being modified which can
-be very useful.
 
-Here are some plugins that you may want to try:
+Usage
+-----
+You'll usually want to install mypy_ (or another type checker) into your Python
+environment alongside these stubs. You can then use mypy_ from the command
+line to check a file or directory, for example with::
 
-- PyCharm:
-    - Mypy ​(Official)​: https://plugins.jetbrains.com/plugin/13348-mypy-official
-    - Mypy (More Popular): https://plugins.jetbrains.com/plugin/11086-mypy
+    mypy <somefile.py>
 
-- Visual Studio Code:
-    - Mypy: https://marketplace.visualstudio.com/items?itemName=matangover.mypy
-
+Alternatively, some IDEs (including VS Code and PyCharm) can be configured to
+perform type checking as you edit.
 
 
 Dependencies
 ------------
 
-* `Traits <https://github.com/enthought/traits>`_
-* `mypy <https://github.com/python/mypy>`_
+This package depends on Traits_.
 
+.. _Traits: https://pypi.org/project/traits/
+.. _mypy: https://pypi.org/project/mypy/

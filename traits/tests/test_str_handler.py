@@ -37,8 +37,6 @@ class MyHandler(TraitHandler):
             pass
         self.error(object, name, value)
 
-        return
-
     def info(self):
         msg = "a string not containing the character sequence 'fail'"
         return msg
@@ -63,8 +61,6 @@ class StrHandlerCase(unittest.TestCase):
         self.assertRaises(TraitError, setattr, f, "s", "should fail.")
         self.assertEqual(f.s, "ok")
 
-        return
-
     def test_validator_handler(self):
         b = Bar()
         self.assertEqual(b.s, "")
@@ -74,5 +70,3 @@ class StrHandlerCase(unittest.TestCase):
 
         self.assertRaises(TraitError, setattr, b, "s", "should fail.")
         self.assertEqual(b.s, "ok")
-
-        return

@@ -9,5 +9,6 @@
 # Thanks for using Enthought open source!
 
 
-class BaseTraitHandler(object):
-    ...
+class NotifierNotFound(Exception):
+    """ Raised when a notifier cannot be found."""
+    pass

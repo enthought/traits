@@ -19,7 +19,7 @@ import setuptools
 # together with information from the version control system, and then injected
 # into the package source.
 MAJOR = 6
-MINOR = 1
+MINOR = 2
 MICRO = 0
 PRERELEASE = ""
 IS_RELEASED = False
@@ -274,13 +274,13 @@ setuptools.setup(
         Operating System :: MacOS :: MacOS X
         Operating System :: Microsoft :: Windows
         Operating System :: POSIX :: Linux
-        Programming Language :: C
         Programming Language :: Python
         Programming Language :: Python :: 3
         Programming Language :: Python :: 3.5
         Programming Language :: Python :: 3.6
         Programming Language :: Python :: 3.7
         Programming Language :: Python :: 3.8
+        Programming Language :: Python :: 3.9
         Programming Language :: Python :: Implementation :: CPython
         Topic :: Scientific/Engineering
         Topic :: Software Development
@@ -289,20 +289,39 @@ setuptools.setup(
         """.splitlines()
         if len(c.strip()) > 0
     ],
-    description="Explicitly typed attributes for Python",
+    description="Observable typed attributes for Python classes",
     long_description=get_long_description(),
     long_description_content_type="text/x-rst",
-    download_url="https://github.com/enthought/traits",
+    download_url="https://pypi.python.org/pypi/traits",
+    project_urls={
+        "Issue Tracker": "https://github.com/enthought/traits/issues",
+        "Documentation": "https://docs.enthought.com/traits",
+        "Source Code": "https://github.com/enthought/traits",
+    },
     install_requires=[],
     extras_require={
+        "docs": [
+            "enthought-sphinx-theme",
+            "Sphinx",
+        ],
         "test": [
             "Cython",
-            "numpy",
-            "pyface",
-            "PySide2",
+            "flake8",
+            "mypy",
             "setuptools",
-            "Sphinx",
-            "traitsui",
+            "Sphinx>=2.1.0",
+            # Python 3.9 exclusions:
+            #
+            # * NumPy installation fails on Python 3.9 on the Ubuntu Xenial
+            #   system used by Travis CI.
+            # * PySide2 is installable but also currently not working
+            #   on Python 3.9.
+            # * Because of the above, we also exclude GUI-using packages
+            #   Pyface and TraitsUI on Python 3.9.
+            "numpy;python_version<'3.9'",
+            "pyface;python_version<'3.9'",
+            "PySide2;python_version<'3.9'",
+            "traitsui;python_version<'3.9'",
         ],
     },
     ext_modules=[setuptools.Extension("traits.ctraits", ["traits/ctraits.c"])],
@@ -314,8 +333,6 @@ setuptools.setup(
         ],
     },
     license="BSD",
-    maintainer="ETS Developers",
-    maintainer_email="enthought-dev@enthought.com",
     packages=setuptools.find_packages(include=["traits", "traits.*"]),
     python_requires=">=3.5",
     zip_safe=False,

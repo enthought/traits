@@ -51,7 +51,7 @@ you can run tests in all supported runtimes::
 
     python etstool.py test-all
 
-Currently supported runtime values are ``3.5`` and ``3.6``.  Not all
+Currently supported runtime values are ``3.6``.  Not all
 combinations of runtimes will work, but the tasks will fail with
 a clear error if that is the case.
 
@@ -84,12 +84,15 @@ import click
 
 # Dependencies common to all configurations.
 common_dependencies = {
+    "configobj",
     "coverage",
     "cython",
     "enthought_sphinx_theme",
     "flake8",
+    "lark_parser",
+    "mypy",
     "numpy",
-    "pyqt",
+    "pyqt5",
     "Sphinx",
     "traitsui",
 }
@@ -102,7 +105,7 @@ unix_dependencies = {
     "gnureadline",
 }
 
-supported_runtimes = ["3.5", "3.6"]
+supported_runtimes = ["3.6"]
 default_runtime = "3.6"
 
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
@@ -153,44 +156,38 @@ def cli():
     help="Name of the EDM environment to install",
 )
 @editable_option
-@click.option("--docs/--no-docs", default=True)
 @click.option("--source/--no-source", default=False)
-def install(edm, runtime, environment, editable, docs, source):
+def install(edm, runtime, environment, editable, source):
     """ Install project and dependencies into a clean EDM environment and
     optionally install further dependencies required for building
-    documentation.
+    documentation and mini-language parser.
 
     """
     parameters = get_parameters(edm, runtime, environment)
     dependencies = common_dependencies.copy()
     if sys.platform != "win32":
         dependencies.update(unix_dependencies)
+
     packages = " ".join(dependencies)
 
     # EDM commands to set up the development environment. The installation
     # of TraitsUI from EDM installs Traits as a dependency, so we need
     # to explicitly uninstall it before re-installing from source.
+    install_traits = _get_install_command_string(".", editable=editable)
+    install_stubs = _get_install_command_string(
+        "./traits-stubs/", editable=editable
+    )
+    install_copyright_checker = _get_install_command_string(
+        "copyright_header/", editable=False, no_deps=False
+    )
     commands = [
         "{edm} environments create {environment} --force --version={runtime}",
         "{edm} --config edm.yaml install -y -e {environment} " + packages,
         "{edm} plumbing remove-package -e {environment} traits",
+        install_traits,
+        install_stubs,
+        install_copyright_checker,
     ]
-
-    install_cmd = _get_install_command_string(".", editable=editable)
-    install_mypy_cmd = _get_install_command_string("mypy", editable=False,
-                                                   no_deps=False)
-    install_stubs_cmd = _get_install_command_string("./traits-stubs/",
-                                                    editable=editable)
-
-    commands.append(install_cmd)
-    commands.append(install_mypy_cmd)
-    commands.append(install_stubs_cmd)
-
-    install_copyright_checker = (
-        "{edm} run -e {environment} -- "
-        "python -m pip install copyright_header/"
-    )
-    commands.append(install_copyright_checker)
 
     click.echo("Creating environment '{environment}'".format(**parameters))
     execute(commands, parameters)
@@ -212,16 +209,7 @@ def install(edm, runtime, environment, editable, docs, source):
             "{edm} run -e {environment} -- " + command for command in commands
         ]
         execute(commands, parameters)
-    if docs:
-        commands = [
-            "{edm} run -e {environment} -- pip install -r "
-            "ci-doc-requirements.txt --no-dependencies"
-        ]
-        execute(commands, parameters)
-        click.echo(
-            "Installed enthought-sphinx-theme in '"
-            "{environment}'.".format(**parameters)
-        )
+
     click.echo("Done install")
 
 
@@ -260,8 +248,10 @@ def test(edm, runtime, verbose, environment):
     commands = [
         "{edm} run -e {environment} -- coverage run -p -m "
         "unittest discover " + options + "traits",
+    ]
+    commands += [
         "{edm} run -e {environment} -- coverage run -p -m "
-        "unittest discover " + options + "traits_stubs_tests"
+        "unittest discover " + options + "traits_stubs_tests",
     ]
 
     # We run in a tempdir to avoid accidentally picking up wrong traits
@@ -396,6 +386,38 @@ def test_all(edm):
         sys.exit(1)
 
 
+@cli.command(name="generate-parser")
+@edm_option
+@runtime_option
+@click.option(
+    "--environment", default=None, help="Name of EDM environment to use."
+)
+def generate_parser(edm, runtime, environment):
+    """ Regenerate the mini-language parser for the observe framework.
+    """
+    parameters = get_parameters(edm, runtime, environment)
+
+    root_dir = os.path.dirname(__file__)
+    observers_dir = os.path.join(root_dir, "traits", "observation")
+
+    # parser file to be generated.
+    out_path = os.path.join(observers_dir, "_generated_parser.py")
+
+    # grammar file.
+    parameters["grammar_path"] = os.path.join(
+        observers_dir, "_dsl_grammar.lark")
+
+    command = (
+        "{edm} run -e {environment} -- "
+        "python -m lark.tools.standalone "
+        "{grammar_path}"
+    )
+
+    with open(out_path, "w", encoding="utf-8") as out_file:
+        execute([command], parameters, stdout=out_file)
+    click.echo("Written to {out_path!r}".format(out_path=out_path))
+
+
 # Utility routines
 
 def get_parameters(edm, runtime, environment):
@@ -467,12 +489,13 @@ def do_in_existingdir(path):
         os.chdir(old_path)
 
 
-def execute(commands, parameters):
+def execute(commands, parameters, stdout=None):
     for command in commands:
         click.echo("[EXECUTING] {}".format(command.format(**parameters)))
         try:
             subprocess.check_call(
-                [arg.format(**parameters) for arg in command.split()]
+                [arg.format(**parameters) for arg in command.split()],
+                stdout=stdout,
             )
         except subprocess.CalledProcessError as exc:
             print(exc)
@@ -540,12 +563,12 @@ def _get_install_command_string(pkg_or_location, editable, no_deps=True):
         the setup script at the provided location.
 
     """
-    cmd = "{edm} run -e {environment} -- python -m pip install "
+    cmd = "{edm} run -e {environment} -- python -m pip install"
     if editable:
-        cmd += "--editable"
-    cmd += " {} ".format(pkg_or_location)
+        cmd += " --editable"
+    cmd += " {}".format(pkg_or_location)
     if no_deps:
-        cmd += "--no-dependencies"
+        cmd += " --no-dependencies"
     return cmd
 
 

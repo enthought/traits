@@ -57,7 +57,7 @@ post_setattr(self, object, name, value)
 The subclass can also define a constant default value by setting the class-
 level *default_value* attribute to the desired constant value. For example::
 
-    class OddInt(Int):
+    class OddInt(BaseInt):
 
         default_value = 1
 
@@ -71,7 +71,7 @@ If you have a constant string that can be used as the type's *info* value, you
 can provide it by simple setting the string as the value of the class-level
 *info_text* attribute::
 
-    class OddInt(Int):
+    class OddInt(BaseInt):
 
         info_text = 'an odd integer'
 

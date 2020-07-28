@@ -31,16 +31,33 @@ Dynamic Initialization
 When you define trait attributes using predefined traits, the Trait() factory
 function or trait handlers, you typically specify their default values
 statically. You can also define a method that dynamically initializes a trait
-attribute the first time that the attribute value is accessed. To do this, you
-define a method on the same class as the trait attribute, with a name based on
-the name of the trait attribute:
+attribute. To do this, you define a method on the same class as the trait
+attribute, with a name based on the name of the trait attribute:
 
 .. index:: default value; method
 
 .. method:: _name_default()
 
-This method initializes the *name* trait attribute, returning its initial value.
-The method overrides any default value specified in the trait definition.
+This method returns the default value for the *name* trait attribute and it
+overrides any default value specified in the trait definition.
+
+Similar to static default values, default values defined dynamically should be
+thought of as existing **prior to** setting object state during
+initialization. For performance purposes, a default initializer method is
+called when:
+
+1. the attribute value is accessed the first time or
+2. an instance is constructed with a specific value, if there is a change
+   handler defined for the trait. This is needed so the default can be reported
+   as the old value (see :ref:`static-notification`).
+
+While it is possible to use a default initializer method to lazily initialize
+attributes based on the object state post-instantiation, this relies on not
+having to observe for changes on the trait. This is often difficult in
+practice, since trait notifications can be set up by external objects, and are
+often needed for Property traits, delegation and GUI applications. These use
+cases may cause the default values to be computed eagerly prior to
+instantiation, instead of lazily after instantiation.
 
 .. index:: get_default_value()
 
@@ -511,6 +528,11 @@ traits.has_traits module::
 
     import traits.has_traits
     traits.has_traits.CHECK_INTERFACES = 1
+
+.. deprecated:: 6.2.0
+   Interface checking with the ``@provides`` decorator is deprecated. In the
+   future, the ``@provides`` decorator will ignore the value of
+   ``CHECK_INTERFACES`` and will not do any interface checking.
 
 .. index:: interfaces; using, examples; interface usage
 
@@ -1140,39 +1162,28 @@ next time its value is requested.
 .. index:: cached_property decorator, depends_on metadata
 
 One strategy to accomplish caching would be to use a private attribute for the
-cached value, and notification listener methods on the attributes that are
+cached value, and notification observer methods on the attributes that are
 depended on. However, to simplify the situation, Property traits support a
-@cached_property decorator and **depends_on** metadata. Use @cached_property to
-indicate that a getter method's return value should be cached. Use
-**depends_on** to indicate the other attributes that the property depends on.
+|@cached_property| decorator and **observe** metadata. Use |@cached_property|
+to indicate that a getter method's return value should be cached. Use
+**observe** to indicate the other attributes that the property depends on.
 
 .. index:: examples; cached property
 
-For example::
+For example:
 
-    # cached_prop.py -- Example of @cached_property decorator
-    from traits.api import HasPrivateTraits, List, Int,\
-                                     Property, cached_property
+.. literalinclude:: /../../examples/tutorials/doc_examples/examples/cached_prop.py
+   :start-at: from traits.api
 
-    class TestScores ( HasPrivateTraits ):
-
-        scores  = List( Int )
-        average = Property( depends_on = 'scores' )
-
-        @cached_property
-        def _get_average ( self ):
-            s = self.scores
-            return (float( reduce( lambda n1, n2: n1 + n2, s, 0 ) )
-                     / len( s ))
-
-The @cached_property decorator takes no arguments. Place it on the line
+The |@cached_property| decorator takes no arguments. Place it on the line
 preceding the property's getter method.
 
-The **depends_on** metadata attribute accepts extended trait references, using
-the same syntax as the on_trait_change() method's name parameter, described in
-:ref:`the-name-parameter`. As a result, it can take values that specify
-attributes on referenced objects, multiple attributes, or attributes that are
-selected based on their metadata attributes.
+The **observe** metadata attribute accepts extended trait references, using
+the same syntax as the |HasTraits.observe| method's expression parameter,
+which is also described in :ref:`expression section <observe-expression>`.
+As a result, it can take values that specify attributes on referenced objects,
+multiple attributes, or attributes that are selected based on their metadata
+attributes.
 
 .. index:: persistence, __getstate__(), __setstate__()
 
@@ -1503,3 +1514,9 @@ course, this is offset by the convenience and flexibility provided by the
 deferral model. As with any powerful tool, it is best to understand its
 strengths and weaknesses and apply that understanding in determining when use of
 the tool is justified and appropriate.
+
+..
+   # substitutions
+
+.. |HasTraits.observe| replace:: :func:`~traits.has_traits.HasTraits.observe`
+.. |@cached_property| replace:: :func:`~traits.has_traits.cached_property`

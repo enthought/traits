@@ -33,8 +33,6 @@ from traits.interface_checker import InterfaceError, check_implements
 # checks explicitly:
 from traits import has_traits
 
-has_traits.CHECK_INTERFACES = 0
-
 
 class InterfaceCheckerTestCase(unittest.TestCase):
     """ Tests to help find out if we can do type-safe casting. """
@@ -45,9 +43,15 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
+        # Make sure implicit interface checking is turned off, so that we can
+        # make the checks explicitly:
+        self._old_check_interfaces = has_traits.CHECK_INTERFACES
+        has_traits.CHECK_INTERFACES = 0
+
         reset_global_adaptation_manager()
 
-        return
+    def tearDown(self):
+        has_traits.CHECK_INTERFACES = self._old_check_interfaces
 
     ###########################################################################
     # Tests.
@@ -70,8 +74,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         # the interface.
         check_implements(Foo, IFoo, 2)
 
-        return
-
     def test_single_interface(self):
         """ single interface """
 
@@ -87,8 +89,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         # The checker will raise an exception if the class does not implement
         # the interface.
         check_implements(Foo, IFoo, 2)
-
-        return
 
     def test_single_interface_with_invalid_method_signature(self):
         """ single interface with invalid method signature """
@@ -106,8 +106,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         self.assertRaises(InterfaceError, check_implements, Foo, IFoo, 2)
 
-        return
-
     def test_single_interface_with_missing_trait(self):
         """ single interface with missing trait """
 
@@ -120,7 +118,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             pass
 
         self.assertRaises(InterfaceError, check_implements, Foo, IFoo, 2)
-        return
 
     def test_single_interface_with_missing_method(self):
         """ single interface with missing method """
@@ -135,8 +132,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             pass
 
         self.assertRaises(InterfaceError, check_implements, Foo, IFoo, 2)
-
-        return
 
     def test_multiple_interfaces(self):
         """ multiple interfaces """
@@ -160,8 +155,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         # The checker will raise an exception if the class does not implement
         # the interface.
         check_implements(Foo, [IFoo, IBar, IBaz], 2)
-
-        return
 
     def test_multiple_interfaces_with_invalid_method_signature(self):
         """ multiple interfaces with invalid method signature """
@@ -195,8 +188,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz], 2
         )
 
-        return
-
     def test_multiple_interfaces_with_missing_trait(self):
         """ multiple interfaces with missing trait """
 
@@ -219,8 +210,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         self.assertRaises(
             InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz], 2
         )
-
-        return
 
     def test_multiple_interfaces_with_missing_method(self):
         """ multiple interfaces with missing method """
@@ -250,8 +239,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz], 2
         )
 
-        return
-
     def test_inherited_interfaces(self):
         """ inherited interfaces """
 
@@ -274,8 +261,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         # The checker will raise an exception if the class does not implement
         # the interface.
         check_implements(Foo, IBaz, 2)
-
-        return
 
     def test_inherited_interfaces_with_invalid_method_signature(self):
         """ inherited with invalid method signature """
@@ -307,8 +292,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         self.assertRaises(InterfaceError, check_implements, Foo, IBaz, 2)
 
-        return
-
     def test_inherited_interfaces_with_missing_trait(self):
         """ inherited interfaces with missing trait """
 
@@ -329,8 +312,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             y = Int
 
         self.assertRaises(InterfaceError, check_implements, Foo, IBaz, 2)
-
-        return
 
     def test_inherited_interfaces_with_missing_method(self):
         """ inherited interfaces with missing method """
@@ -357,8 +338,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
                 pass
 
         self.assertRaises(InterfaceError, check_implements, Foo, IBaz, 2)
-
-        return
 
     def test_subclasses_with_wrong_signature_methods(self):
         """ Subclasses with incorrect method signatures """
@@ -394,8 +373,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             foo = Instance(IFoo)
 
         Bar(foo=Foo())
-
-        return
 
     def test_callable(self):
         """ callable """

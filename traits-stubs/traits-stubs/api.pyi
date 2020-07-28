@@ -1,4 +1,23 @@
-from .trait_type import TraitType as TraitType
+# (C) Copyright 2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
+from .constants import (
+    ComparisonMode as ComparisonMode,
+    DefaultValue as DefaultValue,
+    TraitKind as TraitKind,
+    ValidateTrait as ValidateTrait,
+    NO_COMPARE as NO_COMPARE,
+    OBJECT_IDENTITY_COMPARE as OBJECT_IDENTITY_COMPARE,
+    RICH_COMPARE as RICH_COMPARE,
+)
+
 from .traits import (
     Color as Color,
     Default as Default,
@@ -8,7 +27,31 @@ from .traits import (
     Trait as Trait
 )
 
-from .has_traits import HasTraits as HasTraits
+from .ctrait import CTrait as CTrait
+
+from .has_traits import (
+    ABCHasStrictTraits as ABCHasStrictTraits,
+    ABCHasTraits as ABCHasTraits,
+    ABCMetaHasTraits as ABCMetaHasTraits,
+    AbstractViewElement as AbstractViewElement,
+    HasTraits as HasTraits,
+    HasStrictTraits as HasStrictTraits,
+    HasPrivateTraits as HasPrivateTraits,
+    HasRequiredTraits as HasRequiredTraits,
+    Interface as Interface,
+    SingletonHasTraits as SingletonHasTraits,
+    SingletonHasStrictTraits as SingletonHasStrictTraits,
+    SingletonHasPrivateTraits as SingletonHasPrivateTraits,
+    MetaHasTraits as MetaHasTraits,
+    Vetoable as Vetoable,
+    VetoableEvent as VetoableEvent,
+    observe as observe,
+    on_trait_change as on_trait_change,
+    cached_property as cached_property,
+    property_depends_on as property_depends_on,
+    provides as provides,
+    isinterface as isinterface,
+)
 
 from .trait_types import (
     Any as Any,
@@ -56,6 +99,8 @@ from .trait_types import (
     Set as Set,
     CSet as CSet,
     Dict as Dict,
+    Map as Map,
+    PrefixMap as PrefixMap,
     Instance as Instance,
     AdaptedTo as AdaptedTo,
     AdaptsTo as AdaptsTo,
@@ -131,6 +176,9 @@ from .trait_types import (
     ValidatedTuple as ValidatedTuple
 )
 
+from .base_trait_handler import BaseTraitHandler as BaseTraitHandler
+from .trait_handler import TraitHandler as TraitHandler
+from .trait_type import TraitType as TraitType
 from .trait_handlers import (
     TraitCoerceType as TraitCoerceType,
     TraitCastType as TraitCastType,

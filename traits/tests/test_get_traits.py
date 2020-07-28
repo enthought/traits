@@ -72,6 +72,13 @@ class GetTraitTestCase(unittest.TestCase):
 
     def test_dir(self):
         b = FooBar()
-        self.assertIn("baz", dir(b))
-        self.assertIn("num", dir(b))
-        self.assertIn("edit_traits", dir(b))
+        names = dir(b)
+        self.assertIn("baz", names)
+        self.assertIn("num", names)
+        self.assertIn("edit_traits", names)
+
+        # Issue 925: _notifiers not shown in dir()
+        self.assertIn("_notifiers", names)
+
+        # Ensure no duplicates
+        self.assertEqual(len(set(names)), len(names))

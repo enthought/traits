@@ -1,0 +1,10 @@
+All images are the original work of Hannes Grobe/AWI.
+
+The images in this directory are licensed according to the Creative Commons
+CC BY 3.0 license: https://creativecommons.org/licenses/by/3.0/
+
+sample_0001.png
+    https://commons.wikimedia.org/wiki/Category:Scanning_electron_microscopic_images_of_minerals#/media/File:Arnager-kalk-bornholm_01_hg.jpg
+
+sample_0002.png
+    https://commons.wikimedia.org/wiki/Category:Scanning_electron_microscopic_images_of_minerals#/media/File:Arnager-kalk-bornholm_03_hg.jpg

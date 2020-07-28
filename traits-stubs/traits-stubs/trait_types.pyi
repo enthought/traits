@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# (C) Copyright 2020 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -27,7 +27,6 @@ from uuid import UUID as _UUID
 
 from .trait_type import _TraitType
 
-MutableTypes: _Any
 SetTypes: _Any
 int_fast_validate: _Any
 float_fast_validate: _Any
@@ -410,7 +409,7 @@ class CList(_List[_S, _T]):
 class PrefixList(BaseStr):
     def __init__(
             self,
-            *values: _Union[str, _Sequence[str]],
+            values: _Sequence[str],
             **metadata: _Any,
     ) -> None:
         ...
@@ -453,6 +452,32 @@ class Dict(_Dict[_S, _T]):
     ...
 
 
+class _Map(_TraitType[_S, _T]):
+    def __init__(
+            self,
+            map: _DictType[_S, _T],
+            **metadata: _Any
+    ) -> None:
+        ...
+
+
+class Map(_Map):
+    ...
+
+
+class _PrefixMap(_TraitType[_S, _T]):
+    def __init__(
+            self,
+            map: _DictType[_S, _T],
+            **metadata: _Any
+    ) -> None:
+        ...
+
+
+class PrefixMap(_PrefixMap):
+    ...
+
+
 class _BaseClass(_TraitType[_Union[_T, str, None], _Union[_T, str, None]]):
     ...
 
@@ -462,14 +487,13 @@ class BaseClass(_BaseClass[_Type]):
 
 
 class _BaseInstance(_BaseClass[_T]):
+
+    # simplified signature
     def __init__(
             self,
-            klass: _T = ...,
-            factory: _OptionalCallable = ...,
-            args: tuple = ...,
-            kw: _Dict[_Any, _Any] = ...,
-            allow_none: bool = ...,
-            adapt: str = ...,
+            klass: _T,
+            *args,
+            **metadata: _Any,
     ) -> None:
         ...
 
@@ -548,10 +572,6 @@ class Either(_TraitType[_Any, _Any]):
         ...
 
 
-class NoneTrait(_TraitType[None, None]):
-    ...
-
-
 class Union(_TraitType[_Any, _Any]):
     def __init__(
             self,
@@ -586,15 +606,36 @@ class WeakRef(Instance):
 
 
 class Date(_BaseInstance[datetime.date]):
-    ...
+
+    # simplified signature
+    def __init__(
+            self,
+            default_value: datetime.date = ...,
+            **metadata: _Any,
+    ) -> None:
+        ...
 
 
 class Datetime(_BaseInstance[datetime.datetime]):
-    ...
+
+    # simplified signature
+    def __init__(
+            self,
+            default_value: datetime.datetime = ...,
+            **metadata: _Any,
+    ) -> None:
+        ...
 
 
 class Time(_BaseInstance[datetime.time]):
-    ...
+
+    # simplified signature
+    def __init__(
+            self,
+            default_value: datetime.time = ...,
+            **metadata: _Any,
+    ) -> None:
+        ...
 
 
 class AdaptedTo(Supports):

@@ -20,7 +20,7 @@
 #
 # All configuration values have a default value; values that are commented out
 # serve to show the default value.
-import datetime
+
 import os
 import sys
 
@@ -43,6 +43,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.coverage",
     "sphinx.ext.githubpages",
+    "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "traits.util.trait_documenter",
@@ -59,8 +60,10 @@ master_doc = "index"
 
 # General substitutions.
 project = "traits"
-copyright = "2008-{date.year}, Enthought Inc".format(
-    date=datetime.date.today())
+copyright = """\
+(C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+All rights reserved.
+"""
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
@@ -69,7 +72,11 @@ traits_init_path = os.path.join("..", "..", "traits", "__init__.py")
 with open(traits_init_path, "r", encoding="utf-8") as version_module:
     version_code = compile(version_module.read(), "__init__.py", "exec")
     exec(version_code, version_info)
-version = release = version_info["__version__"]
+
+# "release" is the full version string, including the bugfix portion and any
+# modifiers. "version" is of the form "6.2" and is what's used in titles.
+release = version_info["__version__"]
+version = ".".join(release.split(".")[:2])
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -163,7 +170,7 @@ if BUILD_DOCSET:
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = "Traits 6 User Manual"
+html_title = "Traits {version} User Manual".format(version=version)
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 # html_short_title = None
@@ -220,7 +227,7 @@ latex_documents = [
     (
         "index",
         "Traits.tex",
-        "Traits 6 User Manual",
+        "Traits {version} User Manual".format(version=version),
         "Enthought, Inc.",
         "manual",
     )
@@ -254,10 +261,19 @@ texinfo_documents = [
     (
         "index",
         "traits",
-        "Traits 6 User Manual",
+        "Traits {version} User Manual".format(version=version),
         "Enthought, Inc.",
         "Traits",
         "Explicitly typed attributes for Python.",
         "Python",
     )
 ]
+
+# Options for intersphinx extension
+# ---------------------------------
+
+intersphinx_mapping = {
+    "pyface": ("https://docs.enthought.com/pyface", None),
+    "python": ("https://docs.python.org/3", None),
+    "traitsui": ("https://docs.enthought.com/traitsui", None),
+}

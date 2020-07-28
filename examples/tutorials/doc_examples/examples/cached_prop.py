@@ -8,18 +8,29 @@
 #
 # Thanks for using Enthought open source!
 
-# cached_prop.py - Example of @cached_property decorator
-# --[Imports]------------------------------------------------------------------
-from traits.api import HasPrivateTraits, List, Int, Property, cached_property
+"""
+This example demonstrates the use of Property, with caching and notifcation
+support.
 
+"""
 
-# --[Code]---------------------------------------------------------------------
-class TestScores(HasPrivateTraits):
+from traits.api import (
+    cached_property, HasStrictTraits, Str, observe, Property,
+)
 
-    scores = List(Int)
-    average = Property(depends_on="scores")
+class Person(HasStrictTraits):
+
+    full_name = Str()
+    last_name = Property(observe="full_name")
 
     @cached_property
-    def _get_average(self):
-        s = self.scores
-        return sum(s) / len(s)
+    def _get_last_name(self):
+        return self.full_name.split(" ")[-1]
+
+    @observe("last_name")
+    def _last_name_updated(self, event):
+        print("last_name is changed.")
+
+
+obj = Person()
+obj.full_name = "John Doe"   # print: last_name is changed.
