@@ -55,6 +55,7 @@ class AbstractArray(TraitType):
         value=None,
         coerce=False,
         typecode=None,
+        *,
         casting="unsafe",
         **metadata
     ):
