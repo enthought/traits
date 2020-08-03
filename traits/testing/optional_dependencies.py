@@ -44,6 +44,9 @@ requires_numpy = unittest.skipIf(numpy is None, "NumPy not available")
 
 pyface = optional_import("pyface")
 requires_pyface = unittest.skipIf(pyface is None, "Pyface not available")
+# Import pyface.toolkit so that client code doesn't need an extra import.
+if pyface is not None:
+    import pyface.toolkit
 
 sphinx = optional_import("sphinx")
 requires_sphinx = unittest.skipIf(sphinx is None, "Sphinx not available")
