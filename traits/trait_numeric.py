@@ -382,9 +382,9 @@ class CArray(AbstractArray):
         - "no": No casting is allowed
         - "equiv": Only byte-order changes are allowed
         - "safe": Only allow casting that fully preserves values (e.g.
-          ``float32`` to ``float64``)
-        - "same-kind": Only safe casts or casts within a kind (e.g.
-          ``float64`` to ``float32``) are allowed
+          "float32" to "float64")
+        - "same-kind": Only safe casts or casts within a kind (e.g. "float64"
+          to "float32") are allowed
         - "unsafe": Any casting is allowed
 
         Default is "unsafe".
