@@ -10,7 +10,7 @@
 
 import unittest
 
-from traits.api import Array, Bool, HasTraits
+from traits.api import Array, Bool, HasTraits, TraitError
 from traits.testing.optional_dependencies import numpy, requires_numpy
 
 
@@ -25,10 +25,10 @@ if numpy is not None:
             self.event_fired = True
 
 
+@requires_numpy
 class ArrayTestCase(unittest.TestCase):
     """ Test cases for delegated traits. """
 
-    @requires_numpy
     def test_zero_to_one_element(self):
         """ Test that an event fires when an Array trait changes from zero to
         one element.
@@ -43,3 +43,19 @@ class ArrayTestCase(unittest.TestCase):
 
         # Confirm that the static trait handler was invoked.
         self.assertEqual(f.event_fired, True)
+
+    def test_safe_casting(self):
+        class Bar(HasTraits):
+            unsafe_f32 = Array(dtype="float32")
+            safe_f32 = Array(dtype="float32", casting="safe")
+
+        f64 = numpy.array([1], dtype="float64")
+        f32 = numpy.array([1], dtype="float32")
+
+        b = Bar()
+
+        b.unsafe_f32 = f32
+        b.unsafe_f32 = f64
+        b.safe_f32 = f32
+        with self.assertRaises(TraitError):
+            b.safe_f32 = f64

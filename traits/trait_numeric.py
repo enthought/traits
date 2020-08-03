@@ -55,6 +55,8 @@ class AbstractArray(TraitType):
         value=None,
         coerce=False,
         typecode=None,
+        *,
+        casting="unsafe",
         **metadata
     ):
         global ndarray, asarray
@@ -130,6 +132,7 @@ class AbstractArray(TraitType):
         self.dtype = dtype
         self.shape = shape
         self.coerce = coerce
+        self.casting = casting
 
         super(AbstractArray, self).__init__(value, **metadata)
 
@@ -148,11 +151,7 @@ class AbstractArray(TraitType):
 
             # Make sure the array is of the right type:
             if (self.dtype is not None) and (value.dtype != self.dtype):
-                if self.coerce:
-                    value = value.astype(self.dtype)
-                else:
-                    # XXX: this also coerces.
-                    value = asarray(value, self.dtype)
+                value = value.astype(self.dtype, casting=self.casting)
 
             # If no shape requirements, then return the value:
             trait_shape = self.shape
@@ -310,13 +309,39 @@ class Array(AbstractArray):
         second dimension must be at least 2.)
     value : numpy array
         A default value for the array.
+    casting : str
+        Casting rule for the array's dtype. If ``dtype`` is set, a value can
+        only be assigned if it passes the casting rule. Values can be:
+
+        - "no": No casting is allowed
+        - "equiv": Only byte-order changes are allowed
+        - "safe": Only allow casting that fully preserves values (e.g.
+          "float32" to "float64")
+        - "same-kind": Only safe casts or casts within a kind (e.g. "float64"
+          to "float32") are allowed
+        - "unsafe": Any casting is allowed
+
+        Default is "unsafe".
     """
 
     def __init__(
-        self, dtype=None, shape=None, value=None, typecode=None, **metadata
+        self,
+        dtype=None,
+        shape=None,
+        value=None,
+        typecode=None,
+        *,
+        casting="unsafe",
+        **metadata
     ):
         super(Array, self).__init__(
-            dtype, shape, value, False, typecode=typecode, **metadata
+            dtype,
+            shape,
+            value,
+            False,
+            typecode=typecode,
+            casting=casting,
+            **metadata
         )
 
 
@@ -351,13 +376,39 @@ class CArray(AbstractArray):
         second dimension must be at least 2.)
     value : numpy array
         A default value for the array.
+    casting : str
+        Casting rule for the array's dtype. If ``dtype`` is set, a value can
+        only be assigned if it passes the casting rule. Values can be:
+
+        - "no": No casting is allowed
+        - "equiv": Only byte-order changes are allowed
+        - "safe": Only allow casting that fully preserves values (e.g.
+          "float32" to "float64")
+        - "same-kind": Only safe casts or casts within a kind (e.g. "float64"
+          to "float32") are allowed
+        - "unsafe": Any casting is allowed
+
+        Default is "unsafe".
     """
 
     def __init__(
-        self, dtype=None, shape=None, value=None, typecode=None, **metadata
+        self,
+        dtype=None,
+        shape=None,
+        value=None,
+        typecode=None,
+        *,
+        casting="unsafe",
+        **metadata
     ):
         super(CArray, self).__init__(
-            dtype, shape, value, True, typecode=typecode, **metadata
+            dtype,
+            shape,
+            value,
+            True,
+            typecode=typecode,
+            casting=casting,
+            **metadata
         )
 
 
