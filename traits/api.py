@@ -14,7 +14,7 @@ Use this module for importing Traits names into your namespace. For example::
     from traits.api import HasTraits
 """
 
-from .constants import (  # noqa: F401
+from .constants import (
     ComparisonMode,
     DefaultValue,
     TraitKind,
@@ -24,24 +24,24 @@ from .constants import (  # noqa: F401
     RICH_COMPARE,
 )
 
-from .trait_base import Uninitialized, Undefined, Missing, Self  # noqa: F401
-from .trait_converters import as_ctrait  # noqa: F401
+from .trait_base import Uninitialized, Undefined, Missing, Self
+from .trait_converters import as_ctrait
 
-from .trait_errors import (  # noqa: F401
+from .trait_errors import (
     TraitError,
     TraitNotificationError,
     DelegationError,
 )
 
-from .trait_notifiers import (  # noqa: F401
+from .trait_notifiers import (
     push_exception_handler,
     pop_exception_handler,
     TraitChangeNotifyWrapper,
 )
 
-from .ctrait import CTrait  # noqa: F401
-from .trait_factory import TraitFactory  # noqa: F401
-from .traits import (  # noqa: F401
+from .ctrait import CTrait
+from .trait_factory import TraitFactory
+from .traits import (
     Trait,
     Property,
     Default,
@@ -50,7 +50,7 @@ from .traits import (  # noqa: F401
     Font,
 )
 
-from .trait_types import (  # noqa: F401
+from .trait_types import (
     Any,
     Int,
     Float,
@@ -118,7 +118,7 @@ from .trait_types import (  # noqa: F401
 
 # Deprecated TraitType subclasses and instances.
 
-from .trait_types import (  # noqa: F401
+from .trait_types import (
     BaseUnicode,
     Unicode,
     BaseCUnicode,
@@ -147,7 +147,7 @@ from .trait_types import (  # noqa: F401
     DictStrList,
 )
 
-from .trait_types import (  # noqa: F401
+from .trait_types import (
     BaseCallable,
     BaseInt,
     BaseFloat,
@@ -168,9 +168,9 @@ from .trait_types import (  # noqa: F401
     BaseInstance,
 )
 
-from .trait_types import UUID, ValidatedTuple  # noqa: F401
+from .trait_types import UUID, ValidatedTuple
 
-from .has_traits import (  # noqa: F401
+from .has_traits import (
     ABCHasStrictTraits,
     ABCHasTraits,
     ABCMetaHasTraits,
@@ -194,10 +194,10 @@ from .has_traits import (  # noqa: F401
     isinterface,
 )
 
-from .base_trait_handler import BaseTraitHandler  # noqa: F401
-from .trait_handler import TraitHandler  # noqa: F401
-from .trait_type import TraitType  # noqa: F401
-from .trait_handlers import (  # noqa: F401
+from .base_trait_handler import BaseTraitHandler
+from .trait_handler import TraitHandler
+from .trait_type import TraitType
+from .trait_handlers import (
     TraitCoerceType,
     TraitCastType,
     TraitInstance,
@@ -213,17 +213,17 @@ from .trait_handlers import (  # noqa: F401
 )
 
 
-from .trait_dict_object import TraitDictEvent, TraitDictObject  # noqa: F401
-from .trait_list_object import TraitListEvent, TraitListObject  # noqa: F401
-from .trait_set_object import TraitSetEvent, TraitSetObject  # noqa: F401
+from .trait_dict_object import TraitDictEvent, TraitDictObject
+from .trait_list_object import TraitListEvent, TraitListObject
+from .trait_set_object import TraitSetEvent, TraitSetObject
 
 
-from .adaptation.adapter import Adapter  # noqa: F401
-from .adaptation.adaptation_error import AdaptationError  # noqa: F401
-from .adaptation.adaptation_manager import (  # noqa: F401
+from .adaptation.adapter import Adapter
+from .adaptation.adaptation_error import AdaptationError
+from .adaptation.adaptation_manager import (
     adapt,
     register_factory,
     register_provides,
 )
 
-from .trait_numeric import Array, ArrayOrNone, CArray  # noqa: F401
+from .trait_numeric import Array, ArrayOrNone, CArray
