@@ -126,3 +126,10 @@ class TestConfigureTraits(unittest.TestCase):
 
         self.assertIsInstance(unpickled, Model)
         self.assertEqual(unpickled.count, model.count)
+
+    def test_edit_when_false(self):
+        # Check for deprecation warning when *edit* is false.
+        model = Model()
+        with mock.patch.object(self.toolkit, "view_application"):
+            with self.assertWarns(DeprecationWarning):
+                model.configure_traits(edit=False)
