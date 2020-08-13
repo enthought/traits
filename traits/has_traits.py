@@ -1980,7 +1980,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         Parameters
         ----------
         filename : str
-            NOTE: Deprecated as of traits 6.0.0.
+            .. deprecated:: 6.0.0
             The name (including path) of a file that contains a pickled
             representation of the current object. When this parameter is
             specified, the method reads the corresponding file (if it exists)
@@ -2002,6 +2002,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             their meanings. If *kind* is unspecified or None, the **kind**
             attribute of the View object is used.
         edit : bool
+            .. deprecated:: 6.2.0
             Indicates whether to display a user interface. If *filename*
             specifies an existing file, setting *edit* to False loads the
             saved values from that file into the object without requiring
@@ -2053,7 +2054,11 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                     pickle.Pickler(fd, protocol=3).dump(self)
             return rc
 
-        return True
+        else:
+            message = ('The edit argument to configure_traits is deprecated, '
+                       'and will be removed in Traits 7.0.0')
+            warnings.warn(message, DeprecationWarning)
+            return True
 
     def editable_traits(self):
         """Returns an alphabetically sorted list of the names of non-event
