@@ -93,7 +93,7 @@ common_dependencies = {
     "mypy",
     "numpy",
     "pyqt5",
-    "Sphinx^=2.3.1",
+    "Sphinx!=3.2.0",
     "traitsui",
 }
 
