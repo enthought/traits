@@ -31,6 +31,8 @@ class Foo(HasTraits):
 
     instance = Instance(Bar)
 
+    any_value = Any()
+
     int_with_default = Int()
 
     int_with_default_computed = Bool()
@@ -90,6 +92,12 @@ class TestHasTraitsHelpersHasNamedTrait(unittest.TestCase):
         )
 
 
+class CannotCompare:
+
+    def __eq__(self, other):
+        raise TypeError("Cannot be compared for equality.")
+
+
 class TestHasTraitsHelpersIterObjects(unittest.TestCase):
     """ Test iter_objects."""
 
@@ -117,6 +125,14 @@ class TestHasTraitsHelpersIterObjects(unittest.TestCase):
         actual = list(helpers.iter_objects(foo, "instance"))
         self.assertEqual(actual, [])
 
+    def test_iter_objects_allow_object_cannot_compare_for_equality(self):
+        # see enthought/traits#1277
+        foo = Foo()
+        foo.any_value = CannotCompare()
+
+        actual = list(helpers.iter_objects(foo, "any_value"))
+        self.assertEqual(actual, [foo.any_value])
+
     def test_iter_objects_accepted_values(self):
         foo = Foo(instance=Bar(), list_of_int=[1, 2])
         actual = list(helpers.iter_objects(foo, "instance"))
@@ -135,12 +151,6 @@ class TestHasTraitsHelpersIterObjects(unittest.TestCase):
         foo = Foo()
         list(helpers.iter_objects(foo, "property_value"))
         self.assertEqual(foo.property_n_calculations, 0)
-
-
-class CannotCompare:
-
-    def __eq__(self, other):
-        raise TypeError("Cannot be compared for equality.")
 
 
 class ObjectWithEqualityComparisonMode(HasTraits):
@@ -277,6 +287,57 @@ class TestHasTraitsHelpersComparisonMode(unittest.TestCase):
 
         # when
         instance.dict_values["2"] = 2
+
+        # then
+        self.assertEqual(handler.call_count, 1)
+
+
+class TestHasTraitsHelpersMaintainerHandler(unittest.TestCase):
+
+    def test_any_value_followed_by_list_items_new_bad_value(self):
+        # see enthought/traits#1277
+        foo = Foo()
+        handler = mock.Mock()
+
+        # list_items(optional=True) will excuse the CannotCompare which isn't
+        # a TraitList
+        observe(
+            object=foo,
+            expression=expression.trait("any_value").list_items(optional=True),
+            handler=handler,
+        )
+
+        # when
+        # this triggers observer_change_handler
+        foo.any_value = CannotCompare()
+
+        # then
+        # no errors
+
+    def test_any_value_followed_by_list_items_old_bad_value(self):
+        # see enthought/traits#1277
+        foo = Foo()
+        foo.any_value = CannotCompare()
+        handler = mock.Mock()
+
+        # list_items(optional=True) will excuse the CannotCompare which isn't
+        # a TraitList
+        observe(
+            object=foo,
+            expression=expression.trait("any_value").list_items(optional=True),
+            handler=handler,
+        )
+
+        # when
+        # this triggers observer_change_handler
+        foo.any_value = foo.list_of_int  # a TraitList
+
+        # then
+        # no errors
+
+        # when
+        handler.reset_mock()
+        foo.any_value.append(1)
 
         # then
         self.assertEqual(handler.call_count, 1)
