@@ -165,8 +165,6 @@ class TestCopyTraitsSharedCopyNone(CopyTraits, CopyTraitsSharedCopyNone):
     __test__ = False
 
     def setUp(self):
-        # super(TestCopyTraitsSharedCopyNone,self).setUp()
-
         # deep is the default value for Instance trait copy
         self.set_shared_copy("deep")
 
@@ -177,7 +175,6 @@ class TestCopyTraitsCopyNotSpecified(
     __test__ = True
 
     def setUp(self):
-        #        super(TestCopyTraitsCopyNotSpecified,self).setUp()
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
         self.baz2.copy_traits(self.baz)
@@ -187,7 +184,6 @@ class TestCopyTraitsCopyShallow(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
     __test__ = True
 
     def setUp(self):
-        #        super(TestCopyTraitsCopyShallow,self).setUp()
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
         self.baz2.copy_traits(self.baz, copy="shallow")
@@ -197,7 +193,6 @@ class TestCopyTraitsCopyDeep(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
     __test__ = True
 
     def setUp(self):
-        #        super(TestCopyTraitsCopyDeep,self).setUp()
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
         self.baz2.copy_traits(self.baz, copy="deep")
@@ -233,7 +228,6 @@ class TestCopyTraitsSharedCopyRef(CopyTraits, CopyTraitsSharedCopyRef):
     __test__ = False
 
     def setUp(self):
-        # super(TestCopyTraitsSharedCopyRef,self).setUp()
         self.set_shared_copy("ref")
 
 
