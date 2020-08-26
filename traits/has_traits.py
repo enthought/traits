@@ -1243,7 +1243,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         not be persisted::
 
             def __getstate__(self):
-                state = super(X,self).__getstate__()
+                state = super().__getstate__()
                 for key in ['foo', 'bar']:
                     if key in state:
                         del state[key]
@@ -3438,7 +3438,7 @@ class HasRequiredTraits(HasStrictTraits):
                 "{}.".format(", ".join(sorted(missing_required_traits)))
             )
 
-        super(HasRequiredTraits, self).__init__(**traits)
+        super().__init__(**traits)
 
 
 class HasPrivateTraits(HasTraits):

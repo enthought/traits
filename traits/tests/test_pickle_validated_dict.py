@@ -20,7 +20,7 @@ class C(HasTraits):
 
     # And we must initialize it to something non-trivial
     def __init__(self):
-        super(C, self).__init__()
+        super().__init__()
         self.a = {1: [2, 3]}
 
 

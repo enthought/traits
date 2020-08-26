@@ -1279,7 +1279,7 @@ However, in cases where this strategy is insufficient, use the following pattern
 to override __getstate__() to remove items that should not be persisted::
 
     def __getstate__ ( self ):
-        state = super( XXX, self ).__getstate__()
+        state = super().__getstate__()
 
         for key in [ 'foo', 'bar' ]:
             if key in state:
@@ -1309,8 +1309,8 @@ ensure that their internal object state remains consistent and up to date.
    pickling time.  If this key is not present when unpickling, the HasTraits
    __setstate__() method falls back to a compatibility mode and may not restore
    the state correctly.  For the same reason, if you're overriding
-   __getstate__(), you should be careful to make the appropriate ``super(...,
-   self).__getstate__()`` call.
+   __getstate__(), you should be careful to make the appropriate
+   ``super().__getstate__()`` call.
 
 .. index:: __setstate__(); overriding
 

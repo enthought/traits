@@ -41,7 +41,7 @@ class CopyTraitsBase(unittest.TestCase):
     __test__ = False
 
     def setUp(self):
-        super(CopyTraitsBase, self).setUp()
+        super().setUp()
         self.shared = Shared(s="shared")
         self.foo = Foo(shared=self.shared, s="foo")
         self.bar = Bar(shared=self.shared, foo=self.foo, s="bar")
@@ -63,7 +63,7 @@ class TestCopyTraitsSetup(CopyTraitsBase):
     __test__ = True
 
     def setUp(self):
-        super(TestCopyTraitsSetup, self).setUp()
+        super().setUp()
 
     def test_setup(self):
         self.assertIs(self.foo, self.bar.foo)

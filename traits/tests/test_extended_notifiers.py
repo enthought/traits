@@ -48,7 +48,7 @@ class ExtendedNotifiers(HasTraits):
         for listener in fail_listeners:
             self._on_trait_change(listener, "fail", dispatch="extended")
 
-        super(ExtendedNotifiers, self).__init__(**traits)
+        super().__init__(**traits)
 
     ok = Float
     fail = Float

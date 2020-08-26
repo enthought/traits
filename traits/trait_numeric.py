@@ -134,7 +134,7 @@ class AbstractArray(TraitType):
         self.coerce = coerce
         self.casting = casting
 
-        super(AbstractArray, self).__init__(value, **metadata)
+        super().__init__(value, **metadata)
 
     def validate(self, object, name, value):
         """ Validates that the value is a valid array.
@@ -334,7 +334,7 @@ class Array(AbstractArray):
         casting="unsafe",
         **metadata
     ):
-        super(Array, self).__init__(
+        super().__init__(
             dtype,
             shape,
             value,
@@ -401,7 +401,7 @@ class CArray(AbstractArray):
         casting="unsafe",
         **metadata
     ):
-        super(CArray, self).__init__(
+        super().__init__(
             dtype,
             shape,
             value,
@@ -424,12 +424,12 @@ class ArrayOrNone(CArray):
     def __init__(self, *args, **metadata):
         # Normally use object identity to detect array values changing:
         metadata.setdefault("comparison_mode", ComparisonMode.identity)
-        super(ArrayOrNone, self).__init__(*args, **metadata)
+        super().__init__(*args, **metadata)
 
     def validate(self, object, name, value):
         if value is None:
             return value
-        return super(ArrayOrNone, self).validate(object, name, value)
+        return super().validate(object, name, value)
 
     def get_default_value(self):
         dv = self.default_value

@@ -96,7 +96,7 @@ overriding *__getstate__* using the follow pattern to remove items that should
 not be persisted::
 
     def __getstate__(self):
-        state = super(XXX, self).__getstate__()
+        state = super().__getstate__()
 
         for key in [ 'foo', 'bar' ]:
             if key in state:

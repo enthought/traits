@@ -168,7 +168,7 @@ class _TraitsChangeCollector(HasStrictTraits):
             )
             warnings.warn(message, DeprecationWarning, stacklevel=2)
             traits["trait_name"] = value
-        super(_TraitsChangeCollector, self).__init__(**traits)
+        super().__init__(**traits)
 
     def start_collecting(self):
         self.obj.on_trait_change(self._event_handler, self.trait_name)

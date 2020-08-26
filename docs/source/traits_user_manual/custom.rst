@@ -44,7 +44,7 @@ Here's an example of subclassing a predefined trait class::
         info_text = 'an odd integer'
 
         def validate ( self, object, name, value ):
-            value = super(OddInt, self).validate(object, name, value)
+            value = super().validate(object, name, value)
             if (value % 2) == 1:
                 return value
 

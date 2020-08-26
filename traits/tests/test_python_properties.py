@@ -17,7 +17,7 @@ from traits.api import HasTraits
 
 class Model(HasTraits):
     def __init__(self):
-        super(Model, self).__init__()
+        super().__init__()
         self._value = 0
 
     @property

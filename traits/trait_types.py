@@ -648,7 +648,7 @@ class String(TraitType):
     def __init__(
         self, value="", minlen=0, maxlen=sys.maxsize, regex="", **metadata
     ):
-        super(String, self).__init__(value, **metadata)
+        super().__init__(value, **metadata)
         self.minlen = max(0, minlen)
         self.maxlen = max(self.minlen, maxlen)
         self.regex = regex
@@ -779,7 +779,7 @@ class Regex(String):
     """
 
     def __init__(self, value="", regex=".*", **metadata):
-        super(Regex, self).__init__(value=value, regex=regex, **metadata)
+        super().__init__(value=value, regex=regex, **metadata)
 
 
 class Code(String):
@@ -875,7 +875,7 @@ class This(BaseType):
     info_text = "an instance of the same type as the receiver"
 
     def __init__(self, value=None, allow_none=True, **metadata):
-        super(This, self).__init__(value, **metadata)
+        super().__init__(value, **metadata)
 
         if allow_none:
             self.fast_validate = (ValidateTrait.self_type, None)
@@ -1111,7 +1111,7 @@ class Delegate(TraitType):
         metadata["_prefix"] = prefix
         metadata["_listenable"] = listenable
 
-        super(Delegate, self).__init__(**metadata)
+        super().__init__(**metadata)
 
         self.delegate = delegate
         self.prefix = prefix
@@ -1121,7 +1121,7 @@ class Delegate(TraitType):
     def as_ctrait(self):
         """ Returns a CTrait corresponding to the trait defined by this class.
         """
-        trait = super(Delegate, self).as_ctrait()
+        trait = super().as_ctrait()
         trait.delegate(
             self.delegate, self.prefix, self.prefix_type, self.modify
         )
@@ -1175,7 +1175,7 @@ class DelegatesTo(Delegate):
     """
 
     def __init__(self, delegate, prefix="", listenable=True, **metadata):
-        super(DelegatesTo, self).__init__(
+        super().__init__(
             delegate,
             prefix=prefix,
             modify=True,
@@ -1232,7 +1232,7 @@ class PrototypedFrom(Delegate):
     """
 
     def __init__(self, prototype, prefix="", listenable=True, **metadata):
-        super(PrototypedFrom, self).__init__(
+        super().__init__(
             prototype,
             prefix=prefix,
             modify=False,
@@ -1280,7 +1280,7 @@ class Expression(TraitType):
         """
         # Tell the C code that 'setattr' should store the original, unadapted
         # value passed to it:
-        ctrait = super(Expression, self).as_ctrait()
+        ctrait = super().as_ctrait()
         ctrait.setattr_original_value = True
         return ctrait
 
@@ -1351,7 +1351,7 @@ class BaseFile(BaseStr):
         self.entries = entries
         self.exists = exists
 
-        super(BaseFile, self).__init__(value, **metadata)
+        super().__init__(value, **metadata)
 
     def validate(self, object, name, value):
         """ Validates that a specified value is valid for this trait.
@@ -1368,7 +1368,7 @@ class BaseFile(BaseStr):
             except TypeError:
                 pass
 
-        validated_value = super(BaseFile, self).validate(object, name, value)
+        validated_value = super().validate(object, name, value)
         if not self.exists:
             return validated_value
         elif isfile(value):
@@ -1436,7 +1436,7 @@ class File(BaseFile):
         exists=False,
         **metadata
     ):
-        super(File, self).__init__(
+        super().__init__(
             value, filter, auto_set, entries, exists, **metadata
         )
 
@@ -1486,7 +1486,7 @@ class BaseDirectory(BaseStr):
         self.auto_set = auto_set
         self.exists = exists
 
-        super(BaseDirectory, self).__init__(value, **metadata)
+        super().__init__(value, **metadata)
 
     def validate(self, object, name, value):
         """ Validates that a specified value is valid for this trait.
@@ -1500,7 +1500,7 @@ class BaseDirectory(BaseStr):
             except TypeError:
                 pass
 
-        validated_value = super(BaseDirectory, self).validate(
+        validated_value = super().validate(
             object, name, value
         )
         if not self.exists:
@@ -1555,7 +1555,7 @@ class Directory(BaseDirectory):
         self, value="", auto_set=False, entries=0, exists=False, **metadata
     ):
         # Fast validation is disabled (Github issue #877).
-        super(Directory, self).__init__(
+        super().__init__(
             value, auto_set, entries, exists, **metadata
         )
 
@@ -1603,7 +1603,7 @@ class BaseRange(TraitType):
             else:
                 value = high
 
-        super(BaseRange, self).__init__(value, **metadata)
+        super().__init__(value, **metadata)
 
         vtype = type(high)
         if (low is not None) and (
@@ -1987,10 +1987,10 @@ class BaseEnum(TraitType):
             self.values = None
             self.get, self.set, self.validate = self._get, self._set, None
             if nargs == 0:
-                super(BaseEnum, self).__init__(**metadata)
+                super().__init__(**metadata)
             elif nargs == 1:
                 default_value = args[0]
-                super(BaseEnum, self).__init__(default_value, **metadata)
+                super().__init__(default_value, **metadata)
             else:
                 raise TraitError(
                     "Incorrect number of arguments specified "
@@ -2022,7 +2022,7 @@ class BaseEnum(TraitType):
 
             self.init_fast_validate(ValidateTrait.enum, self.values)
 
-            super(BaseEnum, self).__init__(default_value, **metadata)
+            super().__init__(default_value, **metadata)
 
     def init_fast_validate(self, *args):
         """ Does nothing for the BaseEnum class. Used in the Enum class to set
@@ -2232,7 +2232,7 @@ class BaseTuple(TraitType):
         if len(types) == 0:
             self.init_fast_validate(ValidateTrait.coerce, tuple, None, list)
 
-            super(BaseTuple, self).__init__((), **metadata)
+            super().__init__((), **metadata)
 
             return
 
@@ -2251,7 +2251,7 @@ class BaseTuple(TraitType):
                 [type.default_value()[1] for type in self.types]
             )
 
-        super(BaseTuple, self).__init__(default_value, **metadata)
+        super().__init__(default_value, **metadata)
 
     def init_fast_validate(self, *args):
         """ Saves the validation parameters.
@@ -2325,7 +2325,7 @@ class Tuple(BaseTuple):
     def init_fast_validate(self, *args):
         """ Set up the C-level fast validator.
         """
-        super(Tuple, self).init_fast_validate(*args)
+        super().init_fast_validate(*args)
 
         self.fast_validate = args
 
@@ -2362,12 +2362,12 @@ class ValidatedTuple(BaseTuple):
     def __init__(self, *types, **metadata):
         metadata.setdefault("fvalidate", None)
         metadata.setdefault("fvalidate_info", "")
-        super(ValidatedTuple, self).__init__(*types, **metadata)
+        super().__init__(*types, **metadata)
 
     def validate(self, object, name, value):
         """ Validates that the value is a valid tuple.
         """
-        values = super(ValidatedTuple, self).validate(object, name, value)
+        values = super().validate(object, name, value)
         # Exceptions in the fvalidate function will not result in a TraitError
         # but will be allowed to propagate up the frame stacks.
         if self.fvalidate is None or self.fvalidate(values):
@@ -2453,7 +2453,7 @@ class List(TraitType):
         if self.item_trait.instance_handler == "_instance_changed_handler":
             metadata.setdefault("instance_handler", "_list_changed_handler")
 
-        super(List, self).__init__(value, **metadata)
+        super().__init__(value, **metadata)
 
     def validate(self, object, name, value):
         """ Validates that the values is a valid list.
@@ -2530,14 +2530,14 @@ class CList(List):
             except (ValueError, TypeError):
                 value = [value]
 
-        return super(CList, self).validate(object, name, value)
+        return super().validate(object, name, value)
 
     def full_info(self, object, name, value):
         """ Returns a description of the trait.
         """
         return "%s or %s" % (
             self.item_trait.full_info(object, name, value),
-            super(CList, self).full_info(object, name, value),
+            super().full_info(object, name, value),
         )
 
 
@@ -2679,7 +2679,7 @@ class Set(TraitType):
         self.item_trait = trait_from(trait)
         self.has_items = items
 
-        super(Set, self).__init__(value, **metadata)
+        super().__init__(value, **metadata)
 
     def validate(self, object, name, value):
         """ Validates that the values is a valid set.
@@ -2741,14 +2741,14 @@ class CSet(Set):
             except (ValueError, TypeError):
                 value = set([value])
 
-        return super(CSet, self).validate(object, name, value)
+        return super().validate(object, name, value)
 
     def full_info(self, object, name, value):
         """ Returns a description of the trait.
         """
         return "%s or %s" % (
             self.item_trait.full_info(object, name, value),
-            super(CSet, self).full_info(object, name, value),
+            super().full_info(object, name, value),
         )
 
 
@@ -2811,7 +2811,7 @@ class Dict(TraitType):
             handler.has_items = False
         self.value_handler = handler
 
-        super(Dict, self).__init__(value, **metadata)
+        super().__init__(value, **metadata)
 
     def validate(self, object, name, value):
         """ Validates that the value is a valid dictionary.
@@ -3260,7 +3260,7 @@ class BaseInstance(BaseClass):
 
         self.default_value = value
 
-        super(BaseInstance, self).__init__(value, **metadata)
+        super().__init__(value, **metadata)
 
     def validate(self, object, name, value):
         """ Validates that the value is a valid object instance.
@@ -3330,7 +3330,7 @@ class BaseInstance(BaseClass):
         dvt = self.default_value_type
         if dvt < 0:
             if not isinstance(dv, _InstanceArgs):
-                return super(BaseInstance, self).get_default_value()
+                return super().get_default_value()
 
             self.default_value_type = dvt = DefaultValue.callable_and_args
             self.default_value = dv = (
@@ -3376,7 +3376,7 @@ class BaseInstance(BaseClass):
         pass
 
     def resolve_class(self, object, name, value):
-        super(BaseInstance, self).resolve_class(object, name, value)
+        super().resolve_class(object, name, value)
 
         # fixme: The following is quite ugly, because it wants to try and fix
         # the trait referencing this handler to use the 'fast path' now that
@@ -3457,7 +3457,7 @@ class Supports(Instance):
     def as_ctrait(self):
         """ Returns a CTrait corresponding to the trait defined by this class.
         """
-        return self.modify_ctrait(super(Supports, self).as_ctrait())
+        return self.modify_ctrait(super().as_ctrait())
 
     def modify_ctrait(self, ctrait):
 
@@ -3536,7 +3536,7 @@ class Type(BaseClass):
         self._allow_none = allow_none
         self.module = get_module_name()
 
-        super(Type, self).__init__(value, **metadata)
+        super().__init__(value, **metadata)
 
     def validate(self, object, name, value):
         """ Validates that the value is a valid object instance.
@@ -3580,7 +3580,7 @@ class Type(BaseClass):
         which describes the default value for this trait.
         """
         if not isinstance(self.default_value, str):
-            return super(Type, self).get_default_value()
+            return super().get_default_value()
 
         return (
             DefaultValue.callable_and_args,
@@ -3630,7 +3630,7 @@ class Event(TraitType):
         metadata["type"] = "event"
         metadata["transient"] = True
 
-        super(Event, self).__init__(**metadata)
+        super().__init__(**metadata)
 
         self.trait = None
         if trait is not None:
@@ -3721,7 +3721,7 @@ class Button(Event):
         self.width_padding = width_padding
         self.height_padding = height_padding
         self.view = view
-        super(Button, self).__init__(**metadata)
+        super().__init__(**metadata)
 
     def create_editor(self):
         from traitsui.api import ButtonEditor
@@ -3798,7 +3798,7 @@ class ToolbarButton(Button):
         height_padding=2,
         **metadata
     ):
-        super(ToolbarButton, self).__init__(
+        super().__init__(
             label,
             image=image,
             style=style,
@@ -3853,7 +3853,7 @@ class _NoneTrait(TraitType):
         if default_value is not None:
             raise ValueError("Cannot set default value {} "
                              "for _NoneTrait".format(default_value))
-        super(_NoneTrait, self).__init__(**metadata)
+        super().__init__(**metadata)
 
     def validate(self, obj, name, value):
         if value is None:
@@ -4041,7 +4041,7 @@ class UUID(TraitType):
     info_text = "a read-only UUID"
 
     def __init__(self, can_init=False, **metadata):
-        super(UUID, self).__init__(None, **metadata)
+        super().__init__(None, **metadata)
         self.can_init = can_init
 
     def validate(self, object, name, value):
@@ -4117,7 +4117,7 @@ class WeakRef(Instance):
     ):
         metadata.setdefault("copy", "ref")
 
-        super(WeakRef, self).__init__(
+        super().__init__(
             klass,
             allow_none=allow_none,
             adapt=adapt,
