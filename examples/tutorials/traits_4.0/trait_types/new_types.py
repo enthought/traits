@@ -186,7 +186,7 @@ class RandInt(TraitType):
 
     # Define the type's constructor:
     def __init__(self, low=1, high=10, **metadata):
-        super(RandInt, self).__init__(**metadata)
+        super().__init__(**metadata)
         self.low = int(low)
         self.high = int(high)
 

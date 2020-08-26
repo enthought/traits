@@ -113,7 +113,7 @@ class ETSConfigTestCase(unittest.TestCase):
     def run(self, result=None):
         # Extend TestCase.run to use a temporary home directory.
         with temporary_home_directory():
-            super(ETSConfigTestCase, self).run(result)
+            super().run(result)
 
     ###########################################################################
     # 'ETSConfigTestCase' interface.

@@ -172,7 +172,7 @@ class TestCaseEnumTrait(unittest.TestCase):
             def validate(self, obj, name, value):
                 if isinstance(value, str):
                     return value
-                return super(UnionAllowStr, self).validate(obj, name, value)
+                return super().validate(obj, name, value)
 
         class TestClass(HasTraits):
             s = UnionAllowStr(Int, Float)

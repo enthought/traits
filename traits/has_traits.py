@@ -3438,7 +3438,7 @@ class HasRequiredTraits(HasStrictTraits):
                 "{}.".format(", ".join(sorted(missing_required_traits)))
             )
 
-        super(HasRequiredTraits, self).__init__(**traits)
+        super().__init__(**traits)
 
 
 class HasPrivateTraits(HasTraits):

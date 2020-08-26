@@ -768,7 +768,7 @@ class TraitPrefixMap(TraitMap):
             self.error(object, name, value)
 
     def info(self):
-        return super(TraitPrefixMap, self).info() + " (or any unique prefix)"
+        return super().info() + " (or any unique prefix)"
 
 
 class TraitCompound(TraitHandler):

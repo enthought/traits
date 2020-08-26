@@ -1011,7 +1011,7 @@ class ListenerParser(HasPrivateTraits):
 
     def __init__(self, text="", **traits):
         self.text = text
-        super(ListenerParser, self).__init__(**traits)
+        super().__init__(**traits)
 
     # -- Private Methods ------------------------------------------------------
 

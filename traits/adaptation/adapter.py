@@ -33,6 +33,6 @@ class Adapter(HasTraits):
 
     def __init__(self, adaptee, **traits):
         traits["adaptee"] = adaptee
-        super(Adapter, self).__init__(**traits)
+        super().__init__(**traits)
 
     adaptee = Any
