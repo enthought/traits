@@ -132,7 +132,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         except ValueError:
             # Without this, a failure to find the trait definition aborts
             # the whole documentation build.
-            logger.warn(
+            logger.warning(
                 "No definition for the trait {!r} could be found in "
                 "class {!r}.".format(self.object_name, self.parent),
                 exc_info=True)
