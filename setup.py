@@ -323,13 +323,27 @@ setuptools.setup(
             "PySide2;python_version<'3.9'",
             "traitsui;python_version<'3.9'",
         ],
+        "examples": [
+            # dependencies for examples
+            "numpy",
+            "pillow",
+        ]
     },
     ext_modules=[setuptools.Extension("traits.ctraits", ["traits/ctraits.c"])],
     package_data={
+        "traits": [
+            "examples/introduction/*",
+            "examples/introduction/*/*",
+        ],
         "traits.tests": [
             "test-data/historical-pickles/README",
             "test-data/historical-pickles/*.pkl",
             "test-data/historical-pickles/*.py",
+        ],
+    },
+    entry_points={
+        "etsdemo_data": [
+            "introduction = traits._entry_point:introduction",
         ],
     },
     license="BSD",
