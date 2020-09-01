@@ -68,7 +68,7 @@ def iter_objects(object, name):
         skipped values.
     """
     value = object.__dict__.get(name, Undefined)
-    if value not in UNOBSERVABLE_VALUES:
+    if all(value is not skipped for skipped in UNOBSERVABLE_VALUES):
         yield value
 
 
@@ -89,7 +89,7 @@ def observer_change_handler(event, graph, handler, target, dispatcher):
     dispatcher : callable
         Callable for dispatching the handler.
     """
-    if event.old not in UNOBSERVABLE_VALUES:
+    if all(event.old is not skipped for skipped in UNOBSERVABLE_VALUES):
         try:
             add_or_remove_notifiers(
                 object=event.old,
@@ -104,7 +104,7 @@ def observer_change_handler(event, graph, handler, target, dispatcher):
             # notifier.
             pass
 
-    if event.new not in UNOBSERVABLE_VALUES:
+    if all(event.new is not skipped for skipped in UNOBSERVABLE_VALUES):
         add_or_remove_notifiers(
             object=event.new,
             graph=graph,
