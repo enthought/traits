@@ -229,7 +229,7 @@ class _AddNotifier(_AddOrRemoveNotifier):
         # other.
         steps = [
             self._add_or_remove_notifiers,
-            self._add_or_remove_maintainers,
+            self._add_maintainers,
             self._add_children_notifiers,
             self._add_extra_graphs,
         ]
@@ -298,7 +298,7 @@ class _AddNotifier(_AddOrRemoveNotifier):
                         dispatcher=self.dispatcher,
                     )
 
-    def _add_or_remove_maintainers(self):
+    def _add_maintainers(self):
         """ Add or remove notifiers for maintaining children notifiers when
         the objects being observed by the root observer change.
         """
@@ -336,7 +336,7 @@ class _RemoveNotifier(_AddOrRemoveNotifier):
         # other.
         steps = [
             self._add_or_remove_notifiers,
-            self._add_or_remove_maintainers,
+            self._remove_maintainers,
             self._remove_children_notifiers,
             self._remove_extra_graphs,
         ]
@@ -405,7 +405,7 @@ class _RemoveNotifier(_AddOrRemoveNotifier):
                         dispatcher=self.dispatcher,
                     )
 
-    def _add_or_remove_maintainers(self):
+    def _remove_maintainers(self):
         """ Add or remove notifiers for maintaining children notifiers when
         the objects being observed by the root observer change.
         """
