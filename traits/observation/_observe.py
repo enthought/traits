@@ -133,14 +133,22 @@ class _AddOrRemoveNotifier:
         observer. e.g. for handing trait_added event.
         """
         for extra_graph in self.graph.node.iter_extra_graphs(self.graph):
-            add_or_remove_notifiers(
-                object=self.object,
-                graph=extra_graph,
-                handler=self.handler,
-                target=self.target,
-                dispatcher=self.dispatcher,
-                remove=self.remove,
-            )
+            if not self.remove:
+                add_notifiers(
+                    object=self.object,
+                    graph=extra_graph,
+                    handler=self.handler,
+                    target=self.target,
+                    dispatcher=self.dispatcher,
+                )
+            else:
+                remove_notifiers(
+                    object=self.object,
+                    graph=extra_graph,
+                    handler=self.handler,
+                    target=self.target,
+                    dispatcher=self.dispatcher,
+                )
 
     def _add_or_remove_children_notifiers(self):
         """ Recursively add or remove notifiers for the children ObserverGraph.
