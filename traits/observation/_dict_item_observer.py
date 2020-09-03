@@ -10,7 +10,7 @@
 
 from traits.observation._dict_change_event import dict_event_factory
 from traits.observation._i_observer import IObserver
-from traits.observation._observe import add_or_remove_notifiers
+from traits.observation._observe import add_notifiers, remove_notifiers
 from traits.observation._observer_change_notifier import ObserverChangeNotifier
 from traits.observation._trait_event_notifier import TraitEventNotifier
 from traits.trait_dict_object import TraitDict
@@ -186,20 +186,18 @@ def _observer_change_handler(event, graph, handler, target, dispatcher):
         Callable for dispatching the handler.
     """
     for removed_item in event.removed.values():
-        add_or_remove_notifiers(
+        remove_notifiers(
             object=removed_item,
             graph=graph,
             handler=handler,
             target=target,
             dispatcher=dispatcher,
-            remove=True,
         )
     for added_item in event.added.values():
-        add_or_remove_notifiers(
+        add_notifiers(
             object=added_item,
             graph=graph,
             handler=handler,
             target=target,
             dispatcher=dispatcher,
-            remove=False,
         )
