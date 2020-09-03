@@ -254,6 +254,28 @@ class _AddNotifier(_AddOrRemoveNotifier):
         else:
             self._processed.clear()
 
+    def _add_or_remove_extra_graphs(self):
+        """ Add or remove additional ObserverGraph contributed by the root
+        observer. e.g. for handing trait_added event.
+        """
+        for extra_graph in self.graph.node.iter_extra_graphs(self.graph):
+            if not self.remove:
+                add_notifiers(
+                    object=self.object,
+                    graph=extra_graph,
+                    handler=self.handler,
+                    target=self.target,
+                    dispatcher=self.dispatcher,
+                )
+            else:
+                remove_notifiers(
+                    object=self.object,
+                    graph=extra_graph,
+                    handler=self.handler,
+                    target=self.target,
+                    dispatcher=self.dispatcher,
+                )
+
 
 class _RemoveNotifier(_AddOrRemoveNotifier):
     def __init__(self, *, object, graph, handler, target, dispatcher):
@@ -295,3 +317,25 @@ class _RemoveNotifier(_AddOrRemoveNotifier):
             raise
         else:
             self._processed.clear()
+
+    def _add_or_remove_extra_graphs(self):
+        """ Add or remove additional ObserverGraph contributed by the root
+        observer. e.g. for handing trait_added event.
+        """
+        for extra_graph in self.graph.node.iter_extra_graphs(self.graph):
+            if not self.remove:
+                add_notifiers(
+                    object=self.object,
+                    graph=extra_graph,
+                    handler=self.handler,
+                    target=self.target,
+                    dispatcher=self.dispatcher,
+                )
+            else:
+                remove_notifiers(
+                    object=self.object,
+                    graph=extra_graph,
+                    handler=self.handler,
+                    target=self.target,
+                    dispatcher=self.dispatcher,
+                )
