@@ -231,7 +231,7 @@ class _AddNotifier(_AddOrRemoveNotifier):
             self._add_or_remove_notifiers,
             self._add_or_remove_maintainers,
             self._add_or_remove_children_notifiers,
-            self._add_or_remove_extra_graphs,
+            self._add_extra_graphs,
         ]
 
         # Not quite the complete reversal, as trees are still walked from
@@ -254,7 +254,7 @@ class _AddNotifier(_AddOrRemoveNotifier):
         else:
             self._processed.clear()
 
-    def _add_or_remove_extra_graphs(self):
+    def _add_extra_graphs(self):
         """ Add or remove additional ObserverGraph contributed by the root
         observer. e.g. for handing trait_added event.
         """
@@ -295,7 +295,7 @@ class _RemoveNotifier(_AddOrRemoveNotifier):
             self._add_or_remove_notifiers,
             self._add_or_remove_maintainers,
             self._add_or_remove_children_notifiers,
-            self._add_or_remove_extra_graphs,
+            self._remove_extra_graphs,
         ]
 
         # Not quite the complete reversal, as trees are still walked from
@@ -318,7 +318,7 @@ class _RemoveNotifier(_AddOrRemoveNotifier):
         else:
             self._processed.clear()
 
-    def _add_or_remove_extra_graphs(self):
+    def _remove_extra_graphs(self):
         """ Add or remove additional ObserverGraph contributed by the root
         observer. e.g. for handing trait_added event.
         """
