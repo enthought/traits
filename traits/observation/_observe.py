@@ -234,11 +234,6 @@ class _AddNotifier(_AddOrRemoveNotifier):
             self._add_extra_graphs,
         ]
 
-        # Not quite the complete reversal, as trees are still walked from
-        # root to leaves.
-        if self.remove:
-            steps = steps[::-1]
-
         try:
             for step in steps:
                 step()
@@ -246,10 +241,7 @@ class _AddNotifier(_AddOrRemoveNotifier):
             # Undo and then reraise
             while self._processed:
                 notifier, observable = self._processed.pop()
-                if self.remove:
-                    notifier.add_to(observable)
-                else:
-                    notifier.remove_from(observable)
+                notifier.remove_from(observable)
             raise
         else:
             self._processed.clear()
@@ -259,44 +251,26 @@ class _AddNotifier(_AddOrRemoveNotifier):
         observer. e.g. for handing trait_added event.
         """
         for extra_graph in self.graph.node.iter_extra_graphs(self.graph):
-            if not self.remove:
-                add_notifiers(
-                    object=self.object,
-                    graph=extra_graph,
-                    handler=self.handler,
-                    target=self.target,
-                    dispatcher=self.dispatcher,
-                )
-            else:
-                remove_notifiers(
-                    object=self.object,
-                    graph=extra_graph,
-                    handler=self.handler,
-                    target=self.target,
-                    dispatcher=self.dispatcher,
-                )
+            add_notifiers(
+                object=self.object,
+                graph=extra_graph,
+                handler=self.handler,
+                target=self.target,
+                dispatcher=self.dispatcher,
+            )
 
     def _add_children_notifiers(self):
         """ Recursively add or remove notifiers for the children ObserverGraph.
         """
         for child_graph in self.graph.children:
             for next_object in self.graph.node.iter_objects(self.object):
-                if not self.remove:
-                    add_notifiers(
-                        object=next_object,
-                        graph=child_graph,
-                        handler=self.handler,
-                        target=self.target,
-                        dispatcher=self.dispatcher,
-                    )
-                else:
-                    remove_notifiers(
-                        object=next_object,
-                        graph=child_graph,
-                        handler=self.handler,
-                        target=self.target,
-                        dispatcher=self.dispatcher,
-                    )
+                add_notifiers(
+                    object=next_object,
+                    graph=child_graph,
+                    handler=self.handler,
+                    target=self.target,
+                    dispatcher=self.dispatcher,
+                )
 
     def _add_maintainers(self):
         """ Add or remove notifiers for maintaining children notifiers when
@@ -312,10 +286,7 @@ class _AddNotifier(_AddOrRemoveNotifier):
                     target=self.target,
                     dispatcher=self.dispatcher,
                 )
-                if self.remove:
-                    change_notifier.remove_from(observable)
-                else:
-                    change_notifier.add_to(observable)
+                change_notifier.add_to(observable)
 
                 self._processed.append((change_notifier, observable))
 
@@ -333,10 +304,7 @@ class _AddNotifier(_AddOrRemoveNotifier):
                 target=self.target,
                 dispatcher=self.dispatcher,
             )
-            if self.remove:
-                notifier.remove_from(observable)
-            else:
-                notifier.add_to(observable)
+            notifier.add_to(observable)
 
             self._processed.append((notifier, observable))
 
