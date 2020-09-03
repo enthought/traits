@@ -228,7 +228,7 @@ class _AddNotifier(_AddOrRemoveNotifier):
         # The order of events does not matter as they are independent of each
         # other.
         steps = [
-            self._add_or_remove_notifiers,
+            self._add_notifiers,
             self._add_maintainers,
             self._add_children_notifiers,
             self._add_extra_graphs,
@@ -319,7 +319,7 @@ class _AddNotifier(_AddOrRemoveNotifier):
 
                 self._processed.append((change_notifier, observable))
 
-    def _add_or_remove_notifiers(self):
+    def _add_notifiers(self):
         """ Add or remove user notifiers for the objects observed by the root
         observer.
         """
@@ -356,7 +356,7 @@ class _RemoveNotifier(_AddOrRemoveNotifier):
         # The order of events does not matter as they are independent of each
         # other.
         steps = [
-            self._add_or_remove_notifiers,
+            self._remove_notifiers,
             self._remove_maintainers,
             self._remove_children_notifiers,
             self._remove_extra_graphs,
@@ -447,7 +447,7 @@ class _RemoveNotifier(_AddOrRemoveNotifier):
 
                 self._processed.append((change_notifier, observable))
 
-    def _add_or_remove_notifiers(self):
+    def _remove_notifiers(self):
         """ Add or remove user notifiers for the objects observed by the root
         observer.
         """
