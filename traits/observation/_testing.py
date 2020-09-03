@@ -11,7 +11,7 @@
 from unittest import mock
 
 from traits.observation._exceptions import NotifierNotFound
-from traits.observation._observe import add_or_remove_notifiers
+from traits.observation._observe import add_notifiers, remove_notifiers
 from traits.observation._observer_graph import ObserverGraph
 
 
@@ -43,8 +43,8 @@ def create_graph(*nodes):
 
 
 def call_add_or_remove_notifiers(**kwargs):
-    """ Convenience function for calling add_or_remove_notifiers with default
-    values.
+    """ Convenience function for calling add_notifiers, remove_notifiers with
+    default values.
 
     Parameters
     ----------
@@ -60,7 +60,11 @@ def call_add_or_remove_notifiers(**kwargs):
         remove=False,
     )
     values.update(kwargs)
-    add_or_remove_notifiers(**values)
+    remove = values.pop('remove')
+    if remove:
+        remove_notifiers(**values)
+    else:
+        add_notifiers(**values)
 
 
 class DummyObservable:
