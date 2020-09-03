@@ -276,6 +276,28 @@ class _AddNotifier(_AddOrRemoveNotifier):
                     dispatcher=self.dispatcher,
                 )
 
+    def _add_or_remove_children_notifiers(self):
+        """ Recursively add or remove notifiers for the children ObserverGraph.
+        """
+        for child_graph in self.graph.children:
+            for next_object in self.graph.node.iter_objects(self.object):
+                if not self.remove:
+                    add_notifiers(
+                        object=next_object,
+                        graph=child_graph,
+                        handler=self.handler,
+                        target=self.target,
+                        dispatcher=self.dispatcher,
+                    )
+                else:
+                    remove_notifiers(
+                        object=next_object,
+                        graph=child_graph,
+                        handler=self.handler,
+                        target=self.target,
+                        dispatcher=self.dispatcher,
+                    )
+
 
 class _RemoveNotifier(_AddOrRemoveNotifier):
     def __init__(self, *, object, graph, handler, target, dispatcher):
@@ -339,3 +361,25 @@ class _RemoveNotifier(_AddOrRemoveNotifier):
                     target=self.target,
                     dispatcher=self.dispatcher,
                 )
+
+    def _add_or_remove_children_notifiers(self):
+        """ Recursively add or remove notifiers for the children ObserverGraph.
+        """
+        for child_graph in self.graph.children:
+            for next_object in self.graph.node.iter_objects(self.object):
+                if not self.remove:
+                    add_notifiers(
+                        object=next_object,
+                        graph=child_graph,
+                        handler=self.handler,
+                        target=self.target,
+                        dispatcher=self.dispatcher,
+                    )
+                else:
+                    remove_notifiers(
+                        object=next_object,
+                        graph=child_graph,
+                        handler=self.handler,
+                        target=self.target,
+                        dispatcher=self.dispatcher,
+                    )
