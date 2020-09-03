@@ -230,7 +230,7 @@ class _AddNotifier(_AddOrRemoveNotifier):
         steps = [
             self._add_or_remove_notifiers,
             self._add_or_remove_maintainers,
-            self._add_or_remove_children_notifiers,
+            self._add_children_notifiers,
             self._add_extra_graphs,
         ]
 
@@ -276,7 +276,7 @@ class _AddNotifier(_AddOrRemoveNotifier):
                     dispatcher=self.dispatcher,
                 )
 
-    def _add_or_remove_children_notifiers(self):
+    def _add_children_notifiers(self):
         """ Recursively add or remove notifiers for the children ObserverGraph.
         """
         for child_graph in self.graph.children:
@@ -316,7 +316,7 @@ class _RemoveNotifier(_AddOrRemoveNotifier):
         steps = [
             self._add_or_remove_notifiers,
             self._add_or_remove_maintainers,
-            self._add_or_remove_children_notifiers,
+            self._remove_children_notifiers,
             self._remove_extra_graphs,
         ]
 
@@ -362,7 +362,7 @@ class _RemoveNotifier(_AddOrRemoveNotifier):
                     dispatcher=self.dispatcher,
                 )
 
-    def _add_or_remove_children_notifiers(self):
+    def _remove_children_notifiers(self):
         """ Recursively add or remove notifiers for the children ObserverGraph.
         """
         for child_graph in self.graph.children:
