@@ -55,25 +55,23 @@ def add_or_remove_notifiers(
 
 
 def add_notifiers(*, object, graph, handler, target, dispatcher):
-    callable_ = _AddOrRemoveNotifier(
+    callable_ = _AddNotifier(
         object=object,
         graph=graph,
         handler=handler,
         target=target,
         dispatcher=dispatcher,
-        remove=False,
     )
     callable_()
 
 
 def remove_notifiers(*, object, graph, handler, target, dispatcher):
-    callable_ = _AddOrRemoveNotifier(
+    callable_ = _RemoveNotifier(
         object=object,
         graph=graph,
         handler=handler,
         target=target,
         dispatcher=dispatcher,
-        remove=True,
     )
     callable_()
 
@@ -217,9 +215,23 @@ class _AddOrRemoveNotifier:
 
 class _AddNotifier(_AddOrRemoveNotifier):
     def __init__(self, *, object, graph, handler, target, dispatcher):
-        super().__init__(object, graph, handler, target, dispatcher, remove=False)  # noqa: E501
+        super().__init__(
+            object=object,
+            graph=graph,
+            handler=handler,
+            target=target,
+            dispatcher=dispatcher,
+            remove=False,
+        )
 
 
 class _RemoveNotifier(_AddOrRemoveNotifier):
     def __init__(self, *, object, graph, handler, target, dispatcher):
-        super().__init__(object, graph, handler, target, dispatcher, remove=True)  # noqa: E501
+        super().__init__(
+            object=object,
+            graph=graph,
+            handler=handler,
+            target=target,
+            dispatcher=dispatcher,
+            remove=True,
+        )
