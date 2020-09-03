@@ -54,6 +54,30 @@ def add_or_remove_notifiers(
     callable_()
 
 
+def add_notifiers(*, object, graph, handler, target, dispatcher):
+    callable_ = _AddOrRemoveNotifier(
+        object=object,
+        graph=graph,
+        handler=handler,
+        target=target,
+        dispatcher=dispatcher,
+        remove=False,
+    )
+    callable_()
+
+
+def remove_notifiers(*, object, graph, handler, target, dispatcher):
+    callable_ = _AddOrRemoveNotifier(
+        object=object,
+        graph=graph,
+        handler=handler,
+        target=target,
+        dispatcher=dispatcher,
+        remove=True,
+    )
+    callable_()
+
+
 class _AddOrRemoveNotifier:
     """ Callable for adding or removing notifiers.
 
