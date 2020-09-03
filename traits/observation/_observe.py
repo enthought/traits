@@ -213,3 +213,11 @@ class _AddOrRemoveNotifier:
                 notifier.add_to(observable)
 
             self._processed.append((notifier, observable))
+
+
+class _AddNotifier(_AddOrRemoveNotifier):
+    pass
+
+
+class _RemoveNotifier(_AddOrRemoveNotifier):
+    pass
