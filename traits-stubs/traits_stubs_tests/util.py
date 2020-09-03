@@ -15,8 +15,6 @@ import shutil
 import re
 import tempfile
 
-from mypy import api as mypy_api
-
 
 def parse_py_file(filepath):
     """ This function parses a python file that have been annotated with error
@@ -98,6 +96,9 @@ def run_mypy(filepath):
         The exit status
 
     """
+    # Local import to make it easier to skip tests if mypy is not in
+    # the environment.
+    from mypy import api as mypy_api
 
     # Need to use  tempdir since mypy complains that:
     # "site-packages is in PYTHONPATH. Please change directory so it is not."
