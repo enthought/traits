@@ -14,7 +14,7 @@
 from traits.constants import ComparisonMode, TraitKind
 from traits.ctraits import CHasTraits
 from traits.observation._exceptions import NotifierNotFound
-from traits.observation._observe import add_or_remove_notifiers
+from traits.observation._observe import add_notifiers, remove_notifiers
 from traits.trait_base import Undefined, Uninitialized
 
 
@@ -91,13 +91,12 @@ def observer_change_handler(event, graph, handler, target, dispatcher):
     """
     if all(event.old is not skipped for skipped in UNOBSERVABLE_VALUES):
         try:
-            add_or_remove_notifiers(
+            remove_notifiers(
                 object=event.old,
                 graph=graph,
                 handler=handler,
                 target=target,
                 dispatcher=dispatcher,
-                remove=True,
             )
         except NotifierNotFound:
             # The old value could be a default value that does not have any
@@ -105,13 +104,12 @@ def observer_change_handler(event, graph, handler, target, dispatcher):
             pass
 
     if all(event.new is not skipped for skipped in UNOBSERVABLE_VALUES):
-        add_or_remove_notifiers(
+        add_notifiers(
             object=event.new,
             graph=graph,
             handler=handler,
             target=target,
             dispatcher=dispatcher,
-            remove=False,
         )
 
 
