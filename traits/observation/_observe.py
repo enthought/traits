@@ -225,7 +225,34 @@ class _AddNotifier(_AddOrRemoveNotifier):
         )
 
     def __call__(self):
-        super().__call__()
+        # The order of events does not matter as they are independent of each
+        # other.
+        steps = [
+            self._add_or_remove_notifiers,
+            self._add_or_remove_maintainers,
+            self._add_or_remove_children_notifiers,
+            self._add_or_remove_extra_graphs,
+        ]
+
+        # Not quite the complete reversal, as trees are still walked from
+        # root to leaves.
+        if self.remove:
+            steps = steps[::-1]
+
+        try:
+            for step in steps:
+                step()
+        except Exception:
+            # Undo and then reraise
+            while self._processed:
+                notifier, observable = self._processed.pop()
+                if self.remove:
+                    notifier.add_to(observable)
+                else:
+                    notifier.remove_from(observable)
+            raise
+        else:
+            self._processed.clear()
 
 
 class _RemoveNotifier(_AddOrRemoveNotifier):
@@ -240,4 +267,31 @@ class _RemoveNotifier(_AddOrRemoveNotifier):
         )
 
     def __call__(self):
-        super().__call__()
+        # The order of events does not matter as they are independent of each
+        # other.
+        steps = [
+            self._add_or_remove_notifiers,
+            self._add_or_remove_maintainers,
+            self._add_or_remove_children_notifiers,
+            self._add_or_remove_extra_graphs,
+        ]
+
+        # Not quite the complete reversal, as trees are still walked from
+        # root to leaves.
+        if self.remove:
+            steps = steps[::-1]
+
+        try:
+            for step in steps:
+                step()
+        except Exception:
+            # Undo and then reraise
+            while self._processed:
+                notifier, observable = self._processed.pop()
+                if self.remove:
+                    notifier.add_to(observable)
+                else:
+                    notifier.remove_from(observable)
+            raise
+        else:
+            self._processed.clear()
