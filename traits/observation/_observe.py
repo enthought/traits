@@ -215,14 +215,14 @@ class _AddOrRemoveNotifier:
 
 class _AddNotifier(_AddOrRemoveNotifier):
     def __init__(self, *, object, graph, handler, target, dispatcher):
-        super().__init__(
-            object=object,
-            graph=graph,
-            handler=handler,
-            target=target,
-            dispatcher=dispatcher,
-            remove=False,
-        )
+        self.object = object
+        self.graph = graph
+        self.handler = handler
+        self.target = target
+        self.dispatcher = dispatcher
+
+        # list of (notifier, observable)
+        self._processed = []
 
     def __call__(self):
         # The order of events does not matter as they are independent of each
@@ -311,14 +311,14 @@ class _AddNotifier(_AddOrRemoveNotifier):
 
 class _RemoveNotifier(_AddOrRemoveNotifier):
     def __init__(self, *, object, graph, handler, target, dispatcher):
-        super().__init__(
-            object=object,
-            graph=graph,
-            handler=handler,
-            target=target,
-            dispatcher=dispatcher,
-            remove=True,
-        )
+        self.object = object
+        self.graph = graph
+        self.handler = handler
+        self.target = target
+        self.dispatcher = dispatcher
+
+        # list of (notifier, observable)
+        self._processed = []
 
     def __call__(self):
         # The order of events does not matter as they are independent of each
