@@ -224,6 +224,9 @@ class _AddNotifier(_AddOrRemoveNotifier):
             remove=False,
         )
 
+    def __call__(self):
+        super().__call__()
+
 
 class _RemoveNotifier(_AddOrRemoveNotifier):
     def __init__(self, *, object, graph, handler, target, dispatcher):
@@ -235,3 +238,6 @@ class _RemoveNotifier(_AddOrRemoveNotifier):
             dispatcher=dispatcher,
             remove=True,
         )
+
+    def __call__(self):
+        super().__call__()
