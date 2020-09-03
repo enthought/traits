@@ -155,14 +155,22 @@ class _AddOrRemoveNotifier:
         """
         for child_graph in self.graph.children:
             for next_object in self.graph.node.iter_objects(self.object):
-                add_or_remove_notifiers(
-                    object=next_object,
-                    graph=child_graph,
-                    handler=self.handler,
-                    target=self.target,
-                    dispatcher=self.dispatcher,
-                    remove=self.remove,
-                )
+                if not self.remove:
+                    add_notifiers(
+                        object=next_object,
+                        graph=child_graph,
+                        handler=self.handler,
+                        target=self.target,
+                        dispatcher=self.dispatcher,
+                    )
+                else:
+                    remove_notifiers(
+                        object=next_object,
+                        graph=child_graph,
+                        handler=self.handler,
+                        target=self.target,
+                        dispatcher=self.dispatcher,
+                    )
 
     def _add_or_remove_maintainers(self):
         """ Add or remove notifiers for maintaining children notifiers when
