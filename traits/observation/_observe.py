@@ -216,8 +216,10 @@ class _AddOrRemoveNotifier:
 
 
 class _AddNotifier(_AddOrRemoveNotifier):
-    pass
+    def __init__(self, *, object, graph, handler, target, dispatcher):
+        super().__init__(object, graph, handler, target, dispatcher, remove=False)  # noqa: E501
 
 
 class _RemoveNotifier(_AddOrRemoveNotifier):
-    pass
+    def __init__(self, *, object, graph, handler, target, dispatcher):
+        super().__init__(object, graph, handler, target, dispatcher, remove=True)  # noqa: E501
