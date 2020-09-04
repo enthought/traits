@@ -41,11 +41,17 @@ jobs:
     - name: Lint with flake8
       run: |
         python -m flake8
-    - name: Run documentation build
+    - name: Run documentation build (xvfb)
+      run: |
+        cd docs
+        xvfb-run --auto-servernum python -m sphinx -b html -W source build
+      if: matrix.os == 'ubuntu-latest'
+    - name: Run documentation build (no xvfb)
       run: |
         cd docs
         python -m sphinx -b html -W source build
-    - name: Test with unittest (with xvfb)
+      if: matrix.os != 'ubuntu-latest'
+    - name: Test with unittest (xvfb)
       run: |
         mkdir testdir
         cd testdir
