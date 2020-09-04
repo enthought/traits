@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
         python-version: [3.5, 3.6, 3.7, 3.8]
 
     steps:
@@ -18,6 +18,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install qt5-default
+        sudo apt-get install xvfb
         sudo apt-get install libxkbcommon-x11-0
         sudo apt-get install libxcb-icccm4
         sudo apt-get install libxcb-image0
@@ -44,7 +45,7 @@ jobs:
       run: |
         mkdir testdir
         cd testdir
-        python -m unittest discover -v traits
+        xvfb-run --auto-servernum python -m unittest discover -v traits
         python -m unittest discover -v traits_stubs_tests
       env:
         # Debug test failures due to missing plugins
