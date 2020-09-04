@@ -17,13 +17,6 @@ jobs:
     - name: Install Linux packages for Qt 5 support
       run: |
         sudo apt-get install qt5-default
-        sudo apt-get install libxkbcommon-x11-0
-        sudo apt-get install libxcb-icccm4
-        sudo apt-get install libxcb-image0
-        sudo apt-get install libxcb-keysyms1
-        sudo apt-get install libxcb-randr0
-        sudo apt-get install libxcb-render-util0
-        sudo apt-get install libxcb-xinerama0
       if: matrix.os == 'ubuntu-latest'
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
@@ -45,6 +38,9 @@ jobs:
         cd testdir
         python -m unittest discover -v traits
         python -m unittest discover -v traits_stubs_tests
+      env:
+        # Debug test failures due to missing plugins
+        QT_DEBUG_PLUGINS: 1
     - name: Run documentation build
       run: |
         cd docs
