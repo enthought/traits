@@ -14,9 +14,11 @@ from unittest import TestCase
 
 import pkg_resources
 
+from traits.testing.optional_dependencies import requires_mypy
 from traits_stubs_tests.util import MypyAssertions
 
 
+@requires_mypy
 class TestAnnotations(TestCase, MypyAssertions):
     def test_all(self, filename_suffix=''):
         """ Run mypy for all files contained in traits_stubs_tests/examples
