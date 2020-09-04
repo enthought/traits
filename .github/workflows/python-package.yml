@@ -46,11 +46,3 @@ jobs:
         mkdir testdir
         cd testdir
         xvfb-run --auto-servernum python -m unittest discover -v traits
-        python -m unittest discover -v traits_stubs_tests
-      env:
-        # Debug test failures due to missing plugins
-        QT_DEBUG_PLUGINS: 1
-    - name: Run documentation build
-      run: |
-        cd docs
-        python -m sphinx -b html -W source build
