@@ -39,6 +39,9 @@ def optional_import(name):
 cython = optional_import("cython")
 requires_cython = unittest.skipIf(cython is None, "Cython not available")
 
+mypy = optional_import("mypy")
+requires_mypy = unittest.skipIf(mypy is None, "Mypy not available")
+
 numpy = optional_import("numpy")
 requires_numpy = unittest.skipIf(numpy is None, "NumPy not available")
 
