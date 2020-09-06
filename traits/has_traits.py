@@ -2035,7 +2035,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 with open(filename, "rb") as fd:
                     self.copy_traits(pickle.Unpickler(fd).load())
 
-        if edit==None:
+        if edit is None:
             from traitsui.api import toolkit
 
             if context is None:
