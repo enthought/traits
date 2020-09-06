@@ -1980,6 +1980,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         Parameters
         ----------
         filename : str
+        
             .. deprecated:: 6.0.0
             The name (including path) of a file that contains a pickled
             representation of the current object. When this parameter is
@@ -2002,6 +2003,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             their meanings. If *kind* is unspecified or None, the **kind**
             attribute of the View object is used.
         edit : bool
+
             .. deprecated:: 6.2.0
             Indicates whether to display a user interface. If *filename*
             specifies an existing file, setting *edit* to False loads the
