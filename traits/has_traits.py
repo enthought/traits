@@ -1980,8 +1980,6 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         Parameters
         ----------
         filename : str
-        
-            .. deprecated:: 6.0.0
             The name (including path) of a file that contains a pickled
             representation of the current object. When this parameter is
             specified, the method reads the corresponding file (if it exists)
@@ -1990,6 +1988,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             **OK**), the new values are written to the file. If this parameter
             is not specified, the values are loaded from the in-memory object,
             and are not persisted when the dialog box is closed.
+            .. deprecated:: 6.0.0
+
         view : View or str
             A View object (or its name) that defines a user interface for
             editing trait attribute values of the current object. If the view
@@ -2003,12 +2003,12 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             their meanings. If *kind* is unspecified or None, the **kind**
             attribute of the View object is used.
         edit : bool
-
-            .. deprecated:: 6.2.0
             Indicates whether to display a user interface. If *filename*
             specifies an existing file, setting *edit* to False loads the
             saved values from that file into the object without requiring
             user interaction.
+            .. deprecated:: 6.2.0
+            
         context : object or dictionary
             A single object or a dictionary of string/object pairs, whose trait
             attributes are to be edited. If not specified, the current object
