@@ -133,3 +133,10 @@ class TestConfigureTraits(unittest.TestCase):
         with mock.patch.object(self.toolkit, "view_application"):
             with self.assertWarns(DeprecationWarning):
                 model.configure_traits(edit=False)
+
+    def test_edit_when_true(self):
+        # Check for deprecation warning when *edit* is false.
+        model = Model()
+        with mock.patch.object(self.toolkit, "view_application"):
+            with self.assertWarns(DeprecationWarning):
+                model.configure_traits(edit=True)

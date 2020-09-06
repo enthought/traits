@@ -1948,7 +1948,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         filename=None,
         view=None,
         kind=None,
-        edit=True,
+        edit=None,
         context=None,
         handler=None,
         id="",
@@ -2035,7 +2035,29 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 with open(filename, "rb") as fd:
                     self.copy_traits(pickle.Unpickler(fd).load())
 
-        if edit:
+        if edit==None:
+            from traitsui.api import toolkit
+
+            if context is None:
+                context = self
+            rc = toolkit().view_application(
+                context,
+                self.trait_view(view),
+                kind,
+                handler,
+                id,
+                scrollable,
+                args,
+            )
+            if rc and (filename is not None):
+                with open(filename, "wb") as fd:
+                    pickle.Pickler(fd, protocol=3).dump(self)
+            return rc
+
+        elif edit:
+            message = ('The edit argument to configure_traits is deprecated, '
+                       'and will be removed in Traits 7.0.0')
+            warnings.warn(message, DeprecationWarning)
             from traitsui.api import toolkit
 
             if context is None:
