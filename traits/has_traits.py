@@ -2008,7 +2008,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             saved values from that file into the object without requiring
             user interaction.
             .. deprecated:: 6.2.0
-            
+
         context : object or dictionary
             A single object or a dictionary of string/object pairs, whose trait
             attributes are to be edited. If not specified, the current object
