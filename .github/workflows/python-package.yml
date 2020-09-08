@@ -29,6 +29,7 @@ jobs:
     - name: Start virtual framebuffer on Linux
       run: |
         sudo apt-get install xvfb
+        export DISPLAY=:99.0
         Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
         sleep 3  # give xvfb some time to start
       if: matrix.os == 'ubuntu-latest'
