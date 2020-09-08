@@ -35,7 +35,7 @@ jobs:
         python --version
         python -m pip install --upgrade pip setuptools wheel
         python -m pip install copyright_header/
-        python -m pip install .[docs,test]
+        python -m pip install .[test]
         python -m pip install traits-stubs/[test]
     - name: Create clean test directory
       run: |
