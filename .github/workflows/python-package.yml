@@ -44,16 +44,11 @@ jobs:
         python -m pip install copyright_header/
         python -m pip install .[docs,test]
         python -m pip install traits-stubs/[test]
-    - name: Lint with flake8
-      run: |
-        python -m flake8
     - name: Test with unittest
-      run: |
-        mkdir testdir
-        cd testdir
-        python -m unittest discover -v traits
-        python -m unittest discover -v traits_stubs_tests
-    - name: Run documentation build
-      run: |
-        cd docs
-        python -m sphinx -b html -W source build
+      uses: GabrielBB/xvfb-action@v1
+      with:
+        run: |
+          mkdir testdir
+          cd testdir
+          python -m unittest discover -v traits
+          python -m unittest discover -v traits_stubs_tests
