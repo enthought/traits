@@ -5,12 +5,12 @@ on:
 
 jobs:
   build:
-
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: [3.5, 3.6, 3.7, 3.8]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v2
@@ -18,7 +18,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install qt5-default
-        sudo apt-get install xvfb
         sudo apt-get install libxkbcommon-x11-0
         sudo apt-get install libxcb-icccm4
         sudo apt-get install libxcb-image0
@@ -26,6 +25,13 @@ jobs:
         sudo apt-get install libxcb-randr0
         sudo apt-get install libxcb-render-util0
         sudo apt-get install libxcb-xinerama0
+      if: matrix.os == 'ubuntu-latest'
+    - name: Start virtual framebuffer on Linux
+      run: |
+        sudo apt-get install xvfb
+        export DISPLAY=:99.0
+        sh -e /etc/init.d/xvfb start"
+        sleep 3  # give xvfb some time to start
       if: matrix.os == 'ubuntu-latest'
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
@@ -41,30 +47,13 @@ jobs:
     - name: Lint with flake8
       run: |
         python -m flake8
-    - name: Run documentation build (xvfb)
-      run: |
-        cd docs
-        xvfb-run --auto-servernum python -m sphinx -b html -W source build
-      if: matrix.os == 'ubuntu-latest'
-    - name: Run documentation build (no xvfb)
-      run: |
-        cd docs
-        python -m sphinx -b html -W source build
-      if: matrix.os != 'ubuntu-latest'
-    - name: Test with unittest (xvfb)
-      run: |
-        mkdir testdir
-        cd testdir
-        xvfb-run --auto-servernum python -m unittest discover -v traits
-        xvfb-run --auto-servernum python -m unittest discover -v traits_stubs_tests
-      if: matrix.os == 'ubuntu-latest'
-      env:
-        # Debug test failures due to missing plugins
-        QT_DEBUG_PLUGINS: 1
-    - name: Test with unittest (no xvfb)
+    - name: Test with unittest
       run: |
         mkdir testdir
         cd testdir
         python -m unittest discover -v traits
         python -m unittest discover -v traits_stubs_tests
-      if: matrix.os != 'ubuntu-latest'
+    - name: Run documentation build
+      run: |
+        cd docs
+        python -m sphinx -b html -W source build
