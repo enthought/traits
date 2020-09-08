@@ -44,11 +44,11 @@ jobs:
         python -m pip install copyright_header/
         python -m pip install .[docs,test]
         python -m pip install traits-stubs/[test]
+    - name: Create clean test directory
+      run: |
+        mkdir testdir
     - name: Test with unittest
       uses: GabrielBB/xvfb-action@v1
       with:
-        run: |
-          mkdir testdir
-          cd testdir
-          python -m unittest discover -v traits
-          python -m unittest discover -v traits_stubs_tests
+        working-directory: testdir
+        run: python -m unittest discover -v traits
