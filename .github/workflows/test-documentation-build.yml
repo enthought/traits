@@ -1,0 +1,32 @@
+name: Test Traits documentation build
+
+on:
+  pull_request
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.6, 3.8]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies and local packages
+      run: |
+        python --version
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install .[docs]
+    - name: Create clean test directory
+      run: |
+        mkdir testdir
+    - name: Build HTML documentation with Sphinx
+      run: |
+        cd docs
+        python -m sphinx -b html -W source build
