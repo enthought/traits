@@ -32,17 +32,12 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies and local packages
       run: |
-        python --version
         python -m pip install --upgrade pip setuptools wheel
-        python -m pip install copyright_header/
         python -m pip install .[test]
         python -m pip install traits-stubs/[test]
     - name: Create clean test directory
       run: |
         mkdir testdir
-    - name: Run style checks
-      run: |
-        python -m flake8
     - name: Test Traits package
       uses: GabrielBB/xvfb-action@v1
       with:
