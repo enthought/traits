@@ -1988,6 +1988,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             **OK**), the new values are written to the file. If this parameter
             is not specified, the values are loaded from the in-memory object,
             and are not persisted when the dialog box is closed.
+
             .. deprecated:: 6.0.0
 
         view : View or str
@@ -2007,6 +2008,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             specifies an existing file, setting *edit* to False loads the
             saved values from that file into the object without requiring
             user interaction.
+
             .. deprecated:: 6.2.0
 
         context : object or dictionary
@@ -2037,52 +2039,32 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 with open(filename, "rb") as fd:
                     self.copy_traits(pickle.Unpickler(fd).load())
 
-        if edit is None:
-            from traitsui.api import toolkit
-
-            if context is None:
-                context = self
-            rc = toolkit().view_application(
-                context,
-                self.trait_view(view),
-                kind,
-                handler,
-                id,
-                scrollable,
-                args,
-            )
-            if rc and (filename is not None):
-                with open(filename, "wb") as fd:
-                    pickle.Pickler(fd, protocol=3).dump(self)
-            return rc
-
-        elif edit:
+        if edit is not None:
             message = ('The edit argument to configure_traits is deprecated, '
                        'and will be removed in Traits 7.0.0')
             warnings.warn(message, DeprecationWarning)
-            from traitsui.api import toolkit
-
-            if context is None:
-                context = self
-            rc = toolkit().view_application(
-                context,
-                self.trait_view(view),
-                kind,
-                handler,
-                id,
-                scrollable,
-                args,
-            )
-            if rc and (filename is not None):
-                with open(filename, "wb") as fd:
-                    pickle.Pickler(fd, protocol=3).dump(self)
-            return rc
-
+            if edit:
+                edit = None
+            else:
+                return True
         else:
-            message = ('The edit argument to configure_traits is deprecated, '
-                       'and will be removed in Traits 7.0.0')
-            warnings.warn(message, DeprecationWarning)
-            return True
+            from traitsui.api import toolkit
+
+            if context is None:
+                context = self
+            rc = toolkit().view_application(
+                context,
+                self.trait_view(view),
+                kind,
+                handler,
+                id,
+                scrollable,
+                args,
+            )
+            if rc and (filename is not None):
+                with open(filename, "wb") as fd:
+                    pickle.Pickler(fd, protocol=3).dump(self)
+            return rc
 
     def editable_traits(self):
         """Returns an alphabetically sorted list of the names of non-event
