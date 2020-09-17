@@ -2039,15 +2039,11 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 with open(filename, "rb") as fd:
                     self.copy_traits(pickle.Unpickler(fd).load())
 
-        if edit is not None:
-            message = ('The edit argument to configure_traits is deprecated, '
-                       'and will be removed in Traits 7.0.0')
-            warnings.warn(message, DeprecationWarning)
+        if edit is True or None:
             if edit:
-                edit = None
-            else:
-                return True
-        else:
+                message = ('The edit argument to configure_traits is '
+                           'deprecated, and will be removed in Traits 7.0.0')
+                warnings.warn(message, DeprecationWarning)
             from traitsui.api import toolkit
 
             if context is None:
@@ -2065,6 +2061,12 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
                 with open(filename, "wb") as fd:
                     pickle.Pickler(fd, protocol=3).dump(self)
             return rc
+        else:
+            message = ('The edit argument to configure_traits is deprecated, '
+                       'and will be removed in Traits 7.0.0')
+            warnings.warn(message, DeprecationWarning)
+
+        return True
 
     def editable_traits(self):
         """Returns an alphabetically sorted list of the names of non-event
