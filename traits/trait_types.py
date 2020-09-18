@@ -361,7 +361,7 @@ class BaseStr(TraitType):
 
 
 class Str(BaseStr):
-    """ A fast-validating trait type whose value must be a complex number.
+    """ A fast-validating trait type whose value must be a string.
     """
 
     #: The C-level fast validator to use:
