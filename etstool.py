@@ -217,6 +217,26 @@ def install(edm, runtime, environment, editable, source):
 @edm_option
 @runtime_option
 @click.option(
+    "--environment",
+    default=None,
+    help="Name of the EDM environment to install",
+)
+def shell(edm, runtime, environment):
+    """ Create a shell into the EDM development environment
+    (aka 'activate' it).
+
+    """
+    parameters = get_parameters(edm, runtime, environment)
+    commands = [
+        "{edm} shell -e {environment}",
+    ]
+    execute(commands, parameters)
+
+
+@cli.command()
+@edm_option
+@runtime_option
+@click.option(
     "--environment", default=None, help="Name of EDM environment to check."
 )
 def flake8(edm, runtime, environment):
