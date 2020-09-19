@@ -15,6 +15,7 @@ import shutil
 import tempfile
 import unittest
 import unittest.mock as mock
+import warnings
 
 from traits.api import HasTraits, Int
 from traits.testing.optional_dependencies import requires_traitsui, traitsui
@@ -130,13 +131,27 @@ class TestConfigureTraits(unittest.TestCase):
     def test_edit_when_false(self):
         # Check for deprecation warning when *edit* is false.
         model = Model()
-        with mock.patch.object(self.toolkit, "view_application"):
+        with mock.patch.object(self.toolkit, "view_application") as mock_view:
             with self.assertWarns(DeprecationWarning):
                 model.configure_traits(edit=False)
+        mock_view.assert_not_called()
 
     def test_edit_when_true(self):
         # Check for deprecation warning when *edit* is false.
         model = Model()
-        with mock.patch.object(self.toolkit, "view_application"):
+        with mock.patch.object(self.toolkit, "view_application") as mock_view:
+            mock_view.return_value = True
             with self.assertWarns(DeprecationWarning):
                 model.configure_traits(edit=True)
+        self.assertEqual(len(mock_view.mock_calls), 1)
+
+    def test_edit_not_given(self):
+        # Normal case where the *edit* argument is not supplied.
+        model = Model()
+        with mock.patch.object(self.toolkit, "view_application") as mock_view:
+            mock_view.return_value = True
+            with warnings.catch_warnings(record=True) as captured_warnings:
+                warnings.simplefilter("always", DeprecationWarning)
+                model.configure_traits()
+        self.assertEqual(len(mock_view.mock_calls), 1)
+        self.assertEqual(len(captured_warnings), 0)
