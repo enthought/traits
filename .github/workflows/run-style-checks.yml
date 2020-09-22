@@ -4,7 +4,7 @@ on:
   pull_request
 
 jobs:
-  build:
+  style:
     strategy:
       matrix:
         os: [ubuntu-latest]
