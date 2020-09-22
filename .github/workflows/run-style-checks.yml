@@ -1,4 +1,4 @@
-name: Run style checks on codebase
+name: Style check
 
 on:
   pull_request

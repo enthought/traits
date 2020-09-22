@@ -1,4 +1,4 @@
-name: Test Traits documentation build
+name: Doc build
 
 on:
   pull_request

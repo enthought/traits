@@ -1,4 +1,4 @@
-name: Install and test Traits package
+name: Tests
 
 on:
   pull_request
