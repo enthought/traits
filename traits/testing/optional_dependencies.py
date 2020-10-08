@@ -45,6 +45,11 @@ requires_mypy = unittest.skipIf(mypy is None, "Mypy not available")
 numpy = optional_import("numpy")
 requires_numpy = unittest.skipIf(numpy is None, "NumPy not available")
 
+pkg_resources = optional_import("pkg_resources")
+requires_pkg_resources = unittest.skipIf(
+    pkg_resources is None, "pkg_resources not available"
+)
+
 pyface = optional_import("pyface")
 requires_pyface = unittest.skipIf(pyface is None, "Pyface not available")
 
