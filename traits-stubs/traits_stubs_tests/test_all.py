@@ -12,15 +12,18 @@
 from pathlib import Path
 from unittest import TestCase
 
-import pkg_resources
-
-from traits.testing.optional_dependencies import requires_mypy
+from traits.testing.optional_dependencies import (
+    pkg_resources,
+    requires_mypy,
+    requires_pkg_resources,
+)
 from traits_stubs_tests.util import MypyAssertions
 
 
 @requires_mypy
 class TestAnnotations(TestCase, MypyAssertions):
-    def test_all(self, filename_suffix=''):
+    @requires_pkg_resources
+    def test_all(self, filename_suffix=""):
         """ Run mypy for all files contained in traits_stubs_tests/examples
         directory.
 

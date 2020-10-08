@@ -17,7 +17,10 @@ import pathlib
 import pickle
 import unittest
 
-import pkg_resources
+from traits.testing.optional_dependencies import (
+    pkg_resources,
+    requires_pkg_resources,
+)
 
 
 def find_pickles():
@@ -52,6 +55,7 @@ def find_pickles():
 
 
 class TestHistoricalPickles(unittest.TestCase):
+    @requires_pkg_resources
     def test_unpickling_historical_pickles(self):
         # Just test that the pickle can be unpickled.
         for pickle_path in find_pickles():
