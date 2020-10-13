@@ -276,7 +276,6 @@ setuptools.setup(
         Operating System :: POSIX :: Linux
         Programming Language :: Python
         Programming Language :: Python :: 3
-        Programming Language :: Python :: 3.5
         Programming Language :: Python :: 3.6
         Programming Language :: Python :: 3.7
         Programming Language :: Python :: 3.8
@@ -348,6 +347,6 @@ setuptools.setup(
     },
     license="BSD",
     packages=setuptools.find_packages(include=["traits", "traits.*"]),
-    python_requires=">=3.5",
+    python_requires=">=3.6",
     zip_safe=False,
 )
