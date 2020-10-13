@@ -454,6 +454,29 @@ class UnittestTools(object):
 
     @contextlib.contextmanager
     def _catch_warnings(self):
+        """
+        Replacement for warnings.catch_warnings.
+
+        This method wraps warnings.catch_warnings, takes care to
+        reset the warning registry before entering the with context,
+        and ensures that DeprecationWarnings are always emitted.
+
+        The hack to reset the warning registry is no longer needed in
+        Python 3.4 and later. See http://bugs.python.org/issue4180 for
+        more background.
+
+        .. deprecated:: 6.2
+            Use :func:`warnings.catch_warnings` instead.
+
+        """
+        warnings.warn(
+            (
+                "The _catch_warnings method is deprecated. "
+                "Use warnings.catch_warnings instead."
+            ),
+            DeprecationWarning,
+        )
+
         # Ugly hack copied from the core Python code (see
         # Lib/test/test_support.py) to reset the warnings registry
         # for the module making use of this context manager.
@@ -475,8 +498,10 @@ class UnittestTools(object):
         for testing uses of traits.util.deprecated.deprecated.
 
         """
-        with self._catch_warnings() as w:
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always", DeprecationWarning)
             yield w
+
         self.assertGreater(
             len(w),
             0,
@@ -490,8 +515,10 @@ class UnittestTools(object):
         for testing uses of traits.util.deprecated.deprecated.
 
         """
-        with self._catch_warnings() as w:
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always", DeprecationWarning)
             yield w
+
         self.assertEqual(
             len(w),
             0,
