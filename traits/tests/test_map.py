@@ -13,7 +13,6 @@ Tests for the Map handler.
 """
 
 import pickle
-import sys
 import unittest
 
 from traits.api import HasTraits, Int, List, Map, on_trait_change, TraitError
@@ -71,16 +70,11 @@ class TestMap(unittest.TestCase):
             married = Map(mapping)
 
         p = Person()
-        if sys.version_info >= (3, 6):
-            # If we're using Python >= 3.6, we can rely on dictionaries
-            # being ordered, and then the default is predictable.
-            self.assertEqual(p.married, "yes")
-            self.assertEqual(p.married_, 1)
-        else:
-            # Otherwise, all we can expect is that the default is _one_
-            # of the dictionary entries.
-            self.assertIn(p.married, mapping)
-            self.assertEqual(p.married_, mapping[p.married])
+
+        # Since we're using Python >= 3.6, we can rely on dictionaries
+        # being ordered, and then the default is predictable.
+        self.assertEqual(p.married, "yes")
+        self.assertEqual(p.married_, 1)
 
     def test_no_default_reverse_access_order(self):
         mapping = {"yes": 1, "yeah": 1, "no": 0, "nah": 0}
@@ -91,14 +85,11 @@ class TestMap(unittest.TestCase):
         p = Person()
         shadow_value = p.married_
         primary_value = p.married
-        if sys.version_info >= (3, 6):
-            self.assertEqual(primary_value, "yes")
-            self.assertEqual(shadow_value, 1)
-        else:
-            # For Python < 3.6, dictionary ordering and hence the default
-            # value aren't predictable.
-            self.assertIn(primary_value, mapping)
-            self.assertEqual(shadow_value, mapping[primary_value])
+
+        # For Python >= 3.6, dictionary ordering and hence the default
+        # value are predictable.
+        self.assertEqual(primary_value, "yes")
+        self.assertEqual(shadow_value, 1)
 
     def test_default(self):
         class Person(HasTraits):

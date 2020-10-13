@@ -10,7 +10,6 @@
 
 import os
 from pathlib import Path
-import sys
 import unittest
 
 from traits.api import File, HasTraits, TraitError
@@ -30,7 +29,6 @@ class FileTestCase(unittest.TestCase):
         example_model = ExampleModel(file_name=__file__)
         example_model.file_name = os.path.__file__
 
-    @unittest.skipIf(sys.version_info < (3, 6), "PathLike File trait test")
     def test_valid_pathlike_file(self):
         ExampleModel(file_name=Path(__file__))
 
@@ -40,7 +38,6 @@ class FileTestCase(unittest.TestCase):
         with self.assertRaises(TraitError):
             example_model.file_name = "not_valid_path!#!#!#"
 
-    @unittest.skipIf(sys.version_info < (3, 6), "PathLike File trait test")
     def test_invalid_pathlike_file(self):
         example_model = ExampleModel(file_name=__file__)
 
@@ -53,7 +50,6 @@ class FileTestCase(unittest.TestCase):
         with self.assertRaises(TraitError):
             example_model.file_name = os.path.dirname(__file__)
 
-    @unittest.skipIf(sys.version_info < (3, 6), "PathLike File trait test")
     def test_pathlike_directory(self):
         example_model = ExampleModel(file_name=__file__)
 
