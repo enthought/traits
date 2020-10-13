@@ -439,3 +439,8 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
             with self.assertRaises(self.failureException):
                 with self.assertNotDeprecated():
                     old_and_dull_caller()
+
+    def test__catch_warnings_deprecated(self):
+        with self.assertWarns(DeprecationWarning):
+            with self._catch_warnings():
+                pass
