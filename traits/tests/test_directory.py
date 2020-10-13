@@ -9,17 +9,11 @@
 # Thanks for using Enthought open source!
 
 import pathlib
-import sys
 from tempfile import gettempdir
 
 import unittest
 
 from traits.api import BaseDirectory, Directory, HasTraits, TraitError
-
-
-requires_fspath = unittest.skipIf(
-    sys.version_info < (3, 6),
-    "Test requires os.fspath, which is unavailable before Python 3.6")
 
 
 class ExampleModel(HasTraits):
@@ -86,21 +80,18 @@ class TestBaseDirectory(unittest.TestCase):
         with self.assertRaises(TraitError):
             foo.path = __file__
 
-    @requires_fspath
     def test_accepts_valid_pathlib_dir(self):
         foo = ExistsBaseDirectory()
         foo.path = pathlib.Path(gettempdir())
 
         self.assertIsInstance(foo.path, str)
 
-    @requires_fspath
     def test_rejects_invalid_pathlib_dir(self):
         foo = ExistsBaseDirectory()
 
         with self.assertRaises(TraitError):
             foo.path = pathlib.Path("!!!invalid_directory")
 
-    @requires_fspath
     def test_rejects_valid_pathlib_file(self):
         foo = ExistsBaseDirectory()
 
@@ -124,7 +115,6 @@ class TestBaseDirectory(unittest.TestCase):
         foo = SimpleBaseDirectory()
         foo.path = "!!!invalid_directory"
 
-    @requires_fspath
     def test_simple_accepts_any_pathlib(self):
         """ BaseDirectory with no existence check accepts any pathlib path.
         """

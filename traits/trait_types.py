@@ -15,13 +15,10 @@ import collections.abc
 import datetime
 from importlib import import_module
 import operator
+from os import fspath
+from os.path import isfile, isdir
 import re
 import sys
-try:
-    from os import fspath
-except ImportError:
-    fspath = None
-from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 import uuid
 
@@ -1298,8 +1295,8 @@ class PythonValue(Any):
 class BaseFile(BaseStr):
     """ A trait type whose value must be a file path string.
 
-    For Python 3.6 and later this will accept os.pathlib Path objects,
-    converting them to the corresponding string value.
+    This will accept both strings and os.pathlib Path objects,
+    converting the latter to the corresponding string value.
 
     Parameters
     ----------
@@ -1358,15 +1355,13 @@ class BaseFile(BaseStr):
 
             Note: The 'fast validator' version performs this check in C.
         """
-        if fspath is not None:
-            # Python 3.5 does not implement __fspath__
-            try:
-                # If value is of type os.PathLike, get the path representation
-                # The path representation could be either a str or bytes type
-                # If fspath returns bytes, further validation will fail.
-                value = fspath(value)
-            except TypeError:
-                pass
+        try:
+            # If value is of type os.PathLike, get the path representation
+            # The path representation could be either a str or bytes type
+            # If fspath returns bytes, further validation will fail.
+            value = fspath(value)
+        except TypeError:
+            pass
 
         validated_value = super().validate(object, name, value)
         if not self.exists:
@@ -1391,8 +1386,8 @@ class BaseFile(BaseStr):
 class File(BaseFile):
     """ A fast-validating trait type whose value must be a file path string.
 
-    For Python 3.6 and later this will accept os.pathlib Path objects,
-    converting them to the corresponding string value.
+    This will accept both strings and os.pathlib Path objects,
+    converting the latter to the corresponding string value.
 
     Parameters
     ----------
@@ -1444,9 +1439,8 @@ class File(BaseFile):
 class BaseDirectory(BaseStr):
     """ A trait type whose value must be a directory path string.
 
-    For Python 3.6 and greater, it also accepts objects implementing
-    the :class:`os.PathLike` interface, converting them to the corresponding
-    string.
+    This also accepts objects implementing the :class:`os.PathLike` interface,
+    converting them to the corresponding string.
 
     Parameters
     ----------
@@ -1493,12 +1487,10 @@ class BaseDirectory(BaseStr):
 
         Note: The 'fast validator' version performs this check in C.
         """
-        if fspath is not None:
-            # Python 3.5 does not implement __fspath__
-            try:
-                value = fspath(value)
-            except TypeError:
-                pass
+        try:
+            value = fspath(value)
+        except TypeError:
+            pass
 
         validated_value = super().validate(
             object, name, value
@@ -1520,9 +1512,8 @@ class BaseDirectory(BaseStr):
 class Directory(BaseDirectory):
     """ A fast-validating trait type whose value is a directory path string.
 
-    For Python 3.6 and greater, it also accepts objects implementing
-    the :class:`os.PathLike` interface, converting them to the corresponding
-    string.
+    This also accepts objects implementing the :class:`os.PathLike` interface,
+    converting them to the corresponding string.
 
     Parameters
     ----------
