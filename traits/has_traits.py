@@ -2042,8 +2042,10 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
         if edit is None:
             edit = True
         else:
-            message = ('The edit argument to configure_traits is '
-                        'deprecated, and will be removed in Traits 7.0.0')
+            message = (
+                'The edit argument to configure_traits is '
+                'deprecated, and will be removed in Traits 7.0.0'
+            )
             warnings.warn(message, DeprecationWarning)
 
         if edit:
