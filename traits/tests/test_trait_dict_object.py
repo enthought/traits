@@ -143,7 +143,7 @@ class TestTraitDict(unittest.TestCase):
         self.assertEqual(self.changed, {"a": 1, "b": 2})
         self.assertEqual(self.removed, {})
 
-    def test_update_with_tranformation(self):
+    def test_update_with_transformation(self):
         td = TraitDict(
             {"1": 1, "2": 2},
             key_validator=str,
