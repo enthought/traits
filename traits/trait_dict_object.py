@@ -9,6 +9,7 @@
 # Thanks for using Enthought open source!
 
 import copy
+import sys
 from weakref import ref
 
 from traits.observation.i_observable import IObservable
@@ -194,6 +195,39 @@ class TraitDict(dict):
         removed = {key: self[key]} if key in self else {}
         super().__delitem__(key)
         self.notify(removed=removed, added={}, changed={})
+
+    if sys.version_info >= (3, 9):
+        def __ior__(self, other):
+            """ Update self with the contents of other.
+
+            Parameters
+            ----------
+            other : mapping or iterable of (key, value) pairs
+                Values to be added to this dictionary.
+            """
+            validated_dict = {}
+            added = {}
+            changed = {}
+
+            items = other.items() if hasattr(other, 'keys') else other
+
+            for key, value in items:
+                validated_key = self.key_validator(key)
+                validated_value = self.value_validator(value)
+
+                if validated_key in self:
+                    changed[validated_key] = self[validated_key]
+                else:
+                    added[validated_key] = validated_value
+
+                validated_dict[validated_key] = validated_value
+
+            retval = super().__ior__(validated_dict)
+
+            if added or changed:
+                self.notify(removed={}, added=added, changed=changed)
+
+            return retval
 
     def clear(self):
         """ Remove all items from the dict. """
