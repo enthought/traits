@@ -232,7 +232,8 @@ class TraitDict(dict):
             validated_dict[validated_key] = validated_value
 
         super().update(validated_dict)
-        self.notify(removed={}, added=added, changed=changed)
+        if added or changed:
+            self.notify(removed={}, added=added, changed=changed)
 
     def setdefault(self, key, value=None):
         """ Returns the value if key is present in the dict, else creates the
