@@ -205,6 +205,37 @@ class TestTraitDict(unittest.TestCase):
         self.assertEqual(self.changed, {"1": 1})
         self.assertEqual(self.removed, {})
 
+    def test_update_with_empty_argument(self):
+        td = TraitDict(
+            {"1": 1, "2": 2},
+            key_validator=str,
+            notifiers=[self.notification_handler],
+        )
+
+        # neither of these should cause a notification to be emitted
+        td.update([])
+        td.update({})
+        self.assertEqual(td, {"1": 1, "2": 2})
+        self.assertIsNone(self.added)
+        self.assertIsNone(self.changed)
+        self.assertIsNone(self.removed)
+
+    def test_update_notifies_with_nonempty_argument(self):
+        # Corner case: we don't want to get into the difficulties of
+        # comparing values for equality, so we notify for a non-empty
+        # argument even if the dictionary has not actually changed.
+        td = TraitDict(
+            {"1": 1, "2": 2},
+            key_validator=str,
+            notifiers=[self.notification_handler],
+        )
+
+        td.update({"1": 1})
+        self.assertEqual(td, {"1": 1, "2": 2})
+        self.assertEqual(self.added, {})
+        self.assertEqual(self.changed, {"1": 1})
+        self.assertEqual(self.removed, {})
+
     def test_clear(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
                        value_validator=int_validator,
@@ -215,6 +246,21 @@ class TestTraitDict(unittest.TestCase):
         self.assertEqual(self.added, {})
         self.assertEqual(self.changed, {})
         self.assertEqual(self.removed, {"a": 1, "b": 2})
+
+    def test_clear_empty_dictionary(self):
+        # Clearing an empty dictionary should not notify.
+        td = TraitDict(
+            {},
+            key_validator=str_validator,
+            value_validator=int_validator,
+            notifiers=[self.notification_handler],
+        )
+
+        td.clear()
+
+        self.assertIsNone(self.added)
+        self.assertIsNone(self.changed)
+        self.assertIsNone(self.removed)
 
     def test_invalid_key(self):
         td = TraitDict({"a": 1, "b": 2}, key_validator=str_validator,
