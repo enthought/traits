@@ -301,14 +301,14 @@ setuptools.setup(
     extras_require={
         "docs": [
             "enthought-sphinx-theme",
-            "Sphinx!=3.2.0",
+            "Sphinx>=2.1.0,!=3.2.0",
         ],
         "test": [
             "Cython",
             "flake8",
             "mypy",
             "setuptools",
-            "Sphinx!=3.2.0",
+            "Sphinx>=2.1.0,!=3.2.0",
             # Python 3.9 exclusions:
             #
             # * NumPy installation fails on Python 3.9 on the Ubuntu Xenial
