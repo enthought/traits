@@ -647,7 +647,7 @@ class Application(HasTraits):
     pass
 
 
-class TestObserveAnytrait(unittest.TestCase):
+class TestObserveItemsFromOnTraitChange(unittest.TestCase):
 
     def test_observe_event_with_undefined_name_suffix_items(self):
         # Regression test for the error resulting from trying (and failing) to
