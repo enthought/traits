@@ -638,9 +638,10 @@ class TestDelegateToInteraction(unittest.TestCase):
 
 
 # Integration tests with on_trait_change and observe ------------------
-# The legacy of on_trait_change means trait named with "_items" suffix is
-# handled differently in HasTraits. This tests the awkward interaction that
-# could arise while using on_trait_change together with observe.
+# The legacy of on_trait_change means instance trait named with "_items"
+# suffix is handled differently in HasTraits. This tests the awkward
+# interaction that could arise while using on_trait_change together with
+# observe involving "*_items"
 
 class Application(HasTraits):
     pass
@@ -649,10 +650,9 @@ class Application(HasTraits):
 class TestObserveAnytrait(unittest.TestCase):
 
     def test_observe_event_with_undefined_name_suffix_items(self):
-        # A trait name with suffix "*_items" is special-cased by
-        # HasTraits.traits such that it is not reported.
-        # When filtering events, we should not use HasTraits.traits
-        # to retrieve the CTrait associated with the "*_items" name.
+        # Regression test for the error resulting from trying (and failing) to
+        # retrieve the CTrait for an instance trait with name "*_items"
+        # via HasTraits.traits
         app = Application()
 
         def dummy_handler():
