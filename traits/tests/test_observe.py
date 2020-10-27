@@ -635,3 +635,43 @@ class TestDelegateToInteraction(unittest.TestCase):
         self.assertFalse(mess.handler_called)
         mess.dummy1.x = 20
         self.assertTrue(mess.handler_called)
+
+
+# Integration tests with on_trait_change and observe ------------------
+# The legacy of on_trait_change means trait named with "_items" suffix is
+# handled differently in HasTraits. This tests the awkward interaction that
+# could arise while using on_trait_change together with observe.
+
+class Application(HasTraits):
+    pass
+
+
+class TestObserveAnytrait(unittest.TestCase):
+
+    def test_observe_event_with_undefined_name_suffix_items(self):
+        # A trait name with suffix "*_items" is special-cased by
+        # HasTraits.traits such that it is not reported.
+        # When filtering events, we should not use HasTraits.traits
+        # to retrieve the CTrait associated with the "*_items" name.
+        app = Application()
+
+        def dummy_handler():
+            pass
+
+        # on_trait_change does not check if the trait has been defined.
+        # This has the side-effect of creating the CTrait for this trait name.
+        app.on_trait_change(dummy_handler, "i_am_undefined_with_items")
+        self.assertIsNotNone(app._trait("i_am_undefined_with_items", 0))
+
+        # Precondition for this test, i_am_undefined_with_items is still not
+        # reported by HasTraits.traits method
+        self.assertNotIn("i_am_undefined_with_items", app.traits())
+
+        events = []
+        # This works because the CTrait is created by on_trait_change
+        app.observe(events.append, "i_am_undefined_with_items")
+
+        # This should not fail.
+        app.trait_property_changed("i_am_undefined_with_items", 1, 2)
+
+        self.assertEqual(len(events), 1)
