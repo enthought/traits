@@ -15,6 +15,7 @@ For details on motivation and the varying "scenarios" see the related issue:
 enthought/traits#1325
 """
 
+import textwrap
 import timeit
 
 
@@ -23,31 +24,34 @@ N = 10000
 
 # Code template strings to be timed for scenario 1
 
-base_setup = """
-from traits.api import (
-    HasTraits, Instance, observe, on_trait_change, Property, Str
-)
-from traits.observation.api import trait
-"""
+# General setup not to be included in the timing.
+BASE_SETUP = textwrap.dedent("""
+    from traits.api import (
+        HasTraits, Instance, observe, on_trait_change, Property, Str
+    )
+    from traits.observation.api import trait
+""")
 
-person_construction_template = """
-class Person(HasTraits):
-    name = Str()
-    {decorator}
-    def some_method(self):
-        pass
-"""
+# Construct HasTraits subclass with decorated method
+PERSON_CONSTRUCTION_TEMPLATE = textwrap.dedent("""
 
-person_instantiation_setup_template = base_setup + person_construction_template
-instantiate_person = """
-Person()
-"""
+    class Person(HasTraits):
+        name = Str()
+        {decorator}
+        def some_method(self, event):
+            pass
 
-person_name_reassignment_setup_template = person_instantiation_setup_template \
-    + "a_person = Person()"
-reassign_name = """
-a_person.name = ''
-"""
+""")
+
+# Instantiate the HasTraits subclass with decorated method
+INSTANTIATE_PERSON = textwrap.dedent("""
+    a_person = Person()
+""")
+
+# Update the trait being observed
+REASSIGN_NAME = textwrap.dedent("""
+    a_person.name = ''
+""")
 
 
 def scenario1(decorator):
@@ -65,23 +69,23 @@ def scenario1(decorator):
         A 3-tuple containing the time to construct the HasTraits subclass, the
         time to instantiate it, and the time to reassign the trait
     """
-    construct_person = person_construction_template.format(decorator=decorator)
+    construct_person = PERSON_CONSTRUCTION_TEMPLATE.format(decorator=decorator)
     construction_time = timeit.timeit(
-        construct_person, base_setup, number=N
+        stmt=construct_person,
+        setup=BASE_SETUP,
+        number=N
     )
 
-    instantiate_setup = person_instantiation_setup_template.format(
-        decorator=decorator
-    )
     instantiation_time = timeit.timeit(
-        instantiate_person, instantiate_setup, number=N
+        stmt=INSTANTIATE_PERSON,
+        setup=BASE_SETUP + construct_person,
+        number=N
     )
 
-    reassign_setup = person_name_reassignment_setup_template.format(
-        decorator=decorator
-    )
     reassign_person_name_time = timeit.timeit(
-        reassign_name, reassign_setup, number=N
+        stmt=REASSIGN_NAME,
+        setup=BASE_SETUP + construct_person + INSTANTIATE_PERSON,
+        number=N
     )
 
     return (construction_time, instantiation_time, reassign_person_name_time)
@@ -89,33 +93,41 @@ def scenario1(decorator):
 
 # Code template strings to be timed for scenario 2
 
-construct_parent_setup = base_setup + """
-class Person(HasTraits):
-    name = Str()
-"""
-parent_construction_template = """
-class Parent(HasTraits):
-    child = Instance(Person)
-    {decorator}
-    def some_method(self, event):
-        pass
-"""
+# Setup for constructing subclass of HasTraits with a trait referring to an
+# instance of HasTraits
+CONSTRUCT_PARENT_SETUP = BASE_SETUP + textwrap.dedent("""
 
-parent_instantiation_setup_template = construct_parent_setup \
-    + parent_construction_template
-instantiate_parent = """
-Parent()
-"""
+    class Person(HasTraits):
+        name = Str()
 
-child_reassignment_setup_template = parent_instantiation_setup_template \
-    + "a_parent = Parent(child=Person())"
-reassign_child = """
-a_parent.child = Person()
-"""
+""")
 
-reassign_child_name = """
-a_parent.child.name = ''
-"""
+# Construct subclass of HasTraits with a trait referring to an instance of
+# HasTraits with decorated method
+PARENT_CONSTRUCTION_TEMPLATE = textwrap.dedent("""
+
+    class Parent(HasTraits):
+        child = Instance(Person)
+        {decorator}
+        def some_method(self, event):
+            pass
+
+""")
+
+# Instantiate the class
+INSTANTIATE_PARENT = textwrap.dedent("""
+    a_parent = Parent(child=Person())
+""")
+
+# Update the instance trait containing the trait being observed
+REASSIGN_CHILD = textwrap.dedent("""
+    a_parent.child = Person()
+""")
+
+# Update the trait being observed on the instance trait
+REASSIGN_CHILD_NAME = textwrap.dedent("""
+    a_parent.child.name = ''
+""")
 
 
 def scenario2(decorator):
@@ -134,29 +146,31 @@ def scenario2(decorator):
         time to instantiate it, the time to reassign child, and the
         time to reassign child.name
     """
-    construct_parent = parent_construction_template.format(
+    construct_parent = PARENT_CONSTRUCTION_TEMPLATE.format(
         decorator=decorator
     )
     construction_time = timeit.timeit(
-        construct_parent, construct_parent_setup, number=N
+        stmt=construct_parent,
+        setup=CONSTRUCT_PARENT_SETUP,
+        number=N
     )
 
-    instantiate_parent_setup = parent_instantiation_setup_template.format(
-        decorator=decorator
-    )
     instantiation_time = timeit.timeit(
-        instantiate_parent, instantiate_parent_setup, number=N
+        stmt=INSTANTIATE_PARENT,
+        setup=CONSTRUCT_PARENT_SETUP + construct_parent,
+        number=N
     )
 
-    reassign_child_setup = child_reassignment_setup_template.format(
-        decorator=decorator
-    )
     reassign_child_time = timeit.timeit(
-        reassign_child, reassign_child_setup, number=N
+        stmt=REASSIGN_CHILD,
+        setup=CONSTRUCT_PARENT_SETUP + construct_parent + INSTANTIATE_PARENT,
+        number=N
     )
 
     reassign_child_name_time = timeit.timeit(
-        reassign_child_name, reassign_child_setup, number=N
+        stmt=REASSIGN_CHILD_NAME,
+        setup=CONSTRUCT_PARENT_SETUP + construct_parent + INSTANTIATE_PARENT,
+        number=N
     )
 
     return (
@@ -169,17 +183,18 @@ def scenario2(decorator):
 
 # Code template strings to be timed for scenario 3
 
-person_with_property_construction_template = """
-class Person(HasTraits):
-    name=Str()
-    a_property = Property({})
-"""
+# Construct subclass of HasTraits with a trait that is defined as Property that
+# depends on a simple trait
+PERSON_WITH_PROPERTY_CONSTRUCTION_TEMPLATE = textwrap.dedent("""
 
-person_with_property_instantiation_setup_template = base_setup \
-    + person_with_property_construction_template
+    class Person(HasTraits):
+        name=Str()
+        a_property = Property({})
 
-dependee_name_reassignment_setup_template = \
-    person_with_property_instantiation_setup_template + "a_person = Person()"
+        def _get_a_property(self):
+            return self.name
+
+""")
 
 
 def scenario3(property_args):
@@ -200,21 +215,23 @@ def scenario3(property_args):
         depended-on / observed.
     """
     construct_person_with_property = \
-        person_with_property_construction_template.format(property_args)
+        PERSON_WITH_PROPERTY_CONSTRUCTION_TEMPLATE.format(property_args)
     construction_time = timeit.timeit(
-        construct_person_with_property, base_setup, number=N
+        stmt=construct_person_with_property,
+        setup=BASE_SETUP,
+        number=N
     )
 
-    instantiate_person_with_property_setup = \
-        person_with_property_instantiation_setup_template.format(property_args)
     instantiation_time = timeit.timeit(
-        instantiate_person, instantiate_person_with_property_setup, number=N
+        stmt=INSTANTIATE_PERSON,
+        setup=BASE_SETUP + construct_person_with_property,
+        number=N
     )
 
-    reassign_dependee_name_setup = \
-        dependee_name_reassignment_setup_template.format(property_args)
     reassign_dependee_name_time = timeit.timeit(
-        reassign_name, reassign_dependee_name_setup, number=N
+        stmt=REASSIGN_NAME,
+        setup=BASE_SETUP + construct_person_with_property + INSTANTIATE_PERSON,
+        number=N
     )
 
     return (construction_time, instantiation_time, reassign_dependee_name_time)
@@ -222,18 +239,18 @@ def scenario3(property_args):
 
 # Code template strings to be timed for scenario 4
 
-parent_with_property_construction_template = """
-class Parent(HasTraits):
-    child = Instance(Person)
-    a_property = Property({})
-"""
+# Construct subclass of HasTraits with a trait that is defined as Property that
+# depends on an extended trait
+PARENT_WITH_PROPERTY_CONSTRUCTION_TEMPLATE = textwrap.dedent("""
 
-parent_with_property_instantiation_setup_template = construct_parent_setup \
-    + parent_with_property_construction_template
+    class Parent(HasTraits):
+        child = Instance(Person)
+        a_property = Property({})
 
-child_reassignment_with_property_setup_template = \
-    parent_with_property_instantiation_setup_template \
-    + "a_parent = Parent(child=Person())"
+        def _get_a_property(self):
+            return self.child.name
+
+""")
 
 
 def scenario4(property_args):
@@ -253,28 +270,38 @@ def scenario4(property_args):
         time to instantiate it, the time to reassign child, and the time to
         reassign child.name
     """
-    construct_parent_with_property_stmt = \
-        parent_with_property_construction_template.format(property_args)
+    construct_parent_with_property = \
+        PARENT_WITH_PROPERTY_CONSTRUCTION_TEMPLATE.format(property_args)
     construction_time = timeit.timeit(
-        construct_parent_with_property_stmt,
-        construct_parent_setup,
+        stmt=construct_parent_with_property,
+        setup=CONSTRUCT_PARENT_SETUP,
         number=N
     )
 
-    instantiate_parent_with_property_setup = \
-        parent_with_property_instantiation_setup_template.format(property_args)
     instantiation_time = timeit.timeit(
-        instantiate_parent, instantiate_parent_with_property_setup, number=N
+        stmt=INSTANTIATE_PARENT,
+        setup=CONSTRUCT_PARENT_SETUP + construct_parent_with_property,
+        number=N
     )
 
-    reassign_child_setup = \
-        child_reassignment_with_property_setup_template.format(property_args)
     reassign_child_time = timeit.timeit(
-        reassign_child, reassign_child_setup, number=N
+        stmt=REASSIGN_CHILD,
+        setup=(
+            CONSTRUCT_PARENT_SETUP
+            + construct_parent_with_property
+            + INSTANTIATE_PARENT
+        ),
+        number=N
     )
 
     reassign_child_name_time = timeit.timeit(
-        reassign_child_name, reassign_child_setup, number=N
+        stmt=REASSIGN_CHILD_NAME,
+        setup=(
+            CONSTRUCT_PARENT_SETUP
+            + construct_parent_with_property
+            + INSTANTIATE_PARENT
+        ),
+        number=N
     )
 
     return (
