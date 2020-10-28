@@ -351,18 +351,47 @@ def report1():
         (1) Time to import the module, i.e. the class construction.
         (2) Time to instantiate the HasTraits object.
         (3) Time for reassigning the trait to a new value.
+
+    Times are reported as:
+    (#): absolute_time  relative_time_to_control
         """
     )
-    benchmark_template = "(1): {:.6f}  (2): {:.6f}  (3): {:.6f}"
+    benchmark_template = ("(1): {0:.5f} {3:.2f}  (2): {1:.5f} {4:.2f}  "
+                          "(3): {2:.5f} {5:.2f}")
 
+    control_times = scenario1('')
+    relative_control_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, control_times)
+    )
     print("control -")
-    print(benchmark_template.format(*scenario1('')))
+    print(benchmark_template.format(*control_times, *relative_control_times))
+
+    on_trait_change_times = scenario1("@on_trait_change('name')")
+    relative_on_trait_change_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, on_trait_change_times)
+    )
     print("on_trait_change('name') -")
-    print(benchmark_template.format(*scenario1("@on_trait_change('name')")))
+    print(benchmark_template.format(
+        *on_trait_change_times, *relative_on_trait_change_times))
+
+    observe_times = scenario1("@observe('name')")
+    relative_observe_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, observe_times)
+    )
     print("observe('name') - ")
-    print(benchmark_template.format(*scenario1("@observe('name')")))
+    print(benchmark_template.format(*observe_times, *relative_observe_times))
+
+    observe_trait_times = scenario1("@observe(trait('name'))")
+    relative_observe_trait_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, observe_trait_times)
+    )
     print("observe(trait('name')) - ")
-    print(benchmark_template.format(*scenario1("@observe(trait('name'))")))
+    print(benchmark_template.format(
+        *observe_trait_times, *relative_observe_trait_times))
 
     print('-' * 80)
 
@@ -385,20 +414,47 @@ def report2():
         (2) Time to instantiate the HasTraits object.
         (3) Time for reassigning child to a new value.
         (4) Time for reassigning child.name to a new value.
+
+    Times are reported as:
+    (#): absolute_time  relative_time_to_control
         """
     )
-    benchmark_template = "(1): {:.6f}  (2): {:.6f}  (3): {:.6f}  (4): {:.6f}"
+    benchmark_template = ("(1): {0:.5f} {4:.2f}  (2): {1:.5f} {5:.2f}  "
+                          "(3): {2:.5f} {6:.2f}  (4): {3:.5f} {7:.2f}")
 
+    control_times = scenario2('')
+    relative_control_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, control_times)
+    )
     print("control -")
-    print(benchmark_template.format(*scenario2('')))
+    print(benchmark_template.format(*control_times, *relative_control_times))
+
+    on_trait_change_times = scenario2("@on_trait_change('child.name')")
+    relative_on_trait_change_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, on_trait_change_times)
+    )
     print("on_trait_change('child.name') -")
     print(benchmark_template.format(
-        *scenario2("@on_trait_change('child.name')")))
+        *on_trait_change_times, *relative_on_trait_change_times))
+
+    observe_times = scenario2("@observe('child.name')")
+    relative_observe_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, observe_times)
+    )
     print("observe('child.name') - ")
-    print(benchmark_template.format(*scenario2("@observe('child.name')")))
+    print(benchmark_template.format(*observe_times, *relative_observe_times))
+
+    observe_trait_times = scenario2("@observe(trait('child').trait('name'))")
+    relative_observe_trait_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, observe_trait_times)
+    )
     print("observe(trait('child').trait('name')) - ")
     print(benchmark_template.format(
-        *scenario2("@observe(trait('child').trait('name'))")))
+        *observe_trait_times, *relative_observe_trait_times))
 
     print('-' * 80)
 
@@ -419,18 +475,47 @@ def report3():
         (1) Time to import the module, i.e. the class construction.
         (2) Time to instantiate the HasTraits object.
         (3) Time for changing the trait being depended-on / observed.
+
+    Times are reported as:
+    (#): absolute_time  relative_time_to_control
         """
     )
-    benchmark_template = "(1): {:.6f}  (2): {:.6f}  (3): {:.6f}"
+    benchmark_template = ("(1): {0:.5f} {3:.2f}  (2): {1:.5f} {4:.2f}  "
+                          "(3): {2:.5f} {5:.2f}")
 
+    control_times = scenario3_5('', '')
+    relative_control_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, control_times)
+    )
     print("control -")
-    print(benchmark_template.format(*scenario3_5('', '')))
+    print(benchmark_template.format(*control_times, *relative_control_times))
+
+    depends_on_times = scenario3_5("depends_on='name'", '')
+    relative_depends_on_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, depends_on_times)
+    )
     print("depends_on='name' -")
-    print(benchmark_template.format(*scenario3_5("depends_on='name'", '')))
+    print(benchmark_template.format(
+        *depends_on_times, *relative_depends_on_times))
+
+    observe_times = scenario3_5("observe='name'", '')
+    relative_observe_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, observe_times)
+    )
     print("observe='name' - ")
-    print(benchmark_template.format(*scenario3_5("observe='name'", '')))
+    print(benchmark_template.format(*observe_times, *relative_observe_times))
+
+    observe_trait_times = scenario3_5("observe=trait('name')", '')
+    relative_observe_trait_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, observe_trait_times)
+    )
     print("observe=trait('name') - ")
-    print(benchmark_template.format(*scenario3_5("observe=trait('name')", '')))
+    print(benchmark_template.format(
+        *observe_trait_times, *relative_observe_trait_times))
 
     print('-' * 80)
 
@@ -453,20 +538,49 @@ def report4():
         (2) Time to instantiate the HasTraits object.
         (3) Time for reassigning child to a new value.
         (4) Time for reassigning child.name to a new value.
+
+    Times are reported as:
+    (#): absolute_time  relative_time_to_control
         """
     )
-    benchmark_template = "(1): {:.6f}  (2): {:.6f}  (3): {:.6f}  (4): {:.6f}"
+    benchmark_template = ("(1): {0:.5f} {4:.2f}  (2): {1:.5f} {5:.2f}  "
+                          "(3): {2:.5f} {6:.2f}  (4): {3:.5f} {7:.2f}")
 
+    control_times = scenario4_6('', '')
+    relative_control_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, control_times)
+    )
     print("control -")
-    print(benchmark_template.format(*scenario4_6('', '')))
+    print(benchmark_template.format(*control_times, *relative_control_times))
+
+    depends_on_times = scenario4_6("depends_on='child.name'", '')
+    relative_depends_on_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, depends_on_times)
+    )
     print("depends_on='child.name' -")
     print(benchmark_template.format(
-        *scenario4_6("depends_on='child.name'", '')))
+        *depends_on_times, *relative_depends_on_times))
+
+    observe_times = scenario4_6("observe='child.name'", '')
+    relative_observe_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, observe_times)
+    )
     print("observe='child.name' - ")
-    print(benchmark_template.format(*scenario4_6("observe='child.name'", '')))
+    print(benchmark_template.format(*observe_times, *relative_observe_times))
+
+    observe_trait_times = scenario4_6(
+        "observe=trait('child').trait('name')", ''
+    )
+    relative_observe_trait_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, observe_trait_times)
+    )
     print("observe=trait('child').trait('name') - ")
     print(benchmark_template.format(
-        *scenario4_6("observe=trait('child').trait('name')", '')))
+        *observe_trait_times, *relative_observe_trait_times))
 
     print('-' * 80)
 
@@ -484,21 +598,49 @@ def report5():
         (1) Time to import the module, i.e. the class construction.
         (2) Time to instantiate the HasTraits object.
         (3) Time for changing the trait being depended-on / observed.
+
+    Times are reported as:
+    (#): absolute_time  relative_time_to_control
         """
     )
-    benchmark_template = "(1): {:.6f}  (2): {:.6f}  (3): {:.6f}"
+    benchmark_template = ("(1): {0:.5f} {3:.2f}  (2): {1:.5f} {4:.2f}  "
+                          "(3): {2:.5f} {5:.2f}")
 
+    control_times = scenario3_5('', '@cached_property')
+    relative_control_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, control_times)
+    )
     print("control -")
-    print(benchmark_template.format(*scenario3_5('', '@cached_property')))
+    print(benchmark_template.format(*control_times, *relative_control_times))
+
+    depends_on_times = scenario3_5("depends_on='name'", '@cached_property')
+    relative_depends_on_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, depends_on_times)
+    )
     print("depends_on='name' -")
     print(benchmark_template.format(
-        *scenario3_5("depends_on='name'", '@cached_property')))
+        *depends_on_times, *relative_depends_on_times))
+
+    observe_times = scenario3_5("observe='name'", '@cached_property')
+    relative_observe_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, observe_times)
+    )
     print("observe='name' - ")
-    print(benchmark_template.format(
-        *scenario3_5("observe='name'", '@cached_property')))
+    print(benchmark_template.format(*observe_times, *relative_observe_times))
+
+    observe_trait_times = scenario3_5(
+        "observe=trait('name')", '@cached_property'
+    )
+    relative_observe_trait_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, observe_trait_times)
+    )
     print("observe=trait('name') - ")
     print(benchmark_template.format(
-        *scenario3_5("observe=trait('name')", '@cached_property')))
+        *observe_trait_times, *relative_observe_trait_times))
 
     print('-' * 80)
 
@@ -509,7 +651,7 @@ def report6():
     print(
         """
     Scenario 6
-        Identical to scenario 4 only using the @chached_property decorator on
+        Identical to scenario 4 only using the @cached_property decorator on
         the property's getter method.
 
         The timing we are interested in:
@@ -517,26 +659,51 @@ def report6():
         (2) Time to instantiate the HasTraits object.
         (3) Time for reassigning child to a new value.
         (4) Time for reassigning child.name to a new value.
+
+    Times are reported as:
+    (#): absolute_time  relative_time_to_control
         """
     )
-    benchmark_template = "(1): {:.6f}  (2): {:.6f}  (3): {:.6f}  (4): {:.6f}"
+    benchmark_template = ("(1): {0:.5f} {4:.2f}  (2): {1:.5f} {5:.2f}  "
+                          "(3): {2:.5f} {6:.2f}  (4): {3:.5f} {7:.2f}")
 
+    control_times = scenario4_6('', '@cached_property')
+    relative_control_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, control_times)
+    )
     print("control -")
-    print(benchmark_template.format(*scenario4_6('', '@cached_property')))
+    print(benchmark_template.format(*control_times, *relative_control_times))
+
+    depends_on_times = scenario4_6(
+        "depends_on='child.name'", '@cached_property'
+    )
+    relative_depends_on_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, depends_on_times)
+    )
     print("depends_on='child.name' -")
     print(benchmark_template.format(
-        *scenario4_6("depends_on='child.name'", '@cached_property')))
-    print("observe='child.name' - ")
-    print(benchmark_template.format(
-        *scenario4_6("observe='child.name'", '@cached_property')))
-    print("observe=trait('child').trait('name') - ")
-    print(
-        benchmark_template.format(
-            *scenario4_6(
-                "observe=trait('child').trait('name')", '@cached_property'
-            )
-        )
+        *depends_on_times, *relative_depends_on_times))
+
+    observe_times = scenario4_6("observe='child.name'", '@cached_property')
+    relative_observe_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, observe_times)
     )
+    print("observe='child.name' - ")
+    print(benchmark_template.format(*observe_times, *relative_observe_times))
+
+    observe_trait_times = scenario4_6(
+        "observe=trait('child').trait('name')", '@cached_property'
+    )
+    relative_observe_trait_times = map(
+        lambda times: times[1] / times[0],
+        zip(control_times, observe_trait_times)
+    )
+    print("observe=trait('child').trait('name') - ")
+    print(benchmark_template.format(
+        *observe_trait_times, *relative_observe_trait_times))
 
     print('-' * 80)
 
