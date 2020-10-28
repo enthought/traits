@@ -24,13 +24,14 @@ N = 10000
 
 base_setup = """
 from traits.api import (
-    HasTraits, observe, on_trait_change, Str, Instance, Property
+    HasTraits, Instance, observe, on_trait_change, Property, Str
 )
+from traits.observation.api import trait
 """
 
 person_construction_template = """
 class Person(HasTraits):
-    name=Str()
+    name = Str()
     {decorator}
     def some_method(self):
         pass
@@ -71,8 +72,10 @@ def scenario1(decorator):
     return (construction_time, instantiation_time, reassign_person_name_time)
 
 
-construct_parent_setup = base_setup \
-    + person_construction_template.format(decorator="")
+construct_parent_setup = base_setup + """
+class Person(HasTraits):
+    name = Str()
+"""
 parent_construction_template = """
 class Parent(HasTraits):
     child = Instance(Person)
@@ -236,10 +239,12 @@ def report1():
 
     print("control -")
     print(benchmark_template.format(*scenario1('')))
-    print("on_trait_change -")
+    print("on_trait_change('name') -")
     print(benchmark_template.format(*scenario1("@on_trait_change('name')")))
-    print("observe - ")
+    print("observe('name') - ")
     print(benchmark_template.format(*scenario1("@observe('name')")))
+    print("observe(trait('name')) - ")
+    print(benchmark_template.format(*scenario1("@observe(trait('name'))")))
 
     print('-' * 80)
 
@@ -265,10 +270,12 @@ def report2():
 
     print("control -")
     print(benchmark_template.format(*scenario2('')))
-    print("on_trait_change -")
+    print("on_trait_change('child.name') -")
     print(benchmark_template.format(*scenario2("@on_trait_change('child.name')")))
-    print("observe - ")
+    print("observe('child.name') - ")
     print(benchmark_template.format(*scenario2("@observe('child.name')")))
+    print("observe(trait('child').trait('name')) - ")
+    print(benchmark_template.format(*scenario2("@observe(trait('child').trait('name'))")))
 
     print('-' * 80)
 
@@ -294,10 +301,12 @@ def report3():
 
     print("control -")
     print(benchmark_template.format(*scenario3('')))
-    print("depends_on -")
+    print("depends_on='name' -")
     print(benchmark_template.format(*scenario3("depends_on='name'")))
-    print("observe - ")
+    print("observe='name' - ")
     print(benchmark_template.format(*scenario3("observe='name'")))
+    print("observe=trait('name') - ")
+    print(benchmark_template.format(*scenario3("observe=trait('name')")))
 
     print('-' * 80)
 
@@ -324,10 +333,12 @@ def report4():
 
     print("control -")
     print(benchmark_template.format(*scenario4('')))
-    print("depends_on -")
+    print("depends_on='child.name' -")
     print(benchmark_template.format(*scenario4("depends_on='child.name'")))
-    print("observe - ")
+    print("observe='child.name' - ")
     print(benchmark_template.format(*scenario4("observe='child.name'")))
+    print("observe=trait('child').trait('name') - ")
+    print(benchmark_template.format(*scenario4("observe=trait('child').trait('name')")))
 
     print('-' * 80)
 
