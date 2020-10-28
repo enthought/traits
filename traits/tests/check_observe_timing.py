@@ -222,16 +222,13 @@ def scenario3(property_args):
 
 # Code template strings to be timed for scenario 4
 
-construct_parent_with_property_setup = base_setup \
-    + person_construction_template.format(decorator="")
 parent_with_property_construction_template = """
 class Parent(HasTraits):
     child = Instance(Person)
     a_property = Property({})
 """
 
-parent_with_property_instantiation_setup_template = \
-    construct_parent_with_property_setup \
+parent_with_property_instantiation_setup_template = construct_parent_setup \
     + parent_with_property_construction_template
 
 child_reassignment_with_property_setup_template = \
@@ -260,7 +257,7 @@ def scenario4(property_args):
         parent_with_property_construction_template.format(property_args)
     construction_time = timeit.timeit(
         construct_parent_with_property_stmt,
-        construct_parent_with_property_setup,
+        construct_parent_setup,
         number=N
     )
 
