@@ -271,11 +271,13 @@ def report2():
     print("control -")
     print(benchmark_template.format(*scenario2('')))
     print("on_trait_change('child.name') -")
-    print(benchmark_template.format(*scenario2("@on_trait_change('child.name')")))
+    print(benchmark_template.format(
+        *scenario2("@on_trait_change('child.name')")))
     print("observe('child.name') - ")
     print(benchmark_template.format(*scenario2("@observe('child.name')")))
     print("observe(trait('child').trait('name')) - ")
-    print(benchmark_template.format(*scenario2("@observe(trait('child').trait('name'))")))
+    print(benchmark_template.format(
+        *scenario2("@observe(trait('child').trait('name'))")))
 
     print('-' * 80)
 
@@ -338,7 +340,8 @@ def report4():
     print("observe='child.name' - ")
     print(benchmark_template.format(*scenario4("observe='child.name'")))
     print("observe=trait('child').trait('name') - ")
-    print(benchmark_template.format(*scenario4("observe=trait('child').trait('name')")))
+    print(benchmark_template.format(
+        *scenario4("observe=trait('child').trait('name')")))
 
     print('-' * 80)
 
