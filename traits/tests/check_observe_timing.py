@@ -29,9 +29,11 @@ from traits.api import (
 """
 
 person_construction_template = """
-{decorator}
 class Person(HasTraits):
     name=Str()
+    {decorator}
+    def some_method(self):
+        pass
 """
 
 person_instantiation_setup_template = base_setup + person_construction_template
@@ -72,9 +74,11 @@ def scenario1(decorator):
 construct_parent_setup = base_setup \
     + person_construction_template.format(decorator="")
 parent_construction_template = """
-{decorator}
 class Parent(HasTraits):
     child = Instance(Person)
+    {decorator}
+    def some_method(self, event):
+        pass
 """
 
 parent_instantiation_setup_template = construct_parent_setup \
@@ -262,9 +266,9 @@ def report2():
     print("control -")
     print(benchmark_template.format(*scenario2('')))
     print("on_trait_change -")
-    print(benchmark_template.format(*scenario2("@on_trait_change('name')")))
+    print(benchmark_template.format(*scenario2("@on_trait_change('child.name')")))
     print("observe - ")
-    print(benchmark_template.format(*scenario2("@observe('name')")))
+    print(benchmark_template.format(*scenario2("@observe('child.name')")))
 
     print('-' * 80)
 
