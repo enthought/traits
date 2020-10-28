@@ -27,7 +27,13 @@ N = 10000
 # General setup not to be included in the timing.
 BASE_SETUP = textwrap.dedent("""
     from traits.api import (
-        HasTraits, Instance, observe, on_trait_change, Property, Str
+        cached_property,
+        HasTraits,
+        Instance,
+        observe,
+        on_trait_change,
+        Property,
+        Str
     )
     from traits.observation.api import trait
 """)
@@ -184,21 +190,23 @@ def scenario2(decorator):
 # Code template strings to be timed for scenario 3
 
 # Construct subclass of HasTraits with a trait that is defined as Property that
-# depends on a simple trait
+# depends on a simple trait (with option include @cached_property)
 PERSON_WITH_PROPERTY_CONSTRUCTION_TEMPLATE = textwrap.dedent("""
 
     class Person(HasTraits):
         name=Str()
         a_property = Property({})
 
+        {}
         def _get_a_property(self):
             return self.name
 
 """)
 
 
-def scenario3(property_args):
-    """ Time the cases described by scenario 3 using the given argument to the
+def scenario3_5(property_args, cached_property):
+    """ Time the cases described by scenario 3 or 5 depending on the
+    cached_property argument, using the given property_args argument in the
     Property trait defintion.
 
     Parameters
@@ -206,6 +214,10 @@ def scenario3(property_args):
     property_args - Str
         The string defining the argument to be passed in the definition of the
         Property trait.  e.g. "depends_on='name'"
+    cached_property - Str
+        The string that will be used to decorate the getter method of the
+        Property.  Expected to be '' for scenario 3 and '@cached_property' for
+        scenario 5.
 
     Returns
     -------
@@ -215,7 +227,10 @@ def scenario3(property_args):
         depended-on / observed.
     """
     construct_person_with_property = \
-        PERSON_WITH_PROPERTY_CONSTRUCTION_TEMPLATE.format(property_args)
+        PERSON_WITH_PROPERTY_CONSTRUCTION_TEMPLATE.format(
+            property_args,
+            cached_property
+        )
     construction_time = timeit.timeit(
         stmt=construct_person_with_property,
         setup=BASE_SETUP,
@@ -240,21 +255,23 @@ def scenario3(property_args):
 # Code template strings to be timed for scenario 4
 
 # Construct subclass of HasTraits with a trait that is defined as Property that
-# depends on an extended trait
+# depends on an extended trait (with option to include @cached_property)
 PARENT_WITH_PROPERTY_CONSTRUCTION_TEMPLATE = textwrap.dedent("""
 
     class Parent(HasTraits):
         child = Instance(Person)
         a_property = Property({})
 
+        {}
         def _get_a_property(self):
             return self.child.name
 
 """)
 
 
-def scenario4(property_args):
-    """ Time the cases described by scenario 4 using the given argument to the
+def scenario4_6(property_args, cached_property):
+    """ Time the cases described by scenario 4 or 6 depending on the
+    cached_property argument, using the given property_args argument for the
     Property trait defintion.
 
     Parameters
@@ -262,6 +279,10 @@ def scenario4(property_args):
     property_args - Str
         The string defining the argument to be passed in the definition of the
         Property trait.  e.g. "depends_on='child.name'"
+    cached_property - Str
+        The string that will be used to decorate the getter method of the
+        Property.  Expected to be '' for scenario 4 and '@cached_property' for
+        scenario 6.
 
     Returns
     -------
@@ -271,7 +292,10 @@ def scenario4(property_args):
         reassign child.name
     """
     construct_parent_with_property = \
-        PARENT_WITH_PROPERTY_CONSTRUCTION_TEMPLATE.format(property_args)
+        PARENT_WITH_PROPERTY_CONSTRUCTION_TEMPLATE.format(
+            property_args,
+            cached_property
+        )
     construction_time = timeit.timeit(
         stmt=construct_parent_with_property,
         setup=CONSTRUCT_PARENT_SETUP,
@@ -400,13 +424,13 @@ def report3():
     benchmark_template = "(1): {:.6f}  (2): {:.6f}  (3): {:.6f}"
 
     print("control -")
-    print(benchmark_template.format(*scenario3('')))
+    print(benchmark_template.format(*scenario3_5('', '')))
     print("depends_on='name' -")
-    print(benchmark_template.format(*scenario3("depends_on='name'")))
+    print(benchmark_template.format(*scenario3_5("depends_on='name'", '')))
     print("observe='name' - ")
-    print(benchmark_template.format(*scenario3("observe='name'")))
+    print(benchmark_template.format(*scenario3_5("observe='name'", '')))
     print("observe=trait('name') - ")
-    print(benchmark_template.format(*scenario3("observe=trait('name')")))
+    print(benchmark_template.format(*scenario3_5("observe=trait('name')", '')))
 
     print('-' * 80)
 
@@ -434,14 +458,85 @@ def report4():
     benchmark_template = "(1): {:.6f}  (2): {:.6f}  (3): {:.6f}  (4): {:.6f}"
 
     print("control -")
-    print(benchmark_template.format(*scenario4('')))
+    print(benchmark_template.format(*scenario4_6('', '')))
     print("depends_on='child.name' -")
-    print(benchmark_template.format(*scenario4("depends_on='child.name'")))
+    print(benchmark_template.format(
+        *scenario4_6("depends_on='child.name'", '')))
     print("observe='child.name' - ")
-    print(benchmark_template.format(*scenario4("observe='child.name'")))
+    print(benchmark_template.format(*scenario4_6("observe='child.name'", '')))
     print("observe=trait('child').trait('name') - ")
     print(benchmark_template.format(
-        *scenario4("observe=trait('child').trait('name')")))
+        *scenario4_6("observe=trait('child').trait('name')", '')))
+
+    print('-' * 80)
+
+
+def report5():
+    """ Print a readable benchmark report for scenario 5. """
+
+    print(
+        """
+    Scenario 5
+        Identical to scenario 3 only using the @chached_property decorator on
+        the property's getter method.
+
+        The timing we are interested in:
+        (1) Time to import the module, i.e. the class construction.
+        (2) Time to instantiate the HasTraits object.
+        (3) Time for changing the trait being depended-on / observed.
+        """
+    )
+    benchmark_template = "(1): {:.6f}  (2): {:.6f}  (3): {:.6f}"
+
+    print("control -")
+    print(benchmark_template.format(*scenario3_5('', '@cached_property')))
+    print("depends_on='name' -")
+    print(benchmark_template.format(
+        *scenario3_5("depends_on='name'", '@cached_property')))
+    print("observe='name' - ")
+    print(benchmark_template.format(
+        *scenario3_5("observe='name'", '@cached_property')))
+    print("observe=trait('name') - ")
+    print(benchmark_template.format(
+        *scenario3_5("observe=trait('name')", '@cached_property')))
+
+    print('-' * 80)
+
+
+def report6():
+    """ Print a readable benchmark report for scenario 6. """
+
+    print(
+        """
+    Scenario 6
+        Identical to scenario 4 only using the @chached_property decorator on
+        the property's getter method.
+
+        The timing we are interested in:
+        (1) Time to import the module, i.e. the class construction.
+        (2) Time to instantiate the HasTraits object.
+        (3) Time for reassigning child to a new value.
+        (4) Time for reassigning child.name to a new value.
+        """
+    )
+    benchmark_template = "(1): {:.6f}  (2): {:.6f}  (3): {:.6f}  (4): {:.6f}"
+
+    print("control -")
+    print(benchmark_template.format(*scenario4_6('', '@cached_property')))
+    print("depends_on='child.name' -")
+    print(benchmark_template.format(
+        *scenario4_6("depends_on='child.name'", '@cached_property')))
+    print("observe='child.name' - ")
+    print(benchmark_template.format(
+        *scenario4_6("observe='child.name'", '@cached_property')))
+    print("observe=trait('child').trait('name') - ")
+    print(
+        benchmark_template.format(
+            *scenario4_6(
+                "observe=trait('child').trait('name')", '@cached_property'
+            )
+        )
+    )
 
     print('-' * 80)
 
@@ -451,6 +546,8 @@ def main():
     report2()
     report3()
     report4()
+    report5()
+    report6()
 
 
 if __name__ == '__main__':
