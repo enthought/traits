@@ -295,14 +295,14 @@ def report1():
         """
     Scenario 1:
         Given a subclass of HasTraits with a trait defined, e.g. name = Str(),
-        compare having a method that is decorated with @on_trait_change("name")
-        to without. compare having a method that is decorated with
-        @observe("name") to without.
+        compare having a method with no decorator to one that is decorated with
+        @on_trait_change("name"), one decorated with @observe("name"), and one
+        with @observe(trait('name')).
 
         The timing we are interested in:
         (1) Time to import the module, i.e. the class construction.
         (2) Time to instantiate the HasTraits object.
-        (3) Time for reassigning the trait to a new value.)
+        (3) Time for reassigning the trait to a new value.
         """
     )
     benchmark_template = "(1): {:.6f}  (2): {:.6f}  (3): {:.6f}"
@@ -327,9 +327,10 @@ def report2():
     Scenario 2
         Given a subclass of HasTraits with a trait referring to an instance of
         HasTraits, e.g. child = Instance(AnotherClass) where AnotherClass has a
-        name trait. compare having a method that is decorated with
-        @on_trait_change("child.name") to without. compare having a method that
-        is decorated with @observe("child.name") to without.
+        name trait, compare having a method with no decorator to one that is
+        decorated with @on_trait_change("child.name"), one decorated with
+        @observe("child.name"), and one with
+        @observe(trait('child').trait('name')).
 
         The timing we are interested in:
         (1) Time to import the module, i.e. the class construction.
@@ -361,11 +362,10 @@ def report3():
         """
     Scenario 3
         Given a subclass of HasTraits with a trait that is defined as Property
-        that depends on a simple trait comparing having the Property to be
-        defined as Property(depends_on="name") to without depends_on. comparing
-        having the Property to be defined using Property(observe="name") to
-        without observe. (Note that this is a feature currently available on
-        master only).
+        that depends on a simple trait, compare having the Property be defined
+        as Property(), Property(depends_on="name"), Property(observe="name"),
+        and Property(observe=trait('name')). (Note that this is a feature
+        currently available on master only).
 
         The timing we are interested in:
         (1) Time to import the module, i.e. the class construction.
@@ -395,10 +395,10 @@ def report4():
     Scenario 4
         Given a subclass of HasTraits with a trait that is defined as Property
         that depends on an extended trait, compare having the Property be
-        defined as Property(depends_on="child.name") to without depends_on.
-        compare having the Property defined as Property(observe="child.name")
-        to without observe. (Note that this is a feature currently available on
-        master only).
+        defined as Property(), Property(depends_on="child.name"),
+        Property(observe="child.name"), and
+        Property(observe=trait('child').trait('name')). (Note that this is a
+        feature currently available on master only).
 
         The timing we are interested in:
         (1) Time to import the module, i.e. the class construction.
