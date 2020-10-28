@@ -21,6 +21,7 @@ import timeit
 # Number of iterations to perform:
 N = 10000
 
+# Code template strings to be timed for scenario 1
 
 base_setup = """
 from traits.api import (
@@ -50,6 +51,20 @@ a_person.name = ''
 
 
 def scenario1(decorator):
+    """ Time the cases described by scenario 1 using the given method decorator.
+
+    Parameters
+    ----------
+    decorator - Str
+        The string defining the decorator to be used on the method of the
+        HasTraits subclass.  e.g. "@observe('name')"
+
+    Returns
+    -------
+    tuple
+        A 3-tuple containing the time to construct the HasTraits subclass, the
+        time to instantiate it, and the time to reassign the trait
+    """
     construct_person = person_construction_template.format(decorator=decorator)
     construction_time = timeit.timeit(
         construct_person, base_setup, number=N
@@ -71,6 +86,8 @@ def scenario1(decorator):
 
     return (construction_time, instantiation_time, reassign_person_name_time)
 
+
+# Code template strings to be timed for scenario 2
 
 construct_parent_setup = base_setup + """
 class Person(HasTraits):
@@ -102,6 +119,21 @@ a_parent.child.name = ''
 
 
 def scenario2(decorator):
+    """ Time the cases described by scenario 2 using the given method decorator.
+
+    Parameters
+    ----------
+    decorator - Str
+        The string defining the decorator to be used on the method of the
+        HasTraits subclass.  e.g. "@observe('child.name')"
+
+    Returns
+    -------
+    tuple
+        A 4-tuple containing the time to construct the HasTraits subclass, the
+        time to instantiate it, the time to reassign child, and the
+        time to reassign child.name
+    """
     construct_parent = parent_construction_template.format(
         decorator=decorator
     )
@@ -135,6 +167,8 @@ def scenario2(decorator):
     )
 
 
+# Code template strings to be timed for scenario 3
+
 person_with_property_construction_template = """
 class Person(HasTraits):
     name=Str()
@@ -149,6 +183,22 @@ dependee_name_reassignment_setup_template = \
 
 
 def scenario3(property_args):
+    """ Time the cases described by scenario 3 using the given argument to the
+    Property trait defintion.
+
+    Parameters
+    ----------
+    property_args - Str
+        The string defining the argument to be passed in the definition of the
+        Property trait.  e.g. "depends_on='name'"
+
+    Returns
+    -------
+    tuple
+        A 3-tuple containing the time to construct the HasTraits subclass, the
+        time to instantiate it, and the time to reassign the trait being
+        depended-on / observed.
+    """
     construct_person_with_property = \
         person_with_property_construction_template.format(property_args)
     construction_time = timeit.timeit(
@@ -170,6 +220,8 @@ def scenario3(property_args):
     return (construction_time, instantiation_time, reassign_dependee_name_time)
 
 
+# Code template strings to be timed for scenario 4
+
 construct_parent_with_property_setup = base_setup \
     + person_construction_template.format(decorator="")
 parent_with_property_construction_template = """
@@ -188,6 +240,22 @@ child_reassignment_with_property_setup_template = \
 
 
 def scenario4(property_args):
+    """ Time the cases described by scenario 4 using the given argument to the
+    Property trait defintion.
+
+    Parameters
+    ----------
+    property_args - Str
+        The string defining the argument to be passed in the definition of the
+        Property trait.  e.g. "depends_on='child.name'"
+
+    Returns
+    -------
+    tuple
+        A 4-tuple containing the time to construct the HasTraits subclass, the
+        time to instantiate it, the time to reassign child, and the time to
+        reassign child.name
+    """
     construct_parent_with_property_stmt = \
         parent_with_property_construction_template.format(property_args)
     construction_time = timeit.timeit(
@@ -221,6 +289,8 @@ def scenario4(property_args):
 
 
 def report1():
+    """ Print a readable benchmark report for scenario 1. """
+
     print(
         """
     Scenario 1:
@@ -250,6 +320,8 @@ def report1():
 
 
 def report2():
+    """ Print a readable benchmark report for scenario 2. """
+
     print(
         """
     Scenario 2
@@ -283,6 +355,8 @@ def report2():
 
 
 def report3():
+    """ Print a readable benchmark report for scenario 3. """
+
     print(
         """
     Scenario 3
@@ -314,6 +388,8 @@ def report3():
 
 
 def report4():
+    """ Print a readable benchmark report for scenario 4. """
+
     print(
         """
     Scenario 4
