@@ -356,8 +356,8 @@ def report1():
     (#): absolute_time  relative_time_to_control
         """
     )
-    benchmark_template = ("(1): {0:.5f} {3:.2f}  (2): {1:.5f} {4:.2f}  "
-                          "(3): {2:.5f} {5:.2f}")
+    benchmark_template = ("(1): {0:.5f} {3:5.2f}  (2): {1:.5f} {4:5.2f}  "
+                          "(3): {2:.5f} {5:5.2f}")
 
     control_times = scenario1('')
     relative_control_times = map(
@@ -419,8 +419,8 @@ def report2():
     (#): absolute_time  relative_time_to_control
         """
     )
-    benchmark_template = ("(1): {0:.5f} {4:.2f}  (2): {1:.5f} {5:.2f}  "
-                          "(3): {2:.5f} {6:.2f}  (4): {3:.5f} {7:.2f}")
+    benchmark_template = ("(1): {0:.5f} {4:5.2f}  (2): {1:.5f} {5:5.2f}  "
+                          "(3): {2:.5f} {6:5.2f}  (4): {3:.5f} {7:5.2f}")
 
     control_times = scenario2('')
     relative_control_times = map(
@@ -480,8 +480,8 @@ def report3():
     (#): absolute_time  relative_time_to_control
         """
     )
-    benchmark_template = ("(1): {0:.5f} {3:.2f}  (2): {1:.5f} {4:.2f}  "
-                          "(3): {2:.5f} {5:.2f}")
+    benchmark_template = ("(1): {0:.5f} {3:5.2f}  (2): {1:.5f} {4:5.2f}  "
+                          "(3): {2:.5f} {5:5.2f}")
 
     control_times = scenario3_5('', '')
     relative_control_times = map(
@@ -543,8 +543,8 @@ def report4():
     (#): absolute_time  relative_time_to_control
         """
     )
-    benchmark_template = ("(1): {0:.5f} {4:.2f}  (2): {1:.5f} {5:.2f}  "
-                          "(3): {2:.5f} {6:.2f}  (4): {3:.5f} {7:.2f}")
+    benchmark_template = ("(1): {0:.5f} {4:5.2f}  (2): {1:.5f} {5:5.2f}  "
+                          "(3): {2:.5f} {6:5.2f}  (4): {3:.5f} {7:5.2f}")
 
     control_times = scenario4_6('', '')
     relative_control_times = map(
@@ -603,8 +603,8 @@ def report5():
     (#): absolute_time  relative_time_to_control
         """
     )
-    benchmark_template = ("(1): {0:.5f} {3:.2f}  (2): {1:.5f} {4:.2f}  "
-                          "(3): {2:.5f} {5:.2f}")
+    benchmark_template = ("(1): {0:.5f} {3:5.2f}  (2): {1:.5f} {4:5.2f}  "
+                          "(3): {2:.5f} {5:5.2f}")
 
     control_times = scenario3_5('', '@cached_property')
     relative_control_times = map(
@@ -664,8 +664,8 @@ def report6():
     (#): absolute_time  relative_time_to_control
         """
     )
-    benchmark_template = ("(1): {0:.5f} {4:.2f}  (2): {1:.5f} {5:.2f}  "
-                          "(3): {2:.5f} {6:.2f}  (4): {3:.5f} {7:.2f}")
+    benchmark_template = ("(1): {0:.5f} {4:5.2f}  (2): {1:.5f} {5:5.2f}  "
+                          "(3): {2:.5f} {6:5.2f}  (4): {3:.5f} {7:5.2f}")
 
     control_times = scenario4_6('', '@cached_property')
     relative_control_times = map(
