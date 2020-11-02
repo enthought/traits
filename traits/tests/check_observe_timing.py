@@ -74,7 +74,7 @@ INSTANTIATE_PERSON = textwrap.dedent("""
 
 # Update the trait being observed
 REASSIGN_NAME = textwrap.dedent("""
-    a_person.name = ''
+    a_person.name = 'name'
 """)
 
 
@@ -221,7 +221,7 @@ REASSIGN_CHILD = textwrap.dedent("""
 
 # Update the trait being observed on the instance trait
 REASSIGN_CHILD_NAME = textwrap.dedent("""
-    a_parent.child.name = ''
+    a_parent.child.name = 'name'
 """)
 
 
