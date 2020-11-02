@@ -13,6 +13,7 @@ import unittest
 from traits.api import (
     HasTraits,
     Int,
+    List,
     Str,
     TraitError,
 )
@@ -82,3 +83,30 @@ class GetTraitTestCase(unittest.TestCase):
 
         # Ensure no duplicates
         self.assertEqual(len(set(names)), len(names))
+
+    def test_trait_name_with_list_items(self):
+        # Dynamically added a List trait causes an "_items" to be added, but
+        # that should not be reported by HasTraits.traits
+
+        class Base(HasTraits):
+            pass
+
+        a = Base()
+        # This adds an instance trait for "pins_items" as well.
+        a.add_trait("pins", List())
+
+        self.assertIn("pins", a.traits())
+        self.assertNotIn("pins_items", a.traits())
+
+    def test_trait_name_with_items(self):
+        # Dynamically added traits with name "*_items" is also skipped.
+
+        class Base(HasTraits):
+            pass
+
+        a = Base()
+        a.add_trait("good_items", Str())
+
+        # If enthought/traits#1329 is fixed, then the following assertion
+        # should fail.
+        self.assertNotIn("good_items", a.traits())
