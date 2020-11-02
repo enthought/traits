@@ -11,7 +11,7 @@
 """
 Perform timing tests to compare the performance of on_trait_change and observe.
 
-For details on the varying "scenarios" see the description strings throughout
+For details on the varying scenarios see the description strings throughout
 the file.
 
 For the original motivation of this script, see the related issue:
@@ -114,57 +114,6 @@ def get_decorated_method_simple_timing(decorator):
     )
 
     return (construction_time, instantiation_time, reassign_person_name_time)
-
-
-def report_decorated_method_simple():
-    """ Print a readable benchmark report for the decorator with simple trait
-    case. """
-
-    print(DECORATOR_SIMPLE_CASE_DESCRIPTION)
-
-    benchmark_template = ("(1): {0:.5f} {3:5.2f}  (2): {1:.5f} {4:5.2f}  "
-                          "(3): {2:.5f} {5:5.2f}")
-
-    control_times = get_decorated_method_simple_timing('')
-    relative_control_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, control_times)
-    )
-    print("control -")
-    print(benchmark_template.format(*control_times, *relative_control_times))
-
-    on_trait_change_times = get_decorated_method_simple_timing(
-        "@on_trait_change('name')"
-    )
-    relative_on_trait_change_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, on_trait_change_times)
-    )
-    print("on_trait_change('name') -")
-    print(benchmark_template.format(
-        *on_trait_change_times, *relative_on_trait_change_times))
-
-    observe_times = get_decorated_method_simple_timing("@observe('name')")
-    relative_observe_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, observe_times)
-    )
-    print("observe('name') - ")
-    print(benchmark_template.format(*observe_times, *relative_observe_times))
-
-    observe_trait_times = get_decorated_method_simple_timing(
-        "@observe(trait('name'))"
-    )
-    relative_observe_trait_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, observe_trait_times)
-    )
-    print("observe(trait('name')) - ")
-    print(benchmark_template.format(
-        *observe_trait_times, *relative_observe_trait_times))
-
-    print('-' * 80)
-
 
 
 DECORATOR_EXTENDED_CASE_DESCRIPTION = """
@@ -277,58 +226,6 @@ def get_decorated_method_extended_timing(decorator):
     )
 
 
-def report_decorated_method_extended():
-    """ Print a readable benchmark report for the decorated method with
-    enxtended trait case.. """
-
-    print(DECORATOR_EXTENDED_CASE_DESCRIPTION)
-
-    benchmark_template = ("(1): {0:.5f} {4:5.2f}  (2): {1:.5f} {5:5.2f}  "
-                          "(3): {2:.5f} {6:5.2f}  (4): {3:.5f} {7:5.2f}")
-
-    control_times = get_decorated_method_extended_timing('')
-    relative_control_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, control_times)
-    )
-    print("control -")
-    print(benchmark_template.format(*control_times, *relative_control_times))
-
-    on_trait_change_times = get_decorated_method_extended_timing(
-        "@on_trait_change('child.name')"
-    )
-    relative_on_trait_change_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, on_trait_change_times)
-    )
-    print("on_trait_change('child.name') -")
-    print(benchmark_template.format(
-        *on_trait_change_times, *relative_on_trait_change_times))
-
-    observe_times = get_decorated_method_extended_timing(
-        "@observe('child.name')"
-    )
-    relative_observe_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, observe_times)
-    )
-    print("observe('child.name') - ")
-    print(benchmark_template.format(*observe_times, *relative_observe_times))
-
-    observe_trait_times = get_decorated_method_extended_timing(
-        "@observe(trait('child').trait('name'))"
-    )
-    relative_observe_trait_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, observe_trait_times)
-    )
-    print("observe(trait('child').trait('name')) - ")
-    print(benchmark_template.format(
-        *observe_trait_times, *relative_observe_trait_times))
-
-    print('-' * 80)
-
-
 PROPERTY_SIMPLE_CASE_DESCRIPTION = """
     Given a subclass of HasTraits with a trait that is defined as Property
     that depends on a simple trait, compare having the Property be defined
@@ -358,7 +255,7 @@ CACHED_PROPERTY_SIMPLE_CASE_DESCRIPTION = """
     (#): absolute_time  relative_time_to_control
         """
 
-# Code template strings to be timed for the (cached) property depending on a 
+# Code template strings to be timed for the (cached) property depending on a
 # simple trait scenario.
 
 # Construct subclass of HasTraits with a trait that is defined as Property that
@@ -424,106 +321,6 @@ def get_property_simple_timing(property_args, cached_property):
     return (construction_time, instantiation_time, reassign_dependee_name_time)
 
 
-def report_property_simple():
-    """ Print a readable benchmark report for the property depending on a
-    simple trait scenario. """
-
-    print(PROPERTY_SIMPLE_CASE_DESCRIPTION)
-
-    benchmark_template = ("(1): {0:.5f} {3:5.2f}  (2): {1:.5f} {4:5.2f}  "
-                          "(3): {2:.5f} {5:5.2f}")
-
-    control_times = get_property_simple_timing('', '')
-    relative_control_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, control_times)
-    )
-    print("control -")
-    print(benchmark_template.format(*control_times, *relative_control_times))
-
-    depends_on_times = get_property_simple_timing("depends_on='name'", '')
-    relative_depends_on_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, depends_on_times)
-    )
-    print("depends_on='name' -")
-    print(benchmark_template.format(
-        *depends_on_times, *relative_depends_on_times))
-
-    observe_times = get_property_simple_timing("observe='name'", '')
-    relative_observe_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, observe_times)
-    )
-    print("observe='name' - ")
-    print(benchmark_template.format(*observe_times, *relative_observe_times))
-
-    observe_trait_times = get_property_simple_timing(
-        "observe=trait('name')", ''
-    )
-    relative_observe_trait_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, observe_trait_times)
-    )
-    print("observe=trait('name') - ")
-    print(benchmark_template.format(
-        *observe_trait_times, *relative_observe_trait_times))
-
-    print('-' * 80)
-
-
-def report_cached_property_simple():
-    """ Print a readable benchmark report for the cached property depending on
-    a simple trait scenario. """
-
-    print(CACHED_PROPERTY_SIMPLE_CASE_DESCRIPTION)
-
-    benchmark_template = ("(1): {0:.5f} {3:5.2f}  (2): {1:.5f} {4:5.2f}  "
-                          "(3): {2:.5f} {5:5.2f}")
-
-    control_times = get_property_simple_timing('', '@cached_property')
-    relative_control_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, control_times)
-    )
-    print("control -")
-    print(benchmark_template.format(*control_times, *relative_control_times))
-
-    depends_on_times = get_property_simple_timing(
-        "depends_on='name'", '@cached_property'
-    )
-    relative_depends_on_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, depends_on_times)
-    )
-    print("depends_on='name' -")
-    print(benchmark_template.format(
-        *depends_on_times, *relative_depends_on_times))
-
-    observe_times = get_property_simple_timing(
-        "observe='name'", '@cached_property'
-    )
-    relative_observe_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, observe_times)
-    )
-    print("observe='name' - ")
-    print(benchmark_template.format(*observe_times, *relative_observe_times))
-
-    observe_trait_times = get_property_simple_timing(
-        "observe=trait('name')", '@cached_property'
-    )
-    relative_observe_trait_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, observe_trait_times)
-    )
-    print("observe=trait('name') - ")
-    print(benchmark_template.format(
-        *observe_trait_times, *relative_observe_trait_times))
-
-    print('-' * 80)
-
-
 PROPERTY_EXTENDED_CASE_DESCRIPTION = """
     Given a subclass of HasTraits with a trait that is defined as Property
     that depends on an extended trait, compare having the Property be
@@ -556,7 +353,7 @@ CACHED_PROPERTY_EXTENDED_CASE_DESCRIPTION = """
     (#): absolute_time  relative_time_to_control
         """
 
-# Code template strings to be timed for the (cached) property depending on an 
+# Code template strings to be timed for the (cached) property depending on an
 # extended trait scenario.
 
 # Construct subclass of HasTraits with a trait that is defined as Property that
@@ -575,7 +372,7 @@ PARENT_WITH_PROPERTY_CONSTRUCTION_TEMPLATE = textwrap.dedent("""
 
 
 def get_property_extended_timing(property_args, cached_property):
-    """ Time the cases described by the (cached) property depending on an 
+    """ Time the cases described by the (cached) property depending on an
     extended trait scenario. Wether or not the property is cached is determined
     by the cached_property argument, and the given property_args argument is
     used for the Property trait defintion.
@@ -641,115 +438,130 @@ def get_property_extended_timing(property_args, cached_property):
     )
 
 
-def report_property_extended():
-    """ Print a readable benchmark report for the property depending on an 
-    extended trait scenario. """
+def report(description, benchmark_template, get_time, get_time_args):
+    """ Prints a readable benchmark report.
 
-    print(PROPERTY_EXTENDED_CASE_DESCRIPTION)
+    Parameters
+    ----------
+    descritption : str
+        The description of the benchmarking scenario being reported.
+    benchmark_template : str
+        The format string used to print the times for the benchmark in a clean,
+        formatted way
+    get_time : function
+        The function used to get the benchmark times for the current benchmark
+        scenario
+    get_time_args : list of tuples
+        The list of tuples containing the arguments to be passed the the
+        get_time function.  Note the first argument should give specifics about
+        the case being timed and will be printed as part of the report.  e.g.
+        ("@observe('name')"), or ("depends_on='name'", '@cached_property').  A
+        first argument of '' will be printed in the report as 'control'. The
+        first tuple should correspond to the control case.
+    """
 
-    benchmark_template = ("(1): {0:.5f} {4:5.2f}  (2): {1:.5f} {5:5.2f}  "
-                          "(3): {2:.5f} {6:5.2f}  (4): {3:.5f} {7:5.2f}")
+    print(description)
 
-    control_times = get_property_extended_timing('', '')
-    relative_control_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, control_times)
-    )
-    print("control -")
-    print(benchmark_template.format(*control_times, *relative_control_times))
+    control_times = get_time(*get_time_args[0])
 
-    depends_on_times = get_property_extended_timing(
-        "depends_on='child.name'", ''
-    )
-    relative_depends_on_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, depends_on_times)
-    )
-    print("depends_on='child.name' -")
-    print(benchmark_template.format(
-        *depends_on_times, *relative_depends_on_times))
+    for args in get_time_args:
+        if args[0] == '':
+            print("control -")
+            case_times = control_times
+        else:
+            print(args[0] + ' -')
+            case_times = get_time(*args)
 
-    observe_times = get_property_extended_timing("observe='child.name'", '')
-    relative_observe_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, observe_times)
-    )
-    print("observe='child.name' - ")
-    print(benchmark_template.format(*observe_times, *relative_observe_times))
+        relative_times = map(
+            lambda times: times[1] / times[0], zip(control_times, case_times)
+        )
 
-    observe_trait_times = get_property_extended_timing(
-        "observe=trait('child').trait('name')", ''
-    )
-    relative_observe_trait_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, observe_trait_times)
-    )
-    print("observe=trait('child').trait('name') - ")
-    print(benchmark_template.format(
-        *observe_trait_times, *relative_observe_trait_times))
-
-    print('-' * 80)
-
-
-def report_cached_property_extended():
-    """ Print a readable benchmark report for the cached property depending on
-    an extended trait scenario. """
-
-    print(CACHED_PROPERTY_EXTENDED_CASE_DESCRIPTION)
-
-    benchmark_template = ("(1): {0:.5f} {4:5.2f}  (2): {1:.5f} {5:5.2f}  "
-                          "(3): {2:.5f} {6:5.2f}  (4): {3:.5f} {7:5.2f}")
-
-    control_times = get_property_extended_timing('', '@cached_property')
-    relative_control_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, control_times)
-    )
-    print("control -")
-    print(benchmark_template.format(*control_times, *relative_control_times))
-
-    depends_on_times = get_property_extended_timing(
-        "depends_on='child.name'", '@cached_property'
-    )
-    relative_depends_on_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, depends_on_times)
-    )
-    print("depends_on='child.name' -")
-    print(benchmark_template.format(
-        *depends_on_times, *relative_depends_on_times))
-
-    observe_times = get_property_extended_timing(
-        "observe='child.name'", '@cached_property'
-    )
-    relative_observe_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, observe_times)
-    )
-    print("observe='child.name' - ")
-    print(benchmark_template.format(*observe_times, *relative_observe_times))
-
-    observe_trait_times = get_property_extended_timing(
-        "observe=trait('child').trait('name')", '@cached_property'
-    )
-    relative_observe_trait_times = map(
-        lambda times: times[1] / times[0],
-        zip(control_times, observe_trait_times)
-    )
-    print("observe=trait('child').trait('name') - ")
-    print(benchmark_template.format(
-        *observe_trait_times, *relative_observe_trait_times))
+        print(benchmark_template.format(*case_times, *relative_times))
 
     print('-' * 80)
 
 
 def main():
-    report_decorated_method_simple()
-    report_decorated_method_extended()
-    report_property_simple()
-    report_cached_property_simple()
-    report_property_extended()
-    report_cached_property_extended()
+    BENCHMARK_TEMPLATE_3TIMES = ("(1): {0:.5f} {3:>6.2f} "
+                                 "(2): {1:.5f} {4:>6.2f} "
+                                 "(3): {2:.5f} {5:<6.2f}")
+
+    BENCHMARK_TEMPLATE_4TIMES = ("(1): {0:.5f} {4:>6.2f} "
+                                 "(2): {1:.5f} {5:>6.2f} "
+                                 "(3): {2:.5f} {6:>6.2f} "
+                                 "(4): {3:.5f} {7:>6.2f}")
+
+    report(
+        description=DECORATOR_SIMPLE_CASE_DESCRIPTION,
+        benchmark_template=BENCHMARK_TEMPLATE_3TIMES,
+        get_time=get_decorated_method_simple_timing,
+        get_time_args=[
+            ('',),
+            ("@on_trait_change('name')",),
+            ("@observe('name')",),
+            ("@observe(trait('name'))",)
+        ]
+    )
+
+    report(
+        description=DECORATOR_EXTENDED_CASE_DESCRIPTION,
+        benchmark_template=BENCHMARK_TEMPLATE_4TIMES,
+        get_time=get_decorated_method_extended_timing,
+        get_time_args=[
+            ('',),
+            ("@on_trait_change('child.name')",),
+            ("@observe('child.name')",),
+            ("@observe(trait('child').trait('name'))",)
+        ]
+    )
+
+    report(
+        description=PROPERTY_SIMPLE_CASE_DESCRIPTION,
+        benchmark_template=BENCHMARK_TEMPLATE_3TIMES,
+        get_time=get_property_simple_timing,
+        get_time_args=[
+            ('', ''),
+            ("depends_on='name'", ''),
+            ("observe='name'", ''),
+            ("observe=trait('name')", '')
+        ]
+    )
+
+    report(
+        description=CACHED_PROPERTY_SIMPLE_CASE_DESCRIPTION,
+        benchmark_template=BENCHMARK_TEMPLATE_3TIMES,
+        get_time=get_property_simple_timing,
+        get_time_args=[
+            ('', '@cached_property'),
+            ("depends_on='name'", '@cached_property'),
+            ("observe='name'", '@cached_property'),
+            ("observe=trait('name')", '@cached_property')
+        ]
+    )
+
+    report(
+        description=PROPERTY_EXTENDED_CASE_DESCRIPTION,
+        benchmark_template=BENCHMARK_TEMPLATE_4TIMES,
+        get_time=get_property_extended_timing,
+        get_time_args=[
+            ('', ''),
+            ("depends_on='child.name'", ''),
+            ("observe='child.name'", ''),
+            ("observe=trait('child').trait('name')", '')
+        ]
+    )
+
+    report(
+        description=CACHED_PROPERTY_EXTENDED_CASE_DESCRIPTION,
+        benchmark_template=BENCHMARK_TEMPLATE_4TIMES,
+        get_time=get_property_extended_timing,
+        get_time_args=[
+            ('', '@cached_property'),
+            ("depends_on='child.name'", '@cached_property'),
+            ("observe='child.name'", '@cached_property'),
+            ("observe=trait('child').trait('name')", '@cached_property')
+        ]
+    )
 
 
 if __name__ == '__main__':
