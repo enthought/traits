@@ -11,7 +11,10 @@
 """
 Perform timing tests to compare the performance of on_trait_change and observe.
 
-For details on motivation and the varying "scenarios" see the related issue:
+For details on the varying "scenarios" see the description strings throughout
+the file.
+
+For the original motivation of this script, see the related issue:
 enthought/traits#1325
 """
 
@@ -22,7 +25,22 @@ import timeit
 # Number of iterations to perform:
 N = 10000
 
-# Code template strings to be timed for scenario 1
+DECORATOR_SIMPLE_CASE_DESCRIPTION = """
+    Given a subclass of HasTraits with a trait defined, e.g. name = Str(),
+    compare having a method with no decorator to one that is decorated with
+    @on_trait_change("name"), one decorated with @observe("name"), and one
+    with @observe(trait('name')).
+
+    The timing we are interested in:
+    (1) Time to import the module, i.e. the class construction.
+    (2) Time to instantiate the HasTraits object.
+    (3) Time for reassigning the trait to a new value.
+
+    Times are reported as:
+    (#): absolute_time  relative_time_to_control
+        """
+
+# Code template strings to be timed for the simple decorator case
 
 # General setup not to be included in the timing.
 BASE_SETUP = textwrap.dedent("""
@@ -60,8 +78,9 @@ REASSIGN_NAME = textwrap.dedent("""
 """)
 
 
-def scenario1(decorator):
-    """ Time the cases described by scenario 1 using the given method decorator.
+def get_decorated_method_simple_timing(decorator):
+    """ Time the cases described by the decorator with simple trait case, using
+    the given method decorator.
 
     Parameters
     ----------
@@ -97,30 +116,16 @@ def scenario1(decorator):
     return (construction_time, instantiation_time, reassign_person_name_time)
 
 
-def report1():
-    """ Print a readable benchmark report for scenario 1. """
+def report_decorated_method_simple():
+    """ Print a readable benchmark report for the decorator with simple trait
+    case. """
 
-    print(
-        """
-    Scenario 1:
-        Given a subclass of HasTraits with a trait defined, e.g. name = Str(),
-        compare having a method with no decorator to one that is decorated with
-        @on_trait_change("name"), one decorated with @observe("name"), and one
-        with @observe(trait('name')).
+    print(DECORATOR_SIMPLE_CASE_DESCRIPTION)
 
-        The timing we are interested in:
-        (1) Time to import the module, i.e. the class construction.
-        (2) Time to instantiate the HasTraits object.
-        (3) Time for reassigning the trait to a new value.
-
-    Times are reported as:
-    (#): absolute_time  relative_time_to_control
-        """
-    )
     benchmark_template = ("(1): {0:.5f} {3:5.2f}  (2): {1:.5f} {4:5.2f}  "
                           "(3): {2:.5f} {5:5.2f}")
 
-    control_times = scenario1('')
+    control_times = get_decorated_method_simple_timing('')
     relative_control_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, control_times)
@@ -128,7 +133,9 @@ def report1():
     print("control -")
     print(benchmark_template.format(*control_times, *relative_control_times))
 
-    on_trait_change_times = scenario1("@on_trait_change('name')")
+    on_trait_change_times = get_decorated_method_simple_timing(
+        "@on_trait_change('name')"
+    )
     relative_on_trait_change_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, on_trait_change_times)
@@ -137,7 +144,7 @@ def report1():
     print(benchmark_template.format(
         *on_trait_change_times, *relative_on_trait_change_times))
 
-    observe_times = scenario1("@observe('name')")
+    observe_times = get_decorated_method_simple_timing("@observe('name')")
     relative_observe_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, observe_times)
@@ -145,7 +152,9 @@ def report1():
     print("observe('name') - ")
     print(benchmark_template.format(*observe_times, *relative_observe_times))
 
-    observe_trait_times = scenario1("@observe(trait('name'))")
+    observe_trait_times = get_decorated_method_simple_timing(
+        "@observe(trait('name'))"
+    )
     relative_observe_trait_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, observe_trait_times)
@@ -157,7 +166,27 @@ def report1():
     print('-' * 80)
 
 
-# Code template strings to be timed for scenario 2
+
+DECORATOR_EXTENDED_CASE_DESCRIPTION = """
+    Given a subclass of HasTraits with a trait referring to an instance of
+    HasTraits, e.g. child = Instance(AnotherClass) where AnotherClass has a
+    name trait, compare having a method with no decorator to one that is
+    decorated with @on_trait_change("child.name"), one decorated with
+    @observe("child.name"), and one with
+    @observe(trait('child').trait('name')).
+
+    The timing we are interested in:
+    (1) Time to import the module, i.e. the class construction.
+    (2) Time to instantiate the HasTraits object.
+    (3) Time for reassigning child to a new value.
+    (4) Time for reassigning child.name to a new value.
+
+    Times are reported as:
+    (#): absolute_time  relative_time_to_control
+        """
+
+# Code template strings to be timed for the decorated method with enxtended
+# trait case.
 
 # Setup for constructing subclass of HasTraits with a trait referring to an
 # instance of HasTraits
@@ -196,8 +225,9 @@ REASSIGN_CHILD_NAME = textwrap.dedent("""
 """)
 
 
-def scenario2(decorator):
-    """ Time the cases described by scenario 2 using the given method decorator.
+def get_decorated_method_extended_timing(decorator):
+    """ Time the cases described by the decorated method with enxtended trait
+    case, using the given method decorator.
 
     Parameters
     ----------
@@ -247,33 +277,16 @@ def scenario2(decorator):
     )
 
 
-def report2():
-    """ Print a readable benchmark report for scenario 2. """
+def report_decorated_method_extended():
+    """ Print a readable benchmark report for the decorated method with
+    enxtended trait case.. """
 
-    print(
-        """
-    Scenario 2
-        Given a subclass of HasTraits with a trait referring to an instance of
-        HasTraits, e.g. child = Instance(AnotherClass) where AnotherClass has a
-        name trait, compare having a method with no decorator to one that is
-        decorated with @on_trait_change("child.name"), one decorated with
-        @observe("child.name"), and one with
-        @observe(trait('child').trait('name')).
+    print(DECORATOR_EXTENDED_CASE_DESCRIPTION)
 
-        The timing we are interested in:
-        (1) Time to import the module, i.e. the class construction.
-        (2) Time to instantiate the HasTraits object.
-        (3) Time for reassigning child to a new value.
-        (4) Time for reassigning child.name to a new value.
-
-    Times are reported as:
-    (#): absolute_time  relative_time_to_control
-        """
-    )
     benchmark_template = ("(1): {0:.5f} {4:5.2f}  (2): {1:.5f} {5:5.2f}  "
                           "(3): {2:.5f} {6:5.2f}  (4): {3:.5f} {7:5.2f}")
 
-    control_times = scenario2('')
+    control_times = get_decorated_method_extended_timing('')
     relative_control_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, control_times)
@@ -281,7 +294,9 @@ def report2():
     print("control -")
     print(benchmark_template.format(*control_times, *relative_control_times))
 
-    on_trait_change_times = scenario2("@on_trait_change('child.name')")
+    on_trait_change_times = get_decorated_method_extended_timing(
+        "@on_trait_change('child.name')"
+    )
     relative_on_trait_change_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, on_trait_change_times)
@@ -290,7 +305,9 @@ def report2():
     print(benchmark_template.format(
         *on_trait_change_times, *relative_on_trait_change_times))
 
-    observe_times = scenario2("@observe('child.name')")
+    observe_times = get_decorated_method_extended_timing(
+        "@observe('child.name')"
+    )
     relative_observe_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, observe_times)
@@ -298,7 +315,9 @@ def report2():
     print("observe('child.name') - ")
     print(benchmark_template.format(*observe_times, *relative_observe_times))
 
-    observe_trait_times = scenario2("@observe(trait('child').trait('name'))")
+    observe_trait_times = get_decorated_method_extended_timing(
+        "@observe(trait('child').trait('name'))"
+    )
     relative_observe_trait_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, observe_trait_times)
@@ -310,7 +329,37 @@ def report2():
     print('-' * 80)
 
 
-# Code template strings to be timed for scenario 3
+PROPERTY_SIMPLE_CASE_DESCRIPTION = """
+    Given a subclass of HasTraits with a trait that is defined as Property
+    that depends on a simple trait, compare having the Property be defined
+    as Property(), Property(depends_on="name"), Property(observe="name"),
+    and Property(observe=trait('name')). (Note that this is a feature
+    currently available on master only).
+
+    The timing we are interested in:
+    (1) Time to import the module, i.e. the class construction.
+    (2) Time to instantiate the HasTraits object.
+    (3) Time for changing the trait being depended-on / observed.
+
+    Times are reported as:
+    (#): absolute_time  relative_time_to_control
+        """
+
+CACHED_PROPERTY_SIMPLE_CASE_DESCRIPTION = """
+    Identical to the simple property case only using the @chached_property
+    decorator on the property's getter method.
+
+    The timing we are interested in:
+    (1) Time to import the module, i.e. the class construction.
+    (2) Time to instantiate the HasTraits object.
+    (3) Time for changing the trait being depended-on / observed.
+
+    Times are reported as:
+    (#): absolute_time  relative_time_to_control
+        """
+
+# Code template strings to be timed for the (cached) property depending on a 
+# simple trait scenario.
 
 # Construct subclass of HasTraits with a trait that is defined as Property that
 # depends on a simple trait (with option include @cached_property)
@@ -327,10 +376,11 @@ PERSON_WITH_PROPERTY_CONSTRUCTION_TEMPLATE = textwrap.dedent("""
 """)
 
 
-def scenario3_5(property_args, cached_property):
-    """ Time the cases described by scenario 3 or 5 depending on the
-    cached_property argument, using the given property_args argument in the
-    Property trait defintion.
+def get_property_simple_timing(property_args, cached_property):
+    """ Time the cases described by the (cached) property depending on a simple
+    trait scenario.  Whether or not the property is cached is based on the
+    cached_property argument, and the given property_args argument is used in
+    the Property trait defintion.
 
     Parameters
     ----------
@@ -339,8 +389,7 @@ def scenario3_5(property_args, cached_property):
         Property trait.  e.g. "depends_on='name'"
     cached_property - Str
         The string that will be used to decorate the getter method of the
-        Property.  Expected to be '' for scenario 3 and '@cached_property' for
-        scenario 5.
+        Property.  Expected to be either '' or '@cached_property'.
 
     Returns
     -------
@@ -375,31 +424,16 @@ def scenario3_5(property_args, cached_property):
     return (construction_time, instantiation_time, reassign_dependee_name_time)
 
 
-def report3():
-    """ Print a readable benchmark report for scenario 3. """
+def report_property_simple():
+    """ Print a readable benchmark report for the property depending on a
+    simple trait scenario. """
 
-    print(
-        """
-    Scenario 3
-        Given a subclass of HasTraits with a trait that is defined as Property
-        that depends on a simple trait, compare having the Property be defined
-        as Property(), Property(depends_on="name"), Property(observe="name"),
-        and Property(observe=trait('name')). (Note that this is a feature
-        currently available on master only).
+    print(PROPERTY_SIMPLE_CASE_DESCRIPTION)
 
-        The timing we are interested in:
-        (1) Time to import the module, i.e. the class construction.
-        (2) Time to instantiate the HasTraits object.
-        (3) Time for changing the trait being depended-on / observed.
-
-    Times are reported as:
-    (#): absolute_time  relative_time_to_control
-        """
-    )
     benchmark_template = ("(1): {0:.5f} {3:5.2f}  (2): {1:.5f} {4:5.2f}  "
                           "(3): {2:.5f} {5:5.2f}")
 
-    control_times = scenario3_5('', '')
+    control_times = get_property_simple_timing('', '')
     relative_control_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, control_times)
@@ -407,7 +441,7 @@ def report3():
     print("control -")
     print(benchmark_template.format(*control_times, *relative_control_times))
 
-    depends_on_times = scenario3_5("depends_on='name'", '')
+    depends_on_times = get_property_simple_timing("depends_on='name'", '')
     relative_depends_on_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, depends_on_times)
@@ -416,7 +450,7 @@ def report3():
     print(benchmark_template.format(
         *depends_on_times, *relative_depends_on_times))
 
-    observe_times = scenario3_5("observe='name'", '')
+    observe_times = get_property_simple_timing("observe='name'", '')
     relative_observe_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, observe_times)
@@ -424,7 +458,9 @@ def report3():
     print("observe='name' - ")
     print(benchmark_template.format(*observe_times, *relative_observe_times))
 
-    observe_trait_times = scenario3_5("observe=trait('name')", '')
+    observe_trait_times = get_property_simple_timing(
+        "observe=trait('name')", ''
+    )
     relative_observe_trait_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, observe_trait_times)
@@ -436,28 +472,16 @@ def report3():
     print('-' * 80)
 
 
-def report5():
-    """ Print a readable benchmark report for scenario 5. """
+def report_cached_property_simple():
+    """ Print a readable benchmark report for the cached property depending on
+    a simple trait scenario. """
 
-    print(
-        """
-    Scenario 5
-        Identical to scenario 3 only using the @chached_property decorator on
-        the property's getter method.
+    print(CACHED_PROPERTY_SIMPLE_CASE_DESCRIPTION)
 
-        The timing we are interested in:
-        (1) Time to import the module, i.e. the class construction.
-        (2) Time to instantiate the HasTraits object.
-        (3) Time for changing the trait being depended-on / observed.
-
-    Times are reported as:
-    (#): absolute_time  relative_time_to_control
-        """
-    )
     benchmark_template = ("(1): {0:.5f} {3:5.2f}  (2): {1:.5f} {4:5.2f}  "
                           "(3): {2:.5f} {5:5.2f}")
 
-    control_times = scenario3_5('', '@cached_property')
+    control_times = get_property_simple_timing('', '@cached_property')
     relative_control_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, control_times)
@@ -465,7 +489,9 @@ def report5():
     print("control -")
     print(benchmark_template.format(*control_times, *relative_control_times))
 
-    depends_on_times = scenario3_5("depends_on='name'", '@cached_property')
+    depends_on_times = get_property_simple_timing(
+        "depends_on='name'", '@cached_property'
+    )
     relative_depends_on_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, depends_on_times)
@@ -474,7 +500,9 @@ def report5():
     print(benchmark_template.format(
         *depends_on_times, *relative_depends_on_times))
 
-    observe_times = scenario3_5("observe='name'", '@cached_property')
+    observe_times = get_property_simple_timing(
+        "observe='name'", '@cached_property'
+    )
     relative_observe_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, observe_times)
@@ -482,7 +510,7 @@ def report5():
     print("observe='name' - ")
     print(benchmark_template.format(*observe_times, *relative_observe_times))
 
-    observe_trait_times = scenario3_5(
+    observe_trait_times = get_property_simple_timing(
         "observe=trait('name')", '@cached_property'
     )
     relative_observe_trait_times = map(
@@ -496,7 +524,40 @@ def report5():
     print('-' * 80)
 
 
-# Code template strings to be timed for scenario 4
+PROPERTY_EXTENDED_CASE_DESCRIPTION = """
+    Given a subclass of HasTraits with a trait that is defined as Property
+    that depends on an extended trait, compare having the Property be
+    defined as Property(), Property(depends_on="child.name"),
+    Property(observe="child.name"), and
+    Property(observe=trait('child').trait('name')). (Note that this is a
+    feature currently available on master only).
+
+    The timing we are interested in:
+    (1) Time to import the module, i.e. the class construction.
+    (2) Time to instantiate the HasTraits object.
+    (3) Time for reassigning child to a new value.
+    (4) Time for reassigning child.name to a new value.
+
+    Times are reported as:
+    (#): absolute_time  relative_time_to_control
+        """
+
+CACHED_PROPERTY_EXTENDED_CASE_DESCRIPTION = """
+    Identical to the extended property case only using the @cached_property
+    decorator on the property's getter method.
+
+    The timing we are interested in:
+    (1) Time to import the module, i.e. the class construction.
+    (2) Time to instantiate the HasTraits object.
+    (3) Time for reassigning child to a new value.
+    (4) Time for reassigning child.name to a new value.
+
+    Times are reported as:
+    (#): absolute_time  relative_time_to_control
+        """
+
+# Code template strings to be timed for the (cached) property depending on an 
+# extended trait scenario.
 
 # Construct subclass of HasTraits with a trait that is defined as Property that
 # depends on an extended trait (with option to include @cached_property)
@@ -513,10 +574,11 @@ PARENT_WITH_PROPERTY_CONSTRUCTION_TEMPLATE = textwrap.dedent("""
 """)
 
 
-def scenario4_6(property_args, cached_property):
-    """ Time the cases described by scenario 4 or 6 depending on the
-    cached_property argument, using the given property_args argument for the
-    Property trait defintion.
+def get_property_extended_timing(property_args, cached_property):
+    """ Time the cases described by the (cached) property depending on an 
+    extended trait scenario. Wether or not the property is cached is determined
+    by the cached_property argument, and the given property_args argument is
+    used for the Property trait defintion.
 
     Parameters
     ----------
@@ -525,8 +587,7 @@ def scenario4_6(property_args, cached_property):
         Property trait.  e.g. "depends_on='child.name'"
     cached_property - Str
         The string that will be used to decorate the getter method of the
-        Property.  Expected to be '' for scenario 4 and '@cached_property' for
-        scenario 6.
+        Property.  Expected to be either '' or '@cached_property'.
 
     Returns
     -------
@@ -580,33 +641,16 @@ def scenario4_6(property_args, cached_property):
     )
 
 
-def report4():
-    """ Print a readable benchmark report for scenario 4. """
+def report_property_extended():
+    """ Print a readable benchmark report for the property depending on an 
+    extended trait scenario. """
 
-    print(
-        """
-    Scenario 4
-        Given a subclass of HasTraits with a trait that is defined as Property
-        that depends on an extended trait, compare having the Property be
-        defined as Property(), Property(depends_on="child.name"),
-        Property(observe="child.name"), and
-        Property(observe=trait('child').trait('name')). (Note that this is a
-        feature currently available on master only).
+    print(PROPERTY_EXTENDED_CASE_DESCRIPTION)
 
-        The timing we are interested in:
-        (1) Time to import the module, i.e. the class construction.
-        (2) Time to instantiate the HasTraits object.
-        (3) Time for reassigning child to a new value.
-        (4) Time for reassigning child.name to a new value.
-
-    Times are reported as:
-    (#): absolute_time  relative_time_to_control
-        """
-    )
     benchmark_template = ("(1): {0:.5f} {4:5.2f}  (2): {1:.5f} {5:5.2f}  "
                           "(3): {2:.5f} {6:5.2f}  (4): {3:.5f} {7:5.2f}")
 
-    control_times = scenario4_6('', '')
+    control_times = get_property_extended_timing('', '')
     relative_control_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, control_times)
@@ -614,7 +658,9 @@ def report4():
     print("control -")
     print(benchmark_template.format(*control_times, *relative_control_times))
 
-    depends_on_times = scenario4_6("depends_on='child.name'", '')
+    depends_on_times = get_property_extended_timing(
+        "depends_on='child.name'", ''
+    )
     relative_depends_on_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, depends_on_times)
@@ -623,7 +669,7 @@ def report4():
     print(benchmark_template.format(
         *depends_on_times, *relative_depends_on_times))
 
-    observe_times = scenario4_6("observe='child.name'", '')
+    observe_times = get_property_extended_timing("observe='child.name'", '')
     relative_observe_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, observe_times)
@@ -631,7 +677,7 @@ def report4():
     print("observe='child.name' - ")
     print(benchmark_template.format(*observe_times, *relative_observe_times))
 
-    observe_trait_times = scenario4_6(
+    observe_trait_times = get_property_extended_timing(
         "observe=trait('child').trait('name')", ''
     )
     relative_observe_trait_times = map(
@@ -645,29 +691,16 @@ def report4():
     print('-' * 80)
 
 
-def report6():
-    """ Print a readable benchmark report for scenario 6. """
+def report_cached_property_extended():
+    """ Print a readable benchmark report for the cached property depending on
+    an extended trait scenario. """
 
-    print(
-        """
-    Scenario 6
-        Identical to scenario 4 only using the @cached_property decorator on
-        the property's getter method.
+    print(CACHED_PROPERTY_EXTENDED_CASE_DESCRIPTION)
 
-        The timing we are interested in:
-        (1) Time to import the module, i.e. the class construction.
-        (2) Time to instantiate the HasTraits object.
-        (3) Time for reassigning child to a new value.
-        (4) Time for reassigning child.name to a new value.
-
-    Times are reported as:
-    (#): absolute_time  relative_time_to_control
-        """
-    )
     benchmark_template = ("(1): {0:.5f} {4:5.2f}  (2): {1:.5f} {5:5.2f}  "
                           "(3): {2:.5f} {6:5.2f}  (4): {3:.5f} {7:5.2f}")
 
-    control_times = scenario4_6('', '@cached_property')
+    control_times = get_property_extended_timing('', '@cached_property')
     relative_control_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, control_times)
@@ -675,7 +708,7 @@ def report6():
     print("control -")
     print(benchmark_template.format(*control_times, *relative_control_times))
 
-    depends_on_times = scenario4_6(
+    depends_on_times = get_property_extended_timing(
         "depends_on='child.name'", '@cached_property'
     )
     relative_depends_on_times = map(
@@ -686,7 +719,9 @@ def report6():
     print(benchmark_template.format(
         *depends_on_times, *relative_depends_on_times))
 
-    observe_times = scenario4_6("observe='child.name'", '@cached_property')
+    observe_times = get_property_extended_timing(
+        "observe='child.name'", '@cached_property'
+    )
     relative_observe_times = map(
         lambda times: times[1] / times[0],
         zip(control_times, observe_times)
@@ -694,7 +729,7 @@ def report6():
     print("observe='child.name' - ")
     print(benchmark_template.format(*observe_times, *relative_observe_times))
 
-    observe_trait_times = scenario4_6(
+    observe_trait_times = get_property_extended_timing(
         "observe=trait('child').trait('name')", '@cached_property'
     )
     relative_observe_trait_times = map(
@@ -709,12 +744,12 @@ def report6():
 
 
 def main():
-    report1()
-    report2()
-    report3()
-    report4()
-    report5()
-    report6()
+    report_decorated_method_simple()
+    report_decorated_method_extended()
+    report_property_simple()
+    report_cached_property_simple()
+    report_property_extended()
+    report_cached_property_extended()
 
 
 if __name__ == '__main__':
