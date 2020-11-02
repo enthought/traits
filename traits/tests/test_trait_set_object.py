@@ -14,7 +14,7 @@ from unittest import mock
 from traits.api import HasTraits, Set, Str
 from traits.trait_base import _validate_everything
 from traits.trait_errors import TraitError
-from traits.trait_set_object import TraitSet
+from traits.trait_set_object import TraitSet, TraitSetEvent
 from traits.trait_types import _validate_int
 
 
@@ -516,3 +516,13 @@ class TestTraitSetObject(unittest.TestCase):
 
         # then
         notifier.assert_not_called()
+
+
+class TestTraitSetEvent(unittest.TestCase):
+
+    def test_trait_set_event_str_representation(self):
+        """ test string representation of the TraitSetEvent class. """
+        desired_repr = "TraitSetEvent(removed=set(), added=set())"
+        trait_set_event = TraitSetEvent()
+        self.assertEqual(desired_repr, str(trait_set_event))
+        self.assertEqual(desired_repr, repr(trait_set_event))

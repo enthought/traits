@@ -93,6 +93,13 @@ class TestTraitListEvent(unittest.TestCase):
         self.assertEqual(event.removed, [])
         self.assertEqual(event.added, [])
 
+    def test_trait_list_event_str_representation(self):
+        """ test string representation of the TraitListEvent class. """
+        desired_repr = "TraitListEvent(index=0, removed=[], added=[])"
+        trait_list_event = TraitListEvent()
+        self.assertEqual(desired_repr, str(trait_list_event))
+        self.assertEqual(desired_repr, repr(trait_list_event))
+
 
 class TestTraitList(unittest.TestCase):
 

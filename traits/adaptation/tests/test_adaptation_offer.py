@@ -56,3 +56,18 @@ class TestAdaptationOffer(unittest.TestCase):
         from traits.adaptation.tests.lazy_examples import IFoo
 
         self.assertIs(to_protocol, IFoo)
+
+    def test_adaptation_offer_str_representation(self):
+        """ test string representation of the AdaptationOffer class. """
+
+        class Foo:
+            pass
+
+        class Bar:
+            pass
+
+        desired_repr = ("<AdaptationOffer: 'test_adaptation_offer.Foo' "
+                        "-> 'test_adaptation_offer.Bar'>")
+        adaptation_offer = AdaptationOffer(from_protocol=Foo, to_protocol=Bar)
+        self.assertEqual(desired_repr, str(adaptation_offer))
+        self.assertEqual(desired_repr, repr(adaptation_offer))
