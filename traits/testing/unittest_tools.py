@@ -8,8 +8,10 @@
 #
 # Thanks for using Enthought open source!
 
-""" Trait assert mixin class to simplify test implementation for Trait
-Classes.
+""" Tools for testing Traits classes using Python unittest framework.
+
+This includes a mixin class to simplify test implementation for
+Trait Classes, as well as helper functions that can be used with unittest.
 
 """
 
@@ -31,9 +33,40 @@ from traits.api import (
     Int,
     List,
     Str,
+    pop_exception_handler as on_trait_change_pop_exception,
     Property,
+    push_exception_handler as on_trait_change_push_exception,
+)
+from traits.observation.api import (
+    pop_exception_handler as observe_pop_exception,
+    push_exception_handler as observe_push_exception,
 )
 from traits.util.async_trait_wait import wait_for_condition
+
+
+def setup_test():
+    """ Set up exception handlers so that any exceptions from a change
+    handler given to ``on_trait_change`` or ``observe`` are re-raised and the
+    default logging behavior is silenced. Suitable to be used in
+    ``unittest.TestCase.setUp``.
+    """
+
+    # we will reraise, there is no need to log.
+    def ignore(*args):
+        pass
+
+    on_trait_change_push_exception(handler=ignore, reraise_exceptions=True)
+    observe_push_exception(handler=ignore, reraise_exceptions=True)
+
+
+def teardown_test():
+    """ Reverse the actions in ``setup_test``.
+
+    Suitable to be used in ``unittest.TestCase.tearDown`` or with
+    ``unittest.TestCase.addCleanup``.
+    """
+    observe_pop_exception()
+    on_trait_change_pop_exception()
 
 
 class _AssertTraitChangesContext(object):

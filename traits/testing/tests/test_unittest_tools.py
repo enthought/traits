@@ -20,8 +20,9 @@ from traits.api import (
     Int,
     List,
     on_trait_change,
+    observe,
 )
-from traits.testing.api import UnittestTools
+from traits.testing.api import UnittestTools, setup_test, teardown_test
 # unittest_tools provides a reference to unittest for historical reasons, and
 # downstream packages may still be doing "from traits.testing.unittest_tools
 # import unittest". We keep this import as-is (instead of doing a simple
@@ -444,3 +445,44 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         with self.assertWarns(DeprecationWarning):
             with self._catch_warnings():
                 pass
+
+
+class TestHelperMethod(unittest.TestCase):
+
+    def setUp(self):
+        setup_test()
+        self.addCleanup(teardown_test)
+
+    def test_on_trait_change_error(self):
+        # Test error from on_trait_change is re-raised.
+        # Ideally, we should check there are no logging messages with
+        # assertNoLogs from Python 3.10
+
+        class A(HasTraits):
+            foo = Bool(False)
+
+            @on_trait_change("foo")
+            def _bad_handler(self):
+                raise ZeroDivisionError("Bad handler!")
+
+        obj = A()
+
+        with self.assertRaises(ZeroDivisionError):
+            obj.foo = True
+
+    def test_observe_error(self):
+        # Test error from observe is re-raised.
+        # Ideally, we should check there are no logging messages with
+        # assertNoLogs from Python 3.10
+
+        class A(HasTraits):
+            foo = Bool(False)
+
+            @observe("foo")
+            def _bad_handler(self, event):
+                raise ZeroDivisionError("Bad handler!")
+
+        obj = A()
+
+        with self.assertRaises(ZeroDivisionError):
+            obj.foo = True
