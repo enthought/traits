@@ -12,58 +12,70 @@ Traits will typically log (instead of raise) exceptions when an exception is
 encountered in a trait-change handler. This behavior is often preferred in
 applications, since you usually want to avoid critical failures in
 applications. However, when debugging these errors, the
-``logging.Logger.exception`` only displays the tip of the traceback. For example,
-the following code changes a ``constant``:
+``logging.Logger.exception`` only displays the tip of the traceback. For
+example, the following change handler raises an exception::
 
-.. code-block:: python
-
-   from traits.api import HasTraits, Int
+   from traits.api import HasTraits, Int, observe
 
    class Curmudgeon(HasTraits):
-       constant = Int(1)
-       def _constant_changed(self):
+       number = Int(1)
+
+       @observe("number")
+       def number_updated(self):
            raise ValueError()
 
    c = Curmudgeon()
-   c.constant = 42
+   c.number = 42
 
-The ``constant`` trait-change handler raises an exception that is caught and
-logged::
+The script exits normally. The exception is caught and logged::
 
-   Exception occurred in traits notification handler.
-   Please check the log file for details.
-   Exception occurred in traits notification handler for object:
-   <__main__.Curmudgeon object at 0x107603050>, trait: constant, old value: 0, new value: 42 
-     ...
-     File "curmudgeon.py", line 12, in _constant_changed
+   Exception occurred in traits notification handler for event object: TraitChangeEvent(object=<__main__.Curmudgeon object at 0x7fed00525220>, name='number', old=1, new=42)
+   Traceback (most recent call last):
+    ...
+   File "curmudgeon.py", line 8, in number_updated
        raise ValueError()
    ValueError
 
 This logged exception, however, only contains the tip of the traceback. This
 makes debugging a bit difficult. You can force exceptions to be re-raised
-by adding a custom exception handler:
+by calling :func:`~traits.testing.unittest_tools.setup_test`::
 
-.. code-block:: python
+   from traits.testing.api import setup_test
+   setup_test()
+
+This helper function will cause exceptions from ``observe`` or
+``on_trait_change`` to be re-raised. This setting can be reversed by
+:func:`~traits.testing.unittest_tools.teardown_test`::
+
+   from traits.testing.api import teardown_test
+   teardown_test()
+
+Alternatively, you can modify the exception handling just for
+``observe``::
+
+   from traits.observation.api import push_exception_handler
+   push_exception_handler(reraise_exceptions=True)
+
+Or just for ``on_trait_change``::
 
    from traits.api import push_exception_handler
    push_exception_handler(reraise_exceptions=True)
 
 (For example, you could add this to the top of the original code block.)
 
-Re-running the original code example with this custom handler will now raise
+Re-running the original code example with the exception handler will now raise
 the following traceback::
 
    Traceback (most recent call last):
      File "curmudgeon.py", line 15, in <module>
-       c.constant = 42
+       c.number = 42
      ...
-     File "curmudgeon.py", line 12, in _constant_changed
+     File "curmudgeon.py", line 12, in number_updated
        raise ValueError()
    ValueError
 
 Notice that this traceback has information about *where* we changed
-``constant``.  Note: This is a toy example; use ``Constant`` from
-``traits.api`` if you actually want a constant trait.
+``number``.
 
 
 Tracing Traits Change Events
