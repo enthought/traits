@@ -66,8 +66,10 @@ class TestAdaptationOffer(unittest.TestCase):
         class Bar:
             pass
 
-        desired_repr = ("<AdaptationOffer: 'test_adaptation_offer.Foo' "
-                        "-> 'test_adaptation_offer.Bar'>")
         adaptation_offer = AdaptationOffer(from_protocol=Foo, to_protocol=Bar)
+        desired_repr = "<AdaptationOffer: '{}' -> '{}'>".format(
+            adaptation_offer.from_protocol_name,
+            adaptation_offer.to_protocol_name
+        )
         self.assertEqual(desired_repr, str(adaptation_offer))
         self.assertEqual(desired_repr, repr(adaptation_offer))
