@@ -455,17 +455,16 @@ def report(description, benchmark_template, get_time, get_time_args):
         The list of tuples containing the arguments to be passed the the
         get_time function.  Note the first argument should give specifics about
         the case being timed and will be printed as part of the report.  e.g.
-        ("@observe('name')"), or ("depends_on='name'", '@cached_property').  A
-        first argument of '' will be printed in the report as 'control'. The
-        first tuple should correspond to the control case.
+        ("@observe('name')"), or ("depends_on='name'", '@cached_property').
+        The first item in the list will be used as a control.
     """
 
     print(description)
 
     control_times = get_time(*get_time_args[0])
 
-    for args in get_time_args:
-        if args[0] == '':
+    for index, args in enumerate(get_time_args):
+        if index == 0:
             print("control -")
             case_times = control_times
         else:
@@ -484,7 +483,7 @@ def report(description, benchmark_template, get_time, get_time_args):
 def main():
     BENCHMARK_TEMPLATE_3TIMES = ("(1): {0:.5f} {3:>6.2f} "
                                  "(2): {1:.5f} {4:>6.2f} "
-                                 "(3): {2:.5f} {5:<6.2f}")
+                                 "(3): {2:.5f} {5:>6.2f}")
 
     BENCHMARK_TEMPLATE_4TIMES = ("(1): {0:.5f} {4:>6.2f} "
                                  "(2): {1:.5f} {5:>6.2f} "
