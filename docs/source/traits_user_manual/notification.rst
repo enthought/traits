@@ -244,7 +244,8 @@ The following expectations apply to any change handler:
 * No assumptions should be made about the order of which handlers are called
   for a given change event. A change event can have many change handlers.
 * No exceptions should be raised from a change handler. Any unexpected
-  exceptions will be captured and logged.
+  exceptions will be captured and logged. (See
+  :ref:`debugging-change-handler-error` on how to override this behavior).
 
 When the handler is invoked, it is given an **event** object which provides
 information about the change observed. The type and signature of *event*

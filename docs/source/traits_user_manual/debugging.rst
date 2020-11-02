@@ -4,16 +4,19 @@
 Tips for debugging Traits
 =========================
 
+.. _debugging-change-handler-error:
 
 Re-raising exceptions in change handlers
 ========================================
 
 Traits will typically log (instead of raise) exceptions when an exception is
-encountered in a trait-change handler. This behavior is often preferred in
-applications, since you usually want to avoid critical failures in
-applications. However, when debugging these errors, the
+encountered in a trait-change handler (see :ref:`observe-notification`). This
+behavior is often preferred in applications, since you usually want to avoid
+critical failures in applications. However, when debugging these errors, the
 ``logging.Logger.exception`` only displays the tip of the traceback. For
-example, the following change handler raises an exception::
+example, the following change handler raises an exception:
+
+.. code-block:: python
 
    from traits.api import HasTraits, Int, observe
 
@@ -27,7 +30,9 @@ example, the following change handler raises an exception::
    c = Curmudgeon()
    c.number = 42
 
-The script exits normally. The exception is caught and logged::
+The script exits normally. The exception is caught and logged:
+
+.. code-block:: none
 
    Exception occurred in traits notification handler for event object: TraitChangeEvent(object=<__main__.Curmudgeon object at 0x7fed00525220>, name='number', old=1, new=42)
    Traceback (most recent call last):
@@ -38,25 +43,33 @@ The script exits normally. The exception is caught and logged::
 
 This logged exception, however, only contains the tip of the traceback. This
 makes debugging a bit difficult. You can force exceptions to be re-raised
-by calling :func:`~traits.testing.unittest_tools.setup_test`::
+by calling :func:`~traits.testing.unittest_tools.setup_test`:
+
+.. code-block:: python
 
    from traits.testing.api import setup_test
    setup_test()
 
 This helper function will cause exceptions from ``observe`` or
 ``on_trait_change`` to be re-raised. This setting can be reversed by
-:func:`~traits.testing.unittest_tools.teardown_test`::
+:func:`~traits.testing.unittest_tools.teardown_test`:
+
+.. code-block:: python
 
    from traits.testing.api import teardown_test
    teardown_test()
 
 Alternatively, you can modify the exception handling just for
-``observe``::
+``observe``:
+
+.. code-block:: python
 
    from traits.observation.api import push_exception_handler
    push_exception_handler(reraise_exceptions=True)
 
-Or just for ``on_trait_change``::
+Or just for ``on_trait_change``:
+
+.. code-block:: python
 
    from traits.api import push_exception_handler
    push_exception_handler(reraise_exceptions=True)
@@ -64,7 +77,9 @@ Or just for ``on_trait_change``::
 (For example, you could add this to the top of the original code block.)
 
 Re-running the original code example with the exception handler will now raise
-the following traceback::
+the following traceback:
+
+.. code-block:: none
 
    Traceback (most recent call last):
      File "curmudgeon.py", line 15, in <module>
