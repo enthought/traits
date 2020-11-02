@@ -129,7 +129,7 @@ def ctrait_prevent_event(event):
     """
     if event.old is Uninitialized:
         return True
-    ctrait = event.object._trait(event.name, 2)
+    ctrait = event.object.trait(event.name)
     if (ctrait.type == TraitKind.trait.name
             and ctrait.comparison_mode == ComparisonMode.equality):
         try:
