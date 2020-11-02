@@ -448,6 +448,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
 
 class TestHelperMethod(unittest.TestCase):
+    """ Test setup_test and teardown_test helper functions. """
 
     def setUp(self):
         setup_test()
