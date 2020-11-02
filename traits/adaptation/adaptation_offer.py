@@ -28,12 +28,13 @@ class AdaptationOffer(HasTraits):
     def __repr__(self):
         """ Return a string representation of the object. """
 
-        template = "<AdaptationOffer: '{from_}' -> '{to}'>"
+        template = "<{class_name}: '{from_}' -> '{to}'>"
 
+        class_name = self.__class__.__name__
         from_ = self.from_protocol_name
         to = self.to_protocol_name
 
-        return template.format(from_=from_, to=to)
+        return template.format(class_name=class_name, from_=from_, to=to)
 
     #### 'AdaptationOffer' protocol ###########################################
 
