@@ -44,11 +44,10 @@ class DictChangeEvent:
 
     def __repr__(self):
         return (
-            "{event.__class__.__name__}("
-            "object={event.object!r}, "
-            "removed={event.removed!r}, "
-            "added={event.added!r}"
-            ")".format(event=self)
+            f"{self.__class__.__name__}("
+            f"object={self.object!r}, "
+            f"removed={self.removed!r}, "
+            f"added={self.added!r})"
         )
 
 
