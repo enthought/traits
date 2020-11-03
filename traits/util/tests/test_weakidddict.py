@@ -130,3 +130,10 @@ class TestWeakIDDict(unittest.TestCase):
         desired_repr = "<WeakIDDict at 0x{0:x}>".format(id(weak_id_dict))
         self.assertEqual(desired_repr, str(weak_id_dict))
         self.assertEqual(desired_repr, repr(weak_id_dict))
+
+    def test_weak_id_key_dict_str_representation(self):
+        """ test string representation of the WeakIDKeyDict class. """
+        weak_id_key_dict = WeakIDKeyDict()
+        desired_repr = "<WeakIDKeyDict at 0x{0:x}>".format(id(weak_id_key_dict))
+        self.assertEqual(desired_repr, str(weak_id_key_dict))
+        self.assertEqual(desired_repr, repr(weak_id_key_dict))
