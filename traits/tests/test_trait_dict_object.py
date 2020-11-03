@@ -438,7 +438,7 @@ class TestTraitDictObject(unittest.TestCase):
 class TestTraitDictEvent(unittest.TestCase):
 
     def test_trait_dict_event_str_representation(self):
-        """ test string representation of the TraitDictEvent class. """
+        """ Test string representation of the TraitDictEvent class. """
         desired_repr = "TraitDictEvent(removed={}, added={}, changed={})"
         trait_dict_event = TraitDictEvent()
         self.assertEqual(desired_repr, str(trait_dict_event))

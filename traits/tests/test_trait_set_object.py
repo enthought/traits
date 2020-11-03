@@ -521,7 +521,7 @@ class TestTraitSetObject(unittest.TestCase):
 class TestTraitSetEvent(unittest.TestCase):
 
     def test_trait_set_event_str_representation(self):
-        """ test string representation of the TraitSetEvent class. """
+        """ Test string representation of the TraitSetEvent class. """
         desired_repr = "TraitSetEvent(removed=set(), added=set())"
         trait_set_event = TraitSetEvent()
         self.assertEqual(desired_repr, str(trait_set_event))
