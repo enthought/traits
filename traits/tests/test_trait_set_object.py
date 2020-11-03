@@ -526,3 +526,15 @@ class TestTraitSetEvent(unittest.TestCase):
         trait_set_event = TraitSetEvent()
         self.assertEqual(desired_repr, str(trait_set_event))
         self.assertEqual(desired_repr, repr(trait_set_event))
+
+    def test_trait_set_event_subclass_str_representation(self):
+        """ Test string representation of a subclass of the TraitSetEvent
+        class. """
+
+        class DifferentName(TraitSetEvent):
+            pass
+
+        desired_repr = "DifferentName(removed=set(), added=set())"
+        different_name_subclass = DifferentName()
+        self.assertEqual(desired_repr, str(different_name_subclass))
+        self.assertEqual(desired_repr, repr(different_name_subclass))

@@ -443,3 +443,15 @@ class TestTraitDictEvent(unittest.TestCase):
         trait_dict_event = TraitDictEvent()
         self.assertEqual(desired_repr, str(trait_dict_event))
         self.assertEqual(desired_repr, repr(trait_dict_event))
+
+    def test_trait_dict_event_subclass_str_representation(self):
+        """ Test string representation of a subclass of the TraitDictEvent
+        class. """
+
+        class DifferentName(TraitDictEvent):
+            pass
+
+        desired_repr = "DifferentName(removed={}, added={}, changed={})"
+        differnt_name_subclass = DifferentName()
+        self.assertEqual(desired_repr, str(differnt_name_subclass))
+        self.assertEqual(desired_repr, repr(differnt_name_subclass))

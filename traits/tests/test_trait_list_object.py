@@ -100,6 +100,18 @@ class TestTraitListEvent(unittest.TestCase):
         self.assertEqual(desired_repr, str(trait_list_event))
         self.assertEqual(desired_repr, repr(trait_list_event))
 
+    def test_trait_list_event_subclass_str_representation(self):
+        """ Test string representation of a subclass of the TraitListEvent
+        class. """
+
+        class DifferentName(TraitListEvent):
+            pass
+
+        desired_repr = "DifferentName(index=0, removed=[], added=[])"
+        different_name_subclass = DifferentName()
+        self.assertEqual(desired_repr, str(different_name_subclass))
+        self.assertEqual(desired_repr, repr(different_name_subclass))
+
 
 class TestTraitList(unittest.TestCase):
 
