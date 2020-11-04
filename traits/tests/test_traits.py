@@ -600,7 +600,6 @@ class TestTraitWithMappingAndCallable(unittest.TestCase):
 
         # the value is not 'white' any more.
         self.assertEqual(obj.value, 5)
-        # it is a mapped trait because there is a mapping.
         self.assertEqual(obj.value_, 5)
 
     def test_trait_set_value_use_callable(self):
@@ -609,7 +608,6 @@ class TestTraitWithMappingAndCallable(unittest.TestCase):
         # The value is not 'red' any more.
         # the callable is used, not the mapping.
         self.assertEqual(obj.value, 3)
-        # it is a mapped trait because there is a mapping.
         self.assertEqual(obj.value_, 3)
 
     def test_trait_set_value_use_mapping(self):
@@ -617,7 +615,6 @@ class TestTraitWithMappingAndCallable(unittest.TestCase):
 
         # Now this uses the mapping, and the value is the original one.
         self.assertEqual(obj.value, (0, 0, 0))
-        # it is a mapped trait because there is a mapping.
         self.assertEqual(obj.value_, 999)
 
 
