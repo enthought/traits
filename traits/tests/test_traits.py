@@ -565,13 +565,17 @@ def str_cast_to_int(object, name, value):
     return len(value)
 
 
-class TraitWithMappingAndCallable(HasTraits):
+# Suppress DeprecationWarning from TraitPrefixMap instantiation.
+with warnings.catch_warnings():
+    warnings.filterwarnings(action="ignore", category=DeprecationWarning)
 
-    value = Trait(
-        "white",
-        {"white": 0, "red": 1, (0, 0, 0): 999},
-        str_cast_to_int,
-    )
+    class TraitWithMappingAndCallable(HasTraits):
+
+        value = Trait(
+            "white",
+            {"white": 0, "red": 1, (0, 0, 0): 999},
+            str_cast_to_int,
+        )
 
 
 class TestTraitWithMappingAndCallable(unittest.TestCase):
