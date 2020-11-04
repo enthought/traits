@@ -24,7 +24,7 @@ example, the following change handler raises an exception:
        number = Int(1)
 
        @observe("number")
-       def number_updated(self):
+       def number_updated(self, event):
            raise ValueError()
 
    c = Curmudgeon()
