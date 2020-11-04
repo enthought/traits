@@ -554,6 +554,69 @@ class PrefixMapTest(AnyTraitTest):
         return {"o": "one", "on": "one", "tw": "two", "th": "three"}[value[:2]]
 
 
+# This test a combination of Trait, a default, a mapping and a function
+
+def str_cast_to_int(object, name, value):
+    """ A function that validates the value is a str and then convert
+    it to an int using its length.
+    """
+    if not isinstance(value, str):
+        raise TraitError("Not an string!")
+    return len(value)
+
+
+class TraitWithMappingAndCallable(HasTraits):
+
+    value = Trait(
+        "white",
+        {"white": 0, "red": 1, (0, 0, 0): 999},
+        str_cast_to_int,
+    )
+
+
+class TestTraitWithMappingAndCallable(unittest.TestCase):
+    """ Test that demonstrates a usage of Trait where TraitMap is used but it
+    cannot be replaced with Map. The callable causes the key value to be
+    changed to match the mapped value.
+
+    e.g. this would not work:
+
+        value = Union(
+            Map({"white": 0, "red": 1, (0,0,0): 999}),
+            NewTraitType(),
+            default_value="white",
+        )
+
+        where NewTraitType is a subclass of TraitType with ``validate`` simply
+        calls str_cast_to_int
+    """
+
+    def test_trait_default(self):
+        obj = TraitWithMappingAndCallable()
+
+        # the value is not 'white' any more.
+        self.assertEqual(obj.value, 5)
+        # it is a mapped trait because there is a mapping.
+        self.assertEqual(obj.value_, 5)
+
+    def test_trait_set_value_use_callable(self):
+        obj = TraitWithMappingAndCallable(value="red")
+
+        # The value is not 'red' any more.
+        # the callable is used, not the mapping.
+        self.assertEqual(obj.value, 3)
+        # it is a mapped trait because there is a mapping.
+        self.assertEqual(obj.value_, 3)
+
+    def test_trait_set_value_use_mapping(self):
+        obj = TraitWithMappingAndCallable(value=(0, 0, 0))
+
+        # Now this uses the mapping, and the value is the original one.
+        self.assertEqual(obj.value, (0, 0, 0))
+        # it is a mapped trait because there is a mapping.
+        self.assertEqual(obj.value_, 999)
+
+
 # Old style class version:
 
 
