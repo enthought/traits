@@ -565,7 +565,7 @@ def str_cast_to_int(object, name, value):
     return len(value)
 
 
-# Suppress DeprecationWarning from TraitPrefixMap instantiation.
+# Suppress DeprecationWarning from TraitMap instantiation.
 with warnings.catch_warnings():
     warnings.filterwarnings(action="ignore", category=DeprecationWarning)
 
