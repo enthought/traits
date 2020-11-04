@@ -43,7 +43,7 @@ class WeakIDDict(MutableMapping):
             self.update(dict)
 
     def __repr__(self):
-        return "<WeakIDDict at 0x{0:x}>".format(id(self))
+        return f"<{self.__class__.__name__} at 0x{id(self):x}>"
 
     def __delitem__(self, key):
         del self.data[id(key)]

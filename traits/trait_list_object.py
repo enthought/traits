@@ -54,8 +54,11 @@ class TraitListEvent(object):
         self.added = added
 
     def __repr__(self):
-        return "TraitListEvent(index={!r}, removed={!r}, added={!r})".format(
-            self.index, self.removed, self.added
+        return (
+            f"{self.__class__.__name__}("
+            f"index={self.index!r}, "
+            f"removed={self.removed!r}, "
+            f"added={self.added!r})"
         )
 
 
