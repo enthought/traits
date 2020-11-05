@@ -36,7 +36,11 @@ jobs:
       os: osx
       osx_image: xcode11.5
       language: shell
-    - name: "Python 3.8 on macOS"
+    - name: "Python 3.8 on macOS (XCode 12.2)"
+      os: osx
+      osx_image: xcode12.2
+      language: shell
+    - name: "Python 3.8 on macOS (XCode 12.0.1)"
       os: osx
       osx_image: xcode12
       language: shell
