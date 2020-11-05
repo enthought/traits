@@ -30,9 +30,7 @@ example, the following change handler raises an exception:
    c = Curmudgeon()
    c.number = 42
 
-The script exits normally. The exception is caught and logged:
-
-.. code-block:: none
+The script exits normally. The exception is caught and logged::
 
    Exception occurred in traits notification handler for event object: TraitChangeEvent(object=<__main__.Curmudgeon object at 0x7fed00525220>, name='number', old=1, new=42)
    Traceback (most recent call last):
@@ -77,9 +75,7 @@ Or just for ``on_trait_change``:
 (For example, you could add this to the top of the original code block.)
 
 Re-running the original code example with the exception handler will now raise
-the following traceback:
-
-.. code-block:: none
+the following traceback::
 
    Traceback (most recent call last):
      File "curmudgeon.py", line 15, in <module>
