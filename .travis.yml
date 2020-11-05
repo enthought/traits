@@ -36,6 +36,10 @@ jobs:
       os: osx
       osx_image: xcode11.5
       language: shell
+    - name: "Python 3.8 on macOS"
+      os: osx
+      osx_image: xcode12.2
+      language: shell
 
 install:
   - python3 --version
