@@ -812,8 +812,20 @@ def observe(expression, *, post_init=False, dispatch="same"):
             observe_inputs = []
             handler._observe_inputs = observe_inputs
 
+        # Handle the overloaded signature.
+        # Support list to be consistent with on_trait_change.
+        if isinstance(expression, list):
+            expressions = expression
+        else:
+            expressions = [expression]
+
+        expressions = [
+            observe_api.parse(expr) if isinstance(expr, str) else expr
+            for expr in expressions
+        ]
+
         observe_input = dict(
-            expression=expression,
+            expression=expressions,
             dispatch=dispatch,
             post_init=post_init,
             handler_getter=getattr,
