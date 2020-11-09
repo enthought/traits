@@ -9,7 +9,7 @@
 # Thanks for using Enthought open source!
 
 import contextlib
-from functools import reduce
+from functools import reduce, lru_cache
 import operator
 
 from traits.observation import _generated_parser
@@ -254,6 +254,7 @@ def _handle_tree(tree, default_notifies=None):
         tree.children, default_notifies=default_notifies)
 
 
+@lru_cache(maxsize=128)
 def parse(text):
     """ Top-level function for parsing user's text to an ObserverExpression.
 
