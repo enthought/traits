@@ -1,5 +1,5 @@
 # (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
-# All rights reserved.
+# All rights reversed.
 #
 # This software is provided without warranty under the terms of the BSD
 # license included in LICENSE.txt and may be redistributed only under
