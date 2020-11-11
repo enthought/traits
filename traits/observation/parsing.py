@@ -9,7 +9,7 @@
 # Thanks for using Enthought open source!
 
 import contextlib
-from functools import reduce, lru_cache
+from functools import lru_cache, reduce
 import operator
 
 from traits.observation import _generated_parser
