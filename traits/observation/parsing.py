@@ -17,6 +17,9 @@ import traits.observation.expression as expression_module
 
 _LARK_PARSER = _generated_parser.Lark_StandAlone()
 
+#: Maximum number of parsed observer expressions stored in the LRU cache
+_OBSERVER_EXPRESSION_CACHE_MAXSIZE = 128
+
 
 def _handle_series(trees, default_notifies):
     """ Handle expressions joined in series using "." or ":" connectors.
@@ -254,7 +257,7 @@ def _handle_tree(tree, default_notifies=None):
         tree.children, default_notifies=default_notifies)
 
 
-@lru_cache(maxsize=128)
+@lru_cache(maxsize=_OBSERVER_EXPRESSION_CACHE_MAXSIZE)
 def parse(text):
     """ Top-level function for parsing user's text to an ObserverExpression.
 
