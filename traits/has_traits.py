@@ -333,12 +333,46 @@ def _create_property_observe_state(observe, property_name, cached):
     def handler_getter(instance, name):
         return types.MethodType(handler, instance)
 
+    observe = _parse_expression(observe)
+
     return dict(
         expression=observe,
         dispatch="same",
         handler_getter=handler_getter,
         post_init=False,
     )
+
+
+def _parse_expression(expression):
+    """ Parse a given expression or list of expressions to convert them into
+    ObserveExpression objects if needed.
+
+    Parameters
+    ----------
+    expression : str or list or ObserverExpression
+    A description of what traits are being observed.
+    If this is a list, each item must be a string or an Expression.
+
+    Returns
+    -------
+    expressions : list
+        List of parsed expression(s) obtained by calling the parse function on
+        each expression input string expression, and leaving
+        OberserverExpression's as is.  
+
+    """
+    # Handle the overloaded signature.
+    # Support list to be consistent with on_trait_change.
+    if isinstance(expression, list):
+        expressions = expression
+    else:
+        expressions = [expression]
+
+    expressions = [
+        observe_api.parse(expr) if isinstance(expr, str) else expr
+        for expr in expressions
+    ]
+    return expressions
 
 
 # This really should be 'HasTraits', but it's not defined yet:
@@ -812,17 +846,7 @@ def observe(expression, *, post_init=False, dispatch="same"):
             observe_inputs = []
             handler._observe_inputs = observe_inputs
 
-        # Handle the overloaded signature.
-        # Support list to be consistent with on_trait_change.
-        if isinstance(expression, list):
-            expressions = expression
-        else:
-            expressions = [expression]
-
-        expressions = [
-            observe_api.parse(expr) if isinstance(expr, str) else expr
-            for expr in expressions
-        ]
+        expressions = _parse_expression(expression)
 
         observe_input = dict(
             expression=expressions,
@@ -2299,17 +2323,7 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
             =========== =======================================================
 
         """
-        # Handle the overloaded signature.
-        # Support list to be consistent with on_trait_change.
-        if isinstance(expression, list):
-            expressions = expression
-        else:
-            expressions = [expression]
-
-        expressions = [
-            observe_api.parse(expr) if isinstance(expr, str) else expr
-            for expr in expressions
-        ]
+        expressions = _parse_expression(expression)
 
         for expr in expressions:
             observe_api.observe(
