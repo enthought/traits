@@ -42,7 +42,7 @@ class TraitListEvent(object):
         this is an empty list.
     """
 
-    def __init__(self, index=0, removed=None, added=None):
+    def __init__(self, *, index=0, removed=None, added=None):
         self.index = index
 
         if removed is None:
@@ -616,7 +616,7 @@ class TraitListObject(TraitList):
             # See enthought/traits#25, enthought/traits#281
             return
 
-        event = TraitListEvent(index, removed, added)
+        event = TraitListEvent(index=index, removed=removed, added=added)
         items_event = self.trait.items_event()
         object.trait_items_event(self.name_items, event, items_event)
 
