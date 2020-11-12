@@ -358,8 +358,7 @@ def _parse_expression(expression):
     expressions : list
         List of parsed expression(s) obtained by calling the parse function on
         each expression input string expression, and leaving
-        OberserverExpression's as is.  
-
+        OberserverExpression's as is.
     """
     # Handle the overloaded signature.
     # Support list to be consistent with on_trait_change.
