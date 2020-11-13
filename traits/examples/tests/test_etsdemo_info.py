@@ -11,11 +11,14 @@ import os
 import unittest
 
 from traits.examples._etsdemo_info import introduction
-from traits.testing.optional_dependencies import pkg_resources
+from traits.testing.optional_dependencies import (
+    pkg_resources,
+    requires_pkg_resources,
+)
 
 
 class TestETSDemoInfo(unittest.TestCase):
-
+    @requires_pkg_resources
     def test_introduction(self):
         # input to introduction is currently just a placeholder
         response = introduction({})
