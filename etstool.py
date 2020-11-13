@@ -82,7 +82,7 @@ from contextlib import contextmanager
 
 import click
 
-# Ensure that "-h" is supported for getting help. 
+# Ensure that "-h" is supported for getting help.
 CONTEXT_SETTINGS = dict(
     help_option_names=["-h", "--help"],
 )
