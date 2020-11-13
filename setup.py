@@ -343,7 +343,7 @@ setuptools.setup(
     },
     entry_points={
         "etsdemo_data": [
-            "introduction = traits._entry_point:introduction",
+            "introduction = traits.examples._entry_point:introduction",
         ],
     },
     license="BSD",
