@@ -306,6 +306,7 @@ setuptools.setup(
         "test": [
             "Cython",
             "flake8",
+            "flake8-ets",
             "mypy",
             "setuptools",
             "Sphinx>=2.1.0,!=3.2.0",

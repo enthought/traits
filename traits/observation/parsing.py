@@ -9,13 +9,16 @@
 # Thanks for using Enthought open source!
 
 import contextlib
-from functools import reduce
+from functools import lru_cache, reduce
 import operator
 
 from traits.observation import _generated_parser
 import traits.observation.expression as expression_module
 
 _LARK_PARSER = _generated_parser.Lark_StandAlone()
+
+#: Maximum number of parsed observer expressions stored in the LRU cache
+_OBSERVER_EXPRESSION_CACHE_MAXSIZE = 128
 
 
 def _handle_series(trees, default_notifies):
@@ -254,6 +257,7 @@ def _handle_tree(tree, default_notifies=None):
         tree.children, default_notifies=default_notifies)
 
 
+@lru_cache(maxsize=_OBSERVER_EXPRESSION_CACHE_MAXSIZE)
 def parse(text):
     """ Top-level function for parsing user's text to an ObserverExpression.
 

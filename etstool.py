@@ -89,6 +89,7 @@ common_dependencies = {
     "cython",
     "enthought_sphinx_theme",
     "flake8",
+    "flake8_ets",
     "lark_parser",
     "mypy",
     "numpy",
@@ -177,16 +178,12 @@ def install(edm, runtime, environment, editable, source):
     install_stubs = _get_install_command_string(
         "./traits-stubs/", editable=editable
     )
-    install_copyright_checker = _get_install_command_string(
-        "copyright_header/", editable=False, no_deps=False
-    )
     commands = [
         "{edm} environments create {environment} --force --version={runtime}",
         "{edm} --config edm.yaml install -y -e {environment} " + packages,
         "{edm} plumbing remove-package -e {environment} traits",
         install_traits,
         install_stubs,
-        install_copyright_checker,
     ]
 
     click.echo("Creating environment '{environment}'".format(**parameters))

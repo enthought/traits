@@ -40,7 +40,6 @@ jobs:
 install:
   - python3 --version
   - python3 -m pip install --upgrade pip setuptools wheel
-  - python3 -m pip install copyright_header/
   - python3 -m pip install .[docs,test]
   - python3 -m pip install traits-stubs/[test]
 
