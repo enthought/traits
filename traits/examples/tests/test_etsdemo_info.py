@@ -12,6 +12,7 @@ import unittest
 
 from traits.examples._etsdemo_info import introduction
 
+
 class TestETSDemoInfo(unittest.TestCase):
 
     def test_introduction(self):
