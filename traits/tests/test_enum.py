@@ -13,10 +13,15 @@ import unittest
 
 from traits.api import (
     Any, BaseEnum, Enum, HasTraits, List, Property, TraitError)
+from traits.etsconfig.api import ETSConfig
 from traits.testing.optional_dependencies import pyface, requires_traitsui
 
-if pyface is not None:
-    GuiTestAssistant = pyface.toolkit.toolkit_object(
+is_qt = ETSConfig.toolkit.startswith('qt')
+
+if pyface is not None and is_qt:
+    from pyface.toolkit import toolkit_object
+
+    GuiTestAssistant = toolkit_object(
         "util.gui_test_assistant:GuiTestAssistant")
 else:
     class GuiTestAssistant:
@@ -314,6 +319,7 @@ class EnumTestCase(unittest.TestCase):
 
 
 @requires_traitsui
+@unittest.skipIf(not is_qt, "GUI toolkit not available")
 class TestGui(GuiTestAssistant, unittest.TestCase):
 
     def test_create_editor(self):
