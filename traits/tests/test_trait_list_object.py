@@ -77,7 +77,7 @@ def list_item_validator(item):
 
 class TestTraitListEvent(unittest.TestCase):
     def test_creation(self):
-        event = TraitListEvent(2, [3], [4])
+        event = TraitListEvent(index=2, removed=[3], added=[4])
         self.assertEqual(event.index, 2)
         self.assertEqual(event.removed, [3])
         self.assertEqual(event.added, [4])

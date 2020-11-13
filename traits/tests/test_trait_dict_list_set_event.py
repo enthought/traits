@@ -42,6 +42,10 @@ class TestTraitEvent(unittest.TestCase):
         self.assertEqual(repr(event), event_str)
         self.assertIsInstance(eval(repr(event)), TraitListEvent)
 
+    def test_list_event_kwargs_only(self):
+        with self.assertRaises(TypeError):
+            TraitListEvent(slice(0, 3, 2), [1, 3], [4, 5])
+
     def test_dict_event_kwargs_only(self):
         with self.assertRaises(TypeError):
             TraitDictEvent({}, {'black': 0}, {'blue': 2})
