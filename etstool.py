@@ -82,6 +82,11 @@ from contextlib import contextmanager
 
 import click
 
+# Ensure that "-h" is supported for getting help. 
+CONTEXT_SETTINGS = dict(
+    help_option_names=["-h", "--help"],
+)
+
 # Dependencies common to all configurations.
 common_dependencies = {
     "configobj",
@@ -140,7 +145,7 @@ verbose_option = click.option(
 )
 
 
-@click.group()
+@click.group(context_settings=CONTEXT_SETTINGS)
 def cli():
     """
     Developer and CI support commands for Traits.
