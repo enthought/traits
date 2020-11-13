@@ -557,11 +557,11 @@ class PrefixMapTest(AnyTraitTest):
 # This test a combination of Trait, a default, a mapping and a function
 
 def str_cast_to_int(object, name, value):
-    """ A function that validates the value is a str and then convert
+    """ A function that validates the value is a str and then converts
     it to an int using its length.
     """
     if not isinstance(value, str):
-        raise TraitError("Not an string!")
+        raise TraitError("Not a string!")
     return len(value)
 
 
