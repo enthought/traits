@@ -14,18 +14,9 @@ import unittest
 from traits.api import (
     Any, BaseEnum, Enum, HasTraits, List, Property, TraitError)
 from traits.etsconfig.api import ETSConfig
-from traits.testing.optional_dependencies import pyface, requires_traitsui
+from traits.testing.optional_dependencies import requires_traitsui
 
-is_qt = ETSConfig.toolkit.startswith('qt')
-
-if pyface is not None and is_qt:
-    from pyface.toolkit import toolkit_object
-
-    GuiTestAssistant = toolkit_object(
-        "util.gui_test_assistant:GuiTestAssistant")
-else:
-    class GuiTestAssistant:
-        pass
+is_null = ETSConfig.toolkit == 'null'
 
 
 class FooEnum(enum.Enum):
@@ -319,16 +310,12 @@ class EnumTestCase(unittest.TestCase):
 
 
 @requires_traitsui
-@unittest.skipIf(not is_qt, "GUI toolkit not available")
-class TestGui(GuiTestAssistant, unittest.TestCase):
+@unittest.skipIf(is_null, "GUI toolkit not available")
+class TestGui(unittest.TestCase):
 
     def test_create_editor(self):
-        obj = EnumCollectionGUIExample()
+        from traitsui.testing.api import UITester
 
-        # Create a UI window
-        ui = obj.edit_traits()
-        try:
-            self.gui.process_events()
-        finally:
-            with self.delete_widget(ui.control):
-                ui.dispose()
+        obj = EnumCollectionGUIExample()
+        with UITester().create_ui(obj):
+            pass
