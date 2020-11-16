@@ -2599,7 +2599,7 @@ class PrefixList(TraitType):
         elif self.values:
             default = self.values[0]
         else:
-            raise TypeError(
+            raise ValueError(
                 "The iterable of legal string values can not be empty."
         )
 
@@ -2932,7 +2932,7 @@ class Map(TraitType):
             if len(self.map) > 0:
                 default_value = next(iter(self.map))
             else:
-                raise TypeError(
+                raise ValueError(
                     "The dictionary of valid values can not be empty."
                 )
 
@@ -3017,7 +3017,7 @@ class PrefixMap(TraitType):
             if len(self.map) > 0:
                 default_value = next(iter(self.map))
             else:
-                raise TypeError(
+                raise ValueError(
                     "The dictionary of valid values can not be empty."
                 )
         else:
