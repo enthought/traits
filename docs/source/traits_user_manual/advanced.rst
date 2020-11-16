@@ -1117,6 +1117,7 @@ Property Factory Function
 
 The Property() function has the following signature:
 
+.. currentmodule:: traits.has_traits
 .. function:: Property( [fget=None, fset=None, fvalidate=None, force=False, handler=None, trait=None, **metadata] )
 
 All parameters are optional, including the *fget* "getter", *fvalidate*
