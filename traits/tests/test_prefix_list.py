@@ -86,6 +86,12 @@ class TestPrefixList(unittest.TestCase):
             "got 'zero'."
         )
 
+    def test_values_is_empty(self):
+        # it doesn't make sense to use a PrefixList with an empty list, so make
+        # sure we raise a ValueError
+        with self.assertRaises(ValueError):
+            PrefixList([])
+
     def test_pickle_roundtrip(self):
         class A(HasTraits):
             foo = PrefixList(["zero", "one", "two"], default_value="one")
