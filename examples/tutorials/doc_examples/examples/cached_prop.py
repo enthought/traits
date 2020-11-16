@@ -18,6 +18,7 @@ from traits.api import (
     cached_property, HasStrictTraits, Str, observe, Property,
 )
 
+
 class Person(HasStrictTraits):
 
     full_name = Str()

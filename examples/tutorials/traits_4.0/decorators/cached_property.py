@@ -73,8 +73,7 @@ Use of the *cached_property* decorator also eliminates the need to add *cached
 using *depends_on* metadata with a cached property definition.
 """
 
-from traits.api import *
-from traitsui.api import *
+from traits.api import cached_property, HasPrivateTraits, Int, List, Property
 
 
 # --[TestScores Class]---------------------------------------------------------

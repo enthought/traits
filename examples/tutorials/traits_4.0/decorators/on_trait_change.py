@@ -123,7 +123,7 @@ Refer to the code tabs of this lesson for a complete example using the
 """
 
 # --<Imports>------------------------------------------------------------------
-from traits.api import *
+from traits.api import HasTraits, Int, List, on_trait_change, Str
 
 
 # --[Employee Class]-----------------------------------------------------------

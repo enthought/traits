@@ -62,11 +62,11 @@ tab's *total_hits* trait definition.
 
 # FIXME redo example without traitsui
 
-from traits.api import *
+from traits.api import (
+    Button, cached_property, HasTraits, Instance, Int, List, Property, Str)
 
-from traitsui.api import *
-
-from traitsui.table_column import *
+from traitsui.api import (
+    HGroup, Item, ModelView, ObjectColumn, TableEditor, VGroup, View)
 
 
 # --[Player Class]-------------------------------------------------------------

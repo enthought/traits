@@ -101,7 +101,7 @@ In this case, the value of the trait must be an object which is an instance of
 the specified class or one of its subclasses.
 """
 # --<Imports>------------------------------------------------------------------
-from traits.api import *
+from traits.api import HasTraits, Instance, implements, Interface, Str
 
 
 # --[IName Interface]----------------------------------------------------------

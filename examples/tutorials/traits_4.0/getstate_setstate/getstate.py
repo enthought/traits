@@ -134,10 +134,9 @@ notifications managed by traits are correctly initialized for the object.
 Failure to call this method may result in lost change notifications.
 """
 
-from pickle import dumps, loads
+from time import time
 
-from traits.api import *
-from time import time, sleep
+from traits.api import Any, HasTraits, Str
 
 
 # --[Session Class]------------------------------------------------------------
@@ -169,6 +168,10 @@ print("Session name:", session.name)
 print("Session created:", session.created)
 
 # # Simulate saving the session to a file/database:
+#
+# from pickle import dumps, loads
+# from time import sleep
+#
 # saved_session = dumps(session)
 #
 # # Simulate the passage of time (zzzzZZZZ...):

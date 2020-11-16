@@ -99,7 +99,7 @@ notification handler.
 
 # FIXME - this need to be redone without traitsui
 
-from traits.api import *
+from traits.api import Delegate, HasTraits, Instance, Str
 
 
 # --[Parent Class]-------------------------------------------------------------

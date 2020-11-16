@@ -20,11 +20,13 @@ is defined, the change handler will be aded to the new trait.
 from traits.api import HasTraits, Int, observe
 from traits.observation.api import trait
 
+
 class Person(HasTraits):
 
     @observe(trait("age", optional=True))
     def notify_age_change(self, event):
         print("age changed")
+
 
 person = Person()
 person.add_trait("age", Int())
