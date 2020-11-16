@@ -12,8 +12,6 @@
 entry points.
 """
 
-import pkg_resources
-
 
 def introduction(request):
     """ Return a configuration for contributing examples to the
@@ -29,6 +27,8 @@ def introduction(request):
     -------
     response : dict
     """
+    import pkg_resources
+
     return dict(
         version=1,
         name="Traits Introduction",
