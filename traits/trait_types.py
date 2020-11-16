@@ -2601,7 +2601,7 @@ class PrefixList(TraitType):
         else:
             raise ValueError(
                 "The iterable of legal string values can not be empty."
-        )
+            )
 
         super().__init__(default, **metadata)
 
