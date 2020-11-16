@@ -2934,7 +2934,7 @@ class Map(TraitType):
             else:
                 raise ValueError(
                     "The dictionary of valid values can not be empty."
-                )
+                ) from None
 
         super().__init__(default_value, **metadata)
 
@@ -3019,7 +3019,7 @@ class PrefixMap(TraitType):
             else:
                 raise ValueError(
                     "The dictionary of valid values can not be empty."
-                )
+                ) from None
         else:
             default_value = self.value_for(default_value)
 
