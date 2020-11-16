@@ -210,7 +210,7 @@ class TestPrefixMap(unittest.TestCase):
             reconstituted.validate(p, "married", "ye")
 
     def test_empty_map(self):
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             PrefixMap({})
 
     def test_pickle_shadow_trait(self):

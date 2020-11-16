@@ -88,8 +88,8 @@ class TestPrefixList(unittest.TestCase):
 
     def test_values_is_empty(self):
         # it doesn't make sense to use a PrefixList with an empty list, so make
-        # sure we raise a TypeError
-        with self.assertRaises(TypeError):
+        # sure we raise a ValueError
+        with self.assertRaises(ValueError):
             PrefixList([])
 
     def test_pickle_roundtrip(self):
