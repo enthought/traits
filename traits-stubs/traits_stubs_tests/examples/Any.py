@@ -1,5 +1,4 @@
 from traits.api import HasTraits, Any, Instance, Int
-from typing import Any as _Any
 
 
 class Test(HasTraits):

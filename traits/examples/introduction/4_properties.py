@@ -4,9 +4,9 @@ Property Traits
 
 The ``Image`` class has three traits which are closely related: ``scan_size``,
 ``scan_width`` and ``scan_height``.  We would ideally like to keep all of these
-synchronized.  This can be done with trait observation, as shown in the previous
-section, but this sort of pattern is common enough that Traits has some in-built
-helpers.
+synchronized.  This can be done with trait observation, as shown in the
+previous section, but this sort of pattern is common enough that Traits has
+some in-built helpers.
 
 Instead of declaring that ``scan_width = Float()`` we could instead declare it
 to be a ``Property`` trait type.  Property traits are similar to ``@property``

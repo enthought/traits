@@ -67,7 +67,8 @@ If we use::
 then if we type::
 
     >>> image.fileanme = "sample_0002.png"
-    TraitError: Cannot set the undefined 'filename' attribute of a 'Image' object.
+    TraitError: Cannot set the undefined 'fileanme' attribute of a 'Image'
+    object.
 
 We get an immediate error which flags the problem.
 
@@ -166,6 +167,7 @@ class Image(HasStrictTraits):
             density=True,
         )
         return hist
+
 
 # ---------------------------------------------------------------------------
 # Demo code
