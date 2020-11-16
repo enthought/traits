@@ -209,6 +209,10 @@ class TestPrefixMap(unittest.TestCase):
         with self.assertRaises(TraitError):
             reconstituted.validate(p, "married", "ye")
 
+    def test_empty_map(self):
+        with self.assertRaises(TypeError):
+            PrefixMap({})
+
     def test_pickle_shadow_trait(self):
         class Person(HasTraits):
             married = PrefixMap({"yes": 1, "yeah": 1, "no": 0, "nah": 0},
