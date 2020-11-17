@@ -4,10 +4,6 @@ Traits: observable typed attributes for Python classes
 
 http://docs.enthought.com/traits
 
-.. image:: https://travis-ci.org/enthought/traits.svg?branch=master
-   :target: https://travis-ci.org/enthought/traits
-   :alt: Build status
-
 The Traits project is at the center of all Enthought Tool Suite development
 and has changed the mental model used at Enthought for programming in the
 already extremely efficient Python programming language. We encourage everyone
