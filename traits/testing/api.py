@@ -10,7 +10,7 @@
 
 from .doctest_tools import doctest_for_module  # noqa: F401
 from .nose_tools import deprecated, performance, skip  # noqa: F401
-from .unittest_tools import ( # noqa: F401
+from .unittest_tools import (  # noqa: F401
     pop_reraise_exceptions,
     push_reraise_exceptions,
     UnittestTools,
