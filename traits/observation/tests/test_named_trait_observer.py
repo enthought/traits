@@ -437,7 +437,8 @@ class TestNamedTraitObserverTraitAdded(unittest.TestCase):
     def test_remove_trait_then_add_trait_again(self):
         # Test a scenario where a trait exists when the observer is hooked,
         # but then the trait is removed, and then added back again, the
-        # observer is gone, because the CTrait is gone.
+        # observer is gone, because the CTrait is gone and the trait_added
+        # event is not fired for something already defined on the class.
 
         # given
         # the trait exists, we can set optional to false.
@@ -455,14 +456,52 @@ class TestNamedTraitObserverTraitAdded(unittest.TestCase):
         handler.reset_mock()
 
         # when
-        # remove the trait and then add it back
+        # remove the trait
         foo.remove_trait("value1")
+
+        # then
+        # the handler is gone with the instance trait.
+        foo.value1 += 1
+        self.assertEqual(handler.call_count, 0)
+
+        # when
+        # Add the trait back...
         foo.add_trait("value1", Int())
 
         # then
-        # the handler is gone
+        # won't bring the handler back, because the 'value1' is defined as a
+        # class trait, trait_added is not fired when it is added.
         foo.value1 += 1
         self.assertEqual(handler.call_count, 0)
+
+    def test_add_trait_remove_trait_then_add_trait_again(self):
+        # Test a scenario when a trait is added, then removed, then added back.
+
+        # given
+        # trait is optional. It will be added later.
+        graph = create_graph(
+            create_observer(name="new_value", notify=True, optional=True),
+        )
+        handler = mock.Mock()
+        foo = ClassWithInstance()
+        call_add_or_remove_notifiers(
+            object=foo, graph=graph, handler=handler, remove=False)
+
+        foo.add_trait("new_value", Int())
+        foo.new_value += 1
+        self.assertEqual(handler.call_count, 1)
+        handler.reset_mock()
+
+        # when
+        # remove the trait and then add it back
+        foo.remove_trait("new_value")
+        foo.add_trait("new_value", Int())
+
+        # then
+        # the handler is now back! The trait was not defined on the class,
+        # so the last 'add_trait' fires a trait_added event.
+        foo.new_value += 1
+        self.assertEqual(handler.call_count, 1)
 
     def test_notifier_trait_added_distinguished(self):
         # Add two observers, both will have their own additional trait_added
