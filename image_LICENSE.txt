@@ -1,10 +1,13 @@
 The icons are mostly derived work from other icons. As such they are
 licensed accordingly to the original license:
 
-Project                 License                   File
-----------------------------------------------------------------------------
-Enthought               BSD 3-Clause              LICENSE.txt
-Hannes Grobe/AWI        CC BY 3.0                 LICENSE-CC-BY-3.0.txt
+Project             License         File, URL
+---------------------------------------------------------------------
+Enthought           BSD 3-Clause    LICENSE.txt
+                                    http://www.enthought.com/licenses/BSD.txt
+
+Hannes Grobe/AWI    CC BY 3.0       LICENSE-CC-BY-3.0.txt
+                                    https://creativecommons.org/licenses/by/3.0
 
 Unless stated in this file, icons and images are the work of Enthought, and
 are released under a 3 clause BSD license.
