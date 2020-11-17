@@ -49,6 +49,10 @@ def push_reraise_exceptions():
     handler given to ``on_trait_change`` or ``observe`` are re-raised and the
     default logging behavior is silenced. Suitable to be used in
     ``unittest.TestCase.setUp``.
+
+    See Also
+    --------
+    pop_reraise_exceptions : reverse the action of this function.
     """
 
     # we will reraise, there is no need to log.
