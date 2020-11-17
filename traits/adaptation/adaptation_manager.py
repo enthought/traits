@@ -77,16 +77,15 @@ class AdaptationManager(HasTraits):
 
         Parameters
         ----------
-        type_ :
-          Python 'type'.
-
-        protocol :
-          Either a regular Python class or a traits Interface.
+        type_
+            Python 'type'.
+        protocol
+            Either a regular Python class or a traits Interface.
 
         Returns
         -------
         result : bool
-          True if the object provides the protocol, otherwise False.
+            True if the object provides the protocol, otherwise False.
 
         """
         return issubclass(type_, protocol)
@@ -96,24 +95,32 @@ class AdaptationManager(HasTraits):
     def adapt(self, adaptee, to_protocol, default=AdaptationError):
         """ Attempt to adapt an object to a given protocol.
 
-        Parameters
-        ----------
-        adaptee :
-          The object that we want to adapt.
-
-        to_protocol :
-          The protocol that the want to adapt the object to.
-
-        If `adaptee` already provides (i.e. implements) the given protocol
+        If *adaptee* already provides (i.e. implements) the given protocol
         then it is simply returned unchanged.
 
-        Otherwise, we try to build a chain of adapters that adapt `adaptee`
-        to `to_protocol`.
+        Otherwise, we try to build a chain of adapters that adapt *adaptee* to
+        *to_protocol*. If no such adaptation is possible then either an
+        AdaptationError is raised, or *default* is returned.
 
-        If no such adaptation is possible then either an AdaptationError is
-        raised (if default=Adaptation error), or `default` is returned (as
-        in the default value passed to 'getattr' etc).
+        Parameters
+        ----------
+        adaptee : object
+            The object that we want to adapt.
+        to_protocol : type or interface
+            The protocol that the want to adapt *adaptee* to.
+        default : object, optional
+            Object to return if no adaptation is possible. If no default is
+            provided, and adaptation fails, an ``AdaptationError`` is raised.
 
+        Returns
+        -------
+        adapted_object : to_protocol
+            The original adaptee adapted to the target protocol.
+
+        Raises
+        ------
+        AdaptationError
+            If adaptation is not possible, and no default is given.
         """
 
         # If the object already provides the given protocol then it is
