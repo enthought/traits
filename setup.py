@@ -308,18 +308,12 @@ setuptools.setup(
             "flake8",
             "flake8-ets",
             "mypy",
+            "numpy",
+            "pyface",
+            "PySide2",
             "setuptools",
             "Sphinx>=2.1.0,!=3.2.0",
-            # Python 3.9 exclusions:
-            #
-            # * PySide2 is installable but currently not working
-            #   on Python 3.9.
-            # * Because of the above, we also exclude GUI-using packages
-            #   Pyface and TraitsUI on Python 3.9.
-            "numpy",
-            "pyface;python_version<'3.9'",
-            "PySide2;python_version<'3.9'",
-            "traitsui;python_version<'3.9'",
+            "traitsui",
         ],
         "examples": [
             # dependencies for examples
