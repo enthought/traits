@@ -11,6 +11,7 @@
 # post_init_notification.py --- Example of static notification
 from traits.api import Float, HasTraits, on_trait_change, Str
 
+
 class Part(HasTraits):
     cost = Float(0.0)
 
@@ -23,6 +24,7 @@ class Part(HasTraits):
     @on_trait_change("name", post_init=True)
     def name_updated(self, object, name, old, new):
         print("{} is changed from {} to {}".format(name, old, new))
+
 
 part = Part(cost=2.0, name="Nail")
 # Result: cost is changed from 0.0 to 2.0

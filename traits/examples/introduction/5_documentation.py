@@ -1,3 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """
 Documentation
 =============
@@ -67,7 +77,8 @@ If we use::
 then if we type::
 
     >>> image.fileanme = "sample_0002.png"
-    TraitError: Cannot set the undefined 'filename' attribute of a 'Image' object.
+    TraitError: Cannot set the undefined 'fileanme' attribute of a 'Image'
+    object.
 
 We get an immediate error which flags the problem.
 
@@ -166,6 +177,7 @@ class Image(HasStrictTraits):
             density=True,
         )
         return hist
+
 
 # ---------------------------------------------------------------------------
 # Demo code

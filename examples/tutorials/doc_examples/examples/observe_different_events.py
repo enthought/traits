@@ -19,6 +19,7 @@ compared to when a list is mutated.
 from traits.api import HasTraits, Int, List, observe
 from traits.observation.api import trait
 
+
 class Person(HasTraits):
 
     scores = List(Int)
@@ -36,6 +37,7 @@ class Person(HasTraits):
             "scores added: {event.added}. scores removed: {event.removed} "
             "(Event type: {event.__class__.__name__})".format(event=event)
         )
+
 
 person = Person(scores=[1, 2])
 # print: scores changed from [] to [1, 2]. (Event type: TraitChangeEvent)

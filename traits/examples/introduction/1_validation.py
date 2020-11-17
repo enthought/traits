@@ -1,3 +1,13 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """
 Validation
 ==========
@@ -44,7 +54,8 @@ find that the class will raise a ``TraitError``::
 
     >>> image = Image()
     >>> image.operator = 3
-    TraitError: The 'operator' trait of an Image instance must be a string, but a value of 3 <class 'int'> was specified.
+    TraitError: The 'operator' trait of an Image instance must be a
+    string, but a value of 3 <class 'int'> was specified.
 
 Traits has trait types corresponding to all the basic Python data types:
 ``Int``, ``Float``, ``Complex``, ``Bool``, and ``Str``.  It also has trait
@@ -176,4 +187,3 @@ try:
     )
 except Exception as exc:
     print(exc)
-

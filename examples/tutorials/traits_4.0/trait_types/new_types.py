@@ -144,7 +144,9 @@ that applies to properties as well.
 """
 
 # --<Imports>------------------------------------------------------------------
-from traits.api import *
+from random import randint
+
+from traits.api import HasTraits, List, TraitError, TraitType
 
 
 # --[DiceRoll Type]------------------------------------------------------------
@@ -176,9 +178,6 @@ class DiceRoll(TraitType):
 
 
 # --[RandInt Property]---------------------------------------------------------
-
-from random import randint
-
 
 # Define a read-only property whose value is a random integer in a specified
 # range:

@@ -1,12 +1,22 @@
+# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
+
 """
 Property Traits
 ===============
 
 The ``Image`` class has three traits which are closely related: ``scan_size``,
 ``scan_width`` and ``scan_height``.  We would ideally like to keep all of these
-synchronized.  This can be done with trait observation, as shown in the previous
-section, but this sort of pattern is common enough that Traits has some in-built
-helpers.
+synchronized.  This can be done with trait observation, as shown in the
+previous section, but this sort of pattern is common enough that Traits has
+some in-built helpers.
 
 Instead of declaring that ``scan_width = Float()`` we could instead declare it
 to be a ``Property`` trait type.  Property traits are similar to ``@property``

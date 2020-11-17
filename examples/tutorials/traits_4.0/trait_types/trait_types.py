@@ -99,7 +99,7 @@ This provides the exact same functionality as the previous definition of
   developers.
 """
 # --<Imports>------------------------------------------------------------------
-from traits.api import *
+from traits.api import BaseInt, HasTraits
 
 
 # --[OddInt Definition]--------------------------------------------------------

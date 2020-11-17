@@ -15,13 +15,16 @@ for a specific instance of HasTraits.
 The change handler can be removed using the 'remove' argument on ``observe``.
 """
 
-from traits.api import HasTraits, Int, observe
+from traits.api import HasTraits, Int
+
 
 class Person(HasTraits):
     age = Int(0)
 
+
 def print_change(event):
     print("{} changed: {} -> {}".format(event.name, event.old, event.new))
+
 
 person = Person(age=1)
 person.observe(print_change, "age")

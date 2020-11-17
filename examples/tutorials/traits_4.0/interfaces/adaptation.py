@@ -235,7 +235,8 @@ re-running the example code to verify that this is indeed the case.
 
 # --<Imports>------------------------------------------------------------------
 
-from traits.api import *
+from traits.api import (
+    Adapter, adapts, HasTraits, Instance, Interface, Str, Supports)
 
 
 # --[IName Interface]----------------------------------------------------------
