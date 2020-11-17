@@ -44,7 +44,7 @@ from traits.observation.api import (
 from traits.util.async_trait_wait import wait_for_condition
 
 
-def setup_test():
+def push_reraise_exceptions():
     """ Set up exception handlers so that any exceptions from a change
     handler given to ``on_trait_change`` or ``observe`` are re-raised and the
     default logging behavior is silenced. Suitable to be used in
@@ -59,8 +59,8 @@ def setup_test():
     observe_push_exception(handler=ignore, reraise_exceptions=True)
 
 
-def teardown_test():
-    """ Reverse the actions in ``setup_test``.
+def pop_reraise_exceptions():
+    """ Reverse the actions in ``push_reraise_exceptions``.
 
     Suitable to be used in ``unittest.TestCase.tearDown`` or with
     ``unittest.TestCase.addCleanup``.

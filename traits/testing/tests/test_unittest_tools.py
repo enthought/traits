@@ -22,7 +22,11 @@ from traits.api import (
     on_trait_change,
     observe,
 )
-from traits.testing.api import UnittestTools, setup_test, teardown_test
+from traits.testing.api import (
+    pop_reraise_exceptions,
+    push_reraise_exceptions,
+    UnittestTools,
+)
 # unittest_tools provides a reference to unittest for historical reasons, and
 # downstream packages may still be doing "from traits.testing.unittest_tools
 # import unittest". We keep this import as-is (instead of doing a simple
@@ -448,11 +452,13 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
 
 class TestHelperMethod(unittest.TestCase):
-    """ Test setup_test and teardown_test helper functions. """
+    """ Test push_reraise_exceptions and pop_reraise_exceptions helper
+    functions.
+    """
 
     def setUp(self):
-        setup_test()
-        self.addCleanup(teardown_test)
+        push_reraise_exceptions()
+        self.addCleanup(pop_reraise_exceptions)
 
     def test_on_trait_change_error(self):
         # Test error from on_trait_change is re-raised.

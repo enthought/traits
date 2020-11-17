@@ -41,21 +41,21 @@ The script exits normally. The exception is caught and logged::
 
 This logged exception, however, only contains the tip of the traceback. This
 makes debugging a bit difficult. You can force exceptions to be re-raised
-by calling :func:`~traits.testing.unittest_tools.setup_test`:
+by calling :func:`~traits.testing.unittest_tools.push_reraise_exceptions`:
 
 .. code-block:: python
 
-   from traits.testing.api import setup_test
-   setup_test()
+   from traits.testing.api import push_reraise_exceptions
+   push_reraise_exceptions()
 
 This helper function will cause exceptions from ``observe`` or
 ``on_trait_change`` to be re-raised. This setting can be reversed by
-:func:`~traits.testing.unittest_tools.teardown_test`:
+:func:`~traits.testing.unittest_tools.pop_reraise_exceptions`:
 
 .. code-block:: python
 
-   from traits.testing.api import teardown_test
-   teardown_test()
+   from traits.testing.api import pop_reraise_exceptions
+   pop_reraise_exceptions()
 
 Alternatively, you can modify the exception handling just for
 ``observe``:
