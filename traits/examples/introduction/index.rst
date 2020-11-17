@@ -1,4 +1,3 @@
-"""
 Introduction to Traits
 ======================
 
@@ -15,4 +14,3 @@ for **Validation**, **Initialization**, **Documentation**,
 **Observation** and **Visualization**.  This tutorial is designed
 to introduce the basics of Traits, but also to explain *why* you
 might want to use Traits in your own code.
-"""
