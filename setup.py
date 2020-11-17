@@ -308,20 +308,12 @@ setuptools.setup(
             "flake8",
             "flake8-ets",
             "mypy",
+            "numpy",
+            "pyface",
+            "PySide2",
             "setuptools",
             "Sphinx>=2.1.0,!=3.2.0",
-            # Python 3.9 exclusions:
-            #
-            # * NumPy installation fails on Python 3.9 on the Ubuntu Xenial
-            #   system used by Travis CI.
-            # * PySide2 is installable but also currently not working
-            #   on Python 3.9.
-            # * Because of the above, we also exclude GUI-using packages
-            #   Pyface and TraitsUI on Python 3.9.
-            "numpy;python_version<'3.9'",
-            "pyface;python_version<'3.9'",
-            "PySide2;python_version<'3.9'",
-            "traitsui;python_version<'3.9'",
+            "traitsui",
         ],
         "examples": [
             # dependencies for examples
