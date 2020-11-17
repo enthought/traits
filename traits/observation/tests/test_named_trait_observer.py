@@ -462,7 +462,7 @@ class TestNamedTraitObserverTraitAdded(unittest.TestCase):
         # then
         # the handler is gone with the instance trait.
         foo.value1 += 1
-        self.assertEqual(handler.call_count, 0)
+        handler.assert_not_called()
 
         # when
         # Add the trait back...
@@ -472,7 +472,7 @@ class TestNamedTraitObserverTraitAdded(unittest.TestCase):
         # won't bring the handler back, because the 'value1' is defined as a
         # class trait, trait_added is not fired when it is added.
         foo.value1 += 1
-        self.assertEqual(handler.call_count, 0)
+        handler.assert_not_called()
 
     def test_add_trait_remove_trait_then_add_trait_again(self):
         # Test a scenario when a trait is added, then removed, then added back.
@@ -489,7 +489,7 @@ class TestNamedTraitObserverTraitAdded(unittest.TestCase):
 
         foo.add_trait("new_value", Int())
         foo.new_value += 1
-        self.assertEqual(handler.call_count, 1)
+        handler.assert_called_once()
         handler.reset_mock()
 
         # when
@@ -501,7 +501,7 @@ class TestNamedTraitObserverTraitAdded(unittest.TestCase):
         # the handler is now back! The trait was not defined on the class,
         # so the last 'add_trait' fires a trait_added event.
         foo.new_value += 1
-        self.assertEqual(handler.call_count, 1)
+        handler.assert_called_once()
 
     def test_notifier_trait_added_distinguished(self):
         # Add two observers, both will have their own additional trait_added
