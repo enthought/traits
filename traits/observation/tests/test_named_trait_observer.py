@@ -452,7 +452,7 @@ class TestNamedTraitObserverTraitAdded(unittest.TestCase):
 
         # sanity check, the handler is called when the trait changes.
         foo.value1 += 1
-        self.assertEqual(handler.call_count, 1)
+        handler.assert_called_once()
         handler.reset_mock()
 
         # when
