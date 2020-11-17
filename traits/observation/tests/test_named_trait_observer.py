@@ -434,6 +434,36 @@ class TestNamedTraitObserverTraitAdded(unittest.TestCase):
         foo.value += 1
         self.assertEqual(handler.call_count, 0)
 
+    def test_remove_trait_then_add_trait_again(self):
+        # Test a scenario where a trait exists when the observer is hooked,
+        # but then the trait is removed, and then added back again, the
+        # observer is gone, because the CTrait is gone.
+
+        # given
+        # the trait exists, we can set optional to false.
+        graph = create_graph(
+            create_observer(name="value1", notify=True, optional=False),
+        )
+        handler = mock.Mock()
+        foo = ClassWithTwoValue()
+        call_add_or_remove_notifiers(
+            object=foo, graph=graph, handler=handler, remove=False)
+
+        # sanity check, the handler is called when the trait changes.
+        foo.value1 += 1
+        self.assertEqual(handler.call_count, 1)
+        handler.reset_mock()
+
+        # when
+        # remove the trait and then add it back
+        foo.remove_trait("value1")
+        foo.add_trait("value1", Int())
+
+        # then
+        # the handler is gone
+        foo.value1 += 1
+        self.assertEqual(handler.call_count, 0)
+
     def test_notifier_trait_added_distinguished(self):
         # Add two observers, both will have their own additional trait_added
         # observer. When one is removed, the other one is not affected.
