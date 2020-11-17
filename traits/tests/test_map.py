@@ -200,6 +200,10 @@ class TestMap(unittest.TestCase):
         self.assertEqual(p.married_, 1)
         self.assertEqual(p.default_calls, 1)
 
+    def test_empty_map(self):
+        with self.assertRaises(ValueError):
+            Map({})
+
     def test_notification(self):
 
         preferences = Preferences()

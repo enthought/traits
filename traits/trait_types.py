@@ -2598,6 +2598,10 @@ class PrefixList(TraitType):
             default = self.value_for(default)
         elif self.values:
             default = self.values[0]
+        else:
+            raise ValueError(
+                "The iterable of legal string values can not be empty."
+            )
 
         super().__init__(default, **metadata)
 
@@ -2925,7 +2929,12 @@ class Map(TraitType):
         try:
             default_value = metadata.pop("default_value")
         except KeyError:
-            default_value = next(iter(self.map))
+            if len(self.map) > 0:
+                default_value = next(iter(self.map))
+            else:
+                raise ValueError(
+                    "The dictionary of valid values can not be empty."
+                ) from None
 
         super().__init__(default_value, **metadata)
 
@@ -3005,7 +3014,12 @@ class PrefixMap(TraitType):
         try:
             default_value = metadata.pop("default_value")
         except KeyError:
-            default_value = next(iter(self.map))
+            if len(self.map) > 0:
+                default_value = next(iter(self.map))
+            else:
+                raise ValueError(
+                    "The dictionary of valid values can not be empty."
+                ) from None
         else:
             default_value = self.value_for(default_value)
 

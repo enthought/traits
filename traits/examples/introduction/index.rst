@@ -1,14 +1,3 @@
-# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
-# All rights reserved.
-#
-# This software is provided without warranty under the terms of the BSD
-# license included in LICENSE.txt and may be redistributed only under
-# the conditions described in the aforementioned license. The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-# Thanks for using Enthought open source!
-
-"""
 Introduction to Traits
 ======================
 
@@ -25,4 +14,3 @@ for **Validation**, **Initialization**, **Documentation**,
 **Observation** and **Visualization**.  This tutorial is designed
 to introduce the basics of Traits, but also to explain *why* you
 might want to use Traits in your own code.
-"""
