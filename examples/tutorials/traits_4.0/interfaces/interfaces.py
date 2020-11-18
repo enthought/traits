@@ -39,31 +39,24 @@ Implementing Interfaces
 -----------------------
 
 A class declares that it implements one or more interfaces using the
-**implements** function, which has the form::
+**provides** decorator, which has the form::
 
-    implements(interface [, interface2, ..., interfacen])
+    @provides(interface [, interface2, ..., interfacen])
 
-The semantics of this function is that the class declares that it implements
-each of the *interfaces* specified as an argument to **implements**.
+The decorator declares that the decorated class implements each of the
+*interfaces* specified as an argument to **provides**. For example::
 
-Also, the call to **implements** must occur at class scope within the class
-definition, as shown in the following example::
+    from traits.api import HasTraits, provides
 
-    from traits.api import HasTraits, implements
-
+    @provides(IName)
     class Person(HasTraits):
 
-        implements(IName)
+        def get_name(self):
+            ...
 
-        ...
-
-Only a single call to **implements** should occur within a class definition.
-
-Refer to the **Person Class** tab in the code for a complete example of using
-**implements**.
 
 Note that in the current version, traits does not check to ensure that the
-class containing the **implements** function actually implements the interfaces
+class decorated with **provides** actually implements the interfaces
 it says it does.
 
 Using Interfaces
@@ -80,13 +73,7 @@ accomplished using the **Instance** trait, as shown in the following example::
         renter = Instance(IName)
 
 Using an interface class in an **Instance** trait definition declares that the
-trait only accepts values which are objects that either:
-
-- Implement the specified interface.
-- Can be adapted to an object that implements the specified interface.
-
-Additional information on what it means to *adapt* an object to implement an
-interface is presented in the next section of the tutorial.
+trait only accepts values which implement the specified interface.
 
 As before, the **Instance** trait can also be used with classes that are not
 interfaces, such as::
@@ -101,7 +88,7 @@ In this case, the value of the trait must be an object which is an instance of
 the specified class or one of its subclasses.
 """
 # --<Imports>------------------------------------------------------------------
-from traits.api import HasTraits, Instance, implements, Interface, Str
+from traits.api import HasTraits, Instance, Interface, provides, Str
 
 
 # --[IName Interface]----------------------------------------------------------
@@ -112,9 +99,8 @@ class IName(Interface):
 
 
 # --[Person Class]-------------------------------------------------------------
+@provides(IName)
 class Person(HasTraits):
-
-    implements(IName)
 
     first_name = Str("John")
     last_name = Str("Doe")
