@@ -197,13 +197,13 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
             {
                 "my_listener": [
                     {
-                        "expression": "name",
+                        "expression": [trait("name")],
                         "post_init": False,
                         "dispatch": "same",
                         "handler_getter": getattr,
                     },
                     {
-                        "expression": trait("value"),
+                        "expression": [trait("value")],
                         "post_init": True,
                         "dispatch": "ui",
                         "handler_getter": getattr,
