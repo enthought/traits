@@ -35,7 +35,6 @@ ViewTraits: str
 InstanceTraits: str
 DefaultTraitsView: str
 CantHaveDefaultValue: _Any
-EmptyList: _Any
 DeferredCopy: _Any
 extended_trait_pat: _Any
 any_trait: _Any
