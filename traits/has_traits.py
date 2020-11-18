@@ -333,10 +333,10 @@ def _create_property_observe_state(observe, property_name, cached):
     def handler_getter(instance, name):
         return types.MethodType(handler, instance)
 
-    observe = _parse_expression(observe)
+    expressions = _parse_expression(observe)
 
     return dict(
-        expression=observe,
+        expression=expressions,
         dispatch="same",
         handler_getter=handler_getter,
         post_init=False,
