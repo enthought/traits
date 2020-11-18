@@ -110,9 +110,6 @@ DefaultTraitsView = "traits_view"
 # Trait types which cannot have default values
 CantHaveDefaultValue = ("event", "delegate", "constant")
 
-# An empty list
-EmptyList = []
-
 # The trait types that should be copied last when doing a 'copy_traits':
 DeferredCopy = ("delegate", "property")
 
