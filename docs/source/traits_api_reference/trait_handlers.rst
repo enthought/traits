@@ -19,6 +19,9 @@ Classes
 
 .. autoclass:: TraitCompound
 
+.. autoclass:: TraitMap
+
+
 Private Functions
 -----------------
 
@@ -44,7 +47,4 @@ and may be removed in a future version of Traits.
 
 .. autoclass:: TraitPrefixList
 
-.. autoclass:: TraitMap
-
 .. autoclass:: TraitPrefixMap
-

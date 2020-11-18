@@ -668,8 +668,6 @@ class TraitMap(TraitHandler):
 
     is_mapped = True
 
-    @deprecated(_WARNING_FORMAT_STR.format(
-        handler="TraitMap", replacement="Map"))
     def __init__(self, map):
         self.map = map
         self.fast_validate = (ValidateTrait.map, map)
