@@ -350,15 +350,15 @@ def _parse_expression(expression):
     Parameters
     ----------
     expression : str or list or ObserverExpression
-    A description of what traits are being observed.
-    If this is a list, each item must be a string or an Expression.
+        A description of what traits are being observed.
+        If this is a list, each item must be a string or an Expression.
 
     Returns
     -------
-    expressions : list
+    expressions : list of ObserverExpression
         List of parsed expression(s) obtained by calling the parse function on
         each expression input string expression, and leaving
-        OberserverExpression's as is.
+        ObserverExpression objects as is.
     """
     # Handle the overloaded signature.
     # Support list to be consistent with on_trait_change.
