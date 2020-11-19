@@ -475,12 +475,8 @@ class EnumTest(AnyTraitTest):
     _bad_values = [0, "zero", 4, None]
 
 
-# Suppress DeprecationWarning from (implicit) TraitMap instantiation
-with warnings.catch_warnings():
-    warnings.filterwarnings(action="ignore", category=DeprecationWarning)
-
-    class MappedTrait(HasTraits):
-        value = Trait("one", {"one": 1, "two": 2, "three": 3})
+class MappedTrait(HasTraits):
+    value = Trait("one", {"one": 1, "two": 2, "three": 3})
 
 
 class MappedTest(AnyTraitTest):
@@ -565,17 +561,13 @@ def str_cast_to_int(object, name, value):
     return len(value)
 
 
-# Suppress DeprecationWarning from TraitMap instantiation.
-with warnings.catch_warnings():
-    warnings.filterwarnings(action="ignore", category=DeprecationWarning)
+class TraitWithMappingAndCallable(HasTraits):
 
-    class TraitWithMappingAndCallable(HasTraits):
-
-        value = Trait(
-            "white",
-            {"white": 0, "red": 1, (0, 0, 0): 999},
-            str_cast_to_int,
-        )
+    value = Trait(
+        "white",
+        {"white": 0, "red": 1, (0, 0, 0): 999},
+        str_cast_to_int,
+    )
 
 
 class TestTraitWithMappingAndCallable(unittest.TestCase):

@@ -14,7 +14,6 @@ import warnings
 from traits.api import (
     TraitDict,
     TraitList,
-    TraitMap,
     TraitPrefixList,
     TraitPrefixMap,
     TraitTuple,
@@ -28,7 +27,6 @@ class TestTraitHandlerDeprecatedWarnings(unittest.TestCase):
             "TraitDict": TraitDict,
             "TraitList": TraitList,
             "TraitTuple": TraitTuple,
-            "TraitMap": lambda: TraitMap({}),
             "TraitPrefixList": lambda: TraitPrefixList("one", "two"),
             "TraitPrefixMap": lambda: TraitPrefixMap({}),
         }
