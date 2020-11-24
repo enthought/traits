@@ -1,10 +1,9 @@
 include CHANGES.rst
 include LICENSE.txt
+include LICENSE-CC-BY-3.0.txt
 include MANIFEST.in
 include README.rst
 include image_LICENSE.txt
-include image_LICENSE_Eclipse.txt
-include image_LICENSE_Nuvola.txt
 graft docs
 prune docs/build
 recursive-exclude docs *.pyc
