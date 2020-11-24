@@ -11,14 +11,13 @@
 # interface_implementation.py - Example of implementing an interface
 
 # --[Imports]------------------------------------------------------------------
-from traits.api import HasTraits, implements, Str, Instance
+from traits.api import HasTraits, Instance, provides, Str
 from interface_definition import IName
 
 
 # --[Code]---------------------------------------------------------------------
+@provides(IName)
 class Person(HasTraits):
-    implements(IName)
-
     first_name = Str("John")
     last_name = Str("Doe")
 

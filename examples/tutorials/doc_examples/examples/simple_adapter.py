@@ -11,17 +11,15 @@
 # simple_adapter.py - Example of adaptation using Adapter
 
 # --[Imports]------------------------------------------------------------------
-from traits.api import Adapter, Instance, implements
+from traits.api import Adapter, Instance, provides
+
 from interface_definition import IName
 from interface_implementation import Person
 
 
 # --[Code]---------------------------------------------------------------------
+@provides(IName)
 class PersonINameAdapter(Adapter):
-
-    # Declare what interfaces this adapter implements for its
-    # client:
-    implements(IName)
 
     # Declare the type of client it supports:
     adaptee = Instance(Person)
