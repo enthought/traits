@@ -2,6 +2,9 @@
 Traits: observable typed attributes for Python classes
 ======================================================
 
+.. image:: https://github.com/enthought/traits/workflows/Tests/badge.svg
+   :target: https://github.com/enthought/traits
+
 http://docs.enthought.com/traits
 
 The Traits project is at the center of all Enthought Tool Suite development
