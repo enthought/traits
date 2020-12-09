@@ -19,7 +19,7 @@ users), the operator name is a string, the acquisition date is a
 datetime.date object, and so on.  Many languages allow (or even require)
 you to specify these data types as part of your program, but even then these
 data types tend to reflect what the computer stores in memory, and not what
-the data actually _represents_.
+the data actually *represents*.
 
 For example, not only should the file be a string, but we would like to
 validate that the string is in fact a valid path name, and ideally that the
@@ -88,7 +88,7 @@ common to call it a _trait_ rather than an attribute.
 
 
 Traits and Static Types
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
 The first version of Traits was written over 15 years ago.  In the last 5
 years or so, Python has started to gain the ability to perform static type
@@ -104,7 +104,7 @@ these new Python type systems.
 
 
 Exercise
-~~~~~~~~
+--------
 
 The example code hasn't declared trait types for all the attributes used by
 the class.  Declare trait types for ``scan_width``, ``scan_height`` and
