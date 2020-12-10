@@ -2,11 +2,11 @@
 Introduction
 ============
 
-This is tutorial is intended to introduce you to the basics of Traits
-and to give you an idea of what capabilities the Traits libraries provide.
+This tutorial is intended to introduce you to the basics of Traits
+and to give you an idea of what capabilities the Traits library provides.
 This tutorial assumes that you are confortable with the Python
 programming language, object oriented programming, and the core tools of
-the Python scientifc ecosystem, such as NumPy.
+the Python scientific ecosystem, such as NumPy.
 
 This tutorial is designed to introduce the basics of Traits, but also to
 explain *why* you might want to use Traits in your own code.
