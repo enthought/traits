@@ -1,6 +1,14 @@
 Traits CHANGELOG
 ================
 
+Upcoming release X.Y.Z
+----------------------
+
+Removals
+~~~~~~~~
+* Make ``NoDefaultSpecified`` private and remove it from the public API.(#1380)
+
+
 Release 6.1.1
 -------------
 
