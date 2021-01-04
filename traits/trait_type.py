@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -73,7 +73,7 @@ class NoDefaultSpecified(object):
     pass
 
 
-NoDefaultSpecified = NoDefaultSpecified()
+no_default_specified = NoDefaultSpecified()
 
 
 class TraitType(BaseTraitHandler):
@@ -173,7 +173,7 @@ class TraitType(BaseTraitHandler):
     #: The metadata for the trait.
     metadata = {}
 
-    def __init__(self, default_value=NoDefaultSpecified, **metadata):
+    def __init__(self, default_value=no_default_specified, **metadata):
         """ TraitType initializer
 
         This is the only method normally called directly by client code.
@@ -183,7 +183,7 @@ class TraitType(BaseTraitHandler):
         Override this method whenever a different method signature or a
         validated default value is needed.
         """
-        if default_value is not NoDefaultSpecified:
+        if default_value is not no_default_specified:
             self.default_value = default_value
 
         if len(metadata) > 0:
@@ -257,7 +257,7 @@ class TraitType(BaseTraitHandler):
 
         return (dvt, dv)
 
-    def clone(self, default_value=NoDefaultSpecified, **metadata):
+    def clone(self, default_value=no_default_specified, **metadata):
         """ Copy, optionally modifying default value and metadata.
 
         Clones the contents of this object into a new instance of the same
@@ -294,7 +294,7 @@ class TraitType(BaseTraitHandler):
 
         new._metadata.update(metadata)
 
-        if default_value is not NoDefaultSpecified:
+        if default_value is not no_default_specified:
             new.default_value = default_value
             if self.validate is not None:
                 try:
