@@ -73,7 +73,7 @@ class NoDefaultSpecified(object):
     pass
 
 
-no_default_specified = NoDefaultSpecified()
+NoDefaultSpecified = NoDefaultSpecified()
 
 
 class TraitType(BaseTraitHandler):
@@ -173,7 +173,7 @@ class TraitType(BaseTraitHandler):
     #: The metadata for the trait.
     metadata = {}
 
-    def __init__(self, default_value=no_default_specified, **metadata):
+    def __init__(self, default_value=NoDefaultSpecified, **metadata):
         """ TraitType initializer
 
         This is the only method normally called directly by client code.
@@ -183,7 +183,7 @@ class TraitType(BaseTraitHandler):
         Override this method whenever a different method signature or a
         validated default value is needed.
         """
-        if default_value is not no_default_specified:
+        if default_value is not NoDefaultSpecified:
             self.default_value = default_value
 
         if len(metadata) > 0:
@@ -257,7 +257,7 @@ class TraitType(BaseTraitHandler):
 
         return (dvt, dv)
 
-    def clone(self, default_value=no_default_specified, **metadata):
+    def clone(self, default_value=NoDefaultSpecified, **metadata):
         """ Copy, optionally modifying default value and metadata.
 
         Clones the contents of this object into a new instance of the same
@@ -294,7 +294,7 @@ class TraitType(BaseTraitHandler):
 
         new._metadata.update(metadata)
 
-        if default_value is not no_default_specified:
+        if default_value is not NoDefaultSpecified:
             new.default_value = default_value
             if self.validate is not None:
                 try:
