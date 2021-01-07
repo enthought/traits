@@ -7,6 +7,8 @@
 Classes
 -------
 
+.. autoclass:: NoDefaultSpecified
+
 .. autoclass:: TraitType
 
 Private Functions

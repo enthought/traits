@@ -14,6 +14,11 @@ from .base_trait_handler import BaseTraitHandler as BaseTraitHandler
 
 trait_types: Dict[str, int]
 
+
+class NoDefaultSpecified:
+    ...
+
+
 _Accepts = TypeVar('_Accepts')
 
 _Stores = TypeVar('_Stores')
