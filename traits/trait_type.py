@@ -68,12 +68,17 @@ def _read_only(object, name, value):
     )
 
 
-# Create a singleton object for use in the TraitType constructor:
-class NoDefaultSpecified(object):
-    pass
+class _NoDefaultSpecifiedType(object):
+    """
+    An instance of this class is used to provide the singleton object
+    ``NoDefaultSpecified`` for use in the TraitType constructor.
+    """
 
 
-NoDefaultSpecified = NoDefaultSpecified()
+#: Singleton object that can be passed for the ``default_value`` argument
+#: in the :class:`TraitType` constructor, to indicate that no default value
+#: was specified.
+NoDefaultSpecified = _NoDefaultSpecifiedType()
 
 
 class TraitType(BaseTraitHandler):
