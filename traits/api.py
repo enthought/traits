@@ -196,7 +196,7 @@ from .has_traits import (
 
 from .base_trait_handler import BaseTraitHandler
 from .trait_handler import TraitHandler
-from .trait_type import TraitType
+from .trait_type import TraitType, NoDefaultSpecified
 from .trait_handlers import (
     TraitCoerceType,
     TraitCastType,
