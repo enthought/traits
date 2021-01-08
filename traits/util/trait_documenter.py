@@ -49,12 +49,6 @@ class TraitDocumenter(ClassLevelDocumenter):
 
     To use the documenter, append the module path in the extension
     attribute of the `conf.py`.
-
-    .. warning::
-
-        Using the TraitDocumenter in conjunction with TraitsDoc is not
-        advised.
-
     """
 
     # ClassLevelDocumenter interface #####################################
