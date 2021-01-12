@@ -68,12 +68,17 @@ def _read_only(object, name, value):
     )
 
 
-# Create a singleton object for use in the TraitType constructor:
-class _NoDefaultSpecified(object):
-    pass
+class _NoDefaultSpecifiedType(object):
+    """
+    An instance of this class is used to provide the singleton object
+    ``NoDefaultSpecified`` for use in the TraitType constructor.
+    """
 
 
-_no_default_specified = _NoDefaultSpecified()
+#: Singleton object that can be passed for the ``default_value`` argument
+#: in the :class:`TraitType` constructor, to indicate that no default value
+#: was specified.
+NoDefaultSpecified = _NoDefaultSpecifiedType()
 
 
 class TraitType(BaseTraitHandler):
@@ -173,7 +178,7 @@ class TraitType(BaseTraitHandler):
     #: The metadata for the trait.
     metadata = {}
 
-    def __init__(self, default_value=_no_default_specified, **metadata):
+    def __init__(self, default_value=NoDefaultSpecified, **metadata):
         """ TraitType initializer
 
         This is the only method normally called directly by client code.
@@ -183,7 +188,7 @@ class TraitType(BaseTraitHandler):
         Override this method whenever a different method signature or a
         validated default value is needed.
         """
-        if default_value is not _no_default_specified:
+        if default_value is not NoDefaultSpecified:
             self.default_value = default_value
 
         if len(metadata) > 0:
@@ -257,7 +262,7 @@ class TraitType(BaseTraitHandler):
 
         return (dvt, dv)
 
-    def clone(self, default_value=_no_default_specified, **metadata):
+    def clone(self, default_value=NoDefaultSpecified, **metadata):
         """ Copy, optionally modifying default value and metadata.
 
         Clones the contents of this object into a new instance of the same
@@ -294,7 +299,7 @@ class TraitType(BaseTraitHandler):
 
         new._metadata.update(metadata)
 
-        if default_value is not _no_default_specified:
+        if default_value is not NoDefaultSpecified:
             new.default_value = default_value
             if self.validate is not None:
                 try:
