@@ -86,6 +86,28 @@ the simpler, more commonly used forms.
    attributes with the prefix 'trait' or '_trait'. This avoids overshadowing
    existing methods on HasTraits.
 
+
+A note about the Traits package structure
+-----------------------------------------
+
+We described above how trait type definitions and the :class:`~.HasTraits`
+class can be imported from the ``traits.api`` module. For example::
+
+    from traits.api import Float, HasTraits, Int
+
+In fact, the :class:`HasTraits` class and various trait type classes are
+defined in other modules nested inside the Traits package structure, but
+they're re-imported to ``traits.api`` for user convenience. In general,
+everything you need should be available in either ``traits.api`` or one of the
+other ``*.api`` modules inside the package structure (for example,
+``traits.adaptation.api`` or ``traits.observation.api``). As a matter of best
+practices, you should import the things you need directly from one of these
+``*.api`` modules. If you discover that there's something that you need that's
+not available from one of these modules, please discuss with the Traits
+development team (for example, by opening an issue on the `Traits bug
+tracker`_).
+
+
 .. index:: predefined traits
 
 .. _predefined-traits:
@@ -961,3 +983,8 @@ the metadata attribute::
        details on particular traits, and see Chapter 5 for details on extending
        existing traits.
 .. [3] Available in Python 2.5.
+
+..
+   external urls
+
+.. _Traits bug tracker: https://github.com/enthought/traits/issues
