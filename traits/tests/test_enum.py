@@ -12,7 +12,8 @@ import enum
 import unittest
 
 from traits.api import (
-    Any, BaseEnum, Enum, HasTraits, Int, List, Property, TraitError, Tuple)
+    Any, BaseEnum, Enum, HasTraits, Int, List, Property, Set,
+    TraitError, Tuple)
 from traits.etsconfig.api import ETSConfig
 from traits.testing.optional_dependencies import requires_traitsui
 
@@ -308,7 +309,7 @@ class EnumTestCase(unittest.TestCase):
             obj.slow_enum = "perhaps"
         self.assertEqual(obj.slow_enum, "no")
 
-    def test_enum_in_tuple(self):
+    def test_dynamic_enum_in_tuple(self):
         # Regression test for #1385. The previous implementation of Enum
         # did no validation until trait-set time, but for an Enum inside
         # a Tuple, the inner traits are never set.
@@ -326,6 +327,19 @@ class EnumTestCase(unittest.TestCase):
         with self.assertRaises(TraitError):
             model.year_and_month = 1986, 13
 
+    def test_dynamic_enum_in_list(self):
+        # Another regression test for #1385.
+        class HasEnumInList(HasTraits):
+            #: Valid digits
+            digits = Set(Int)
+
+            #: Sequence of those digits
+            digit_sequence = List(Enum(values="digits"))
+
+        model = HasEnumInList(digits={-1, 0, 1})
+        model.trinary_int = [-1, 0, 1, 1]
+        with self.assertRaises(TraitError):
+            model.trinary_int = [-1, 0, 2, 1]
 
 @requires_traitsui
 @unittest.skipIf(is_null, "GUI toolkit not available")
