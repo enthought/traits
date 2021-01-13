@@ -1976,7 +1976,8 @@ class BaseEnum(TraitType):
         if self.name is not None:
             # Dynamic enumeration
             self.values = None
-            self.get, self.set, self.validate = self._get, self._set, None
+            self.get, self.set, self.validate = (
+                self._get, self._set, self._validate)
             if nargs == 0:
                 super().__init__(**metadata)
             elif nargs == 1:
@@ -2074,10 +2075,16 @@ class BaseEnum(TraitType):
         return value
 
     def _set(self, object, name, value):
-        """ Sets the current value of a dynamic range trait.
+        """ Sets the current value of a dynamic enum trait.
+        """
+        value = self._validate(object, name, value)
+        self.set_value(object, name, value)
+
+    def _validate(self, object, name, value):
+        """ Validate a value for a dynamic enum trait.
         """
         if safe_contains(value, xgetattr(object, self.name)):
-            self.set_value(object, name, value)
+            return value
         else:
             self.error(object, name, value)
 

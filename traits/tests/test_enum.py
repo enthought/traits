@@ -12,7 +12,8 @@ import enum
 import unittest
 
 from traits.api import (
-    Any, BaseEnum, Enum, HasTraits, List, Property, TraitError)
+    Any, BaseEnum, Enum, HasTraits, Int, List, Property, Set, TraitError,
+    Tuple)
 from traits.etsconfig.api import ETSConfig
 from traits.testing.optional_dependencies import requires_traitsui
 
@@ -307,6 +308,38 @@ class EnumTestCase(unittest.TestCase):
         with self.assertRaises(TraitError):
             obj.slow_enum = "perhaps"
         self.assertEqual(obj.slow_enum, "no")
+
+    def test_dynamic_enum_in_tuple(self):
+        # Regression test for #1385. The previous implementation of Enum
+        # did no validation until trait-set time, but for an Enum inside
+        # a Tuple, the inner traits are never set.
+
+        class HasEnumInTuple(HasTraits):
+            #: List of valid month numbers.
+            months = List(Int, value=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+
+            #: (Year, month) pairs.
+            year_and_month = Tuple(Int(), Enum(values='months'))
+
+        model = HasEnumInTuple()
+        model.year_and_month = (1974, 8)
+        self.assertEqual(model.year_and_month, (1974, 8))
+        with self.assertRaises(TraitError):
+            model.year_and_month = 1986, 13
+
+    def test_dynamic_enum_in_list(self):
+        # Another regression test for #1385.
+        class HasEnumInList(HasTraits):
+            #: Valid digits
+            digits = Set(Int)
+
+            #: Sequence of those digits
+            digit_sequence = List(Enum(values="digits"))
+
+        model = HasEnumInList(digits={-1, 0, 1})
+        model.digit_sequence = [-1, 0, 1, 1]
+        with self.assertRaises(TraitError):
+            model.digit_sequence = [-1, 0, 2, 1]
 
 
 @requires_traitsui
