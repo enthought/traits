@@ -105,7 +105,6 @@ class RangeTestCase(unittest.TestCase):
             high = Int()
             hours_and_name = Tuple(Range(low="low", high="high"), Str)
 
-
         model = HasRangeInTuple(low=0, high=48)
         model.hours_and_name = (40, "fred")
         self.assertEqual(model.hours_and_name, (40, "fred"))
