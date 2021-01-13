@@ -1633,7 +1633,8 @@ class BaseRange(TraitType):
             if high is not None:
                 high = int(high)
         else:
-            self.get, self.set, self.validate = self._get, self._set, None
+            self.get, self.set, self.validate = (
+                self._get, self._set, self._validate)
             self._vtype = None
             self._type_desc = "a number"
 
@@ -1764,14 +1765,19 @@ class BaseRange(TraitType):
     def _set(self, object, name, value):
         """ Sets the current value of a dynamic range trait.
         """
+        value = self._validate(object, name, value)
+        self._set_value(object, name, value)
+
+    def _validate(self, object, name, value):
+        """ Validate a value for a dynamic range trait.
+        """
         if not isinstance(value, str):
             try:
                 low = eval(self._low)
                 high = eval(self._high)
                 if (low is None) and (high is None):
                     if isinstance(value, RangeTypes):
-                        self._set_value(object, name, value)
-                        return
+                        return value
                 else:
                     new_value = self._typed_value(value, low, high)
                     if (
@@ -1783,8 +1789,7 @@ class BaseRange(TraitType):
                         or (self._exclude_high and (high > new_value))
                         or ((not self._exclude_high) and (high >= new_value))
                     ):
-                        self._set_value(object, name, new_value)
-                        return
+                        return new_value
             except:
                 pass
 
