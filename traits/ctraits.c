@@ -3484,9 +3484,11 @@ validate_trait_prefix_map(
 |  Verifies a Python value is a tuple of a specified type and content:
 +----------------------------------------------------------------------------*/
 
-/* There are three possible types of outcome for this function.
+/* Note: this function does not follow standard CPython error-handling rules.
+   There are three possible types of outcome for this function.
 
-   If validation fails, NULL is returned and no Python exception is set.
+   If validation fails, NULL is returned and no Python exception is set
+     (contrary to usual Python C-API conventions).
    If an unexpected exception occurs, NULL is returned and a Python exception
      is set.
    If validation succeeds, the validated object is returne.
