@@ -114,7 +114,7 @@ class RangeTestCase(unittest.TestCase):
 
     def test_dynamic_range_in_list(self):
         # Another regression test for #1391.
-        class HasEnumInList(HasTraits):
+        class HasRangeInList(HasTraits):
             #: Valid digit range
             low = Int()
 
@@ -123,7 +123,7 @@ class RangeTestCase(unittest.TestCase):
             #: Sequence of digits
             digit_sequence = List(Range(low="low", high="high"))
 
-        model = HasEnumInList(low=-1, high=1)
+        model = HasRangeInList(low=-1, high=1)
         model.digit_sequence = [-1, 0, 1, 1]
         with self.assertRaises(TraitError):
             model.digit_sequence = [-1, 0, 2, 1]
