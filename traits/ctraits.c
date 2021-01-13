@@ -3491,7 +3491,7 @@ validate_trait_prefix_map(
      (contrary to usual Python C-API conventions).
    If an unexpected exception occurs, NULL is returned and a Python exception
      is set.
-   If validation succeeds, the validated object is returne.
+   If validation succeeds, the validated object is returned.
 */
 
 static PyObject *
