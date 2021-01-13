@@ -107,11 +107,11 @@ class RangeTestCase(unittest.TestCase):
 
 
         model = HasRangeInTuple(low=0, high=48)
-        model.hours = (40, "fred")
-        self.assertEqual(model.hours, (40, "fred"))
+        model.hours_and_name = (40, "fred")
+        self.assertEqual(model.hours_and_name, (40, "fred"))
         with self.assertRaises(TraitError):
             # First argument out or range; should raise.
-            model.hours = (50, "george")
+            model.hours_and_name = (50, "george")
 
     def test_dynamic_range_in_list(self):
         # Another regression test for #1391.
