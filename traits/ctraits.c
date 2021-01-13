@@ -3516,7 +3516,9 @@ validate_trait_tuple_check(
                 else {
                     aitem = itrait->validate(itrait, obj, name, bitem);
                     if (aitem == NULL) {
-                        PyErr_Clear();
+                        if (PyErr_ExceptionMatches(TraitError)) {
+                            PyErr_Clear();
+                        }
                         Py_XDECREF(tuple);
                         return NULL;
                     }
@@ -3560,7 +3562,7 @@ validate_trait_tuple(
 {
     PyObject *result = validate_trait_tuple_check(
         PyTuple_GET_ITEM(trait->py_validate, 1), obj, name, value);
-    if (result != NULL) {
+    if (result != NULL || PyErr_Occurred()) {
         return result;
     }
 
@@ -3917,7 +3919,7 @@ validate_trait_complex(
             case 9: /* Tuple item check: */
                 result = validate_trait_tuple_check(
                     PyTuple_GET_ITEM(type_info, 1), obj, name, value);
-                if (result != NULL) {
+                if (result != NULL || PyErr_Occurred()) {
                     return result;
                 }
 
