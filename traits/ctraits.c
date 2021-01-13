@@ -3484,6 +3484,16 @@ validate_trait_prefix_map(
 |  Verifies a Python value is a tuple of a specified type and content:
 +----------------------------------------------------------------------------*/
 
+/* Note: this function does not follow standard CPython error-handling rules.
+   There are three possible types of outcome for this function.
+
+   If validation fails, NULL is returned and no Python exception is set
+     (contrary to usual Python C-API conventions).
+   If an unexpected exception occurs, NULL is returned and a Python exception
+     is set.
+   If validation succeeds, the validated object is returned.
+*/
+
 static PyObject *
 validate_trait_tuple_check(
     PyObject *traits, has_traits_object *obj, PyObject *name, PyObject *value)
@@ -3508,7 +3518,9 @@ validate_trait_tuple_check(
                 }
 
                 if (aitem == NULL) {
-                    PyErr_Clear();
+                    if (PyErr_ExceptionMatches(TraitError)) {
+                        PyErr_Clear();
+                    }
                     Py_XDECREF(tuple);
                     return NULL;
                 }
@@ -3551,7 +3563,7 @@ validate_trait_tuple(
 {
     PyObject *result = validate_trait_tuple_check(
         PyTuple_GET_ITEM(trait->py_validate, 1), obj, name, value);
-    if (result != NULL) {
+    if (result != NULL || PyErr_Occurred()) {
         return result;
     }
 
@@ -3908,7 +3920,7 @@ validate_trait_complex(
             case 9: /* Tuple item check: */
                 result = validate_trait_tuple_check(
                     PyTuple_GET_ITEM(type_info, 1), obj, name, value);
-                if (result != NULL) {
+                if (result != NULL || PyErr_Occurred()) {
                     return result;
                 }
 
