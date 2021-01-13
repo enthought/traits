@@ -336,7 +336,6 @@ class EnumTestCase(unittest.TestCase):
             #: Sequence of those digits
             digit_sequence = List(Enum(values="digits"))
 
-
         model = HasEnumInList(digits={-1, 0, 1})
         model.digit_sequence = [-1, 0, 1, 1]
         with self.assertRaises(TraitError):
