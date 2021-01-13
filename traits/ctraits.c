@@ -3515,13 +3515,14 @@ validate_trait_tuple_check(
                 }
                 else {
                     aitem = itrait->validate(itrait, obj, name, bitem);
-                    if (aitem == NULL) {
-                        if (PyErr_ExceptionMatches(TraitError)) {
-                            PyErr_Clear();
-                        }
-                        Py_XDECREF(tuple);
-                        return NULL;
+                }
+
+                if (aitem == NULL) {
+                    if (PyErr_ExceptionMatches(TraitError)) {
+                        PyErr_Clear();
                     }
+                    Py_XDECREF(tuple);
+                    return NULL;
                 }
 
                 if (tuple != NULL) {
