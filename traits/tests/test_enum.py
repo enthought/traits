@@ -12,7 +12,8 @@ import enum
 import unittest
 
 from traits.api import (
-    Any, BaseEnum, Enum, HasTraits, Int, List, Property, TraitError, Tuple)
+    Any, BaseEnum, Enum, HasTraits, Int, List, Property, Set, TraitError,
+    Tuple)
 from traits.etsconfig.api import ETSConfig
 from traits.testing.optional_dependencies import requires_traitsui
 
@@ -325,6 +326,21 @@ class EnumTestCase(unittest.TestCase):
         self.assertEqual(model.year_and_month, (1974, 8))
         with self.assertRaises(TraitError):
             model.year_and_month = 1986, 13
+
+    def test_dynamic_enum_in_list(self):
+        # Another regression test for #1385.
+        class HasEnumInList(HasTraits):
+            #: Valid digits
+            digits = Set(Int)
+
+            #: Sequence of those digits
+            digit_sequence = List(Enum(values="digits"))
+
+
+        model = HasEnumInList(digits={-1, 0, 1})
+        model.digit_sequence = [-1, 0, 1, 1]
+        with self.assertRaises(TraitError):
+            model.digit_sequence = [-1, 0, 2, 1]
 
 
 @requires_traitsui
