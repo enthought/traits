@@ -10,7 +10,7 @@
 
 import unittest
 
-from traits.api import HasTraits, Int, Range, Str, TraitError
+from traits.api import HasTraits, Int, List, Range, Str, TraitError, Tuple
 
 
 class WithFloatRange(HasTraits):
@@ -97,3 +97,34 @@ class RangeTestCase(unittest.TestCase):
         with self.assertRaises(TraitError):
             obj.r = obj.high
         self.assertEqual(obj.r, 5)
+
+    def test_dynamic_range_in_tuple(self):
+        # Regression test for #1391
+        class HasRangeInTuple(HasTraits):
+            low = Int()
+            high = Int()
+            hours_and_name = Tuple(Range(low="low", high="high"), Str)
+
+
+        model = HasRangeInTuple(low=0, high=48)
+        model.hours = (40, "fred")
+        self.assertEqual(model.hours, (40, "fred"))
+        with self.assertRaises(TraitError):
+            # First argument out or range; should raise.
+            model.hours = (50, "george")
+
+    def test_dynamic_range_in_list(self):
+        # Another regression test for #1391.
+        class HasEnumInList(HasTraits):
+            #: Valid digit range
+            low = Int()
+
+            high = Int()
+
+            #: Sequence of digits
+            digit_sequence = List(Range(low="low", high="high"))
+
+        model = HasEnumInList(low=-1, high=1)
+        model.digit_sequence = [-1, 0, 1, 1]
+        with self.assertRaises(TraitError):
+            model.digit_sequence = [-1, 0, 2, 1]
