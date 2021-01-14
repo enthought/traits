@@ -13,6 +13,7 @@ Contents
     :maxdepth: 3
 
     intro.rst
+    ../traits_tutorial/index
     defining.rst
     notification.rst
     deferring.rst

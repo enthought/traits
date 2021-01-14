@@ -1,13 +1,6 @@
 Traits |version| Documentation
 ==============================
 
-Tutorial
---------
-.. toctree::
-    :maxdepth: 3
-
-    traits_tutorial/index
-
 User Reference
 --------------
 .. toctree::

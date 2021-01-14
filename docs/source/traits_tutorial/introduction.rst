@@ -1,6 +1,6 @@
-============
-Introduction
-============
+==============
+First Tutorial
+==============
 
 This tutorial is intended to introduce you to the basics of Traits
 and to give you an idea of what capabilities the Traits library provides.
