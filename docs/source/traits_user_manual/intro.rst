@@ -10,10 +10,8 @@ repository <http://github.com/enthought/traits>`_. Additional documentation
 for the Traits package is available,
 including:
 
-* *Traits API Reference*
-* `TraitsUI User Manual
-  <http://docs.enthought.com/traitsui/traitsui_user_manual/index.html>`_
-* Traits Technical Notes
+* `Traits API Reference <https://docs.enthought.com/traits/traits_api_reference/index.html>`_
+* `Traits Technical Notes <https://docs.enthought.com/traits/changelog.html>`_
 
 What Are Traits?
 ----------------
