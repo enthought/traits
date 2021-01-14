@@ -412,7 +412,7 @@ the table.
 Instance
 ::::::::
 One of the most fundamental and useful predefined trait types is Instance.
-Instance traits values are an instance of a particular class or its subclasses,
+Instance trait values are an instance of a particular class or its subclasses,
 as specified by the **klass** argument. **klass** can be either an instance of
 a class or a class itself (note this applies to all python classes, not
 necessarily just ``HasTraits`` subclasses). Further, **klass** can also be an
@@ -422,8 +422,7 @@ interface. For more details on this particular usecase, see :ref:`interfaces`.
 If **klass** is an instance or if it is a class and **args** and **kw** are not
 specified, the default value is None. Otherwise, the default value is
 obtained by calling the callable **factory** argument (or **klass** if
-**factory** is*None) with **args** and **kw**. As an example, consider the
-following::
+**factory** is None) with **args** and **kw**. For example::
 
     # instance_trait_defaults.py --- Example of Instance trait default values
     from traits.api import HasTraits, Instance
@@ -432,10 +431,22 @@ following::
         pass
 
     class Child(HasTraits):
-        # default value is None 
-        father = Instance(Parent)
+        # default value is None
+        father = Instance(Parent())
+        # default value is also None
+        grandfather = Instance(Parent)
         # default value is Parent()
         mother = Instance(Parent, args=())
+
+In the first case, although we instatiate a ``Parent`` object, that instance is
+not used as the default to prevent different instances of the ``Child`` class
+from sharing the same instance of ``Parent`` for their ``father`` trait by
+default. In the last case, the default ``Parent`` instance is not immediately
+created, but rather is lazily instantiated when the trait is first accessed.
+The default ``Parent`` will also be instantiated if the trait is assigned to
+and there is a change handler defined on the trait (to detect changes from the
+default value). For more details on change handlers and trait notification see
+:ref:`observe-notification`.
 
 Somewhat surprisingly, ``mother = Instance(Parent, ())`` will also yield a
 default value of ``Parent()``, even though in that case it is **factory** that

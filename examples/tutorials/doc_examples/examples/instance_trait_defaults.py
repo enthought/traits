@@ -21,6 +21,8 @@ class Parent(HasTraits):
 
 class Child(HasTraits):
     # default value is None
-    father = Instance(Parent)
+    father = Instance(Parent())
+    # default value is also None
+    grandfather = Instance(Parent)
     # default value is Parent()
     mother = Instance(Parent, args=())
