@@ -8,18 +8,19 @@
 #
 # Thanks for using Enthought open source!
 
-# add_class_trait.py --- Example of mutually-referring classes
-# 
+# instance_trait_defaults.py --- Example of Instance trait default values
 
 # --[Imports]------------------------------------------------------------------
 from traits.api import HasTraits, Instance
+
 
 # --[Code]---------------------------------------------------------------------
 class Parent(HasTraits):
     pass
 
-class Child(HasTraits):
-    
-    father = Instance(Parent)
 
+class Child(HasTraits):
+    # default value is None
+    father = Instance(Parent)
+    # default value is Parent()
     mother = Instance(Parent, args=())
