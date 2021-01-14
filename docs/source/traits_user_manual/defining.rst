@@ -405,6 +405,46 @@ the table.
 |                  | *allow_none* = False, *adapt* = 'yes', \*\*\ *metadata*])|
 +------------------+----------------------------------------------------------+
 
+.. index:: Instance trait
+
+.. _instance:
+
+Instance
+::::::::
+One of the most fundamental and useful predefined trait types is Instance.
+Instance traits values are an instance of a particular class or its subclasses,
+as specified by the **klass** argument. **klass** can be either an instance of
+a class or a class itself (note this applies to all python classes, not
+necessarily just ``HasTraits`` subclasses). Further, **klass** can also be an
+interface, in which case the trait only accepts values implementing that
+interface. For more details on this particular usecase, see :ref:`interfaces`.
+
+If **klass** is an instance or if it is a class and **args** and **kw** are not
+specified, the default value is None. Otherwise, the default value is
+obtained by calling the callable **factory** argument (or **klass** if
+**factory** is*None) with **args** and **kw**. As an example, consider the
+following::
+
+    # instance_trait_defaults.py --- Example of Instance trait default values
+    from traits.api import HasTraits, Instance
+
+    class Parent(HasTraits):
+        pass
+
+    class Child(HasTraits):
+        # default value is None 
+        father = Instance(Parent)
+        # default value is Parent()
+        mother = Instance(Parent, args=())
+
+Somewhat surprisingly, ``mother = Instance(Parent, ())`` will also yield a
+default value of ``Parent()``, even though in that case it is **factory** that
+is ``()`` not **args**.  This is a result of implementation details, and using
+this form is discouraged.  Another discouraged behavior is passing in another
+trait type to Instance. For example, ``some_trait = Instance(Int)``. This will
+likely lead to unexpected behavior and potential errors. Instead simply do
+``some_trait = Int()``.
+
 .. index:: This trait, self trait
 
 .. _this-and-self:
