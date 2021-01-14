@@ -911,6 +911,13 @@ class self(This):
 
 class Function(TraitType):
     """ A trait type whose value must be a function.
+
+    .. deprecated:: 6.2.0
+        This trait type explicitly checks for an instance of
+        ``types.FunctionType``. For the majority of use cases, the more general
+        ``Callable`` trait type should be used instead. If an instance
+        specifically of ``types.FunctionType`` really is needed, one can use
+        ``Instance(types.FunctionType)``.
     """
 
     #: The C-level fast validator to use:
