@@ -6,12 +6,9 @@ a special kind of type definition called a trait. This document introduces the
 concepts behind, and usage of, the Traits package.
 
 For more information on the Traits package, refer to the `Traits GitHub
-repository <http://github.com/enthought/traits>`_. Additional documentation
-for the Traits package is available,
-including:
-
-* `Traits API Reference <https://docs.enthought.com/traits/traits_api_reference/index.html>`_
-* `Traits Technical Notes <https://docs.enthought.com/traits/changelog.html>`_
+repository <http://github.com/enthought/traits>`_. For additional documentation
+on the Traits package, refer to the `Traits API Reference
+<https://docs.enthought.com/traits/traits_api_reference/index.html>`_
 
 What Are Traits?
 ----------------
