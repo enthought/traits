@@ -20,7 +20,7 @@ import subprocess
 import unittest
 
 from traits.api import (
-    DefaultValue, Float, NoDefaultSpecified, TraitType, Undefined)
+    DefaultValue, Float, Function, NoDefaultSpecified, TraitType, Undefined)
 from traits.testing.optional_dependencies import requires_numpy
 
 
@@ -93,3 +93,9 @@ class TraitTypesTest(unittest.TestCase):
             trait_type.get_default_value(),
             (DefaultValue.constant, Undefined),
         )
+
+
+class TestDeprecatedTraitTypes(unittest.TestCase):
+    def test_function_deprecated(self):
+        with self.assertWarnsRegex(DeprecationWarning, "Function trait type"):
+            Function()

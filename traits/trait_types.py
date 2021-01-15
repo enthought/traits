@@ -47,6 +47,7 @@ from .traits import (
     _TraitMaker,
     _InstanceArgs,
 )
+from .util.deprecated import deprecated
 from .util.import_symbol import import_symbol
 
 # TraitsUI integration imports
@@ -919,6 +920,10 @@ class Function(TraitType):
         specifically of ``types.FunctionType`` really is needed, one can use
         ``Instance(types.FunctionType)``.
     """
+    @deprecated("Function trait type has been deprecated. Use 'Callable' or "
+    "'Instance(types.FunctionType)' instead")
+    def __init__(self):
+        super().__init__()
 
     #: The C-level fast validator to use:
     fast_validate = (ValidateTrait.coerce, FunctionType)
