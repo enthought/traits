@@ -411,13 +411,11 @@ the table.
 
 Instance
 ::::::::
-One of the most fundamental and useful predefined trait types is Instance.
-Instance trait values are an instance of a particular class or its subclasses,
-as specified by the **klass** argument. **klass** can be either an instance of
-a class or a class itself (note this applies to all python classes, not
-necessarily just ``HasTraits`` subclasses). Further, **klass** can also be an
-interface, in which case the trait only accepts values implementing that
-interface. For more details on this particular usecase, see :ref:`interfaces`.
+One of the most fundamental and useful predefined trait types is
+:class:`~.Instance`. Instance trait values are an instance of a particular class
+or its subclasses, as specified by the **klass** argument. **klass** can be
+either an instance of a class or a class itself (note this applies to all python
+classes, not necessarily just ``HasTraits`` subclasses).
 
 If **klass** is an instance or if it is a class and **args** and **kw** are not
 specified, the default value is None. Otherwise, the default value is
@@ -451,10 +449,11 @@ default value). For more details on change handlers and trait notification see
 Somewhat surprisingly, ``mother = Instance(Parent, ())`` will also yield a
 default value of ``Parent()``, even though in that case it is **factory** that
 is ``()`` not **args**.  This is a result of implementation details, and using
-this form is discouraged.  Another discouraged behavior is passing in another
-trait type to Instance. For example, ``some_trait = Instance(Int)``. This will
-likely lead to unexpected behavior and potential errors. Instead simply do
-``some_trait = Int()``.
+this form is discouraged.  The preferred way of writing this code is
+``mother = Instance(Parent, args=())``. Another common mistake is passing in
+another trait type to Instance. For example, ``some_trait = Instance(Int)``.
+This will likely lead to unexpected behavior and potential errors. Instead
+simply do ``some_trait = Int()``.
 
 .. index:: This trait, self trait
 
