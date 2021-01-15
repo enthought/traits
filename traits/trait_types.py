@@ -921,7 +921,7 @@ class Function(TraitType):
         ``Instance(types.FunctionType)``.
     """
     @deprecated("Function trait type has been deprecated. Use 'Callable' or "
-    "'Instance(types.FunctionType)' instead")
+                "'Instance(types.FunctionType)' instead")
     def __init__(self):
         super().__init__()
 
