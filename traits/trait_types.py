@@ -920,6 +920,7 @@ class Function(TraitType):
         specifically of ``types.FunctionType`` really is needed, one can use
         ``Instance(types.FunctionType)``.
     """
+
     @deprecated("Function trait type has been deprecated. Use 'Callable' or "
                 "'Instance(types.FunctionType)' instead")
     def __init__(self):
@@ -934,7 +935,19 @@ class Function(TraitType):
 
 class Method(TraitType):
     """ A trait type whose value must be a method.
+
+    .. deprecated:: 6.2.0
+        This trait type explicitly checks for an instance of
+        ``types.MethodType``. For the majority of use cases, the more general
+        ``Callable`` trait type should be used instead. If an instance
+        specifically of ``types.MethodType`` really is needed, one can use
+        ``Instance(types.MethodType)``.
     """
+
+    @deprecated("Method trait type has been deprecated. Use 'Callable' or "
+                "'Instance(types.MethodType)' instead")
+    def __init__(self):
+        super().__init__()
 
     #: The C-level fast validator to use:
     fast_validate = (ValidateTrait.coerce, MethodType)
