@@ -324,7 +324,7 @@ the table.
 | File             | File( [*value* = '', *filter* = None, *auto_set* = False,|
 |                  | *entries* = 10, *exists* = False,  \*\*\ *metadata* ] )  |
 +------------------+----------------------------------------------------------+
-| Function         | Function( [*value* = None, \*\*\ *metadata*] )           |
+| Function [3]_    | Function( [*value* = None, \*\*\ *metadata*] )           |
 +------------------+----------------------------------------------------------+
 | generic_trait    | n/a                                                      |
 +------------------+----------------------------------------------------------+
@@ -396,7 +396,7 @@ the table.
 | Union            | Union( *val1*\ [, *val2*, ..., *valN*,                   |
 |                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
-| UUID [3]_        | UUID( [\*\*\ *metadata*] )                               |
+| UUID [4]_        | UUID( [\*\*\ *metadata*] )                               |
 +------------------+----------------------------------------------------------+
 | ValidatedTuple   | ValidatedTuple( [\*\ *traits*, *fvalidate* = None,       |
 |                  | *fvalidate_info* = '' , \*\*\ *metadata*] )              |
@@ -982,9 +982,15 @@ the metadata attribute::
        extend an existing predefined trait. See the *Traits API Reference* for
        details on particular traits, and see Chapter 5 for details on extending
        existing traits.
-.. [3] Available in Python 2.5.
+.. [3] The Function trait type is now deprecated. See |Function|
+.. [4] Available in Python 2.5.
 
 ..
    external urls
 
 .. _Traits bug tracker: https://github.com/enthought/traits/issues
+
+..
+   # substitutions
+
+.. |Function| replace:: :class:`~traits.trait_types.Function`
