@@ -1117,8 +1117,9 @@ Property Factory Function
 
 The Property() function has the following signature:
 
-.. currentmodule:: traits.has_traits
+.. currentmodule:: traits.traits
 .. function:: Property( [fget=None, fset=None, fvalidate=None, force=False, handler=None, trait=None, **metadata] )
+   :noindex:
 
 All parameters are optional, including the *fget* "getter", *fvalidate*
 "validator"  and *fset* "setter" methods. If no parameters are specified, then
@@ -1145,6 +1146,18 @@ situations:
 * The *force* option is True, (which requires the Property() factory function
   to ignore functions on the class) and one of the access functions was not
   specified in the arguments.
+
+You can use the **observe** metadata attribute to indicate that the
+property depends on the value of another trait. The value of **observe**
+follows the same signature as the **expression** parameter in
+|HasTraits.observe|, which is also described in
+:ref:`expression section <observe-expression>`. The property will fire a trait
+change notification if any of the traits specified by **observe** change. For
+example::
+
+    class Wheel(Part):
+        axle = Instance(Axle)
+        position = Property(observe='axle.chassis.position')
 
 .. index:: property traits; caching value
 
@@ -1179,12 +1192,10 @@ For example:
 The |@cached_property| decorator takes no arguments. Place it on the line
 preceding the property's getter method.
 
-The **observe** metadata attribute accepts extended trait references, using
-the same syntax as the |HasTraits.observe| method's expression parameter,
-which is also described in :ref:`expression section <observe-expression>`.
-As a result, it can take values that specify attributes on referenced objects,
-multiple attributes, or attributes that are selected based on their metadata
-attributes.
+As mentioned above, the **observe** metadata attribute accepts extended trait
+references. As a result, it can take values that specify attributes on
+referenced objects, multiple attributes, or attributes that are selected based
+on their metadata attributes.
 
 .. index:: persistence, __getstate__(), __setstate__()
 
