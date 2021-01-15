@@ -342,7 +342,7 @@ the table.
 +------------------+----------------------------------------------------------+
 | Map              | Map( *map*\ [, \*\*\ *metadata*] )                       |
 +------------------+----------------------------------------------------------+
-| Method           | Method ([\*\*\ *metadata*] )                             |
+| Method [3]_      | Method ([\*\*\ *metadata*] )                             |
 +------------------+----------------------------------------------------------+
 | Module           | Module ( [\*\*\ *metadata*] )                            |
 +------------------+----------------------------------------------------------+
@@ -982,7 +982,8 @@ the metadata attribute::
        extend an existing predefined trait. See the *Traits API Reference* for
        details on particular traits, and see Chapter 5 for details on extending
        existing traits.
-.. [3] The Function trait type is now deprecated. See |Function|
+.. [3] The Function and Method trait types are now deprecated. See |Function|,
+       |Method|
 .. [4] Available in Python 2.5.
 
 ..
@@ -994,3 +995,4 @@ the metadata attribute::
    # substitutions
 
 .. |Function| replace:: :class:`~traits.trait_types.Function`
+.. |Method| replace:: :class:`~traits.trait_types.Method`
