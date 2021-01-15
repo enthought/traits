@@ -1150,7 +1150,7 @@ situations:
 You can use the **observe** metadata attribute to indicate that the
 property depends on the value of another trait. The value of **observe**
 follows the same signature as the **expression** parameter in
-|HasTraits.observe|, which is also described in
+|HasTraits.observe|, which is also described in the
 :ref:`expression section <observe-expression>`. The property will fire a trait
 change notification if any of the traits specified by **observe** change. For
 example::
