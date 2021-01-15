@@ -448,12 +448,12 @@ default value). For more details on change handlers and trait notification see
 
 Somewhat surprisingly, ``mother = Instance(Parent, ())`` will also yield a
 default value of ``Parent()``, even though in that case it is **factory** that
-is ``()`` not **args**.  This is a result of implementation details, and using
-this form is discouraged.  The preferred way of writing this code is
-``mother = Instance(Parent, args=())``. Another common mistake is passing in
-another trait type to Instance. For example, ``some_trait = Instance(Int)``.
-This will likely lead to unexpected behavior and potential errors. Instead
-simply do ``some_trait = Int()``.
+is ``()`` not **args**.  This is a result of implementation details, however
+the recommended way of writing this code is to explicitly pass **args** by
+keyword like so ``mother = Instance(Parent, args=())``. Another common mistake
+is passing in another trait type to Instance. For example,
+``some_trait = Instance(Int)``. This will likely lead to unexpected behavior
+and potential errors. Instead simply do ``some_trait = Int()``.
 
 .. index:: This trait, self trait
 
