@@ -1,7 +1,8 @@
 name: Publish release to PyPI
 
 on:
-  pull_request
+  release:
+    types: [published]
 
 jobs:
   build-sdist:
@@ -27,7 +28,7 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         python -m twine check --strict dist/*.tar.gz
-        # python -m twine upload dist/*.tar.gz
+        python -m twine upload dist/*.tar.gz
 
   build-wheel-windows-macos:
 
@@ -64,7 +65,7 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         python -m twine check --strict dist/*.whl
-        # python -m twine upload dist/*.whl
+        python -m twine upload dist/*.whl
 
   build-wheel-linux:
     runs-on: ubuntu-latest
@@ -90,4 +91,4 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         python -m twine check --strict dist/*-manylinux*.whl
-        # python -m twine upload dist/*-manylinux*.whl
+        python -m twine upload dist/*-manylinux*.whl
