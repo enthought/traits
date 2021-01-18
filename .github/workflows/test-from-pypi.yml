@@ -1,0 +1,55 @@
+name: Test installation from PyPI
+
+on:
+  #schedule:
+  #  # Run at 03:27 UTC on the 8th and 22nd of every month
+  #  - cron: '27 3 8,22 * *'
+  pull_request
+
+jobs:
+  test-pypi-sdist:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-architecture: [x86, x64]
+        exclude:
+        - os: macos-latest
+          python-architecture: x86
+        - os: ubuntu-latest
+          python-architecture: x86
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Install Linux packages for Qt 5 support
+      run: |
+        sudo apt-get update
+        sudo apt-get install qt5-default
+        sudo apt-get install libxkbcommon-x11-0
+        sudo apt-get install libxcb-icccm4
+        sudo apt-get install libxcb-image0
+        sudo apt-get install libxcb-keysyms1
+        sudo apt-get install libxcb-randr0
+        sudo apt-get install libxcb-render-util0
+        sudo apt-get install libxcb-xinerama0
+      if: runner.os == 'Linux'
+    - name: Set up Python ${{ matrix.python-version }} (${{ matrix.python-architecture }})
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        architecture: ${{ matrix.python-architecture }}
+    - name: Install prerequisites
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+    - name: Install Traits and test dependencies from PyPI sdist
+      run: |
+        python -m pip install --no-binary traits traits[test]
+    - name: Create clean test directory
+      run: |
+        mkdir testdir
+    - name: Test Traits package
+      uses: GabrielBB/xvfb-action@v1
+      with:
+        working-directory: testdir
+        run: python -m unittest discover -v traits
