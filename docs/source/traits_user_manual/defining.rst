@@ -418,7 +418,7 @@ either an instance of a class or a class itself (note this applies to all python
 classes, not necessarily just ``HasTraits`` subclasses).
 
 If **klass** is an instance or if it is a class and **args** and **kw** are not
-specified, the default value is None. Otherwise, the default value is
+specified, the default value is ``None``. Otherwise, the default value is
 obtained by calling the callable **factory** argument (or **klass** if
 **factory** is None) with **args** and **kw**. For example::
 
