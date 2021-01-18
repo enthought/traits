@@ -45,8 +45,8 @@ this release:
 * Kevin Duff
 * Glen Granzow
 * Matt Hancock
+* Rahul Poruri
 * Eric Prestat
-* Poruri Sai Rahul
 * Kuya Takami
 * Hugo van Kemenade
 * Aditya Vats
