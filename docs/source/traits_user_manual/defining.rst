@@ -415,12 +415,17 @@ One of the most fundamental and useful predefined trait types is
 :class:`~.Instance`. Instance trait values are an instance of a particular class
 or its subclasses, as specified by the **klass** argument. **klass** can be
 either an instance of a class or a class itself (note this applies to all python
-classes, not necessarily just :class:`~.HasTraits` subclasses).
+classes, not necessarily just :class:`~.HasTraits` subclasses).  However, one should
+typically provide the type or interface they want an instance of, instead of
+providing an instance of a class already.
 
 If **klass** is an instance or if it is a class and **args** and **kw** are not
 specified, the default value is ``None``. Otherwise, the default value is
 obtained by calling the callable **factory** argument (or **klass** if
-**factory** is None) with **args** and **kw**. For example::
+**factory** is None) with **args** and **kw**. Further, there is the
+**allow_none** argument which dictates whether the trait can take on a value of
+``None``. However, this does not include the default value for the trait. For
+example::
 
     # instance_trait_defaults.py --- Example of Instance trait default values
     from traits.api import HasTraits, Instance
@@ -431,6 +436,8 @@ obtained by calling the callable **factory** argument (or **klass** if
     class Child(HasTraits):
         # default value is None
         father = Instance(Parent)
+        # default value is still None, but None can not be assigned
+        grandfather = Instance(Parent, allow_none=False)
         # default value is Parent()
         mother = Instance(Parent, args=())
 
