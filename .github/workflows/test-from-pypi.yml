@@ -1,10 +1,9 @@
 name: Test installation from PyPI
 
 on:
-  #schedule:
-  #  # Run at 03:27 UTC on the 8th and 22nd of every month
-  #  - cron: '27 3 8,22 * *'
-  pull_request
+  schedule:
+    # Run at 03:27 UTC on the 8th and 22nd of every month
+    - cron: '27 3 8,22 * *'
 
 jobs:
   test-pypi-sdist:
