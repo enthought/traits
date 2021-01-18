@@ -417,7 +417,7 @@ or its subclasses, as specified by the **klass** argument. **klass** can be
 either an instance of a class or a class itself (note this applies to all python
 classes, not necessarily just :class:`~.HasTraits` subclasses).  However, one should
 typically provide the type or interface they want an instance of, instead of
-providing an instance of a class already.
+providing an instance of a class.
 
 If **klass** is an instance or if it is a class and **args** and **kw** are not
 specified, the default value is ``None``. Otherwise, the default value is
