@@ -430,16 +430,11 @@ obtained by calling the callable **factory** argument (or **klass** if
 
     class Child(HasTraits):
         # default value is None
-        father = Instance(Parent())
-        # default value is also None
-        grandfather = Instance(Parent)
+        father = Instance(Parent)
         # default value is Parent()
         mother = Instance(Parent, args=())
 
-In the first case, although we instatiate a ``Parent`` object, that instance is
-not used as the default to prevent different instances of the ``Child`` class
-from sharing the same instance of ``Parent`` for their ``father`` trait by
-default. In the last case, the default ``Parent`` instance is not immediately
+In the last case, the default ``Parent`` instance is not immediately
 created, but rather is lazily instantiated when the trait is first accessed.
 The default ``Parent`` will also be instantiated if the trait is assigned to
 and there is a change handler defined on the trait (to detect changes from the
