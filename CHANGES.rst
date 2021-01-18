@@ -65,7 +65,7 @@ Features
 ~~~~~~~~
 
 * The ``Property`` trait type now supports the ``observe`` keyword. (#1175)
-* Add |= support to TraitDict for Python >= 3.9. (#1306)
+* Add ``|=`` support to TraitDict for Python 3.9 and later. (#1306)
 * Add casting keyword to numeric array types. (#547)
 * The Traits examples are now part of the Traits package, and so are
   contributed to ``etsdemo``. (#1275)
