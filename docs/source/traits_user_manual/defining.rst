@@ -415,10 +415,10 @@ One of the most fundamental and useful predefined trait types is
 :class:`~.Instance`. Instance trait values are an instance of a particular class
 or its subclasses, as specified by the **klass** argument. **klass** can be
 either an instance of a class or a class itself (note this applies to all python
-classes, not necessarily just ``HasTraits`` subclasses).
+classes, not necessarily just :class:`~.HasTraits` subclasses).
 
 If **klass** is an instance or if it is a class and **args** and **kw** are not
-specified, the default value is None. Otherwise, the default value is
+specified, the default value is ``None``. Otherwise, the default value is
 obtained by calling the callable **factory** argument (or **klass** if
 **factory** is None) with **args** and **kw**. For example::
 
