@@ -35,19 +35,22 @@ Highlights of this release
 Detailed PR-by-PR changes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-More than 60 PRs went into this release. The following people contributed
-changes for this release:
+More than 60 PRs went into this release. The following people contributed to
+this release:
 
-Aaron Ayres
-Alexandre Chabot-Leclerc
-Kit Choi
-Mark Dickinson
-Kevin Duff
-Matt Hancock
-Eric Prestat
-Poruri Sai Rahul
-Hugo van Kemenade
-Corran Webster
+* Aaron Ayres
+* Alexandre Chabot-Leclerc
+* Kit Choi
+* Mark Dickinson
+* Kevin Duff
+* Glen Granzow
+* Matt Hancock
+* Eric Prestat
+* Poruri Sai Rahul
+* Kuya Takami
+* Hugo van Kemenade
+* Aditya Vats
+* Corran Webster
 
 
 Performance
@@ -185,6 +188,7 @@ Build and development workflow changes
 * Make ``mypy`` an optional dependency. (#1289)
 * Speed up CI builds for Travis and Appveyor by caching the ``pip`` directory
   (now redundant). (#1241)
+* Add automated wheel and sdist building for Traits releases. (#1404, #1291)
 
 
 Release 6.1.1
