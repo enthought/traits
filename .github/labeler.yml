@@ -1,0 +1,4 @@
+# Configuration file for labeler action used in check-news workflow.
+
+has news:
+- CHANGES.rst
