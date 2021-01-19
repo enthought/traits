@@ -12,8 +12,8 @@ jobs:
   changelog:
     runs-on: ubuntu-latest
 
-  steps:
-  - name: Add 'has news' label
-    uses: actions/labeler@v3
-    with:
-      sync-labels: true
+    steps:
+    - name: Add 'has news' label
+      uses: actions/labeler@v3
+      with:
+        sync-labels: true
