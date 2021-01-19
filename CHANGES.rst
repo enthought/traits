@@ -1,12 +1,6 @@
 Traits CHANGELOG
 ================
 
-Release 6.2.0
--------------
-
-Add exciting new workflow that checks that the changelog is updated!
-
-
 Release 6.1.1
 -------------
 
