@@ -53,14 +53,6 @@ this release:
 * Corran Webster
 
 
-Performance
-~~~~~~~~~~~
-
-* Parsing of the ``observe`` string was previously a performance bottleneck.
-  This has been fixed, by removing some redundant parsing calls and by caching
-  parsing results. (#1343, #1344, #1345)
-
-
 Features
 ~~~~~~~~
 
@@ -73,6 +65,14 @@ Features
 * The Traits examples package now includes a beginner's tutorial. (#1061)
 
 
+Performance
+~~~~~~~~~~~
+
+* Parsing of the ``observe`` string was previously a performance bottleneck.
+  This has been fixed, by removing some redundant parsing calls and by caching
+  parsing results. (#1343, #1344, #1345)
+
+
 Changes
 ~~~~~~~
 
@@ -81,8 +81,8 @@ Changes
   available from ``traits.api``. (#1384, #1380, #1378)
 * The deprecation of the ``TraitMap`` trait type has been reversed, because
   there are existing uses of ``TraitMap`` that are hard to replace.
-  Nevertheless, it's still not recommended to use ``TraitMap`` in new code. Use
-  ``Map`` instead. (#1365)
+  Nevertheless, it is still not recommended to use ``TraitMap`` in new code.
+  Use ``Map`` instead. (#1365)
 * An attempt to use ``PrefixList`` with an empty list, or ``PrefixMap`` or
   ``Map`` with an empty dictionary, now raises ``ValueError``. As a result,
   the default default value (which used to be ``None``) is always valid.
@@ -92,25 +92,6 @@ Changes
   ``ComparisonMode.identity`` when using ``observe`` to observe items
   in a ``List``, ``Dict`` or ``Set``. (#1165, #1328, #1240)
 
-
-Documentation
-~~~~~~~~~~~~~
-
-* Add "Tutorial" section to the main documentation, based on the
-  new ``traits.examples`` tutorial content. (#1374)
-* Clarify that only the ``api`` modules should be used for imports. (#1387)
-* Update copyright header end years. (#1376)
-* Update contents of ``image_LICENSE.txt``. (#1362)
-* Remove mentions of the removed functions ``adapts`` and ``implements`` from
-  the examples and tutorial. (#1367)
-* Move Traits introduction description to ``index.rst``. (#1358)
-* Fix path to Enthought logo when building docset. (#1285)
-* Fix the ``trait_documenter`` extension to be less fragile. (#1247)
-* Add user manual documentation for the ``Instance`` trait type. (#1395)
-* Document that the ``List``, ``Dict`` and ``Set`` trait types copy on
-  assignment. (#1402)
-* Various other minor improvements, typo fixes, and other documentation fixes.
-  (#1396, #1383, #1381, #1384, #1292, #1355, #1350, #1319, #1292, #1401)
 
 Deprecations
 ~~~~~~~~~~~~
@@ -143,6 +124,26 @@ Fixes
   the ``_TraitChangeCollector`` class. (#1411)
 
 
+Documentation
+~~~~~~~~~~~~~
+
+* Add "Tutorial" section to the main documentation, based on the
+  new ``traits.examples`` tutorial content. (#1374)
+* Clarify that only the ``api`` modules should be used for imports. (#1387)
+* Update copyright header end years. (#1376)
+* Update contents of ``image_LICENSE.txt``. (#1362)
+* Remove mentions of the removed functions ``adapts`` and ``implements`` from
+  the examples and tutorial. (#1367)
+* Move Traits introduction description to ``index.rst``. (#1358)
+* Fix path to Enthought logo when building docset. (#1285)
+* Fix the ``trait_documenter`` extension to be less fragile. (#1247)
+* Add user manual documentation for the ``Instance`` trait type. (#1395)
+* Document that the ``List``, ``Dict`` and ``Set`` trait types copy on
+  assignment. (#1402)
+* Various other minor improvements, typo fixes, and other documentation fixes.
+  (#1396, #1383, #1381, #1384, #1292, #1355, #1350, #1319, #1292, #1401)
+
+
 Cleanup and other maintenance
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -162,11 +163,11 @@ Test suite
 
 * Prevent test_enum failures if traitsui or GUI toolkit are not installed.
   (#1349)
-* Other minor test fixes (typos in test names, etc.). (#1309)
 * Tests that require ``pkg_resources`` are skipped if ``setuptools`` is not
   installed. (#1301)
 * Fix an order-dependency bug in the ``test_subclasses_weakref`` regression
   test. (#1290)
+* Fix a typo in a test method name. (#1309)
 * Various additional or improved tests for existing code.
   (#1359, #1336, #1330, #1248, #1225, #1208, #1209)
 
