@@ -2827,7 +2827,7 @@ class Dict(TraitType):
         {}
         >>> b['one'] = 1
         >>> a.x
-        [1, 2, 3]
+        {}
 
     Parameters
     ----------
