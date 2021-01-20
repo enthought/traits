@@ -2937,6 +2937,8 @@ class HasTraits(CHasTraits, metaclass=MetaHasTraits):
     def traits(self, **metadata):
         """Returns a dictionary containing the definitions of all of the trait
         attributes of this object that match the set of *metadata* criteria.
+        Note that any traits with a name containing the suffix "_items" are
+        always excluded.
 
         The keys of the returned dictionary are the trait attribute names, and
         the values are their corresponding trait definition objects.

@@ -2424,6 +2424,20 @@ class List(TraitType):
 
         minlen <= len(list) <= maxlen
 
+    Note that this trait type creates copies of values on assignment, rather
+    than assigning the exact instance. For example, consider::
+
+        >>> class A(HasTraits):
+        ...     x = List()
+        ...
+        >>> b = [1, 2, 3]
+        >>> a = A(x=b)
+        >>> a.x
+        [1, 2, 3]
+        >>> b.append(4)
+        >>> a.x
+        [1, 2, 3]
+
     Parameters
     ----------
     trait : a trait or value that can be converted using trait_from()
@@ -2674,10 +2688,24 @@ class PrefixList(TraitType):
 class Set(TraitType):
     """ A trait type for a set of values of the specified type.
 
+    Note that this trait type creates copies of values on assignment, rather
+    than assigning the exact instance. For example, consider::
+
+        >>> class A(HasTraits):
+        ...     x = Set()
+        ...
+        >>> b = set()
+        >>> a = A(x=b)
+        >>> a.x
+        TraitSetObject()
+        >>> b.add(1)
+        >>> a.x
+        TraitSetObject()
+
     Parameters
     ----------
-    trait : a trait or value that can be converted to a trait using Trait()
-        The type of item that the list contains. If not specified, the list
+    trait : a trait or value that can be converted using trait_from()
+        The type of item that the set contains. If not specified, the set
         can contain items of any type.
     value : set
         Default value for the set.
@@ -2689,7 +2717,7 @@ class Set(TraitType):
     Attributes
     ----------
     item_trait : a trait or value that can be converted to a trait
-        The type of item that the list contains. If not specified, the list
+        The type of item that the set contains. If not specified, the set
         can contain items of any type.
     has_items : bool
         Whether there is a corresponding `<name>_items` trait.
@@ -2787,6 +2815,19 @@ class CSet(Set):
 class Dict(TraitType):
     """ A trait type for a dictionary with specified key and value types.
 
+    Note that this trait type creates copies of values on assignment, rather
+    than assigning the exact instance. For example, consider::
+
+        >>> class A(HasTraits):
+        ...     x = Dict()
+        ...
+        >>> b = {}
+        >>> a = A(x=b)
+        >>> a.x
+        {}
+        >>> b['one'] = 1
+        >>> a.x
+        {}
 
     Parameters
     ----------

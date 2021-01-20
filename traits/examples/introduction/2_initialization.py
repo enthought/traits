@@ -134,8 +134,8 @@ have been set::
         self.scan_width, self.scan_height = self.scan_size
 
 
-Excercise
-~~~~~~~~~
+Exercise
+--------
 
 In our original example, the ``scan_size`` atribute had a default value of
 ``(1e-5, 1e-5)``.  Modify the code in the example so that the trait is

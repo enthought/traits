@@ -405,6 +405,58 @@ the table.
 |                  | *allow_none* = False, *adapt* = 'yes', \*\*\ *metadata*])|
 +------------------+----------------------------------------------------------+
 
+.. index:: Instance trait
+
+.. _instance:
+
+Instance
+::::::::
+One of the most fundamental and useful predefined trait types is
+:class:`~.Instance`. Instance trait values are an instance of a particular class
+or its subclasses, as specified by the **klass** argument. **klass** can be
+either an instance of a class or a class itself (note this applies to all python
+classes, not necessarily just :class:`~.HasTraits` subclasses).  However, one should
+typically provide the type or interface they want an instance of, instead of
+providing an instance of a class.
+
+If **klass** is an instance or if it is a class and **args** and **kw** are not
+specified, the default value is ``None``. Otherwise, the default value is
+obtained by calling the callable **factory** argument (or **klass** if
+**factory** is None) with **args** and **kw**. Further, there is the
+**allow_none** argument which dictates whether the trait can take on a value of
+``None``. However, this does not include the default value for the trait. For
+example::
+
+    # instance_trait_defaults.py --- Example of Instance trait default values
+    from traits.api import HasTraits, Instance
+
+    class Parent(HasTraits):
+        pass
+
+    class Child(HasTraits):
+        # default value is None
+        father = Instance(Parent)
+        # default value is still None, but None can not be assigned
+        grandfather = Instance(Parent, allow_none=False)
+        # default value is Parent()
+        mother = Instance(Parent, args=())
+
+In the last case, the default ``Parent`` instance is not immediately
+created, but rather is lazily instantiated when the trait is first accessed.
+The default ``Parent`` will also be instantiated if the trait is assigned to
+and there is a change handler defined on the trait (to detect changes from the
+default value). For more details on change handlers and trait notification see
+:ref:`observe-notification`.
+
+Somewhat surprisingly, ``mother = Instance(Parent, ())`` will also yield a
+default value of ``Parent()``, even though in that case it is **factory** that
+is ``()`` not **args**.  This is a result of implementation details, however
+the recommended way of writing this code is to explicitly pass **args** by
+keyword like so ``mother = Instance(Parent, args=())``. Another common mistake
+is passing in another trait type to Instance. For example,
+``some_trait = Instance(Int)``. This will likely lead to unexpected behavior
+and potential errors. Instead simply do ``some_trait = Int()``.
+
 .. index:: This trait, self trait
 
 .. _this-and-self:

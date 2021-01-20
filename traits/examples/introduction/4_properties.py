@@ -97,7 +97,7 @@ is unlikely to cause problems; but you probably wouldn't want to do this
 with a multi-gigabyte array.
 
 Exercise
-~~~~~~~~
+--------
 
 Make ``pixel_area`` a read-only property.
 
