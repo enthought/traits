@@ -18,8 +18,8 @@ Highlights of this release
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * The Traits examples are now distributed as part of the Traits egg, and
-  are contributed to the ``etsdemo`` application. (The latter is currently
-  distributed as part of TraitsUI.)
+  are contributed to the ``etsdemo`` application. (The latter can be
+  installed from PyPI with ``pip install etsdemo``.)
 * Performance of the ``observe`` framework has been significantly improved.
 * It's no longer necessary to specify a trait comparison mode of
   ``ComparisonMode.identity`` when using ``observe`` to observe items
