@@ -64,7 +64,8 @@ Performance
 Features
 ~~~~~~~~
 
-* The ``Property`` trait type now supports the ``observe`` keyword. (#1175)
+* The ``Property`` trait type now supports the ``observe`` keyword. (#1175,
+  #1400)
 * Add ``|=`` support to TraitDict for Python 3.9 and later. (#1306)
 * Add casting keyword to numeric array types. (#547)
 * The Traits examples are now part of the Traits package, and so are
@@ -95,6 +96,8 @@ Changes
 Documentation
 ~~~~~~~~~~~~~
 
+* Add "Tutorial" section to the main documentation, based on the
+  new ``traits.examples`` tutorial content. (#1374)
 * Clarify that only the ``api`` modules should be used for imports. (#1387)
 * Update copyright header end years. (#1376)
 * Update contents of ``image_LICENSE.txt``. (#1362)
@@ -103,8 +106,11 @@ Documentation
 * Move Traits introduction description to ``index.rst``. (#1358)
 * Fix path to Enthought logo when building docset. (#1285)
 * Fix the ``trait_documenter`` extension to be less fragile. (#1247)
+* Add user manual documentation for the ``Instance`` trait type. (#1395)
+* Document that the ``List``, ``Dict`` and ``Set`` trait types copy on
+  assignment. (#1402)
 * Various other minor improvements, typo fixes, and other documentation fixes.
-  (#1396, #1383, #1381, #1384, #1292, #1355, #1350, #1319, #1292)
+  (#1396, #1383, #1381, #1384, #1292, #1355, #1350, #1319, #1292, #1401)
 
 Deprecations
 ~~~~~~~~~~~~
@@ -133,6 +139,8 @@ Fixes
 * Fix exception raised when assigning a NumPy array to a ``List``
   trait. (#1278)
 * Fix uses of deprecated ``logger.warn`` function. (#1283)
+* Fix a bad ``Instance`` trait declaration for a private trait in
+  the ``_TraitChangeCollector`` class. (#1411)
 
 
 Cleanup and other maintenance
@@ -189,6 +197,8 @@ Build and development workflow changes
 * Speed up CI builds for Travis and Appveyor by caching the ``pip`` directory
   (now redundant). (#1241)
 * Add automated wheel and sdist building for Traits releases. (#1404, #1291)
+* Add cron-job workflow to regularly test install of the latest releases
+  from PyPI. (#1406)
 
 
 Release 6.1.1
