@@ -129,7 +129,7 @@ Fixes
   (#1366)
 * Don't hard-code class names in ``__repr__`` implementations of
   ``TraitListEvent``, ``TraitSetEvent`` and ``TraitDictEvent``. (#1335)
-* Don't notify on empty ``update``s of ``Dict`` traits. (#1308)
+* Don't notify on empty ``update``\ s of ``Dict`` traits. (#1308)
 * Fix exception raised when assigning a NumPy array to a ``List``
   trait. (#1278)
 * Fix uses of deprecated ``logger.warn`` function. (#1283)
