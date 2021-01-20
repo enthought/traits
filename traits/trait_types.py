@@ -47,6 +47,7 @@ from .traits import (
     _TraitMaker,
     _InstanceArgs,
 )
+from .util.deprecated import deprecated
 from .util.import_symbol import import_symbol
 
 # TraitsUI integration imports
@@ -911,7 +912,19 @@ class self(This):
 
 class Function(TraitType):
     """ A trait type whose value must be a function.
+
+    .. deprecated:: 6.2.0
+        This trait type explicitly checks for an instance of
+        ``types.FunctionType``. For the majority of use cases, the more general
+        ``Callable`` trait type should be used instead. If an instance
+        specifically of ``types.FunctionType`` really is needed, one can use
+        ``Instance(types.FunctionType)``.
     """
+
+    @deprecated("Function trait type has been deprecated. Use 'Callable' or "
+                "'Instance(types.FunctionType)' instead")
+    def __init__(self):
+        super().__init__()
 
     #: The C-level fast validator to use:
     fast_validate = (ValidateTrait.coerce, FunctionType)
@@ -922,7 +935,19 @@ class Function(TraitType):
 
 class Method(TraitType):
     """ A trait type whose value must be a method.
+
+    .. deprecated:: 6.2.0
+        This trait type explicitly checks for an instance of
+        ``types.MethodType``. For the majority of use cases, the more general
+        ``Callable`` trait type should be used instead. If an instance
+        specifically of ``types.MethodType`` really is needed, one can use
+        ``Instance(types.MethodType)``.
     """
+
+    @deprecated("Method trait type has been deprecated. Use 'Callable' or "
+                "'Instance(types.MethodType)' instead")
+    def __init__(self):
+        super().__init__()
 
     #: The C-level fast validator to use:
     fast_validate = (ValidateTrait.coerce, MethodType)
@@ -1633,7 +1658,8 @@ class BaseRange(TraitType):
             if high is not None:
                 high = int(high)
         else:
-            self.get, self.set, self.validate = self._get, self._set, None
+            self.get, self.set, self.validate = (
+                self._get, self._set, self._validate)
             self._vtype = None
             self._type_desc = "a number"
 
@@ -1764,14 +1790,19 @@ class BaseRange(TraitType):
     def _set(self, object, name, value):
         """ Sets the current value of a dynamic range trait.
         """
+        value = self._validate(object, name, value)
+        self._set_value(object, name, value)
+
+    def _validate(self, object, name, value):
+        """ Validate a value for a dynamic range trait.
+        """
         if not isinstance(value, str):
             try:
                 low = eval(self._low)
                 high = eval(self._high)
                 if (low is None) and (high is None):
                     if isinstance(value, RangeTypes):
-                        self._set_value(object, name, value)
-                        return
+                        return value
                 else:
                     new_value = self._typed_value(value, low, high)
                     if (
@@ -1783,8 +1814,7 @@ class BaseRange(TraitType):
                         or (self._exclude_high and (high > new_value))
                         or ((not self._exclude_high) and (high >= new_value))
                     ):
-                        self._set_value(object, name, new_value)
-                        return
+                        return new_value
             except:
                 pass
 
@@ -1976,7 +2006,8 @@ class BaseEnum(TraitType):
         if self.name is not None:
             # Dynamic enumeration
             self.values = None
-            self.get, self.set, self.validate = self._get, self._set, None
+            self.get, self.set, self.validate = (
+                self._get, self._set, self._validate)
             if nargs == 0:
                 super().__init__(**metadata)
             elif nargs == 1:
@@ -2074,10 +2105,16 @@ class BaseEnum(TraitType):
         return value
 
     def _set(self, object, name, value):
-        """ Sets the current value of a dynamic range trait.
+        """ Sets the current value of a dynamic enum trait.
+        """
+        value = self._validate(object, name, value)
+        self.set_value(object, name, value)
+
+    def _validate(self, object, name, value):
+        """ Validate a value for a dynamic enum trait.
         """
         if safe_contains(value, xgetattr(object, self.name)):
-            self.set_value(object, name, value)
+            return value
         else:
             self.error(object, name, value)
 

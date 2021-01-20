@@ -67,6 +67,16 @@ property, depending on the specific methods and class constants that you define.
 A trait type uses a validate() method, while a trait property uses get() and
 set() methods.
 
+The :class:`~.TraitType` initializer provides an optional argument
+``default_value`` to support easy setting of the default value of the trait
+type. The default value for that argument is :data:`~.NoDefaultSpecified`: we
+don't follow the common Python idiom of using ``None`` to represent no default
+here, since for many trait types ``None`` may be a valid default value. When
+subclassing :class:`~.TraitType` and overriding or extending its ``__init__``
+method, it's recommended to re-use the singleton :data:`~.NoDefaultSpecified`
+if you need a way to indicate that no default value was specified.
+
+
 .. index: trait type; defining
 
 .. _defining-a-trait-type:
@@ -148,7 +158,7 @@ In order for the property to trigger notifications you must call either:
 * object.trait_property_changed(name, old, value) to not cache the value.
 * self.set_value(object, name, value) to cache the value.
 
-Likewise if the property will not be read only the get method must use 
+Likewise if the property will not be read only the get method must use
 self.get_value(object, name) in order to behave correctly.
 
 The following example demonstrates the use of a property trait to set temperature::

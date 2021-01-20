@@ -27,7 +27,6 @@ from traits.api import (
     Any,
     Event,
     HasStrictTraits,
-    Instance,
     Int,
     List,
     Str,
@@ -156,9 +155,9 @@ class _TraitsChangeCollector(HasStrictTraits):
     # Private list of events.
     events = List(Any)
 
-    # Lock used to allow access to events by multiple threads
+    # Private lock used to allow access to events by multiple threads
     # simultaneously.
-    _lock = Instance(threading.Lock, ())
+    _lock = Any()
 
     def __init__(self, **traits):
         if "trait" in traits:
@@ -169,6 +168,12 @@ class _TraitsChangeCollector(HasStrictTraits):
             warnings.warn(message, DeprecationWarning, stacklevel=2)
             traits["trait_name"] = value
         super().__init__(**traits)
+
+        # We assign the lock eagerly rather than depending on a lazy default,
+        # since we want to be sure that the lock is created (a) only once,
+        # and (b) on the main thread. Similarly for the events list.
+        self._lock = threading.Lock()
+        self.events = []
 
     def start_collecting(self):
         self.obj.on_trait_change(self._event_handler, self.trait_name)

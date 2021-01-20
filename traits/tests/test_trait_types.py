@@ -19,8 +19,15 @@ import shutil
 import subprocess
 import unittest
 
-from traits.trait_type import TraitType
-from traits.trait_types import Float
+from traits.api import (
+    DefaultValue,
+    Float,
+    Function,
+    NoDefaultSpecified,
+    Method,
+    TraitType,
+    Undefined
+)
 from traits.testing.optional_dependencies import requires_numpy
 
 
@@ -61,3 +68,45 @@ class TraitTypesTest(unittest.TestCase):
             shutil.rmtree(tmpdir)
 
         self.assertEqual(output.strip(), "Success")
+
+    def test_default_value_in_init(self):
+        # Tests for the behaviour of the default_value argument
+        # to TraitType.__init__.
+        trait_type = TraitType(default_value=23)
+        self.assertEqual(
+            trait_type.get_default_value(),
+            (DefaultValue.constant, 23),
+        )
+
+        # An explicit default value of None should work as expected.
+        trait_type = TraitType(default_value=None)
+        self.assertEqual(
+            trait_type.get_default_value(),
+            (DefaultValue.constant, None),
+        )
+
+        # If no default is given, get_default_value() returns a value
+        # of Undefined.
+        trait_type = TraitType()
+        self.assertEqual(
+            trait_type.get_default_value(),
+            (DefaultValue.constant, Undefined),
+        )
+
+        # Similarly, if NoDefaultSpecified is given, get_default_value()
+        # is Undefined.
+        trait_type = TraitType(default_value=NoDefaultSpecified)
+        self.assertEqual(
+            trait_type.get_default_value(),
+            (DefaultValue.constant, Undefined),
+        )
+
+
+class TestDeprecatedTraitTypes(unittest.TestCase):
+    def test_function_deprecated(self):
+        with self.assertWarnsRegex(DeprecationWarning, "Function trait type"):
+            Function()
+
+    def test_method_deprecated(self):
+        with self.assertWarnsRegex(DeprecationWarning, "Method trait type"):
+            Method()

@@ -378,7 +378,7 @@ _HasTraits = None
 class MetaHasTraits(type):
     """ Controls the creation of HasTraits classes.
 
-    The heavy work is done by the `create_traits_meta_dict` function, which
+    The heavy work is done by the `update_traits_class_dict` function, which
     takes the ``class_dict`` dictionary of class members and extracts and
     processes the trait declarations in it. The trait declarations are then
     added back to the class dictionary and passed off to the __new__ method
