@@ -1,6 +1,207 @@
 Traits CHANGELOG
 ================
 
+Release 6.2.0
+-------------
+
+Released: 2021-01-21
+
+The Traits library is a foundational component of the Enthought Tool Suite. It
+provides observable, typed attributes for Python classes, making those classes
+suitable for event-driven dataflow programming and for immediate use as models
+for graphical user interfaces, like those provided by the TraitsUI library.
+
+Traits 6.2 is the latest feature release in the Traits 6 series, with several
+improvements and fixes over Traits 6.1.
+
+Highlights of this release
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* The Traits examples are now distributed as part of the Traits egg, and
+  are contributed to the ``etsdemo`` application. (The latter can be
+  installed from PyPI with ``pip install etsdemo``.)
+* Performance of the ``observe`` framework has been significantly improved.
+* It's no longer necessary to specify a trait comparison mode of
+  ``ComparisonMode.identity`` when using ``observe`` to observe items
+  in a ``List``, ``Dict`` or ``Set``.
+* Support for Python 3.5 has been dropped.
+* When importing from Traits, you should always import from one of the ``api``
+  modules (for example, ``traits.api``, ``traits.adaptation.api``, etc.) This
+  recommendation has now been made explicit in the documentation. If you find
+  something you need that's not available from one of the ``api`` modules,
+  please let the Traits developers know.
+
+
+Detailed PR-by-PR changes
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+More than 60 PRs went into this release. The following people contributed to
+this release:
+
+* Aaron Ayres
+* Alexandre Chabot-Leclerc
+* Kit Choi
+* Mark Dickinson
+* Kevin Duff
+* Glen Granzow
+* Matt Hancock
+* Rahul Poruri
+* Eric Prestat
+* Kuya Takami
+* Hugo van Kemenade
+* Aditya Vats
+* Corran Webster
+
+
+Features
+~~~~~~~~
+
+* The ``Property`` trait type now supports the ``observe`` keyword. (#1175,
+  #1400)
+* Add ``|=`` support to TraitDict for Python 3.9 and later. (#1306)
+* Add casting keyword to numeric array types. (#547)
+* The Traits examples are now part of the Traits package, and so are
+  contributed to ``etsdemo``. (#1275)
+* The Traits examples package now includes a beginner's tutorial. (#1061)
+
+
+Performance
+~~~~~~~~~~~
+
+* Parsing of the ``observe`` string was previously a performance bottleneck.
+  This has been fixed, by removing some redundant parsing calls and by caching
+  parsing results. (#1343, #1344, #1345)
+
+
+Changes
+~~~~~~~
+
+* The ``NoDefaultSpecified`` constant (used as a default value for
+  the ``TraitType`` ``default_value`` argument) is now public, made
+  available from ``traits.api``. (#1384, #1380, #1378)
+* The deprecation of the ``TraitMap`` trait type has been reversed, because
+  there are existing uses of ``TraitMap`` that are hard to replace.
+  Nevertheless, it is still not recommended to use ``TraitMap`` in new code.
+  Use ``Map`` instead. (#1365)
+* An attempt to use ``PrefixList`` with an empty list, or ``PrefixMap`` or
+  ``Map`` with an empty dictionary, now raises ``ValueError``. As a result,
+  the default default value (which used to be ``None``) is always valid.
+  (#1351)
+* ``TraitListEvent`` arguments are now keyword only. (#1346)
+* It's no longer necessary to specify a trait comparison mode of
+  ``ComparisonMode.identity`` when using ``observe`` to observe items
+  in a ``List``, ``Dict`` or ``Set``. (#1165, #1328, #1240)
+
+
+Deprecations
+~~~~~~~~~~~~
+
+* The ``Function`` and ``Method`` trait types are deprecated. Use
+  ``Callable`` or ``Instance`` instead. (#1399, #1397)
+* The ``edit`` parameter to ``configure_traits`` has been deprecated. (#1311)
+* The ``UnittestTools._catch_warnings`` function has been deprecated. (#1310)
+* The use of the ``CHECK_INTERFACES`` global variable for automated
+  interface checking has been deprecated. (#1231)
+
+
+Fixes
+~~~~~
+
+* Non-``TraitError`` exceptions raised during ``Tuple`` validation are now
+  propagated. Previously they were converted into ``TraitError``. (#1393)
+* Dynamic ``Range`` and ``Enum`` traits are now properly validated
+  when inside a container (for example ``Tuple`` or ``List``). Previously
+  no validation was performed. (#1388, #1392)
+* Remove the unused module-level constant ``traits.has_traits.EmptyList``.
+  (#1366)
+* Don't hard-code class names in ``__repr__`` implementations of
+  ``TraitListEvent``, ``TraitSetEvent`` and ``TraitDictEvent``. (#1335)
+* Don't notify on empty ``update``\ s of ``Dict`` traits. (#1308)
+* Fix exception raised when assigning a NumPy array to a ``List``
+  trait. (#1278)
+* Fix uses of deprecated ``logger.warn`` function. (#1283)
+* Fix a bad ``Instance`` trait declaration for a private trait in
+  the ``_TraitChangeCollector`` class. (#1411)
+
+
+Documentation
+~~~~~~~~~~~~~
+
+* Add "Tutorial" section to the main documentation, based on the
+  new ``traits.examples`` tutorial content. (#1374)
+* Clarify that only the ``api`` modules should be used for imports. (#1387)
+* Update copyright header end years. (#1376)
+* Update contents of ``image_LICENSE.txt``. (#1362)
+* Remove mentions of the removed functions ``adapts`` and ``implements`` from
+  the examples and tutorial. (#1367)
+* Move Traits introduction description to ``index.rst``. (#1358)
+* Fix path to Enthought logo when building docset. (#1285)
+* Fix the ``trait_documenter`` extension to be less fragile. (#1247)
+* Add user manual documentation for the ``Instance`` trait type. (#1395)
+* Document that the ``List``, ``Dict`` and ``Set`` trait types copy on
+  assignment. (#1402)
+* Various other minor improvements, typo fixes, and other documentation fixes.
+  (#1396, #1383, #1381, #1384, #1292, #1355, #1350, #1319, #1292, #1401)
+
+
+Cleanup and other maintenance
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Remove dead code. (#1281)
+* Update ``super`` usage to the usual Python 3 argument-less pattern. (#1280)
+* Remove per-import ``# noqa`` comments in ``api`` modules in favour of
+  per-file ignores in the ``flake8`` configuration. (#1269)
+* Remove out-of-date and non-functional coverage badge from README. (#1263)
+* Rename ``_i_observable`` module to ``i_observable``. (#1296)
+* Refactor and simplify method checks. (#1176)
+* Fix typo in optional_dependencies comment. (#1235)
+* Use ComparisonMode constants instead of magic numbers. (#1229)
+
+
+Test suite
+~~~~~~~~~~
+
+* Prevent test_enum failures if traitsui or GUI toolkit are not installed.
+  (#1349)
+* Tests that require ``pkg_resources`` are skipped if ``setuptools`` is not
+  installed. (#1301)
+* Fix an order-dependency bug in the ``test_subclasses_weakref`` regression
+  test. (#1290)
+* Fix a typo in a test method name. (#1309)
+* Various additional or improved tests for existing code.
+  (#1359, #1336, #1330, #1248, #1225, #1208, #1209)
+
+
+Build and development workflow changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Traits now uses GitHub Actions for continuous integration. The Travis CI
+  and Appveyor configurations have been removed. (#1296, #1360)
+* CI runs are no longer based on EDM. (#878)
+* New CI run for the core test suite, without any optional dependencies.
+  (#1314)
+* Test Python 3.9 in the continuous integration (and drop tests for Python
+  3.5 and older). (#1326, #1313, , #1303)
+* Make ``traits.examples`` into a package. (#1348)
+* Make examples directories ``flake8``-clean. (#1353)
+* Fix examples packaging nit. (#1363)
+* Support ``-h`` for getting help in ``etstool.py``. (#1347)
+* Add ``shell`` command to ``etstool.py``. (#1293)
+* Use the ``flake8_ets`` package in place of the local ``copyright_header``
+  package.
+  The ``copyright_header`` package has been removed. (#1341)
+* Add script ``check_observe_timing.py`` to benchmark performance of
+  ``observe`` to compare with ``on_trait_change``. (#1331)
+* Correct the minimum Sphinx version in README. (#1216, #1320)
+* Restrict Sphinx version to avoid buggy versions. (#1276)
+* Make ``mypy`` an optional dependency. (#1289)
+* Speed up CI builds for Travis and Appveyor by caching the ``pip`` directory
+  (now redundant). (#1241)
+* Add automated wheel and sdist building for Traits releases. (#1404, #1291)
+* Add cron-job workflow to regularly test install of the latest releases
+  from PyPI. (#1406)
+
+
 Release 6.1.1
 -------------
 
