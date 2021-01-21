@@ -1,6 +1,12 @@
 Traits CHANGELOG
 ================
 
+Unreleased changes
+------------------
+
+Add new workflow to verify that a changelog entry is present. (#1412)
+
+
 Release 6.1.1
 -------------
 
