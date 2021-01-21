@@ -91,7 +91,7 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
     - name: Install Traits and test dependencies from PyPI wheel
       run: |
-        python -m pip install --only-binary :all: traits[test]
+        python -m pip install --only-binary traits traits[test]
     - name: Create clean test directory
       run: |
         mkdir testdir
