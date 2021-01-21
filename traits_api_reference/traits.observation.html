@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.observation Package &mdash; Traits 6.1 User Manual</title>
+    <title>traits.observation Package &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.testing Package" href="traits.testing.html" >
     <link rel="prev" title="traits.etsconfig Package" href="traits.etsconfig.html" > 
@@ -50,7 +50,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -93,12 +93,12 @@
 <dl class="class">
 <dt id="traits.observation.exception_handling.ObserverExceptionHandler">
 <em class="property">class </em><code class="sig-prename descclassname">traits.observation.exception_handling.</code><code class="sig-name descname">ObserverExceptionHandler</code><span class="sig-paren">(</span><em class="sig-param">handler</em>, <em class="sig-param">reraise_exceptions</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/observation/exception_handling.html#ObserverExceptionHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.observation.exception_handling.ObserverExceptionHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>State for an exception handler.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>handler</strong> (<em>callable</em><em>(</em><em>event</em><em>) or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – A callable to handle an event, in the context of
+<li><p><strong>handler</strong> (<em>callable</em><em>(</em><em>event</em><em>) or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – A callable to handle an event, in the context of
 an exception. If None, the exceptions will be logged.</p></li>
 <li><p><strong>reraise_exceptions</strong> (<em>boolean</em>) – Whether to reraise the exception.</p></li>
 </ul>
@@ -109,7 +109,7 @@ an exception. If None, the exceptions will be logged.</p></li>
 <dl class="class">
 <dt id="traits.observation.exception_handling.ObserverExceptionHandlerStack">
 <em class="property">class </em><code class="sig-prename descclassname">traits.observation.exception_handling.</code><code class="sig-name descname">ObserverExceptionHandlerStack</code><a class="reference internal" href="../_modules/traits/observation/exception_handling.html#ObserverExceptionHandlerStack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.observation.exception_handling.ObserverExceptionHandlerStack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A stack of exception handlers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -124,7 +124,7 @@ current exception handler.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>handler</strong> (<em>callable</em><em>(</em><em>event</em><em>) or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – A callable to handle an event, in the context of
+<li><p><strong>handler</strong> (<em>callable</em><em>(</em><em>event</em><em>) or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – A callable to handle an event, in the context of
 an exception. If None, the exceptions will be logged.</p></li>
 <li><p><strong>reraise_exceptions</strong> (<em>boolean</em>) – Whether to reraise the exception.</p></li>
 </ul>
@@ -138,7 +138,7 @@ an exception. If None, the exceptions will be logged.</p></li>
 <dd><p>Pop the current exception handler from the stack.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#IndexError" title="(in Python v3.8)"><strong>IndexError</strong></a> – If there are no handlers to pop.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#IndexError" title="(in Python v3.9)"><strong>IndexError</strong></a> – If there are no handlers to pop.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -149,7 +149,7 @@ an exception. If None, the exceptions will be logged.</p></li>
 <dd><p>Handles a traits notification exception using the handler last pushed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – An event object emitted by the notification.</p>
+<dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a>) – An event object emitted by the notification.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -164,7 +164,7 @@ current exception handler.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>handler</strong> (<em>callable</em><em>(</em><em>event</em><em>) or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a>) – A callable to handle an event, in the context of
+<li><p><strong>handler</strong> (<em>callable</em><em>(</em><em>event</em><em>) or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – A callable to handle an event, in the context of
 an exception. If None, the exceptions will be logged.</p></li>
 <li><p><strong>reraise_exceptions</strong> (<em>boolean</em>) – Whether to reraise the exception.</p></li>
 </ul>
@@ -178,7 +178,7 @@ an exception. If None, the exceptions will be logged.</p></li>
 <dd><p>Pop the current exception handler from the stack.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#IndexError" title="(in Python v3.8)"><strong>IndexError</strong></a> – If there are no handlers to pop.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#IndexError" title="(in Python v3.9)"><strong>IndexError</strong></a> – If there are no handlers to pop.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -189,7 +189,7 @@ an exception. If None, the exceptions will be logged.</p></li>
 <dd><p>Handles a traits notification exception using the handler last pushed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – An event object emitted by the notification.</p>
+<dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a>) – An event object emitted by the notification.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -203,7 +203,7 @@ an exception. If None, the exceptions will be logged.</p></li>
 <dl class="class">
 <dt id="traits.observation.expression.ObserverExpression">
 <em class="property">class </em><code class="sig-prename descclassname">traits.observation.expression.</code><code class="sig-name descname">ObserverExpression</code><a class="reference internal" href="../_modules/traits/observation/expression.html#ObserverExpression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.observation.expression.ObserverExpression" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>ObserverExpression is an object for describing what traits are being
 observed for change notifications. It can be passed directly to
 <code class="docutils literal notranslate"><span class="pre">HasTraits.observe</span></code> method or the <code class="docutils literal notranslate"><span class="pre">observe</span></code> decorator.</p>
@@ -219,7 +219,7 @@ equivalent content.</p>
 <dd class="field-odd"><p></p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -274,12 +274,12 @@ given filter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filter</strong> (<em>callable</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><em>CTrait</em></a><em>) </em><em>-&gt; bool</em>) – A callable that receives the name of a trait and the corresponding
+<li><p><strong>filter</strong> (<em>callable</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><em>CTrait</em></a><em>) </em><em>-&gt; bool</em>) – A callable that receives the name of a trait and the corresponding
 trait definition. The returned bool indicates whether the trait
 is observed. In order to remove an existing observer with the
 equivalent filter, the filter callables must compare equally. The
 callable must also be hashable.</p></li>
-<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -303,8 +303,8 @@ non-None value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>metadata_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the metadata to filter traits with.</p></li>
-<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
+<li><p><strong>metadata_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the metadata to filter traits with.</p></li>
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -332,8 +332,8 @@ on any object that is one of the values in the dict named “mapping”:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
-<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to ignore this if the upstream object is not a dict.
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
+<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to ignore this if the upstream object is not a dict.
 Default is false and an error will be raised if the object is not
 a dict.</p></li>
 </ul>
@@ -360,8 +360,8 @@ the trait <code class="docutils literal notranslate"><span class="pre">value</sp
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
-<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to ignore this if the upstream object is not a list.
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
+<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to ignore this if the upstream object is not a list.
 Default is false and an error will be raised if the object is not
 a list.</p></li>
 </ul>
@@ -384,8 +384,8 @@ a list.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
-<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to ignore this if the upstream object is not a set.
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
+<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to ignore this if the upstream object is not a set.
 Default is false and an error will be raised if the object is not
 a set.</p></li>
 </ul>
@@ -409,9 +409,9 @@ name given.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the trait to match.</p></li>
-<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
-<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If true, skip this observer if the requested trait is not found.
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the trait to match.</p></li>
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
+<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – If true, skip this observer if the requested trait is not found.
 Default is false, and an error will be raised if the requested
 trait is not found.</p></li>
 </ul>
@@ -498,8 +498,8 @@ that is one of the values in the dict named “mapping”:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
-<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to ignore this if the upstream object is not a dict.
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
+<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to ignore this if the upstream object is not a dict.
 Default is false and an error will be raised if the object is not
 a dict.</p></li>
 </ul>
@@ -526,8 +526,8 @@ the trait <code class="docutils literal notranslate"><span class="pre">value</sp
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
-<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to ignore this if the upstream object is not a list.
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
+<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to ignore this if the upstream object is not a list.
 Default is false and an error will be raised if the object is not
 a list.</p></li>
 </ul>
@@ -551,12 +551,12 @@ given filter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filter</strong> (<em>callable</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><em>CTrait</em></a><em>) </em><em>-&gt; bool</em>) – A callable that receives the name of a trait and the corresponding
+<li><p><strong>filter</strong> (<em>callable</em><em>(</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference internal" href="ctrait.html#traits.ctrait.CTrait" title="traits.ctrait.CTrait"><em>CTrait</em></a><em>) </em><em>-&gt; bool</em>) – A callable that receives the name of a trait and the corresponding
 trait definition. The returned bool indicates whether the trait is
 observed. In order to remove an existing observer with the equivalent
 filter, the filter callables must compare equally. The callable must
 also be hashable.</p></li>
-<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes.</p></li>
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -580,8 +580,8 @@ non-None value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>metadata_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the metadata to filter traits with.</p></li>
-<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
+<li><p><strong>metadata_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the metadata to filter traits with.</p></li>
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -602,8 +602,8 @@ non-None value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
-<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to ignore this if the upstream object is not a set.
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
+<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to ignore this if the upstream object is not a set.
 Default is false and an error will be raised if the object is not
 a set.</p></li>
 </ul>
@@ -627,9 +627,9 @@ name given.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the trait to match.</p></li>
-<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
-<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – If true, skip this observer if the requested trait is not found.
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the trait to match.</p></li>
+<li><p><strong>notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to notify for changes. Default is to notify.</p></li>
+<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em>, </em><em>optional</em>) – If true, skip this observer if the requested trait is not found.
 Default is false, and an error will be raised if the requested
 trait is not found.</p></li>
 </ul>
@@ -674,7 +674,7 @@ If keys are found in <code class="docutils literal notranslate"><span class="pre
 and the values are old.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -687,7 +687,7 @@ If keys are found in <code class="docutils literal notranslate"><span class="pre
 and the values are new.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -716,7 +716,7 @@ and the values are new.</p>
 <dd><p>The index used for the mutation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#slice" title="(in Python v3.8)">slice</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#slice" title="(in Python v3.9)">slice</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -727,7 +727,7 @@ and the values are new.</p>
 <dd><p>Values added to the list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -738,7 +738,7 @@ and the values are new.</p>
 <dd><p>Values removed from the list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -767,7 +767,7 @@ and the values are new.</p>
 <dd><p>Values removed from the set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.8)">set</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)">set</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -778,7 +778,7 @@ and the values are new.</p>
 <dd><p>Values added to the set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.8)">set</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)">set</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -807,7 +807,7 @@ and the values are new.</p>
 <dd><p>Name of the trait.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -839,13 +839,13 @@ and the values are new.</p>
 </div>
 <div class="section" id="module-traits.observation.parsing">
 <span id="traits-observation-parsing-module"></span><h2><a class="reference internal" href="#module-traits.observation.parsing" title="traits.observation.parsing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.observation.parsing</span></code></a> Module<a class="headerlink" href="#module-traits.observation.parsing" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="attribute">
 <dt id="traits.observation.parsing.parse">
-<code class="sig-prename descclassname">traits.observation.parsing.</code><code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/observation/parsing.html#parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.observation.parsing.parse" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">traits.observation.parsing.</code><code class="sig-name descname">parse</code><a class="reference internal" href="../_modules/traits/observation/parsing.html#parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.observation.parsing.parse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Top-level function for parsing user’s text to an ObserverExpression.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Text to be parsed.</p>
+<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Text to be parsed.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>expression</strong></p>
@@ -917,12 +917,12 @@ and the values are new.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

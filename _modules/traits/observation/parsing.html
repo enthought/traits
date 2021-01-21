@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.observation.parsing &mdash; Traits 6.1 User Manual</title>
+    <title>traits.observation.parsing &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../../../index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.2 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -77,7 +77,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <h1>Source code for traits.observation.parsing</h1><div class="highlight"><pre>
-<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span></span><span class="c1"># (C) Copyright 2005-2021 Enthought, Inc., Austin, TX</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># This software is provided without warranty under the terms of the BSD</span>
@@ -88,13 +88,16 @@
 <span class="c1"># Thanks for using Enthought open source!</span>
 
 <span class="kn">import</span> <span class="nn">contextlib</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">lru_cache</span><span class="p">,</span> <span class="n">reduce</span>
 <span class="kn">import</span> <span class="nn">operator</span>
 
 <span class="kn">from</span> <span class="nn">traits.observation</span> <span class="k">import</span> <span class="n">_generated_parser</span>
 <span class="kn">import</span> <span class="nn">traits.observation.expression</span> <span class="k">as</span> <span class="nn">expression_module</span>
 
 <span class="n">_LARK_PARSER</span> <span class="o">=</span> <span class="n">_generated_parser</span><span class="o">.</span><span class="n">Lark_StandAlone</span><span class="p">()</span>
+
+<span class="c1">#: Maximum number of parsed observer expressions stored in the LRU cache</span>
+<span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span> <span class="o">=</span> <span class="mi">128</span>
 
 
 <span class="k">def</span> <span class="nf">_handle_series</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="n">default_notifies</span><span class="p">):</span>
@@ -333,7 +336,8 @@
         <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">,</span> <span class="n">default_notifies</span><span class="o">=</span><span class="n">default_notifies</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="parse"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.parsing.parse">[docs]</a><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<div class="viewcode-block" id="parse"><a class="viewcode-back" href="../../../traits_api_reference/traits.observation.html#traits.observation.parsing.parse">[docs]</a><span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="n">_OBSERVER_EXPRESSION_CACHE_MAXSIZE</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Top-level function for parsing user&#39;s text to an ObserverExpression.</span>
 
 <span class="sd">    Parameters</span>
@@ -383,12 +387,12 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

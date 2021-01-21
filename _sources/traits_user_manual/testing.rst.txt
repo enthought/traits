@@ -122,7 +122,7 @@ the methods and attributes of a |HasStrictTraits| instance. To circumvent the
     my_class.__dict__['add_to_number'] = Mock()
 
     # We can now use the mock in our tests.
-    my_class.add_number(42)
+    my_class.add_to_number(42)
     print(my_class.add_to_number.call_args_list)
 
 .. note::

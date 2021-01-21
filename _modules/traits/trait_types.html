@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.trait_types &mdash; Traits 6.1 User Manual</title>
+    <title>traits.trait_types &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.2 Documentation</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -77,7 +77,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <h1>Source code for traits.trait_types</h1><div class="highlight"><pre>
-<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span></span><span class="c1"># (C) Copyright 2005-2021 Enthought, Inc., Austin, TX</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># This software is provided without warranty under the terms of the BSD</span>
@@ -94,13 +94,10 @@
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">from</span> <span class="nn">importlib</span> <span class="k">import</span> <span class="n">import_module</span>
 <span class="kn">import</span> <span class="nn">operator</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">fspath</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">isdir</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">fspath</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">fspath</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">isdir</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">,</span> <span class="n">ModuleType</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 
@@ -129,6 +126,7 @@
     <span class="n">_TraitMaker</span><span class="p">,</span>
     <span class="n">_InstanceArgs</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.util.deprecated</span> <span class="k">import</span> <span class="n">deprecated</span>
 <span class="kn">from</span> <span class="nn">.util.import_symbol</span> <span class="k">import</span> <span class="n">import_symbol</span>
 
 <span class="c1"># TraitsUI integration imports</span>
@@ -440,7 +438,7 @@
 
 
 <div class="viewcode-block" id="Str"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Str">[docs]</a><span class="k">class</span> <span class="nc">Str</span><span class="p">(</span><span class="n">BaseStr</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; A fast-validating trait type whose value must be a complex number.</span>
+    <span class="sd">&quot;&quot;&quot; A fast-validating trait type whose value must be a string.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1">#: The C-level fast validator to use:</span>
@@ -727,7 +725,7 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">minlen</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxlen</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span>
     <span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">minlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">minlen</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minlen</span><span class="p">,</span> <span class="n">maxlen</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regex</span> <span class="o">=</span> <span class="n">regex</span>
@@ -858,7 +856,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="s2">&quot;.*&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Regex</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="n">regex</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="n">regex</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Code"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Code">[docs]</a><span class="k">class</span> <span class="nc">Code</span><span class="p">(</span><span class="n">String</span><span class="p">):</span>
@@ -954,7 +952,7 @@
     <span class="n">info_text</span> <span class="o">=</span> <span class="s2">&quot;an instance of the same type as the receiver&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">This</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">allow_none</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fast_validate</span> <span class="o">=</span> <span class="p">(</span><span class="n">ValidateTrait</span><span class="o">.</span><span class="n">self_type</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -993,7 +991,19 @@
 
 <div class="viewcode-block" id="Function"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Function">[docs]</a><span class="k">class</span> <span class="nc">Function</span><span class="p">(</span><span class="n">TraitType</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A trait type whose value must be a function.</span>
+
+<span class="sd">    .. deprecated:: 6.2.0</span>
+<span class="sd">        This trait type explicitly checks for an instance of</span>
+<span class="sd">        ``types.FunctionType``. For the majority of use cases, the more general</span>
+<span class="sd">        ``Callable`` trait type should be used instead. If an instance</span>
+<span class="sd">        specifically of ``types.FunctionType`` really is needed, one can use</span>
+<span class="sd">        ``Instance(types.FunctionType)``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;Function trait type has been deprecated. Use &#39;Callable&#39; or &quot;</span>
+                <span class="s2">&quot;&#39;Instance(types.FunctionType)&#39; instead&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
     <span class="c1">#: The C-level fast validator to use:</span>
     <span class="n">fast_validate</span> <span class="o">=</span> <span class="p">(</span><span class="n">ValidateTrait</span><span class="o">.</span><span class="n">coerce</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">)</span>
@@ -1004,7 +1014,19 @@
 
 <div class="viewcode-block" id="Method"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Method">[docs]</a><span class="k">class</span> <span class="nc">Method</span><span class="p">(</span><span class="n">TraitType</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A trait type whose value must be a method.</span>
+
+<span class="sd">    .. deprecated:: 6.2.0</span>
+<span class="sd">        This trait type explicitly checks for an instance of</span>
+<span class="sd">        ``types.MethodType``. For the majority of use cases, the more general</span>
+<span class="sd">        ``Callable`` trait type should be used instead. If an instance</span>
+<span class="sd">        specifically of ``types.MethodType`` really is needed, one can use</span>
+<span class="sd">        ``Instance(types.MethodType)``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;Method trait type has been deprecated. Use &#39;Callable&#39; or &quot;</span>
+                <span class="s2">&quot;&#39;Instance(types.MethodType)&#39; instead&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
     <span class="c1">#: The C-level fast validator to use:</span>
     <span class="n">fast_validate</span> <span class="o">=</span> <span class="p">(</span><span class="n">ValidateTrait</span><span class="o">.</span><span class="n">coerce</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">)</span>
@@ -1190,7 +1212,7 @@
         <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;_prefix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefix</span>
         <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;_listenable&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">listenable</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">Delegate</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">delegate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
@@ -1200,7 +1222,7 @@
 <div class="viewcode-block" id="Delegate.as_ctrait"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Delegate.as_ctrait">[docs]</a>    <span class="k">def</span> <span class="nf">as_ctrait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns a CTrait corresponding to the trait defined by this class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">trait</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Delegate</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">()</span>
+        <span class="n">trait</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">()</span>
         <span class="n">trait</span><span class="o">.</span><span class="n">delegate</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">delegate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">modify</span>
         <span class="p">)</span>
@@ -1254,7 +1276,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delegate</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">listenable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">DelegatesTo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">delegate</span><span class="p">,</span>
             <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span>
             <span class="n">modify</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -1311,7 +1333,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prototype</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">listenable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">PrototypedFrom</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">prototype</span><span class="p">,</span>
             <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span>
             <span class="n">modify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -1359,7 +1381,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Tell the C code that &#39;setattr&#39; should store the original, unadapted</span>
         <span class="c1"># value passed to it:</span>
-        <span class="n">ctrait</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Expression</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">()</span>
+        <span class="n">ctrait</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">()</span>
         <span class="n">ctrait</span><span class="o">.</span><span class="n">setattr_original_value</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">ctrait</span></div></div>
 
@@ -1377,8 +1399,8 @@
 <div class="viewcode-block" id="BaseFile"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseFile">[docs]</a><span class="k">class</span> <span class="nc">BaseFile</span><span class="p">(</span><span class="n">BaseStr</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A trait type whose value must be a file path string.</span>
 
-<span class="sd">    For Python 3.6 and later this will accept os.pathlib Path objects,</span>
-<span class="sd">    converting them to the corresponding string value.</span>
+<span class="sd">    This will accept both strings and os.pathlib Path objects,</span>
+<span class="sd">    converting the latter to the corresponding string value.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1430,24 +1452,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="o">=</span> <span class="n">entries</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exists</span> <span class="o">=</span> <span class="n">exists</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">BaseFile</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BaseFile.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseFile.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that a specified value is valid for this trait.</span>
 
 <span class="sd">            Note: The &#39;fast validator&#39; version performs this check in C.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">fspath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Python 3.5 does not implement __fspath__</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="c1"># If value is of type os.PathLike, get the path representation</span>
-                <span class="c1"># The path representation could be either a str or bytes type</span>
-                <span class="c1"># If fspath returns bytes, further validation will fail.</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-                <span class="k">pass</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># If value is of type os.PathLike, get the path representation</span>
+            <span class="c1"># The path representation could be either a str or bytes type</span>
+            <span class="c1"># If fspath returns bytes, further validation will fail.</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">pass</span>
 
-        <span class="n">validated_value</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">BaseFile</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">validated_value</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">exists</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">validated_value</span>
         <span class="k">elif</span> <span class="n">isfile</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
@@ -1470,8 +1490,8 @@
 <div class="viewcode-block" id="File"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.File">[docs]</a><span class="k">class</span> <span class="nc">File</span><span class="p">(</span><span class="n">BaseFile</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A fast-validating trait type whose value must be a file path string.</span>
 
-<span class="sd">    For Python 3.6 and later this will accept os.pathlib Path objects,</span>
-<span class="sd">    converting them to the corresponding string value.</span>
+<span class="sd">    This will accept both strings and os.pathlib Path objects,</span>
+<span class="sd">    converting the latter to the corresponding string value.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1515,7 +1535,7 @@
         <span class="n">exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">metadata</span>
     <span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">File</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">value</span><span class="p">,</span> <span class="nb">filter</span><span class="p">,</span> <span class="n">auto_set</span><span class="p">,</span> <span class="n">entries</span><span class="p">,</span> <span class="n">exists</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span>
         <span class="p">)</span></div>
 
@@ -1523,9 +1543,8 @@
 <div class="viewcode-block" id="BaseDirectory"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseDirectory">[docs]</a><span class="k">class</span> <span class="nc">BaseDirectory</span><span class="p">(</span><span class="n">BaseStr</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A trait type whose value must be a directory path string.</span>
 
-<span class="sd">    For Python 3.6 and greater, it also accepts objects implementing</span>
-<span class="sd">    the :class:`os.PathLike` interface, converting them to the corresponding</span>
-<span class="sd">    string.</span>
+<span class="sd">    This also accepts objects implementing the :class:`os.PathLike` interface,</span>
+<span class="sd">    converting them to the corresponding string.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1565,21 +1584,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">auto_set</span> <span class="o">=</span> <span class="n">auto_set</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exists</span> <span class="o">=</span> <span class="n">exists</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BaseDirectory.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseDirectory.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that a specified value is valid for this trait.</span>
 
 <span class="sd">        Note: The &#39;fast validator&#39; version performs this check in C.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">fspath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Python 3.5 does not implement __fspath__</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-                <span class="k">pass</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">fspath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">pass</span>
 
-        <span class="n">validated_value</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span>
+        <span class="n">validated_value</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span>
             <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">exists</span><span class="p">:</span>
@@ -1599,9 +1616,8 @@
 <div class="viewcode-block" id="Directory"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Directory">[docs]</a><span class="k">class</span> <span class="nc">Directory</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A fast-validating trait type whose value is a directory path string.</span>
 
-<span class="sd">    For Python 3.6 and greater, it also accepts objects implementing</span>
-<span class="sd">    the :class:`os.PathLike` interface, converting them to the corresponding</span>
-<span class="sd">    string.</span>
+<span class="sd">    This also accepts objects implementing the :class:`os.PathLike` interface,</span>
+<span class="sd">    converting them to the corresponding string.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1634,7 +1650,7 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">auto_set</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">entries</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span>
     <span class="p">):</span>
         <span class="c1"># Fast validation is disabled (Github issue #877).</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Directory</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">value</span><span class="p">,</span> <span class="n">auto_set</span><span class="p">,</span> <span class="n">entries</span><span class="p">,</span> <span class="n">exists</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span>
         <span class="p">)</span></div>
 
@@ -1682,7 +1698,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">high</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">BaseRange</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
         <span class="n">vtype</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">high</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">low</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
@@ -1721,7 +1737,8 @@
             <span class="k">if</span> <span class="n">high</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">high</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">high</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_vtype</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_type_desc</span> <span class="o">=</span> <span class="s2">&quot;a number&quot;</span>
 
@@ -1852,14 +1869,19 @@
     <span class="k">def</span> <span class="nf">_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Sets the current value of a dynamic range trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_value</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Validate a value for a dynamic range trait.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">low</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_low</span><span class="p">)</span>
                 <span class="n">high</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_high</span><span class="p">)</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">low</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">high</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">RangeTypes</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_set_value</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-                        <span class="k">return</span>
+                        <span class="k">return</span> <span class="n">value</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">new_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_typed_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>
                     <span class="k">if</span> <span class="p">(</span>
@@ -1871,8 +1893,7 @@
                         <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_exclude_high</span> <span class="ow">and</span> <span class="p">(</span><span class="n">high</span> <span class="o">&gt;</span> <span class="n">new_value</span><span class="p">))</span>
                         <span class="ow">or</span> <span class="p">((</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exclude_high</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">high</span> <span class="o">&gt;=</span> <span class="n">new_value</span><span class="p">))</span>
                     <span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_set_value</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
-                        <span class="k">return</span>
+                        <span class="k">return</span> <span class="n">new_value</span>
             <span class="k">except</span><span class="p">:</span>
                 <span class="k">pass</span>
 
@@ -2064,12 +2085,13 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Dynamic enumeration</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">nargs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">super</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+                <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">nargs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">default_value</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="nb">super</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">default_value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+                <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">default_value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
                     <span class="s2">&quot;Incorrect number of arguments specified &quot;</span>
@@ -2101,7 +2123,7 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">init_fast_validate</span><span class="p">(</span><span class="n">ValidateTrait</span><span class="o">.</span><span class="n">enum</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
-            <span class="nb">super</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">default_value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">default_value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BaseEnum.init_fast_validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseEnum.init_fast_validate">[docs]</a>    <span class="k">def</span> <span class="nf">init_fast_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Does nothing for the BaseEnum class. Used in the Enum class to set</span>
@@ -2162,10 +2184,16 @@
         <span class="k">return</span> <span class="n">value</span>
 
     <span class="k">def</span> <span class="nf">_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Sets the current value of a dynamic range trait.</span>
+        <span class="sd">&quot;&quot;&quot; Sets the current value of a dynamic enum trait.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Validate a value for a dynamic enum trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">safe_contains</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">xgetattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">value</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
@@ -2311,7 +2339,7 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">types</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">init_fast_validate</span><span class="p">(</span><span class="n">ValidateTrait</span><span class="o">.</span><span class="n">coerce</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
 
-            <span class="nb">super</span><span class="p">(</span><span class="n">BaseTuple</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">((),</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">((),</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
             <span class="k">return</span>
 
@@ -2330,7 +2358,7 @@
                 <span class="p">[</span><span class="nb">type</span><span class="o">.</span><span class="n">default_value</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="nb">type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">]</span>
             <span class="p">)</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">BaseTuple</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">default_value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">default_value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BaseTuple.init_fast_validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseTuple.init_fast_validate">[docs]</a>    <span class="k">def</span> <span class="nf">init_fast_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Saves the validation parameters.</span>
@@ -2404,7 +2432,7 @@
 <div class="viewcode-block" id="Tuple.init_fast_validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Tuple.init_fast_validate">[docs]</a>    <span class="k">def</span> <span class="nf">init_fast_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Set up the C-level fast validator.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Tuple</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">init_fast_validate</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">init_fast_validate</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fast_validate</span> <span class="o">=</span> <span class="n">args</span></div></div>
 
@@ -2441,12 +2469,12 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">types</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
         <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;fvalidate&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;fvalidate_info&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">ValidatedTuple</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">types</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">types</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ValidatedTuple.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.ValidatedTuple.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that the value is a valid tuple.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ValidatedTuple</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="c1"># Exceptions in the fvalidate function will not result in a TraitError</span>
         <span class="c1"># but will be allowed to propagate up the frame stacks.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fvalidate</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">fvalidate</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
@@ -2474,6 +2502,20 @@
 <span class="sd">    The length of the list assigned to the trait must be such that::</span>
 
 <span class="sd">        minlen &lt;= len(list) &lt;= maxlen</span>
+
+<span class="sd">    Note that this trait type creates copies of values on assignment, rather</span>
+<span class="sd">    than assigning the exact instance. For example, consider::</span>
+
+<span class="sd">        &gt;&gt;&gt; class A(HasTraits):</span>
+<span class="sd">        ...     x = List()</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; b = [1, 2, 3]</span>
+<span class="sd">        &gt;&gt;&gt; a = A(x=b)</span>
+<span class="sd">        &gt;&gt;&gt; a.x</span>
+<span class="sd">        [1, 2, 3]</span>
+<span class="sd">        &gt;&gt;&gt; b.append(4)</span>
+<span class="sd">        &gt;&gt;&gt; a.x</span>
+<span class="sd">        [1, 2, 3]</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2532,7 +2574,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">item_trait</span><span class="o">.</span><span class="n">instance_handler</span> <span class="o">==</span> <span class="s2">&quot;_instance_changed_handler&quot;</span><span class="p">:</span>
             <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;instance_handler&quot;</span><span class="p">,</span> <span class="s2">&quot;_list_changed_handler&quot;</span><span class="p">)</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">List</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
 <div class="viewcode-block" id="List.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.List.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that the values is a valid list.</span>
@@ -2609,14 +2651,14 @@
             <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">CList</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CList.full_info"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.CList.full_info">[docs]</a>    <span class="k">def</span> <span class="nf">full_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns a description of the trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> or </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">item_trait</span><span class="o">.</span><span class="n">full_info</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">CList</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">full_info</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">full_info</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
         <span class="p">)</span></div></div>
 
 
@@ -2686,6 +2728,10 @@
             <span class="n">default</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_for</span><span class="p">(</span><span class="n">default</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
             <span class="n">default</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The iterable of legal string values can not be empty.&quot;</span>
+            <span class="p">)</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
@@ -2721,10 +2767,24 @@
 <div class="viewcode-block" id="Set"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Set">[docs]</a><span class="k">class</span> <span class="nc">Set</span><span class="p">(</span><span class="n">TraitType</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A trait type for a set of values of the specified type.</span>
 
+<span class="sd">    Note that this trait type creates copies of values on assignment, rather</span>
+<span class="sd">    than assigning the exact instance. For example, consider::</span>
+
+<span class="sd">        &gt;&gt;&gt; class A(HasTraits):</span>
+<span class="sd">        ...     x = Set()</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; b = set()</span>
+<span class="sd">        &gt;&gt;&gt; a = A(x=b)</span>
+<span class="sd">        &gt;&gt;&gt; a.x</span>
+<span class="sd">        TraitSetObject()</span>
+<span class="sd">        &gt;&gt;&gt; b.add(1)</span>
+<span class="sd">        &gt;&gt;&gt; a.x</span>
+<span class="sd">        TraitSetObject()</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    trait : a trait or value that can be converted to a trait using Trait()</span>
-<span class="sd">        The type of item that the list contains. If not specified, the list</span>
+<span class="sd">    trait : a trait or value that can be converted using trait_from()</span>
+<span class="sd">        The type of item that the set contains. If not specified, the set</span>
 <span class="sd">        can contain items of any type.</span>
 <span class="sd">    value : set</span>
 <span class="sd">        Default value for the set.</span>
@@ -2736,7 +2796,7 @@
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    item_trait : a trait or value that can be converted to a trait</span>
-<span class="sd">        The type of item that the list contains. If not specified, the list</span>
+<span class="sd">        The type of item that the set contains. If not specified, the set</span>
 <span class="sd">        can contain items of any type.</span>
 <span class="sd">    has_items : bool</span>
 <span class="sd">        Whether there is a corresponding `&lt;name&gt;_items` trait.</span>
@@ -2758,7 +2818,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">item_trait</span> <span class="o">=</span> <span class="n">trait_from</span><span class="p">(</span><span class="n">trait</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_items</span> <span class="o">=</span> <span class="n">items</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">Set</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Set.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Set.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that the values is a valid set.</span>
@@ -2820,20 +2880,33 @@
             <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">value</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">CSet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CSet.full_info"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.CSet.full_info">[docs]</a>    <span class="k">def</span> <span class="nf">full_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns a description of the trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> or </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">item_trait</span><span class="o">.</span><span class="n">full_info</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">CSet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">full_info</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">full_info</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
         <span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Dict"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Dict">[docs]</a><span class="k">class</span> <span class="nc">Dict</span><span class="p">(</span><span class="n">TraitType</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A trait type for a dictionary with specified key and value types.</span>
 
+<span class="sd">    Note that this trait type creates copies of values on assignment, rather</span>
+<span class="sd">    than assigning the exact instance. For example, consider::</span>
+
+<span class="sd">        &gt;&gt;&gt; class A(HasTraits):</span>
+<span class="sd">        ...     x = Dict()</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; b = {}</span>
+<span class="sd">        &gt;&gt;&gt; a = A(x=b)</span>
+<span class="sd">        &gt;&gt;&gt; a.x</span>
+<span class="sd">        {}</span>
+<span class="sd">        &gt;&gt;&gt; b[&#39;one&#39;] = 1</span>
+<span class="sd">        &gt;&gt;&gt; a.x</span>
+<span class="sd">        {}</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2890,7 +2963,7 @@
             <span class="n">handler</span><span class="o">.</span><span class="n">has_items</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value_handler</span> <span class="o">=</span> <span class="n">handler</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">Dict</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Dict.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Dict.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that the value is a valid dictionary.</span>
@@ -3013,7 +3086,12 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">default_value</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;default_value&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="n">default_value</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">default_value</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The dictionary of valid values can not be empty.&quot;</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">None</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">default_value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
@@ -3093,7 +3171,12 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">default_value</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;default_value&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="n">default_value</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">default_value</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The dictionary of valid values can not be empty.&quot;</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">default_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_for</span><span class="p">(</span><span class="n">default_value</span><span class="p">)</span>
 
@@ -3339,7 +3422,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">value</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">BaseInstance</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BaseInstance.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseInstance.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that the value is a valid object instance.</span>
@@ -3409,7 +3492,7 @@
         <span class="n">dvt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value_type</span>
         <span class="k">if</span> <span class="n">dvt</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dv</span><span class="p">,</span> <span class="n">_InstanceArgs</span><span class="p">):</span>
-                <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">BaseInstance</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_default_value</span><span class="p">()</span>
+                <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_default_value</span><span class="p">()</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">default_value_type</span> <span class="o">=</span> <span class="n">dvt</span> <span class="o">=</span> <span class="n">DefaultValue</span><span class="o">.</span><span class="n">callable_and_args</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">dv</span> <span class="o">=</span> <span class="p">(</span>
@@ -3455,7 +3538,7 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="BaseInstance.resolve_class"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseInstance.resolve_class">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">BaseInstance</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">resolve_class</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">resolve_class</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
         <span class="c1"># fixme: The following is quite ugly, because it wants to try and fix</span>
         <span class="c1"># the trait referencing this handler to use the &#39;fast path&#39; now that</span>
@@ -3536,7 +3619,7 @@
 <div class="viewcode-block" id="Supports.as_ctrait"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Supports.as_ctrait">[docs]</a>    <span class="k">def</span> <span class="nf">as_ctrait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns a CTrait corresponding to the trait defined by this class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modify_ctrait</span><span class="p">(</span><span class="nb">super</span><span class="p">(</span><span class="n">Supports</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modify_ctrait</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">())</span></div>
 
     <span class="k">def</span> <span class="nf">modify_ctrait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctrait</span><span class="p">):</span>
 
@@ -3615,7 +3698,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_allow_none</span> <span class="o">=</span> <span class="n">allow_none</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">get_module_name</span><span class="p">()</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">Type</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Type.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Type.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that the value is a valid object instance.</span>
@@ -3659,7 +3742,7 @@
 <span class="sd">        which describes the default value for this trait.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Type</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_default_value</span><span class="p">()</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_default_value</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">DefaultValue</span><span class="o">.</span><span class="n">callable_and_args</span><span class="p">,</span>
@@ -3709,7 +3792,7 @@
         <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;event&quot;</span>
         <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;transient&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">Event</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">trait</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">trait</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -3800,7 +3883,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">width_padding</span> <span class="o">=</span> <span class="n">width_padding</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height_padding</span> <span class="o">=</span> <span class="n">height_padding</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">view</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Button</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Button.create_editor"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Button.create_editor">[docs]</a>    <span class="k">def</span> <span class="nf">create_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">ButtonEditor</span>
@@ -3877,7 +3960,7 @@
         <span class="n">height_padding</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="o">**</span><span class="n">metadata</span>
     <span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">ToolbarButton</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">label</span><span class="p">,</span>
             <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span>
             <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span>
@@ -3932,7 +4015,7 @@
         <span class="k">if</span> <span class="n">default_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot set default value </span><span class="si">{}</span><span class="s2"> &quot;</span>
                              <span class="s2">&quot;for _NoneTrait&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">default_value</span><span class="p">))</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">_NoneTrait</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -4120,7 +4203,7 @@
     <span class="n">info_text</span> <span class="o">=</span> <span class="s2">&quot;a read-only UUID&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">can_init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">UUID</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">can_init</span> <span class="o">=</span> <span class="n">can_init</span>
 
 <div class="viewcode-block" id="UUID.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.UUID.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -4196,7 +4279,7 @@
     <span class="p">):</span>
         <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;copy&quot;</span><span class="p">,</span> <span class="s2">&quot;ref&quot;</span><span class="p">)</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">WeakRef</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">klass</span><span class="p">,</span>
             <span class="n">allow_none</span><span class="o">=</span><span class="n">allow_none</span><span class="p">,</span>
             <span class="n">adapt</span><span class="o">=</span><span class="n">adapt</span><span class="p">,</span>
@@ -4411,12 +4494,12 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

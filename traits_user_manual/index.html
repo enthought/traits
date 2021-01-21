@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Traits 6.1 User Manual &mdash; Traits 6.1 User Manual</title>
+    <title>Traits 6.2 User Manual &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,9 +30,9 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
     <link rel="next" title="Introduction" href="intro.html" >
-    <link rel="prev" title="Traits 6.1 Documentation" href="../index.html" > 
+    <link rel="prev" title="Introduction" href="../traits_tutorial/introduction.html" > 
   </head>
   <body>
   <div class="container">
@@ -49,7 +49,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
 	 
     </ul>
               
@@ -68,7 +68,7 @@
            accesskey="N">next</a>
       </li>
       <li class="active">
-        <a href="../index.html" title="Traits 6.1 Documentation"
+        <a href="../traits_tutorial/introduction.html" title="Introduction"
            accesskey="P">previous</a>
       </li>
     </ul>
@@ -85,14 +85,14 @@
           <div class="body" id="spc-section-body" role="main">
             
   <div class="section" id="traits-version-user-manual">
-<h1>Traits 6.1 User Manual<a class="headerlink" href="#traits-version-user-manual" title="Permalink to this headline">¶</a></h1>
+<h1>Traits 6.2 User Manual<a class="headerlink" href="#traits-version-user-manual" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list">
 <dt class="field-odd">Authors</dt>
 <dd class="field-odd"><p>David C. Morrill, Janet M. Swisher, and Enthought developers</p>
 </dd>
 <dt class="field-even">Copyright</dt>
 <dd class="field-even"><div class="line-block">
-<div class="line">(C) Copyright 2005-2020 Enthought, Inc., Austin, TX</div>
+<div class="line">(C) Copyright 2005-2021 Enthought, Inc., Austin, TX</div>
 <div class="line">All rights reserved.</div>
 </div>
 </dd>
@@ -107,6 +107,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="defining.html">Defining Traits: Initialization and Validation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="defining.html#a-note-about-the-traits-package-structure">A note about the Traits package structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="defining.html#predefined-traits">Predefined Traits</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="defining.html#predefined-traits-for-simple-types">Predefined Traits for Simple Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="defining.html#other-predefined-traits">Other Predefined Traits</a></li>
@@ -140,7 +141,6 @@
 <li class="toctree-l2"><a class="reference internal" href="notification.html#migration-from-on-trait-change">Migration from <code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="notification.html#observe-extended-trait-names">Observe extended trait names</a></li>
 <li class="toctree-l3"><a class="reference internal" href="notification.html#observe-nested-attributes-in-a-container">Observe nested attributes in a container</a></li>
-<li class="toctree-l3"><a class="reference internal" href="notification.html#identity-comparison-mode-for-container-traits">Identity comparison mode for container traits</a></li>
 <li class="toctree-l3"><a class="reference internal" href="notification.html#change-handler-signature-is-different">Change handler signature is different</a></li>
 <li class="toctree-l3"><a class="reference internal" href="notification.html#syntax-is-not-supported">Syntax “[]” is not supported</a></li>
 <li class="toctree-l3"><a class="reference internal" href="notification.html#id1">Syntax “-” is not supported</a></li>
@@ -260,13 +260,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="appendix.html">Appendix</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="listening.html">Trait Notification with <strong>on_trait_change</strong></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="listening.html#dynamic-notification">Dynamic Notification</a></li>
-<li class="toctree-l3"><a class="reference internal" href="listening.html#static-notification">Static Notification</a></li>
-<li class="toctree-l3"><a class="reference internal" href="listening.html#trait-events">Trait Events</a></li>
-<li class="toctree-l3"><a class="reference internal" href="listening.html#dos-and-donts">Dos and Don’ts</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="appendix.html#trait-notification-with-on-trait-change">Trait Notification with <strong>on_trait_change</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="appendix.html#property-depends-on">Property <strong>depends_on</strong></a></li>
 </ul>
 </li>
 </ul>
@@ -328,7 +323,7 @@ owners.</p>
             </a></p>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Traits 6.1 User Manual</a><ul>
+<li><a class="reference internal" href="#">Traits 6.2 User Manual</a><ul>
 <li><a class="reference internal" href="#contents">Contents</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 <li><a class="reference internal" href="#license">License</a></li>
@@ -337,8 +332,8 @@ owners.</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../index.html"
-                        title="previous chapter">Traits 6.1 Documentation</a></p>
+  <p class="topless"><a href="../traits_tutorial/introduction.html"
+                        title="previous chapter">Introduction</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="intro.html"
                         title="next chapter">Introduction</a></p>
@@ -373,12 +368,12 @@ owners.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

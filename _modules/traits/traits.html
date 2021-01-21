@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.traits &mdash; Traits 6.1 User Manual</title>
+    <title>traits.traits &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.2 Documentation</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -77,7 +77,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <h1>Source code for traits.traits</h1><div class="highlight"><pre>
-<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span></span><span class="c1"># (C) Copyright 2005-2021 Enthought, Inc., Austin, TX</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># This software is provided without warranty under the terms of the BSD</span>
@@ -614,18 +614,18 @@
 <span class="sd">            def _get_foo(self):</span>
 <span class="sd">                return self._foo</span>
 
-<span class="sd">    You can use the **depends_on** metadata attribute to indicate that the</span>
-<span class="sd">    property depends on the value of another trait. The value of **depends_on**</span>
-<span class="sd">    is an extended name specifier for traits that the property depends on. The</span>
-<span class="sd">    property will a trait change notification if any of the traits specified</span>
-<span class="sd">    by **depends_on** change. For example::</span>
+<span class="sd">    You can use the **observe** metadata attribute to indicate that the</span>
+<span class="sd">    property depends on the value of another trait. The value of **observe**</span>
+<span class="sd">    follows the same signature as the **expression** parameter in</span>
+<span class="sd">    ``HasTraits.observe``. The property will fire a trait change notification</span>
+<span class="sd">    if any of the traits specified by **observe** change. For example::</span>
 
-<span class="sd">        class Wheel ( Part ):</span>
-<span class="sd">            axle     = Instanced( Axle )</span>
-<span class="sd">            position = Property( depends_on = &#39;axle.chassis.position&#39; )</span>
+<span class="sd">        class Wheel(Part):</span>
+<span class="sd">            axle = Instance(Axle)</span>
+<span class="sd">            position = Property(observe=&#39;axle.chassis.position&#39;)</span>
 
 <span class="sd">    For details of the extended trait name syntax, refer to the</span>
-<span class="sd">    on_trait_change() method of the HasTraits class.</span>
+<span class="sd">    observe() method of the HasTraits class.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -696,9 +696,7 @@
             <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;editor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">editor</span>
 
     <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;depends_on&quot;</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fget</span><span class="p">,</span> <span class="s2">&quot;depends_on&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;depends_on&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span>
-        <span class="n">fget</span><span class="p">,</span> <span class="s2">&quot;cached_property&quot;</span><span class="p">,</span> <span class="kc">False</span>
-    <span class="p">):</span>
+    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fget</span><span class="p">,</span> <span class="s2">&quot;cached_property&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
         <span class="n">metadata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;cached&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
     <span class="n">trait</span> <span class="o">=</span> <span class="n">CTrait</span><span class="p">(</span><span class="n">TraitKind</span><span class="o">.</span><span class="n">property</span><span class="p">)</span>
@@ -817,12 +815,12 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

@@ -7,7 +7,7 @@
 Classes
 -------
 
-.. autoclass:: NoDefaultSpecified
+.. autodata:: NoDefaultSpecified
 
 .. autoclass:: TraitType
 

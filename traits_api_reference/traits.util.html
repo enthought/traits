@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.util Package &mdash; Traits 6.1 User Manual</title>
+    <title>traits.util Package &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="Traits CHANGELOG" href="../changelog.html" >
     <link rel="prev" title="traits.testing Package" href="traits.testing.html" > 
@@ -50,7 +50,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -121,7 +121,7 @@ returned.</p>
 <dl class="class">
 <dt id="traits.util.camel_case.CamelCaseToPython">
 <em class="property">class </em><code class="sig-prename descclassname">traits.util.camel_case.</code><code class="sig-name descname">CamelCaseToPython</code><a class="reference internal" href="../_modules/traits/util/camel_case.html#CamelCaseToPython"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.camel_case.CamelCaseToPython" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Simple functor class to convert names from camel case to idiomatic
 Python variable names.</p>
 <dl>
@@ -165,8 +165,8 @@ different input strings can result in the same output string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The string to be made safe.</p></li>
-<li><p><strong>replace_empty</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – The return value to be used in the event that the sanitised
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The string to be made safe.</p></li>
+<li><p><strong>replace_empty</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – The return value to be used in the event that the sanitised
 string ends up being empty. No validation is done on this
 input - it’s up to the user to ensure that the default is
 itself safe. The default is to return the empty string.</p></li>
@@ -176,7 +176,7 @@ itself safe. The default is to return the empty string.</p></li>
 <dd class="field-even"><p><strong>safe_string</strong> – A filename-safe version of string.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -199,8 +199,8 @@ is provided, then uses the current time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dt</strong> (<a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)"><em>None</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.8)"><em>datetime.datetime</em></a>) – If None, then the current time is used.</p></li>
-<li><p><strong>microseconds</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Display microseconds or not.</p></li>
+<li><p><strong>dt</strong> (<a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.9)"><em>datetime.datetime</em></a>) – If None, then the current time is used.</p></li>
+<li><p><strong>microseconds</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Display microseconds or not.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -280,17 +280,17 @@ resource if alt_path is defined.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the project to look for the resource in. Can be the name or
+<li><p><strong>project</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the project to look for the resource in. Can be the name or
 a requirement string. Ex: ‘MyProject’, ‘MyProject&gt;1.0’,
 ‘MyProject==1.1’</p></li>
-<li><p><strong>resource_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The path to the file from inside the package. If the file desired is
+<li><p><strong>resource_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The path to the file from inside the package. If the file desired is
 MyProject/data/image.jpg, resource_path would be ‘data/image.jpg’.</p></li>
-<li><p><strong>alt_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The path to the resource relative to the location of the application’s
+<li><p><strong>alt_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The path to the resource relative to the location of the application’s
 top-level script (the one with __main__). If this function is called in
 code/scripts/myscript.py and the resource is code/data/image.jpg, the
 alt_path would be ‘../data/image.jpg’. This path is only used if the
 resource cannot be found using setuptools.</p></li>
-<li><p><strong>return_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Determines whether the function should return a file object or a full
+<li><p><strong>return_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Determines whether the function should return a file object or a full
 path to the resource.</p></li>
 </ul>
 </dd>
@@ -342,7 +342,7 @@ from the module.</p>
 <dl class="exception">
 <dt id="traits.util.toposort.CyclicGraph">
 <em class="property">exception </em><code class="sig-prename descclassname">traits.util.toposort.</code><code class="sig-name descname">CyclicGraph</code><a class="reference internal" href="../_modules/traits/util/toposort.html#CyclicGraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.toposort.CyclicGraph" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <p>Exception for cyclic graphs.</p>
 </dd></dl>
 
@@ -366,11 +366,6 @@ from the module.</p>
 signature of module level and class level traits.</p>
 <p>To use the documenter, append the module path in the extension
 attribute of the <cite>conf.py</cite>.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Using the TraitDocumenter in conjunction with TraitsDoc is not
-advised.</p>
-</div>
 <dl class="attribute">
 <dt id="traits.util.trait_documenter.TraitDocumenter.objtype">
 <code class="sig-name descname">objtype</code><em class="property"> = 'traitattribute'</em><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.objtype" title="Permalink to this definition">¶</a></dt>
@@ -424,6 +419,39 @@ advised.</p>
 option set to the trait definition.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.trait_documenter.trait_definition">
+<code class="sig-prename descclassname">traits.util.trait_documenter.</code><code class="sig-name descname">trait_definition</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">cls</em>, <em class="sig-param">trait_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#trait_definition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.trait_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the portion of the source defining a Trait attribute.</p>
+<p>For example, given a class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">)</span>
+    <span class="n">foo</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">trait_definition(cls=MyModel,</span> <span class="pre">trait_name=&quot;foo&quot;)</span></code> returns
+<code class="docutils literal notranslate"><span class="pre">&quot;List(Int,</span> <span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3])&quot;</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cls</strong> (<a class="reference internal" href="has_traits.html#traits.has_traits.MetaHasTraits" title="traits.has_traits.MetaHasTraits"><em>MetaHasTraits</em></a>) – Class being documented.</p></li>
+<li><p><strong>trait_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the trait being documented.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The portion of the source containing the trait definition. For
+example, for a class trait defined as <code class="docutils literal notranslate"><span class="pre">&quot;my_trait</span> <span class="pre">=</span> <span class="pre">Float(3.5)&quot;</span></code>,
+the returned string will contain <code class="docutils literal notranslate"><span class="pre">&quot;Float(3.5)&quot;</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If <em>trait_name</em> doesn’t appear as a class-level variable in the
+    source.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -614,7 +642,7 @@ RecordContainer is created.</p>
 <dd><p>Indentation level when reporting chained events.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -663,7 +691,7 @@ for each thread.</p>
 <dd><p>Mapping from threads to ChangeEventRecorder instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -774,12 +802,12 @@ traced.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

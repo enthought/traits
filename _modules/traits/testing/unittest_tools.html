@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.testing.unittest_tools &mdash; Traits 6.1 User Manual</title>
+    <title>traits.testing.unittest_tools &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../../../index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.2 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -77,7 +77,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <h1>Source code for traits.testing.unittest_tools</h1><div class="highlight"><pre>
-<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span></span><span class="c1"># (C) Copyright 2005-2021 Enthought, Inc., Austin, TX</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># This software is provided without warranty under the terms of the BSD</span>
@@ -106,7 +106,6 @@
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">Event</span><span class="p">,</span>
     <span class="n">HasStrictTraits</span><span class="p">,</span>
-    <span class="n">Instance</span><span class="p">,</span>
     <span class="n">Int</span><span class="p">,</span>
     <span class="n">List</span><span class="p">,</span>
     <span class="n">Str</span><span class="p">,</span>
@@ -235,9 +234,9 @@
     <span class="c1"># Private list of events.</span>
     <span class="n">events</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Any</span><span class="p">)</span>
 
-    <span class="c1"># Lock used to allow access to events by multiple threads</span>
+    <span class="c1"># Private lock used to allow access to events by multiple threads</span>
     <span class="c1"># simultaneously.</span>
-    <span class="n">_lock</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">,</span> <span class="p">())</span>
+    <span class="n">_lock</span> <span class="o">=</span> <span class="n">Any</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;trait&quot;</span> <span class="ow">in</span> <span class="n">traits</span><span class="p">:</span>
@@ -247,7 +246,13 @@
             <span class="p">)</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
             <span class="n">traits</span><span class="p">[</span><span class="s2">&quot;trait_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">_TraitsChangeCollector</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span>
+
+        <span class="c1"># We assign the lock eagerly rather than depending on a lazy default,</span>
+        <span class="c1"># since we want to be sure that the lock is created (a) only once,</span>
+        <span class="c1"># and (b) on the main thread. Similarly for the events list.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">def</span> <span class="nf">start_collecting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_event_handler</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait_name</span><span class="p">)</span>
@@ -533,6 +538,29 @@
 
     <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
     <span class="k">def</span> <span class="nf">_catch_warnings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Replacement for warnings.catch_warnings.</span>
+
+<span class="sd">        This method wraps warnings.catch_warnings, takes care to</span>
+<span class="sd">        reset the warning registry before entering the with context,</span>
+<span class="sd">        and ensures that DeprecationWarnings are always emitted.</span>
+
+<span class="sd">        The hack to reset the warning registry is no longer needed in</span>
+<span class="sd">        Python 3.4 and later. See http://bugs.python.org/issue4180 for</span>
+<span class="sd">        more background.</span>
+
+<span class="sd">        .. deprecated:: 6.2</span>
+<span class="sd">            Use :func:`warnings.catch_warnings` instead.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="s2">&quot;The _catch_warnings method is deprecated. &quot;</span>
+                <span class="s2">&quot;Use warnings.catch_warnings instead.&quot;</span>
+            <span class="p">),</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="p">)</span>
+
         <span class="c1"># Ugly hack copied from the core Python code (see</span>
         <span class="c1"># Lib/test/test_support.py) to reset the warnings registry</span>
         <span class="c1"># for the module making use of this context manager.</span>
@@ -554,8 +582,10 @@
 <span class="sd">        for testing uses of traits.util.deprecated.deprecated.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_catch_warnings</span><span class="p">()</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;always&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">w</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">),</span>
             <span class="mi">0</span><span class="p">,</span>
@@ -569,8 +599,10 @@
 <span class="sd">        for testing uses of traits.util.deprecated.deprecated.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_catch_warnings</span><span class="p">()</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;always&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">w</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">),</span>
             <span class="mi">0</span><span class="p">,</span>
@@ -613,12 +645,12 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

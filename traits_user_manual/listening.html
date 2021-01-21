@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Trait Notification with on_trait_change &mdash; Traits 6.1 User Manual</title>
+    <title>Trait Notification with on_trait_change &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
     <link rel="up" title="Appendix" href="appendix.html" >
     <link rel="next" title="API Reference" href="../traits_api_reference/index.html" >
     <link rel="prev" title="Appendix" href="appendix.html" > 
@@ -50,9 +50,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" >Traits 6.1 User Manual</a></li>
+          <li class="active"><a href="index.html" >Traits 6.2 User Manual</a></li>
           <li class="active"><a href="appendix.html" accesskey="U">Appendix</a></li> 
     </ul>
               
@@ -509,6 +509,7 @@ change handlers. The <code class="docutils literal notranslate"><span class="pre
 to delay registering the handler to after the state is set.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">on_trait_change</span><span class="p">,</span> <span class="n">Str</span>
 
+
 <span class="k">class</span> <span class="nc">Part</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">cost</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 
@@ -521,6 +522,7 @@ to delay registering the handler to after the state is set.</p>
     <span class="nd">@on_trait_change</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">post_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">name_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> is changed from </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">))</span>
+
 
 <span class="n">part</span> <span class="o">=</span> <span class="n">Part</span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Nail&quot;</span><span class="p">)</span>
 <span class="c1"># Result: cost is changed from 0.0 to 2.0</span>
@@ -917,12 +919,12 @@ and logged, so not to prevent other handlers to be called.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

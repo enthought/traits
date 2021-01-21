@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Defining Traits: Initialization and Validation &mdash; Traits 6.1 User Manual</title>
+    <title>Defining Traits: Initialization and Validation &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,8 +30,8 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
-    <link rel="up" title="Traits 6.1 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.2 User Manual" href="index.html" >
     <link rel="next" title="Trait Notification" href="notification.html" >
     <link rel="prev" title="Introduction" href="intro.html" > 
   </head>
@@ -50,9 +50,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.1 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.2 User Manual</a></li> 
     </ul>
               
               
@@ -155,6 +155,25 @@ the simpler, more commonly used forms.</p>
 attributes with the prefix ‘trait’ or ‘_trait’. This avoids overshadowing
 existing methods on HasTraits.</p>
 </div>
+<div class="section" id="a-note-about-the-traits-package-structure">
+<h2>A note about the Traits package structure<a class="headerlink" href="#a-note-about-the-traits-package-structure" title="Permalink to this headline">¶</a></h2>
+<p>We described above how trait type definitions and the <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasTraits</span></code></a>
+class can be imported from the <code class="docutils literal notranslate"><span class="pre">traits.api</span></code> module. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span>
+</pre></div>
+</div>
+<p>In fact, the <code class="xref py py-class docutils literal notranslate"><span class="pre">HasTraits</span></code> class and various trait type classes are
+defined in other modules nested inside the Traits package structure, but
+they’re re-imported to <code class="docutils literal notranslate"><span class="pre">traits.api</span></code> for user convenience. In general,
+everything you need should be available in either <code class="docutils literal notranslate"><span class="pre">traits.api</span></code> or one of the
+other <code class="docutils literal notranslate"><span class="pre">*.api</span></code> modules inside the package structure (for example,
+<code class="docutils literal notranslate"><span class="pre">traits.adaptation.api</span></code> or <code class="docutils literal notranslate"><span class="pre">traits.observation.api</span></code>). As a matter of best
+practices, you should import the things you need directly from one of these
+<code class="docutils literal notranslate"><span class="pre">*.api</span></code> modules. If you discover that there’s something that you need that’s
+not available from one of these modules, please discuss with the Traits
+development team (for example, by opening an issue on the <a class="reference external" href="https://github.com/enthought/traits/issues">Traits bug
+tracker</a>).</p>
+</div>
 <div class="section" id="predefined-traits">
 <span id="index-5"></span><span id="id2"></span><h2>Predefined Traits<a class="headerlink" href="#predefined-traits" title="Permalink to this headline">¶</a></h2>
 <p>The Traits package includes a large number of predefined traits for commonly
@@ -172,7 +191,7 @@ pass it as an argument to the trait:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">account_balance</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Most predefined traits are callable, <a class="footnote-reference brackets" href="#id19" id="id3">2</a> and can accept a default value and
+<p>Most predefined traits are callable, <a class="footnote-reference brackets" href="#id22" id="id3">2</a> and can accept a default value and
 possibly other arguments; all that are callable can also accept metadata as
 keyword arguments. (See <a class="reference internal" href="#other-predefined-traits"><span class="std std-ref">Other Predefined Traits</span></a> for information on trait
 signatures, and see <a class="reference internal" href="#trait-metadata"><span class="std std-ref">Trait Metadata</span></a> for information on metadata
@@ -386,7 +405,7 @@ the table.</p>
 <td><p>File( [<em>value</em> = ‘’, <em>filter</em> = None, <em>auto_set</em> = False,
 <em>entries</em> = 10, <em>exists</em> = False,  **<em>metadata</em> ] )</p></td>
 </tr>
-<tr class="row-odd"><td><p>Function</p></td>
+<tr class="row-odd"><td><p>Function <a class="footnote-reference brackets" href="#id23" id="id8">3</a></p></td>
 <td><p>Function( [<em>value</em> = None, **<em>metadata</em>] )</p></td>
 </tr>
 <tr class="row-even"><td><p>generic_trait</p></td>
@@ -410,7 +429,7 @@ None, <em>kw</em> = None, <em>allow_none</em> = True, <em>adapt</em> = None,
 <tr class="row-even"><td><p>Map</p></td>
 <td><p>Map( <em>map</em>[, **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td><p>Method</p></td>
+<tr class="row-odd"><td><p>Method <a class="footnote-reference brackets" href="#id23" id="id9">3</a></p></td>
 <td><p>Method ([**<em>metadata</em>] )</p></td>
 </tr>
 <tr class="row-even"><td><p>Module</p></td>
@@ -484,7 +503,7 @@ True, **<em>metadata</em>] )</p></td>
 <td><p>Union( <em>val1</em>[, <em>val2</em>, …, <em>valN</em>,
 **<em>metadata</em>] )</p></td>
 </tr>
-<tr class="row-odd"><td><p>UUID <a class="footnote-reference brackets" href="#id20" id="id8">3</a></p></td>
+<tr class="row-odd"><td><p>UUID <a class="footnote-reference brackets" href="#id24" id="id10">4</a></p></td>
 <td><p>UUID( [**<em>metadata</em>] )</p></td>
 </tr>
 <tr class="row-even"><td><p>ValidatedTuple</p></td>
@@ -497,13 +516,59 @@ True, **<em>metadata</em>] )</p></td>
 </tr>
 </tbody>
 </table>
+<div class="section" id="instance">
+<span id="index-26"></span><span id="id11"></span><h4>Instance<a class="headerlink" href="#instance" title="Permalink to this headline">¶</a></h4>
+<p>One of the most fundamental and useful predefined trait types is
+<a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Instance" title="traits.trait_types.Instance"><code class="xref py py-class docutils literal notranslate"><span class="pre">Instance</span></code></a>. Instance trait values are an instance of a particular class
+or its subclasses, as specified by the <strong>klass</strong> argument. <strong>klass</strong> can be
+either an instance of a class or a class itself (note this applies to all python
+classes, not necessarily just <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasTraits</span></code></a> subclasses).  However, one should
+typically provide the type or interface they want an instance of, instead of
+providing an instance of a class.</p>
+<p>If <strong>klass</strong> is an instance or if it is a class and <strong>args</strong> and <strong>kw</strong> are not
+specified, the default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>. Otherwise, the default value is
+obtained by calling the callable <strong>factory</strong> argument (or <strong>klass</strong> if
+<strong>factory</strong> is None) with <strong>args</strong> and <strong>kw</strong>. Further, there is the
+<strong>allow_none</strong> argument which dictates whether the trait can take on a value of
+<code class="docutils literal notranslate"><span class="pre">None</span></code>. However, this does not include the default value for the trait. For
+example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># instance_trait_defaults.py --- Example of Instance trait default values</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
+
+<span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="c1"># default value is None</span>
+    <span class="n">father</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Parent</span><span class="p">)</span>
+    <span class="c1"># default value is still None, but None can not be assigned</span>
+    <span class="n">grandfather</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># default value is Parent()</span>
+    <span class="n">mother</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>In the last case, the default <code class="docutils literal notranslate"><span class="pre">Parent</span></code> instance is not immediately
+created, but rather is lazily instantiated when the trait is first accessed.
+The default <code class="docutils literal notranslate"><span class="pre">Parent</span></code> will also be instantiated if the trait is assigned to
+and there is a change handler defined on the trait (to detect changes from the
+default value). For more details on change handlers and trait notification see
+<a class="reference internal" href="notification.html#observe-notification"><span class="std std-ref">Trait Notification</span></a>.</p>
+<p>Somewhat surprisingly, <code class="docutils literal notranslate"><span class="pre">mother</span> <span class="pre">=</span> <span class="pre">Instance(Parent,</span> <span class="pre">())</span></code> will also yield a
+default value of <code class="docutils literal notranslate"><span class="pre">Parent()</span></code>, even though in that case it is <strong>factory</strong> that
+is <code class="docutils literal notranslate"><span class="pre">()</span></code> not <strong>args</strong>.  This is a result of implementation details, however
+the recommended way of writing this code is to explicitly pass <strong>args</strong> by
+keyword like so <code class="docutils literal notranslate"><span class="pre">mother</span> <span class="pre">=</span> <span class="pre">Instance(Parent,</span> <span class="pre">args=())</span></code>. Another common mistake
+is passing in another trait type to Instance. For example,
+<code class="docutils literal notranslate"><span class="pre">some_trait</span> <span class="pre">=</span> <span class="pre">Instance(Int)</span></code>. This will likely lead to unexpected behavior
+and potential errors. Instead simply do <code class="docutils literal notranslate"><span class="pre">some_trait</span> <span class="pre">=</span> <span class="pre">Int()</span></code>.</p>
+</div>
 <div class="section" id="this-and-self">
-<span id="index-26"></span><span id="id9"></span><h4>This and self<a class="headerlink" href="#this-and-self" title="Permalink to this headline">¶</a></h4>
+<span id="index-27"></span><span id="id12"></span><h4>This and self<a class="headerlink" href="#this-and-self" title="Permalink to this headline">¶</a></h4>
 <p>A couple of predefined traits that merit special explanation are This and
 <strong>self</strong>. They are intended for attributes whose values must be of the same
 class (or a subclass) as the enclosing class. The default value of This is
 None; the default value of <strong>self</strong> is the object containing the attribute.</p>
-<p id="index-27">The following is an example of using This:</p>
+<p id="index-28">The following is an example of using This:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># this.py --- Example of This predefined trait</span>
 
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">This</span>
@@ -546,11 +611,11 @@ on the class on which it was defined. For example:</p>
 </div>
 </div>
 <div class="section" id="map">
-<span id="index-28"></span><span id="id10"></span><h4>Map<a class="headerlink" href="#map" title="Permalink to this headline">¶</a></h4>
+<span id="index-29"></span><span id="id13"></span><h4>Map<a class="headerlink" href="#map" title="Permalink to this headline">¶</a></h4>
 <p>The map trait ensures that the value assigned to a trait attribute
 is a key of a specified dictionary, and also assigns the dictionary
 value corresponding to that key to a shadow attribute.</p>
-<p id="index-29">The following is an example of using Map:</p>
+<p id="index-30">The following is an example of using Map:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># map.py --- Example of Map predefined trait</span>
 
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Map</span>
@@ -574,13 +639,13 @@ Instantiating the class produces the following:</p>
 </div>
 </div>
 <div class="section" id="prefixmap">
-<span id="index-30"></span><span id="id11"></span><h4>PrefixMap<a class="headerlink" href="#prefixmap" title="Permalink to this headline">¶</a></h4>
+<span id="index-31"></span><span id="id14"></span><h4>PrefixMap<a class="headerlink" href="#prefixmap" title="Permalink to this headline">¶</a></h4>
 <p>Like Map, PrefixMap is created using a dictionary, but in this
 case, the keys of the dictionary must be strings. Like PrefixList,
 a string <em>v</em> is a valid value for the trait attribute if it is a prefix of
 one and only one key <em>k</em> in the dictionary. The actual values assigned to
 the trait attribute is <em>k</em>, and its corresponding mapped attribute is map[<em>k</em>].</p>
-<p id="index-31">The following is an example of using PrefixMap:</p>
+<p id="index-32">The following is an example of using PrefixMap:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># prefixmap.py --- Example of PrefixMap predefined trait</span>
 
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">PrefixMap</span>
@@ -608,7 +673,7 @@ Instantiating the class produces the following:</p>
 </div>
 </div>
 <div class="section" id="prefixlist">
-<span id="index-32"></span><span id="id12"></span><h4>PrefixList<a class="headerlink" href="#prefixlist" title="Permalink to this headline">¶</a></h4>
+<span id="index-33"></span><span id="id15"></span><h4>PrefixList<a class="headerlink" href="#prefixlist" title="Permalink to this headline">¶</a></h4>
 <p>Ensures that a value assigned to the attribute is a member of a list of
 specified string values, or is a unique prefix of one of those values.
 The values that can be assigned to a trait attribute of type PrefixList
@@ -616,7 +681,7 @@ is the set of all strings supplied to the PrefixList constructor, as well
 as any unique prefix of those strings. The actual value assigned to the
 trait is limited to the set of complete strings assigned to the
 PrefixList constructor.</p>
-<p id="index-33">The following is an example of using PrefixList:</p>
+<p id="index-34">The following is an example of using PrefixList:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># prefixlist.py --- Example of PrefixList predefined trait</span>
 
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">PrefixList</span>
@@ -638,13 +703,13 @@ prefix. Instantiating the class produces the following:</p>
 </div>
 </div>
 <div class="section" id="either">
-<span id="index-34"></span><span id="id13"></span><h4>Either<a class="headerlink" href="#either" title="Permalink to this headline">¶</a></h4>
+<span id="index-35"></span><span id="id16"></span><h4>Either<a class="headerlink" href="#either" title="Permalink to this headline">¶</a></h4>
 <p>Another predefined trait that merits special explanation is Either. The
 Either trait is intended for attributes that may take a value of more than
 a single trait type, including None. The default value of Either is None, even
 if None is not one of the types the user explicitly defines in the constructor,
 but a different default value can be provided using the <code class="docutils literal notranslate"><span class="pre">default</span></code> argument.</p>
-<p id="index-35">The following is an example of using Either:</p>
+<p id="index-36">The following is an example of using Either:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># either.py --- Example of Either predefined trait</span>
 
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Either</span><span class="p">,</span> <span class="n">Str</span>
@@ -675,7 +740,7 @@ will raise a TraitError if a value of any other type is assigned. For example:</
 </div>
 </div>
 <div class="section" id="union">
-<span id="index-36"></span><span id="id14"></span><h4>Union<a class="headerlink" href="#union" title="Permalink to this headline">¶</a></h4>
+<span id="index-37"></span><span id="id17"></span><h4>Union<a class="headerlink" href="#union" title="Permalink to this headline">¶</a></h4>
 <p>The Union trait accepts a value that is considered valid by at least one
 of the traits in its definition. It is a simpler and therefore less error-prone
 alternative to the <cite>Either</cite> trait, which allows more complex constructs and
@@ -684,7 +749,7 @@ validates the value assigned to it against each of the traits in its definition
 in the order they are defined. Union only accepts trait types or trait type
 instances or None in its definition. Prefer to use Union over <cite>Either</cite> to
 remain future proof.</p>
-<p id="index-37">The following is an example of using Union:</p>
+<p id="index-38">The following is an example of using Union:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># union.py --- Example of Union predefined trait</span>
 
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Instance</span>
@@ -766,7 +831,7 @@ trait.</p>
 </ul>
 </div>
 <div class="section" id="list-of-possible-values">
-<span id="list-of-possibl-values"></span><span id="index-38"></span><h4>List of Possible Values<a class="headerlink" href="#list-of-possible-values" title="Permalink to this headline">¶</a></h4>
+<span id="list-of-possibl-values"></span><span id="index-39"></span><h4>List of Possible Values<a class="headerlink" href="#list-of-possible-values" title="Permalink to this headline">¶</a></h4>
 <p>You can define a trait whose possible values include disparate types. To do
 this, use the predefined Enum trait, and pass it a list of all possible values.
 The values must all be of simple Python data types, such as strings, integers,
@@ -774,7 +839,7 @@ and floats, but they do not have to be all of the same type. This list of
 values can be a typical parameter list, an explicit (bracketed) list, or a
 variable whose type is list. The first item in the list is used as the default
 value.</p>
-<p id="index-39">A trait defined in this fashion can accept only values that are contained in
+<p id="index-40">A trait defined in this fashion can accept only values that are contained in
 the list of permitted values. The default value is the first value specified;
 it is also a valid value for assignment.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
@@ -835,7 +900,7 @@ one can specify <strong>another trait</strong> that holds the list of possible v
 </div>
 </div>
 <div class="section" id="trait-metadata">
-<span id="index-40"></span><span id="id15"></span><h2>Trait Metadata<a class="headerlink" href="#trait-metadata" title="Permalink to this headline">¶</a></h2>
+<span id="index-41"></span><span id="id18"></span><h2>Trait Metadata<a class="headerlink" href="#trait-metadata" title="Permalink to this headline">¶</a></h2>
 <p>Trait objects can contain metadata attributes, which fall into three categories:</p>
 <ul class="simple">
 <li><p>Internal attributes, which you can query but not set.</p></li>
@@ -848,10 +913,10 @@ passing them as keyword arguments to callable traits. The value of each
 keyword argument becomes bound to the resulting trait object as the value
 of an attribute having the same name as the keyword.</p>
 <div class="section" id="internal-metadata-attributes">
-<span id="index-41"></span><span id="id16"></span><h3>Internal Metadata Attributes<a class="headerlink" href="#internal-metadata-attributes" title="Permalink to this headline">¶</a></h3>
+<span id="index-42"></span><span id="id19"></span><h3>Internal Metadata Attributes<a class="headerlink" href="#internal-metadata-attributes" title="Permalink to this headline">¶</a></h3>
 <p>The following metadata attributes are used internally by the Traits package,
 and can be queried:</p>
-<span class="target" id="index-42"></span><span class="target" id="index-43"></span><span class="target" id="index-44"></span><span class="target" id="index-45"></span><ul class="simple" id="index-46">
+<span class="target" id="index-43"></span><span class="target" id="index-44"></span><span class="target" id="index-45"></span><span class="target" id="index-46"></span><ul class="simple" id="index-47">
 <li><p><strong>array</strong>: Indicates whether the trait is an array.</p></li>
 <li><p><strong>default</strong>: Returns the default value for the trait, if known; otherwise it
 returns Undefined.</p></li>
@@ -892,10 +957,10 @@ derived from TraitType.</p></li>
 </ul>
 </div>
 <div class="section" id="recognized-metadata-attributes">
-<span id="index-47"></span><span id="id17"></span><h3>Recognized Metadata Attributes<a class="headerlink" href="#recognized-metadata-attributes" title="Permalink to this headline">¶</a></h3>
+<span id="index-48"></span><span id="id20"></span><h3>Recognized Metadata Attributes<a class="headerlink" href="#recognized-metadata-attributes" title="Permalink to this headline">¶</a></h3>
 <p>The following metadata attributes are not predefined, but are recognized by
 HasTraits objects:</p>
-<span class="target" id="index-48"></span><span class="target" id="index-49"></span><ul class="simple" id="index-50">
+<span class="target" id="index-49"></span><span class="target" id="index-50"></span><ul class="simple" id="index-51">
 <li><p><strong>desc</strong>: A string describing the intended meaning of the trait. It is used
 in exception messages and fly-over help in user interface trait editors.</p></li>
 <li><p><strong>editor</strong>: Specifies an instance of a subclass of TraitEditor to use when
@@ -919,8 +984,8 @@ False, as doing so is likely to create unintended consequences. See
 <p>Other metadata attributes may be recognized by specific predefined traits.</p>
 </div>
 <div class="section" id="accessing-metadata-attributes">
-<span id="index-51"></span><span id="id18"></span><h3>Accessing Metadata Attributes<a class="headerlink" href="#accessing-metadata-attributes" title="Permalink to this headline">¶</a></h3>
-<p id="index-52">Here is an example of setting trait metadata using keyword arguments:</p>
+<span id="index-52"></span><span id="id21"></span><h3>Accessing Metadata Attributes<a class="headerlink" href="#accessing-metadata-attributes" title="Permalink to this headline">¶</a></h3>
+<p id="index-53">Here is an example of setting trait metadata using keyword arguments:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># keywords.py --- Example of trait keywords</span>
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
 
@@ -987,14 +1052,18 @@ the metadata attribute:</p>
 </div>
 <p class="rubric">Footnotes</p>
 <dl class="footnote brackets">
-<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
+<dt class="label" id="id22"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
 <dd><p>Most callable predefined traits are classes, but a few are functions.
 The distinction does not make a difference unless you are trying to
 extend an existing predefined trait. See the <em>Traits API Reference</em> for
 details on particular traits, and see Chapter 5 for details on extending
 existing traits.</p>
 </dd>
-<dt class="label" id="id20"><span class="brackets"><a class="fn-backref" href="#id8">3</a></span></dt>
+<dt class="label" id="id23"><span class="brackets">3</span><span class="fn-backref">(<a href="#id8">1</a>,<a href="#id9">2</a>)</span></dt>
+<dd><p>The Function and Method trait types are now deprecated. See <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Function" title="traits.trait_types.Function"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span></code></a>,
+<a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Method" title="traits.trait_types.Method"><code class="xref py py-class docutils literal notranslate"><span class="pre">Method</span></code></a></p>
+</dd>
+<dt class="label" id="id24"><span class="brackets"><a class="fn-backref" href="#id10">4</a></span></dt>
 <dd><p>Available in Python 2.5.</p>
 </dd>
 </dl>
@@ -1014,6 +1083,7 @@ existing traits.</p>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Defining Traits: Initialization and Validation</a><ul>
+<li><a class="reference internal" href="#a-note-about-the-traits-package-structure">A note about the Traits package structure</a></li>
 <li><a class="reference internal" href="#predefined-traits">Predefined Traits</a><ul>
 <li><a class="reference internal" href="#predefined-traits-for-simple-types">Predefined Traits for Simple Types</a><ul>
 <li><a class="reference internal" href="#trait-type-coercion">Trait Type Coercion</a></li>
@@ -1021,6 +1091,7 @@ existing traits.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#other-predefined-traits">Other Predefined Traits</a><ul>
+<li><a class="reference internal" href="#instance">Instance</a></li>
 <li><a class="reference internal" href="#this-and-self">This and self</a></li>
 <li><a class="reference internal" href="#map">Map</a></li>
 <li><a class="reference internal" href="#prefixmap">PrefixMap</a></li>
@@ -1079,12 +1150,12 @@ existing traits.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

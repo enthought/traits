@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Custom Traits &mdash; Traits 6.1 User Manual</title>
+    <title>Custom Traits &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,8 +30,8 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
-    <link rel="up" title="Traits 6.1 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.2 User Manual" href="index.html" >
     <link rel="next" title="Advanced Topics" href="advanced.html" >
     <link rel="prev" title="Deferring Trait Definitions" href="deferring.html" > 
   </head>
@@ -50,9 +50,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.1 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.2 User Manual</a></li> 
     </ul>
               
               
@@ -116,7 +116,7 @@ TraitType.</p>
     <span class="n">info_text</span> <span class="o">=</span> <span class="s1">&#39;an odd integer&#39;</span>
 
     <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">OddInt</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">value</span>
 
@@ -137,6 +137,14 @@ in programming.</p>
 property, depending on the specific methods and class constants that you define.
 A trait type uses a validate() method, while a trait property uses get() and
 set() methods.</p>
+<p>The <a class="reference internal" href="../traits_api_reference/trait_type.html#traits.trait_type.TraitType" title="traits.trait_type.TraitType"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitType</span></code></a> initializer provides an optional argument
+<code class="docutils literal notranslate"><span class="pre">default_value</span></code> to support easy setting of the default value of the trait
+type. The default value for that argument is <a class="reference internal" href="../traits_api_reference/trait_type.html#traits.trait_type.NoDefaultSpecified" title="traits.trait_type.NoDefaultSpecified"><code class="xref py py-data docutils literal notranslate"><span class="pre">NoDefaultSpecified</span></code></a>: we
+don’t follow the common Python idiom of using <code class="docutils literal notranslate"><span class="pre">None</span></code> to represent no default
+here, since for many trait types <code class="docutils literal notranslate"><span class="pre">None</span></code> may be a valid default value. When
+subclassing <a class="reference internal" href="../traits_api_reference/trait_type.html#traits.trait_type.TraitType" title="traits.trait_type.TraitType"><code class="xref py py-class docutils literal notranslate"><span class="pre">TraitType</span></code></a> and overriding or extending its <code class="docutils literal notranslate"><span class="pre">__init__</span></code>
+method, it’s recommended to re-use the singleton <a class="reference internal" href="../traits_api_reference/trait_type.html#traits.trait_type.NoDefaultSpecified" title="traits.trait_type.NoDefaultSpecified"><code class="xref py py-data docutils literal notranslate"><span class="pre">NoDefaultSpecified</span></code></a>
+if you need a way to indicate that no default value was specified.</p>
 <div class="section" id="defining-a-trait-type">
 <span id="id4"></span><h3>Defining a Trait Type<a class="headerlink" href="#defining-a-trait-type" title="Permalink to this headline">¶</a></h3>
 <p>The members that are specific to a trait type subclass are:</p>
@@ -641,12 +649,12 @@ BaseType version that does not have the <strong>fast_validate</strong> attribute
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

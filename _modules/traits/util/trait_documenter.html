@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.util.trait_documenter &mdash; Traits 6.1 User Manual</title>
+    <title>traits.util.trait_documenter &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../../../index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.2 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -77,7 +77,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <h1>Source code for traits.util.trait_documenter</h1><div class="highlight"><pre>
-<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span></span><span class="c1"># (C) Copyright 2005-2021 Enthought, Inc., Austin, TX</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># This software is provided without warranty under the terms of the BSD</span>
@@ -100,10 +100,14 @@
 <span class="kn">import</span> <span class="nn">traceback</span>
 
 <span class="kn">from</span> <span class="nn">sphinx.ext.autodoc</span> <span class="k">import</span> <span class="n">ClassLevelDocumenter</span>
+<span class="kn">from</span> <span class="nn">sphinx.util</span> <span class="k">import</span> <span class="n">logging</span>
 
 <span class="kn">from</span> <span class="nn">traits.has_traits</span> <span class="k">import</span> <span class="n">MetaHasTraits</span>
 <span class="kn">from</span> <span class="nn">traits.trait_type</span> <span class="k">import</span> <span class="n">TraitType</span>
 <span class="kn">from</span> <span class="nn">traits.traits</span> <span class="k">import</span> <span class="n">generic_trait</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_is_class_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
@@ -124,12 +128,6 @@
 
 <span class="sd">    To use the documenter, append the module path in the extension</span>
 <span class="sd">    attribute of the `conf.py`.</span>
-
-<span class="sd">    .. warning::</span>
-
-<span class="sd">        Using the TraitDocumenter in conjunction with TraitsDoc is not</span>
-<span class="sd">        advised.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># ClassLevelDocumenter interface #####################################</span>
@@ -199,41 +197,87 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ClassLevelDocumenter</span><span class="o">.</span><span class="n">add_directive_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig</span><span class="p">)</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_trait_definition</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">definition</span> <span class="o">=</span> <span class="n">trait_definition</span><span class="p">(</span>
+                <span class="bp">cls</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span>
+                <span class="n">trait_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">object_name</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c1"># Without this, a failure to find the trait definition aborts</span>
+            <span class="c1"># the whole documentation build.</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;No definition for the trait </span><span class="si">{!r}</span><span class="s2"> could be found in &quot;</span>
+                <span class="s2">&quot;class </span><span class="si">{!r}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">object_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">),</span>
+                <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span>
 
         <span class="c1"># Workaround for enthought/traits#493: if the definition is multiline,</span>
         <span class="c1"># throw away all lines after the first.</span>
         <span class="k">if</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">definition</span><span class="p">:</span>
             <span class="n">definition</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; …&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="s2">&quot;   :annotation: = </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">definition</span><span class="p">),</span> <span class="s2">&quot;&lt;autodoc&gt;&quot;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="s2">&quot;   :annotation: = </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">definition</span><span class="p">),</span> <span class="s2">&quot;&lt;autodoc&gt;&quot;</span><span class="p">)</span></div></div>
 
-    <span class="c1"># Private Interface #####################################################</span>
 
-    <span class="k">def</span> <span class="nf">_get_trait_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Retrieve the Trait attribute definition</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="trait_definition"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.trait_documenter.trait_definition">[docs]</a><span class="k">def</span> <span class="nf">trait_definition</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Retrieve the portion of the source defining a Trait attribute.</span>
 
-        <span class="c1"># Get the class source and tokenize it.</span>
-        <span class="n">source</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
-        <span class="n">string_io</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
-        <span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenize</span><span class="o">.</span><span class="n">generate_tokens</span><span class="p">(</span><span class="n">string_io</span><span class="o">.</span><span class="n">readline</span><span class="p">)</span>
+<span class="sd">    For example, given a class::</span>
 
-        <span class="c1"># find the trait definition start</span>
-        <span class="n">trait_found</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">name_found</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="n">trait_found</span><span class="p">:</span>
-            <span class="n">item</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">name_found</span> <span class="ow">and</span> <span class="n">item</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">OP</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">):</span>
-                <span class="n">trait_found</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">continue</span>
-            <span class="k">if</span> <span class="n">item</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">NAME</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">object_name</span><span class="p">):</span>
-                <span class="n">name_found</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="sd">        class MyModel(HasStrictTraits)</span>
+<span class="sd">            foo = List(Int, [1, 2, 3])</span>
 
-        <span class="c1"># Retrieve the trait definition.</span>
-        <span class="n">definition_tokens</span> <span class="o">=</span> <span class="n">_get_definition_tokens</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="n">tokenize</span><span class="o">.</span><span class="n">untokenize</span><span class="p">(</span><span class="n">definition_tokens</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">definition</span></div>
+<span class="sd">    ``trait_definition(cls=MyModel, trait_name=&quot;foo&quot;)`` returns</span>
+<span class="sd">    ``&quot;List(Int, [1, 2, 3])&quot;``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cls : MetaHasTraits</span>
+<span class="sd">        Class being documented.</span>
+<span class="sd">    trait_name : str</span>
+<span class="sd">        Name of the trait being documented.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The portion of the source containing the trait definition. For</span>
+<span class="sd">        example, for a class trait defined as ``&quot;my_trait = Float(3.5)&quot;``,</span>
+<span class="sd">        the returned string will contain ``&quot;Float(3.5)&quot;``.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If *trait_name* doesn&#39;t appear as a class-level variable in the</span>
+<span class="sd">        source.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the class source and tokenize it.</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+    <span class="n">string_io</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenize</span><span class="o">.</span><span class="n">generate_tokens</span><span class="p">(</span><span class="n">string_io</span><span class="o">.</span><span class="n">readline</span><span class="p">)</span>
+
+    <span class="c1"># find the trait definition start</span>
+    <span class="n">trait_found</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">name_found</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">trait_found</span><span class="p">:</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">if</span> <span class="n">name_found</span> <span class="ow">and</span> <span class="n">item</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">OP</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">):</span>
+            <span class="n">trait_found</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">item</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">NAME</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">):</span>
+            <span class="n">name_found</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">trait_found</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;No trait definition for </span><span class="si">{!r}</span><span class="s2"> found in </span><span class="si">{!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">trait_name</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Retrieve the trait definition.</span>
+    <span class="n">definition_tokens</span> <span class="o">=</span> <span class="n">_get_definition_tokens</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">tokenize</span><span class="o">.</span><span class="n">untokenize</span><span class="p">(</span><span class="n">definition_tokens</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">definition</span></div>
 
 
 <span class="k">def</span> <span class="nf">_get_definition_tokens</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
@@ -311,12 +355,12 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

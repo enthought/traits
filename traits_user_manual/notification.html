@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Trait Notification &mdash; Traits 6.1 User Manual</title>
+    <title>Trait Notification &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,8 +30,8 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
-    <link rel="up" title="Traits 6.1 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.2 User Manual" href="index.html" >
     <link rel="next" title="Deferring Trait Definitions" href="deferring.html" >
     <link rel="prev" title="Defining Traits: Initialization and Validation" href="defining.html" > 
   </head>
@@ -50,9 +50,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.1 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.2 User Manual</a></li> 
     </ul>
               
               
@@ -113,12 +113,14 @@ applying the <a class="reference internal" href="../traits_api_reference/has_tra
 observe changes to a specific trait on an object:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">observe</span>
 
+
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">age</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="nd">@observe</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">notify_age_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;age changed from </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">new</span><span class="p">))</span>
+
 
 <span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">age</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># print &#39;age changed from 0 to 1&#39;</span>
 <span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">2</span>    <span class="c1"># print &#39;age changed from 1 to 2&#39;</span>
@@ -143,13 +145,16 @@ be used to delay adding the change handler until after the object state is set.<
 <p>The <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.observe" title="traits.has_traits.HasTraits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> method on <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal notranslate"><span class="pre">HasTraits</span></code></a> is useful for adding or removing
 change handlers on a per instance basis. The example above can be rewritten like
 this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">observe</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span>
+
 
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">age</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
+
 <span class="k">def</span> <span class="nf">print_change</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> changed: </span><span class="si">{}</span><span class="s2"> -&gt; </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">new</span><span class="p">))</span>
+
 
 <span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">age</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">person</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">print_change</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">)</span>
@@ -420,9 +425,10 @@ it is invoked. The following example shows the first option:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">observe</span>
 <span class="kn">from</span> <span class="nn">traits.observation.api</span> <span class="k">import</span> <span class="n">trait</span>
 
+
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 
-    <span class="n">scores</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Int</span><span class="p">,</span> <span class="n">comparison_mode</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Int</span><span class="p">)</span>
 
     <span class="nd">@observe</span><span class="p">(</span><span class="s2">&quot;scores&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">notify_scores_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
@@ -437,6 +443,7 @@ it is invoked. The following example shows the first option:</p>
             <span class="s2">&quot;scores added: </span><span class="si">{event.added}</span><span class="s2">. scores removed: </span><span class="si">{event.removed}</span><span class="s2"> &quot;</span>
             <span class="s2">&quot;(Event type: </span><span class="si">{event.__class__.__name__}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">event</span><span class="o">=</span><span class="n">event</span><span class="p">)</span>
         <span class="p">)</span>
+
 
 <span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">scores</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
 <span class="c1"># print: scores changed from [] to [1, 2]. (Event type: TraitChangeEvent)</span>
@@ -473,6 +480,7 @@ a trait is defined.</p>
     <span class="nd">@observe</span><span class="p">(</span><span class="n">trait</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
     <span class="k">def</span> <span class="nf">notify_age_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;age changed&quot;</span><span class="p">)</span>
+
 
 <span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
 <span class="n">person</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">Int</span><span class="p">())</span>
@@ -605,7 +613,7 @@ containers.</p>
     <span class="n">value</span> <span class="o">=</span> <span class="n">Int</span><span class="p">()</span>
 
 <span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">container</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Instance</span><span class="p">(</span><span class="n">Bar</span><span class="p">),</span> <span class="n">comparison_mode</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">container</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Instance</span><span class="p">(</span><span class="n">Bar</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>To notify for changes on <em>Bar.value</em> for an item in <em>Foo.container</em>,
@@ -641,32 +649,6 @@ defined for supporting <a class="reference internal" href="../traits_api_referen
 with <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a> is discouraged as this special trait may be removed when
 <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a> is removed.</p>
 </div>
-<div class="section" id="identity-comparison-mode-for-container-traits">
-<h3>Identity comparison mode for container traits<a class="headerlink" href="#identity-comparison-mode-for-container-traits" title="Permalink to this headline">¶</a></h3>
-<p>While observing mutations and nested attributes inside <code class="docutils literal notranslate"><span class="pre">List</span></code>, <code class="docutils literal notranslate"><span class="pre">Set</span></code> and
-<code class="docutils literal notranslate"><span class="pre">Dict</span></code>, one should set the trait’s comparison mode to <strong>identity</strong> (1) or
-<strong>none</strong> (0) in the <a class="reference internal" href="../traits_api_reference/constants.html#traits.constants.ComparisonMode" title="traits.constants.ComparisonMode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComparisonMode</span></code></a> enum.</p>
-<p>For backward compatibility, the default comparison mode is currently set to
-<strong>equality</strong> (2). This results in observers not being moved from the old
-container to the new one, if a new container compares equally to the old one
-is assigned to the trait.</p>
-<p>For example, with <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">container</span> <span class="o">=</span> <span class="n">List</span><span class="p">()</span>
-
-<span class="nd">@on_trait_change</span><span class="p">(</span><span class="s2">&quot;container[]&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">container_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="o">...</span>
-</pre></div>
-</div>
-<p>With <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.observe" title="traits.has_traits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a>, it would be best to change this to:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">container</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">comparison_mode</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="nd">@observe</span><span class="p">(</span><span class="s2">&quot;container.items&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">container_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="o">...</span>
-</pre></div>
-</div>
-</div>
 <div class="section" id="change-handler-signature-is-different">
 <h3>Change handler signature is different<a class="headerlink" href="#change-handler-signature-is-different" title="Permalink to this headline">¶</a></h3>
 <p><a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change" title="traits.has_traits.on_trait_change"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a> supports a range of call
@@ -699,7 +681,7 @@ based on the type of changes being handled (see
 </pre></div>
 </div>
 <p>It will have to be changed to:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">container</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">comparison_mode</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">container</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">comparison_mode</span><span class="o">=</span><span class="n">ComparisonMode</span><span class="o">.</span><span class="n">identity</span><span class="p">)</span>
 
 <span class="nd">@observe</span><span class="p">(</span><span class="s2">&quot;container:items&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">name_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
@@ -802,7 +784,6 @@ used for putting up the observer:</p>
 <li><a class="reference internal" href="#migration-from-on-trait-change">Migration from <code class="xref py py-func docutils literal notranslate"><span class="pre">on_trait_change()</span></code></a><ul>
 <li><a class="reference internal" href="#observe-extended-trait-names">Observe extended trait names</a></li>
 <li><a class="reference internal" href="#observe-nested-attributes-in-a-container">Observe nested attributes in a container</a></li>
-<li><a class="reference internal" href="#identity-comparison-mode-for-container-traits">Identity comparison mode for container traits</a></li>
 <li><a class="reference internal" href="#change-handler-signature-is-different">Change handler signature is different</a></li>
 <li><a class="reference internal" href="#syntax-is-not-supported">Syntax “[]” is not supported</a></li>
 <li><a class="reference internal" href="#id1">Syntax “-” is not supported</a></li>
@@ -850,12 +831,12 @@ used for putting up the observer:</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

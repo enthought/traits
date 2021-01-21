@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.has_traits Module &mdash; Traits 6.1 User Manual</title>
+    <title>traits.has_traits Module &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.base_trait_handler Module" href="base_trait_handler.html" >
     <link rel="prev" title="traits.traits Module" href="traits.html" > 
@@ -50,7 +50,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -96,7 +96,7 @@ associated metaclasses.</p>
 <dt id="traits.has_traits.MetaHasTraits">
 <em class="property">class </em><code class="sig-prename descclassname">traits.has_traits.</code><code class="sig-name descname">MetaHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Controls the creation of HasTraits classes.</p>
-<p>The heavy work is done by the <cite>create_traits_meta_dict</cite> function, which
+<p>The heavy work is done by the <cite>update_traits_class_dict</cite> function, which
 takes the <code class="docutils literal notranslate"><span class="pre">class_dict</span></code> dictionary of class members and extracts and
 processes the trait declarations in it. The trait declarations are then
 added back to the class dictionary and passed off to the __new__ method
@@ -207,7 +207,7 @@ been modified</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the attribute to add.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the attribute to add.</p></li>
 <li><p><strong>*trait</strong> – A trait or a value that can be converted to a trait using Trait()
 Trait definition of the attribute. It can be a single value or
 a list equivalent to an argument list for the Trait() function.</p></li>
@@ -228,7 +228,7 @@ a list equivalent to an argument list for the Trait() function.</p></li>
 <dd><p>Returns a list of the immediate (or all) subclasses of this class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>all</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Indicates whether to return all subclasses of this class. If
+<dd class="field-odd"><p><strong>all</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Indicates whether to return all subclasses of this class. If
 False, only immediate subclasses are returned.</p>
 </dd>
 </dl>
@@ -267,7 +267,7 @@ name/value pairs for <em>all</em> traits defined on the object.</p>
 values are the corresponding trait values.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -291,7 +291,7 @@ name/value pairs for <em>all</em> traits defined on the object.</p>
 values are the corresponding trait values.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -316,7 +316,7 @@ in a lambda function. For example, you can write:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>trait_change_notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If <strong>True</strong> (the default), then each value assigned may generate a
+<li><p><strong>trait_change_notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <strong>True</strong> (the default), then each value assigned may generate a
 trait change notification. If <strong>False</strong>, then no trait change
 notifications will be generated. (see also: trait_setq)</p></li>
 <li><p><strong>**traits</strong> – Key/value pairs, the trait attributes and their values to be
@@ -352,7 +352,7 @@ in a lambda function. For example, you can write:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>trait_change_notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If <strong>True</strong> (the default), then each value assigned may generate a
+<li><p><strong>trait_change_notify</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If <strong>True</strong> (the default), then each value assigned may generate a
 trait change notification. If <strong>False</strong>, then no trait change
 notifications will be generated. (see also: trait_setq)</p></li>
 <li><p><strong>**traits</strong> – Key/value pairs, the trait attributes and their values to be
@@ -445,12 +445,12 @@ traits.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – The object whose trait attribute values should be copied.</p></li>
+<li><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a>) – The object whose trait attribute values should be copied.</p></li>
 <li><p><strong>traits</strong> (<em>list of strings</em>) – A list of names of trait attributes to copy. If None or
 unspecified, the set of names returned by trait_names() is used.
 If ‘all’ or an empty list, the set of names returned by
 all_trait_names() is used.</p></li>
-<li><p><strong>memo</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – A dictionary of objects that have already been copied.</p></li>
+<li><p><strong>memo</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – A dictionary of objects that have already been copied.</p></li>
 <li><p><strong>copy</strong> (<em>None | 'deep' | 'shallow'</em>) – The type of copy to perform on any trait that does not have
 explicit ‘copy’ metadata. A value of None means ‘copy reference’.</p></li>
 </ul>
@@ -480,8 +480,8 @@ cloned.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>traits</strong> (<em>list of strings</em>) – The list of names of the trait attributes to copy.</p></li>
-<li><p><strong>memo</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – A dictionary of objects that have already been copied.</p></li>
-<li><p><strong>copy</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The type of copy <code class="docutils literal notranslate"><span class="pre">deep</span></code> or <code class="docutils literal notranslate"><span class="pre">shallow</span></code> to perform on any trait
+<li><p><strong>memo</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – A dictionary of objects that have already been copied.</p></li>
+<li><p><strong>copy</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The type of copy <code class="docutils literal notranslate"><span class="pre">deep</span></code> or <code class="docutils literal notranslate"><span class="pre">shallow</span></code> to perform on any trait
 that does not have explicit ‘copy’ metadata. A value of None means
 ‘copy reference’.</p></li>
 </ul>
@@ -511,19 +511,19 @@ attribute is not specified, the View object returned by
 trait_view() is used.</p></li>
 <li><p><strong>parent</strong> (<em>toolkit control</em>) – The reference to a user interface component to use as the parent
 window for the object’s UI window.</p></li>
-<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The type of user interface window to create. See the
+<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The type of user interface window to create. See the
 <strong>traitsui.view.kind_trait</strong> trait for values and
 their meanings. If <em>kind</em> is unspecified or None, the <strong>kind</strong>
 attribute of the View object is used.</p></li>
-<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em> or </em><em>dictionary</em>) – A single object or a dictionary of string/object pairs, whose trait
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a><em> or </em><em>dictionary</em>) – A single object or a dictionary of string/object pairs, whose trait
 attributes are to be edited. If not specified, the current object
 is used.</p></li>
 <li><p><strong>handler</strong> (<em>Handler</em>) – A handler object used for event handling in the dialog box. If
 None, the default handler for Traits UI is used.</p></li>
-<li><p><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A unique ID for persisting preferences about this user interface,
+<li><p><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A unique ID for persisting preferences about this user interface,
 such as size and position. If not specified, no user preferences
 are saved.</p></li>
-<li><p><strong>scrollable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Indicates whether the dialog box should be scrollable. When set to
+<li><p><strong>scrollable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Indicates whether the dialog box should be scrollable. When set to
 True, scroll bars appear on the dialog box if it is not large
 enough to display all of the items in the view at one time.</p></li>
 </ul>
@@ -570,7 +570,7 @@ non-event trait attributes on the current object.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of a view element</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of a view element</p></li>
 <li><p><strong>view_element</strong> (<em>ViewElement</em>) – View element to associate</p></li>
 </ul>
 </dd>
@@ -637,7 +637,7 @@ associated with the class.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.configure_traits">
-<code class="sig-name descname">configure_traits</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em>, <em class="sig-param">view=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">edit=True</em>, <em class="sig-param">context=None</em>, <em class="sig-param">handler=None</em>, <em class="sig-param">id=''</em>, <em class="sig-param">scrollable=None</em>, <em class="sig-param">**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.configure_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.configure_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">configure_traits</code><span class="sig-paren">(</span><em class="sig-param">filename=None</em>, <em class="sig-param">view=None</em>, <em class="sig-param">kind=None</em>, <em class="sig-param">edit=None</em>, <em class="sig-param">context=None</em>, <em class="sig-param">handler=None</em>, <em class="sig-param">id=''</em>, <em class="sig-param">scrollable=None</em>, <em class="sig-param">**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.configure_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.configure_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates and displays a dialog box for editing values of trait
 attributes, as if it were a complete, self-contained GUI application.</p>
 <p>This method is intended for use in applications that do not normally
@@ -657,38 +657,45 @@ modified by the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – NOTE: Deprecated as of traits 6.0.0.
-The name (including path) of a file that contains a pickled
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – <p>The name (including path) of a file that contains a pickled
 representation of the current object. When this parameter is
 specified, the method reads the corresponding file (if it exists)
 to restore the saved values of the object’s traits before
 displaying them. If the user confirms the dialog box (by clicking
 <strong>OK</strong>), the new values are written to the file. If this parameter
 is not specified, the values are loaded from the in-memory object,
-and are not persisted when the dialog box is closed.</p></li>
-<li><p><strong>view</strong> (<em>View</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A View object (or its name) that defines a user interface for
+and are not persisted when the dialog box is closed.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 6.0.0.</span></p>
+</div>
+</p></li>
+<li><p><strong>view</strong> (<em>View</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A View object (or its name) that defines a user interface for
 editing trait attribute values of the current object. If the view
 is defined as an attribute on this class, use the name of the
 attribute. Otherwise, use a reference to the view object. If this
 attribute is not specified, the View object returned by
 trait_view() is used.</p></li>
-<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The type of user interface window to create. See the
+<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The type of user interface window to create. See the
 <strong>traitsui.view.kind_trait</strong> trait for values and
 their meanings. If <em>kind</em> is unspecified or None, the <strong>kind</strong>
 attribute of the View object is used.</p></li>
-<li><p><strong>edit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Indicates whether to display a user interface. If <em>filename</em>
+<li><p><strong>edit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – <p>Indicates whether to display a user interface. If <em>filename</em>
 specifies an existing file, setting <em>edit</em> to False loads the
 saved values from that file into the object without requiring
-user interaction.</p></li>
-<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a><em> or </em><em>dictionary</em>) – A single object or a dictionary of string/object pairs, whose trait
+user interaction.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 6.2.0.</span></p>
+</div>
+</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a><em> or </em><em>dictionary</em>) – A single object or a dictionary of string/object pairs, whose trait
 attributes are to be edited. If not specified, the current object
 is used</p></li>
 <li><p><strong>handler</strong> (<em>Handler</em>) – A handler object used for event handling in the dialog box. If
 None, the default handler for Traits UI is used.</p></li>
-<li><p><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A unique ID for persisting preferences about this user interface,
+<li><p><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – A unique ID for persisting preferences about this user interface,
 such as size and position. If not specified, no user preferences
 are saved.</p></li>
-<li><p><strong>scrollable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Indicates whether the dialog box should be scrollable. When set to
+<li><p><strong>scrollable</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Indicates whether the dialog box should be scrollable. When set to
 True, scroll bars appear on the dialog box if it is not large
 enough to display all of the items in the view at one time.</p></li>
 </ul>
@@ -739,7 +746,7 @@ visible</p>
 attributes on the current object, in an easily readable format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>show_help</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Indicates whether to display additional descriptive information.</p>
+<dd class="field-odd"><p><strong>show_help</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Indicates whether to display additional descriptive information.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -801,11 +808,11 @@ the above features and more.</p>
 It must accept one argument, which is an event object providing
 information about the change.
 See <a class="reference internal" href="traits.observation.html#module-traits.observation.events" title="traits.observation.events"><code class="xref py py-mod docutils literal notranslate"><span class="pre">traits.observation.events</span></code></a> for details.</p></li>
-<li><p><strong>expression</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em> or </em><a class="reference internal" href="traits.observation.html#traits.observation.expression.ObserverExpression" title="traits.observation.expression.ObserverExpression"><em>ObserverExpression</em></a>) – A description of what traits are being observed.
+<li><p><strong>expression</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em> or </em><a class="reference internal" href="traits.observation.html#traits.observation.expression.ObserverExpression" title="traits.observation.expression.ObserverExpression"><em>ObserverExpression</em></a>) – A description of what traits are being observed.
 If this is a list, each item must be a string or an Expression.</p></li>
 <li><p><strong>remove</strong> (<em>boolean</em><em>, </em><em>optional</em>) – Whether to remove the event handler. Default is to add the event
 handler.</p></li>
-<li><p><strong>dispatch</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – <p>A string indicating how the handler should be run.
+<li><p><strong>dispatch</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – <p>A string indicating how the handler should be run.
 Default is to run on the same thread where the change occurs.</p>
 <p>Possible values are:</p>
 <table class="docutils align-default">
@@ -1069,13 +1076,13 @@ be notified of changes to any of the items of the ‘xxx’ trait.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>handler</strong> (<em>function</em>) – A trait notification function for the <em>name</em> trait attribute, with
 one of the signatures described below.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the trait attribute whose value changes trigger the
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the trait attribute whose value changes trigger the
 notification. The <em>name</em> can specify complex patterns of trait
 changes using an extended <em>name</em> syntax, which is described below.</p></li>
-<li><p><strong>remove</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True, removes the previously-set association between
+<li><p><strong>remove</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, removes the previously-set association between
 <em>handler</em> and <em>name</em>; if False (the default), creates the
 association.</p></li>
-<li><p><strong>dispatch</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – <p>A string indicating the thread on which notifications must be run.
+<li><p><strong>dispatch</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – <p>A string indicating the thread on which notifications must be run.
 Possible values are:</p>
 <table class="docutils align-default">
 <colgroup>
@@ -1350,13 +1357,13 @@ be notified of changes to any of the items of the ‘xxx’ trait.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>handler</strong> (<em>function</em>) – A trait notification function for the <em>name</em> trait attribute, with
 one of the signatures described below.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the trait attribute whose value changes trigger the
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – The name of the trait attribute whose value changes trigger the
 notification. The <em>name</em> can specify complex patterns of trait
 changes using an extended <em>name</em> syntax, which is described below.</p></li>
-<li><p><strong>remove</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True, removes the previously-set association between
+<li><p><strong>remove</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – If True, removes the previously-set association between
 <em>handler</em> and <em>name</em>; if False (the default), creates the
 association.</p></li>
-<li><p><strong>dispatch</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – <p>A string indicating the thread on which notifications must be run.
+<li><p><strong>dispatch</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – <p>A string indicating the thread on which notifications must be run.
 Possible values are:</p>
 <table class="docutils align-default">
 <colgroup>
@@ -1413,13 +1420,13 @@ be updated, but not vice versa.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the trait attribute on this object.</p></li>
-<li><p><strong>object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><em>object</em></a>) – The object with which to synchronize.</p></li>
-<li><p><strong>alias</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the trait attribute on <em>other</em>; if None or omitted, same
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the trait attribute on this object.</p></li>
+<li><p><strong>object</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><em>object</em></a>) – The object with which to synchronize.</p></li>
+<li><p><strong>alias</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the trait attribute on <em>other</em>; if None or omitted, same
 as <em>name</em>.</p></li>
-<li><p><strong>mutual</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Indicates whether synchronization is mutual (True or non-zero)
+<li><p><strong>mutual</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Indicates whether synchronization is mutual (True or non-zero)
 or one-way (False or zero)</p></li>
-<li><p><strong>remove</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Indicates whether synchronization is being added (False or zero)
+<li><p><strong>remove</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a>) – Indicates whether synchronization is being added (False or zero)
 or removed (True or non-zero)</p></li>
 </ul>
 </dd>
@@ -1433,7 +1440,7 @@ or removed (True or non-zero)</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the attribute to add.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the attribute to add.</p></li>
 <li><p><strong>*trait</strong> – Trait or a value that can be converted to a trait by Trait().
 Trait definition for <em>name</em>. If more than one value is specified,
 it is equivalent to passing the entire list of values to Trait().</p></li>
@@ -1448,13 +1455,13 @@ it is equivalent to passing the entire list of values to Trait().</p></li>
 <dd><p>Removes a trait attribute from this object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the attribute to remove.</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the attribute to remove.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>result</strong> – True if the trait was successfully removed.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1474,10 +1481,10 @@ definition found is returned unmodified (the default).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the attribute whose trait definition is to be returned.</p></li>
-<li><p><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Indicates whether to return a trait definition if <em>name</em> is
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the attribute whose trait definition is to be returned.</p></li>
+<li><p><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Indicates whether to return a trait definition if <em>name</em> is
 not explicitly defined.</p></li>
-<li><p><strong>copy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Indicates whether to return the original trait definition or a
+<li><p><strong>copy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Indicates whether to return the original trait definition or a
 copy.</p></li>
 </ul>
 </dd>
@@ -1495,7 +1502,7 @@ delegation chain until a non-delegated trait attribute is reached, and
 returns the definition of that attribute’s trait as the result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the attribute whose trait definition is returned.</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the attribute whose trait definition is returned.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1511,7 +1518,9 @@ returns the definition of that attribute’s trait as the result.</p>
 <dt id="traits.has_traits.HasTraits.traits">
 <code class="sig-name descname">traits</code><span class="sig-paren">(</span><em class="sig-param">**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dictionary containing the definitions of all of the trait
-attributes of this object that match the set of <em>metadata</em> criteria.</p>
+attributes of this object that match the set of <em>metadata</em> criteria.
+Note that any traits with a name containing the suffix “_items” are
+always excluded.</p>
 <p>The keys of the returned dictionary are the trait attribute names, and
 the values are their corresponding trait definition objects.</p>
 <p>If no <em>metadata</em> information is specified, then all explicitly defined
@@ -1734,7 +1743,7 @@ return its result. The &#64;cached_property decorator automatically wraps
 the decorated method in cache management code, eliminating the need to
 write boilerplate cache management code explicitly. For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">file_name</span> <span class="o">=</span> <span class="n">File</span>
-<span class="n">file_contents</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">depends_on</span> <span class="o">=</span> <span class="s1">&#39;file_name&#39;</span> <span class="p">)</span>
+<span class="n">file_contents</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">observe</span><span class="o">=</span><span class="s1">&#39;file_name&#39;</span><span class="p">)</span>
 
 <span class="nd">@cached_property</span>
 <span class="k">def</span> <span class="nf">_get_file_contents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1747,7 +1756,7 @@ _get_file_contents() method only once each time after the <strong>file_name</str
 trait is modified. In all other cases, the cached value
 <strong>_file_contents</strong>, which maintained by the &#64;cached_property wrapper
 code, is returned.</p>
-<p>Note the use, in the example, of the <strong>depends_on</strong> metadata attribute
+<p>Note the use, in the example, of the <strong>observe</strong> metadata attribute
 to specify that the value of <strong>file_contents</strong> depends on
 <strong>file_name</strong>, so that _get_file_contents() is called only when
 <strong>file_name</strong> changes. For details, see the traits.traits.Property()
@@ -1778,7 +1787,7 @@ representing the change. See <a class="reference internal" href="traits.observat
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>expression</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em> or </em><a class="reference internal" href="traits.observation.html#traits.observation.expression.ObserverExpression" title="traits.observation.expression.ObserverExpression"><em>ObserverExpression</em></a>) – A description of what traits are being observed.
+<li><p><strong>expression</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em> or </em><a class="reference internal" href="traits.observation.html#traits.observation.expression.ObserverExpression" title="traits.observation.expression.ObserverExpression"><em>ObserverExpression</em></a>) – A description of what traits are being observed.
 If this is a list, each item must be a string or Expression.
 See <a class="reference internal" href="#traits.has_traits.HasTraits.observe" title="traits.has_traits.HasTraits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">HasTraits.observe()</span></code></a> for details on the
 semantics when passing a string.</p></li>
@@ -1787,7 +1796,7 @@ the state is set when instantiating an object. Default is false, and
 values provided to the instance constructor will trigger the
 change handler to fire if the value is different from the
 default. Set to true to avoid this change event.</p></li>
-<li><p><strong>dispatch</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – <p>A string indicating how the handler should be run. Default is to run
+<li><p><strong>dispatch</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><em>optional</em>) – <p>A string indicating how the handler should be run. Default is to run
 it on the same thread where the change occurs.
 Possible values are:</p>
 <table class="docutils align-default">
@@ -1981,12 +1990,12 @@ being unchecked.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

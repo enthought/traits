@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>Advanced Topics &mdash; Traits 6.1 User Manual</title>
+    <title>Advanced Topics &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,8 +30,8 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
-    <link rel="up" title="Traits 6.1 User Manual" href="index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
+    <link rel="up" title="Traits 6.2 User Manual" href="index.html" >
     <link rel="next" title="Testing" href="testing.html" >
     <link rel="prev" title="Custom Traits" href="custom.html" > 
   </head>
@@ -50,9 +50,9 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
 	
-          <li class="active"><a href="index.html" accesskey="U">Traits 6.1 User Manual</a></li> 
+          <li class="active"><a href="index.html" accesskey="U">Traits 6.2 User Manual</a></li> 
     </ul>
               
               
@@ -519,6 +519,11 @@ traits.has_traits module:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">traits.has_traits</span>
 <span class="n">traits</span><span class="o">.</span><span class="n">has_traits</span><span class="o">.</span><span class="n">CHECK_INTERFACES</span> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
+</div>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 6.2.0: </span>Interface checking with the <code class="docutils literal notranslate"><span class="pre">&#64;provides</span></code> decorator is deprecated. In the
+future, the <code class="docutils literal notranslate"><span class="pre">&#64;provides</span></code> decorator will ignore the value of
+<code class="docutils literal notranslate"><span class="pre">CHECK_INTERFACES</span></code> and will not do any interface checking.</p>
 </div>
 </div>
 <div class="section" id="using-interfaces">
@@ -1015,8 +1020,8 @@ TraitUI view.</p>
 <span id="id24"></span><h3>Property Factory Function<a class="headerlink" href="#property-factory-function" title="Permalink to this headline">¶</a></h3>
 <p>The Property() function has the following signature:</p>
 <dl class="function">
-<dt id="traits.adaptation.api.Property">
-<code class="sig-prename descclassname">traits.adaptation.api.</code><code class="sig-name descname">Property</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">fget=None</em>, <em class="sig-param">fset=None</em>, <em class="sig-param">fvalidate=None</em>, <em class="sig-param">force=False</em>, <em class="sig-param">handler=None</em>, <em class="sig-param">trait=None</em>, <em class="sig-param">**metadata</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.adaptation.api.Property" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="sig-prename descclassname">traits.traits.</code><code class="sig-name descname">Property</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">fget=None</em>, <em class="sig-param">fset=None</em>, <em class="sig-param">fvalidate=None</em>, <em class="sig-param">force=False</em>, <em class="sig-param">handler=None</em>, <em class="sig-param">trait=None</em>, <em class="sig-param">**metadata</em><span class="optional">]</span><span class="sig-paren">)</span></dt>
 <dd></dd></dl>
 
 <p>All parameters are optional, including the <em>fget</em> “getter”, <em>fvalidate</em>
@@ -1043,6 +1048,18 @@ situations:</p>
 to ignore functions on the class) and one of the access functions was not
 specified in the arguments.</p></li>
 </ul>
+<p>You can use the <strong>observe</strong> metadata attribute to indicate that the
+property depends on the value of another trait. The value of <strong>observe</strong>
+follows the same signature as the <strong>expression</strong> parameter in
+<a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.observe" title="traits.has_traits.HasTraits.observe"><code class="xref py py-func docutils literal notranslate"><span class="pre">observe()</span></code></a>, which is also described in the
+<a class="reference internal" href="notification.html#observe-expression"><span class="std std-ref">expression section</span></a>. The property will fire a trait
+change notification if any of the traits specified by <strong>observe</strong> change. For
+example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Wheel</span><span class="p">(</span><span class="n">Part</span><span class="p">):</span>
+    <span class="n">axle</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Axle</span><span class="p">)</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">observe</span><span class="o">=</span><span class="s1">&#39;axle.chassis.position&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="caching-a-property-value">
 <span id="index-31"></span><span id="id25"></span><h3>Caching a Property Value<a class="headerlink" href="#caching-a-property-value" title="Permalink to this headline">¶</a></h3>
@@ -1053,35 +1070,41 @@ When a change occurs in one of the attributes on which the cached value depends,
 the cache should be cleared, and the property value should be recomputed the
 next time its value is requested.</p>
 <p id="index-32">One strategy to accomplish caching would be to use a private attribute for the
-cached value, and notification listener methods on the attributes that are
+cached value, and notification observer methods on the attributes that are
 depended on. However, to simplify the situation, Property traits support a
-&#64;cached_property decorator and <strong>depends_on</strong> metadata. Use &#64;cached_property to
-indicate that a getter method’s return value should be cached. Use
-<strong>depends_on</strong> to indicate the other attributes that the property depends on.</p>
+<a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.cached_property" title="traits.has_traits.cached_property"><code class="xref py py-func docutils literal notranslate"><span class="pre">cached_property()</span></code></a> decorator and <strong>observe</strong> metadata. Use <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.cached_property" title="traits.has_traits.cached_property"><code class="xref py py-func docutils literal notranslate"><span class="pre">cached_property()</span></code></a>
+to indicate that a getter method’s return value should be cached. Use
+<strong>observe</strong> to indicate the other attributes that the property depends on.</p>
 <p id="index-33">For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># cached_prop.py -- Example of @cached_property decorator</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasPrivateTraits</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span>\
-                                 <span class="n">Property</span><span class="p">,</span> <span class="n">cached_property</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">cached_property</span><span class="p">,</span> <span class="n">HasStrictTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">observe</span><span class="p">,</span> <span class="n">Property</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="k">class</span> <span class="nc">TestScores</span> <span class="p">(</span> <span class="n">HasPrivateTraits</span> <span class="p">):</span>
 
-    <span class="n">scores</span>  <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">Int</span> <span class="p">)</span>
-    <span class="n">average</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">depends_on</span> <span class="o">=</span> <span class="s1">&#39;scores&#39;</span> <span class="p">)</span>
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
+
+    <span class="n">full_name</span> <span class="o">=</span> <span class="n">Str</span><span class="p">()</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">observe</span><span class="o">=</span><span class="s2">&quot;full_name&quot;</span><span class="p">)</span>
 
     <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">_get_average</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scores</span>
-        <span class="k">return</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span> <span class="n">reduce</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">:</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">)</span>
-                 <span class="o">/</span> <span class="nb">len</span><span class="p">(</span> <span class="n">s</span> <span class="p">))</span>
+    <span class="k">def</span> <span class="nf">_get_last_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">full_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="nd">@observe</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_last_name_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;last_name is changed.&quot;</span><span class="p">)</span>
+
+
+<span class="n">obj</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">full_name</span> <span class="o">=</span> <span class="s2">&quot;John Doe&quot;</span>   <span class="c1"># print: last_name is changed.</span>
 </pre></div>
 </div>
-<p>The &#64;cached_property decorator takes no arguments. Place it on the line
+<p>The <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.cached_property" title="traits.has_traits.cached_property"><code class="xref py py-func docutils literal notranslate"><span class="pre">cached_property()</span></code></a> decorator takes no arguments. Place it on the line
 preceding the property’s getter method.</p>
-<p>The <strong>depends_on</strong> metadata attribute accepts extended trait references, using
-the same syntax as the on_trait_change() method’s name parameter, described in
-<a class="reference internal" href="listening.html#the-name-parameter"><span class="std std-ref">The name Parameter</span></a>. As a result, it can take values that specify
-attributes on referenced objects, multiple attributes, or attributes that are
-selected based on their metadata attributes.</p>
+<p>As mentioned above, the <strong>observe</strong> metadata attribute accepts extended trait
+references. As a result, it can take values that specify attributes on
+referenced objects, multiple attributes, or attributes that are selected based
+on their metadata attributes.</p>
 </div>
 </div>
 <div class="section" id="persistence">
@@ -1150,7 +1173,7 @@ metadata.</p>
 <p>However, in cases where this strategy is insufficient, use the following pattern
 to override __getstate__() to remove items that should not be persisted:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">__getstate__</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-    <span class="n">state</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span> <span class="n">XXX</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">()</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span> <span class="p">]:</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
@@ -1178,8 +1201,8 @@ an extra <code class="docutils literal notranslate"><span class="pre">'__traits_
 pickling time.  If this key is not present when unpickling, the HasTraits
 __setstate__() method falls back to a compatibility mode and may not restore
 the state correctly.  For the same reason, if you’re overriding
-__getstate__(), you should be careful to make the appropriate <code class="docutils literal notranslate"><span class="pre">super(...,</span>
-<span class="pre">self).__getstate__()</span></code> call.</p>
+__getstate__(), you should be careful to make the appropriate
+<code class="docutils literal notranslate"><span class="pre">super().__getstate__()</span></code> call.</p>
 </div>
 </div>
 <div class="section" id="overriding-setstate">
@@ -1468,12 +1491,12 @@ the tool is justified and appropriate.</p>
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

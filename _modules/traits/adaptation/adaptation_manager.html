@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.adaptation.adaptation_manager &mdash; Traits 6.1 User Manual</title>
+    <title>traits.adaptation.adaptation_manager &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../../genindex.html" >
     <link rel="search" title="Search" href="../../../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../../../index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../../../index.html" >
     <link rel="up" title="Module code" href="../../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../../../index.html">Traits 6.2 Documentation</a></li>
 	
           <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -77,7 +77,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <h1>Source code for traits.adaptation.adaptation_manager</h1><div class="highlight"><pre>
-<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span></span><span class="c1"># (C) Copyright 2005-2021 Enthought, Inc., Austin, TX</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># This software is provided without warranty under the terms of the BSD</span>
@@ -156,16 +156,15 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        type_ :</span>
-<span class="sd">          Python &#39;type&#39;.</span>
-
-<span class="sd">        protocol :</span>
-<span class="sd">          Either a regular Python class or a traits Interface.</span>
+<span class="sd">        type_</span>
+<span class="sd">            Python &#39;type&#39;.</span>
+<span class="sd">        protocol</span>
+<span class="sd">            Either a regular Python class or a traits Interface.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        result : bool</span>
-<span class="sd">          True if the object provides the protocol, otherwise False.</span>
+<span class="sd">            True if the object provides the protocol, otherwise False.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span></div>
@@ -175,24 +174,32 @@
 <div class="viewcode-block" id="AdaptationManager.adapt"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.adapt">[docs]</a>    <span class="k">def</span> <span class="nf">adapt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">AdaptationError</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Attempt to adapt an object to a given protocol.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        adaptee :</span>
-<span class="sd">          The object that we want to adapt.</span>
-
-<span class="sd">        to_protocol :</span>
-<span class="sd">          The protocol that the want to adapt the object to.</span>
-
-<span class="sd">        If `adaptee` already provides (i.e. implements) the given protocol</span>
+<span class="sd">        If *adaptee* already provides (i.e. implements) the given protocol</span>
 <span class="sd">        then it is simply returned unchanged.</span>
 
-<span class="sd">        Otherwise, we try to build a chain of adapters that adapt `adaptee`</span>
-<span class="sd">        to `to_protocol`.</span>
+<span class="sd">        Otherwise, we try to build a chain of adapters that adapt *adaptee* to</span>
+<span class="sd">        *to_protocol*. If no such adaptation is possible then either an</span>
+<span class="sd">        AdaptationError is raised, or *default* is returned.</span>
 
-<span class="sd">        If no such adaptation is possible then either an AdaptationError is</span>
-<span class="sd">        raised (if default=Adaptation error), or `default` is returned (as</span>
-<span class="sd">        in the default value passed to &#39;getattr&#39; etc).</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adaptee : object</span>
+<span class="sd">            The object that we want to adapt.</span>
+<span class="sd">        to_protocol : type or interface</span>
+<span class="sd">            The protocol that the want to adapt *adaptee* to.</span>
+<span class="sd">        default : object, optional</span>
+<span class="sd">            Object to return if no adaptation is possible. If no default is</span>
+<span class="sd">            provided, and adaptation fails, an ``AdaptationError`` is raised.</span>
 
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        adapted_object : to_protocol</span>
+<span class="sd">            The original adaptee adapted to the target protocol.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        AdaptationError</span>
+<span class="sd">            If adaptation is not possible, and no default is given.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># If the object already provides the given protocol then it is</span>
@@ -548,12 +555,12 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.traits Module &mdash; Traits 6.1 User Manual</title>
+    <title>traits.traits Module &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../genindex.html" >
     <link rel="search" title="Search" href="../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../index.html" >
     <link rel="up" title="API Reference" href="index.html" >
     <link rel="next" title="traits.has_traits Module" href="has_traits.html" >
     <link rel="prev" title="API Reference" href="index.html" > 
@@ -50,7 +50,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../index.html">Traits 6.2 Documentation</a></li>
 	
           <li class="active"><a href="index.html" accesskey="U">API Reference</a></li> 
     </ul>
@@ -325,18 +325,18 @@ attribute this trait is assigned to. For example:</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_foo</span>
 </pre></div>
 </div>
-<p>You can use the <strong>depends_on</strong> metadata attribute to indicate that the
-property depends on the value of another trait. The value of <strong>depends_on</strong>
-is an extended name specifier for traits that the property depends on. The
-property will a trait change notification if any of the traits specified
-by <strong>depends_on</strong> change. For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Wheel</span> <span class="p">(</span> <span class="n">Part</span> <span class="p">):</span>
-    <span class="n">axle</span>     <span class="o">=</span> <span class="n">Instanced</span><span class="p">(</span> <span class="n">Axle</span> <span class="p">)</span>
-    <span class="n">position</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">depends_on</span> <span class="o">=</span> <span class="s1">&#39;axle.chassis.position&#39;</span> <span class="p">)</span>
+<p>You can use the <strong>observe</strong> metadata attribute to indicate that the
+property depends on the value of another trait. The value of <strong>observe</strong>
+follows the same signature as the <strong>expression</strong> parameter in
+<code class="docutils literal notranslate"><span class="pre">HasTraits.observe</span></code>. The property will fire a trait change notification
+if any of the traits specified by <strong>observe</strong> change. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Wheel</span><span class="p">(</span><span class="n">Part</span><span class="p">):</span>
+    <span class="n">axle</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Axle</span><span class="p">)</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">observe</span><span class="o">=</span><span class="s1">&#39;axle.chassis.position&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>For details of the extended trait name syntax, refer to the
-on_trait_change() method of the HasTraits class.</p>
+observe() method of the HasTraits class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -344,7 +344,7 @@ on_trait_change() method of the HasTraits class.</p>
 <li><p><strong>fset</strong> (<em>function</em>) – The “setter” function for the property.</p></li>
 <li><p><strong>fvalidate</strong> (<em>function</em>) – The validation function for the property. The method should return the
 value to set or raise TraitError if the new value is not valid.</p></li>
-<li><p><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Indicates whether to use only the function definitions specified by
+<li><p><strong>force</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><em>bool</em></a>) – Indicates whether to use only the function definitions specified by
 <strong>fget</strong> and <strong>fset</strong>, and not look elsewhere on the class.</p></li>
 <li><p><strong>handler</strong> (<em>function</em>) – A trait handler function for the trait.</p></li>
 <li><p><strong>trait</strong> (<em>Trait</em><em> or </em><em>value</em>) – A trait definition or a value that can be converted to a trait that
@@ -475,12 +475,12 @@ replaced by <code class="docutils literal notranslate"><span class="pre">Font</s
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.

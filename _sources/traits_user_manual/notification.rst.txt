@@ -450,7 +450,7 @@ Suppose we have these classes::
         value = Int()
 
     class Foo(HasTraits):
-        container = List(Instance(Bar), comparison_mode=1)
+        container = List(Instance(Bar))
 
 To notify for changes on *Bar.value* for an item in *Foo.container*,
 with |@on_trait_change|, one may do::
@@ -485,35 +485,6 @@ The specially named *name*\_items for listening to container changes is still
 defined for supporting |@on_trait_change|. Monitoring this *name*\_items trait
 with |@observe| is discouraged as this special trait may be removed when
 |@on_trait_change| is removed.
-
-
-Identity comparison mode for container traits
-`````````````````````````````````````````````
-
-While observing mutations and nested attributes inside ``List``, ``Set`` and
-``Dict``, one should set the trait's comparison mode to **identity** (1) or
-**none** (0) in the :class:`~traits.constants.ComparisonMode` enum.
-
-For backward compatibility, the default comparison mode is currently set to
-**equality** (2). This results in observers not being moved from the old
-container to the new one, if a new container compares equally to the old one
-is assigned to the trait.
-
-For example, with |@on_trait_change|::
-
-    container = List()
-
-    @on_trait_change("container[]")
-    def container_updated(self):
-        ...
-
-With |@observe|, it would be best to change this to::
-
-    container = List(comparison_mode=1)
-
-    @observe("container.items")
-    def container_updated(self):
-        ...
 
 
 Change handler signature is different
@@ -552,7 +523,7 @@ For mutations to container, e.g.::
 
 It will have to be changed to::
 
-    container = List(comparison_mode=1)
+    container = List(comparison_mode=ComparisonMode.identity)
 
     @observe("container:items")
     def name_updated(self, event):

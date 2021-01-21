@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     
-    <title>traits.has_traits &mdash; Traits 6.1 User Manual</title>
+    <title>traits.has_traits &mdash; Traits 6.2 Documentation</title>
     
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '6.1.1',
+        VERSION:     '6.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         LINK_SUFFIX: '',
@@ -30,7 +30,7 @@
     <link rel="shortcut icon" href="../../_static/img/favicon.ico">
     <link rel="index" title="Index" href="../../genindex.html" >
     <link rel="search" title="Search" href="../../search.html" >
-    <link rel="top" title="Traits 6.1 User Manual" href="../../index.html" >
+    <link rel="top" title="Traits 6.2 Documentation" href="../../index.html" >
     <link rel="up" title="Module code" href="../index.html" > 
   </head>
   <body>
@@ -48,7 +48,7 @@
               
     <ul class="nav nav-pills pull-left">
 	
-        <li class="active"><a href="../../index.html">Traits 6.1 User Manual</a></li>
+        <li class="active"><a href="../../index.html">Traits 6.2 Documentation</a></li>
 	
           <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
     </ul>
@@ -77,7 +77,7 @@
           <div class="body" id="spc-section-body" role="main">
             
   <h1>Source code for traits.has_traits</h1><div class="highlight"><pre>
-<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span></span><span class="c1"># (C) Copyright 2005-2021 Enthought, Inc., Austin, TX</span>
 <span class="c1"># All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># This software is provided without warranty under the terms of the BSD</span>
@@ -93,13 +93,15 @@
 
 <span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">copy</span> <span class="k">as</span> <span class="nn">copy_module</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">types</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
 
-<span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">FunctionType</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">TraitsVersion</span>
 <span class="kn">from</span> <span class="nn">.adaptation.adaptation_error</span> <span class="k">import</span> <span class="n">AdaptationError</span>
@@ -144,6 +146,11 @@
 <span class="c1">#       logs a warning if they don&#39;t.</span>
 <span class="c1">#  - 2: Ensures that classes implement the interfaces they say they do, and</span>
 <span class="c1">#       raises an InterfaceError if they don&#39;t.</span>
+<span class="c1">#</span>
+<span class="c1">#  This constant is used by the @provides decorator when deciding whether to</span>
+<span class="c1">#  do interface checking. This behaviour is deprecated. In the future, the</span>
+<span class="c1">#  provides decorator will no longer perform interface checking, regardless of</span>
+<span class="c1">#  the value of this constant.</span>
 
 <span class="n">CHECK_INTERFACES</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -165,11 +172,6 @@
     <span class="n">StaticTraitChangeNotifyWrapper</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># In Python 3, unbound methods do not exist anymore, they&#39;re just functions</span>
-<span class="n">BoundMethodTypes</span> <span class="o">=</span> <span class="p">(</span><span class="n">MethodType</span><span class="p">,)</span>
-<span class="n">UnboundMethodTypes</span> <span class="o">=</span> <span class="p">(</span><span class="n">FunctionType</span><span class="p">,)</span>
-<span class="n">FunctionTypes</span> <span class="o">=</span> <span class="p">(</span><span class="n">FunctionType</span><span class="p">,)</span>
-
 <span class="c1"># Class dictionary entries used to save trait, listener and view information</span>
 <span class="c1"># and definitions:</span>
 
@@ -186,9 +188,6 @@
 
 <span class="c1"># Trait types which cannot have default values</span>
 <span class="n">CantHaveDefaultValue</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;event&quot;</span><span class="p">,</span> <span class="s2">&quot;delegate&quot;</span><span class="p">,</span> <span class="s2">&quot;constant&quot;</span><span class="p">)</span>
-
-<span class="c1"># An empty list</span>
-<span class="n">EmptyList</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="c1"># The trait types that should be copied last when doing a &#39;copy_traits&#39;:</span>
 <span class="n">DeferredCopy</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;delegate&quot;</span><span class="p">,</span> <span class="s2">&quot;property&quot;</span><span class="p">)</span>
@@ -240,7 +239,7 @@
     <span class="n">result</span> <span class="o">=</span> <span class="n">class_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span>
         <span class="p">(</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="ow">and</span> <span class="n">is_function_type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">is_unbound_method_type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="ow">and</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;on_trait_change&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
     <span class="p">):</span>
         <span class="k">return</span> <span class="n">result</span>
@@ -257,31 +256,17 @@
     <span class="k">return</span> <span class="kc">None</span>
 
 
-<span class="k">def</span> <span class="nf">is_cython_func_or_method</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Test if the given input is a Cython method or function. &quot;&quot;&quot;</span>
-    <span class="c1"># The only way to get the type from the method with str comparison ...</span>
-    <span class="k">return</span> <span class="s2">&quot;cython_function_or_method&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">method</span><span class="p">))</span>
-
-
-<span class="k">def</span> <span class="nf">is_bound_method_type</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Test if the given input is a Python method or a Cython method. &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">BoundMethodTypes</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_cython_func_or_method</span><span class="p">(</span>
-        <span class="n">method</span>
-    <span class="p">)</span>
-
-
 <span class="k">def</span> <span class="nf">is_unbound_method_type</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Test if the given input is a Python method or a Cython method. &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">UnboundMethodTypes</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_cython_func_or_method</span><span class="p">(</span>
-        <span class="n">method</span>
-    <span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot; Check for something that looks like an unbound class method.</span>
 
+<span class="sd">    This is used in practice to identify magic-named _name_changed</span>
+<span class="sd">    and _name_fired methods.</span>
 
-<span class="k">def</span> <span class="nf">is_function_type</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Test if the given input is a Python function or a Cython method. &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">FunctionTypes</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_cython_func_or_method</span><span class="p">(</span>
-        <span class="n">function</span>
-    <span class="p">)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># The ismethoddescriptor check catches methods written in C or Cython</span>
+    <span class="c1"># extensions. It excludes things that pass an isfunction check, so we have</span>
+    <span class="c1"># to explicitly re-include that check.</span>
+    <span class="k">return</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span><span class="p">(</span><span class="n">method</span><span class="p">)</span> <span class="ow">or</span> <span class="n">inspect</span><span class="o">.</span><span class="n">ismethoddescriptor</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_is_serializable</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
@@ -326,7 +311,7 @@
 
     <span class="c1"># Merge in the information from the class dictionary:</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">class_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">is_function_type</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">is_unbound_method_type</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
             <span class="n">n</span> <span class="o">=</span> <span class="mi">13</span>
             <span class="n">col</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;_changed_for_&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">col</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
@@ -394,6 +379,77 @@
     <span class="k">return</span> <span class="n">class_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
 
+<span class="k">def</span> <span class="nf">_create_property_observe_state</span><span class="p">(</span><span class="n">observe</span><span class="p">,</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">cached</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create the metadata for setting up an observer for Property.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    observe : str or list or Expression</span>
+<span class="sd">        As is accepted by HasTraits.observe expression argument</span>
+<span class="sd">        This is the value provided in Property(observe=...)</span>
+<span class="sd">    property_name : str</span>
+<span class="sd">        The name of the property trait.</span>
+<span class="sd">    cached : boolean</span>
+<span class="sd">        Whether the property is cached or not.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    state : dict</span>
+<span class="sd">        State to be used by _init_traits_observers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
+            <span class="n">cache_name</span> <span class="o">=</span> <span class="n">TraitsCache</span> <span class="o">+</span> <span class="n">property_name</span>
+            <span class="n">old</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">cache_name</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">old</span> <span class="o">=</span> <span class="n">Undefined</span>
+        <span class="n">instance</span><span class="o">.</span><span class="n">trait_property_changed</span><span class="p">(</span><span class="n">property_name</span><span class="p">,</span> <span class="n">old</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">handler_getter</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">MethodType</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
+
+    <span class="n">expressions</span> <span class="o">=</span> <span class="n">_parse_expression</span><span class="p">(</span><span class="n">observe</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">expression</span><span class="o">=</span><span class="n">expressions</span><span class="p">,</span>
+        <span class="n">dispatch</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span>
+        <span class="n">handler_getter</span><span class="o">=</span><span class="n">handler_getter</span><span class="p">,</span>
+        <span class="n">post_init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_parse_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Parse a given expression or list of expressions to convert them into</span>
+<span class="sd">    ObserveExpression objects if needed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    expression : str or list or ObserverExpression</span>
+<span class="sd">        A description of what traits are being observed.</span>
+<span class="sd">        If this is a list, each item must be a string or an Expression.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    expressions : list of ObserverExpression</span>
+<span class="sd">        List of parsed expression(s) obtained by calling the parse function on</span>
+<span class="sd">        each expression input string expression, and leaving</span>
+<span class="sd">        ObserverExpression objects as is.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Handle the overloaded signature.</span>
+    <span class="c1"># Support list to be consistent with on_trait_change.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">expressions</span> <span class="o">=</span> <span class="n">expression</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">expressions</span> <span class="o">=</span> <span class="p">[</span><span class="n">expression</span><span class="p">]</span>
+
+    <span class="n">expressions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">observe_api</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">expr</span>
+        <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">expressions</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="n">expressions</span>
+
+
 <span class="c1"># This really should be &#39;HasTraits&#39;, but it&#39;s not defined yet:</span>
 <span class="n">_HasTraits</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -401,7 +457,7 @@
 <div class="viewcode-block" id="MetaHasTraits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaHasTraits">[docs]</a><span class="k">class</span> <span class="nc">MetaHasTraits</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Controls the creation of HasTraits classes.</span>
 
-<span class="sd">    The heavy work is done by the `create_traits_meta_dict` function, which</span>
+<span class="sd">    The heavy work is done by the `update_traits_class_dict` function, which</span>
 <span class="sd">    takes the ``class_dict`` dictionary of class members and extracts and</span>
 <span class="sd">    processes the trait declarations in it. The trait declarations are then</span>
 <span class="sd">    added back to the class dictionary and passed off to the __new__ method</span>
@@ -474,7 +530,7 @@
     <span class="n">prefix_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">view_elements</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="c1"># Mapping from method names to list(dict)</span>
+    <span class="c1"># Mapping from method/trait names to list(dict)</span>
     <span class="c1"># where each nested dict provides the input arguments for calling</span>
     <span class="c1"># ``HasTraits.observe`` once. See ``_init_trait_observers``.`</span>
     <span class="n">observers</span> <span class="o">=</span> <span class="p">{}</span>
@@ -558,9 +614,7 @@
                 <span class="n">prefix_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                 <span class="n">prefix_traits</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_cython_func_or_method</span><span class="p">(</span>
-            <span class="n">value</span>
-        <span class="p">):</span>
+        <span class="k">elif</span> <span class="n">is_unbound_method_type</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
             <span class="n">pattern</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;on_trait_change&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">pattern</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">listeners</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
@@ -760,6 +814,15 @@
 
             <span class="n">listeners</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;property&quot;</span><span class="p">,</span> <span class="n">cached</span><span class="p">,</span> <span class="n">depends_on</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">trait</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;property&quot;</span> <span class="ow">and</span> <span class="n">trait</span><span class="o">.</span><span class="n">observe</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">observer_state</span> <span class="o">=</span> <span class="n">_create_property_observe_state</span><span class="p">(</span>
+                <span class="n">observe</span><span class="o">=</span><span class="n">trait</span><span class="o">.</span><span class="n">observe</span><span class="p">,</span>
+                <span class="n">property_name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">cached</span><span class="o">=</span><span class="n">trait</span><span class="o">.</span><span class="n">cached</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">stack</span> <span class="o">=</span> <span class="n">observers</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">observer_state</span><span class="p">)</span>
+
     <span class="c1"># Add processed traits back into class_dict.</span>
     <span class="n">class_dict</span><span class="p">[</span><span class="n">BaseTraits</span><span class="p">]</span> <span class="o">=</span> <span class="n">base_traits</span>
     <span class="n">class_dict</span><span class="p">[</span><span class="n">ClassTraits</span><span class="p">]</span> <span class="o">=</span> <span class="n">class_traits</span>
@@ -858,10 +921,13 @@
             <span class="n">observe_inputs</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">handler</span><span class="o">.</span><span class="n">_observe_inputs</span> <span class="o">=</span> <span class="n">observe_inputs</span>
 
+        <span class="n">expressions</span> <span class="o">=</span> <span class="n">_parse_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+
         <span class="n">observe_input</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">expression</span><span class="o">=</span><span class="n">expression</span><span class="p">,</span>
+            <span class="n">expression</span><span class="o">=</span><span class="n">expressions</span><span class="p">,</span>
             <span class="n">dispatch</span><span class="o">=</span><span class="n">dispatch</span><span class="p">,</span>
             <span class="n">post_init</span><span class="o">=</span><span class="n">post_init</span><span class="p">,</span>
+            <span class="n">handler_getter</span><span class="o">=</span><span class="nb">getattr</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">observe_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">observe_input</span><span class="p">)</span>
 
@@ -913,7 +979,7 @@
 <span class="sd">        write boilerplate cache management code explicitly. For example::</span>
 
 <span class="sd">            file_name = File</span>
-<span class="sd">            file_contents = Property( depends_on = &#39;file_name&#39; )</span>
+<span class="sd">            file_contents = Property(observe=&#39;file_name&#39;)</span>
 
 <span class="sd">            @cached_property</span>
 <span class="sd">            def _get_file_contents(self):</span>
@@ -926,7 +992,7 @@
 <span class="sd">        **_file_contents**, which maintained by the @cached_property wrapper</span>
 <span class="sd">        code, is returned.</span>
 
-<span class="sd">        Note the use, in the example, of the **depends_on** metadata attribute</span>
+<span class="sd">        Note the use, in the example, of the **observe** metadata attribute</span>
 <span class="sd">        to specify that the value of **file_contents** depends on</span>
 <span class="sd">        **file_name**, so that _get_file_contents() is called only when</span>
 <span class="sd">        **file_name** changes. For details, see the traits.traits.Property()</span>
@@ -1288,7 +1354,7 @@
 <span class="sd">        not be persisted::</span>
 
 <span class="sd">            def __getstate__(self):</span>
-<span class="sd">                state = super(X,self).__getstate__()</span>
+<span class="sd">                state = super().__getstate__()</span>
 <span class="sd">                for key in [&#39;foo&#39;, &#39;bar&#39;]:</span>
 <span class="sd">                    if key in state:</span>
 <span class="sd">                        del state[key]</span>
@@ -1993,7 +2059,7 @@
         <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">view</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">kind</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">edit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">edit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">handler</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -2025,7 +2091,6 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        filename : str</span>
-<span class="sd">            NOTE: Deprecated as of traits 6.0.0.</span>
 <span class="sd">            The name (including path) of a file that contains a pickled</span>
 <span class="sd">            representation of the current object. When this parameter is</span>
 <span class="sd">            specified, the method reads the corresponding file (if it exists)</span>
@@ -2034,6 +2099,9 @@
 <span class="sd">            **OK**), the new values are written to the file. If this parameter</span>
 <span class="sd">            is not specified, the values are loaded from the in-memory object,</span>
 <span class="sd">            and are not persisted when the dialog box is closed.</span>
+
+<span class="sd">            .. deprecated:: 6.0.0</span>
+
 <span class="sd">        view : View or str</span>
 <span class="sd">            A View object (or its name) that defines a user interface for</span>
 <span class="sd">            editing trait attribute values of the current object. If the view</span>
@@ -2051,6 +2119,9 @@
 <span class="sd">            specifies an existing file, setting *edit* to False loads the</span>
 <span class="sd">            saved values from that file into the object without requiring</span>
 <span class="sd">            user interaction.</span>
+
+<span class="sd">            .. deprecated:: 6.2.0</span>
+
 <span class="sd">        context : object or dictionary</span>
 <span class="sd">            A single object or a dictionary of string/object pairs, whose trait</span>
 <span class="sd">            attributes are to be edited. If not specified, the current object</span>
@@ -2078,6 +2149,15 @@
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">copy_traits</span><span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">Unpickler</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">edit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">edit</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s1">&#39;The edit argument to configure_traits is &#39;</span>
+                <span class="s1">&#39;deprecated, and will be removed in Traits 7.0.0&#39;</span>
+            <span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">edit</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">toolkit</span>
@@ -2318,17 +2398,7 @@
 <span class="sd">            =========== =======================================================</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Handle the overloaded signature.</span>
-        <span class="c1"># Support list to be consistent with on_trait_change.</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="n">expressions</span> <span class="o">=</span> <span class="n">expression</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">expressions</span> <span class="o">=</span> <span class="p">[</span><span class="n">expression</span><span class="p">]</span>
-
-        <span class="n">expressions</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">observe_api</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">expr</span>
-            <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">expressions</span>
-        <span class="p">]</span>
+        <span class="n">expressions</span> <span class="o">=</span> <span class="n">_parse_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">expressions</span><span class="p">:</span>
             <span class="n">observe_api</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span>
@@ -2946,6 +3016,8 @@
 <div class="viewcode-block" id="HasTraits.traits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasTraits.traits">[docs]</a>    <span class="k">def</span> <span class="nf">traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a dictionary containing the definitions of all of the trait</span>
 <span class="sd">        attributes of this object that match the set of *metadata* criteria.</span>
+<span class="sd">        Note that any traits with a name containing the suffix &quot;_items&quot; are</span>
+<span class="sd">        always excluded.</span>
 
 <span class="sd">        The keys of the returned dictionary are the trait attribute names, and</span>
 <span class="sd">        the values are their corresponding trait definition objects.</span>
@@ -3204,7 +3276,7 @@
         <span class="n">dic</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">klass</span> <span class="ow">in</span> <span class="nb">object</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__mro__</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">method</span><span class="p">)</span> <span class="ow">is</span> <span class="n">FunctionType</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dic</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">is_unbound_method_type</span><span class="p">(</span><span class="n">method</span><span class="p">)</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dic</span><span class="p">):</span>
                     <span class="n">dic</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">yield</span> <span class="n">name</span>
 
@@ -3390,7 +3462,7 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;post_init&quot;</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span>
                         <span class="n">expression</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;expression&quot;</span><span class="p">],</span>
-                        <span class="n">handler</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>
+                        <span class="n">handler</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;handler_getter&quot;</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>
                         <span class="n">dispatch</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;dispatch&quot;</span><span class="p">],</span>
                     <span class="p">)</span>
 
@@ -3402,7 +3474,7 @@
                 <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;post_init&quot;</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span>
                         <span class="n">expression</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;expression&quot;</span><span class="p">],</span>
-                        <span class="n">handler</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>
+                        <span class="n">handler</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;handler_getter&quot;</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>
                         <span class="n">dispatch</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;dispatch&quot;</span><span class="p">],</span>
                     <span class="p">)</span>
 
@@ -3483,7 +3555,7 @@
                 <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">missing_required_traits</span><span class="p">)))</span>
             <span class="p">)</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">HasRequiredTraits</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="HasPrivateTraits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.HasPrivateTraits">[docs]</a><span class="k">class</span> <span class="nc">HasPrivateTraits</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -3656,6 +3728,15 @@
         <span class="k">if</span> <span class="n">CHECK_INTERFACES</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">.interface_checker</span> <span class="k">import</span> <span class="n">check_implements</span>
 
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="s2">&quot;In the future, the @provides decorator will not perform &quot;</span>
+                    <span class="s2">&quot;interface checks. Set has_traits.CHECK_INTERFACES to 0 &quot;</span>
+                    <span class="s2">&quot;to suppress this warning.&quot;</span>
+                <span class="p">),</span>
+                <span class="ne">DeprecationWarning</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">check_implements</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">protocols</span><span class="p">,</span> <span class="n">CHECK_INTERFACES</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">klass</span>
@@ -3709,12 +3790,12 @@
     <div class="row-fluid">
     <ul class="inline pull-left">
       <li>
-        &copy; Copyright (C) Copyright 2005-2020 Enthought, Inc., Austin, TX
+        &copy; Copyright (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 All rights reserved.
 
       </li>
       <li>
-      Last updated on Jul 23, 2020.
+      Last updated on Jan 20, 2021.
       </li>
       <li>
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
