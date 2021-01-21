@@ -18,3 +18,9 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         sync-labels: true
+
+    - name: Check one of the two 'news' labels is present
+      uses: docker://agilepathway/pull-request-label-checker:latest
+      with:
+        one_of: ["has news", "skip news"]
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
