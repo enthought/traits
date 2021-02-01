@@ -87,3 +87,11 @@ class TestDate(unittest.TestCase):
         trait = obj.base_trait("epoch")
         editor_factory = trait.get_editor()
         self.assertIsInstance(editor_factory, traitsui.api.DateEditor)
+
+    def test_disallow_datetime(self):
+        test_datetime = datetime.datetime(1975, 2, 13)
+        obj = HasDateTraits()
+        with self.assertRaises(TraitError) as exception_context:
+            obj.expiry = test_datetime
+        message = str(exception_context.exception)
+        self.assertIn("must be a non-datetime date or None", message)
