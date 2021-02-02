@@ -605,12 +605,14 @@ class WeakRef(Instance):
         ...
 
 
-class Date(_BaseInstance[datetime.date]):
 
-    # simplified signature
+_OptionalDate = Optional[datetime.date]
+
+class Date(_TraitType[_OptionalDate, _OptionalDate]):
     def __init__(
             self,
             default_value: datetime.date = ...,
+            allow_datetime: bool = False,
             **metadata: _Any,
     ) -> None:
         ...
