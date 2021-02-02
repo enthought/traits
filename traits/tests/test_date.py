@@ -28,58 +28,71 @@ NT_EPOCH = datetime.date(1600, 1, 1)
 
 
 class HasDateTraits(HasStrictTraits):
-    #: Cake expiry date
-    expiry = Date(allow_datetime=False)
-
-    #: Datetime allowed!
-    solstice = Date(allow_datetime=True)
+    #: Simple case - no default, no parameters, no metadata
+    simple_date = Date()
 
     #: Date with default
     epoch = Date(UNIX_EPOCH)
 
-    #: Date with default spelled out explicitly using the keyword.
+    #: Date with default provided via keyword.
     alternative_epoch = Date(default_value=NT_EPOCH)
+
+    #: Datetime instances prohibited
+    datetime_prohibited = Date(allow_datetime=False)
+
+    #: Datetime instances allowed
+    datetime_allowed = Date(allow_datetime=True)
 
 
 class TestDate(unittest.TestCase):
     def test_default(self):
         obj = HasDateTraits()
+        self.assertEqual(obj.simple_date, None)
         self.assertEqual(obj.epoch, UNIX_EPOCH)
         self.assertEqual(obj.alternative_epoch, NT_EPOCH)
-        self.assertEqual(obj.expiry, None)
 
-    def test_assign_a_date(self):
+    def test_assign_date(self):
         test_date = datetime.date(1975, 2, 13)
         obj = HasDateTraits()
-        obj.expiry = test_date
-        self.assertEqual(obj.expiry, test_date)
+        obj.simple_date = test_date
+        self.assertEqual(obj.simple_date, test_date)
 
-    def test_assign_not_a_date(self):
-        obj = HasDateTraits()
-        with self.assertRaises(TraitError):
-            obj.expiry = "1975-2-13"
-
-    def test_info_text(self):
+    def test_assign_non_date(self):
         obj = HasDateTraits()
         with self.assertRaises(TraitError) as exception_context:
-            obj.solstice = "1975-2-13"
+            obj.simple_date = "1975-2-13"
         message = str(exception_context.exception)
         self.assertIn("must be a date or None", message)
+
+    def test_assign_datetime(self):
+        # By default, datetime instances are permitted.
+        test_datetime = datetime.datetime(1975, 2, 13)
+        obj = HasDateTraits()
+        obj.simple_date = test_datetime
+        self.assertEqual(obj.simple_date, test_datetime)
 
     def test_assign_none(self):
         # This is a test for the current behaviour. There may be an argument
         # for optionally disallowing None. Note that specifying
         # allow_none=False in the trait definition does not work as expected.
-        obj = HasDateTraits(expiry=UNIX_EPOCH)
-        obj.expiry = None
-        self.assertIsNone(obj.expiry)
+        # (Ref: enthought/traits#495)
+        obj = HasDateTraits(simple_date=UNIX_EPOCH)
+        obj.simple_date = None
+        self.assertIsNone(obj.simple_date)
 
-    def test_assign_a_datetime_legacy(self):
-        # Legacy case: by default, datetime instances are permitted.
+    def test_allow_datetime_false(self):
         test_datetime = datetime.datetime(1975, 2, 13)
         obj = HasDateTraits()
-        obj.solstice = test_datetime
-        self.assertEqual(obj.solstice, test_datetime)
+        with self.assertRaises(TraitError) as exception_context:
+            obj.datetime_prohibited = test_datetime
+        message = str(exception_context.exception)
+        self.assertIn("must be a non-datetime date or None", message)
+
+    def test_allow_datetime_true(self):
+        test_datetime = datetime.datetime(1975, 2, 13)
+        obj = HasDateTraits()
+        obj.datetime_allowed = test_datetime
+        self.assertEqual(obj.datetime_allowed, test_datetime)
 
     @requires_traitsui
     def test_get_editor(self):
@@ -87,11 +100,3 @@ class TestDate(unittest.TestCase):
         trait = obj.base_trait("epoch")
         editor_factory = trait.get_editor()
         self.assertIsInstance(editor_factory, traitsui.api.DateEditor)
-
-    def test_disallow_datetime(self):
-        test_datetime = datetime.datetime(1975, 2, 13)
-        obj = HasDateTraits()
-        with self.assertRaises(TraitError) as exception_context:
-            obj.expiry = test_datetime
-        message = str(exception_context.exception)
-        self.assertIn("must be a non-datetime date or None", message)
