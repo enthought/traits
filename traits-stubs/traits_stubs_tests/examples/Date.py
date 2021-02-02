@@ -20,8 +20,8 @@ class TestClass(HasTraits):
 obj = TestClass()
 obj.t = datetime.datetime.now()
 obj.t = datetime.datetime.now().date()
-obj.t = "sometime-string"
 
 obj.t = datetime.datetime.now().time()  # E: assignment
+obj.t = "sometime-string"  # E: assignment
 obj.t = 9  # E: assignment
 obj.t = []  # E: assignment
