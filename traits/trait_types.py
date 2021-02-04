@@ -41,7 +41,11 @@ from .trait_dict_object import TraitDictEvent, TraitDictObject
 from .trait_errors import TraitError
 from .trait_list_object import TraitListEvent, TraitListObject
 from .trait_set_object import TraitSetEvent, TraitSetObject
-from .trait_type import TraitType, _infer_default_value_type
+from .trait_type import (
+    _infer_default_value_type,
+    NoDefaultSpecified,
+    TraitType,
+)
 from .traits import (
     Trait,
     _TraitMaker,
@@ -3423,6 +3427,14 @@ class BaseInstance(BaseClass):
             )
 
         return (dvt, dv)
+
+    def clone(self, default_value=NoDefaultSpecified, **metadata):
+        """ pass """
+        allow_none = metadata.pop("allow_none", None)
+        clone_of_self = super().clone(default_value=default_value, **metadata)
+        if allow_none is not None:
+            clone_of_self._allow_none = allow_none
+        return clone_of_self
 
     def create_editor(self):
         """ Returns the default traits UI editor for this type of trait.
