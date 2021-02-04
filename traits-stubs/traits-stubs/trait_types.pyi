@@ -613,7 +613,7 @@ class Date(_TraitType[_OptionalDate, _OptionalDate]):
             self,
             default_value: datetime.date = ...,
             allow_datetime: bool = ...,
-            allow_none: bool = ...
+            allow_none: bool = ...,
             **metadata: _Any,
     ) -> None:
         ...
