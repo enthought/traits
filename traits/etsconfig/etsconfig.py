@@ -316,8 +316,6 @@ class ETSConfig(object):
                     )
                 elif self.toolkit == "qt4":
                     self._kiva_backend = "image"
-                elif self.toolkit == "pyglet":
-                    self._kiva_backend = "gl"
                 else:
                     self._kiva_backend = "image"
 
