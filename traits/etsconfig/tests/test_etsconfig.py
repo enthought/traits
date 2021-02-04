@@ -217,6 +217,14 @@ class ETSConfigTestCase(unittest.TestCase):
         self.assertEqual(dirname, self.ETSConfig.application_data)
         self.assertEqual(app_name, "tests")
 
+    def test_toolkit_default_kiva_backend(self):
+        self.ETSConfig.toolkit = "qt4"
+        self.assertEqual(self.ETSConfig.kiva_backend, "image")
+
+    def test_toolkit_explicit_kiva_backend(self):
+        self.ETSConfig.toolkit = "wx.celiagg"
+        self.assertEqual(self.ETSConfig.kiva_backend, "celiagg")
+
     def test_toolkit_environ(self):
         test_args = ["something"]
         test_environ = {"ETS_TOOLKIT": "test"}
