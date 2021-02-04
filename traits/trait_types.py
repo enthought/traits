@@ -4238,8 +4238,54 @@ class WeakRef(Instance):
         self.klass = klass
 
 
-#: A trait type for datetime.date instances.
-Date = BaseInstance(datetime.date, editor=date_editor)
+class Date(TraitType):
+    """ A trait type whose value must be a date.
+
+    The value must be an instance of :class:`datetime.date`. Note that
+    :class:`datetime.datetime` is a subclass of :class:`datetime.date`, so
+    by default instances of :class:`datetime.datetime` are also permitted.
+    Use ``Date(allow_datetime=False)`` to exclude this possibility.
+
+    Parameters
+    ----------
+    default_value : datetime.date, optional
+        The default value for this trait. If no default is provided, the
+        default is ``None``.
+    allow_datetime : bool, optional
+        If ``False``, instances of ``datetime.datetime`` are not valid
+        values for this Trait. The default is ``True``.
+    **metadata: dict
+        Additional metadata.
+    """
+
+    def __init__(self, default_value=None, *, allow_datetime=True, **metadata):
+        super().__init__(default_value, **metadata)
+        self.allow_datetime = allow_datetime
+
+    def validate(self, object, name, value):
+        """ Check that the given value is valid date for this trait.
+        """
+        if value is None:
+            return value
+        if isinstance(value, datetime.date):
+            if self.allow_datetime or not isinstance(value, datetime.datetime):
+                return value
+
+        self.error(object, name, value)
+
+    def info(self):
+        """
+        Return text description of this trait.
+        """
+        if self.allow_datetime:
+            return "a date or None"
+        else:
+            return "a non-datetime date or None"
+
+    def create_editor(self):
+        """ Create default editor factory for this trait.
+        """
+        return date_editor()
 
 
 #: A trait type for datetime.datetime instances.

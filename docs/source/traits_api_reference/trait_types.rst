@@ -252,7 +252,8 @@ Traits
 .. autoclass:: WeakRef
    :show-inheritance:
 
-.. autodata:: Date
+.. autoclass:: Date
+   :show-inheritance:
 
 .. autodata:: Datetime
 
