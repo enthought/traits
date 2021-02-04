@@ -612,6 +612,7 @@ class Date(_TraitType[_OptionalDate, _OptionalDate]):
     def __init__(
             self,
             default_value: datetime.date = ...,
+            *,
             allow_datetime: bool = ...,
             allow_none: bool = ...,
             **metadata: _Any,
